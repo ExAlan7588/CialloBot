@@ -1,0 +1,31 @@
+version = 1
+
+# 測試檔案模式
+test_patterns = [
+    "tests/**",
+    "**/test_*.py"
+]
+
+# 排除不需要分析的檔案/目錄
+exclude_patterns = [
+    ".venv/**",
+    "__pycache__/**",
+    ".ruff_cache/**",
+    "*.sql",
+    "logs/**",
+    "fonts/**",
+    "downloaded_gacha_master_cards/**",
+    "exported_cards/**",
+    "venture_editor/**",
+    "vulture_whitelist.py"
+]
+
+[[analyzers]]
+name = "python"
+
+  [analyzers.meta]
+  runtime_version = "3.x.x"
+  max_line_length = 100
+
+[[code_formatters]]
+name = "ruff"
