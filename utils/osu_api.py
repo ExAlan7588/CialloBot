@@ -1,7 +1,8 @@
-import aiohttp
-from private import config
+from __future__ import annotations
+
 import time  # For token expiry
-import logging
+
+import aiohttp
 from loguru import logger
 
 # osu! API v2 的基礎 URL
@@ -12,7 +13,7 @@ OSU_API_V1_BASE_URL = "https://osu.ppy.sh/api"
 
 
 class OsuAPI:
-    def __init__(self, client_id: str, client_secret: str, api_v1_key: str):
+    def __init__(self, client_id: str, client_secret: str, api_v1_key: str) -> None:
         self.client_id = client_id
         self.client_secret = client_secret
         self.api_v1_key = api_v1_key  # Added for API v1
@@ -20,17 +21,17 @@ class OsuAPI:
         self._access_token = None
         self._token_expiry_time = 0  # Timestamp when the token expires
 
-    async def setup(self):
+    async def setup(self) -> None:
         """初始化 aiohttp.ClientSession"""
         if self.session is None or self.session.closed:
             self.session = aiohttp.ClientSession()
 
-    async def close(self):
+    async def close(self) -> None:
         """關閉 aiohttp.ClientSession"""
         if self.session and not self.session.closed:
             await self.session.close()
 
-    async def _get_access_token(self):
+    async def _get_access_token(self) -> bool | None:
         """使用 Client Credentials Grant 獲取 access token"""
         await self.setup()
         logger.debug("[OSU_API] Attempting to get new access token...")
@@ -80,7 +81,7 @@ class OsuAPI:
         return True
 
     async def _request(
-        self, method: str, endpoint: str, params: dict = None, json_payload: dict = None
+        self, method: str, endpoint: str, params: dict | None = None, json_payload: dict | None = None
     ) -> dict | list | None:
         """發送異步請求到 osu! API v2"""
         logger.debug(f"[OSU_API] Preparing request: {method} {endpoint}")
@@ -174,7 +175,7 @@ class OsuAPI:
 
     # 示例：API v2 的 get_user (需要根據 v2 文檔調整)
     async def get_user(
-        self, user_identifier: str, mode: str = None, identifier_type: str = None
+        self, user_identifier: str, mode: str | None = None, identifier_type: str | None = None
     ) -> dict | None:
         """
         Retrieves details for a user.
@@ -201,9 +202,9 @@ class OsuAPI:
     async def get_user_recent(
         self,
         user_id: int | str,
-        mode: str = None,
+        mode: str | None = None,
         limit: int = 5,
-        offset: int = None,
+        offset: int | None = None,
         include_fails: bool = True,
     ) -> list | None:
         """
@@ -223,7 +224,7 @@ class OsuAPI:
         return await self._request("GET", endpoint, params=params)
 
     async def get_user_best(
-        self, user_id: int | str, mode: str = None, limit: int = 100, offset: int = None
+        self, user_id: int | str, mode: str | None = None, limit: int = 100, offset: int | None = None
     ) -> list | None:
         """
         獲取使用者的最佳表現。支援自動分頁獲取最多實際請求的 limit 數量。
@@ -273,13 +274,13 @@ class OsuAPI:
                     f"[get_user_best] Error fetching scores page for user {user_id} at offset {current_offset}. Aborting further pagination."
                 )
                 # Return what we have so far, or None if nothing was fetched at all
-                return all_scores if all_scores else None
+                return all_scores or None
 
             if not isinstance(scores_page, list):
                 logger.error(
                     f"[get_user_best] Expected list from API, got {type(scores_page)}. Aborting."
                 )
-                return all_scores if all_scores else None
+                return all_scores or None
 
             if not scores_page:  # No more scores to fetch
                 logger.debug(
@@ -304,7 +305,7 @@ class OsuAPI:
             f"[get_user_best] Fetched a total of {len(all_scores)} scores for user {user_id}."
         )
         return (
-            all_scores if all_scores else []
+            all_scores or []
         )  # Return empty list if nothing found, or None if error earlier
 
     async def get_user_beatmapsets(
@@ -342,7 +343,7 @@ class OsuAPI:
                 f"[OSU_API get_user_beatmapsets] Received {len(result)} beatmapsets of type '{beatmap_type}' for user {user_id}"
             )
             return result
-        elif (
+        if (
             isinstance(result, dict)
             and "beatmapsets" in result
             and isinstance(result["beatmapsets"], list)
@@ -354,18 +355,18 @@ class OsuAPI:
             # The dict might also contain 'total' and 'cursor' fields for cursor pagination.
             # For now, we just return the beatmapsets. The calling function will need to handle pagination logic.
             return result["beatmapsets"]
-        elif (
+        if (
             result is not None
         ):  # Non-list, non-dict with 'beatmapsets' but not None (e.g. an error dict not caught by _request)
             logger.warning(
                 f"[OSU_API get_user_beatmapsets] Expected a list or dict with 'beatmapsets' key for '{beatmap_type}' for user {user_id}, but got {type(result)}. Data: {str(result)[:200]}"
             )
             return None  # Or an empty list, depending on how we want to handle unexpected formats
-        else:  # result is None (error already logged by _request)
-            logger.error(
-                f"[OSU_API get_user_beatmapsets] Failed to fetch beatmapsets of type '{beatmap_type}' for user {user_id}"
-            )
-            return None
+        # result is None (error already logged by _request)
+        logger.error(
+            f"[OSU_API get_user_beatmapsets] Failed to fetch beatmapsets of type '{beatmap_type}' for user {user_id}"
+        )
+        return None
 
     async def get_beatmapset(self, beatmapset_id: int) -> dict | None:
         """
@@ -386,9 +387,9 @@ class OsuAPI:
     async def get_beatmap_attributes(
         self,
         beatmap_id: int,
-        mods: int | list | str = None,
-        ruleset_id: int = None,
-        ruleset_short_name: str = None,
+        mods: int | list | str | None = None,
+        ruleset_id: int | None = None,
+        ruleset_short_name: str | None = None,
     ) -> dict | None:
         """
         Retrieves difficulty attributes for a specific beatmap, optionally with mods and for a specific ruleset.
@@ -462,7 +463,7 @@ class OsuAPI:
             elif mods_int & 64:
                 mods.append("DT")
             for mod_val, mod_str in MODS_ENUM.items():
-                if mod_str in ["NC", "DT", "HT"]:
+                if mod_str in {"NC", "DT", "HT"}:
                     if not (mod_str == "HT" and 512 & mods_int):
                         continue
                 if mods_int & mod_val:
@@ -492,7 +493,7 @@ class OsuAPI:
                 return 0.0
             accuracy = ((c300 * 300 + c100 * 100 + c50 * 50) / (total_hits * 300)) * 100
             return round(accuracy, 2)
-        elif mode == "taiko":
+        if mode == "taiko":
             total_hits = (
                 c300 + c100 + cmiss
             )  # c50 is not used, geki/katu are part of c300/c100
@@ -502,7 +503,7 @@ class OsuAPI:
             # Here, c300 are greats, c100 are goods.
             accuracy = ((c300 * 1 + c100 * 0.5) / total_hits) * 100
             return round(accuracy, 2)
-        elif mode == "fruits":
+        if mode == "fruits":
             total_hits = (
                 c300 + c100 + c50 + cmiss + c_katu
             )  # c_katu are droplets caught by missing a fruit on slider
@@ -533,7 +534,7 @@ class OsuAPI:
                 if statistics.get("accuracy") is not None
                 else 0.0
             )  # API often provides 0.xxxx format
-        elif mode == "mania":
+        if mode == "mania":
             # Mania accuracy is complex: ( (MAX*320 + 300*300 + 200*200 + 100*100 + 50*50) / (total_notes * 320) ) * 100
             # geki = MAX, katu = 300s in some contexts, but API stats are count_geki, count_300, count_katu, count_100, count_50, count_miss
             # For mania: count_geki (MAX/300g), count_300 (300), count_katu (200/!200), count_100 (100), count_50 (50), count_miss (Miss)
@@ -549,14 +550,13 @@ class OsuAPI:
                 return 0.0
             accuracy = (total_score_points / total_possible_points) * 100
             return round(accuracy, 2)
-        else:
-            # If API v2 provides accuracy directly in the score object, prefer that.
-            # score_data.get('accuracy') might be e.g. 0.9876, so multiply by 100.
-            return (
-                statistics.get("accuracy", 0.0) * 100
-                if statistics.get("accuracy") is not None
-                else 0.0
-            )
+        # If API v2 provides accuracy directly in the score object, prefer that.
+        # score_data.get('accuracy') might be e.g. 0.9876, so multiply by 100.
+        return (
+            statistics.get("accuracy", 0.0) * 100
+            if statistics.get("accuracy") is not None
+            else 0.0
+        )
 
     async def get_score_v1(
         self, beatmap_id: int, user_id: int | str, mode: int = 0
@@ -591,18 +591,17 @@ class OsuAPI:
                         f"[get_score_v1] Successfully fetched score from API v1: {data[0]} for beatmap {beatmap_id}, user {user_id}, mode {mode}"
                     )
                     return data[0]  # Return the first (and only) score
-                elif (
+                if (
                     isinstance(data, list) and not data
                 ):  # Successfully fetched an empty list
                     logger.info(
                         f"[get_score_v1] API v1 returned an empty list for beatmap {beatmap_id}, user {user_id}, mode {mode}. No score data found."
                     )
                     return None
-                else:
-                    logger.warning(
-                        f"[get_score_v1] No score found or unexpected response format from API v1: {data} for beatmap {beatmap_id}, user {user_id}, mode {mode}"
-                    )
-                    return None
+                logger.warning(
+                    f"[get_score_v1] No score found or unexpected response format from API v1: {data} for beatmap {beatmap_id}, user {user_id}, mode {mode}"
+                )
+                return None
         except aiohttp.ClientResponseError as e:
             logger.error(
                 f"[get_score_v1] HTTP error during API v1 request: {e.status} {e.message} for URL {e.request_info.url}"

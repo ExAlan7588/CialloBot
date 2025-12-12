@@ -1,14 +1,17 @@
+from __future__ import annotations
+
 import discord
 from discord import app_commands
 from discord.ext import commands
+from loguru import logger
+
 from private import config  # For SUPPORTED_LANGUAGES and DEFAULT_LANGUAGE
 from utils.localization import (
+    _translations,
     get_user_language,
     set_user_language,
-    get_localized_string as lstr,
-    _translations,
 )  # For direct access to translations for language names
-from loguru import logger
+from utils.localization import get_localized_string as lstr
 
 
 def get_language_display_name(lang_code: str, target_lang_code: str) -> str:
@@ -34,7 +37,7 @@ def get_language_display_name(lang_code: str, target_lang_code: str) -> str:
 
 
 class UtilityCog(commands.Cog):
-    def __init__(self, bot: commands.Bot):
+    def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
 
     @app_commands.command(
@@ -44,7 +47,7 @@ class UtilityCog(commands.Cog):
     @app_commands.describe(
         language_code="The language code to set (e.g., en, zh_TW). Leave empty to see current."
     )
-    async def lang(self, interaction: discord.Interaction, language_code: str = None):
+    async def lang(self, interaction: discord.Interaction, language_code: str | None = None) -> None:
         user_id = interaction.user.id
         current_user_lang = get_user_language(user_id)
 
@@ -103,11 +106,11 @@ class UtilityCog(commands.Cog):
         final_code_to_check = ""
         if raw_normalized_code == "en":
             final_code_to_check = "en"
-        elif raw_normalized_code in [
+        elif raw_normalized_code in {
             "zh-tw",
             "zh_tw",
             "zhtw",
-        ]:  # handles variations like "zh-tw", "zh_tw", "zhtw"
+        }:  # handles variations like "zh-tw", "zh_tw", "zhtw"
             final_code_to_check = "zh_TW"
         else:
             # For any other code, use it as is for checking against SUPPORTED_LANGUAGES
@@ -229,6 +232,6 @@ class UtilityCog(commands.Cog):
     #     await interaction.response.send_message(embed=embed, ephemeral=True)
 
 
-async def setup(bot: commands.Bot):
+async def setup(bot: commands.Bot) -> None:
     await bot.add_cog(UtilityCog(bot))
     logger.info("UtilityCog loaded.")

@@ -1,24 +1,29 @@
+from __future__ import annotations
+
+import contextlib
+import datetime
+from typing import TYPE_CHECKING
+
 import discord
 from discord import app_commands
 from discord.ext import commands
-import datetime
+
+# from utils.image_utils import create_score_card # For image generation # REMOVED
+from loguru import logger
+
+from cogs.pp_cog import format_mods_for_display  # CORRECTED IMPORT
 from private import config  # For DEFAULT_OSU_MODE
-from utils.osu_api import OsuAPI
-from utils.localization import (
-    get_localized_string as lstr,
-    get_user_language,
-    _translations,
-)
-import re
 
 # import traceback # No longer needed
 from utils import user_data_manager
-from .user_cog import MODE_EMOJI_STRINGS, MODE_FALLBACK_TEXT  # Import from user_cog
-from cogs.pp_cog import format_mods_for_display  # CORRECTED IMPORT
 from utils.beatmap_utils import get_beatmap_status_display  # IMPORT THE NEW FUNCTION
-# from utils.image_utils import create_score_card # For image generation # REMOVED
+from utils.localization import _translations, get_user_language
+from utils.localization import get_localized_string as lstr
 
-from loguru import logger
+from .user_cog import MODE_EMOJI_STRINGS, MODE_FALLBACK_TEXT  # Import from user_cog
+
+if TYPE_CHECKING:
+    from utils.osu_api import OsuAPI
 
 # osu! 遊戲模式的映射，用於顯示 和 API v2 的模式字串
 OSU_MODES_INT_TO_STRING = {0: "osu", 1: "taiko", 2: "fruits", 3: "mania"}
@@ -69,7 +74,7 @@ class PreviousBestButton(discord.ui.Button):
         style=discord.ButtonStyle.secondary,
         emoji="⬅️",
         **kwargs,
-    ):
+    ) -> None:
         super().__init__(
             label=lstr(user_id_for_l10n, "button_previous_bp", "Previous BP"),
             style=style,
@@ -77,7 +82,7 @@ class PreviousBestButton(discord.ui.Button):
             **kwargs,
         )
 
-    async def callback(self, interaction: discord.Interaction):
+    async def callback(self, interaction: discord.Interaction) -> None:
         view: BestScoreView = self.view
         if view is None or view.current_index == 0:
             await interaction.response.defer()  # Should be disabled, but good practice
@@ -94,7 +99,7 @@ class NextBestButton(discord.ui.Button):
         style=discord.ButtonStyle.secondary,
         emoji="➡️",
         **kwargs,
-    ):
+    ) -> None:
         super().__init__(
             label=lstr(user_id_for_l10n, "button_next_bp", "Next BP"),
             style=style,
@@ -102,7 +107,7 @@ class NextBestButton(discord.ui.Button):
             **kwargs,
         )
 
-    async def callback(self, interaction: discord.Interaction):
+    async def callback(self, interaction: discord.Interaction) -> None:
         view: BestScoreView = self.view
         if view is None or view.current_index >= len(view.scores_list) - 1:
             await interaction.response.defer()  # Should be disabled
@@ -114,7 +119,7 @@ class NextBestButton(discord.ui.Button):
 
 # New Modal for Jump to BP
 class JumpToBPModal(discord.ui.Modal):
-    def __init__(self, view: "BestScoreView", user_id_for_l10n: int):
+    def __init__(self, view: BestScoreView, user_id_for_l10n: int) -> None:
         super().__init__(
             title=lstr(
                 user_id_for_l10n, "modal_jump_to_bp_title", "Jump to Specific BP"
@@ -140,7 +145,7 @@ class JumpToBPModal(discord.ui.Modal):
         )
         self.add_item(self.bp_rank_input)
 
-    async def on_submit(self, interaction: discord.Interaction):
+    async def on_submit(self, interaction: discord.Interaction) -> None:
         input_value = self.bp_rank_input.value
         try:
             rank_to_jump = int(input_value)
@@ -185,7 +190,7 @@ class JumpToBPButton(discord.ui.Button):
         style=discord.ButtonStyle.secondary,
         emoji="\u23f9",
         **kwargs,
-    ):  # Unicode for :stop_button:
+    ) -> None:  # Unicode for :stop_button:
         super().__init__(
             label=lstr(user_id_for_l10n, "button_jump_to_bp", "Jump"),
             style=style,
@@ -193,7 +198,7 @@ class JumpToBPButton(discord.ui.Button):
             **kwargs,
         )
 
-    async def callback(self, interaction: discord.Interaction):
+    async def callback(self, interaction: discord.Interaction) -> None:
         view: BestScoreView = self.view
         if view is None or not view.scores_list:
             await interaction.response.defer()  # Should be disabled if no scores
@@ -213,7 +218,7 @@ class BestScoreView(discord.ui.View):
         mode_int: int,
         user_id_for_l10n: int,
         timeout=300,
-    ):  # Timeout in seconds
+    ) -> None:  # Timeout in seconds
         super().__init__(timeout=timeout)
         self.cog = cog_instance  # OsuCog instance
         self.scores_list = scores
@@ -236,14 +241,14 @@ class BestScoreView(discord.ui.View):
 
         self._update_button_states()
 
-    def _update_button_states(self):
+    def _update_button_states(self) -> None:
         self.prev_button.disabled = self.current_index == 0
         self.next_button.disabled = self.current_index >= len(self.scores_list) - 1
         self.jump_button.disabled = not self.scores_list  # Disable if no scores
         # Update button labels with current user's language if interaction is available
         # For now, labels are set at init. If dynamic l10n for buttons is needed, it's more complex.
 
-    async def update_embed(self, interaction: discord.Interaction):
+    async def update_embed(self, interaction: discord.Interaction) -> None:
         await (
             interaction.response.defer()
         )  # Defer response as embed generation might take time
@@ -263,7 +268,7 @@ class BestScoreView(discord.ui.View):
         self._update_button_states()
         await interaction.edit_original_response(embed=new_embed, view=self)
 
-    async def on_timeout(self):
+    async def on_timeout(self) -> None:
         # Optionally disable buttons on timeout
         for item in self.children:
             if isinstance(item, discord.ui.Button):
@@ -284,7 +289,7 @@ class PreviousRecentButton(discord.ui.Button):
         style=discord.ButtonStyle.secondary,
         emoji="⬅️",
         **kwargs,
-    ):
+    ) -> None:
         super().__init__(
             label=lstr(user_id_for_l10n, "button_previous_recent", "Previous Play"),
             style=style,
@@ -292,7 +297,7 @@ class PreviousRecentButton(discord.ui.Button):
             **kwargs,
         )
 
-    async def callback(self, interaction: discord.Interaction):
+    async def callback(self, interaction: discord.Interaction) -> None:
         view: RecentScoreView = self.view
         if view is None or view.current_index == 0:
             await interaction.response.defer()
@@ -308,7 +313,7 @@ class NextRecentButton(discord.ui.Button):
         style=discord.ButtonStyle.secondary,
         emoji="➡️",
         **kwargs,
-    ):
+    ) -> None:
         super().__init__(
             label=lstr(user_id_for_l10n, "button_next_recent", "Next Play"),
             style=style,
@@ -316,7 +321,7 @@ class NextRecentButton(discord.ui.Button):
             **kwargs,
         )
 
-    async def callback(self, interaction: discord.Interaction):
+    async def callback(self, interaction: discord.Interaction) -> None:
         view: RecentScoreView = self.view
         if view is None or view.current_index >= len(view.scores_list) - 1:
             await interaction.response.defer()
@@ -335,7 +340,7 @@ class RecentScoreView(discord.ui.View):
         mode_int: int,
         user_id_for_l10n: int,
         timeout=300,
-    ):
+    ) -> None:
         super().__init__(timeout=timeout)
         self.cog = cog_instance
         self.scores_list = scores
@@ -353,11 +358,11 @@ class RecentScoreView(discord.ui.View):
 
         self._update_button_states()
 
-    def _update_button_states(self):
+    def _update_button_states(self) -> None:
         self.prev_button.disabled = self.current_index == 0
         self.next_button.disabled = self.current_index >= len(self.scores_list) - 1
 
-    async def update_embed(self, interaction: discord.Interaction):
+    async def update_embed(self, interaction: discord.Interaction) -> None:
         await interaction.response.defer()
         current_score = self.scores_list[self.current_index]
         # Use the same _create_score_embed, rank_in_top will be None for recent plays
@@ -371,19 +376,17 @@ class RecentScoreView(discord.ui.View):
         self._update_button_states()
         await interaction.edit_original_response(embed=new_embed, view=self)
 
-    async def on_timeout(self):
+    async def on_timeout(self) -> None:
         for item in self.children:
             if isinstance(item, discord.ui.Button):
                 item.disabled = True
         if hasattr(self, "message") and self.message:
-            try:
+            with contextlib.suppress(discord.NotFound):
                 await self.message.edit(view=self)
-            except discord.NotFound:
-                pass
 
 
 class OsuCog(commands.Cog):
-    def __init__(self, bot: commands.Bot):
+    def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
         self.osu_api: OsuAPI = bot.osu_api_client
 
@@ -402,19 +405,16 @@ class OsuCog(commands.Cog):
             attributes.append(f"CS: {cs:.1f}")
             if ar is not None:
                 attributes.append(f"AR: {ar:.1f}")
-            attributes.append(f"OD: {od:.1f}")
-            attributes.append(f"HP: {hp:.1f}")
+            attributes.extend((f"OD: {od:.1f}", f"HP: {hp:.1f}"))
         elif mode_int == 1:  # Taiko
-            attributes.append(f"OD: {od:.1f}")
-            attributes.append(f"HP: {hp:.1f}")
+            attributes.extend((f"OD: {od:.1f}", f"HP: {hp:.1f}"))
         elif mode_int == 2:  # Catch
             attributes.append(f"CS: {cs:.1f}")
             if ar is not None:
                 attributes.append(f"AR: {ar:.1f}")
             attributes.append(f"HP: {hp:.1f}")
         elif mode_int == 3:  # Mania
-            attributes.append(f"OD: {od:.1f}")
-            attributes.append(f"HP: {hp:.1f}")
+            attributes.extend((f"OD: {od:.1f}", f"HP: {hp:.1f}"))
 
         field_name_key = "beatmap_attributes_label"
         field_value_parts = [mode_name_for_field]
@@ -437,11 +437,10 @@ class OsuCog(commands.Cog):
     def get_na_value(self, user_id_for_l10n: int) -> str:
         # Determine language for N/A value
         current_lang = get_user_language(str(user_id_for_l10n))
-        na_translation = _translations.get(current_lang, {}).get(
+        return _translations.get(current_lang, {}).get(
             "value_not_available", "N/A"
         )
         # No need for complex checks if we fetch directly and have a hardcoded fallback
-        return na_translation
 
     def _get_lstr_with_na_fallback(self, user_id_for_l10n: int, key: str, *args) -> str:
         raw_translation = lstr(user_id_for_l10n, key, *args)
@@ -495,30 +494,27 @@ class OsuCog(commands.Cog):
                 f"[OSU_COG /{command_name}] User provided mode: {requested_mode_int}"
             )
             return requested_mode_int
-        else:
-            user_api_default_mode_str = player_data.get("playmode")
-            if user_api_default_mode_str:
-                REVERSE_OSU_MODES_INT_TO_STRING = {
-                    v: k for k, v in OSU_MODES_INT_TO_STRING.items()
-                }  # Stays local for now
-                if user_api_default_mode_str in REVERSE_OSU_MODES_INT_TO_STRING:
-                    determined_mode_int = REVERSE_OSU_MODES_INT_TO_STRING[
-                        user_api_default_mode_str
-                    ]
-                    logger.debug(
-                        f"[OSU_COG /{command_name}] Using user API default mode: {user_api_default_mode_str} -> {determined_mode_int}"
-                    )
-                    return determined_mode_int
-                else:
-                    logger.debug(
-                        f"[OSU_COG /{command_name}] User API default mode '{user_api_default_mode_str}' not recognized, using config default: {config.DEFAULT_OSU_MODE}"
-                    )
-                    return config.DEFAULT_OSU_MODE
-            else:
+        user_api_default_mode_str = player_data.get("playmode")
+        if user_api_default_mode_str:
+            REVERSE_OSU_MODES_INT_TO_STRING = {
+                v: k for k, v in OSU_MODES_INT_TO_STRING.items()
+            }  # Stays local for now
+            if user_api_default_mode_str in REVERSE_OSU_MODES_INT_TO_STRING:
+                determined_mode_int = REVERSE_OSU_MODES_INT_TO_STRING[
+                    user_api_default_mode_str
+                ]
                 logger.debug(
-                    f"[OSU_COG /{command_name}] No user API default mode, using config default: {config.DEFAULT_OSU_MODE}"
+                    f"[OSU_COG /{command_name}] Using user API default mode: {user_api_default_mode_str} -> {determined_mode_int}"
                 )
-                return config.DEFAULT_OSU_MODE
+                return determined_mode_int
+            logger.debug(
+                f"[OSU_COG /{command_name}] User API default mode '{user_api_default_mode_str}' not recognized, using config default: {config.DEFAULT_OSU_MODE}"
+            )
+            return config.DEFAULT_OSU_MODE
+        logger.debug(
+            f"[OSU_COG /{command_name}] No user API default mode, using config default: {config.DEFAULT_OSU_MODE}"
+        )
+        return config.DEFAULT_OSU_MODE
 
     async def _get_user_data(self, user_identifier: str, user_id_for_l10n: int):
         logger.debug(
@@ -533,7 +529,7 @@ class OsuCog(commands.Cog):
                 f"[OSU_COG _get_user_data] User not found. Returning error: {error_message}"
             )
             return None, error_message
-        logger.debug(f"[OSU_COG _get_user_data] User found. Returning data.")
+        logger.debug("[OSU_COG _get_user_data] User found. Returning data.")
         return user_data, None
 
     @app_commands.command(
@@ -555,10 +551,10 @@ class OsuCog(commands.Cog):
     async def recent(
         self,
         interaction: discord.Interaction,
-        osu_user: str = None,
-        osu_id: int = None,
-        mode: int = None,
-    ):
+        osu_user: str | None = None,
+        osu_id: int | None = None,
+        mode: int | None = None,
+    ) -> None:
         try:
             await interaction.response.defer()
             logger.debug(
@@ -729,10 +725,10 @@ class OsuCog(commands.Cog):
     async def best(
         self,
         interaction: discord.Interaction,
-        osu_user: str = None,
-        mode: int = None,
-        bp_rank: int = None,
-    ):
+        osu_user: str | None = None,
+        mode: int | None = None,
+        bp_rank: int | None = None,
+    ) -> None:
         try:
             await interaction.response.defer()
             user_id_for_l10n = interaction.user.id
@@ -770,7 +766,7 @@ class OsuCog(commands.Cog):
             actual_mode_str = OSU_MODES_INT_TO_STRING.get(actual_mode_int)
             if actual_mode_str is None:  # Should not happen with choices
                 await interaction.followup.send(
-                    f"Internal error: Invalid game mode selected.", ephemeral=True
+                    "Internal error: Invalid game mode selected.", ephemeral=True
                 )
                 return
 
@@ -862,7 +858,7 @@ class OsuCog(commands.Cog):
         player_avatar_url: str,
         mode_int: int,
         user_id_for_l10n: int,
-        rank_in_top: int = None,
+        rank_in_top: int | None = None,
     ) -> discord.Embed:
         # This function will create the embed for a single score (recent or best)
         # It needs to be adapted from the existing logic in /recent and /best
@@ -879,10 +875,10 @@ class OsuCog(commands.Cog):
         beatmap_id = beatmap_data.get("id")
         beatmap_url = beatmap_data.get("url", f"https://osu.ppy.sh/b/{beatmap_id}")
 
-        creator_name = beatmapset_data.get(
+        beatmapset_data.get(
             "creator", lstr(user_id_for_l10n, "value_not_available", "N/A")
         )
-        creator_id = beatmapset_data.get("user_id")  # For linking to creator profile
+        beatmapset_data.get("user_id")  # For linking to creator profile
 
         beatmap_artist = beatmapset_data.get(
             "artist", lstr(user_id_for_l10n, "value_not_available", "N/A")
@@ -1061,7 +1057,7 @@ class OsuCog(commands.Cog):
         )
         embed.add_field(
             name=lstr(user_id_for_l10n, "mods_label", "Mods"),
-            value=mods_str if mods_str else self.get_na_value(user_id_for_l10n),
+            value=mods_str or self.get_na_value(user_id_for_l10n),
             inline=True,
         )
         embed.add_field(
@@ -1083,7 +1079,7 @@ class OsuCog(commands.Cog):
         status_display_string_recent = get_beatmap_status_display(
             raw_status_recent,
             user_id_for_l10n,
-            lambda uid, key, fallback: lstr(uid, key, fallback),
+            lstr,
         )
         # Use the same l10n key as for /pp command for the field name, or a more generic one if preferred.
         # For now, let's use a generic "Status" key if pp_embed_beatmap_status is too specific, or reuse.
@@ -1157,7 +1153,7 @@ class OsuCog(commands.Cog):
         footer_date_str = None
         if created_at_str:
             dt_object = datetime.datetime.fromisoformat(
-                created_at_str.replace("Z", "+00:00")
+                created_at_str
             )
             # 不要設定 embed.timestamp，只組合 footer_date_str
             if lang_code == "zh_TW":
@@ -1192,7 +1188,7 @@ class OsuCog(commands.Cog):
         return embed
 
 
-async def setup(bot: commands.Bot):
+async def setup(bot: commands.Bot) -> None:
     # Add choices for mode parameter dynamically based on OSU_MODES and localization
     # This needs to be done carefully as app_commands.Choice needs to be defined at command definition time or transformed.
     # For now, I'll keep it simple and not dynamically localize choices. Users will see 0,1,2,3.

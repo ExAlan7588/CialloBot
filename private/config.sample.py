@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 DISCORD_BOT_TOKEN = "YOUR_DISCORD_BOT_TOKEN_HERE"
 
 DEFAULT_LANGUAGE = "en"

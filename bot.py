@@ -6,8 +6,9 @@
 from __future__ import annotations
 
 import asyncio
+import pathlib
 import sys
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 import discord
 from discord.ext import commands
@@ -16,9 +17,6 @@ from loguru import logger
 from private import config
 from utils.osu_api import OsuAPI
 from utils.startup import setup_logging, wrap_task_factory
-
-if TYPE_CHECKING:
-    pass
 
 
 class OsuBot(commands.Bot):
@@ -84,8 +82,8 @@ class OsuBot(commands.Bot):
 
         logger.info("== 開始載入所有 Cog 模組 ==")
 
-        if not os.path.exists("./cogs"):
-            os.makedirs("./cogs")
+        if not pathlib.Path("./cogs").exists():
+            pathlib.Path("./cogs").mkdir(parents=True)
             logger.warning("⚠️ cogs 資料夾不存在，已自動創建。")
             return
 

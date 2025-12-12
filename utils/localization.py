@@ -1,21 +1,25 @@
+from __future__ import annotations
+
 import json
 import os
-from private import config
+import pathlib
 import threading  # For thread-safe file writing
-from typing import Union, Dict, Any
+
 from loguru import logger
 
+from private import config
+
 # 語言文件緩存
-_translations: Dict[str, Dict[str, str]] = {}
-_user_lang_preferences: Dict[str, str] = {}  # user_id (str): lang_code
+_translations: dict[str, dict[str, str]] = {}
+_user_lang_preferences: dict[str, str] = {}  # user_id (str): lang_code
 USER_PREFS_FILE = "private/user_lang_prefs.json"
 _prefs_lock = threading.Lock()  # Lock for writing to the preferences file
 
 
-def _load_user_preferences():
+def _load_user_preferences() -> None:
     """從 JSON 文件加載用戶語言偏好到內存"""
     global _user_lang_preferences
-    if not os.path.exists(USER_PREFS_FILE):
+    if not pathlib.Path(USER_PREFS_FILE).exists():
         logger.info(
             f"'{USER_PREFS_FILE}' not found. Starting with empty user preferences."
         )
@@ -25,7 +29,7 @@ def _load_user_preferences():
         with (
             _prefs_lock
         ):  # Ensure thread-safe reading, though less critical than writing
-            with open(USER_PREFS_FILE, "r", encoding="utf-8") as f:
+            with pathlib.Path(USER_PREFS_FILE).open(encoding="utf-8") as f:
                 content = f.read()
                 if not content:  # File is empty
                     _user_lang_preferences = {}
@@ -47,7 +51,7 @@ def _load_user_preferences():
         _user_lang_preferences = {}
 
 
-def _save_user_preferences():
+def _save_user_preferences() -> None:
     """將內存中的用戶語言偏好保存到 JSON 文件"""
     try:
         with _prefs_lock:  # Thread-safe writing
@@ -57,7 +61,7 @@ def _save_user_preferences():
 
             logger.debug(f"[L10N] Attempting to save: {preferences_to_save}")
 
-            with open(USER_PREFS_FILE, "w", encoding="utf-8") as f:
+            with pathlib.Path(USER_PREFS_FILE).open("w", encoding="utf-8") as f:
                 json.dump(preferences_to_save, f, ensure_ascii=False, indent=4)
 
             logger.debug(
@@ -67,12 +71,12 @@ def _save_user_preferences():
         logger.error(f"[L10N] Failed to save to '{USER_PREFS_FILE}': {e}")
 
 
-def load_language(lang_code: str):
+def load_language(lang_code: str) -> None:
     """加載指定語言的翻譯文件到緩存"""
     if lang_code not in _translations:
         try:
             file_path = os.path.join("locales", f"{lang_code}.json")
-            with open(file_path, "r", encoding="utf-8") as f:
+            with pathlib.Path(file_path).open(encoding="utf-8") as f:
                 _translations[lang_code] = json.load(f)
                 logger.debug(
                     f"[L10N] Successfully loaded language file: {lang_code}.json into _translations['{lang_code}']"
@@ -97,7 +101,7 @@ def load_language(lang_code: str):
         )
 
 
-def get_user_language(user_id: Union[int, str]) -> str:
+def get_user_language(user_id: int | str) -> str:
     """獲取用戶的語言偏好，如果未設置則返回預設語言"""
     # Ensure all keys in the global preferences are strings before attempting to get.
     # This is a safeguard against potential pollution from other parts of the code.
@@ -127,7 +131,7 @@ def get_user_language(user_id: Union[int, str]) -> str:
     return lang_to_return
 
 
-def set_user_language(user_id: Union[int, str], lang_code: str) -> bool:
+def set_user_language(user_id: int | str, lang_code: str) -> bool:
     """設置用戶的語言偏好"""
     if lang_code not in config.SUPPORTED_LANGUAGES:
         # 也可以在這裡嘗試加載 lang_code，如果 locales 裡有對應文件但未在 SUPPORTED_LANGUAGES 中聲明
@@ -144,7 +148,7 @@ def set_user_language(user_id: Union[int, str], lang_code: str) -> bool:
 
 
 def get_localized_string(
-    user_id_or_lang_code: Union[int, str, None],
+    user_id_or_lang_code: int | str | None,
     key: str,
     default_fallback: str = "",
     *args,
@@ -181,9 +185,7 @@ def get_localized_string(
             )
             # Cannot format if translations are missing. Return unformatted key or fallback.
             return (
-                default_fallback
-                if default_fallback
-                else f"<missing_translations_for_key: {key}>"
+                default_fallback or f"<missing_translations_for_key: {key}>"
             )
 
     localized_string = _translations.get(lang_code, {}).get(key)

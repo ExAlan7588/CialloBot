@@ -1,15 +1,22 @@
+from __future__ import annotations
+
+import pathlib
+import re
+from typing import TYPE_CHECKING
+
 import discord
 from discord import app_commands
 from discord.ext import commands
-import re
-from utils.osu_api import OsuAPI
+from loguru import logger
+
+from utils import beatmap_utils  # Import the new beatmap utils
+from utils.beatmap_utils import get_beatmap_status_display  # IMPORT THE NEW FUNCTION
 from utils.localization import (
     get_localized_string as lstr,
 )  # Assuming you might use localization later
-from utils import beatmap_utils  # Import the new beatmap utils
-import os  # For file operations if any are directly needed here (likely not)
-from utils.beatmap_utils import get_beatmap_status_display  # IMPORT THE NEW FUNCTION
-from loguru import logger
+
+if TYPE_CHECKING:
+    from utils.osu_api import OsuAPI
 
 
 # --- Helper function to format mods for display ---
@@ -21,7 +28,7 @@ def format_mods_for_display(mod_list: list[str]) -> str:
 
 # --- Mod Select UI Elements ---
 class ModSelect(discord.ui.Select):
-    def __init__(self, parent_view, available_mods):
+    def __init__(self, parent_view, available_mods) -> None:
         self.parent_view = parent_view
         options = [
             discord.SelectOption(label=mod.upper(), value=mod) for mod in available_mods
@@ -52,7 +59,7 @@ class ModSelect(discord.ui.Select):
                 options=options,
             )
 
-    async def callback(self, interaction: discord.Interaction):
+    async def callback(self, interaction: discord.Interaction) -> None:
         await self.parent_view.update_embed_with_mods(interaction, self.values)
 
 
@@ -67,7 +74,7 @@ class ModSelectView(discord.ui.View):
         user_id_for_l10n: str,
         all_maps_in_set: list | None = None,
         current_difficulty_index: int | None = None,
-    ):
+    ) -> None:
         super().__init__(timeout=300)  # 5 minutes
         self.cog = cog_instance
         self.osu_api: OsuAPI = cog_instance.osu_api
@@ -110,7 +117,7 @@ class ModSelectView(discord.ui.View):
 
             self._update_pagination_buttons_state()  # Initial state update
 
-    def _update_pagination_buttons_state(self):
+    def _update_pagination_buttons_state(self) -> None:
         if not self.all_maps_in_set or self.current_difficulty_index is None:
             if hasattr(self, "prev_difficulty_button"):
                 self.prev_difficulty_button.disabled = True
@@ -128,7 +135,7 @@ class ModSelectView(discord.ui.View):
         else:
             self.next_difficulty_button.disabled = False
 
-    async def prev_difficulty_callback(self, interaction: discord.Interaction):
+    async def prev_difficulty_callback(self, interaction: discord.Interaction) -> None:
         if (
             self.all_maps_in_set
             and self.current_difficulty_index is not None
@@ -137,7 +144,7 @@ class ModSelectView(discord.ui.View):
             self.current_difficulty_index -= 1
             await self._update_difficulty(interaction)
 
-    async def next_difficulty_callback(self, interaction: discord.Interaction):
+    async def next_difficulty_callback(self, interaction: discord.Interaction) -> None:
         if (
             self.all_maps_in_set
             and self.current_difficulty_index is not None
@@ -146,7 +153,7 @@ class ModSelectView(discord.ui.View):
             self.current_difficulty_index += 1
             await self._update_difficulty(interaction)
 
-    async def _update_difficulty(self, interaction: discord.Interaction):
+    async def _update_difficulty(self, interaction: discord.Interaction) -> None:
         # This method will be called by prev/next callbacks
         await interaction.response.defer()  # Defer interaction
 
@@ -216,7 +223,7 @@ class ModSelectView(discord.ui.View):
 
     async def update_embed_with_mods(
         self, interaction: discord.Interaction, selected_mods: list[str]
-    ):
+    ) -> None:
         await interaction.response.defer()  # Defer if calculation takes time
 
         # Handle "No Mods" selection
@@ -265,7 +272,7 @@ class ModSelectView(discord.ui.View):
 
 
 class PpCog(commands.Cog):
-    def __init__(self, bot: commands.Bot):
+    def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
         self.osu_api: OsuAPI = bot.osu_api_client
 
@@ -276,7 +283,7 @@ class PpCog(commands.Cog):
         beatmapset_data: dict,
         beatmap_attributes_response: dict,
         user_id_for_l10n: str,
-        selected_mods_list: list[str] = None,
+        selected_mods_list: list[str] | None = None,
     ):
         if selected_mods_list is None:
             selected_mods_list = []
@@ -322,7 +329,7 @@ class PpCog(commands.Cog):
         status_display_string = get_beatmap_status_display(
             raw_status,
             user_id_for_l10n,
-            lambda uid, key, fallback: lstr(uid, key, fallback),
+            lstr,
         )
 
         stars_raw = attributes_data.get("star_rating")
@@ -396,7 +403,7 @@ class PpCog(commands.Cog):
                         )
                         rosu_pp_error_message_key = "error_rosupp_unexpected"
                     finally:
-                        if osu_file_path and os.path.exists(osu_file_path):
+                        if osu_file_path and pathlib.Path(osu_file_path).exists():
                             beatmap_utils.delete_osu_file(osu_file_path)
             else:
                 logger.warning(
@@ -550,7 +557,7 @@ class PpCog(commands.Cog):
     @app_commands.describe(
         url="The URL of the osu! beatmap (either beatmapset or specific difficulty)."
     )
-    async def pp(self, interaction: discord.Interaction, url: str):
+    async def pp(self, interaction: discord.Interaction, url: str) -> None:
         await interaction.response.defer()
         user_id_for_l10n = interaction.user.id
 
@@ -786,7 +793,7 @@ class PpCog(commands.Cog):
             )
 
 
-async def setup(bot: commands.Bot):
+async def setup(bot: commands.Bot) -> None:
     # Ensure the utils.beatmap_utils can be loaded correctly
     # And that rosu-pp-py is installed if calculate_pp_with_rosu is to be used.
     # The dynamic import in beatmap_utils will print an error if not found.

@@ -1,28 +1,31 @@
+from __future__ import annotations
+
+import json
+import pathlib
+import random
+
 import discord
 from discord import app_commands
 from discord.ext import commands
-import json
-import random
-import os
+from loguru import logger
+
 from utils.localization import get_user_language  # Import for language preference
 from utils.message_tracker import get_message_tracker  # Import for message tracking
-from private import config  # Import for DEFAULT_LANGUAGE
-from loguru import logger
 
 COPASTA_FILE = "copypastas.json"
 DEFAULT_LANG_KEY = "EN"  # Define a default language key for copypastas
 
 
 class CopypastaCog(commands.Cog):
-    def __init__(self, bot: commands.Bot):
+    def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
         self.copypastas = {}  # This will store { "EN": {"key": "val"}, "zh_TW": ... }
         self.load_copypastas()
 
-    def load_copypastas(self):
+    def load_copypastas(self) -> None:
         try:
-            if os.path.exists(COPASTA_FILE):
-                with open(COPASTA_FILE, "r", encoding="utf-8") as f:
+            if pathlib.Path(COPASTA_FILE).exists():
+                with pathlib.Path(COPASTA_FILE).open(encoding="utf-8") as f:
                     loaded_data = json.load(f)
                 # Basic validation for the new structure
                 if isinstance(loaded_data, dict) and all(
@@ -59,7 +62,7 @@ class CopypastaCog(commands.Cog):
         name="copypasta",
         description="Sends a random copypasta based on your language preference.",
     )
-    async def send_copypasta(self, interaction: discord.Interaction):
+    async def send_copypasta(self, interaction: discord.Interaction) -> None:
         if not self.copypastas:
             self.load_copypastas()  # Try reloading
             if not self.copypastas:
@@ -83,7 +86,7 @@ class CopypastaCog(commands.Cog):
         pastas_to_choose_from = []
 
         # 1. Try preferred language
-        if preferred_lang in self.copypastas and self.copypastas[preferred_lang]:
+        if self.copypastas.get(preferred_lang):
             pastas_to_choose_from = list(self.copypastas[preferred_lang].values())
             logger.debug(
                 f"[CopypastaCog] User {user_id} prefers {preferred_lang}. Found {len(pastas_to_choose_from)} pastas."
@@ -92,8 +95,7 @@ class CopypastaCog(commands.Cog):
         # 2. If preferred language had no pastas (or lang key didn't exist) AND it's not the copypasta default, try copypasta default
         if not pastas_to_choose_from and preferred_lang != copypasta_default_lang_key:
             if (
-                copypasta_default_lang_key in self.copypastas
-                and self.copypastas[copypasta_default_lang_key]
+                self.copypastas.get(copypasta_default_lang_key)
             ):
                 pastas_to_choose_from = list(
                     self.copypastas[copypasta_default_lang_key].values()
@@ -147,7 +149,7 @@ class CopypastaCog(commands.Cog):
         )
 
 
-async def setup(bot: commands.Bot):
+async def setup(bot: commands.Bot) -> None:
     # Ensure LocalizationManager is available if it's set up as part of the bot
     # No explicit action needed here if utils.localization initializes itself and get_user_language is a global func.
     # If it were `bot.localization_manager.get_user_language`, we'd need to ensure bot.localization_manager is set before cog init.

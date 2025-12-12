@@ -61,10 +61,7 @@ class DeleteMessageView(discord.ui.View):
             return True
 
         # 檢查是否有管理員權限
-        if member.guild_permissions.administrator:
-            return True
-
-        return False
+        return bool(member.guild_permissions.administrator)
 
     @discord.ui.button(label="刪除", style=discord.ButtonStyle.danger, emoji="🗑️")
     async def delete_button(

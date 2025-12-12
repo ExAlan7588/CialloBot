@@ -1,8 +1,15 @@
+from __future__ import annotations
+
+import builtins
+import contextlib
+
 import discord
 from discord import app_commands
 from discord.ext import commands
-from utils.localization import get_localized_string as lstr, get_user_language
 from loguru import logger
+
+from utils.localization import get_localized_string as lstr
+from utils.localization import get_user_language
 
 # Define the desired order of commands
 DESIRED_COMMAND_ORDER = [
@@ -20,14 +27,14 @@ DESIRED_COMMAND_ORDER = [
 
 
 class HelpCog(commands.Cog):
-    def __init__(self, bot: commands.Bot):
+    def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
 
     @app_commands.command(
         name="help",
         description="Displays all available slash commands and their descriptions.",
     )
-    async def slash_help(self, interaction: discord.Interaction):
+    async def slash_help(self, interaction: discord.Interaction) -> None:
         logger.debug(
             f"[HelpCog] /help command invoked by {interaction.user.name} (ID: {interaction.user.id})"
         )
@@ -50,13 +57,11 @@ class HelpCog(commands.Cog):
             await interaction.response.defer(ephemeral=True)
         except Exception as e_defer:
             logger.error(f"[HelpCog] Failed to defer interaction for /help: {e_defer}")
-            try:
+            with contextlib.suppress(builtins.BaseException):
                 await interaction.followup.send(
                     "Error processing help command (defer failed). Please try again.",
                     ephemeral=True,
                 )
-            except:
-                pass
             return
 
         embed_title = localized_title_test
@@ -135,6 +140,6 @@ class HelpCog(commands.Cog):
                 pass
 
 
-async def setup(bot: commands.Bot):
+async def setup(bot: commands.Bot) -> None:
     await bot.add_cog(HelpCog(bot))
     logger.info("HelpCog loaded.")

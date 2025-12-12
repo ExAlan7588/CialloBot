@@ -1,7 +1,10 @@
-import json
+from __future__ import annotations
+
 import asyncio
+import json
+import pathlib
+
 import aiofiles
-import os
 from loguru import logger
 
 DATA_FILE = "private/user_bindings.json"
@@ -11,10 +14,10 @@ DATA_LOCK = asyncio.Lock()
 async def load_user_bindings():
     """異步加載使用者綁定數據。如果文件不存在，返回空字典。"""
     async with DATA_LOCK:
-        if not os.path.exists(DATA_FILE):
+        if not pathlib.Path(DATA_FILE).exists():
             return {}
         try:
-            async with aiofiles.open(DATA_FILE, mode="r", encoding="utf-8") as f:
+            async with aiofiles.open(DATA_FILE, encoding="utf-8") as f:
                 content = await f.read()
                 if not content:  # 文件是空的
                     return {}
@@ -29,7 +32,7 @@ async def load_user_bindings():
             return {}
 
 
-async def save_user_bindings(data):
+async def save_user_bindings(data) -> None:
     """異步保存使用者綁定數據。"""
     async with DATA_LOCK:
         try:
@@ -39,7 +42,7 @@ async def save_user_bindings(data):
             logger.error(f"Error saving user bindings: {e}")
 
 
-async def set_user_binding(discord_user_id: int, osu_username_or_id: str):
+async def set_user_binding(discord_user_id: int, osu_username_or_id: str) -> bool:
     """為指定的 Discord 用戶設置 osu! 綁定。"""
     bindings = await load_user_bindings()
     bindings[str(discord_user_id)] = osu_username_or_id
@@ -53,7 +56,7 @@ async def get_user_binding(discord_user_id: int):
     return bindings.get(str(discord_user_id))
 
 
-async def remove_user_binding(discord_user_id: int):
+async def remove_user_binding(discord_user_id: int) -> bool:
     """移除指定 Discord 用戶的 osu! 綁定。"""
     bindings = await load_user_bindings()
     if str(discord_user_id) in bindings:

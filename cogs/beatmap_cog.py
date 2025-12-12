@@ -1,21 +1,26 @@
+from __future__ import annotations
+
+import datetime  # 用於轉換時長
+import re  # 用於正則表達式解析 URL
+from typing import TYPE_CHECKING
+
 import discord
 from discord.ext import commands
-import re  # 用於正則表達式解析 URL
-import datetime  # 用於轉換時長
-from utils.osu_api import OsuAPI
-from utils.localization import get_localized_string as lstr
-from private import config  # For DEFAULT_OSU_MODE
+from loguru import logger
 
 # from utils.osu_api_utils import get_ruleset_id_from_string, RateLimiter, get_user_id_for_l10n_from_message # REMOVED
 from utils.beatmap_utils import get_beatmap_status_display  # IMPORT THE NEW FUNCTION
-from loguru import logger
+from utils.localization import get_localized_string as lstr
+
+if TYPE_CHECKING:
+    from utils.osu_api import OsuAPI
 
 # osu! 遊戲模式的映射 (與 osu_cog.py 中的類似，但這裡也需要用到)
 OSU_MODES_DISPLAY = {0: "mode_std", 1: "mode_taiko", 2: "mode_ctb", 3: "mode_mania"}
 
 
 class BeatmapCog(commands.Cog):
-    def __init__(self, bot: commands.Bot):
+    def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
         self.osu_api: OsuAPI = bot.osu_api_client
         # self.rate_limiter = RateLimiter(calls=20, period=60) # Example limits # COMMENTED OUT
@@ -42,7 +47,7 @@ class BeatmapCog(commands.Cog):
             return "N/A"
 
     @commands.Cog.listener()
-    async def on_message(self, message: discord.Message):
+    async def on_message(self, message: discord.Message) -> None:
         # 忽略機器人自身的消息
         if message.author.bot:
             return
@@ -116,7 +121,7 @@ class BeatmapCog(commands.Cog):
         # num_diffs_in_set was len(beatmap_data_list) before. It's used for footer.
         # If beatmap_id_str was given, beatmap_data_list has at most 1 item.
         # If beatmapset_id_str was given, beatmap_data_list has all diffs.
-        num_diffs_in_set = len(beatmap_data_list)
+        len(beatmap_data_list)
 
         if beatmap_id_str:  # If URL directly pointed to a specific difficulty
             if (
@@ -139,19 +144,18 @@ class BeatmapCog(commands.Cog):
             # This is probably not right if a specific ID was requested and not found.
             # Let's rely on the "if not target_beatmap:" check below.
 
-        else:  # If it was a beatmapset URL (beatmap_id_str was None)
-            if beatmap_data_list:  # Ensure list is not empty
-                # Try to find osu!standard (ruleset_id 0)
-                for bm in beatmap_data_list:
-                    if (
-                        bm.get("ruleset_id") == 0
-                    ):  # API v2 uses 'ruleset_id' for mode integer
-                        target_beatmap = bm
-                        break
+        elif beatmap_data_list:  # Ensure list is not empty
+            # Try to find osu!standard (ruleset_id 0)
+            for bm in beatmap_data_list:
                 if (
-                    not target_beatmap
-                ):  # If no osu!standard, take the first one in the list
-                    target_beatmap = beatmap_data_list[0]
+                    bm.get("ruleset_id") == 0
+                ):  # API v2 uses 'ruleset_id' for mode integer
+                    target_beatmap = bm
+                    break
+            if (
+                not target_beatmap
+            ):  # If no osu!standard, take the first one in the list
+                target_beatmap = beatmap_data_list[0]
             # If beatmap_data_list was empty, target_beatmap remains None
 
         if not target_beatmap:
@@ -205,7 +209,7 @@ class BeatmapCog(commands.Cog):
         status_display_string_on_message = get_beatmap_status_display(
             raw_status_on_message,
             user_id_for_l10n,
-            lambda uid, key, fallback: lstr(uid, key, fallback),
+            lstr,
         )
 
         stars = float(target_beatmap.get("difficulty_rating", 0.0))
@@ -331,6 +335,6 @@ class BeatmapCog(commands.Cog):
         await message.reply(embed=embed, mention_author=False)
 
 
-async def setup(bot: commands.Bot):
+async def setup(bot: commands.Bot) -> None:
     await bot.add_cog(BeatmapCog(bot))
     logger.info("BeatmapCog loaded.")

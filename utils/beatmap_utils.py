@@ -1,10 +1,13 @@
-import asyncio
-import aiohttp
-import aiofiles
+from __future__ import annotations
+
 import os
-import re
+import pathlib
 import time
+
+import aiofiles
+import aiohttp
 from loguru import logger
+
 # Placeholder for rosu_pp, assuming it's installed
 # import rosu_pp_py as rosu_pp # Or the correct import name
 
@@ -16,19 +19,13 @@ TEMP_OSU_DIR = "./temp"
 class BeatmapProcessingError(Exception):
     """Base class for errors during beatmap processing."""
 
-    pass
-
 
 class BeatmapDownloadError(BeatmapProcessingError):
     """Raised when a .osu file download fails."""
 
-    pass
-
 
 class RosuPpCalculationError(BeatmapProcessingError):
     """Raised when rosu-pp calculation fails."""
-
-    pass
 
 
 # Mod bitmasks - Reference: https://github.com/ppy/osu-api/wiki/Display-Mods
@@ -160,7 +157,7 @@ async def download_osu_file(
     Raises BeatmapDownloadError if the download failed or temp directory doesn't exist.
     The file is saved in the TEMP_OSU_DIR.
     """
-    if not os.path.exists(TEMP_OSU_DIR):
+    if not pathlib.Path(TEMP_OSU_DIR).exists():
         err_msg = (
             f"Temporary directory {TEMP_OSU_DIR} does not exist. Please create it."
         )
@@ -179,18 +176,17 @@ async def download_osu_file(
                     await f.write(await response.read())
                 logger.debug(f"[BeatmapUtils] Successfully downloaded {file_path}")
                 return file_path
-            else:
-                error_detail = f"HTTP {response.status}"
-                try:  # Try to get more error details from response
-                    text_response = await response.text()
-                    error_detail += (
-                        f": {text_response[:200]}"  # Limit length of error message
-                    )
-                except Exception:
-                    pass  # Ignore if cannot get text
-                err_msg = f"Error downloading .osu file: {error_detail} for URL {url}"
-                logger.error(f"[BeatmapUtils] {err_msg}")
-                raise BeatmapDownloadError(err_msg)
+            error_detail = f"HTTP {response.status}"
+            try:  # Try to get more error details from response
+                text_response = await response.text()
+                error_detail += (
+                    f": {text_response[:200]}"  # Limit length of error message
+                )
+            except Exception:
+                pass  # Ignore if cannot get text
+            err_msg = f"Error downloading .osu file: {error_detail} for URL {url}"
+            logger.error(f"[BeatmapUtils] {err_msg}")
+            raise BeatmapDownloadError(err_msg)
     except aiohttp.ClientError as e:
         err_msg = f"ClientError during .osu download for {url}: {e}"
         logger.error(f"[BeatmapUtils] {err_msg}")
@@ -207,7 +203,7 @@ def parse_osu_file_metadata(osu_file_path: str) -> dict:
     """Parses an .osu file to extract Title, Artist, and Version from the [Metadata] section."""
     metadata = {"title": None, "artist": None, "version": None}
     try:
-        with open(osu_file_path, "r", encoding="utf-8") as f:
+        with pathlib.Path(osu_file_path).open("r", encoding="utf-8") as f:
             in_metadata_section = False
             for line in f:
                 line = line.strip()
@@ -277,7 +273,7 @@ def get_mods_bitmask_and_clock_rate(
         if mod_upper in MOD_ACRONYMS_TO_BITMASK:
             bitmask |= MOD_ACRONYMS_TO_BITMASK[mod_upper]
 
-        if mod_upper == "DT" or mod_upper == "NC":
+        if mod_upper in {"DT", "NC"}:
             clock_rate = 1.5
         elif mod_upper == "HT":
             clock_rate = 0.75
@@ -304,11 +300,7 @@ async def calculate_pp_with_rosu(
     """
     try:
         try:
-            from rosu_pp_py import (
-                Beatmap,
-                Difficulty,
-                Performance,
-            )  # Adjust import if needed
+            from rosu_pp_py import Beatmap, Difficulty, Performance  # Adjust import if needed
         except ImportError as e:
             err_msg = "rosu-pp-py library not found. Please install it."
             logger.error(f"[BeatmapUtils] Error: {err_msg}")
@@ -406,15 +398,15 @@ async def calculate_pp_with_rosu(
         raise RosuPpCalculationError(err_msg) from e
 
 
-def delete_osu_file(osu_file_path: str):
+def delete_osu_file(osu_file_path: str) -> None:
     """Deletes the specified .osu file from the temp directory."""
     try:
         if (
             osu_file_path
-            and os.path.exists(osu_file_path)
+            and pathlib.Path(osu_file_path).exists()
             and TEMP_OSU_DIR in osu_file_path
         ):  # Safety check
-            os.remove(osu_file_path)
+            pathlib.Path(osu_file_path).unlink()
             logger.debug(f"[BeatmapUtils] Deleted temporary file: {osu_file_path}")
         else:
             logger.debug(

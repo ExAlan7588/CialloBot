@@ -9,8 +9,8 @@
 from __future__ import annotations
 
 import json
-import os
-from typing import TYPE_CHECKING, Any
+import pathlib
+from typing import TYPE_CHECKING
 
 import discord
 from discord import app_commands
@@ -229,8 +229,8 @@ class KeywordCog(commands.Cog):
     def load_keywords(self) -> None:
         """從 JSON 文件載入關鍵詞配置"""
         try:
-            if os.path.exists(self.keywords_file):
-                with open(self.keywords_file, "r", encoding="utf-8") as f:
+            if pathlib.Path(self.keywords_file).exists():
+                with pathlib.Path(self.keywords_file).open("r", encoding="utf-8") as f:
                     data = json.load(f)
                     # 過濾掉註釋和格式說明
                     self.keywords = {
@@ -255,9 +255,9 @@ class KeywordCog(commands.Cog):
                 **self.keywords,
             }
 
-            with open(self.keywords_file, "w", encoding="utf-8") as f:
+            with pathlib.Path(self.keywords_file).open("w", encoding="utf-8") as f:
                 json.dump(data, f, ensure_ascii=False, indent=2)
-            logger.debug(f"💾 已保存關鍵詞配置")
+            logger.debug("💾 已保存關鍵詞配置")
         except Exception as e:
             logger.error(f"❌ 保存關鍵詞配置失敗: {e}", exc_info=True)
 
@@ -286,10 +286,7 @@ class KeywordCog(commands.Cog):
             return True
 
         # 檢查是否有管理員權限
-        if member.guild_permissions.administrator:
-            return True
-
-        return False
+        return bool(member.guild_permissions.administrator)
 
     def get_guild_keywords(self, guild_id: int) -> dict[str, str]:
         """獲取指定伺服器的關鍵詞
@@ -483,7 +480,7 @@ class KeywordCog(commands.Cog):
         )
 
         # 添加關鍵詞字段（最多顯示 25 個）
-        for i, (keyword, response) in enumerate(list(guild_keywords.items())[:25]):
+        for _i, (keyword, response) in enumerate(list(guild_keywords.items())[:25]):
             # 截斷過長的回覆
             display_response = (
                 response if len(response) <= 100 else response[:97] + "..."

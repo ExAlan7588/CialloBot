@@ -5,12 +5,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
 from loguru import logger
-
-if TYPE_CHECKING:
-    from typing import Any
 
 
 def should_ignore_error(error: Exception) -> bool:
@@ -28,10 +23,7 @@ def should_ignore_error(error: Exception) -> bool:
     # 例如：取消的任務、連接超時等
     import asyncio
 
-    if isinstance(error, asyncio.CancelledError):
-        return True
-
-    return False
+    return bool(isinstance(error, asyncio.CancelledError))
 
 
 def capture_exception(exception: Exception) -> None:

@@ -1,23 +1,24 @@
+from __future__ import annotations
+
+import datetime
+import io
+from typing import TYPE_CHECKING
+
 import discord
+import matplotlib.pyplot as plt
+import pycountry  # For converting country codes to names/flags
+from dateutil.relativedelta import relativedelta  # For calculating time differences
 from discord import app_commands
 from discord.ext import commands
-import datetime
-from dateutil.relativedelta import relativedelta  # For calculating time differences
-import pycountry  # For converting country codes to names/flags
-from private import config
-from utils.osu_api import OsuAPI
-from utils.localization import (
-    get_localized_string as lstr,
-    get_user_language,
-    set_user_language,
-)
-import re
-from utils import user_data_manager
-import logging
-import matplotlib.pyplot as plt
-import matplotlib.ticker as ticker
-import io
 from loguru import logger
+
+from private import config
+from utils import user_data_manager
+from utils.localization import get_localized_string as lstr
+from utils.localization import get_user_language
+
+if TYPE_CHECKING:
+    from utils.osu_api import OsuAPI
 
 # osu! 遊戲模式的映射 (與其他 cog 類似)
 OSU_MODES = {  # Used for display keys in lstr
@@ -83,7 +84,7 @@ def get_country_name(country_code: str, lang: str = "en") -> str:
 
 
 class UserCog(commands.Cog):
-    def __init__(self, bot: commands.Bot):
+    def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
         self.osu_api: OsuAPI = bot.osu_api_client
 
@@ -201,9 +202,9 @@ class UserCog(commands.Cog):
             # For mapper duration, "never_uploaded" is used. For profile join date, this path isn't hit if date missing.
             return lstr(user_id_for_l10n, "never_uploaded", "Never")
 
-        now = datetime.datetime.now(datetime.timezone.utc)
+        now = datetime.datetime.now(datetime.UTC)
         if dt_obj.tzinfo is None:  # Ensure dt_obj is timezone-aware
-            dt_obj = dt_obj.replace(tzinfo=datetime.timezone.utc)
+            dt_obj = dt_obj.replace(tzinfo=datetime.UTC)
 
         diff = relativedelta(now, dt_obj)
 
@@ -224,7 +225,7 @@ class UserCog(commands.Cog):
 
         # Handle seconds if no other larger units were added, or if all are zero until seconds
         if not formatted_parts:
-            seconds_value = diff.seconds if diff.seconds >= 0 else 0
+            seconds_value = max(diff.seconds, 0)
             unit_str = lstr(user_id_for_l10n, "unit_second", "s")
             # If not short and we fell through to seconds, it means Y,M,D,H,M were 0.
             # Per request, if not short, minimum is day. If YMD are 0, show "0d" or localized equivalent.
@@ -235,16 +236,14 @@ class UserCog(commands.Cog):
 
         if short:
             return formatted_parts[0]
-        else:
-            to_join = formatted_parts[:2]
-            # If only one part (e.g. "5日") because Y/M were 0, formatted_parts will have 1 element.
-            # If Y/M/D were all 0, it would have hit the `if not formatted_parts:` block above and returned "0d".
+        to_join = formatted_parts[:2]
+        # If only one part (e.g. "5日") because Y/M were 0, formatted_parts will have 1 element.
+        # If Y/M/D were all 0, it would have hit the `if not formatted_parts:` block above and returned "0d".
 
-            lang_code = lstr(user_id_for_l10n, "_lang_code", "en")
-            if lang_code.startswith("zh"):
-                return "".join(to_join)
-            else:
-                return " ".join(to_join)
+        lang_code = lstr(user_id_for_l10n, "_lang_code", "en")
+        if lang_code.startswith("zh"):
+            return "".join(to_join)
+        return " ".join(to_join)
 
     def _build_profile_detail_section(
         self,
@@ -265,7 +264,9 @@ class UserCog(commands.Cog):
         EMOJI_S = "<:rks:1373246734079230072>"
         EMOJI_A = "<:rka:1373246979211132988>"
         # 欄位本地化
-        l = lambda k, *a: self._get_lstr_with_na_fallback(user_id_for_l10n, k, *a)
+
+        def l(k, *a):
+            return self._get_lstr_with_na_fallback(user_id_for_l10n, k, *a)
         na = self.get_na_value(user_id_for_l10n)
 
         lines = []
@@ -273,8 +274,7 @@ class UserCog(commands.Cog):
         mode_emoji = MODE_EMOJI_STRINGS.get(current_mode_int, "")
         mode_name = self.get_mode_name(current_mode_int, user_id_for_l10n)
         game_mode_label = l("user_profile_game_mode", "Game Mode")
-        lines.append(f"**{game_mode_label}:** {mode_emoji} {mode_name}")
-        lines.append("")  # Add a blank line for spacing
+        lines.extend((f"**{game_mode_label}:** {mode_emoji} {mode_name}", ""))  # Add a blank line for spacing
 
         # 1. Status 區塊
         # Variable definitions (most are already in place, ensure all needed are here before building status_item_lines)
@@ -347,38 +347,7 @@ class UserCog(commands.Cog):
 
         status_item_lines = []
         # Order based on user request
-        status_item_lines.append(
-            f"**{l('user_profile_global_rank')}:** {rank_str} ({country_rank_str})"
-        )
-        status_item_lines.append(f"**{l('user_profile_level')}:** {level_str}")
-        status_item_lines.append(
-            f"**PP:** {pp_str} {l('user_profile_accuracy')}: {acc_str}"
-        )
-        status_item_lines.append(f"**{l('user_profile_grades')}:** {grades}")
-        status_item_lines.append(f"**{l('user_profile_accuracy')}:** {acc_str}")
-        status_item_lines.append(f"**{l('user_profile_play_count')}:** {playcount_str}")
-        status_item_lines.append(
-            f"**{l('user_profile_total_score')}:** {total_score_display}"
-        )
-        status_item_lines.append(
-            f"**{l('user_profile_avg_score', 'Avg. Score')}:** {avg_score_display}/{l('user_profile_play_short', 'Play')}"
-        )
-        status_item_lines.append(
-            f"**{l('user_profile_ranked_score')}:** {ranked_score_display}"
-        )
-        status_item_lines.append(
-            f"**{l('user_profile_avg_ranked_score', 'Avg. Ranked Score')}:** {avg_ranked_display}/{l('user_profile_play_short', 'Play')}"
-        )
-        status_item_lines.append(
-            f"**{l('user_profile_total_hits')}:** {total_hits_display}"
-        )
-        status_item_lines.append(
-            f"**{l('user_profile_avg_hits', 'Avg. Hits')}:** {avg_hits_display}/{l('user_profile_play_short', 'Play')}"
-        )
-        status_item_lines.append(f"**{l('user_profile_max_combo')}:** {max_combo_str}")
-        status_item_lines.append(
-            f"**{l('user_profile_replays_watched')}:** {replays_str}"
-        )
+        status_item_lines.extend((f"**{l('user_profile_global_rank')}:** {rank_str} ({country_rank_str})", f"**{l('user_profile_level')}:** {level_str}", f"**PP:** {pp_str} {l('user_profile_accuracy')}: {acc_str}", f"**{l('user_profile_grades')}:** {grades}", f"**{l('user_profile_accuracy')}:** {acc_str}", f"**{l('user_profile_play_count')}:** {playcount_str}", f"**{l('user_profile_total_score')}:** {total_score_display}", f"**{l('user_profile_avg_score', 'Avg. Score')}:** {avg_score_display}/{l('user_profile_play_short', 'Play')}", f"**{l('user_profile_ranked_score')}:** {ranked_score_display}", f"**{l('user_profile_avg_ranked_score', 'Avg. Ranked Score')}:** {avg_ranked_display}/{l('user_profile_play_short', 'Play')}", f"**{l('user_profile_total_hits')}:** {total_hits_display}", f"**{l('user_profile_avg_hits', 'Avg. Hits')}:** {avg_hits_display}/{l('user_profile_play_short', 'Play')}", f"**{l('user_profile_max_combo')}:** {max_combo_str}", f"**{l('user_profile_replays_watched')}:** {replays_str}"))
 
         lines.append(f"{BLACK_CIRCLE} {l('profile_section_status') or 'Status'}")
         for i, item_content in enumerate(status_item_lines):
@@ -427,7 +396,7 @@ class UserCog(commands.Cog):
         if join_date_api_val:
             try:
                 join_dt_obj = datetime.datetime.fromisoformat(
-                    join_date_api_val.replace("Z", "+00:00")
+                    join_date_api_val
                 )
                 formatted_date = self.format_datetime_obj(join_dt_obj, user_id_for_l10n)
                 relative_time = self.time_since(
@@ -502,11 +471,11 @@ class UserCog(commands.Cog):
     async def profile(
         self,
         interaction: discord.Interaction,
-        osu_user: str = None,
-        osu_id: int = None,
+        osu_user: str | None = None,
+        osu_id: int | None = None,
         mode: app_commands.Choice[int] = None,
         detail: bool = False,
-    ):
+    ) -> None:
         await interaction.response.defer()
         user_id_for_l10n = interaction.user.id
 
@@ -518,7 +487,7 @@ class UserCog(commands.Cog):
                 lstr(user_id_for_l10n, "error_only_one_identifier"), ephemeral=True
             )
             return
-        elif osu_id is not None:
+        if osu_id is not None:
             user_identifier = str(osu_id)
             identifier_type_for_api = "id"
             logger.debug(f"Profile lookup: osu_id='{user_identifier}', type='id'")
@@ -596,10 +565,10 @@ class UserCog(commands.Cog):
                     f"API returned unrecognized playmode: '{returned_mode_str_from_api}'. Sticking with default/initial mode: {actual_mode_int}"
                 )
 
-        selected_mode_name_for_display = self.get_mode_name(
+        self.get_mode_name(
             actual_mode_int, user_id_for_l10n
         )
-        username = player_data.get("username") or self.get_na_value(user_id_for_l10n)
+        player_data.get("username") or self.get_na_value(user_id_for_l10n)
         user_id_from_api = player_data.get("id")
 
         mode_stats = player_data.get("statistics")
@@ -735,9 +704,9 @@ class UserCog(commands.Cog):
             else:  # Otherwise, don't include the files parameter
                 await interaction.followup.send(embed=embed)
             return
-        else:  # Not detail view (standard profile) - CORRECTED INDENTATION STARTS HERE
-            if cover_url:
-                embed.set_image(url=cover_url)
+        # Not detail view (standard profile) - CORRECTED INDENTATION STARTS HERE
+        if cover_url:
+            embed.set_image(url=cover_url)
 
         pp_display = (
             f"{pp_raw:,.2f}pp"
@@ -814,7 +783,7 @@ class UserCog(commands.Cog):
         if join_date_str:
             try:
                 join_dt = datetime.datetime.fromisoformat(
-                    join_date_str.replace("Z", "+00:00")
+                    join_date_str
                 )
                 join_date_display = (
                     self.format_datetime_obj(join_dt, user_id_for_l10n)
@@ -861,7 +830,7 @@ class UserCog(commands.Cog):
             )
             return None, False
 
-        lang = get_user_language(str(user_id_for_l10n))
+        get_user_language(str(user_id_for_l10n))
         plt.style.use("seaborn-v0_8-darkgrid")
 
         fig, ax_rank = plt.subplots(1, 1, figsize=(7, 4), dpi=120)
@@ -913,8 +882,8 @@ class UserCog(commands.Cog):
         osu_user="osu! username (optional)", osu_id="osu! user ID (optional)"
     )
     async def mapper(
-        self, interaction: discord.Interaction, osu_user: str = None, osu_id: int = None
-    ):
+        self, interaction: discord.Interaction, osu_user: str | None = None, osu_id: int | None = None
+    ) -> None:
         await interaction.response.defer()
         user_id_for_l10n = interaction.user.id
         # 僅能輸入一個參數
@@ -959,7 +928,7 @@ class UserCog(commands.Cog):
         actual_username = player_data.get("username", user_identifier)
         player_avatar_url = player_data.get("avatar_url")
         country_code = player_data.get("country_code")
-        country_flag = get_country_flag_emoji(country_code) if country_code else ""
+        get_country_flag_emoji(country_code) if country_code else ""
 
         logger.debug(
             f"[USER_COG /mapper] Fetched user: ID {actual_user_id}, Username: {actual_username}"
@@ -1056,7 +1025,7 @@ class UserCog(commands.Cog):
             # In APIv2, 'approved' is a legacy status often represented as 'ranked'.
             # 'qualified' is also sometimes seen and might transition to ranked.
             # For simplicity, counting 'ranked' and 'loved'.
-            if status in ["ranked", "loved", "qualified", "approved"]:
+            if status in {"ranked", "loved", "qualified", "approved"}:
                 ranked_loved_sets_count += 1
 
             total_favourites += bm_set.get("favourite_count", 0)
@@ -1072,7 +1041,7 @@ class UserCog(commands.Cog):
                 try:
                     # API v2 dates are ISO 8601 with Z (UTC) e.g. "2023-01-15T10:30:00+00:00" or "2023-01-15T10:30:00Z"
                     current_bm_date = datetime.datetime.fromisoformat(
-                        date_str_to_parse.replace("Z", "+00:00")
+                        date_str_to_parse
                     )
                     if (
                         latest_submission_date_obj is None
@@ -1089,7 +1058,6 @@ class UserCog(commands.Cog):
                     logger.warning(
                         f"[USER_COG /mapper] Could not parse date: {date_str_to_parse}"
                     )
-                    pass
 
         mapping_duration_str = self._get_lstr_with_na_fallback(
             user_id_for_l10n, "value_not_available"
@@ -1295,8 +1263,8 @@ class UserCog(commands.Cog):
         osu_user="Your osu! username (optional)", osu_id="Your osu! user ID (optional)"
     )
     async def setuser(
-        self, interaction: discord.Interaction, osu_user: str = None, osu_id: int = None
-    ):
+        self, interaction: discord.Interaction, osu_user: str | None = None, osu_id: int | None = None
+    ) -> None:
         user_id_for_l10n = str(interaction.user.id)
         await interaction.response.defer(ephemeral=True)
 
@@ -1426,7 +1394,7 @@ class UserCog(commands.Cog):
         name="unsetuser",
         description="Unbind your Discord account from your osu! account.",
     )
-    async def unsetuser(self, interaction: discord.Interaction):
+    async def unsetuser(self, interaction: discord.Interaction) -> None:
         user_id_for_l10n = str(interaction.user.id)
         discord_user_id = interaction.user.id
         await interaction.response.defer(ephemeral=True)
@@ -1451,7 +1419,7 @@ class UserCog(commands.Cog):
             )
 
 
-async def setup(bot: commands.Bot):
+async def setup(bot: commands.Bot) -> None:
     # Similar to OsuCog, mode choices for /profile can be added here if desired,
     # but the current approach of `mode: app_commands.Choice[int] = None` works simply.
     await bot.add_cog(UserCog(bot))
