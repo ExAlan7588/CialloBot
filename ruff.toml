@@ -105,7 +105,6 @@ max-complexity = 15
 convention = "google"
 
 [lint.isort]
-required-imports = ["from __future__ import annotations"]
 split-on-trailing-comma = false
 
 [format]

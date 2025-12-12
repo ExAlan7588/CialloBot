@@ -15,5 +15,5 @@ dependencies = [
     "loguru>=0.7",
 ]
 
-[tool.uv]
-dev-dependencies = []
+[dependency-groups]
+dev = []
