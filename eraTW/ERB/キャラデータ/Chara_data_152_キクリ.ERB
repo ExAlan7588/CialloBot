@@ -1,0 +1,107 @@
+﻿@CHARAMOVE_DATA_152(ARG, ARG:2)
+LOCAL = 152
+SELECTCASE ARG
+	;连动设定（RETURN=依存する角色, RESULT:1～3=对等に连动する角色）
+	CASE 1
+	;特殊生活时间设定（CFLAG:LOCAL:生活时间补正を设定する）
+	CASE 3
+	;移动倾向（±～10=行きやすい/行きにくい, -100=行かない）
+	CASE 4
+		SELECTCASE ARG:2
+			;地灵殿には行かない、勇仪的家には行かない
+			CASE P901地灵殿前 TO P930旧血池地狱, P936勇仪的家
+				RETURN -100
+			;自室、里通り、酒场に行きやすい
+			CASE P942琪斯美的家, P932后街, P933酒场
+				RETURN 5
+		ENDSELECT
+	;出现场所
+	CASE 7
+		SELECTCASE ARG:2
+			CASE 幻想风穴, 地狱的深道, 旧地狱街道
+			CASE 地狱, 彼岸, 中有之道, 三途之川
+				RETURN 1
+			CASE 灼热地狱遗迹, 旧地狱街道, 地狱的深道
+				RETURN 1
+			CASE 神社境内, 神社走廊, 神社本堂
+				RETURN 1
+			CASE 命莲寺境内, 命莲寺方丈
+				RETURN 1
+		ENDSELECT
+	;引力设定
+	CASE 8
+		;夜はたまに酒场
+		SIF CFLAG:LOCAL:今日的运势 % 8 == 0 && INRANGE(TIME, 1200, 1440)
+			TCVAR:LOCAL:引力点 = P933酒场
+ENDSELECT
+
+@EXIST_キャラデータ152
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@キャラデータ152(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "称呼"
+	CALLF MAKE_STR(V_NAME, "菊理")
+;こっから衣装设定
+CASE "今天的睡衣"
+	CALLF MAKE_STR(V_NAME, "睡衣（连衣裙）套")
+
+CASE "便装：上身衣服２"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("上身衣服２", "女式衬衫"))
+CASE "固有内衣形容词"
+	CALLF MAKE_STR(V_NAME, "solid metal")
+CASE "固有下半身内衣名"
+	CALLF MAKE_STR(V_NAME, "copper panties")
+CASE "固有上半身内衣"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "固有上半身内衣名"
+	CALLF MAKE_STR(V_NAME, "copper bra")
+CASE "固有内衣着用条件"
+	SIF !RAND:(3 - (2 * 胜负内衣判定([[菊理]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "固有内衣半透明(前)"
+	CALLF MAKE_INT(V_NAME, 0)
+CASE "固有内衣半透明(后)"
+	CALLF MAKE_INT(V_NAME, 0)
+CASE "固有内衣布料厚度"
+	CALLF MAKE_INT(V_NAME, 3)
+
+;料理关联
+CASE "料理：喜欢的味道"
+	CALLF MAKE_STR(V_NAME, "煎饼/派/清淡/魔界风/隐し味/魔性/秘术/蛋糕/汉堡/朴素/外界风/大火力/" + "春物/加护/道具の共鸣/" * 3 + "和食/" * 5)
+CASE "料理：讨厌的味道"
+	CALLF MAKE_STR(V_NAME, "怪诞/谜料理/灵障/垃圾/浓郁/玉兔流/逆转/纯化的味道/贫乏饭/洋食/わんぱく/怪しい/" + "科学的/扑鼻/平价食材/" * 3 + "もちもち/" * 5)
+CASE "料理：助手效果"
+	CALLF MAKE_STR(V_NAME, "闪耀/神力/魔界风/")
+;赠り物关联
+CASE "感性：好き"
+	CALLF MAKE_STR(V_NAME, "古の/令人怀念の/神代の/天空の/灵力の/金属风格的/退魔の/" + "怀旧的/和风の/太古の/圣域の/法界の/山吹の/" * 3 + "中世风の/始原の/黄金の/故乡の/" * 5 + "青铜の/菊の/反射の/" * 10)
+CASE "感性：嫌い"
+	CALLF MAKE_STR(V_NAME, "复古未来な/多彩な/塑料の/软乎乎の/蓬蓬鼓鼓の/诅咒の/量子の/" + "近未来风の/冰结の/" * 3 + "现代的/锈迹の/" * 5)
+ENDSELECT
+
+;-------------------------------------------------
+;固有料理设定
+;DISH_NAME          料理名
+;RESULTS            料理の种类（轻食/主食/甜点）
+;CALL 材料设定("")  材料の指定。"泛用"を入れると自动で泛用食材になる
+;DISH_TASTE         味の设定
+;DISH_COMMENT       （任意）一行コメント
+;DISH_TIME          （任意）调理にかかる时间
+;DISH_MAXLIMIT      （任意）料理の持续时间
+;-------------------------------------------------
+@SPECIAL_MENU_152
+;DISH_NAME = Spring Chrysanthemum
+DISH_NAME = 春之菊
+RESULTS = 轻食
+CALL 材料设定("山菜")
+DISH_TASTE = 和食/野菜/さっぱり/叶物/大豆/
+;DISH_COMMENT = Chrysanthemum greens drizzled with soy sauce and sesame seeds.
+DISH_COMMENT = 在菊花叶淋上酱油和芝麻
+RETURN 1

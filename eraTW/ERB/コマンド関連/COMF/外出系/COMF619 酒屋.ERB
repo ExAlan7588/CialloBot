@@ -1,0 +1,283 @@
+﻿@COM619
+#DIM 店员
+#DIMS 表情
+#DIMS 台词
+
+DRAWLINE
+店员 = GET_MAPID(CFLAG:PLAYER:当前位置) == 2 ? 19 # 18
+表情 = 笑颜
+IF FLAG:最后一次访问酒屋日期 == 0
+	台词 = 「第一次来的客人吗？这是特别赠品哦」
+ELSEIF DAY - FLAG:最后一次访问酒屋日期 > 7
+	台词 = 「好久不见了呢ー、请慢用」
+ELSEIF FLAG:最后一次访问酒屋日期 == DAY
+	台词 = 「欢迎光、诶呀？有事吗？」
+ELSEIF FLAG:酒屋里的累积购入额 > 1000000 && FLAG:开始日 != DAY
+	台词 = 「欢迎光临、我可是专门为%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%准备了好多东西呢」
+ELSEIF FLAG:开始日 == DAY
+	台词 = 「真不凑巧、全被刚才的客人买光了」
+	表情 = 通常
+;ここは甜酒を除く
+ELSEIF ITEMSALES:浊酒 + ITEMSALES:清酒 + ITEMSALES:鬼杀酒 > 30
+	台词 = 「欢迎光临、本店有许多美酒哦ー」
+ELSE
+	台词 = 「欢迎光临ー」
+ENDIF
+SIF FLAG:酒屋收购强化
+	台词 = %台词%/「现在正在举行推销活动中。买的越多优惠越多」
+CALL SPTALK, 0, 表情, 店员, 台词, 1 
+$INPUT_LOOP2
+DRAWLINE
+PRINTL [ 1]  - 买酒
+PRINTL [ 2]  - 卖酒
+PRINTL [ 0] - 返回
+$INPUT_LOOP
+INPUT
+
+IF RESULT == 1
+	CALL 酒购入
+	GOTO INPUT_LOOP2
+ELSEIF RESULT == 2
+	CALL 酒卸卖
+	GOTO INPUT_LOOP2
+ELSEIF RESULT != 0
+	GOTO INPUT_LOOP
+ENDIF
+
+FLAG:最后一次访问酒屋日期 = DAY
+IF FLAG:酒屋的累积转卖利益 > 3000000 && FLAG:酒屋的卖出率FLAG == 2
+	FLAG:酒屋的卖出率FLAG = 3
+	PRINTL 
+	PRINTFORML 一走出店就被叫住了
+	台词 = 「卖了这么多酒过来真是帮了大忙了呢～、从今以后会提高一点收购价的」
+ELSEIF FLAG:酒屋的累积转卖利益 > 1000000 && FLAG:酒屋的卖出率FLAG == 1
+	FLAG:酒屋的卖出率FLAG = 2
+	PRINTL 
+	PRINTFORML 一走出店就被叫住了
+	台词 = 「卖了这么多酒过来真是帮上忙了呢ー、要是提高收购价的话能不能多卖一点？」
+ELSEIF FLAG:酒屋的累积转卖利益 > 100000 && FLAG:酒屋的卖出率FLAG == 0
+	FLAG:酒屋的卖出率FLAG = 1
+	PRINTL 
+	PRINTFORML 一走出店就被叫住了
+	台词 = 「一直以来到这卖酒真是太感谢了、作为礼物从下次开始收购价会提高哦ー」
+ELSE
+	台词 = 「下次再来哦ー」
+ENDIF
+CALL SPTALK, 0, "笑颜", 店员, 台词, 1 
+TIME += 10
+RETURN -1
+
+@酒购入
+#DIM 买うもの
+#DIM 割引
+
+DRAWLINE
+;通信贩卖から无くなったので定价になります
+;;割引を20％に设定(定价の80％で贩卖)
+;割引 = 20
+
+PRINTL 
+IF FLAG:最后一次访问酒屋日期 == 0
+	PRINTFORML 「第一次来吧这是特别赠品ー」
+	;值引率を40％に设定(定价の60％で贩卖)
+	割引 = 40
+ELSE
+	PRINTFORML 「买哪种都很划算哦ー」
+	;值引率を20％に设定(定价の80％で贩卖)
+	割引 = 20
+ENDIF
+$INPUT_LOOP2
+DRAWLINE
+PRINTFORML 所持金:%金额表示(MONEY)%
+DRAWLINE
+CALL ITEM_SHOPPING(GETNUM(ITEM, "浊酒"), "微甜的便宜酒", 割引)
+CALL ITEM_SHOPPING(GETNUM(ITEM, "清酒"), "标准的日本酒", 割引)
+CALL ITEM_SHOPPING(GETNUM(ITEM, "鬼杀酒"), "高度数的烈性酒", 割引)
+CALL ITEM_SHOPPING(GETNUM(ITEM, "甜酒"), "像饮料一样容易入口的酒", 割引)
+DRAWLINE
+PRINTL [999] 返回
+INPUT
+
+IF RESULT == 999
+	RETURN -1
+ELSE
+	买うもの = RESULT
+	CALL ITEMDATA(买うもの, "SHOP:酒屋")
+	IF RESULT
+		IF ITEMSALES:买うもの <= 0
+			PRINTFORMW 「对不起、卖完了呢」
+		ELSEIF ITEM:买うもの >= 所持数制限
+			PRINTFORMW 「客人、那个已经拿着很多了吧？　倒不如卖给我一点ー」
+		ELSE
+			CALL ITEMDATA(买うもの, "购入", 割引)
+			IF RESULT
+				FLAG:酒屋里的累积购入额 += RESULT
+				IF FLAG:酒屋里的累积购入额 > 100000 && !RAND:9
+					PRINTL 
+					PRINTFORML 「一直光顾本店真是太感谢了、这是赠品」
+					PRINTFORMW ―得到了作为赠品的%ITEMNAME:GETNUM(ITEM, "姜黄饮料")%―
+					ITEM:姜黄饮料 ++
+				ELSE
+					PRINTL 
+					PRINTFORMW 「多谢惠顾ー」
+				ENDIF
+				
+			ELSE
+				RESTART
+			ENDIF
+		ENDIF
+	ENDIF
+ENDIF
+
+@酒卸卖
+#DIM 卖出率
+#DIM 所持数
+#DIM 选择した商品
+#DIM 卖出个数
+#DIM 卖出额
+
+SELECTCASE FLAG:酒屋的卖出率FLAG
+	CASE 0
+		;值引率を90％に设定(定价の10％で购入してくれる)
+		卖出率 = 10
+	CASE 1
+		;值引率を85％に设定(定价の15％で购入してくれる)
+		卖出率 = 15
+	CASE 2
+		;值引率を80％に设定(定价の20％で购入してくれる)
+		卖出率 = 20
+	CASE 3
+		;值引率を70％に设定(定价の30％で购入してくれる)
+		卖出率 = 30
+ENDSELECT
+SIF FLAG:酒屋收购强化
+	卖出率 += 20
+$INPUT_LOOP2
+DRAWLINE
+PRINT 「
+IF FLAG:酒屋收购强化
+	PRINT 因为是推销活动所以特别的
+ELSEIF FLAG:酒屋的卖出率FLAG
+	PRINT 因为是大客户所以特别
+ENDIF
+PRINTFORML 优惠原价的{卖出率}％」
+DRAWLINE
+PRINT 要卖什么呢…
+PRINTFORML 所持金:%金额表示(MONEY)%
+CALL 酒一览表示(0, "卖出", 卖出率)
+IF RESULT == 0
+	RETURN -1
+ENDIF
+;选んだ番号にしたがって所持数を格纳
+所持数 = ITEM:RESULT
+;所持0の场合
+IF 所持数 == 0
+	PRINTL 
+	PRINTW 因为没有现货、想卖也卖不了
+	RETURN -1
+ENDIF
+;所持0で无い场合个数を寻ねる
+;もう一回INPUTを使用ため今の值を退避
+选择した商品 = RESULT
+卖出个数 = 0
+$SELL_LOOP
+PRINTFORML %ITEMNAME:选择した商品%要卖多少呢…
+PRINTFORML 卖出个数：{卖出个数}
+PRINTFORML [-100]　[ -10]　[  -1]　[  +1]　[ +10]　[+100]
+PRINTBUTTON "[全部] ", 999
+PRINTBUTTON " [复位]", -999
+PRINTL 
+PRINTBUTTON "[卖出]", 0
+INPUT
+IF RESULT
+	IF RESULT == 999
+		卖出个数 = 所持数
+	ELSEIF RESULT == -999
+		卖出个数 = 0
+	ELSE
+		卖出个数 = LIMIT(卖出个数 + RESULT, 0, 所持数)
+	ENDIF
+	CLEARLINE 6
+	GOTO SELL_LOOP
+ENDIF
+IF 卖出个数 <= 0
+	PRINTL 
+	PRINTL 果然还是不卖了
+	GOTO INPUT_LOOP2
+ENDIF
+IF 卖出个数 > 所持数
+	PRINTL 
+	PRINTL 没有那么多
+	GOTO INPUT_LOOP2
+ENDIF
+	
+;一つ中奖了の卖出额を算出
+卖出额 = ITEMPRICE:选择した商品 * 卖出率 / 100
+ITEM:选择した商品 -= 卖出个数
+MONEY += 卖出额 * 卖出个数
+;お店は定价の80％で贩卖
+FLAG:酒屋的累积转卖利益 += ITEMPRICE:选择した商品 * (80 - 卖出率) / 100 * 卖出个数
+PRINTFORMW 以%金额表示(卖出额 * 卖出个数)%的价格卖掉了{卖出个数}个%ITEMNAME:选择した商品%
+;贩卖个数を增加させる处理
+ITEMSALES:选择した商品 += 卖出个数
+GOTO INPUT_LOOP2
+
+;-------------------------------------------------
+;在库の变动
+;SHOP_ITEM.erbにあるEVENTTURNENDから一日一回呼ばれる
+;-------------------------------------------------
+@酒屋の在库
+#DIM 在库增加数
+;宴会前日は酒が品薄に
+IF FLAG:开始日 == DAY + 1
+	ITEMSALES:浊酒 += RAND:(2 + FLAG:酒屋的卖出率FLAG * 1)
+	ITEMSALES:清酒     += RAND:(2 + FLAG:酒屋的卖出率FLAG * 1)
+	ITEMSALES:鬼杀酒   += RAND:(1 + FLAG:酒屋的卖出率FLAG * 1)
+	ITEMSALES:甜酒     += RAND:(3 + FLAG:酒屋的卖出率FLAG * 2)
+ELSE
+	ITEMSALES:浊酒 += RAND:(3 + FLAG:酒屋的卖出率FLAG * 3)
+	ITEMSALES:清酒     += RAND:(3 + FLAG:酒屋的卖出率FLAG * 2)
+	ITEMSALES:鬼杀酒   += RAND:(2 + FLAG:酒屋的卖出率FLAG * 1)
+	ITEMSALES:甜酒     += RAND:(4 + FLAG:酒屋的卖出率FLAG * 3)
+ENDIF
+;累积购入额に応じても在库が增加
+IF FLAG:酒屋里的累积购入额
+	在库增加数 = MAX(FLAG:酒屋里的累积购入额 / 100000 - 3, 0) + 1
+	ITEMSALES:浊酒 += RAND:在库增加数
+	ITEMSALES:清酒     += RAND:在库增加数
+	ITEMSALES:鬼杀酒   += RAND:在库增加数
+	ITEMSALES:甜酒     += RAND:在库增加数
+ENDIF
+;最大数制限
+ITEMSALES:浊酒 = MIN(ITEMSALES:浊酒, 32)
+ITEMSALES:清酒     = MIN(ITEMSALES:清酒, 24)
+ITEMSALES:鬼杀酒   = MIN(ITEMSALES:鬼杀酒, 16)
+ITEMSALES:甜酒     = MIN(ITEMSALES:甜酒, 32)
+;-------------------------------------------------
+;实行可能判定
+;-------------------------------------------------
+;酒屋
+@COM_ABLE619
+;批量管理
+SIF GLOBAL_COMABLE(619)
+	RETURN RESULT
+;酒屋ではない场所
+SIF !SAKE_SHOP(CFLAG:MASTER:当前位置)
+	RETURN 0
+;睡眠中
+SIF CFLAG:睡眠
+	RETURN 0
+;时间停止中
+SIF FLAG:70
+	RETURN 0
+RETURN 1
+
+;酒屋を判定する函数
+@SAKE_SHOP(ARG)
+#FUNCTION
+;酒屋
+SIF ARG == GET_MAP_REPLACEMENT(211)
+	RETURNF 1
+SIF ARG == GET_MAP_REPLACEMENT(1012)
+	RETURNF 1
+RETURNF 0

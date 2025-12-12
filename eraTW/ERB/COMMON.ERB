@@ -1,0 +1,2696 @@
+﻿;函数置き场
+;-------------------------------------------------
+;道具贩卖状况@ITEMSTOCK
+;返回值1 道具が存在しない
+;返回值2 卖完
+;返回值3 お金が足りない
+;返回值4 条件を满たしていない
+;返回值5 すでに99个所持している
+;-------------------------------------------------
+@ITEMSTOCK(ARG, 值段)
+#FUNCTION
+#DIM 值段
+SIF !STRLENS(ITEMNAME:ARG)
+	RETURNF 1
+SIF ITEMSALES:ARG == -2
+	RETURNF 4
+SIF ITEMSALES:ARG == -1
+	RETURNF 2
+SIF MONEY < 值段
+	RETURNF 3
+SIF ITEM:ARG >= 99
+	RETURNF 5
+RETURNF 0
+
+;-------------------------------------------------
+;函数名:CHOICE
+;概　要:２～４择函数
+;参　数:ARGS:0…质问内容
+;      :ARGS:1～4…选择肢の文字列(3,4は省略可)
+;返回值:ユーザ入力结果(0～3)
+;选择条件の无い、朴素的选择肢作成函数
+;口上とかでも使えるかもしれない
+;とりあえず4择まで。增やしてもいいけど
+;-------------------------------------------------
+@CHOICE(ARGS:0, ARGS:1, ARGS:2, ARGS:3, ARGS:4, ARGS:5, ARGS:6, ARGS:7, ARGS:8, ARGS:9, ARGS:10)
+PRINTSL ARGS:0
+FOR LOCAL, 0, 10
+	SIF !STRLENS(ARGS:(1 + LOCAL))
+		CONTINUE
+	PRINTFORML [{LOCAL}] - %ARGS:(1 + LOCAL)%
+NEXT
+$INPUT_LOOP
+INPUT
+SIF INRANGE(RESULT, 0, 9) && STRLENS(ARGS:(1 + RESULT))
+	RETURN RESULT
+;这种想看特殊剧情的人当然得给点特殊剧情照顾下
+CALL SIMATTYAUOJISAN()
+CLEARLINE 1
+GOTO INPUT_LOOP
+
+;-------------------------------------------------
+;选择肢を表示し入力结果を返す函数 条件を满たさない选择肢をグレー表示にして无效にすることが可能
+;参数にセリフと条件(0で无效、非0で有效)を指定。最大7个まで
+;返回值は选择した选择肢の番号
+;-------------------------------------------------
+@ASK_M(ARGS:0, ARG:0, ARGS:1, ARG:1, ARGS:2, ARG:2, ARGS:3, ARG:3, ARGS:4, ARG:4, ARGS:5, ARG:5, ARGS:6, ARG:6, ARGS:7, ARG:7, ARGS:8, ARG:8)
+#DIM CONST 选择肢上限 = 8
+#DIM PREV_REDRAW
+PREV_REDRAW = CURRENTREDRAW()
+REDRAW 0
+FOR LOCAL:0, 0, (选择肢上限 + 1)
+	IF ARGS:(LOCAL:0) != ""
+		IF ARG:(LOCAL:0)
+			PRINTBUTTON @"{LOCAL:0, 2, RIGHT}[%ARGS:(LOCAL:0)%]", LOCAL:0
+		ELSE
+			SETCOLOR 0x606060
+			PRINTPLAINFORM {LOCAL:0, 2, RIGHT}[%ARGS:(LOCAL:0)%]
+			RESETCOLOR
+		ENDIF
+		PRINTL
+	ENDIF
+NEXT
+$INPUT_LOOP
+INPUT
+IF RESULT < 0 || RESULT > 选择肢上限 || ARGS:RESULT == "" || !ARG:RESULT
+	CLEARLINE 1
+	GOTO INPUT_LOOP
+ENDIF
+REDRAW PREV_REDRAW
+RETURN RESULT
+;-------------------------------------------------
+;现金と筹码どちらでも払える选择肢のための函数
+;-------------------------------------------------
+@PAY_YEN_OR_CM(ARG,ARG:1)
+PRINTFORML [0] 放弃
+PRINTFORML [1] 支付%金额表示(ARG)%　　（现在的所持金：%金额表示(MONEY)%）
+PRINTFORML [2] 支付CM%三桁区切(ARG:1)%　（现在的所持筹码：CM%三桁区切(MONEY:2)%）
+$INPUT_LOOP
+INPUT
+SELECTCASE RESULT
+	CASE 0
+	CASE 1
+		IF MONEY < ARG
+			PRINTFORMW 金钱不足
+			GOTO INPUT_LOOP
+		ENDIF
+		MONEY -= ARG
+	CASE 2
+		IF MONEY:2 < ARG:1
+			PRINTFORMW 筹码不足
+			GOTO INPUT_LOOP
+		ENDIF
+		MONEY:2 -= ARG:1
+	CASEELSE
+		GOTO INPUT_LOOP
+ENDSELECT
+RETURN RESULT
+;-------------------------------------------------
+;函数名:GET_REVISION
+;概　要:泛用补正值取得函数
+;参　数:ARG:0…参照する数值
+;返回值:补正后の值
+;备　考:式中函数
+;ある数值を、上限值に渐近していく数值に变换したいときに
+;上升率が小さいとすぐに上限に达する、大きいと逆になかなか上限まで近づかない
+;-------------------------------------------------
+@GET_REVISION(ARG:0, 上限, 上升率)
+#FUNCTION
+#DIM 上限
+#DIM 上升率
+RETURNF 上限 - 上升率 * 上限 / (上升率 + ARG:0)
+
+;eg 10000,2000,20000だと2000-2000*20000/30000
+
+@GET_REVISION2(ARG:0, 上限, 上升率)
+#FUNCTION
+#DIM 上限
+#DIM 上升率
+RETURNF 上限 * (ARG:0 + 1) / (上升率 + ARG:0 + 1)
+
+;-------------------------------------------------
+;函数名:GET_REVISION3
+;概　要:泛用补正值取得函数
+;参　数:num…参照する数值　TH:0~2…しきい值1~3　
+;-------------------------------------------------
+@GET_REVISION3(num, TH:0, TH:1, TH:2)
+#FUNCTION
+#DIM TH, 3
+#DIM num
+
+FOR LOCAL,0,3
+	SIF num <= TH:LOCAL || !TH:LOCAL
+		RETURNF num
+	;参数がTHを超えてたら超过分をSQRT*2
+	num = TH:LOCAL + SQRT(num - TH:LOCAL) * 2
+NEXT
+
+RETURNF num
+
+;10000, 50, 100, 200なら124
+
+
+
+;-------------------------------------------------
+;函数名:PRINT_BASE
+;概　要:泛用补正值取得函数
+;参　数:ARGS バーの名前
+;		ARG:0…参照する角色番号
+;       ARG:1…ベースの番号
+;       ARG:2…バーの长さ
+;BARを表示させたいときに
+;-------------------------------------------------
+@PRINT_BASE(ARGS,ARG:0,ARG:1,ARG:2)
+PRINTFORM %ARGS,%
+BAR BASE:ARG:(ARG:1),MAXBASE:ARG:(ARG:1),ARG:2
+PRINTFORML ({BASE:ARG:(ARG:1)}/{MAXBASE:ARG:(ARG:1)})
+
+;FileName_COMMON.ERB ------------------------------- Rev1.00
+;文字入りライン表示函数
+;CALL		USER
+;ARG		ARGS:表示ライン名, ARG:0 line_to_"-", ARG:1 ライン长
+;RETURN		VOID
+;COMMENT
+;-----------------------------------------------------------
+@DRAW_INFORMATIONLINE(ARGS,ARG,ARG:1)
+#DIMS EQUAL
+#DIMS MINUS
+EQUAL = =
+MINUS = -
+LOCAL = ARG:1
+
+IF ARGS =="Info"
+	SIF TFLAG:Info表示中
+		RETURN
+	TFLAG:Info表示中 = 1
+ENDIF
+SIF !ARG:1
+	LOCAL = 150
+IF ARG == 1
+	PRINTSINGLEFORMS "-- %ARGS% " + "%(MINUS * MAX((LOCAL - STRLENS(ARGS)),0))%"
+ELSE
+	PRINTSINGLEFORMS "== %ARGS% " + "%(EQUAL * 150)%"
+ENDIF
+;-------------------------------------------------
+;绝顶时など、ＡとＢとＤと…みたいな感じで「と」でつないで列挙するための函数
+;参数に表示する文字列と条件(0で无效、非0で有效)を指定。最大5个まで
+;-------------------------------------------------
+@PRINT_EMUNERATE(表示:1,条件:1,表示:2,条件:2,表示:3,条件:3,表示:4,条件:4,表示:5,条件:5)
+#DIMS 表示,6
+#DIM 条件,6
+
+SIF 条件:1
+	PRINTFORM %表示:1%
+SIF 条件:1 && (条件:2 || 条件:3 || 条件:4 || 条件:5)
+	PRINT 和
+SIF 条件:2
+	PRINTFORM %表示:2%
+SIF 条件:2 && (条件:3 || 条件:4 || 条件:5)
+	PRINT 和
+SIF 条件:3
+	PRINTFORM %表示:3%
+SIF 条件:3 && (条件:4 || 条件:5)
+	PRINT 和
+SIF 条件:4
+	PRINTFORM %表示:4%
+SIF 条件:4 && 条件:5
+	PRINT 和
+SIF 条件:5
+	PRINTFORM %表示:5%
+;-------------------------------------------------
+;恶魔で女仆から流用させていただきました。多谢。
+;单语1/单语2/…/单语n の书式で书かれたARGS:0～の单语のどれかを等概率で返す
+;(ARGSが复数あるのは函数などが突っ込まれることを想定しているため)
+;＿は何も出力しない选择とする
+;选择肢の数を100まで扩张、RESULT退避处理追加
+;抽选处理が等概率ならFOR-NEXT使わなくてよいと思ったのでRANDで済ませる
+;-------------------------------------------------
+@TEXTR(ARGS, ARGS:1, ARGS:2, ARGS:3, ARGS:4, ARGS:5, ARGS:6)
+#FUNCTIONS
+#DIM  L_RESULT               ;RESULT退避用
+#DIMS DYNAMIC CHOICES        ;结果
+#DIMS DYNAMIC STR_ARRAY, 100 ;选择肢格纳用の一时变量
+L_RESULT = RESULT
+;まず一つにまとめる
+ARGS = %ARGS%\/%ARGS:1%\/%ARGS:2%\/%ARGS:3%\/%ARGS:4%\/%ARGS:5%\/%ARGS:6%
+;不要な"/"を削る作业
+;空のARGSがあると//がたくさん出来て判定の邪魔になるので
+;1.//は置换で削る
+;2.最末尾が/なら削る（SPLITとRANDをそのまま使用都合上）
+ARGS '= REPLACE(ARGS, "\/+", "/")
+SIF CHARATU(ARGS, STRLENSU(ARGS) - 1) == "/"
+	ARGS '= SUBSTRINGU(ARGS, 0, STRLENSU(ARGS) - 1)
+SPLIT ARGS, "/", STR_ARRAY
+CHOICES '= STR_ARRAY:(RAND:RESULT)
+SIF CHOICES == "＿"
+	CHOICES =
+RESULT = L_RESULT
+RETURNF CHOICES
+;-------------------------------------------------
+;未读判定函数@ONCE
+;式中で使用する函数です
+;ARGSはイベント番号、ARGは真だと初回判定を更新しない、ARG:1は角色登录番号（省略するとTARGET,-1ならMASTER）
+;{イベント番号}/　という文字列をCSTR:1にぶっこんでいきます
+;-------------------------------------------------
+@ONCE(ARGS,ARG, ARG:1)
+#FUNCTION
+;ARG:2の变换
+ARG:1 = ARG:1 ? ARG:1 # TARGET
+ARG:1 = ARG:1 == -1 ? MASTER # ARG:1
+
+SIF CSTR:(ARG:1):1 == ""
+	CSTR:(ARG:1):1 = /
+
+LOCALS = /%ARGS%/
+IF STRCOUNT(CSTR:(ARG:1):1,LOCALS)
+	RETURNF 0
+ELSEIF ARG
+	RETURNF 1
+ENDIF
+;初回判定更新
+CSTR:(ARG:1):1 = %CSTR:(ARG:1):1%%ARGS%/
+RETURNF 1
+
+;FileName_COMMON.ERB ------------------------------- Rev1.00
+;フラグリセット处理
+;CALL		SYSTEM
+;ARG		VOID
+;RETURN		VOID
+;COMMENT
+;-----------------------------------------------------------
+; @EVENTTRAIN
+; SIF SaveDataInTrain
+; 	RETURN
+; FOR LOCAL,0,CHARANUM
+; 	CSTR:LOCAL:1 =
+; NEXT
+
+;-------------------------------------------------
+;未读判定函数@FIRSTTIME
+;式中で使用する函数です。
+;ARGSはイベント番号、ARGは真だと初回判定を更新しない、ARG:1は角色登录番号（省略するとTARGET,-1ならMASTER）
+;{イベント番号}/　という文字列をCSTR:0にぶっこんでいきます
+;-------------------------------------------------
+@FIRSTTIME(ARGS,ARG, ARG:1)
+#FUNCTION
+;ARG:1の变换
+ARG:1 = ARG:1 ? ARG:1 # TARGET
+ARG:1 = ARG:1 == -1 ? MASTER # ARG:1
+SIF CSTR:(ARG:1):0 == ""
+	CSTR:(ARG:1):0 = /
+
+LOCALS = /%ARGS%/
+IF STRCOUNT(CSTR:(ARG:1):0,LOCALS)
+	RETURNF 0
+ELSEIF ARG
+	RETURNF 1
+ENDIF
+;初回判定更新
+CSTR:(ARG:1):0 = %CSTR:(ARG:1):0%%ARGS%/
+RETURNF 1
+
+;-------------------------------------------------
+;函数名:EXP_UP
+;概　要:経験值变动チェック
+;参　数:ARG:0…参照するEXP
+;       ARG:1…参照する角色番号
+;-------------------------------------------------
+@EXP_UP(ARG,ARG:1)
+#FUNCTION
+RETURNF EXP:(ARG:1):ARG - TCVAR:(ARG:1):(400 + ARG)
+
+;-------------------------------------------------
+;函数名:INVAGINA
+;概　要:Vに何が入っているのかを返す
+;参　数:ARG:0…参照する角色番号
+;返回值:0无
+;返回值:1 阴茎
+;返回值:2 振动棒
+;-------------------------------------------------
+@INVAGINA(ARG)
+#FUNCTION
+IF TEQUIP:ARG:50
+	IF TALENT:PLAYER:2 & 2
+		RETURNF 1
+	ELSE
+		RETURNF 3
+	ENDIF
+ELSEIF TEQUIP:ARG:振动棒
+	RETURNF 2
+ENDIF
+;-------------------------------------------------
+;函数名:INANAL
+;概　要:Aに何が入っているのかを返す
+;参　数:ARG:0…参照する角色番号
+;返回值:0无
+;返回值:1 阴茎
+;返回值:2 肛用振动棒
+;返回值:3 后庭拉珠
+;-------------------------------------------------
+@INANAL(ARG)
+#FUNCTION
+IF TEQUIP:ARG:51
+	RETURNF 1
+ELSEIF TEQUIP:ARG:肛用振动棒
+	RETURNF 2
+ELSEIF TEQUIP:ARG:后庭拉珠
+	RETURNF 3
+ENDIF
+;-------------------------------------------------
+;函数名:HETEROSEX
+;ARGとARG:1の性别が同じかどうかを返すほんとはHOMOSEXだけど语感が恶いので
+;女性器を持つものは女、持たないものを男とする
+;返回值0=异性
+;返回值1=同性(レズ)
+;返回值2=同性(ゲイ)
+;-------------------------------------------------
+@HETEROSEX(ARG,ARG:1)
+#FUNCTION
+IF GETBIT(TALENT:ARG:2,0) == GETBIT(TALENT:(ARG:1):2,0)
+	IF GETBIT(TALENT:ARG:2,0)
+		RETURNF 1
+	ELSE
+		RETURNF 2
+	ENDIF
+ELSE
+	RETURNF 0
+ENDIF
+
+;-------------------------------------------------
+;函数名:NameToID
+;参数にCALLNAMEを入れると角色番号を返す
+;-------------------------------------------------
+@NameToID(ARGS)
+#FUNCTION
+LOCAL = FINDCHARA(CALLNAME, @"%ARGS%" , 1)
+RETURNF LOCAL
+
+;-------------------------------------------------
+;函数名:GET_TARGETNUM
+;同室中のTARGETの数を返す
+;参数废止してFOR-NEXTを排除して高速化
+;-------------------------------------------------
+@GET_TARGETNUM()
+#FUNCTION
+RETURNF MAX(0, FINDELEMENT(TARGET, 0) - 1)
+;-------------------------------------------------
+;函数名:IN_ROOM_MEMBER
+;房间の中で特定要素での最低・最高を持つ角色を取得
+;ARGS MAXかMINかを选择
+;ARG 房间の番号
+;ARGS:1 对象となる变量の名前
+;ARG:1 变量の番号
+;-------------------------------------------------
+@IN_ROOM_MEMBER, ARGS, ARG, ARGS:1, ARG:1
+#FUNCTION
+VARSET LOCAL, 0
+SELECTCASE ARGS:1
+	CASE "CFLAG"
+		FOR LOCAL, 1, CHARANUM
+			SIF CFLAG:LOCAL:当前位置 != ARG
+				CONTINUE
+			IF LOCAL:3++ == 0
+				LOCAL:1 = CFLAG:LOCAL:(ARG:1)
+				LOCAL:2 = LOCAL
+			ELSEIF ARGS == "MAX" && LOCAL:1 < CFLAG:LOCAL:(ARG:1)
+				LOCAL:1 = CFLAG:LOCAL:(ARG:1)
+				LOCAL:2 = LOCAL
+			ELSEIF ARGS == "MIN" && LOCAL:1 > CFLAG:LOCAL:(ARG:1)
+				LOCAL:1 = CFLAG:LOCAL:(ARG:1)
+				LOCAL:2 = LOCAL
+			ELSEIF LOCAL:1 == CFLAG:LOCAL:(ARG:1) && RAND:2
+				LOCAL:1 = CFLAG:LOCAL:(ARG:1)
+				LOCAL:2 = LOCAL
+			ENDIF
+		NEXT
+		RETURNF LOCAL:2
+	CASE "TCVAR"
+		FOR LOCAL, 1, CHARANUM
+			SIF CFLAG:LOCAL:当前位置 != ARG
+				CONTINUE
+			IF LOCAL:3++ == 0
+				LOCAL:1 = TCVAR:LOCAL:(ARG:1)
+				LOCAL:2 = LOCAL
+			ELSEIF ARGS == "MAX" && LOCAL:1 < TCVAR:LOCAL:(ARG:1)
+				LOCAL:1 = TCVAR:LOCAL:(ARG:1)
+				LOCAL:2 = LOCAL
+			ELSEIF ARGS == "MIN" && LOCAL:1 > TCVAR:LOCAL:(ARG:1)
+				LOCAL:1 = TCVAR:LOCAL:(ARG:1)
+				LOCAL:2 = LOCAL
+			ELSEIF LOCAL:1 == TCVAR:LOCAL:(ARG:1) && RAND:2
+				LOCAL:1 = TCVAR:LOCAL:(ARG:1)
+				LOCAL:2 = LOCAL
+			ENDIF
+		NEXT
+		RETURNF LOCAL:2
+	CASE "ABL"
+		FOR LOCAL, 1, CHARANUM
+			SIF CFLAG:LOCAL:当前位置 != ARG
+				CONTINUE
+			IF LOCAL:3++ == 0
+				LOCAL:1 = ABL:LOCAL:(ARG:1)
+				LOCAL:2 = LOCAL
+			ELSEIF ARGS == "MAX" && LOCAL:1 < ABL:LOCAL:(ARG:1)
+				LOCAL:1 = ABL:LOCAL:(ARG:1)
+				LOCAL:2 = LOCAL
+			ELSEIF ARGS == "MIN" && LOCAL:1 > ABL:LOCAL:(ARG:1)
+				LOCAL:1 = ABL:LOCAL:(ARG:1)
+				LOCAL:2 = LOCAL
+			ELSEIF LOCAL:1 == ABL:LOCAL:(ARG:1) && RAND:2
+				LOCAL:1 = ABL:LOCAL:(ARG:1)
+				LOCAL:2 = LOCAL
+			ENDIF
+		NEXT
+		RETURNF LOCAL:2
+	CASE "TALENT"
+		FOR LOCAL, 1, CHARANUM
+			SIF CFLAG:LOCAL:当前位置 != ARG
+				CONTINUE
+			IF LOCAL:3++ == 0
+				LOCAL:1 = TALENT:LOCAL:(ARG:1)
+				LOCAL:2 = LOCAL
+			ELSEIF ARGS == "MAX" && LOCAL:1 < TALENT:LOCAL:(ARG:1)
+				LOCAL:1 = TALENT:LOCAL:(ARG:1)
+				LOCAL:2 = LOCAL
+			ELSEIF ARGS == "MIN" && LOCAL:1 > TALENT:LOCAL:(ARG:1)
+				LOCAL:1 = TALENT:LOCAL:(ARG:1)
+				LOCAL:2 = LOCAL
+			ELSEIF LOCAL:1 == TALENT:LOCAL:(ARG:1) && RAND:2
+				LOCAL:1 = TALENT:LOCAL:(ARG:1)
+				LOCAL:2 = LOCAL
+			ENDIF
+		NEXT
+		RETURNF LOCAL:2
+ENDSELECT
+;FileName_COMMON.ERB ------------------------------- Rev1.00
+;TARGET再设定函数
+;CALL		USER
+;ARG		VOID
+;RETURN		VOID
+;COMMENT
+;-----------------------------------------------------------
+;
+;列表函数とソート函数ができたのでかなり简易化できたかな
+@TARGETSET_CHACK(OP)
+#DIMS OP         ;SHOW_STATUSは同室更新入れるとマズイのでスキップする用
+#DIM  TARGET_CNT ;ターゲットの数
+#DIM  L_ID       ;REF对策、渡すだけ
+#DIM  SWAP_ID    ;现在的TARGET指定处理用の一时变量
+;诶嘿嘿中はTARGETを逃がす（情事发觉とかでズレちゃうので）
+SIF !TFLAG:现在的TARGET
+	TFLAG:现在的TARGET = TARGET
+
+CALL MAKE_CHARA_LIST("TARGET列表", L_ID, TARGET, TARGET_CNT)
+SIF !TARGET_CNT
+	RETURN
+CALL SORT_LIST("好感降顺", TARGET, TARGET_CNT)
+
+LOCAL:1 = TARGET
+IF TFLAG:现在的TARGET > 0
+	LOCAL:1 = FINDELEMENT(TARGET, TFLAG:现在的TARGET)
+	IF LOCAL:1 == -1
+		LOCAL:1 = 0
+		TFLAG:现在的TARGET = 0
+	ENDIF
+	LOCAL:1 = TARGET:(LOCAL:1)
+ENDIF
+ARRAYSHIFT TARGET, 1, LOCAL:1
+[SKIPSTART]
+SIF STRCOUNT(OP, "「同室更新无し」")
+	RETURN
+
+;同室确认は列表侧でやっているのでここでは必要ない
+FOR LOCAL, 1, 1 + TARGET_CNT
+	CFLAG:(TARGET:LOCAL):同室 = 1
+NEXT
+[SKIPEND]
+
+
+;====================================================
+@性技补正(ARG)
+#FUNCTION
+RETURNF 1 + (ABL:PLAYER:ARG - 2) / 10
+;====================================================
+
+;-------------------------------------------------
+;函数名:RECOVER
+;概　要:BASE恢复处理
+;		表示文字列が空の场合かつ恢复量が100未满非表示
+;		表示文字列がある场合は表示
+;参　数:ARG:0	参照する角色番号
+;		恢复量	ARGSに对応するBASEに加算する值（负数の场合は减らす）
+;       ARGS	ベース名
+;		ARGS:1	表示文字列
+;-------------------------------------------------
+@RECOVER(ARG,恢复量,ARGS,ARGS:1)
+#DIM BASE_ID
+#DIM 恢复量
+SIF 恢复量 == 0 || !CHECKE_BASE(ARG, ARGS)
+	RETURN
+;恢复处理
+BASE:ARG:(ARGS) = LIMIT(BASE:ARG:(ARGS) + 恢复量, 0, MAXBASE:ARG:(ARGS))
+;表示处理
+SIF 恢复量 > 0 && 恢复量 < 100 && ARGS:1 == ""
+	RETURN
+IF CFLAG:ARG:当前位置 == CFLAG:MASTER:当前位置
+	BASE_ID = FINDELEMENT(BASENAME, ARGS)
+	LOCALS = \@ ARGS:1 != "" ? （%ARGS:1%） # \@
+	IF 恢复量 > 0
+		CALL COLORMESSAGE(@"%BASENAME:BASE_ID%＋{恢复量} （%NAME_OUTPUT_TRANSLATION("CALLNAME", ARG)%）%LOCALS%",C_GREEN,1)
+	ELSEIF 恢复量 < 0
+		CALL COLORMESSAGE(@"%BASENAME:BASE_ID%－{ABS(恢复量)} （%NAME_OUTPUT_TRANSLATION("CALLNAME", ARG)%）%LOCALS%",C_RED,1)
+	ENDIF
+ENDIF
+
+;-------------------------------------------------
+;函数名:RECOVER_PERMIL
+;概　要:BASE割合恢复处理
+;参　数:ARG:0		参照する角色番号
+;		恢复割合	MAXBASE对して算出する值（负数の场合は减らす）
+;       ARGS		ベース名
+;       恢复速度の影响
+;		ARGS:1		表示文字列
+;恢复割合は0.1%单位
+;-------------------------------------------------
+@RECOVER_PERMIL(ARG,恢复割合,ARGS,恢复速度の影响,ARGS:1="")
+#DIM 恢复割合
+#DIM 恢复速度の影响
+#DIM 恢复量
+SIF !CHECKE_BASE(ARG, ARGS)
+	RETURN
+恢复量 = MAXBASE:ARG:(ARGS) * 恢复割合 / 1000
+SIF 恢复速度の影响
+	恢复量 = 恢复量 * (TALENT:ARG:恢复速度 + 4) / 4
+CALL RECOVER(ARG, 恢复量, ARGS, ARGS:1)
+
+;-------------------------------------------------
+;函数名:RECOVER_PERMIL_BOTH
+;概　要:RECOVER_PERMILを你と对象角色两方やる
+;-------------------------------------------------
+@RECOVER_PERMIL_BOTH(ARG,恢复割合,ARGS,恢复速度の影响,ARGS:1="")
+#DIM 恢复割合
+#DIM 恢复速度の影响
+CALL RECOVER_PERMIL(ARG,恢复割合,ARGS,恢复速度の影响,ARGS:1)
+SIF ARG != MASTER
+	CALL RECOVER_PERMIL(MASTER,恢复割合,ARGS,恢复速度の影响,ARGS:1)
+
+;-------------------------------------------------
+;函数名:CHECKE_BASE
+;概　要:ARGが使えるBASEか判定
+;返回值:0：使用不可
+;		1：使用可能
+;-------------------------------------------------
+@CHECKE_BASE(ARG, ARGS)
+#FUNCTION
+SELECTCASE ARGS
+	CASE "体力", "气力"
+	;竿无ならスキップ
+	CASE "精力", "勃起", "射精"
+		SIF !HAS_PENIS(ARG)
+			RETURNF 0
+	;你以外TSPスキップ
+	CASE "TSP"
+		SIF ARG != MASTER
+			RETURNF 0
+	CASE "母乳"
+		SIF !TALENT:ARG:母乳体质
+			RETURNF 0
+ENDSELECT
+RETURNF 1
+
+;-------------------------------------------------
+;函数名:BUFF_BASE
+;概　要:特定BASEを一时的に强化
+;-------------------------------------------------
+@BUFF_BASE(ARG,强化能力,变动值,メッセージ)
+#DIM 变动值
+#DIM 强化能力
+#DIM メッセージ
+SIF !CHECKE_BASE(ARG, BASENAME:强化能力)
+	RETURN
+SIF 变动值 < 0 && ABS(变动值) > MAXBASE:ARG:强化能力
+	变动值 = (MAXBASE:ARG:强化能力 -1) * -1
+
+MAXBASE:ARG:强化能力 += 变动值
+IF 变动值 < 0 && ABS(变动值) > BASE:ARG:强化能力
+	BASE:ARG:强化能力 = 1
+ELSE
+	BASE:ARG:强化能力 += 变动值
+ENDIF
+BUFF:ARG:强化能力 += 变动值
+SIF メッセージ
+	CALL COLORMESSAGE(@"%NAME_OUTPUT_TRANSLATION("CALLNAME", ARG)%的%BASENAME:强化能力%暂时的\@ 变动值 > 0? 上升了# 下降了\@{ABS(变动值)}",C_YELLOW,1)
+;-------------------------------------------------
+;函数名:BUFF_RESET
+;概　要:Buffを完全にリセット
+;-------------------------------------------------
+@BUFF_RESET
+FOR LOCAL,0,CHARANUM
+	FOR LOCAL:1, 0, 16
+		MAXBASE:LOCAL:(LOCAL:1) -= BUFF:LOCAL:(LOCAL:1)
+		BASE:LOCAL:(LOCAL:1) -= BUFF:LOCAL:(LOCAL:1)
+		BUFF:LOCAL:(LOCAL:1) = 0
+	NEXT
+NEXT
+
+;-------------------------------------------------
+;函数名:CHANGE_CFLAG
+;概　要:メッセージ付きCFLAG变动
+;减少にはならないようになってるので注意
+;-------------------------------------------------
+@CHANGE_CFLAG(变动フラグ,对象,变动数)
+#DIM 变动フラグ
+#DIM 对象
+#DIM 变动数
+
+CFLAG:对象:变动フラグ = MAX(CFLAG:对象:变动フラグ + 变动数, 0)
+IF 变动数 > 0
+	CALL COLORMESSAGE(@"%CFLAGNAME:变动フラグ%＋{变动数}（%NAME_OUTPUT_TRANSLATION("CALLNAME", 对象)%）",C_YELLOW,2,1)
+ELSE
+	CALL COLORMESSAGE(@"%CFLAGNAME:变动フラグ%－{-变动数}（%NAME_OUTPUT_TRANSLATION("CALLNAME", 对象)%）",C_RED,2,1)
+ENDIF
+
+;-------------------------------------------------
+;函数名:AddEXP
+;概　要:メッセージ付きEXP加算
+;减少にはならないようになってるので注意
+;-------------------------------------------------
+@AddEXP(VAR_NAME,C_ID,变动数)
+#DIMS VAR_NAME
+#DIM VAR_ID
+#DIM C_ID
+#DIM 变动数
+
+SIF 变动数 == 0
+	RETURN
+
+VAR_ID = FINDELEMENT(EXPNAME, VAR_NAME)
+EXP:C_ID:VAR_ID += 变动数
+CALL COLORMESSAGE(@"%VAR_NAME%＋{变动数}（%NAME_OUTPUT_TRANSLATION("CALLNAME", C_ID)%）",C_YELLOW,2,1)
+
+;-------------------------------------------------
+;函数名:SHIRAHU
+;概　要:普通に意识がある状态か　2だとウフフ中
+;-------------------------------------------------
+@SHIRAHU(ARG)
+#FUNCTION
+IF FLAG:70
+	RETURNF 0
+ELSEIF !CFLAG:ARG:睡眠 && !CFLAG:ARG:陪睡中 && !TCVAR:ARG:烂醉 && !CFLAG:ARG:衰弱
+	IF TFLAG:102 == 2
+		RETURNF 2
+	ELSE
+		RETURNF 1
+	ENDIF
+ELSE
+	RETURNF 0
+ENDIF
+
+;-------------------------------------------------
+;函数名:BETWEENTIME
+;概　要:TIMEがARGからARG:1までの间なのか返す函数
+;-------------------------------------------------
+@BETWEENTIME(ARG,ARG:1)
+#FUNCTION
+IF ARG < ARG:1
+	IF TIME >= ARG && TIME < ARG:1
+		RETURNF 1
+	ELSE
+		RETURNF 0
+	ENDIF
+ELSE
+	IF TIME >= ARG || TIME < ARG:1
+		RETURNF 1
+	ELSE
+		RETURNF 0
+	ENDIF
+ENDIF
+;-------------------------------------------------
+;函数名:VISIT
+;概　要:その角色の活动时间带かどうかを返す函数
+;-------------------------------------------------
+@VISIT(ARG)
+#FUNCTION
+RETURNF BETWEENTIME(CFLAG:ARG:来访时间,CFLAG:ARG:回家时间)
+;-------------------------------------------------
+;函数名:睡眠时间
+;概　要:住宿人物が寝てるかどうかを返す函数だったのを全员使えるように
+;寝てると1を返す
+;-------------------------------------------------
+@睡眠时间(ARG)
+#FUNCTION
+SIF ARG == MASTER
+	RETURNF CFLAG:MASTER:睡眠
+IF CFLAG:ARG:衰弱
+	RETURNF 1
+ELSE
+	;睡眠时间をチェックする
+	CALLF 睡眠时间２(ARG)
+	IF !BETWEENTIME(CFLAG:ARG:起床时间, CFLAG:ARG:就寝时间 + CFLAG:ARG:清醒剂)
+		RETURNF 1
+	ELSE
+		RETURNF 0
+	ENDIF
+ENDIF
+;-------------------------------------------------
+;函数名:睡眠时间２
+;概　要:角色ARGが寝てから起きるまでの时间の计测
+;偏离正轨していた场合は自动で修正する
+;-------------------------------------------------
+@睡眠时间２(ARG)
+#FUNCTION
+#DIM SLEEPTIME
+#DIM WAKEUPTIME
+;清醒剂の强度分延长する
+WAKEUPTIME = CFLAG:ARG:起床时间
+SLEEPTIME = CFLAG:ARG:就寝时间 + CFLAG:ARG:清醒剂
+;就寝时间が24时を超えている场合
+WHILE SLEEPTIME >= 1440
+	SLEEPTIME -= 1440
+WEND
+;前日の夜に寝て翌日の朝に起きる场合
+SIF SLEEPTIME > WAKEUPTIME
+	WAKEUPTIME += 1440
+;睡眠时间が2～14时间を逸している场合はチェック
+IF !INRANGE(WAKEUPTIME - SLEEPTIME, 120, 840)
+	;清醒剂が原因
+	IF CFLAG:ARG:清醒剂
+		;30分ずつ是正していく
+		CFLAG:ARG:清醒剂 -= 30
+		RESTART
+	;设定がおかしい
+	ELSE
+		[IF_DEBUG]
+			;チェックのためTHROWしておく,路人子は许可,一时的に守矢神签对策,あとで修正,THROWはアレなのでデ背包用に
+			;SIF ARG != [[路人子]] && CFLAG:ARG:起床时间 != CFLAG:ARG:就寝时间
+				;THROW
+		[ENDIF]
+	ENDIF
+ENDIF
+RETURNF WAKEUPTIME - SLEEPTIME
+
+;-------------------------------------------------
+;角色の生活时间を设定する函数
+;一日の始まりに设定する
+;-------------------------------------------------
+@生活时间设定(CHARA)
+#DIM CHARA
+;addition custom code, for custom charadata movement
+CALL KOJO_CHECK(CHARA, "CHARADATA", "MOVE", 3)
+IF RESULT == -1 ;等于-1时,表明口上侧需要是结果为0
+	RESULT = 0
+	TRYCALLFORM CHARAMOVE_DATA_{NO:CHARA}(3)
+ELSEIF RESULT ;等于其他正值时，表明口上侧有自己的值
+ELSE 
+;addition custom code, duplicated characters
+TRYCALLFORM CHARAMOVE_DATA_{NO:CHARA}(3)
+ENDIF 
+CFLAG:CHARA:起床时间 = 时刻计算(CSVCFLAG(CHARA, GETNUM(CFLAG, "起床时间")) + CFLAG:CHARA:生活时间补正)
+CFLAG:CHARA:来访时间 = 时刻计算(CSVCFLAG(CHARA, GETNUM(CFLAG, "来访时间")) + CFLAG:CHARA:生活时间补正)
+CFLAG:CHARA:回家时间 = 时刻计算(CSVCFLAG(CHARA, GETNUM(CFLAG, "回家时间")) + CFLAG:CHARA:生活时间补正)
+CFLAG:CHARA:就寝时间 = 时刻计算(CSVCFLAG(CHARA, GETNUM(CFLAG, "就寝时间")) + CFLAG:CHARA:生活时间补正)
+;大晦日はみんな夜ふかし
+IF FESTIVAL() == "大晦日"
+	IF INRANGE(CFLAG:CHARA:回家时间, 900 , 1440) || INRANGE(CFLAG:CHARA:回家时间, 0 , 59) || INRANGE(CFLAG:CHARA:就寝时间, 900 , 1440) || INRANGE(CFLAG:CHARA:就寝时间, 0 , 119)
+		CFLAG:CHARA:回家时间 = 60
+		CFLAG:CHARA:就寝时间 = 120
+	ENDIF
+ENDIF
+;-------------------------------------------------
+;时刻の计算
+;时刻X+Yを时刻で返す
+;-------------------------------------------------
+@时刻计算(ARG)
+#FUNCTION
+LOCAL = ARG
+WHILE LOCAL > 1440
+	LOCAL -= 1440
+WEND
+WHILE LOCAL < 0
+	LOCAL += 1440
+WEND
+RETURNF LOCAL
+
+;-------------------------------------------------
+;函数名:儿童の睡眠时间
+;概　要:角色ARGの儿童が寝てるかどうかを返す函数
+;寝てると1を返す
+;-------------------------------------------------
+@儿童の睡眠时间(ARG)
+#FUNCTION
+#DIM 儿童の起床时间
+#DIM 儿童の就寝时间
+SIF !TALENT:ARG:育儿中
+	RETURNF 0
+儿童の起床时间 = CFLAG:ARG:起床时间
+儿童の就寝时间 = CFLAG:ARG:就寝时间 - 120 + (CFLAG:ARG:就寝时间 - 120 < 0 ? 1440 # 0 )
+IF !BETWEENTIME(儿童の起床时间, 儿童の就寝时间)
+	RETURNF 1
+ELSE
+	RETURNF 0
+ENDIF
+;-------------------------------------------------
+;函数名:WORKING
+;概　要:その角色の仕事时间带かどうかを返す函数
+;-------------------------------------------------
+@WORKING(ARG)
+#FUNCTION
+IF !SHIRAHU(ARG)
+	RETURNF 0
+ELSEIF !BETWEENTIME(TCVAR:ARG:工作开始,TCVAR:ARG:工作结束)
+	RETURNF 0
+ELSEIF BASE:ARG:工作量 <= 0
+	RETURNF 0
+ELSEIF CHARA_HOLIDAY(ARG)
+	RETURNF 0
+ELSE
+	RETURNF 1
+ENDIF
+;-------------------------------------------------
+;函数名:连续实行
+;概　要:同一指令连续实行した际ペナルティが发生するか
+;返回值:0だとペナが发生しない
+;-------------------------------------------------
+@连续实行()
+#FUNCTION
+SIF TARGET != TFLAG:103
+	RETURNF 0
+SELECTCASE PREVCOM
+	CASE 1,60,61,65,67,68,300,304,368,410,442,445,446,604,621
+		RETURNF 0
+	CASEELSE
+		RETURNF 1
+ENDSELECT
+
+;-------------------------------------------------
+;函数名:Counter不发指令
+;返回值:0でないとCounter不发
+;-------------------------------------------------
+@Counter不发指令(ARG)
+#FUNCTION
+SELECTCASE ARG
+	;(天候パッチ)「眺望天空」はCounter不发
+	CASE 495
+		RETURNF 1
+	;炮友契约
+	CASE 357
+		RETURNF 1
+	CASE 697 TO 699
+		RETURNF 1
+	CASEELSE
+		RETURNF 0
+ENDSELECT
+;-------------------------------------------------
+;函数名:ENDUFUFU
+;概　要:诶嘿嘿结束时リセット处理
+;-------------------------------------------------
+@ENDUFUFU(ARG)
+[IF DEBUG]
+	PRINTFORML 诶嘿嘿结束处理
+[ENDIF]
+UFUFU_START_TIME = 0
+UFUFU_START_DAY = 0
+;时间停止中は服装セットしない
+;睡眠中分岐などは全部リセット处理侧にあります
+SIF !FLAG:时间停止
+	CALL CHANGE_CLOTHES(ARG, "复原衣服")
+;服装をTEQUIPへ
+CALL CLOTHES_SETTING_TRAIN(ARG)
+
+;MASTERとの接触位置をリセット
+CALL TOUCH_SET(0, 0, 0, 1)
+
+;ウフフ时系装备リセット
+;TEQUIP:ARG:10-TEQUIP:ARG:149を初期化する
+VARSET TEQUIP:ARG:0, 0, 10, 150
+
+;射精关系リセット
+IF TFLAG:102 < 2
+	BASE:ARG:射精 = 0
+	TCVAR:ARG:要去了 = 0
+ENDIF
+CFLAG:ARG:诶嘿嘿 = 0
+TEQUIP:ARG:50 = -1
+TEQUIP:ARG:51 = -1
+TEQUIP:ARG:上半身裸露状态 = 0
+TEQUIP:ARG:下半身挪开状态 = 0
+TEQUIP:ARG:上衣脱衣完毕 = 0
+TEQUIP:ARG:绳 = 0
+TEQUIP:ARG:拘束 = 0
+TCVAR:ARG:强行 = 0
+TCVAR:ARG:随便 = 0
+
+;一応MASTERも初期化（しとかないと、结束后も○○装着中が表示される可能性があるので
+IF CFLAG:MASTER:诶嘿嘿
+	CFLAG:MASTER:诶嘿嘿 = 0
+	CALL CHANGE_CLOTHES(MASTER, "复原衣服")
+	CALL CLOTHES_SETTING_TRAIN(MASTER)
+	VARSET TEQUIP:MASTER:0, 0, 10, 150
+	TEQUIP:MASTER:50 = -1
+	TEQUIP:MASTER:51 = -1
+	TEQUIP:MASTER:上半身裸露状态 = 0
+	TEQUIP:MASTER:下半身挪开状态 = 0
+ENDIF
+
+IF CFLAG:睡眠
+	IF CFLAG:ARG:口内精液
+		IF TALENT:ARG:精爱味觉 == 1
+			SETCOLOR C_PINK
+			PRINTFORML ❤~
+			PRINTFORML 梦中的%NAME_OUTPUT_TRANSLATION("CALLNAME", ARG)%自然的饮下了%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%赠与的白浊，随后就像触发了什么开关一样缓缓将手移到身下，满面红潮
+			TCVAR:ARG:发情 = 1
+			CFLAG:ARG:积攒度 += LIMIT((10 + RAND:20 + RAND:20 + RAND:20) * ABL:LOCAL:欲望,200,1000)
+		ELSEIF ABL:ARG:精液中毒 > 4
+			SETCOLOR C_YELLOW
+			PRINTFORML 嗯~
+			PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", ARG)%在美梦中熟练的吞下了%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%留在口中的罪恶，但似乎没能满足似的舔舐着口中残存的味道
+			CFLAG:ARG:积攒度 += LIMIT((10 + RAND:20 + RAND:20 + RAND:20) * ABL:LOCAL:欲望,200,1000)
+		ELSEIF ABL:ARG:精液中毒 > 2
+			SETCOLOR C_AQUA
+			PRINTFORML 唔...
+			PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", ARG)%不自觉的咽下%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%留在口中的证据，然后美美的微笑着发出一声梦呓
+		ELSE
+			SETCOLOR C_RED
+			PRINTFORML 咳...咳...
+			PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%处理掉了%NAME_OUTPUT_TRANSLATION("CALLNAME", ARG)%口中残留的精液，%NAME_OUTPUT_TRANSLATION("CALLNAME", ARG)%在睡梦中轻声咳了一声
+		ENDIF
+			CFLAG:ARG:口内精液 = 0
+			RESETCOLOR
+	ENDIF
+	IF CFLAG:ARG:脸上精液 || CFLAG:ARG:手上精液
+		PRINTFORM %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%把粘在%NAME_OUTPUT_TRANSLATION("CALLNAME", ARG)%
+		IF CFLAG:ARG:脸上精液 && !CFLAG:ARG:手上精液
+			PRINTFORM 脸上的
+		ELSEIF !CFLAG:ARG:脸上精液 && CFLAG:ARG:手上精液
+			PRINTFORM 手上的
+		ELSE
+			PRINTFORM 脸上和手上的
+		ENDIF
+		PRINTFORML 精液擦掉了
+		CFLAG:ARG:脸上精液 = 0
+		CFLAG:ARG:手上精液 = 0
+	ENDIF
+ENDIF
+IF !FLAG:时间停止
+	TFLAG:运搬 = 0
+	IF CFLAG:ARG:口内精液
+		PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", ARG)%把嘴里残留着的精液\@ ABL:ARG:精液中毒 > 2 ? 喝下去了 # 吐出来了 \@
+		CFLAG:ARG:口内精液 = 0
+	ENDIF
+	IF CFLAG:ARG:脸上精液 || CFLAG:ARG:手上精液
+		PRINTFORM %NAME_OUTPUT_TRANSLATION("CALLNAME", ARG)%把
+		IF CFLAG:ARG:脸上精液 && !CFLAG:ARG:手上精液
+			PRINTFORM 粘在脸上的
+		ELSEIF !CFLAG:ARG:脸上精液 && CFLAG:ARG:手上精液
+			PRINTFORM 粘在手上的
+		ELSE
+			PRINTFORM 粘在脸上和手上的
+		ENDIF
+		PRINTFORML 精液\@ ABL:ARG:精液中毒 > 2 ? 含进嘴里 # 擦掉了 \@
+		CFLAG:ARG:脸上精液 = 0
+		CFLAG:ARG:手上精液 = 0
+	ENDIF
+ENDIF
+
+;潜伏モード解除
+SIF GETBIT(FLAG:潜伏,0)
+	CALL 潜伏モード结束处理
+
+;-------------------------------------------------
+;函数名:ENDUFUFU_ALL
+;概　要:全员にENDUFUFU
+;人数を返す
+;-------------------------------------------------
+@ENDUFUFU_ALL
+VARSET LOCAL
+FOR LOCAL, 0, CHARANUM
+	IF CFLAG:LOCAL:诶嘿嘿
+		CALL ENDUFUFU(LOCAL)
+		LOCAL:1 ++
+	ENDIF
+NEXT
+TFLAG:MASTERのＰ插入中 = 0
+RETURN LOCAL:1
+
+;-------------------------------------------------------------
+;ARGと你が同性だった场合、两者にレズ（ゲイ）経験を追加する函数
+;-------------------------------------------------------------
+@ADD_EXP_LESNIAN(UP_EXP,ARG,ARGS)
+#DIM UP_EXP
+#DIM SAMESEX
+
+;第二参数を省略するとTARGET扱い
+SIF !ARG
+	ARG = TARGET
+IF HETEROSEX(ARG,MASTER)
+	SAMESEX = 50 + HETEROSEX(ARG,MASTER)
+	EXP:SAMESEX += UP_EXP
+	EXP:PLAYER:SAMESEX += UP_EXP
+	IF ARGS != ""
+		CALL COLORMESSAGE(@"%EXPNAME:SAMESEX%＋{UP_EXP}（%NAME_OUTPUT_TRANSLATION("CALLNAME", ARG)%）",C_YELLOW,2,1)
+		CALL COLORMESSAGE(@"%EXPNAME:SAMESEX%＋{UP_EXP}（%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%）",C_YELLOW,2,1)
+	ENDIF
+ENDIF
+
+;----------------------------------------------------
+;性别判定用
+;----------------------------------------------------
+@HAS_PENIS(ARG)
+#FUNCTION
+SIF GETBIT(TALENT:ARG:性别, 1)
+	RETURNF 1
+RETURNF 0
+
+;-------------------------------------------------
+;イベントなどでキレた场合の处理
+;-------------------------------------------------
+@GET_ANGRY(ARG, 刻印付与)
+#DIM 刻印付与
+
+CFLAG:ARG:心情不快 = 1
+CFLAG:ARG:勃然大怒 = 1
+BASE:ARG:愤怒 = MAXBASE:ARG:愤怒
+TALENT:ARG:心情 = -1
+MARK:ARG:反抗刻印 = MIN(MARK:ARG:反抗刻印 + 刻印付与, 3)
+MARK:ARG:反抗取得履历 = MAX(MARK:ARG:反抗取得履历,MARK:ARG:反抗刻印)
+
+;FileName_COMMON.ERB ------------------------------- Rev1.00
+;酒醉い状态取得
+;CALL		USER
+;ARG		角色No
+;RETURN		酒醉い状态_toSTR
+;COMMENT
+;-----------------------------------------------------------
+@ALCOHOL_FACE(ARG)
+#FUNCTIONS
+SIF BASE:ARG:酒气 <= 2
+	RETURNF "　清醒　"
+SELECTCASE BASE:ARG:酒气
+	CASE IS > (MAXBASE:ARG:酒气 / 10) * 8
+		RETURNF "不省人事"
+;	CASE IS > (MAXBASE:ARG:酒气 / 10) * 7
+;		RETURNF "酩酊大醉"
+	CASE IS > (MAXBASE:ARG:酒气 / 10) * 5
+	;"醉いどれ"
+		RETURNF "醉酒"
+	CASE IS <= (MAXBASE:ARG:酒气 / 10) * 5
+	;"ほろ醉い"
+		RETURNF "微醺"
+ENDSELECT
+;-------------------------------------------------
+;是／否 の选择肢を表示し入力结果を返す函数
+;参数 0=肯定选择肢の文字列、1=否定选择肢の文字列
+;返回值 0=是、1=否
+;-------------------------------------------------
+@ASK_YN(ARGS:0 = "是", ARGS:1 = "否")
+#DIM PREV_REDRAW
+PREV_REDRAW = CURRENTREDRAW()
+REDRAW 0
+PRINTBUTTON @" [%ARGS:0%]", 0
+PRINTL
+PRINTBUTTON @" [%ARGS:1%]", 1
+PRINTL
+$INPUT_LOOP
+INPUT
+IF RESULT != 0 && RESULT != 1
+	CLEARLINE 1
+	GOTO INPUT_LOOP
+ENDIF
+REDRAW PREV_REDRAW
+RETURN RESULT
+;-------------------------------------------------
+;特殊な机能を持つボタンを作成する函数
+;ARGは入力される数字、ARG:1に1を设定すると灰色に、
+;ARG:2に1を设定するとボタンが黄色、ARG:3に1を设定するとボタンが无效(灰色)
+;-------------------------------------------------
+@PRINTBUTTON_EX(ARGS:0, ARG,ARG:1,ARG:2,ARG:3)
+IF ARG:3
+	SETCOLOR C_L_GRAY
+	PRINTFORM %ARGS:0%
+ELSE
+	SIF ARG:2
+		SETCOLOR C_YELLOW
+	SIF ARG:1
+		SETCOLOR C_L_GRAY
+	PRINTBUTTON @"%ARGS:0%", ARG
+ENDIF
+RESETCOLOR
+;-------------------------------------------------
+;特殊な机能を持つボタンを作成する函数
+;ARGは入力される数字、ARG:1に1を设定すると灰色に、
+;ARG:2に1を设定するとボタンが黄色、ARG:3に1を设定するとボタンが无效(灰色)
+;-------------------------------------------------
+@PRINTBUTTON_EXC(ARGS:0, ARG,ARG:1,ARG:2,ARG:3)
+IF ARG:3
+	SETCOLOR C_L_GRAY
+	PRINTFORMC %ARGS:0%
+ELSE
+	SIF ARG:2
+		SETCOLOR C_YELLOW
+	SIF ARG:1
+		SETCOLOR C_L_GRAY
+	PRINTBUTTONC @"%ARGS:0%", ARG
+ENDIF
+RESETCOLOR
+;-------------------------------------------------
+;Fisher-Yatesアルゴリズムによるシャッフル配列の作成
+;専用配列SHAFFLE_ARRAYを使用
+;参数 0:配列の长さ（0～ARG:0-1までのシャッフル）
+;-------------------------------------------------
+@FISHER_YATES_SHAFFLE(ARG:0)
+;シャッフル配列の初期化
+SIF ARG:0 < 1 || ARG:0 > 999
+   ARG:0 = 1 + RAND:998
+SIF !INRANGE(ARG:0 , 1 , 999)
+	THROW 参数({ARG:0})が异常です。1～999の范围で指定してください。
+VARSET SHAFFLE_ARRAY , 0
+;SHAFFLE_ARRAYの初期化
+FOR LOCAL:0 , 0 , ARG:0
+	SHAFFLE_ARRAY:(LOCAL:0) = LOCAL:0
+NEXT
+
+FOR LOCAL:0 , 0 , ARG:0 - 1
+	LOCAL:1 = RAND(LOCAL:0 , ARG:0)
+	SWAP SHAFFLE_ARRAY:(LOCAL:0), SHAFFLE_ARRAY:(LOCAL:1)
+NEXT
+;终端用に-1をセット
+SHAFFLE_ARRAY:(ARG:0) = -1
+RETURN 0
+
+@NEMUKE()
+#FUNCTION
+LOCAL =  TIME + 1440 * DAY - TFLAG:你起床 - TFLAG:198 - CFLAG:MASTER:清醒剂
+RETURNF LOCAL
+
+;-------------------------------------------------
+;时刻表示(ARG)
+;与えられたTIMEをH时MM分表示に变换
+;-------------------------------------------------
+@时刻表示(ARG)
+#FUNCTIONS
+#DIM HOUR
+#DIM MINUTE
+#DIMS 时刻
+HOUR   = ARG / 60
+MINUTE = ARG % 60
+SIF HOUR > 24
+	HOUR = HOUR - 24
+时刻 = %TOSTR(HOUR)%时%TOSTR(MINUTE,"00")%分
+RETURNF 时刻
+
+;-------------------------------------------------
+;时刻变换(HOUR, MINUTE)
+;与えられたHOUR时MINUTE分をTIME用に变换
+;念のためにHOURが25だったりMINUTEが61だったりした场合にも对応した
+;例）CLOCK_TO_TIME(10, 0)をすると返る数值は600
+;eraTWの一日は00:01～24:00の范围、詳しくは@INFO_GO_NEXTDAYを见よ
+;-------------------------------------------------
+@CLOCK_TO_TIME(HOUR, MINUTE)
+#FUNCTION
+#DIM HOUR
+#DIM MINUTE
+SIF HOUR == 24 && MINUTE == 0
+	RETURNF 24 * 60
+HOUR   = (HOUR + MINUTE / 60) % 24
+MINUTE = MINUTE % 60
+RETURNF HOUR * 60 + MINUTE
+
+
+
+;-------------------------------------------------
+;TIMESTOP(ARG)
+;その角色の时间停止状态を返す
+;0=时间停止无（意识あり）　1=时间停止世界入り（意识あり）　2=完全に止められてる（意识がない状态）
+;-------------------------------------------------
+@TIMESTOP(ARG)
+#FUNCTION
+;参数を略すとTARGET
+SIF !ARG
+	ARG = TARGET
+IF !FLAG:70
+	LOCAL = 0
+ELSEIF CFLAG:ARG:344 == 1
+	LOCAL = 1
+ELSE
+	LOCAL = 2
+ENDIF
+RETURNF LOCAL
+
+@KIGEN_CHANGE(ARG,概率,倾向)
+#DIM 概率
+#DIM 倾向
+;倾向を1にすると+のみ、-1にすると-のみ
+SIF TALENT:ARG:感情缺乏
+	概率 /= 2
+IF RAND:100 < 概率
+	IF !倾向
+		IF !RAND:2
+			TALENT:ARG:心情 ++
+		ELSE
+			TALENT:ARG:心情 --
+		ENDIF
+	ELSE
+		TALENT:ARG:心情 += 倾向
+	ENDIF
+ENDIF
+TALENT:ARG:心情 = LIMIT(TALENT:ARG:心情,-1,1)
+
+;-------------------------------------------------
+;ARGが讨厌男人で你が男なら1
+;ARGが讨厌女人で你が女なら2を返す
+;恋慕爱欲两面通吃で无效
+;-------------------------------------------------
+@OTOKOGIRAI(ARG)
+#FUNCTION
+;两面通吃
+SIF TALENT:ARG:性别嗜好 == -1
+	RETURNF 0
+;恋慕
+SIF TALENT:ARG:恋慕
+	RETURNF 0
+SIF TALENT:ARG:爱欲
+	RETURNF 0
+;讨厌男人
+IF TALENT:ARG:性别嗜好 & 1 && !(TALENT:PLAYER:2 & 1)
+	RETURNF 1
+;讨厌女人
+ELSEIF TALENT:ARG:性别嗜好 & 2 && !(TALENT:PLAYER:2 & 2)
+	RETURNF 2
+ENDIF
+RETURNF 0
+
+
+
+;-------------------------------------------------
+;色欲察觉の个别判定F函数
+;-------------------------------------------------
+;实绩解除しなくても察觉できるように
+;指令としての色欲察觉は使用不可能
+@NOTICE_LUST(C_ID)
+#FUNCTION
+#DIM C_ID
+SIF C_ID == MASTER
+	RETURNF 0
+SIF TALENT:MASTER:色欲察觉
+	RETURNF 1
+SIF EXP:C_ID:约会经验 + EXP:C_ID:爱情经验 >= 100
+	RETURNF 1
+RETURNF 0
+
+
+
+;-------------------------------------------------
+;生理周期可视化の个别判定F函数
+;-------------------------------------------------
+;实绩解除しなくても可视化できるように
+@NOTICE_CYCLE(C_ID)
+#FUNCTION
+#DIM C_ID
+SIF !GETBIT(TALENT:C_ID:性别, 0)
+	RETURNF 0
+;自分のは把握しとるじゃろ
+SIF C_ID == MASTER
+	RETURNF 1
+SIF FLAG:生理周期可视化
+	RETURNF 1
+SIF EXP:C_ID:约会经验 + EXP:C_ID:爱情经验 >= 200
+	RETURNF 1
+RETURNF 0
+
+
+
+;-------------------------------------------------
+;角色チェックF函数
+;-------------------------------------------------
+;角色が特定条件に合致しているかどうかを返す
+;条件はTYPEごとに指定
+;复合した条件に名前をつける时は角色列表クラス函数を增设することにした
+;-------------------------------------------------
+@CHECK_CHARA(C_ID, TYPE = "存在")
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS DYNAMIC TYPE ;判定タイプ、DYNAMICしたので多重呼び出し可能
+#DIM C_ID          ;登录番号
+SELECTCASE TYPE
+;基本条件
+CASE "存在"
+	RETURNF !CFLAG:C_ID:出禁
+CASE "陷落"
+	RETURNF (TALENT:C_ID:思慕 || TALENT:C_ID:恋慕 || TALENT:C_ID:爱欲 || TALENT:C_ID:恋人 || TALENT:C_ID:炮友)
+CASE "人类"
+	RETURNF TALENT:C_ID:人类
+CASE "仙人"
+	RETURNF GET_TRIBENAME(C_ID, GETNUM(TALENT, "人类")) == "仙人"
+CASE "天人"
+	RETURNF GET_TRIBENAME(C_ID, GETNUM(TALENT, "人类")) == "天人"
+CASE "月人"
+	RETURNF GET_TRIBENAME(C_ID, GETNUM(TALENT, "人类")) == "月人"
+CASE "魔界人"
+	RETURNF GET_TRIBENAME(C_ID, GETNUM(TALENT, "人类")) == "魔界人"
+CASE "外界人"
+	RETURNF GET_TRIBENAME(C_ID, GETNUM(TALENT, "人类")) == "外界人"
+CASE "妖怪"
+	RETURNF TALENT:C_ID:妖怪
+CASE "鬼"
+	RETURNF GROUPMATCH(GET_TRIBENAME(C_ID, GETNUM(TALENT, "妖怪")), "鬼", "吸血鬼")
+CASE "吸血鬼"
+	RETURNF GET_TRIBENAME(C_ID, GETNUM(TALENT, "妖怪")) == "吸血鬼"
+CASE "河童"
+	RETURNF GET_TRIBENAME(C_ID, GETNUM(TALENT, "妖怪")) == "河童"
+CASE "天狗"
+	RETURNF GET_TRIBENAME(C_ID, GETNUM(TALENT, "妖怪")) == "天狗"
+CASE "妖兽"
+	RETURNF GROUPMATCH(GET_TRIBENAME(C_ID, GETNUM(TALENT, "妖怪")), "妖兽", "妖鸟", "妖虫")
+CASE "妖精"
+	RETURNF TALENT:C_ID:妖精
+CASE "神灵"
+	RETURNF TALENT:C_ID:神灵
+CASE "幽灵"
+	RETURNF TALENT:C_ID:幽灵
+CASE "付丧神"
+	RETURNF TALENT:C_ID:付丧神
+CASE "人形"
+	RETURNF TALENT:C_ID:人形
+CASE "巫女"
+	RETURNF GET_TRIBENAME(C_ID, GETNUM(TALENT, "追加种族")) == "巫女"
+CASE "魔法使"
+	RETURNF GET_TRIBENAME(C_ID, GETNUM(TALENT, "追加种族")) == "魔法使"
+CASE "女仆"
+	RETURNF GET_TRIBENAME(C_ID, GETNUM(TALENT, "追加种族")) == "女仆"
+CASE "蓬莱人"
+	RETURNF GET_TRIBENAME(C_ID, GETNUM(TALENT, "追加种族")) == "蓬莱人"
+CASE "半人类"
+	RETURNF TALENT:C_ID:人类 && (TALENT:C_ID:妖怪 || TALENT:C_ID:妖精 || TALENT:C_ID:神灵 || TALENT:C_ID:幽灵 || TALENT:C_ID:付丧神 || TALENT:C_ID:人形)
+CASE "掌握把柄"
+;C_IDがMASTERの把柄を握っている
+	RETURNF CFLAG:C_ID:掌握把柄
+CASE "被掌握把柄"
+;C_IDがMASTERに把柄を握られている
+	RETURNF CFLAG:C_ID:被掌握把柄
+CASE "反抗刻印"
+	RETURNF (MARK:C_ID:反抗刻印 >= 1)
+CASE "时奸刻印"
+	RETURNF (MARK:C_ID:时奸刻印 >= 1)
+CASE "时奸经验"
+	RETURNF (EXP:C_ID:时奸经验 >= 1)
+CASE "纯洁的交往"
+	RETURNF (CFLAG:C_ID:纯洁的交往 >= 1)
+CASE "口上实装状况"
+	RETURNF (CFLAG:C_ID:口上实装状况 >= 1)
+CASE "子持ち"
+	RETURNF (CFLAG:C_ID:儿童人数 >= 1)
+CASE "同室"
+	RETURNF (CFLAG:C_ID:当前位置 == CFLAG:MASTER:当前位置)
+CASE "种付可"
+	RETURNF TALENT:C_ID:性别 == 1 && CFLAG:C_ID:妊娠经过日数 == 0 && !INRANGE(CFLAG:C_ID:分娩经过日, 1, 59)
+CASE "全裸"
+	{
+	SIF EQUIP:C_ID:饰品 || EQUIP:C_ID:帽子
+		 || EQUIP:C_ID:下半身内衣１ || EQUIP:C_ID:下半身内衣２
+		 || EQUIP:C_ID:上半身内衣１ || EQUIP:C_ID:上半身内衣２
+		 || EQUIP:C_ID:紧身内衣 || EQUIP:C_ID:连体内衣 || EQUIP:C_ID:连衣裙 || EQUIP:C_ID:和服
+		 || EQUIP:C_ID:裤子 || EQUIP:C_ID:下身衣服 || EQUIP:C_ID:裙子
+		 || EQUIP:C_ID:上身衣服１ || EQUIP:C_ID:上身衣服２ || EQUIP:C_ID:外衣
+		 || EQUIP:C_ID:其他１ || EQUIP:C_ID:其他２ || EQUIP:C_ID:其他３ || EQUIP:C_ID:腕部装束
+	}
+		RETURNF 0
+	RETURNF 1
+CASE "女性"
+	RETURNF TALENT:C_ID:性别 == 1
+CASE "妊娠"
+	RETURNF TALENT:C_ID:妊娠
+CASE "育儿中"
+	RETURNF TALENT:C_ID:育儿中
+CASE "扶她"
+	RETURNF TALENT:C_ID:性别 == 3
+CASE "ケモミミ"
+	RETURNF TALENT:C_ID:动物耳 != 0
+CASE "人类耳"
+	RETURNF TALENT:C_ID:动物耳 == 0
+CASE "非处女"
+	SIF TALENT:C_ID:性别 == 2
+		RETURNF 0
+	RETURNF GROUPMATCH(TALENT:C_ID:处女, 0, -1)
+CASEELSE
+	THROW 不明なTYPE%TYPE%
+ENDSELECT
+
+
+
+;-------------------------------------------------
+;角色比较函数
+;-------------------------------------------------
+;全参数必须
+;スマートとは程远いコピペゴリ押しである
+;-------------------------------------------------
+@CHARA_COMPARE(VAR_NAME, VAR_ID, CHARA_A, TYPE, CHARA_B)
+#FUNCTION
+#DIMS VAR_NAME ;比较对象角色变量
+#DIM  VAR_ID   ;比较对象角色变量のID
+#DIM  CHARA_A  ;比较对象角色Aの登录番号
+#DIMS TYPE     ;比较内容
+#DIM  CHARA_B  ;比较对象角色Bの登录番号
+SELECTCASE VAR_NAME
+CASE "ABL"
+	SELECTCASE TYPE
+	CASE "=="
+		RETURNF ABL:CHARA_A:VAR_ID == ABL:CHARA_B:VAR_ID
+	CASE ">"
+		RETURNF ABL:CHARA_A:VAR_ID > ABL:CHARA_B:VAR_ID
+	CASE ">="
+		RETURNF ABL:CHARA_A:VAR_ID >= ABL:CHARA_B:VAR_ID
+	CASE "<"
+		RETURNF ABL:CHARA_A:VAR_ID < ABL:CHARA_B:VAR_ID
+	CASE "<="
+		RETURNF ABL:CHARA_A:VAR_ID <= ABL:CHARA_B:VAR_ID
+	CASEELSE
+		THROW 不明なTYPE　%TYPE%
+	ENDSELECT
+
+CASE "BASE"
+	SELECTCASE TYPE
+	CASE "=="
+		RETURNF BASE:CHARA_A:VAR_ID == BASE:CHARA_B:VAR_ID
+	CASE ">"
+		RETURNF BASE:CHARA_A:VAR_ID > BASE:CHARA_B:VAR_ID
+	CASE ">="
+		RETURNF BASE:CHARA_A:VAR_ID >= BASE:CHARA_B:VAR_ID
+	CASE "<"
+		RETURNF BASE:CHARA_A:VAR_ID < BASE:CHARA_B:VAR_ID
+	CASE "<="
+		RETURNF BASE:CHARA_A:VAR_ID <= BASE:CHARA_B:VAR_ID
+	CASEELSE
+		THROW 不明なTYPE　%TYPE%
+	ENDSELECT
+
+CASE "MAXBASE"
+	SELECTCASE TYPE
+	CASE "=="
+		RETURNF MAXBASE:CHARA_A:VAR_ID == MAXBASE:CHARA_B:VAR_ID
+	CASE ">"
+		RETURNF MAXBASE:CHARA_A:VAR_ID > MAXBASE:CHARA_B:VAR_ID
+	CASE ">="
+		RETURNF MAXBASE:CHARA_A:VAR_ID >= MAXBASE:CHARA_B:VAR_ID
+	CASE "<"
+		RETURNF MAXBASE:CHARA_A:VAR_ID < MAXBASE:CHARA_B:VAR_ID
+	CASE "<="
+		RETURNF MAXBASE:CHARA_A:VAR_ID <= MAXBASE:CHARA_B:VAR_ID
+	CASEELSE
+		THROW 不明なTYPE　%TYPE%
+	ENDSELECT
+
+CASE "EXP"
+	SELECTCASE TYPE
+	CASE "=="
+		RETURNF EXP:CHARA_A:VAR_ID == EXP:CHARA_B:VAR_ID
+	CASE ">"
+		RETURNF EXP:CHARA_A:VAR_ID > EXP:CHARA_B:VAR_ID
+	CASE ">="
+		RETURNF EXP:CHARA_A:VAR_ID >= EXP:CHARA_B:VAR_ID
+	CASE "<"
+		RETURNF EXP:CHARA_A:VAR_ID < EXP:CHARA_B:VAR_ID
+	CASE "<="
+		RETURNF EXP:CHARA_A:VAR_ID <= EXP:CHARA_B:VAR_ID
+	CASEELSE
+		THROW 不明なTYPE　%TYPE%
+	ENDSELECT
+
+CASE "CFLAG"
+	SELECTCASE TYPE
+	CASE "=="
+		RETURNF CFLAG:CHARA_A:VAR_ID == CFLAG:CHARA_B:VAR_ID
+	CASE ">"
+		RETURNF CFLAG:CHARA_A:VAR_ID > CFLAG:CHARA_B:VAR_ID
+	CASE ">="
+		RETURNF CFLAG:CHARA_A:VAR_ID >= CFLAG:CHARA_B:VAR_ID
+	CASE "<"
+		RETURNF CFLAG:CHARA_A:VAR_ID < CFLAG:CHARA_B:VAR_ID
+	CASE "<="
+		RETURNF CFLAG:CHARA_A:VAR_ID <= CFLAG:CHARA_B:VAR_ID
+	CASEELSE
+		THROW 不明なTYPE　%TYPE%
+	ENDSELECT
+
+CASE "PALAM"
+	SELECTCASE TYPE
+	CASE "=="
+		RETURNF PALAM:CHARA_A:VAR_ID == PALAM:CHARA_B:VAR_ID
+	CASE ">"
+		RETURNF PALAM:CHARA_A:VAR_ID > PALAM:CHARA_B:VAR_ID
+	CASE ">="
+		RETURNF PALAM:CHARA_A:VAR_ID >= PALAM:CHARA_B:VAR_ID
+	CASE "<"
+		RETURNF PALAM:CHARA_A:VAR_ID < PALAM:CHARA_B:VAR_ID
+	CASE "<="
+		RETURNF PALAM:CHARA_A:VAR_ID <= PALAM:CHARA_B:VAR_ID
+	CASEELSE
+		THROW 不明なTYPE　%TYPE%
+	ENDSELECT
+
+CASE "TALENT"
+	SELECTCASE TYPE
+	CASE "=="
+		RETURNF TALENT:CHARA_A:VAR_ID == TALENT:CHARA_B:VAR_ID
+	CASE ">"
+		RETURNF TALENT:CHARA_A:VAR_ID > TALENT:CHARA_B:VAR_ID
+	CASE ">="
+		RETURNF TALENT:CHARA_A:VAR_ID >= TALENT:CHARA_B:VAR_ID
+	CASE "<"
+		RETURNF TALENT:CHARA_A:VAR_ID < TALENT:CHARA_B:VAR_ID
+	CASE "<="
+		RETURNF TALENT:CHARA_A:VAR_ID <= TALENT:CHARA_B:VAR_ID
+	CASEELSE
+		THROW 不明なTYPE　%TYPE%
+	ENDSELECT
+
+CASE "TCVAR"
+	SELECTCASE TYPE
+	CASE "=="
+		RETURNF TCVAR:CHARA_A:VAR_ID == TCVAR:CHARA_B:VAR_ID
+	CASE ">"
+		RETURNF TCVAR:CHARA_A:VAR_ID > TCVAR:CHARA_B:VAR_ID
+	CASE ">="
+		RETURNF TCVAR:CHARA_A:VAR_ID >= TCVAR:CHARA_B:VAR_ID
+	CASE "<"
+		RETURNF TCVAR:CHARA_A:VAR_ID < TCVAR:CHARA_B:VAR_ID
+	CASE "<="
+		RETURNF TCVAR:CHARA_A:VAR_ID <= TCVAR:CHARA_B:VAR_ID
+	CASEELSE
+		THROW 不明なTYPE　%TYPE%
+	ENDSELECT
+
+CASE "MARK"
+	SELECTCASE TYPE
+	CASE "=="
+		RETURNF MARK:CHARA_A:VAR_ID == MARK:CHARA_B:VAR_ID
+	CASE ">"
+		RETURNF MARK:CHARA_A:VAR_ID > MARK:CHARA_B:VAR_ID
+	CASE ">="
+		RETURNF MARK:CHARA_A:VAR_ID >= MARK:CHARA_B:VAR_ID
+	CASE "<"
+		RETURNF MARK:CHARA_A:VAR_ID < MARK:CHARA_B:VAR_ID
+	CASE "<="
+		RETURNF MARK:CHARA_A:VAR_ID <= MARK:CHARA_B:VAR_ID
+	CASEELSE
+		THROW 不明なTYPE　%TYPE%
+	ENDSELECT
+
+CASEELSE
+	THROW 不明なVAR_NAME　%VAR_NAME%
+ENDSELECT
+
+[SKIPSTART]
+コレをコピペして置换すれば项目をふやせる
+CASE "CVAR"
+	SELECTCASE TYPE
+	CASE "=="
+		RETURNF CVAR:CHARA_A:VAR_ID == CVAR:CHARA_B:VAR_ID
+	CASE ">"
+		RETURNF CVAR:CHARA_A:VAR_ID > CVAR:CHARA_B:VAR_ID
+	CASE ">="
+		RETURNF CVAR:CHARA_A:VAR_ID >= CVAR:CHARA_B:VAR_ID
+	CASE "<"
+		RETURNF CVAR:CHARA_A:VAR_ID < CVAR:CHARA_B:VAR_ID
+	CASE "<="
+		RETURNF CVAR:CHARA_A:VAR_ID <= CVAR:CHARA_B:VAR_ID
+	CASEELSE
+		THROW 不明なTYPE　%TYPE%
+	ENDSELECT
+[SKIPEND]
+
+
+
+;-------------------------------------------------
+;ステータス评价表示函数
+;-------------------------------------------------
+;元は@PRINT_字母表顺序评价
+;参数を评价对象数值にすることで泛用化し
+;RANK_SCALEの名称をわかりやすくした
+;-------------------------------------------------
+@PRINT_RANK(VAR_VALUE, RANK_SCALE)
+#DIM  VAR_VALUE  ;评价对象数值
+#DIMS RANK_SCALE ;评价に使用する尺度の种类
+#DIM  RANK       ;评价ランク、数が小さいほど优秀
+#DIM  RANK_NUM   ;评价尺度に含まれる评价の种数
+CALL CALC_RANK(VAR_VALUE, RANK_SCALE, RANK, RANK_NUM)
+CALL PRINT_ALPHABET(RANK, RANK_NUM)
+
+
+
+;-------------------------------------------------
+;ステータス评价算出函数
+;-------------------------------------------------
+;RANK_SCALEにもとづいてVAR_VALUEの评价を行う
+;REFによりRANK/RANK_NUMとして渡された参数の数值を直接书き换える
+;-------------------------------------------------
+@CALC_RANK(VAR_VALUE, RANK_SCALE, RANK, RANK_NUM)
+#DIM      VAR_VALUE  ;评价对象数值
+#DIMS     RANK_SCALE ;评价に使用する尺度の种类
+#DIM  REF RANK       ;评价ランク、数が小さいほど优秀
+#DIM  REF RANK_NUM   ;评价尺度に含まれる评价の种数
+SELECTCASE RANK_SCALE
+CASE "MAX_50000"
+;好感度用
+	RANK_NUM = 10
+	SELECTCASE VAR_VALUE
+	CASE IS >= 50000
+		RANK = 0
+	CASE IS >= 30000
+		RANK = 1
+	CASE IS >= 10000
+		RANK = 2
+	CASE IS >=  5000
+		RANK = 3
+	CASE IS >=  3000
+		RANK = 4
+	CASE IS >=  1500
+		RANK = 5
+	CASE IS >=  1000
+		RANK = 6
+	CASE IS >=   500
+		RANK = 7
+	CASE IS >=   100
+		RANK = 8
+	CASEELSE
+		RANK = 9
+	ENDSELECT
+CASE "MAX_20000"
+;信赖度用
+	RANK_NUM = 10
+	SELECTCASE VAR_VALUE
+	CASE IS >= 20000
+		RANK = 0
+	CASE IS >= 10000
+		RANK = 1
+	CASE IS >=  3000
+		RANK = 2
+	CASE IS >=  1000
+		RANK = 3
+	CASE IS >=   500
+		RANK = 4
+	CASE IS >=   150
+		RANK = 5
+	CASE IS >=   100
+		RANK = 6
+	CASE IS >=    50
+		RANK = 7
+	CASE IS >=    10
+		RANK = 8
+	CASEELSE
+		RANK = 9
+	ENDSELECT
+CASE "MAX_99"
+;技术系以外のABL
+	;数字が纵に并ぶと非常に见にくかったんで意图的にインデントずらしてます
+	RANK_NUM = 10
+	SELECTCASE VAR_VALUE
+	CASE IS >= 99
+			RANK = 0
+	CASE IS >= 75
+			RANK = 1
+	CASE IS >= 50
+			RANK = 2
+	CASE IS >= 20
+			RANK = 3
+	CASE IS >= 10
+			RANK = 4
+	CASE IS >=  5
+			RANK = 5
+	CASE IS >=  3
+			RANK = 6
+	CASE IS >=  2
+			RANK = 7
+	CASE IS >=  1
+			RANK = 8
+	CASEELSE
+			RANK = 9
+	ENDSELECT
+CASE "MAX_6"
+;技能系ABL
+	RANK_NUM = 7
+	RANK = MAX(6 - VAR_VALUE, 0)
+CASEELSE
+	THROW 不明なRANK_SCALE %RANK_SCALE%
+ENDSELECT
+
+
+
+;-------------------------------------------------
+;ランク评价表示函数
+;-------------------------------------------------
+;ランク评价(数字が小さいほど优秀)の内容を字母表顺序表记してカラー表示する
+;形式さえあってりゃ别にPRINT_RANKでなくとも使えるぞ
+;ARG=1で大文字
+;-------------------------------------------------
+@PRINT_ALPHABET(RANK, RANK_NUM, ARG)
+#DIM RANK
+#DIM RANK_NUM
+#DIMS CONST STR_RANK10, 10 = "Ex", "SS", " S", " A", " B", " C", " D", " E", " F", " G"
+#DIMS CONST STR_RANK7,   7 = "Ex", " S", " A", " B", " C", " D", " E"
+#DIMS CONST STR_RANK10_F, 10 = "ＳＳＳ", "ＳＳ", "Ｓ", "Ａ", "Ｂ", "Ｃ", "Ｄ", "Ｅ", "Ｆ", "Ｇ"
+#DIMS CONST STR_RANK7_F,   7 = "ＥＸ", "Ｓ", "Ａ", "Ｂ", "Ｃ", "Ｄ", "Ｅ"
+{
+#DIMS  CONST C_RANK10, 10 =
+	"C_P_PURPLE", "C_WHITE", "C_WHITE", "C_PINK", "C_RED",
+	"C_ORANGE", "C_YELLOW", "C_GREEN", "C_AQUA", "C_GRAY"
+}
+#DIMS  CONST C_RANK7,   7 = "C_P_PURPLE", "C_WHITE", "C_PINK", "C_RED", "C_ORANGE", "C_YELLOW", "C_GRAY"
+IF ARG
+	SELECTCASE RANK_NUM
+	CASE 10
+		CALL COLOR_PRINT(STR_RANK10_F:RANK, C_RANK10:RANK, 2)
+	CASE  7
+		CALL COLOR_PRINT(STR_RANK7_F:RANK, C_RANK7:RANK, 2)
+	CASEELSE
+		THROW 错误的RANK_NUM {RANK_NUM}
+	ENDSELECT
+ELSE
+	SELECTCASE RANK_NUM
+	CASE 10
+		CALL COLOR_PRINT(STR_RANK10:RANK, C_RANK10:RANK, 2)
+	CASE  7
+		CALL COLOR_PRINT(STR_RANK7:RANK, C_RANK7:RANK, 2)
+	CASEELSE
+		THROW 错误的RANK_NUM {RANK_NUM}
+	ENDSELECT
+ENDIF
+RESETCOLOR
+
+
+
+;-------------------------------------------------
+;色付きPRINT函数
+;-------------------------------------------------
+;渡した文字を渡した色でPRINTしてRESETCOLOR
+;广域变量でDIMってある色名のみ可能（追加は容易）
+;-------------------------------------------------
+@COLOR_PRINT(ARGS, C_NAME, STR_NUM = 2)
+#DIMS C_NAME
+#DIM  STR_NUM
+SIF !STRLENS(ARGS)
+	RETURN
+SELECTCASE C_NAME
+CASE "C_P_PURPLE"
+	SETCOLOR C_P_PURPLE
+CASE "C_WHITE"
+	SETCOLOR C_WHITE
+CASE "C_PINK"
+	SETCOLOR C_PINK
+CASE "C_RED"
+	SETCOLOR C_RED
+CASE "C_ORANGE"
+	SETCOLOR C_ORANGE
+CASE "C_YELLOW"
+	SETCOLOR C_YELLOW
+CASE "C_GREEN"
+	SETCOLOR C_GREEN
+CASE "C_AQUA"
+	SETCOLOR C_AQUA
+CASE "C_GRAY"
+	SETCOLOR C_GRAY
+CASEELSE
+	THROW 错误的C_NAME %C_NAME%
+ENDSELECT
+PRINTFORM %ARGS, STR_NUM%
+RESETCOLOR
+
+
+
+;-------------------------------------------------
+;BASEカラーバー函数
+;-------------------------------------------------
+;体力などのカラーバー
+;-------------------------------------------------
+@BASE_BAR(C_ID, BASE_NAME, BAR_LENGTH, COLOR_NAME, OP)
+#DIM  C_ID
+#DIMS BASE_NAME
+#DIM  BAR_LENGTH
+#DIMS COLOR_NAME
+#DIMS OP
+#DIM  BASE_ID
+BASE_ID = FINDELEMENT(BASENAME, BASE_NAME)
+SIF BASE_ID < 0
+	THROW 存在しないBASE_NAME %BASE_NAME%
+SIF !STRCOUNT(OP, "「种类表记无し」")
+	PRINTFORM %BASE_NAME, 4%
+CALL PRINT_COLORBAR(BASE:C_ID:BASE_ID, MAXBASE:C_ID:BASE_ID, BAR_LENGTH, UNICODE(0x2585), UNICODE(0x2585), BARCOLORSET(COLOR_NAME), RESULT:1)
+IF !STRCOUNT(OP, "「数字表记无し」")
+	IF BUFF:C_ID:BASE_ID > 0
+		SETCOLOR C_AQUA
+	ELSEIF BUFF:C_ID:BASE_ID < 0
+		SETCOLOR C_YELLOW
+	ENDIF
+	PRINTFORM  ({BASE:C_ID:BASE_ID,5}/{MAXBASE:C_ID:BASE_ID,5})
+	RESETCOLOR
+ENDIF
+SIF STRCOUNT(OP, "「改行」")
+	PRINTFORML
+
+;-------------------------------------------------
+;INFO用の改良型BASEカラーバー函数
+;-------------------------------------------------
+@BASE_BAR_2(C_ID, BASE_NAME, BASE_NAME_SHORT, BAR_LENGTH, COLOR_NAME)
+#DIM  C_ID
+#DIMS BASE_NAME
+#DIMS BASE_NAME_SHORT
+#DIM  BAR_LENGTH
+#DIMS COLOR_NAME
+#DIM  BASE_ID
+BASE_ID = FINDELEMENT(BASENAME, BASE_NAME)
+SIF BASE_ID < 0
+	THROW 存在しないBASE_NAME %BASE_NAME%
+IF BASE_NAME == "精力" && TALENT:C_ID:浓厚精液
+	FONTBOLD
+	SETCOLOR C_CREAM
+	PRINTFORM %BASE_NAME_SHORT%
+	FONTREGULAR
+	RESETCOLOR
+ELSEIF BASE_NAME == "酒气" && BASE:C_ID:酒气 > MAXBASE:C_ID:酒气 * 2 / 3
+	SETCOLOR C_RED
+	PRINTFORM %BASE_NAME_SHORT%
+	RESETCOLOR
+ELSE
+	PRINTFORM %BASE_NAME_SHORT%
+ENDIF
+CALL PRINT_COLORBAR(BASE:C_ID:BASE_ID, MAXBASE:C_ID:BASE_ID, BAR_LENGTH, UNICODE(0x2585), UNICODE(0x2585), BARCOLORSET(COLOR_NAME), RESULT:1)
+IF BUFF:C_ID:BASE_ID > 0
+	SETCOLOR C_AQUA
+ELSEIF BUFF:C_ID:BASE_ID < 0
+	SETCOLOR C_YELLOW
+ENDIF
+PRINTFORM ({BASE:C_ID:BASE_ID, 5})
+RESETCOLOR
+
+;-------------------------------------------------
+;カラースタンプ函数
+;-------------------------------------------------
+;特定の记号を特定の色で并べる
+;MARKの表示用だけどなんか其他にも使えるでしょう
+;ARG=1なら左寄せ
+;-------------------------------------------------
+@COLOR_STAMP(STAMP_NUM, MAX_NUM, STAMP_STR, STAMP_COLOR, ARG)
+#DIM  STAMP_NUM   ;并べるスタンプの数
+#DIM  MAX_NUM     ;スタンプの最大数
+#DIMS STAMP_STR   ;スタンプに使用する文字列
+#DIM  STAMP_COLOR ;スタンプの色
+#DIM  STAMP_LENGTH;スタンプ文字列の长さ
+STAMP_LENGTH = STRLENS(STAMP_STR)
+SIF !STAMP_LENGTH
+	THROW STAMP_STRが指定されていません
+SIF STAMP_COLOR
+	SETCOLOR STAMP_COLOR
+SIF !ARG
+	PRINTFORM %" " * (MAX_NUM - STAMP_NUM) * STAMP_LENGTH%
+PRINTFORM %STAMP_STR * STAMP_NUM%
+RESETCOLOR
+
+;-------------------------------------------------
+;角色抽选函数
+;-------------------------------------------------
+;角色列表から随机で1名を选出する
+;返回值は登录番号、失败したら-1
+;-------------------------------------------------
+@RAND_CHARASELECT(L_TYPE = "主人公以外的角色列表")
+#DIMS L_TYPE                       ;抽选对象タイプ
+#DIM  L_ID                         ;列表のクラスID
+#DIM  CHARA_LIST, 人物数量上限 ;作成する列表
+#DIM  CHARA_CNT                    ;角色カウンタ
+CALL MAKE_CHARA_LIST("主人公以外的角色列表", L_ID, CHARA_LIST, CHARA_CNT)
+SIF !CHARA_CNT
+	RETURN -1
+RETURN CHARA_LIST:(RAND:CHARA_CNT)
+
+
+
+;----------------------------------------------------------------------------------------------------
+;角色の登场判定
+;とりあえず你は弹くようにした
+;----------------------------------------------------------------------------------------------------
+@CAN_MEET(CHARA)
+#FUNCTION
+#DIM CHARA
+SIF !CHARA
+	RETURNF 0
+SIF !EXISTCSV(CHARA)
+	RETURNF 0
+SIF CFLAG:CHARA:出禁
+	RETURNF 0
+SIF CHARA == FLAG:扮演
+	RETURNF 0
+RETURNF 1
+
+;----------------------------------------------------------------------------------------------------
+;现在地点から移动可能な场所へ移动
+;房间から追い出されるときなど
+;----------------------------------------------------------------------------------------------------
+@GETOUT(ARG)
+TCVAR:ARG:追い出され时刻 = TIME
+TCVAR:ARG:追い出され地点 = CFLAG:ARG:当前位置
+FOR LOCAL, MINROOM(), MAXROOM
+	;全くもってスマートでないが、番号の关系上幽香私室からは露台に追い出されてしまうため个别处理する
+	IF CFLAG:ARG:当前位置 == P463幽香私室
+		CFLAG:ARG:当前位置 = P465大堂
+		BREAK
+	ENDIF
+	IF CAN_MOVE(CFLAG:ARG:当前位置, LOCAL) & 1
+		CFLAG:ARG:当前位置 = LOCAL
+		BREAK
+	ENDIF
+NEXT
+
+
+;----------------------------------------------------------------------------------------------------
+;角色の随机选抜函数
+;手抜き处理でできるだけ简素な抽选函数をと思った（RAND_CHARASELECTはちと凝り过ぎ）
+;渡した角色は选ばれない
+;出禁角色が多すぎると无限ループのおそれがあるのが难点
+;难点と是うが全角色对象の抽选では
+;极端なプレイングをしなければ问题にはならない、はず
+;----------------------------------------------------------------------------------------------------
+@RAND_PERSON(CHARA)
+#FUNCTION
+#DIM CHARA
+#DIM HIT_CHARA
+DO
+	HIT_CHARA = RAND(1, 人物数量上限)
+	SIF !CAN_MEET(HIT_CHARA) || HIT_CHARA == CHARA || TALENT:CHARA:路人
+		CONTINUE
+	BREAK
+LOOP 1
+RETURNF HIT_CHARA
+
+
+
+;----------------------------------------------------------------------------------------------------
+;自宅位置取得函数
+;----------------------------------------------------------------------------------------------------
+@GET_CHARAHOME(CHARA)
+#FUNCTION
+#DIM CHARA
+;MASTERは初始位置决まってる
+SIF CHARA == MASTER
+	RETURNF CFLAG:CHARA:初始位置
+;住み込むフラグ立ってるなら决まってる
+SIF CHARA == FLAG:住宿人物
+	RETURNF CFLAG:CHARA:初始位置
+;住所不定の角色は先に
+SIF GROUPMATCH(CSVCFLAG(CHARA, GETNUM(CFLAG, "初始位置")), 0, 99)
+	RETURNF -100
+RETURNF CSVCFLAG(CHARA, GETNUM(CFLAG, "初始位置"))
+
+
+;----------------------------------------------------------------------------------------------------
+;场所名取得函数
+;MAIN_MAP次第で挙动が变わってしまって个人的に气持ち恶い
+;问题点：GET_MAP_REPLACEMENTを使用済みのPLACE_IDを受け取ると误动作≒散步Mapの场所IDは受け取れません
+;----------------------------------------------------------------------------------------------------
+@GET_PLACENAME(PLACE_ID)
+#FUNCTIONS
+#DIM PLACE_ID
+SIF PLACE_ID == SUKIMA()
+	RETURNF "隙间空间"
+SIF PLACE_ID == OMANEKIBEYA()
+	RETURNF OMANEKI_PLACE()
+IF GET_MAPID(PLACE_ID) == MAIN_MAP
+	RETURNF NAME_FROM_PLACE(PLACE_ID)
+ELSE
+	RETURNF STR:(6000 + GET_MAP_REPLACEMENT(PLACE_ID) / 10)
+ENDIF
+
+;----------------------------------------------------------------------------------------------------
+;配列抽选F函数
+;----------------------------------------------------------------------------------------------------
+@ARRAY_HIT(HIT_LIST, LIST_SIZE)
+#FUNCTION
+#DIM REF HIT_LIST ;概率分布列表
+#DIM     LIST_SIZE;概率分布列表の尺寸
+#DIM     CHK_ID   ;判定对象となる要素
+#DIM     HIT_RAND ;抽选乱数处理
+LOCAL = MAX(SUMARRAY(HIT_LIST, 0, LIST_SIZE),1)
+HIT_RAND = RAND(0, LOCAL)
+;DEBUGPRINTFORML LIST_SIZE＝{LIST_SIZE}　HIT_RAND{HIT_RAND}
+FOR CHK_ID, 0, LIST_SIZE
+	SIF HIT_RAND < SUMARRAY(HIT_LIST, 0, CHK_ID + 1)
+		RETURNF CHK_ID
+NEXT
+;THROW 抽选失败
+;Counter抽选失败によるTHROW落ちが发生してるのでｰ1を返すことにする
+RETURNF -1
+
+;----------------------------------------------------------------------------------------------------
+;配列RAND化函数
+;重复制限无なので适宜FISHER_YATES_SHAFFLEと使い分けて下さい
+;----------------------------------------------------------------------------------------------------
+@ARRAY_RAND(RAND_ARRAY, ARRAY_SIZE, RAND_MIN, RAND_MAX)
+#DIM REF RAND_ARRAY; 对象配列
+#DIM     ARRAY_SIZE; 配列尺寸（1以上）
+#DIM     RAND_MIN  ; RANDの下限（0以上）
+#DIM     RAND_MAX  ; RANDの上限-1、この数自体は抽选に选ばれない（RAND_MIN+1以上）
+#DIM     ID_ARRAY  ; ループ用
+FOR ID_ARRAY, 0, ARRAY_SIZE
+	RAND_ARRAY:ID_ARRAY = RAND(RAND_MIN, RAND_MAX)
+NEXT
+
+
+;----------------------------------------------------------------------------------------------------
+;FISHER_YATES_SHAFFLE（F函数版）
+;ソースはwikipedia
+;CALLF FUNC_FISHER_YATES_SHAFFLE(LOCAL, 10)
+;これでLOCAL:0～9に0～9が重复无で代入される
+;----------------------------------------------------------------------------------------------------
+@FUNC_FISHER_YATES_SHAFFLE(ARRAY, ARRAY_SIZE)
+#FUNCTION
+#DIM REF ARRAY   ;对象配列
+#DIM ARRAY_SIZE  ;配列の长さ（2以上の数值にして下さい）
+#DIM ELE_SHAFFLE ;シャッフル对象要素
+VARSET ARRAY, -1
+ARRAY:0 = 0
+;要素0に对する↓の处理は必ず0になるんだから1以降でおｋ
+FOR LOCAL:0, 1, ARRAY_SIZE
+	ELE_SHAFFLE = RAND(0, LOCAL:0 + 1)
+	;挙动变わらないようならif设けるより素通しの方が处理数少なくなったりせんか？
+	;SIF ELE_SHAFFLE != LOCAL:0
+	ARRAY:(LOCAL:0) = ARRAY:ELE_SHAFFLE
+	ARRAY:ELE_SHAFFLE = LOCAL:0
+NEXT
+
+
+;----------------------------------------------------------------------------------------------------
+;复数行自动表示函数
+;一种の超简易アニメーション
+;1秒に1行追记していくよ函数だよ
+;渡された配列の要素を顺番に表示する
+;本格的に动かしたいならぱにめーしょん使え
+;使用部位は纳兹琳の灵摆查找指令
+;----------------------------------------------------------------------------------------------------
+@PRINT_GROUP(COMMENT, NUM_COMMENT, TIME_REDRAW = 1000)
+#DIMS REF COMMENT         ;表示する文字列の配列
+#DIM  NUM_COMMENT         ;配列の要素数
+#DIM  PREV_REDRAW         ;一时退避用
+#DIM  TIME_REDRAW         ;行追加の间隔、标准で1秒
+#DIM  DYNAMIC NOW_COMMENT ;表示隐蔽制御用
+PREV_REDRAW = CURRENTREDRAW()
+REDRAW 0
+FOR LOCAL:0, 0, NUM_COMMENT
+	FOR LOCAL:1, 0, NUM_COMMENT
+		IF LOCAL:1 <= NOW_COMMENT
+			PRINTFORML %COMMENT:(LOCAL:1)%
+		ELSE
+			PRINTFORML
+		ENDIF
+	NEXT
+	TWAIT TIME_REDRAW, 0
+	NOW_COMMENT ++
+	SIF LOCAL:0 < NUM_COMMENT -1
+		CLEARLINE NUM_COMMENT
+NEXT
+REDRAW PREV_REDRAW
+WAIT
+
+
+;----------------------------------------------------------------------------------------------------
+;ARG(DAY)を年月日に变换する函数
+;----------------------------------------------------------------------------------------------------
+@DAY_TO_DATE(ARG)
+#FUNCTION
+VARSET LOCAL
+;冬之月31日は例外
+SIF ARG % 124 == 0
+	LOCAL:5 = 1
+;年目
+LOCAL:1 = ARG / 124
+SIF !LOCAL:5
+	LOCAL:1 += 1
+;月
+IF LOCAL:5
+	LOCAL:2 = 4
+ELSEIF ARG % 124 % 31 == 0
+	LOCAL:2 = ARG % 124 / 31
+ELSE
+	LOCAL:2 = ARG % 124 / 31 + 1
+ENDIF
+;日
+IF LOCAL:5 || ARG % 124 % 31 == 0
+	LOCAL:3 = 31
+ELSE
+	LOCAL:3 = ARG % 124 % 31
+ENDIF
+LOCAL = LOCAL:1 * 1000 + LOCAL:2 * 100 + LOCAL:3
+RETURNF LOCAL
+
+;----------------------------------------------------------------------------------------------------
+;ARG(年月日)をDAYに变换する函数
+;----------------------------------------------------------------------------------------------------
+@DATE_TO_DAY(ARG)
+#FUNCTION
+VARSET LOCAL
+LOCAL += (ARG / 1000 - 1) * 124
+LOCAL += (ARG % 1000 / 100 - 1) * 31
+LOCAL += ARG % 1000 % 100
+RETURNF LOCAL
+
+;----------------------------------------------------------------------------------------------------
+;ARG(DAY)を年月日（曜日）で表示する函数
+;ARGが年月日であるならARG:1を真にすること
+;----------------------------------------------------------------------------------------------------
+@PRINT_DATE(ARG, ARG:1)
+;ARGをDAYと判定
+IF !ARG:1
+	LOCAL:1 = DAY_TO_DATE(ARG)
+	LOCAL:2 = ARG
+;ARGを年月日と判定
+ELSE
+	LOCAL:1 = ARG
+	LOCAL:2 = DATE_TO_DAY(ARG)
+ENDIF
+LOCAL:3 = LOCAL:1 % 1000 / 100
+PRINTFORM 第{LOCAL:1 / 1000}年 %GET_MONTH(LOCAL:3)% {LOCAL:1 % 1000 % 100}日（%GET_DAY(LOCAL:2)%）
+
+@PRINT_DATE_F(ARG)
+#FUNCTIONS
+LOCAL = DAY_TO_DATE(ARG)
+LOCAL:1 = LOCAL / 1000
+LOCAL:2 = LOCAL % 1000 / 100
+LOCAL:3 = LOCAL % 1000 % 100
+LOCALS = 第{LOCAL:1}年 %GET_MONTH(LOCAL:2)%第{LOCAL:3}日
+RETURNF LOCALS
+
+;----------------------------------------------------------------------------------------------------
+;复数文字列カウントF函数
+;----------------------------------------------------------------------------------------------------
+;TARGET_STRに含まれる复数の文字列の数を検索する
+;TARGET_STR、KEY_STRともに"/"を仕切りとして复数の单语をカウントする
+;TARGET_STR、KEY_STRで一度に渡す单语の种类はそれぞれ100种类未满、语群は1000个未满にすること
+;
+;动作例）
+;TARGET_STR："うさぎ/うさぎ/うさぎ/きつね/ねこ/ねこ/"
+;例１）
+;　KEY_STR："うさぎ/ねこ/"
+;　"うさぎ"が3、"ねこ"が2で合计值の5を返す
+;例２）
+;　KEY_STR："きつね/ねこ/"
+;　"きつね"が1、"ねこ"が2で合计值の3を返す
+;例３）
+;　KEY_STR："うさぎ/うさぎ/"
+;　"うさぎ"が3、の处理を2回分やって6を返す
+;----------------------------------------------------------------------------------------------------
+@STR_MULTI_COUNT(TARGET_STR, KEY_STR)
+#FUNCTION
+#DIMS TARGET_STR             ;検索对象文字列
+#DIMS KEY_STR                ;検索したい语群、语群の种类の上限は100种类
+#DIMS DYNAMIC KEY_LIST, 100  ;分割后の单语列表
+#DIM  DYNAMIC KEY_CNT,  100  ;各单语の出现回数
+#DIM  DYNAMIC KEY_NUM        ;单语の总数
+#DIM          KEY_ID         ;ループ处理用
+#DIM  DYNAMIC STR_CNT        ;カウント个数
+#DIMS DYNAMIC TEMP_STR, 1000 ;SPLIT用一次配列
+#DIM  DYNAMIC TEMP_NUM       ;一次配列で使用した要素数
+#DIM          TEMP_RESULT    ;RESULT退避
+;念のため
+TARGET_STR '= REPLACE(TARGET_STR, "\/+", "/")
+CALLF CNT_SPLIT(KEY_STR, KEY_LIST, KEY_CNT, KEY_NUM)
+
+TEMP_RESULT = RESULT
+SPLIT TARGET_STR, "/", TEMP_STR
+TEMP_NUM = RESULT
+FOR KEY_ID, 0, KEY_NUM
+	STR_CNT += MATCH(TEMP_STR, KEY_LIST:KEY_ID, 0, TEMP_NUM) * KEY_CNT:KEY_ID
+NEXT
+RESULT = TEMP_RESULT
+RETURNF STR_CNT
+
+
+;----------------------------------------------------------------------------------------------------
+;カウント机能つきSPLIT函数
+;----------------------------------------------------------------------------------------------------
+;・RESULTを污染せず、F函数中でも使用可能
+;・CALLFで使用のこと、REFを使用して变量を直接书き换える
+;・参数必须、单语列表/出现个数列表の配列上限に注意！
+;・区切り文字は"/"で固定
+;・STR用の配列变量と别に、各单语の出现回数列表を追加
+;・返回值１）STR_LIST、"/"で分割され出力される单语列表
+;・返回值２）CNT_LIST、各单语の出现回数列表
+;・返回值３）STR_NUM、单语の种类の总数
+;・TARGET_STRで一度に渡す单语の种类は100种类未满、语群は1000个未满にすること
+;动作例)
+;TARGET_STR："灵梦/灵梦/灵梦/灵梦/魔理沙/魔理沙/早苗/"
+;　STR_LIST:0 == "灵梦"
+;　STR_LIST:1 == "魔理沙"
+;　STR_LIST:2 == "早苗"
+;　CNT_LIST:0 == 4   ;"灵梦"の出现回数は4回
+;　CNT_LIST:1 == 2   ;"魔理沙"の出现回数は2回
+;　CNT_LIST:2 == 1   ;"早苗"の出现回数は1回
+;　STR_NUM    == 3   ;"灵梦"、"魔理沙"、"早苗"で合计3种类
+;----------------------------------------------------------------------------------------------------
+@CNT_SPLIT(TARGET_STR, STR_LIST, CNT_LIST, STR_NUM)
+#FUNCTION
+#DIMS         TARGET_STR     ;分割对象STR
+#DIMS         NEW_STR        ;更新用一时STR
+#DIMS REF     STR_LIST       ;单语列表
+#DIM  REF     CNT_LIST       ;各单语の出现个数列表
+#DIM  REF     STR_NUM        ;单语の种类の总数
+#DIMS DYNAMIC TEMP_STR, 1000 ;SPLIT用一次配列
+#DIM  DYNAMIC TEMP_NUM       ;一次配列で使用した要素数
+#DIM          TEMP_RESULT    ;RESULT退避
+#DIM          TEMP_ID        ;ループ用
+VARSET STR_LIST
+VARSET CNT_LIST
+STR_NUM = 0
+
+TEMP_RESULT = RESULT
+SPLIT TARGET_STR, "/", TEMP_STR
+TEMP_NUM = RESULT
+FOR TEMP_ID, 0, TEMP_NUM
+	;文字长判定
+	SIF !STRLENS(TEMP_STR:TEMP_ID)
+		CONTINUE
+	;重复判定
+	SIF FINDELEMENT(STR_LIST, TEMP_STR:TEMP_ID, 0, STR_NUM, 1) != -1
+		CONTINUE
+	STR_LIST:STR_NUM '= TEMP_STR:TEMP_ID
+	CNT_LIST:STR_NUM  = MATCH(TEMP_STR, TEMP_STR:TEMP_ID)
+	STR_NUM ++
+NEXT
+RESULT = TEMP_RESULT
+
+;----------------------------------------------------------------------------------------------------
+;同行中の人数を返す函数
+;----------------------------------------------------------------------------------------------------
+@同行人数()
+#FUNCTION
+RETURNF (CHARANUM - 1) - CMATCH(CFLAG:同行 , 0, 1, CHARANUM)
+;MASTERが数に入らないのでCHARANUM - 1です
+
+;----------------------------------------------------------------------------------------------------
+;DAILY_EV0から切り出し
+;主にMAPのYOGORE关联判定
+;悬念事项：名无し地点のYOGOREの扱いってどうなってんだろ？
+;----------------------------------------------------------------------------------------------------
+;据点Map的污垢の合计值を返す
+@SUM_ALL_YOGORE()
+#FUNCTION
+RETURNF SUMARRAY(YOGORE, MINROOM(), MAXROOM)
+
+;据点Map的污垢の平均值を返す
+@AVERAGE_YOGORE()
+#FUNCTION
+RETURNF SUM_ALL_YOGORE() / ROOM_NUM()
+
+;据点Mapに存在する地点の数を返す
+;名无し地点を考虑してない点に注意
+@ROOM_NUM()
+#FUNCTION
+RETURNF MAXROOM % 100
+
+
+;----------------------------------------------------------------------------------------------------
+;メッセージ付きで道具/円/筹码を入手したり支払ったりする函数
+;とりあえず正の数だけ
+;----------------------------------------------------------------------------------------------------
+@GET_ITEM(ITEM_NAME, ITEM_NUM, PRINT_TYPE)
+#DIMS ITEM_NAME
+#DIM ITEM_ID
+#DIM ITEM_NUM
+#DIM PRINT_TYPE;表示形式　0=通常　1=L　2=W
+
+ITEM_ID = GETNUM(ITEM, ITEM_NAME)
+IF ITEM_ID == -1
+	PRINTFORML %ITEM_NAME%不存在
+ENDIF
+DEBUGPRINTFORML %ITEM_NAME%を取得、IDは{ITEM_ID}
+;魔改物品上限
+IF ITEM:ITEM_ID + ITEM_NUM >= 1000
+	CALL COLORMESSAGE(@"%ITEMNAME:ITEM_ID%已经拿不下了", C_YELLOW, PRINT_TYPE)
+	ITEM:ITEM_ID = MAX(ITEM:ITEM_ID, 999)
+ELSE
+	CALL COLORMESSAGE(@"得到了{ITEM_NUM}个%ITEMNAME:ITEM_ID%", C_YELLOW, PRINT_TYPE)
+	ITEM:ITEM_ID += ITEM_NUM
+ENDIF
+
+@LOST_ITEM(ITEM_NAME, ITEM_NUM, PRINT_TYPE)
+#DIMS ITEM_NAME
+#DIM ITEM_ID
+#DIM ITEM_NUM
+#DIM PRINT_TYPE;表示形式　0=通常　1=L　2=W
+
+ITEM_ID = GETNUM(ITEM, ITEM_NAME)
+
+SIF ITEM:ITEM_ID <= 0
+	RETURN
+CALL COLORMESSAGE(@"失去了{ITEM_NUM}个%ITEMNAME:ITEM_ID%", C_YELLOW, PRINT_TYPE)
+ITEM:ITEM_ID = MAX(ITEM:ITEM_ID - ITEM_NUM, 0)
+
+@GET_MONEY_YEN(VALUE, PRINT_TYPE)
+#DIM VALUE
+#DIM PRINT_TYPE;表示形式　0=通常　1=L　2=W
+SIF VALUE <= 0
+	RETURN
+CALL COLORMESSAGE(@"得到了%金额表示(VALUE)%", C_YELLOW, PRINT_TYPE)
+MONEY += VALUE
+
+@GET_SPELL_CARD_BONUS_YEN(VALUE, PRINT_TYPE)
+#DIM VALUE
+#DIM PRINT_TYPE;表示形式　0=通常　1=L　2=W
+SIF VALUE <= 0
+	RETURN
+CALL COLORMESSAGE(@"GET ", 0xFFFFFF, 0)
+CALL COLORMESSAGE(@"SpEll ", 0xC8FFFF, 0)
+CALL COLORMESSAGE(@"CARd ", 0x64FFDC, 0)
+CALL COLORMESSAGE(@"BONUS!!", 0x00FFB4, 1)
+CALL COLORMESSAGE(@"        %金额表示(VALUE)%", C_YELLOW, PRINT_TYPE)
+MONEY += VALUE
+
+@GET_MONEY_CM(VALUE, PRINT_TYPE)
+#DIM VALUE
+#DIM PRINT_TYPE;表示形式　0=通常　1=L　2=W
+SIF VALUE <= 0
+	RETURN
+CALL COLORMESSAGE(@"得到了{VALUE}个筹码", C_YELLOW, PRINT_TYPE)
+MONEY:2 += VALUE
+
+@LOST_MONEY_YEN(VALUE, PRINT_TYPE)
+#DIM VALUE
+#DIM PRINT_TYPE;表示形式　0=通常　1=L　2=W
+SIF VALUE <= 0
+	RETURN
+CALL COLORMESSAGE(@"失去了%金额表示(VALUE)%", C_YELLOW, PRINT_TYPE)
+MONEY = MAX(0, MONEY - VALUE)
+
+@LOST_MONEY_CM(VALUE, PRINT_TYPE)
+#DIM VALUE
+#DIM PRINT_TYPE;表示形式　0=通常　1=L　2=W
+SIF VALUE <= 0
+	RETURN
+CALL COLORMESSAGE(@"失去了{VALUE}筹码", C_YELLOW, PRINT_TYPE)
+MONEY:2 = MAX(0, MONEY:2 - VALUE)
+
+@PAY_MONEY_YEN(VALUE, PRINT_TYPE)
+#DIM VALUE
+#DIM PRINT_TYPE;表示形式　0=通常　1=L　2=W
+SIF VALUE <= 0
+	RETURN
+CALL COLORMESSAGE(@"支付了%金额表示(VALUE)%", C_YELLOW, PRINT_TYPE)
+MONEY = MAX(0, MONEY - VALUE)
+
+@PAY_MONEY_CM(VALUE, PRINT_TYPE)
+#DIM VALUE
+#DIM PRINT_TYPE;表示形式　0=通常　1=L　2=W
+SIF VALUE <= 0
+	RETURN
+CALL COLORMESSAGE(@"支付了{VALUE}筹码", C_YELLOW, PRINT_TYPE)
+MONEY:2 = MAX(0, MONEY:2 - VALUE)
+
+;角色番号C_IDのABLをAvalue变化させる
+@ChangeABL(C_ID, Aname, Avalue)
+#DIM C_ID
+#DIM A_ID
+#DIMS Aname
+#DIM Avalue
+
+A_ID = FINDELEMENT(ABLNAME, Aname)
+ABL:C_ID:A_ID += Avalue
+CALL COLORMESSAGE(@"%NAME_OUTPUT_TRANSLATION("CALLNAME", C_ID)%的%Aname%\@ Avalue > 0 ?上升 # 下降 \@至了{ABL:C_ID:A_ID}",C_YELLOW,2)
+;----------------------------------------------------------------------------------------------
+; Author: えにゅあら
+; Licensed by: CC0
+; L_SEEDの值が同じなら同じ结果を返す疑似乱数（ノイズ函数）
+; 0～L_SCALEの数值を返す（L_SCALEは含まない）
+; L_SCALEの最大值は多分8589934592　计算の都合上これ以上を指定しても切り舍てられるはず
+;----------------------------------------------------------------------------------------------
+@NOISE(L_SEED, L_SCALE)
+#FUNCTION
+#DIM L_SEED
+#DIM L_VAL
+#DIM L_SCALE
+; 随意googleで随机生成した数值をシードの初始位置にした。これやらないと0付近に全然随机感が出ない气がする
+L_SEED = L_SEED ^ 0x145579EC
+L_VAL = (L_SEED >> 13) ^ L_SEED
+L_VAL = (L_VAL * (L_VAL * L_VAL * 60493 + 19990303) + 1376312589) & 0x7fffffff
+RETURNF L_VAL * L_SCALE / 0x80000000
+
+
+; ノイズを二つ加算したものを返す。平均值付近の值が出やすい。出现分布はきれいな三角形。
+@NOISE2(L_SEED, L_SCALE)
+#FUNCTION
+#DIM L_SCALE
+#DIM L_SCALE2
+#DIM L_SEED
+L_SCALE2 = L_SCALE / 2
+L_SCALE = L_SCALE - L_SCALE2
+RETURNF NOISE(L_SEED, L_SCALE) + NOISE(L_SEED ^ 0x1D47E2A3, L_SCALE2)
+
+
+; ノイズを三つ加算したものを返す。平均值付近の值がとても出やすい。出现分布は山なりの曲线(正规分布)。
+@NOISE3(L_SEED, L_SCALE)
+#FUNCTION
+#DIM L_SCALE
+#DIM L_SCALE2
+#DIM L_SEED
+L_SCALE2 = L_SCALE / 3
+L_SCALE = L_SCALE - L_SCALE2*2
+RETURNF NOISE(L_SEED, L_SCALE) + NOISE(L_SEED ^ 0xFA7B7E26, L_SCALE2) + NOISE(L_SEED ^ 0x1D47E2A3, L_SCALE2)
+
+;４つ以上加算しても３つ版と分布の形状は变わらず、单に平均值を中心に缩小されたものになるので、省く
+
+
+
+; 使えそうか试しに表示してみる
+@TEST_PRINTNOISE()
+#FUNCTION
+PRINTL NOISE1
+FOR LOCAL, 0, 100
+	PRINTFORML {NOISE(LOCAL, 100)}
+NEXT
+PRINTL NOISE2
+FOR LOCAL, 0, 100
+	PRINTFORML {NOISE2(LOCAL, 100)}
+NEXT
+PRINTL NOISE3
+FOR LOCAL, 0, 100
+	PRINTFORML {NOISE3(LOCAL, 100)}
+NEXT
+
+;お金の单位付きで3桁ごとにカンマ表示（函数名は仮）
+@金额表示(ARG)
+#FUNCTIONS
+RETURNF MONEYSTR(ARG, "#,##0")
+
+@三桁区切(ARG)
+#FUNCTIONS
+RETURNF TOSTR(ARG, "#,##0")
+
+@数え方(ITEM_NO, ITEM_NUM = 1)
+#FUNCTIONS
+#DIM ITEM_NO
+#DIM ITEM_NUM
+SELECTCASE ITEM_NO
+	CASE 627
+		RETURNF "瓶"
+	CASE 706
+		RETURNF "匹"
+	CASE 707, 708
+		RETURNF "尾"
+	CASEELSE
+		RETURNF \@ ITEM_NUM < 10 ? つ # 个 \@
+ENDSELECT
+
+@IS_LOVER(ARG)
+#FUNCTION
+SIF TALENT:ARG:恋慕
+	RETURNF 1
+SIF TALENT:ARG:爱欲
+	RETURNF 1
+RETURNF 0
+
+@CHARASORT_EX
+VARSET RESULT, -1
+RESULT:0 = MASTER
+RESULT:1 = [[灵梦]]
+RESULT:2 = [[魔理沙]]
+RESULT:3 = [[露米亚]]
+RESULT:4 = [[大妖精]]
+RESULT:5 = [[琪露诺]]
+RESULT:6 = [[美铃]]
+RESULT:7 = [[小恶魔]]
+RESULT:8 = [[帕秋莉]]
+RESULT:9 = [[咲夜]]
+RESULT:10 = [[蕾米莉亚]]
+RESULT:11 = [[芙兰]]
+RESULT:12 = [[蕾蒂]]
+RESULT:13 = [[橙]]
+RESULT:14 = [[爱丽丝]]
+RESULT:15 = [[莉莉Ｗ]]
+RESULT:16 = [[莉莉Ｂ]]
+RESULT:17 = [[莉莉卡]]
+RESULT:18 = [[梅露兰]]
+RESULT:19 = [[露娜萨]]
+RESULT:20 = [[妖梦]]
+RESULT:21 = [[幽幽子]]
+RESULT:22 = [[蓝]]
+RESULT:23 = [[紫]]
+RESULT:24 = [[萃香]]
+RESULT:25 = [[莉格露]]
+RESULT:26 = [[米斯蒂亚]]
+RESULT:27 = [[慧音]]
+RESULT:28 = [[帝]]
+RESULT:29 = [[铃仙]]
+RESULT:30 = [[永琳]]
+RESULT:31 = [[辉夜]]
+RESULT:32 = [[妹红]]
+RESULT:33 = [[文]]
+RESULT:34 = [[梅蒂欣]]
+RESULT:35 = [[幽香]]
+RESULT:36 = [[小町]]
+RESULT:37 = [[映姫]]
+RESULT:38 = [[静叶]]
+RESULT:39 = [[穣子]]
+RESULT:40 = [[雏]]
+RESULT:41 = [[荷取]]
+RESULT:42 = [[椛]]
+RESULT:43 = [[早苗]]
+RESULT:44 = [[神奈子]]
+RESULT:45 = [[诹访子]]
+RESULT:46 = [[桑尼]]
+RESULT:47 = [[露娜]]
+RESULT:48 = [[斯塔]]
+RESULT:49 = [[阿求]]
+RESULT:50 = [[莲子]]
+RESULT:51 = [[梅莉]]
+RESULT:52 = [[衣玖]]
+RESULT:53 = [[天子]]
+RESULT:54 = [[丰姫]]
+RESULT:55 = [[依姫]]
+RESULT:56 = [[铃仙二号]]
+RESULT:57 = [[琪斯美]]
+RESULT:58 = [[山女]]
+RESULT:59 = [[帕露西]]
+RESULT:60 = [[勇仪]]
+RESULT:61 = [[觉]]
+RESULT:62 = [[阿燐]]
+RESULT:63 = [[阿空]]
+RESULT:64 = [[恋]]
+RESULT:65 = [[朱鹭子]]
+RESULT:66 = [[纳兹琳]]
+RESULT:67 = [[小伞]]
+RESULT:68 = [[一轮]]
+RESULT:69 = [[村纱]]
+RESULT:70 = [[星]]
+RESULT:71 = [[白莲]]
+RESULT:72 = [[鵺]]
+RESULT:73 = [[果]]
+RESULT:74 = [[华扇]]
+RESULT:75 = [[响子]]
+RESULT:76 = [[芳香]]
+RESULT:77 = [[青娥]]
+RESULT:78 = [[屠自古]]
+RESULT:79 = [[布都]]
+RESULT:80 = [[神子]]
+RESULT:81 = [[猯藏]]
+RESULT:82 = [[小铃]]
+RESULT:83 = [[心]]
+RESULT:84 = [[若鹭姫]]
+RESULT:85 = [[蛮奇]]
+RESULT:86 = [[影狼]]
+RESULT:87 = [[弁弁]]
+RESULT:88 = [[八桥]]
+RESULT:89 = [[正邪]]
+RESULT:90 = [[针妙丸]]
+RESULT:91 = [[雷鼓]]
+RESULT:92 = [[菫子]]
+RESULT:93 = [[清兰]]
+RESULT:94 = [[铃瑚]]
+RESULT:95 = [[哆来咪]]
+RESULT:96 = [[探女]]
+RESULT:97 = [[克劳恩皮丝]]
+RESULT:98 = [[纯狐]]
+RESULT:99 = [[赫卡提亚]]
+RESULT:100 = [[拉尔瓦]]
+RESULT:101 = [[合欢乃]]
+RESULT:102 = [[阿吽]]
+RESULT:103 = [[成美]]
+RESULT:104 = [[舞]]
+RESULT:105 = [[里乃]]
+RESULT:106 = [[隐岐奈]]
+RESULT:107 = [[女苑]]
+RESULT:108 = [[紫苑]]
+RESULT:109 = [[璎花]]
+RESULT:110 = [[润美]]
+RESULT:111 = [[久侘歌]]
+RESULT:112 = [[八千慧]]
+RESULT:113 = [[磨弓]]
+RESULT:114 = [[袿姫]]
+RESULT:115 = [[早鬼]]
+RESULT:116 = [[美宵]]
+RESULT:117 = [[三花]]
+RESULT:118 = [[高岭]]
+RESULT:119 = [[驹草]]
+RESULT:120 = [[魅须丸]]
+RESULT:121 = [[典]]
+RESULT:122 = [[龙]]
+RESULT:123 = [[千亦]]
+RESULT:124 = [[百百世]]
+RESULT:125 = [[尤魔]]
+RESULT:126 = [[影华扇]]
+RESULT:127 = [[美天]]
+RESULT:128 = [[慧之子]]
+RESULT:129 = [[血枪]]
+RESULT:130 = [[日狭美]]
+RESULT:131 = [[残无]]
+RESULT:132 = [[瑞灵]]
+
+RESULT:201 = [[魔眼]]
+RESULT:202 = [[伊丽丝]]
+RESULT:203 = [[萨里爱尔]]
+RESULT:204 = [[菊理]]
+RESULT:205 = [[矜羯罗]]
+RESULT:206 = [[里香]]
+RESULT:207 = [[明罗]]
+RESULT:208 = [[魅魔]]
+RESULT:209 = [[艾伦]]
+RESULT:210 = [[小兔姫]]
+RESULT:211 = [[卡娜]]
+RESULT:212 = [[理香子]]
+RESULT:213 = [[千百合]]
+RESULT:214 = [[梦美]]
+RESULT:215 = [[留琴]]
+RESULT:216 = [[奥莲姬]]
+RESULT:217 = [[胡桃]]
+RESULT:218 = [[艾丽]]
+RESULT:219 = [[梦月]]
+RESULT:220 = [[幻月]]
+RESULT:221 = [[萨拉]]
+RESULT:222 = [[露易兹]]
+RESULT:223 = [[雪]]
+RESULT:224 = [[​舞​]]
+RESULT:225 = [[梦子]]
+RESULT:226 = [[神绮]]
+
+RESULT:301 = [[先代]]
+RESULT:302 = [[麟]]
+
+RESULT:399 = [[路人子]]
+
+;prints a line in a plain color
+@D_LINE
+LOCAL = GETCOLOR()
+RESETCOLOR
+DRAWLINE
+SETCOLOR LOCAL
+
+;prints a single line of text in a character's color
+; @CHARA_TEXT(ARG, ARGS, MODE = "l")
+; #DIMS MODE
+; LOCAL = GETCOLOR()
+; RESETCOLOR
+; SIF FLAG:口上色
+;     CALL SET_KOJO_COLOR(ARG)
+; SELECTCASE MODE
+;     CASE "l", "L"
+;         PRINTFORML %ARGS%
+;     CASE "w", "W"
+;         PRINTFORMW %ARGS%
+;     CASEELSE
+;         PRINTFORM %ARGS%
+; ENDSELECT
+; SETCOLOR LOCAL

@@ -1,0 +1,131 @@
+﻿;-------------------------------------------------
+;阴蒂爱抚
+;爱抚系指令　レベル1
+;-------------------------------------------------
+@COM15
+;-------------------------------------------------
+;COM别FLAGの设定
+;-------------------------------------------------
+;行为者
+TCVAR:116 = PLAYER
+;侍奉快乐
+TCVAR:PLAYER:108 = 1
+CSTR:TARGET:10 += @"{PLAYER}/"
+
+;TCVAR:2 射精部位フラグ（-1=避孕套 1=膣内 2=肛门 3=手淫 4=口淫 5=乳交 6=素股 7=足交 8=体表 9=肛门侍奉 10=道具）
+TCVAR:TARGET:2 = 3
+;-------------------------------------------------
+;ソース追加处理 ほぼ315の流用
+;-------------------------------------------------
+;消费体力、气力
+IF FLAG:70 == 1
+	BASE:MASTER:TSP -= 20
+	SOURCE:快Ｃ = 80
+	IF ABL:PLAYER:指 >= 4
+		SOURCE:快Ｃ += 50
+	ELSE
+		SOURCE:快Ｃ += ABL:PLAYER:指 * 10
+	ENDIF
+	;手を突っ込めない衣装
+	IF TEQUIP:0 & 16
+		TIMES SOURCE:快Ｃ , 0.80
+		TIMES SOURCE:情欲 , 0.80
+		TIMES SOURCE:露出 , 0.80
+	;裙子以外の何かを履いてる
+	ELSEIF TEQUIP > 1
+		TIMES SOURCE:快Ｃ , 0.90
+		TIMES SOURCE:情欲 , 0.90
+		TIMES SOURCE:露出 , 0.90
+	ENDIF
+	
+	;-------------------------------------------------
+	;経験の处理
+	;-------------------------------------------------
+	;同性爱　レズなら返回值1ゲイなら返回值2
+	IF HETEROSEX(TARGET,PLAYER)
+		EXP:PLAYER:(50 + HETEROSEX(TARGET,PLAYER)) += 3
+	ENDIF
+	
+	;手淫经验
+	EXP:PLAYER:手淫经验 ++
+ELSE
+	DOWNBASE:体力 += 5
+	DOWNBASE:气力 += 50
+
+	SOURCE:欢乐 = 100
+	SOURCE:情爱 = 150
+	SOURCE:情欲 = 150
+	SOURCE:露出 = 100
+	SOURCE:反感 = 370
+	SOURCE:快Ｃ = 80
+	SOURCE:被动 = 145 + 270 * ABL:顺从
+	IF ABL:PLAYER:指 >= 4
+		SOURCE:快Ｃ += 50
+	ELSE
+		SOURCE:快Ｃ += ABL:PLAYER:指 * 10
+	ENDIF
+	;手を突っ込めない衣装
+	IF TEQUIP:0 & 16
+		TIMES SOURCE:快Ｃ , 0.80
+		TIMES SOURCE:情欲 , 0.80
+		TIMES SOURCE:露出 , 0.80
+	;裙子以外の何かを履いてる
+	ELSEIF TEQUIP > 1
+		TIMES SOURCE:快Ｃ , 0.90
+		TIMES SOURCE:情欲 , 0.90
+		TIMES SOURCE:露出 , 0.90
+	ENDIF
+
+	;-------------------------------------------------
+	;特殊ソース处理
+	;-------------------------------------------------
+	;圧抑、抵抗持ちには、抑郁ソース追加
+	SIF TALENT:自己爱 < 0 || TALENT:抵抗
+		SOURCE:郁闷 += 20
+		
+	;-------------------------------------------------
+	;経験の处理
+	;-------------------------------------------------
+	;同性爱　レズなら返回值1ゲイなら返回值2
+	IF HETEROSEX(TARGET,PLAYER)
+		EXP:(50 + HETEROSEX(TARGET,PLAYER)) += 3
+		EXP:PLAYER:(50 + HETEROSEX(TARGET,PLAYER)) += 3
+	ENDIF
+	
+	;手淫经验
+	EXP:PLAYER:手淫经验 ++
+ENDIF
+;调教者の灵活手指によって、快感のソース增加
+IF TALENT:PLAYER:灵活手指
+	TIMES SOURCE:快Ｃ , 1.50
+	TIMES SOURCE:液体 , 1.50
+ENDIF
+;-------------------------------------------------
+;污れの处理
+;-------------------------------------------------
+;奴隷のＶ⇔调教者の手的污垢が移动
+STAIN:3 |= STAIN:PLAYER:1
+STAIN:PLAYER:1 |= STAIN:3
+
+RETURN 1
+
+;-------------------------------------------------
+;阴蒂爱抚实行判定
+;-------------------------------------------------
+@COM_ABLE15
+SIF !TFLAG:100
+	RETURN 0
+;批量管理
+SIF GLOBAL_COMABLE(15)
+	RETURN RESULT
+;毒人形だと性器がついてないのでダメ
+SIF TALENT:196 == 99
+	RETURN 0
+;男だと无理（【给对方手淫】指令と被るので）
+SIF GETBIT(TALENT:TARGET:性别,1)
+	RETURN 0
+;腕使用中 插れながらクリは弄れるのでコメントアウト
+;SIF TFLAG:61 && MASTER_POSE(SET_C,3) != TARGET && MASTER_POSE(SET_P,SET_YUBI) != TARGET && MASTER_POSE(SET_V,SET_YUBI) != TARGET && MASTER_POSE(SET_A,SET_YUBI) != TARGET
+;	RETURN 0
+RETURN 1
+

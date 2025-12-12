@@ -1,0 +1,61 @@
+﻿@COM381
+;コマンドのコスト
+DOWNBASE:MASTER:气力 = 50
+DOWNBASE:TARGET:体力 = 200
+DOWNBASE:TARGET:气力 = 200
+TIME += 10
+
+;コマンドの性向 PALAMに影響
+SOURCE:达成 = 50
+SOURCE:屈从 = 250
+SOURCE:露出 = 50
+SOURCE:反感 = 200
+
+;地の文变动条件を胸围サイズとする
+TFLAG:193 = TALENT:胸围サイズ
+
+;コマンドの效力
+EXP:战斗经验 ++
+
+;信赖上升
+TFLAG:98 += 1
+
+RETURN 1
+
+;-------------------------------------------------
+;実行判定
+;-------------------------------------------------
+@COM_ABLE381
+SIF !TFLAG:100
+	RETURN 0
+;一括管理
+SIF GLOBAL_COMABLE(381)
+	RETURN RESULT
+;以下シチュ制限
+;停止中は不可
+SIF FLAG:70
+	RETURN 0
+;睡眠中は不可
+SIF CFLAG:睡眠
+	RETURN 0
+;陪睡中は不可
+SIF CFLAG:陪睡中
+	RETURN 0
+;仕事中は不可
+SIF CFLAG:行动 == 5
+	RETURN 0
+;寝床が无いなら不可
+SIF !BEDROOM(CFLAG:MASTER:当前位置)
+	RETURN 0
+;素質能力制限
+;妊娠中は不可
+SIF TALENT:TARGET:妊娠
+	RETURN 0
+;亲密5未満ならば不可
+SIF ABL:亲密 < 5
+	RETURN 0
+;あなたの气力が0以下なら不可
+SIF BASE:MASTER:气力 <= 0
+	RETURN 0
+;上记の条件を抜けてきたならば可
+RETURN 1

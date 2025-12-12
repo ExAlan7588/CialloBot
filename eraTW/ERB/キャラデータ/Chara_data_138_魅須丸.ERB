@@ -1,0 +1,117 @@
+﻿@CHARAMOVE_DATA_138(ARG, ARG:2)
+LOCAL = 138
+SELECTCASE ARG
+	;连动设定（RETURN=依存する角色, RESULT:1～3=对等に连动する角色）
+	CASE 1
+	;特殊生活时间设定（CFLAG:LOCAL:生活时间补正を设定する）
+	CASE 3
+	;移动倾向（±～10=行きやすい/行きにくい, -100=行かない）
+	CASE 4
+		SELECTCASE ARG:2
+			;天界には行かない
+			CASE P830玄云海 TO P842比那名居邸库房
+				RETURN -100
+			;私室やお澡堂は入らない
+			CASE P817神奈子私室, P818诹访子私室, P820早苗私室
+				RETURN -100
+			CASE P807椛宅, P808文宅, P809果宅, P854龙宅
+				RETURN -100
+			CASE P851久侘歌的小屋, P852驹草的小屋, P824厕所, P825澡堂
+				RETURN -100
+			;虹龙洞によく居る
+			CASE P855虹龙洞
+				RETURN 5
+		ENDSELECT
+	;出现场所
+	CASE 7
+		SELECTCASE ARG:2
+			CASE 樱花道的鸟居, 神社境内, 神社本堂, 神社走廊
+				RETURN 1
+			CASE 广场, 商业街, 吞屋小道
+				RETURN 1
+			CASE 九天瀑布, 绝景之丘, 山之湖, 守矢神社境内, 虹龙洞
+				RETURN 1
+		ENDSELECT
+	;引力设定（CFLAG:LOCAL:引力点を设定する）
+	CASE 8
+ENDSELECT
+
+@EXIST_キャラデータ138
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@キャラデータ138(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "称呼"
+	CALLF MAKE_STR(V_NAME, "魅须丸")
+;こっから衣装设定
+CASE "今天的睡衣"
+	CALLF MAKE_STR(V_NAME, "睡衣（襦袢）套")
+
+CASE "便装：帽子"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("帽子", "帽子"))
+CASE "便装：外衣"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("外衣", "羽织"))
+CASE "便装：上身衣服１"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("上身衣服１", "无袖外套"))
+CASE "便装：上身衣服２"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("上身衣服２", "女式衬衫"))
+CASE "便装：裙子"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("裙子", "裙子"))
+CASE "便装：其他"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("其他", "勾玉"))
+	
+CASE "固有内衣形容词"
+	CALLF MAKE_STR(V_NAME, "自家制の")
+CASE "固有下半身内衣名"
+	CALLF MAKE_STR(V_NAME, "勾玉柄胖次")
+CASE "固有上半身内衣"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "固有上半身内衣名"
+	CALLF MAKE_STR(V_NAME, "勾玉ブラ")
+CASE "固有内衣着用条件"
+	SIF !RAND:(3 - (2 * 胜负内衣判定([[魅须丸]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "固有内衣半透明(前)"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "固有内衣半透明(后)"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "固有内衣布料厚度"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;料理关联
+CASE "料理：喜欢的味道"
+	CALLF MAKE_STR(V_NAME, "野菜/和食/汁物/甜/甜/酸/酸/简易/清淡/朴素/艺术的/家庭的/松脆/")
+CASE "料理：讨厌的味道"
+	CALLF MAKE_STR(V_NAME, "咸/咸/丰盛/浓厚/谜料理/谜料理/谜料理/")
+CASE "料理：助手效果"
+	CALLF MAKE_STR(V_NAME, "得意料理＊和食＊/")
+;赠り物关联
+CASE "感性：好き"
+	CALLF MAKE_STR(V_NAME, "矿物/朱/秩序/美的/艺术的/和风/纤细/壮大/" + "土/巫术/装饰/" * 3 + "龙珠の/勾玉/" * 5)
+CASE "感性：嫌い"
+	CALLF MAKE_STR(V_NAME, "混沌/洋风/充满力量/" + "生体品/" * 3 + "机械/" * 10)
+ENDSELECT
+
+;-------------------------------------------------
+;固有料理设定
+;DISH_NAME          料理名
+;RESULTS            料理の种类（轻食/主食/甜点）
+;CALL 材料设定("")  材料の指定。"泛用"を入れると自动で泛用食材になる
+;DISH_TASTE         味の设定
+;DISH_COMMENT       （任意）一行コメント
+;DISH_TIME          （任意）调理にかかる时间
+;DISH_MAXLIMIT      （任意）料理の持续时间
+;-------------------------------------------------
+@SPECIAL_MENU_138
+DISH_NAME = 勾玉曲奇
+RESULTS = 甜点
+CALL 材料设定("甜味料")
+DISH_TASTE = 甜味料/洋食/曲奇/卵/甜/艺术的/新鲜/松脆/神力/加护/
+DISH_COMMENT = 勾玉型的彩色曲奇。上面有着加护。
+RETURN 1

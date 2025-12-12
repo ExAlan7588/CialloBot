@@ -1,0 +1,641 @@
+
+;※※※※※※※※※※※※※※※※※※※※※※※※※
+;ハードな调教コマンド
+;※※※※※※※※※※※※※※※※※※※※※※※※※
+;==================================================
+;140,イラマチオ
+;==================================================
+@M_KOJO_MESSAGE_COM_K139_140
+CALL M_KOJO_MESSAGE_COM_K139_140_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K139_140_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;恋慕
+	IF TALENT:恋慕 || TALENT:恋人
+		IF TCVAR:发情
+			IF (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行)
+				SETCOLOR 0xFF69B4
+				CALL HPH_PRINT,@"「姐姐的嘴穴、想要使用吗…HPH」","L"
+				RESETCOLOR
+				PRINTFORML 典睁开嘴、伸出舌头做好了接受的准备
+				SETCOLOR 0xFF69B4
+				CALL HPH_PRINT,@"「青（请）…HPH」","L"
+				PRINTW 
+				RESETCOLOR
+				PRINTFORML 噗啾！！
+				CALL HPH_PRINT,@"啪啾HPH啾噗HPH啾噗HPH啾噗HPH","L"
+				PRINTL 
+				SETCOLOR 0xFF69B4
+				CALL HPH_PRINT,@"「嗯噗HPH　嗯咕HPHHPH　哦啵HPH　嗯噗HPHHPH」","L"
+				RESETCOLOR
+				PRINTFORML 尽管被阴茎粗暴地插入口腔、但典的表情仍然洋溢着喜悦…
+				PRINTL 
+				SETCOLOR 0xFF69B4
+				CALL HPH_PRINT,@"（好开心HPH　姐姐的嘴巴里真的有这么舒服吗～HPHHPH）","L"
+				CALL HPH_PRINT,@"（可以哦HPH　这是专属于你的嘴穴HPHHPH　随意的侵犯它吧HPH）","L"
+				CALL HPH_PRINT,@"（对姐姐打上你的专属标记吧HPHHPH）","L"
+				RESETCOLOR
+				PRINTW 
+			ELSE
+				SELECTCASE RAND:2
+				CASE 0
+					PRINTFORML 咚！　咚！　咚！　咚！　咚！　
+					SETCOLOR 0xFF69B4
+					CALL HPH_PRINT,@"「%TEXTR("哦鴿HPH/哦嘎HPH/呜噗HPH/嗯呼HPH/哦～HPH")%%TEXTR("哦鴿HPH/哦嘎HPH/呜噗HPH/嗯呼HPH/哦～HPH")%%TEXTR("哦鴿HPH/哦嘎HPH/呜噗HPH/嗯呼HPH/哦～HPH")%」","L"
+					CALL HPH_PRINT,@"（喉咙深处HPH　被毫不留情地抽插着HPHHPH　好痛苦啊HPHHPH）","L"
+					CALL HPH_PRINT,@"（但明明很痛苦的HPH　发情中的我却很欢喜啊HPHHPH　每顶到一下喉咙就高潮一次了HPHHPH）","L"
+					PRINTL 
+					RESETCOLOR
+					PRINTFORML 典的手伸向了自己的秘贝。那里已经湿得一蹋糊涂的了
+					SETCOLOR 0xFF69B4
+					CALL HPH_PRINT,@"「呼ーーーーーーHPH　呼ーーーーーーHPH　呼ーーーーーーHPHHPH」","L"
+					RESETCOLOR
+					PRINTFORML 典粗暴地用手指搅拌着阴道。似乎这样会变得更加舒服
+					SETCOLOR 0xFF69B4
+					CALL HPH_PRINT,@"（就算是粗暴的也可以HPH　多爱我一点吧HPHHPH　用典的身体舒服起来吧HPHHPH）","L"
+					RESETCOLOR
+					PRINTW 
+				CASE 1
+					SETCOLOR 0xFF69B4
+					CALL HPH_PRINT,@"「让典平躺着、是打算要做什么呢…啊哦！？HPH」","L"
+					RESETCOLOR
+					PRINTFORML 不理会典的提问、直接将\@ TALENT:MASTER:形状 == 6 || TALENT:MASTER:形状 == 10 ? 凶恶的 # \@肉棒直直插进嘴巴中
+					PRINTW 
+					SETCOLOR 0xFF69B4
+					CALL HPH_PRINT,@"「嗯噗HPH　嗯咕HPHHPH　哦啵HPH　嗯噗HPHHPH」","L"
+					CALL HPH_PRINT,@"（好激烈HPH　嘴穴HPHHPH　要被狠狠的干坏了HPH）","L"
+					PRINTL 
+					RESETCOLOR
+					PRINTFORML 典的脸被用手固定住、被当成真人飞机杯一样对待着
+					PRINTFORML 但即便如此、她感受到的幸福似乎大于了痛苦、因为她所爱之人正全神贯注地对着她摆动着腰
+					PRINTW 
+				ENDSELECT
+			ENDIF
+		ELSE
+			IF (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行)
+				CALL HPH_PRINT,@"「好啊HPH　%CALLNAME:MASTER%大人的鸡鸡就交给我吧HPHHPH」","L"
+				PRINTFORML 典将嘴巴比成Ｏ型、湿润的舌头垂下渴望着肉棒的插入
+				PRINTW 
+				CALL HPH_PRINT,@"啾…啂啂啂…啂噜嗯HPH","L"
+				CALL HPH_PRINT,@"「嗯哼哼HPH　圈部、嘟插进趋了呢…HPHHPH」","L"
+				PRINTFORML 典用舌尖温柔地、仔细地爱抚着%CALLNAME:MASTER%的阴茎
+				PRINTL 
+				CALL HPH_PRINT,@"「重起于吧HPH　接接、没温体的…HPH」","L"
+				PRINTFORML 顺从着典的命令、腰部前后的摆动
+				PRINTL 
+				CALL HPH_PRINT,@"啪啾HPH啪啾HPH啪啾HPH啪啾HPH","L"
+				CALL HPH_PRINT,@"「%TEXTR("呜噗HPH/啊噗HPH/嗯噗HPH/嗯呣HPH")%%TEXTR("呜噗HPH/啊噗HPH/嗯噗HPH/嗯呣HPH")%%TEXTR("呜噗HPH/啊噗HPH/嗯噗HPH/嗯呣HPH")%」","L"
+				PRINTL 
+				CALL HPH_PRINT,@"（呵呵HPH　看起来很享受地在摆腰呢…HPH　看来我的嘴巴对你来说很满意呢…HPH　真是可爱的孩子HPH）","L"
+				PRINTFORML 即便正身处于口虐之中、典依然带着慈母般的笑容静静地观察着%CALLNAME:MASTER%的行为…
+				PRINTW 
+			ELSE
+				CALL HPH_PRINT,@"「好～HPH　是想要口交呢HPH　我很乐意HPHHPH」","L"
+				PRINTFORML 典兴高采烈地试图将%CALLNAME:MASTER%的肉棒吞入口中时
+				PRINTL 
+				PRINTFORML 嘎嘻！
+				PRINTFORML 「哈欸？」
+				PRINTFORML 就在典发出一声惊叫的瞬间、%CALLNAME:MASTER%的阴茎就已经深深地刺进了典的喉咙之中
+				PRINTW 
+				PRINTFORML 蹦～啾！　蹦～啾！　蹦～啾！　蹦～啾！　蹦～啾！　蹦～啾！
+				PRINTFORML 「哦鴿！？　嗯噗！　嗯噗！　嗯噗哦！」
+				PRINTFORML 典虽然被干的眼珠翻白、但仍为了不去咬到阴茎而拼命的张开嘴巴接受这种恶行
+				PRINTL
+				CALL HPH_PRINT,@"（%CALLNAME:MASTER%大人、多么的、热情啊HPH）","L"
+				CALL HPH_PRINT,@"（头都变得昏昏沉沉的了HPH　嘴巴里、满是肉棒的气味啊HPH）","L"
+				PRINTFORML 对典来说、既使是被当作物品般对待、也让她感到爱意与愉悦…
+				PRINTW 
+			ENDIF
+		ENDIF
+		RETURN 1
+	;それ以外
+	ELSE
+		IF (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行)
+			SELECTCASE RAND:3
+			CASE 0
+				CALL HPH_PRINT,@"啪啾HPH啪啾HPH啪啾HPH啪啾HPH","L"
+				CALL HPH_PRINT,@"「%TEXTR("呜噗HPH/啊噗HPH/嗯噗HPH/嗯呣HPH")%%TEXTR("呜噗HPH/啊噗HPH/嗯噗HPH/嗯呣HPH")%%TEXTR("呜噗HPH/啊噗HPH/嗯噗HPH/嗯呣HPH")%」","L"
+				PRINTL 
+				CALL HPH_PRINT,@"（%CALLNAME:MASTER%的…HPH　嘴巴里~都是%CALLNAME:MASTER%的气味HPH）","L"
+				CALL HPH_PRINT,@"（涂满在口腔里头、脑袋都变得晕呼呼的了…HPH）","L"
+				PRINTW 
+			CASE 1
+				CALL HPH_PRINT,@"「看啊…这是你将要用的地方哦…HPH」","L"
+				CALL HPH_PRINT,@"「虽然是嘴巴、但现在作为『嘴穴』的哦…HPH」","L"
+				PRINTL 
+				CALL HPH_PRINT,@"「因为这也是小穴的关系、所以不可以手下留情哦…HPH」","L"
+				CALL HPH_PRINT,@"「用自己的腰、狠狠地干、然后在姐姐这里舒服地%TEXTR("射精/噗噗地射出来")%吧HPH」","L"
+				PRINTFORML 典让舌头垂下来、用右手比一个圈圈、然后模拟着撸动什么东西的动作
+				PRINTW 
+				CALL HPH_PRINT,@"啾…咂噜噜噜噜呜～～～～～～HPH","L"
+				IF TALENT:MASTER:形状 == 6 || TALENT:MASTER:形状 == 10
+					CALL HPH_PRINT,@"「哦啵HPH　哦咕诶HPHHPH」","L"
+					PRINTL 
+					CALL HPH_PRINT,@"（依然是如此梆硬的样子…HPH　跟小孩这个词离得远远的鸡鸡呢…HPH）","L"
+					CALL HPH_PRINT,@"（如果被这样插进去的话、绝大多数女人都会变成雌性动物的吧…HPH）","L"
+				ELSEIF TALENT:MASTER:形状 == 1 || TALENT:MASTER:形状 == 2
+					CALL HPH_PRINT,@"「嗯呼HPH　嗯HPHHPH」","L"
+					PRINTL 
+					CALL HPH_PRINT,@"（呵呵…HPH　这么小小的鸡鸡、一直拼命地想要插进去的样子真是可爱呀…HPH）","L"
+					CALL HPH_PRINT,@"（我可是雄性哦、这样拼命的证明着自己呢HPH）","L"
+				ELSE
+					CALL HPH_PRINT,@"「嗯哞HPH　哦噗HPHHPH」","L"
+					PRINTL 
+					CALL HPH_PRINT,@"（呵呵、已经硬得跟大人一样了…HPH）","L"
+					CALL HPH_PRINT,@"（拼命地想让我品尝阳具的滋味一直一股脑地往里面塞…HPH）","L"
+				ENDIF
+				PRINTL 
+				CALL HPH_PRINT,@"啪啾HPH啪啾HPH啪啾HPH啪啾HPH","L"
+				CALL HPH_PRINT,@"「呜啵HPH　哦噗HPH　嗯噗HPH　嗯呣HPH」","L"
+				CALL HPH_PRINT,@"（被如此幼小的小孩子强迫口交的感觉…意外地、还不错呢HPH）","L"
+				PRINTW 
+			CASE 2
+				CALL HPH_PRINT,@"「呼ーーーーーHPH　呼ーーーーーHPH」","L"
+				PRINTFORML 典嘴边流淌着涎水、紧紧吸住%CALLNAME:MASTER%的龟头…
+				PRINTL 
+				IF TCVAR:MASTER:射精我慢 > 0
+					CALL HPH_PRINT,@"（明明这么拼命地摆动着腰部、居然还能克制不射、多么惹人怜爱啊HPH）","L"
+					CALL HPH_PRINT,@"（就算只有一下下、也想品味一下姐姐非常舒服的嘴穴呢HPH）","L"
+					IF TCVAR:MASTER:要去了 == 1
+						PRINTL 
+						CALL HPH_PRINT,@"（不过、感觉已经快高潮了呢？HPH　就快要射出来了呢？HPH）","L"
+						CALL HPH_PRINT,@"（因为、你的龟头已经开始有混和着一些精液的味道了HPH）","L"
+						CALL HPH_PRINT,@"（可以哟HPH　在姐姐的嘴穴深处、中出吧HPH　让姐姐的喉咙怀孕吧HPHHPH）","L"
+					ENDIF
+					PRINTW 
+				ELSE
+					IF TCVAR:MASTER:要去了 == 1
+						CALL HPH_PRINT,@"（呵呵、明明被玩弄的是我、但没有余裕的人却是%CALLNAME:MASTER%呢…HPH）","L"
+						CALL HPH_PRINT,@"（透过龟头溢出的精液味变得越来越浓厚了HPH　是不是快要射了呢HPH　想射出来对吧HPH）","L"
+						CALL HPH_PRINT,@"（可以哦HPH　不用再忍耐了HPH　将十分弹牙的精液HPH　朝姐姐中出吧HPHHPH）","L"
+						PRINTW 
+					ELSE
+						IF ABL:舌 >= 2
+							CALL HPH_PRINT,@"（呵呵、明明是你自己进攻的、变得越来越没有余裕的人却是你自己呢HPH）","L"
+							CALL HPH_PRINT,@"（既没有注意到喉咙的压迫越来越大、也没有注意到舌头上的动作…HPH）","L"
+							PRINTW 
+						ELSE
+							CALL HPH_PRINT,@"（这样粗暴的%CALLNAME:MASTER%也不坏呢、挺有新鲜感的呢…HPH）","L"
+							CALL HPH_PRINT,@"（等会突然来个〝反击〟也不错呢…HPH）","L"
+							PRINTW 
+						ENDIF
+					ENDIF
+				ENDIF
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				CALL HPH_PRINT,@"「来吧HPH　这就是%CALLNAME:MASTER%大人最喜欢的嘴穴哦～HPH」","L"
+				CALL HPH_PRINT,@"「因为典讨厌麻烦、所以请你自己摆腰然后享受的射精吧HPH」","L"
+				PRINTL 
+				PRINTFORML 典吐出舌头、挑衅地舔了舔嘴唇
+				PRINTFORML 紧紧抓住十分傲慢的典的头部、将肉棒一口气插至喉咙深处
+				PRINTW 
+				CALL HPH_PRINT,@"「嗯呼！？　嗯～～～～～～！？HPH」","L"
+				PRINTFORML 典虽然连肩膀都在颤抖、但仍然用嘴巴接受着肉棒的暴力突入
+				PRINTFORML 口腔中积满了唾液、感觉既温暖又湿滑、使得肉棒能够轻易地进出
+				PRINTL 
+				PRINTFORML 啾噗！　啾噜噜噜噜！　啾噗！　啾噜噜噜噜哦
+				CALL HPH_PRINT,@"「哦～咕HPH　哦欸～HPHHPH　哦～HPH　呜呼HPHHPH」","L"
+				PRINTL 
+				PRINTFORML 典虽然用手拍打了%CALLNAME:MASTER%的身体示意要停下来、但嘴巴却仍缠绕着阴茎不肯松开
+				PRINTFORML 是无意识的反应呢、还是、是刻意为了引起我这边的嗜虐心呢…
+				IF ABL:舌 >= 2
+					PRINTFORML %CALLNAME:MASTER%一边享受着典极上的舌技、一边深深陶醉于她的口腔之中
+				ELSE
+					PRINTFORML 虽然典的舌技不是特别熟练、但%CALLNAME:MASTER%仍然还是能享受这种口交
+				ENDIF
+				PRINTW 
+			CASE 1
+				CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人HPH　请用典的口穴来交尾吧…HPH」","L"
+				PRINTFORML 典将手指像拘束器一样勾住了自己的嘴巴、乞求着肉棒…
+				PRINTW 
+				PRINTFORML 为了实现她的愿望、就像从后面侵犯一样、将典的脸当作屁股用力拉向自己
+				PRINTFORML 然后毫不犹豫地穿透那充满唾液的诱人嘴唇
+				PRINTL 
+				CALL HPH_PRINT,@"「啊咕HPH　嗯噗HPH　嗯咕HPHHPH」","L"
+				PRINTFORML 由自己主动摆动腰部的口交令人非常愉悦、只是一心一意地朝着射精前进
+				CALL HPH_PRINT,@"（这样HPH　被用嘴巴认真交尾HPH　要用嘴巴怀孕了啦HPHHPH）","L"
+				PRINTW 
+			CASE 2
+				PRINTFORML 咂噜噜噜噜哦～～～～…
+				CALL HPH_PRINT,@"「嗯HPH　嗯HPH　嗯HPH　嗯HPH　嗯HPH　嗯HPH」","L"
+				CALL HPH_PRINT,@"（来HPH来HPH来～HPHHPH）","L"
+				PRINTL 
+				PRINTFORML 滋蹦！！
+				CALL HPH_PRINT,@"「哦噗咕！？HPHHPH」","L"
+				CALL HPH_PRINT,@"（来了HPH　毫不留情地抽插HPH　被当作一个穴一样来使用HPH）","L"
+				PRINTW 
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;141,フィストファック
+;==================================================
+@M_KOJO_MESSAGE_COM_K139_141
+CALL M_KOJO_MESSAGE_COM_K139_141_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K139_141_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;恋慕
+	IF TALENT:恋慕
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;142,肛门フィスト
+;==================================================
+@M_KOJO_MESSAGE_COM_K139_142
+CALL M_KOJO_MESSAGE_COM_K139_142_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K139_142_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;恋慕
+	IF TALENT:恋慕
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;143,两穴フィスト
+;==================================================
+@M_KOJO_MESSAGE_COM_K139_143
+CALL M_KOJO_MESSAGE_COM_K139_143_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K139_143_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;恋慕
+	IF TALENT:恋慕
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;144,放尿
+;==================================================
+@M_KOJO_MESSAGE_COM_K139_144
+CALL M_KOJO_MESSAGE_COM_K139_144_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K139_144_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;恋慕
+	IF TALENT:恋慕
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;145,肛门侍奉强制
+;==================================================
+@M_KOJO_MESSAGE_COM_K139_145
+CALL M_KOJO_MESSAGE_COM_K139_145_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K139_145_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;恋慕
+	IF TALENT:恋慕
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;146,浣肠器＋肛塞
+;==================================================
+@M_KOJO_MESSAGE_COM_K139_146
+CALL M_KOJO_MESSAGE_COM_K139_146_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K139_146_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;浣肠液注入
+	IF TEQUIP:浣肠
+		;恋慕
+		IF TALENT:恋慕
+			PRINTFORMW 
+			RETURN 1
+		;屈服3
+		ELSEIF MARK:屈服刻印 == 3
+			PRINTFORMW 
+			RETURN 1
+		;それ以外
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	;解除
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;147,扩张气球
+;==================================================
+@M_KOJO_MESSAGE_COM_K139_147
+CALL M_KOJO_MESSAGE_COM_K139_147_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K139_147_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;装着
+	IF TEQUIP:扩张气球
+		;恋慕
+		IF TALENT:恋慕
+			PRINTFORMW 
+			RETURN 1
+		;屈服3
+		ELSEIF MARK:屈服刻印 == 3
+			PRINTFORMW 
+			RETURN 1
+		;それ以外
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	;解除
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;148,肛门电极
+;==================================================
+@M_KOJO_MESSAGE_COM_K139_148
+CALL M_KOJO_MESSAGE_COM_K139_148_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K139_148_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;装着
+	IF TEQUIP:肛门电极
+		;恋慕
+		IF TALENT:恋慕
+			PRINTFORMW 
+			RETURN 1
+		;屈服3
+		ELSEIF MARK:屈服刻印 == 3
+			PRINTFORMW 
+			RETURN 1
+		;それ以外
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	;解除
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;150,胸の谷间を犯す
+;==================================================
+@M_KOJO_MESSAGE_COM_K139_150
+CALL M_KOJO_MESSAGE_COM_K139_150_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K139_150_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;恋慕
+	IF TALENT:恋慕
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1

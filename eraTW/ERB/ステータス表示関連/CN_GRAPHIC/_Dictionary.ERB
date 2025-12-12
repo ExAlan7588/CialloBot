@@ -1,0 +1,200 @@
+﻿;_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/#
+;
+;Module   :_Dictionary.ERB, _Dictionary.ERH
+;Facility :文字列を连想配列のように扱うライブラリ
+;Licence  :ライセンスフリー(CC0)。
+;
+;Modification Data:
+;  Edit  Date          Author                   Reason
+;  001   2018/08/29    MinorShift(Emueraの人)   新规作成
+;_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/#
+
+
+;文字列を使った连想配列もどき
+;[キー:值]という形式で杂多なデータを保存する。
+;例えば、连想配列用文字列STRが"[发型:ショート][发色:绿][瞳色:青]"であるとき、DIC_GET(STR, "发色")は"绿"を返す。
+;また、STRが"[发型:ショート][发色:绿][瞳色:青]"であるとき、DIC_SET(STR, "发型", "ロング")は"[发型:ロング][发色:绿][瞳色:青]"を返す。
+;制限として、キー又は值には"[", ":", "]"が含まれていて是けない。当然入れ子にはできない。
+;标准では一つの连想配列中のキーの最大数は100个。_Dictionary.ERHを变更すれば增やせるが实行速度が实用的でないと思われる。
+;少しでも高速化するためにデータ形式のチェックは省いている。そのため错误的形式のデータが送られてくると何が起こるかわからない。
+;データをまとめて格纳するためにどうぞ。
+;_Listとは独立しているので值として可变长配列を格纳する、又は连想配列の可变长配列を作成することはできる。入れ子にすると死ぬ。
+
+
+;@DIC_SET(_DICTIONARY, _KEY, _VALUE) ;对象の连想配列の_KEYに_VALUEを格纳した连想配列を返す。既にキーが存在するなら上书き。
+;@DIC_GET(_DICTIONARY, _KEY) ;对象の连想配列の_KEYの值を取得する。キーが存在しなければ空文字列。
+;@DIC_REMOVE(_DICTIONARY, _KEY) ;对象の连想配列の_KEYを削除した连想配列を返す。キーが存在しなければ入力のまま返す。
+;@DIC_CONTAINSKEY(_DICTIONARY, _KEY) ;对象の连想配列に_KEYが存在するかどうか判定する。存在すれば1、しなければ0。
+;@DIC_COUNT(_DICTIONARY) ;对象の连想配列に含まれるキーの数を取得する。
+;@DIC_FOREACH(_DICTIONARY, _FUNCNAME);对象の连想配列に含まれる要素全てについて、CALLFORM %FUNCNAME%, _KEY, _VALUE; を实行する。
+
+
+
+
+;================================================
+;@DIC_SET (#FUNCTIONS)对象の连想配列の_KEYに_VALUEを格纳した连想配列を返す。既にキーが存在するなら上书き。
+;_DICTIONARY 对象の连想配列（文字列）
+;_KEY        追加する对象のキー
+;_VALUE      追加する值
+;RETURNF     追加又は变更された连想配列（文字列）
+;================================================
+@DIC_SET(_DICTIONARY, _KEY, _VALUE)
+#FUNCTIONS
+#DIMS _DICTIONARY
+#DIMS _KEY
+#DIMS _VALUE
+;_KEYが既に存在するかどうか検证
+_DIC_INDEX_OPEN = STRFINDU(_DICTIONARY, "[" + _KEY + ":")
+;_KEYが新规なら[KEY:VALUE]を追加した文字列を返して结束
+IF _DIC_INDEX_OPEN < 0
+	RETURNF _DICTIONARY + "[" + _KEY + ":" + _VALUE + "]"
+ENDIF
+;_KEYが既に存在するならば_DICTIONARYから既存の[KEY:VALUE]を除いた文字列に新规な[KEY:VALUE]を追加する
+IF _DIC_INDEX_OPEN > 0
+	_DICTIONARY_LEFT '= SUBSTRINGU(_DICTIONARY,0,_DIC_INDEX_OPEN)
+ELSE
+	_DICTIONARY_LEFT '= ""
+ENDIF
+;"[KEY:"以降の最初の"]"をサーチ
+_DIC_INDEX_CLOSE = STRFINDU(_DICTIONARY, "]", _DIC_INDEX_OPEN)
+;既存の[KEY:VALUE]よりも右の文本を_DICTIONARY_RIGHTに取得
+IF _DIC_INDEX_CLOSE < 0
+	THROW 连想配列用文字列が正しくない→%_DICTIONARY%
+ELSEIF _DIC_INDEX_CLOSE+1 < STRLENSU(_DICTIONARY)
+	_DICTIONARY_RIGHT '= SUBSTRINGU(_DICTIONARY, _DIC_INDEX_CLOSE + 1 , -1)
+ELSE
+	_DICTIONARY_RIGHT '= ""
+ENDIF
+;足して返す
+RETURNF _DICTIONARY_LEFT + "[" + _KEY + ":" + _VALUE + "]" + _DICTIONARY_RIGHT
+
+
+
+;================================================
+;@DIC_CONTAINSKEY (#FUNCTION) ;对象の连想配列に_KEYが存在するかどうか判定する。存在すれば1、しなければ0。
+;_DICTIONARY 对象の连想配列（文字列）
+;_KEY        キー
+;RETURNF     追加又は变更された连想配列（文字列）
+;================================================
+@DIC_CONTAINSKEY(_DICTIONARY, _KEY)
+#FUNCTION
+#DIMS _DICTIONARY
+#DIMS _KEY
+RETURNF STRFINDU(_DICTIONARY, "[" + _KEY + ":") >= 0
+
+
+;================================================
+;@DIC_REMOVE (#FUNCTIONS)) ;对象の连想配列の_KEYを削除した连想配列を返す。キーが存在しなければ入力のまま返す。
+;_DICTIONARY 对象の连想配列（文字列）
+;_KEY        キー
+;RETURNF     キーが削除された连想配列（文字列）
+;================================================
+@DIC_REMOVE(_DICTIONARY, _KEY)
+#FUNCTIONS
+#DIMS _DICTIONARY
+#DIMS _KEY
+;_KEYが既に存在するかどうか検证
+_DIC_INDEX_OPEN = STRFINDU(_DICTIONARY, "[" + _KEY + ":")
+;_KEYが存在しないなら入力をそのまま返して结束
+IF _DIC_INDEX_OPEN < 0
+	RETURNF _DICTIONARY
+ENDIF
+;_KEYが既に存在するならば_DICTIONARYから既存の[KEY:VALUE]を返す
+IF _DIC_INDEX_OPEN > 0
+	_DICTIONARY_LEFT '= SUBSTRINGU(_DICTIONARY,0,_DIC_INDEX_OPEN)
+ELSE
+	_DICTIONARY_LEFT '= ""
+ENDIF
+;"[KEY:"以降の最初の"]"をサーチ
+_DIC_INDEX_CLOSE = STRFINDU(_DICTIONARY, "]", _DIC_INDEX_OPEN)
+;既存の[KEY:VALUE]よりも右の文本を_DICTIONARY_RIGHTに取得
+IF _DIC_INDEX_CLOSE < 0
+	THROW _Dictionary.ERB:连想配列用文字列が正しくない→%_DICTIONARY%
+ELSEIF _DIC_INDEX_CLOSE+1 < STRLENSU(_DICTIONARY)
+	_DICTIONARY_RIGHT '= SUBSTRINGU(_DICTIONARY, _DIC_INDEX_CLOSE + 1 , -1)
+ELSE
+	_DICTIONARY_RIGHT '= ""
+ENDIF
+;足して返す
+RETURNF _DICTIONARY_LEFT + _DICTIONARY_RIGHT
+
+
+;================================================
+;@DIC_GET (#FUNCTIONS)) ;对象の连想配列の_KEYの值を取得する。キーが存在しなければ空文字列。
+;_DICTIONARY 对象の连想配列（文字列）
+;_KEY        キー
+;RETURNF     キーに对応する值又は空文字列
+;================================================
+@DIC_GET(_DICTIONARY, _KEY)
+#FUNCTIONS
+#DIMS _DICTIONARY
+#DIMS _KEY
+;_KEYが存在するかどうか検证
+_DIC_INDEX_OPEN = STRFINDU(_DICTIONARY, "[" + _KEY + ":")
+;_KEYが存在しないなら空文字列を返して结束
+IF _DIC_INDEX_OPEN < 0
+	RETURNF ""
+ENDIF
+;值の开始位置のインデックスを计算
+_DIC_INDEX_OPEN = _DIC_INDEX_OPEN + STRLENSU(_KEY) + 2
+;"[KEY:"以降の最初の"]"をサーチ
+_DIC_INDEX_CLOSE = STRFINDU(_DICTIONARY, "]", _DIC_INDEX_OPEN)
+IF _DIC_INDEX_CLOSE < 0
+	THROW _Dictionary.ERB:连想配列用文字列が正しくない→%_DICTIONARY%
+ENDIF
+RETURNF SUBSTRINGU(_DICTIONARY, _DIC_INDEX_OPEN, _DIC_INDEX_CLOSE - _DIC_INDEX_OPEN)
+
+
+
+;================================================
+;@DIC_COUNT (#FUNCTION) ;对象の连想配列に含まれるキーの数を取得する。
+;_DICTIONARY 对象の连想配列（文字列）
+;RETURNF     キーの数
+;================================================
+@DIC_COUNT(_DICTIONARY)
+#FUNCTION
+#DIMS _DICTIONARY
+#DIM _COUNT
+_DIC_INDEX_OPEN = -1
+_COUNT = 0
+WHILE 1
+	_DIC_INDEX_OPEN = STRFINDU(_DICTIONARY, "[" , _DIC_INDEX_OPEN + 1)
+	IF _DIC_INDEX_OPEN < 0
+		BREAK
+	ENDIF
+	_COUNT ++
+WEND
+RETURNF _COUNT
+
+
+
+;================================================
+;@DIC_FOREACH ;对象の连想配列に含まれる要素全てについて、CALLFORM %FUNCNAME%, _KEY, _VALUE; を实行する。
+;_DICTIONARY  对象の连想配列（文字列）
+;_FUNCNAME    实行する函数名(CALLFORM %FUNCNAME%, _KEY, _VALUE)
+;RESULT       特に无
+;================================================
+@DIC_FOREACH(_DICTIONARY, _FUNCNAME)
+#DIMS _DICTIONARY
+#DIMS _FUNCNAME
+#DIM _KEYCOUNT
+#DIM _CNT
+#DIMS _DIC_PAIRS,_DIC_MAX
+
+SPLIT _DICTIONARY, "[", _DIC_PAIRS
+IF RESULT > _DIC_MAX
+	THROW _Dictionary.ERB:连想配列のキー数が多すぎる→%_DICTIONARY%
+ENDIF
+_KEYCOUNT = RESULT
+FOR _CNT,0,_KEYCOUNT
+	;空文字列か"キー:值]"のはず
+	_DIC_INDEX_OPEN = STRFINDU(_DIC_PAIRS:_CNT, ":")
+	IF _DIC_INDEX_OPEN < 0
+		CONTINUE
+	ENDIF
+	;_KEY = SUBSTRINGU(_DIC_PAIRS:_CNT, 0, _DIC_INDEX_OPEN)
+	;_VALUE = SUBSTRINGU(_DIC_PAIRS:_CNT, _DIC_INDEX_OPEN + 1, STRLENSU(_DIC_PAIRS:_CNT) - (_DIC_INDEX_OPEN + 1) -1)
+	;CALLFORM %_FUNCNAME%, _KEY, _VALUE
+	CALLFORM %_FUNCNAME%, SUBSTRINGU(_DIC_PAIRS:_CNT, 0, _DIC_INDEX_OPEN), SUBSTRINGU(_DIC_PAIRS:_CNT, _DIC_INDEX_OPEN + 1, STRLENSU(_DIC_PAIRS:_CNT) - (_DIC_INDEX_OPEN + 1) -1)
+NEXT
+

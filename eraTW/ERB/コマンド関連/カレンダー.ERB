@@ -1,0 +1,364 @@
+﻿;-----------------------------------------------------------
+;LOCAL					FOR～NEXT用
+;LOCAL:1～LOCAL:7		予定日（DAY:3）
+;LOCAL:8				リセット用データ
+;LOCAL:11～LOCAL:17		予定日目（DAY）
+;LOCAL:101～LOCAL:107	月をまたいでいるか（0=またいでない,1=まいたでいる）
+;-----------------------------------------------------------
+@日历
+#DIM 予定种别 = 0
+;[SKIPSTART]
+VARSET LOCAL
+FOR COUNT, 1, 9
+	LOCAL:COUNT = DAY:3 + COUNT - 1
+	LOCAL:(COUNT + 10) = DAY + COUNT - 1
+	IF LOCAL:COUNT > 31
+		LOCAL:COUNT -= 31
+		LOCAL:(COUNT + 100) = 1
+	ENDIF
+NEXT
+PRINTL ┌──┬──────────────────────────────────────
+PRINT │ Day│活动事件／宴会情报／【叠石主题】／
+IF 予定种别 == 0
+	SETCOLOR 0 , 255, 0
+	PRINT 工作
+	RESETCOLOR
+	IF FLAG:1007
+		PRINT ／
+		PRINTBUTTON "危险日",901
+		PRINT ／
+		PRINTBUTTON "妊娠育儿天数",902
+	ENDIF
+ELSEIF 予定种别 == 1
+	PRINTBUTTON "工作",900
+	IF FLAG:1007
+		PRINT ／
+		SETCOLOR 0 , 255, 0
+		PRINT 危险日
+		RESETCOLOR
+		PRINT ／
+		PRINTBUTTON "妊娠育儿天数",902
+	ENDIF
+ELSEIF 予定种别 == 2
+	PRINTBUTTON "工作",900
+	IF FLAG:1007
+		PRINT ／
+		PRINTBUTTON "危险日",901
+		PRINT ／
+		SETCOLOR 0 , 255, 0
+		PRINT 妊娠育儿天数(红色:不能啪/黄色:要戴套/粉色:可以啪)
+		RESETCOLOR
+	ENDIF
+ENDIF
+PRINTL 
+PRINTL ├──┼──────────────────────────────────────
+PRINT │
+SETCOLOR 0 , 255, 0
+;{LOCAL:1(～9)}+100の数值がCHARANUM以下だとバグになるので
+;未实装の间はボタン机能自体杀しておく
+;机能实装时に适当な值を设定しなおすこと
+;PRINTBUTTON (LOCAL:1 > 9 ? TOSTR(LOCAL:1) # TOFULL(TOSTR(LOCAL:1))), (LOCAL:1 + 100)
+PRINTFORM %(LOCAL:1 > 9 ? TOSTR(LOCAL:1) # TOFULL(TOSTR(LOCAL:1)))%
+PRINT 日
+RESETCOLOR
+PRINT │
+;予定表内で１行目にイベント・宴会情报、２行目に名前列表表示
+;曜日も予定表内で表示する
+;予定表を呼ぶと时间が进むので细心の注意を払う
+CALL 予定表(LOCAL:1, LOCAL:11, LOCAL:101, 1, 予定种别)
+PRINTL 
+PRINTL ├──┼──────────────────────────────────────
+PRINT │
+;PRINTBUTTON (LOCAL:2 > 9 ? TOSTR(LOCAL:2) # TOFULL(TOSTR(LOCAL:2))), (LOCAL:2 + 100)
+PRINTFORM %(LOCAL:2 > 9 ? TOSTR(LOCAL:2) # TOFULL(TOSTR(LOCAL:2)))%
+PRINT 日│
+CALL 予定表(LOCAL:2, LOCAL:12, LOCAL:102, 2, 予定种别)
+PRINTL 
+PRINTL ├──┼──────────────────────────────────────
+PRINT │
+;PRINTBUTTON (LOCAL:3 > 9 ? TOSTR(LOCAL:3) # TOFULL(TOSTR(LOCAL:3))), (LOCAL:3 + 100)
+PRINTFORM %(LOCAL:3 > 9 ? TOSTR(LOCAL:3) # TOFULL(TOSTR(LOCAL:3)))%
+PRINT 日│
+CALL 予定表(LOCAL:3, LOCAL:13, LOCAL:103, 3, 予定种别)
+PRINTL 
+
+PRINTL ├──┼──────────────────────────────────────
+PRINT │
+;PRINTBUTTON (LOCAL:4 > 9 ? TOSTR(LOCAL:4) # TOFULL(TOSTR(LOCAL:4))), (LOCAL:4 + 100)
+PRINTFORM %(LOCAL:4 > 9 ? TOSTR(LOCAL:4) # TOFULL(TOSTR(LOCAL:4)))%
+PRINT 日│
+CALL 予定表(LOCAL:4, LOCAL:14, LOCAL:104, 4, 予定种别)
+PRINTL 
+
+PRINTL ├──┼──────────────────────────────────────
+PRINT │
+;PRINTBUTTON (LOCAL:5 > 9 ? TOSTR(LOCAL:5) # TOFULL(TOSTR(LOCAL:5))), (LOCAL:5 + 100)
+PRINTFORM %(LOCAL:5 > 9 ? TOSTR(LOCAL:5) # TOFULL(TOSTR(LOCAL:5)))%
+PRINT 日│
+CALL 予定表(LOCAL:5, LOCAL:15, LOCAL:105, 5, 予定种别)
+PRINTL 
+
+PRINTL ├──┼──────────────────────────────────────
+PRINT │
+;PRINTBUTTON (LOCAL:6 > 9 ? TOSTR(LOCAL:6) # TOFULL(TOSTR(LOCAL:6))), (LOCAL:6 + 100)
+PRINTFORM %(LOCAL:6 > 9 ? TOSTR(LOCAL:6) # TOFULL(TOSTR(LOCAL:6)))%
+PRINT 日│
+CALL 予定表(LOCAL:6, LOCAL:16, LOCAL:106, 6, 予定种别)
+PRINTL 
+
+PRINTL ├──┼──────────────────────────────────────
+PRINT │
+;PRINTBUTTON (LOCAL:7 > 9 ? TOSTR(LOCAL:7) # TOFULL(TOSTR(LOCAL:7))), (LOCAL:7 + 100)
+PRINTFORM %(LOCAL:7 > 9 ? TOSTR(LOCAL:7) # TOFULL(TOSTR(LOCAL:7)))%
+PRINT 日│
+CALL 予定表(LOCAL:7, LOCAL:17, LOCAL:107, 7, 予定种别)
+PRINTL 
+
+PRINTL └──┴──────────────────────────────────────
+PRINTL [0] - 返回
+
+;时间を戻すためにリセット用の予定表を呼ぶ
+CALL 予定表(LOCAL:8, LOCAL:18, LOCAL:108, 8)
+INPUT
+IF RESULT >= 1 && RESULT <= CHARANUM
+	PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", RESULT)%
+	IF CFLAG:RESULT:自宅位置
+		PRINT 自宅位置：
+		IF CFLAG:RESULT:神社在住
+			PRINTFORML %NAME_FROM_PLACE(CFLAG:RESULT:神社在住)%
+		ELSE
+			PRINTFORML %NAME_FROM_PLACE((CFLAG:RESULT:自宅位置) / 10 + 6000)%
+		ENDIF
+	ENDIF
+	PRINT 起床时间：
+	SIF CFLAG:RESULT:355
+	PRINTFORML %时刻表示(CFLAG:RESULT:起床时间)%
+	PRINT 就寝时间：
+	SIF CFLAG:RESULT:354
+	PRINTFORML %时刻表示(CFLAG:RESULT:就寝时间)%
+	PRINT 经常去的地方:
+	IF CFLAG:RESULT:经常去的地方 >= 0
+		PRINTFORML %GET_MAPNAME(CFLAG:RESULT:经常去的地方)%
+	ENDIF
+	PRINT 当前位置：
+	IF CFLAG:RESULT:当前位置
+		PRINTFORML %NAME_FROM_PLACE(CFLAG:RESULT:当前位置)%
+	ENDIF
+	PRINT 工作情报：
+	SIF CSTR:RESULT:3 == ""
+		PRINT ？？？
+	PRINTFORML %CSVCSTR(RESULT, 3,)%
+	PRINT 　职场　：
+	SIF CSTR:RESULT:2 == ""
+		PRINT ？？？
+;	// GET_JOBPLACE("仕事",ARG)で职场の书き换え处理があるので变更
+;	再变更しました,1外出先に对応してない,2职场が复数ある角色に对応できない,ため
+	PRINTFORML %CSVCSTR(RESULT, 2)%
+;	PRINTFORML %NAME_FROM_PLACE(CFLAG:RESULT:职场)%
+	RESTART
+;机能实装时に条件を设定しなおす
+;ELSEIF RESULT >= 101 && RESULT <= 131
+;	PRINTFORMW {RESULT - 100}日的预定　※未实装
+;	RESTART
+ELSEIF RESULT >= 900 && RESULT <= 902
+;900:工作予定(予定=0)
+;901:危险日予定(予定=1)
+;902:妊娠育儿天数予定(予定=2)
+	予定种别 = RESULT - 900
+	RESTART
+ENDIF
+;[SKIPEND]
+RETURN
+
+;-----------------------------------------------------------
+;ARG	0=日にち,1=总日数,2=月をまたいでいるか,3=呼び出し回数,4=予定种别(0:工作 1:危险日)
+;		现在=元々のDAY,今日=元々のDAY:2,今月=元々のDAY:3,来月=今月から见た来月
+;-----------------------------------------------------------
+@予定表(ARG, ARG:1, ARG:2, ARG:3, ARG:4=0)
+#DIM 现在
+#DIM 今日
+#DIM 今月
+#DIM 来月
+
+#DIM 元工作量
+#DIM 元工作开始
+#DIM 元工作结束
+#DIM 元职场
+#DIM 元职业种类
+#DIM 元工资
+#DIM 元礼物
+
+#DIM 表示カウント
+
+;TIMEをいじるので逆算
+IF ARG:2 && DAY:2 != 今月
+	IF DAY:2 == 1
+		今月 = 4
+	ELSE
+		今月 = DAY:2 - 1
+	ENDIF
+ELSE
+	今月 = DAY:2
+ENDIF
+IF DAY:2 == 4
+	来月 = 1
+ELSE
+	来月 = DAY:2 + 1
+ENDIF
+;TIMEをいじる
+SIF ARG:2 && DAY:2 == 今月
+	DAY:2 = 来月
+DAY = ARG:1
+DAY:3 = ARG
+;逆算
+现在 = DAY - ARG:3 + 1
+IF 今月 != DAY:2
+	今日 = DAY:3 - ARG:3 + 32
+ELSE
+	今日 = DAY:3 - ARG:3 + 1
+ENDIF
+;最后の呼び出しでリセット
+IF ARG:3 == 8
+	DAY = 现在
+	DAY:2 = 今月
+	DAY:3 = 今日
+	RETURN
+ENDIF
+
+;确认用（来月は１日ラグがあるが问题ない）
+;PRINTFORM 今日{今日}　今月{今月}　来月{来月} 现在{现在} DAY:3-{DAY:3} DAY:2-{DAY:2} DAY - {DAY} 
+;ここからは一时的に时间が进んだ状态で算出する（GET_DAY()や宴会予定も进んだ状态）
+
+;予定表１行目
+IF FESTIVAL() != ""
+	SETCOLOR C_RED
+	PRINTFORM %FESTIVAL()%　
+	RESETCOLOR
+ENDIF
+
+;宴会も日期が变わった状态でチェック
+;宴会情报の表示を１行目に变更
+CALL 宴会予定判定
+
+SETCOLOR C_YELLOW
+IF FLAG:开始日 - DAY == 0 && FLAG:宴会举办FLAG
+	IF STONE_PLAYCOUNT:2 == 16 && (STONE_UKETSUKEDAY + 14 - DAY:0) > 0 && (STONE_UKETSUKEDAY + 14 - DAY:0) < 15
+		PRINTFORM   【暂停至{STONE_UKETSUKEDAY + 14 - DAY:0}日后】
+	ELSE
+		PRINTFORM   【%STONECombiDAY(DAY:3)%】
+	ENDIF
+ELSE
+	IF STONE_PLAYCOUNT:2 == 16 && (STONE_UKETSUKEDAY + 14 - DAY:0) > 0 && (STONE_UKETSUKEDAY + 14 - DAY:0) < 15
+		PRINTFORM 【暂停至{STONE_UKETSUKEDAY + 14 - DAY:0}日后】
+	ELSE
+		PRINTFORM 【%STONECombiDAY(DAY:3)%】
+	ENDIF
+ENDIF
+RESETCOLOR
+
+;予定表２行目以降
+;曜日も变わっている（初日はそのまま）
+PRINTL
+PRINTFORM │(%GET_DAY()%)│
+表示カウント = 0
+FOR LOCAL, 1, CHARANUM
+	IF !ARG:4
+		元工作量 = MAXBASE:LOCAL:工作量
+		元工作开始 = TCVAR:LOCAL:工作开始
+		元工作结束 = TCVAR:LOCAL:工作结束
+		元职场 = CFLAG:LOCAL:职场
+		元职业种类 = CFLAG:LOCAL:职业种类
+		元工资 = TCVAR:LOCAL:工资
+		元礼物 = TCVAR:LOCAL:礼物
+
+	;住宿人物でも仕事に出かけるのでとりあえずコメントアウト
+	;	SIF CFLAG:LOCAL:神社在住
+	;		CONTINUE
+	;	;仕事が随机の场合はあること前提
+		;…にすると今日の仕事に影响が出るので予定も随机（次に仕事するか否か）に
+	;	SIF DAY:3 != 今日
+	;		TCVAR:LOCAL:工作的有无 = 2
+		CALL 仕事内容设定(LOCAL, 1)
+		IF !CHARA_HOLIDAY(LOCAL, 1) && CFLAG:LOCAL:信赖度 >= 10
+			表示カウント++
+			IF 表示カウント > 9
+				PRINTL 
+				PRINT │　　│
+				表示カウント = 0
+			ENDIF
+	;		便利过ぎる气がするので自重
+	;		SIF CFLAG:LOCAL:行动 == 5
+	;			SETCOLOR 255, 100, 0
+			PRINTBUTTON CALLNAME:LOCAL, LOCAL
+			RESETCOLOR
+			PRINT 　
+		ENDIF
+
+		MAXBASE:LOCAL:工作量 = 元工作量
+		TCVAR:LOCAL:工作开始 = 元工作开始
+		TCVAR:LOCAL:工作结束 = 元工作结束
+		CFLAG:LOCAL:职场 = 元职场
+		CFLAG:LOCAL:职业种类 = 元职业种类
+		TCVAR:LOCAL:工资 = 元工资
+		TCVAR:LOCAL:礼物 = 元礼物
+	ELSEIF ARG:4 == 1
+		IF ESTRUS_CATEGORY(LOCAL, ARG:3-1) == "危险日" && FLAG:1007
+			表示カウント++
+			IF 表示カウント > 9
+				PRINTL 
+				PRINT │　　│
+				表示カウント = 0
+			ENDIF
+			;SIF !INRANGE(CFLAG:LOCAL:分娩经过日, 1, 59) && (CFLAG:LOCAL:允许无套 == 1 || CFLAG:LOCAL:允许无套 == 2 || TALENT:LOCAL:初潮 == 1)
+			SIF !INRANGE(CFLAG:LOCAL:分娩经过日, 1, 59) && (CFLAG:LOCAL:允许无套 == 1 || CFLAG:LOCAL:允许无套 == 2)
+				SETCOLOR C_GREEN
+	;		着床済なら名前を粉色にする
+			SIF CFLAG:LOCAL:妊娠经过日数
+				SETCOLOR C_PINK
+			PRINTBUTTON CALLNAME:LOCAL, LOCAL
+			SETCOLOR C_PINK
+			CALL HEART
+			RESETCOLOR
+			PRINT 　
+		ENDIF
+	;		在日历显示育儿受精和妊娠天数
+	ELSEIF ARG:4 == 2
+		IF ESTRUS_CATEGORY(LOCAL, ARG:3-1) == "危险日" && FLAG:1007
+			表示カウント++
+			IF 表示カウント > 9
+				PRINTL 
+				PRINT │　　│
+				表示カウント = 0
+			ENDIF
+			SIF CFLAG:LOCAL:妊娠经过日数
+			SETCOLOR C_PINK
+			PRINTBUTTON CALLNAME:LOCAL, LOCAL
+			SIF CFLAG:LOCAL:妊娠经过日数 >1 && CFLAG:LOCAL:妊娠经过日数 <20
+				PRINTFORM [受精{CFLAG:LOCAL:903}天]
+			SIF TALENT:LOCAL:153 && CFLAG:LOCAL:妊娠经过日数 >30 && CFLAG:LOCAL:妊娠经过日数 <=80
+				PRINTFORM [妊娠{CFLAG:LOCAL:903}天]
+			SIF TALENT:LOCAL:154 && CFLAG:LOCAL:分娩经过日 >= CHILD_自立
+				PRINTFORM [育儿{CFLAG:LOCAL:908}天]
+			SETCOLOR C_YELLOW
+			SIF TALENT:LOCAL:154 && CFLAG:LOCAL:分娩经过日 < CHILD_自立
+				PRINTFORM [育儿{CFLAG:LOCAL:908}天]
+			SETCOLOR C_RED
+			SIF TALENT:LOCAL:153 && CFLAG:LOCAL:妊娠经过日数 >=20 && CFLAG:LOCAL:妊娠经过日数 <=30
+				PRINTFORM [妊娠{CFLAG:LOCAL:903}天]
+			SIF TALENT:LOCAL:153 && CFLAG:LOCAL:妊娠经过日数 >80
+				PRINTFORM [妊娠{CFLAG:LOCAL:903}天]
+			SETCOLOR C_WHITE
+			CALL HEART
+			RESETCOLOR
+			PRINT 　
+		ENDIF
+	;		在日历显示育儿受精和妊娠天数
+	ENDIF
+NEXT
+
+@宴会予定判定
+IF FLAG:开始日 - DAY == 0 && FLAG:宴会举办FLAG
+	SETCOLOR C_GREEN
+	CALL 宴会予定表示
+	RESETCOLOR
+ENDIF

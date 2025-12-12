@@ -1,0 +1,1586 @@
+;==================================================
+;FIRST GREETING OF THE DAY
+;SPECIAL GREETINGS FOR HOLIDAYS
+;ARG 0 = Player enter, 1 = Parsee enter
+;Borrowed from the /egg/ Sakuya dialogue
+;==================================================
+@K60_FIRST_GREETING_OF_DAY_LINES(ARG)
+DEBUGPRINTFORML PARSEE ENG DIALOGUE: In specialevents
+
+PRINTFORML
+; CALL FISHER_YATES_SHAFFLE(CHARANUM-2)
+; FOR LOCAL, 0, 1
+;     LOCAL:1 = SHAFFLE_ARRAY:LOCAL + 1
+;     SIF !CAN_MEET(LOCAL:1)
+;         CONTINUE
+;     SIF LOCAL:1 == 60
+;         CONTINUE
+;     SIF CFLAG:(LOCAL:1):依赖状况
+;         CONTINUE
+;     LOCAL:2 = LOCAL:1
+; NEXT
+; CALL FISHER_YATES_SHAFFLE(CHARANUM-2)
+; FOR LOCAL, 0, 1
+;     LOCAL:1 = SHAFFLE_ARRAY:LOCAL + 1
+;     SIF !CAN_MEET(LOCAL:1)
+;         CONTINUE
+;     SIF CFLAG:(LOCAL:1):依赖状况
+;         CONTINUE
+;     SIF LOCAL:1 == 60
+;         CONTINUE
+;     SIF LOCAL:1 == LOCAL:2
+;         CONTINUE
+;     LOCAL:3 = LOCAL:1
+; NEXT
+
+; PRINTFORML %CALLNAME:(LOCAL:2)%
+; PRINTFORML %CALLNAME:(LOCAL:3)%
+
+;Reset Parsee's consent flags if you started dating one of her friends after fucking her
+IF (TALENT:83:恋人 || TALENT:84:恋人 || TALENT:64:恋人) && !TALENT:MASTER:左拥右抱 && !CFLAG:[[帕露西]]:K60EN_PARSEE_OLD_NO_PUSHDOWN_VALUE
+    DEBUGPRINTFORML Resetting consent flags so Parsee doesn't cuck her friends...
+    CFLAG:[[帕露西]]:K60EN_PARSEE_OLD_NO_PUSHDOWN_VALUE = CFLAG:[[帕露西]]:推倒禁止
+    CFLAG:[[帕露西]]:推倒禁止 = 1
+    CFLAG:[[帕露西]]:K60EN_PARSEE_OLD_CONSENT_VALUE = CFLAG:[[帕露西]]:推倒禁止
+    CFLAG:[[帕露西]]:既成事实 = 0
+    CFLAG:[[帕露西]]:K60EN_PARSEE_OLD_BEEN_PUSHED_DOWN_VALUE = CFLAG:[[帕露西]]:ヤラせちゃった
+    CFLAG:[[帕露西]]:ヤラせちゃった = 0
+ENDIF
+
+IF CFLAG:[[帕露西]]:K60EN_PARSEE_TIMES_BROKEN_UP_WITH > 1 && SHIRAHU([[帕露西]])
+    PRINTFORMDW 帕露西一看到你，就恶狠狠地瞪了你一眼，然后气冲冲地走开了。
+    CFLAG:[[帕露西]]:2 = 0
+    CFLAG:[[帕露西]]:4 = 0
+    ABL:[[帕露西]]:顺从 = 0
+    ABL:[[帕露西]]:亲密 = 0
+    TALENT:[[帕露西]]:恋人 = 0
+    TALENT:[[帕露西]]:恋慕 = 0
+    TALENT:[[帕露西]]:炮友 = 0
+    TALENT:[[帕露西]]:爱欲 = 0
+    TALENT:[[帕露西]]:思慕 = 0
+    CALL RUNOFF(60, 0)
+ENDIF
+
+IF !TCVAR:[[帕露西]]:K60ENC_TCVAR_CHANGE_GREETING_SEEN
+    CALL K60_CHANGE_GREETINGS(ARG)
+    DEBUGPRINTFORML CHANGE flag is {TCVAR:[[帕露西]]:K60ENC_TCVAR_CHANGE_GREETING_SEEN}
+    SIF TCVAR:[[帕露西]]:K60ENC_TCVAR_CHANGE_GREETING_SEEN == 1
+        RETURN 1
+ENDIF
+
+IF !TCVAR:[[帕露西]]:K60ENC_TCVAR_HOLIDAY_GREETING_SEEN
+    CALL K60_HOLIDAY_GREETINGS(ARG)
+    DEBUGPRINTFORML HOLIDAY flag is {TCVAR:[[帕露西]]:K60ENC_TCVAR_HOLIDAY_GREETING_SEEN}
+    SIF TCVAR:[[帕露西]]:K60ENC_TCVAR_HOLIDAY_GREETING_SEEN == 1
+        RETURN 1
+ENDIF
+
+IF !TCVAR:[[帕露西]]:K60ENC_TCVAR_SPECIAL_GREETING_SEEN
+    CALL K60_SPECIAL_GREETINGS(ARG)
+    DEBUGPRINTFORML SPECIAL flag is {TCVAR:[[帕露西]]:K60ENC_TCVAR_SPECIAL_GREETING_SEEN}
+    SIF TCVAR:[[帕露西]]:K60ENC_TCVAR_SPECIAL_GREETING_SEEN == 1
+        RETURN 1
+ENDIF
+
+DEBUGPRINTFORML ARG is {ARG}
+
+IF ARG == 0
+    SELECTCASE K60_ATTITUDE()
+			;Loving
+        CASE 0
+            SELECTCASE RAND:3
+                CASE 0
+                    PRINTFORML 「啊，%K60_MASTER()%。」
+                    PRINTFORMW 「最近在忙什么呢？ 没和其他%PRINT_MALE("家伙", TARGET)%调情吧，希望没有哦？」
+                    PRINTFORMDW 帕露西对你微笑，但你能看到她眼中的不安……
+                CASE 1
+                    PRINTFORMDW 帕露西似乎陷入了沉思。 你向她打招呼时，她吓了一跳，然后对你微笑。
+                    PRINTFORMW 「%K60_MASTER()%！我没注意到你。」
+                CASE 2
+                    PRINTFORMW 「yo,baka!」
+                    IF FIRSTTIME("Guarati101WithMizuhashiSensei")
+                        PRINTFORMDW 咦？ 她为什么骂你笨蛋？
+                        PRINTFORMDW 帕露西看到你的表情，看起来有些抱歉。
+                        PRINTFORML 「哦……原谅我，%K60_MASTER()%。 这是古吉拉特语的问候语。」
+                        PRINTFORMW 「意思是“嘿，亲爱的”。」
+                        IF CFLAG:14:认识
+                            PRINTFORMDL 有趣……
+                            PRINTFORMDW 难道说一直以来都有人用古吉拉特语和琪露诺打招呼吗？
+                        ENDIF
+                    ELSE
+                        PRINTFORMDW 帕露西鞠躬，对你微笑。
+                    ENDIF
+            ENDSELECT
+
+			;Nice, horny
+        CASE 1
+            SELECTCASE RAND:4
+                CASE 0
+                    CALL M_KOJO_COLOR_K60_JEALOUS
+                    PRINTFORML 「啊，%K60_MASTER()%。」
+                    PRINTFORMW 「每次见到你，你似乎都变得更加\@ IS_MALE(MASTER) ? 英俊 # 美丽 \@了呢。」
+                    PRINTFORMW 「我必须承认，我有点嫉妒了……」
+                    PRINTFORMDW 帕露西咧嘴一笑。
+                    PRINTFORMW 「我必须想办法让自己对你更有吸引力才行……」
+                    CALL M_KOJO_COLOR_K60
+                CASE 1
+                    PRINTFORMDW 帕露西凝视着远方，带着梦幻般的微笑。 当她看到你时，笑容更加灿烂。
+                    PRINTFORML 「啊，%K60_MASTER()%。 我刚才还在想你，你就出现了。」
+                CASE 2
+                    PRINTFORMW 「啊，%K60_MASTER()%！」
+                    PRINTFORMDW 帕露西头也不抬。
+                    PRINTFORMW 「我就知道是你。 你在附近的时候，我的脸总是会发烫。」
+                    PRINTFORMDW 她看着你，咧嘴一笑。 就像她说的，她有点脸红。
+                CASE 3
+                    PRINTFORMW 「哎呀呀，这不是幻想乡最\@ IS_MALE(MASTER) ? 英俊的男人 # 美丽的女人\@吗。」
+                    PRINTFORMDW 帕露西对你咧嘴一笑。
+            ENDSELECT
+
+			;爱抱怨的傲娇
+        CASE 2
+            $PARSEE_ROOM_ENTER_TSUNDERE
+            SELECTCASE RAND:6
+                CASE 0
+                    PRINTFORMDL 帕露西转过头，想看看是谁。
+                    PRINTFORMDW 当她看到是你时，她皱着眉头，把头转向一边。
+                CASE 1
+                    PRINTFORMDL 帕露西盯着你，一言不发。
+                    PRINTFORMDL 你开始感到毛骨悚然。 而且她的表情也有些奇怪。
+                    PRINTFORMDW 看起来应该是……充满爱意？
+                CASE 2
+                    PRINTFORMDW 帕露西似乎陷入了沉思。 你向她打招呼时，她吓了一跳，然后怒视着你。
+                    PRINTFORMW 「哇！ 别那样吓我，笨蛋！」
+                CASE 3
+                    PRINTFORMW 「哦。 是你啊。」
+                    PRINTFORMDW 像往常一样，帕露西皱着眉头。
+                    PRINTFORMW 「你想要什么？」
+                CASE 4
+					;只有当帕露西独自一人时
+                    IF GET_TARGETNUM() > 1
+                        GOTO PARSEE_ROOM_ENTER_TSUNDERE
+                    ELSE
+                        CALL M_KOJO_COLOR_K60_JEALOUS
+                        PRINTFORMW 「Paruparuparuparuparuparuparuparu...」
+                        PRINTFORMDL 帕露西皱着眉头，咬着拇指，自言自语。
+                        PRINTFORMDW 当她注意到你在那里时，她停止了嘟囔，怒视着你。
+                        PRINTFORMW 「你介意点好不好？！ 我正在这里发呆呢！」
+                        CALL M_KOJO_COLOR_K60
+                    ENDIF
+					;来自佩迪的设计文档
+                CASE 5
+                    CALL M_KOJO_COLOR_K60_JEALOUS
+                    PRINTFORML 「我原本正在自己的悲惨境地里自怨自艾……然后你就出现了。」
+                    PRINTFORMW 「你有时候真是个气氛破坏者。」
+                    CALL M_KOJO_COLOR_K60
+
+            ENDSELECT
+
+			;Fake nice
+        CASE 3
+            $PARSEE_ROOM_ENTER_PASSIVE_AGGRESSIVE
+            SELECTCASE RAND:5
+                CASE 0
+                    PRINTFORML 「啊，%K60_MASTER()%。」
+                    PRINTFORML 「一切都还好吗？ 你看起来不太高兴。」
+                    PRINTFORMW 「想聊聊吗？」
+                CASE 1
+                    PRINTFORML 「啊，%K60_MASTER()%。」
+                    PRINTFORML 「你看起来心情不错。」
+                    PRINTFORMW 「发生了什么好事吗？ 我想听听。」
+                CASE 2
+                    PRINTFORMDW 帕露西转过身来看向你。
+                    PRINTFORMDW 她用往常的微笑向你打招呼。
+                CASE 3
+					;只有当帕露西独自一人时
+                    IF GET_TARGETNUM() > 1
+                        GOTO PARSEE_ROOM_ENTER_PASSIVE_AGGRESSIVE
+                    ELSE
+                        CALL M_KOJO_COLOR_K60_JEALOUS
+                        PRINTFORMW 「Paruparuparuparuparuparuparuparu...」
+                        PRINTFORMDL 帕露西皱着眉头，咬着拇指，自言自语。
+                        PRINTFORMDW %BREAKENG(@"当你问她在做什么时，她迅速把手藏在背后，鞠躬，并试图表现得很随意。")%
+                        PRINTFORMW 「嗯？ 哦……那是，啊，琐罗亚斯德教的仪式。 我在为所有经过我桥梁的人的健康祈祷。」
+                        CALL M_KOJO_COLOR_K60
+                    ENDIF
+                CASE 4
+                    IF CFLAG:[[帕露西]]:K60ENC_SETTING_YUUPARU_CRUSH == 1
+                        PRINTFORMW 「嗯……我是该踩勇仪桑呢，还是让勇仪桑踩我呢……？」
+                        PRINTFORMDW 帕露西自言自语。 当她注意到你在那里时，她吓了一跳，怒视着你。
+                        PRINTFORMW 「哇！ 你站在那里多久了？！」
+                        IF CFLAG:[[帕露西]]:当前位置 == CFLAG:64:当前位置
+                            PRINTFORMDL 然后她看到了%CALLNAME:64%，脸红了。
+                            PRINTFORMW 「你-你也在呀？！」
+                            PRINTFORMDW 她的眼睛在你俩之间来回移动，就像在看网球比赛。
+                            PRINTFORMDW 也许你应该给他们泡些茶，免得情况变得更加尴尬。
+                        ENDIF
+                    ELSE
+                        GOTO PARSEE_ROOM_ENTER_PASSIVE_AGGRESSIVE
+                    ENDIF
+
+            ENDSELECT
+    ENDSELECT
+    IF CFLAG:K60EN_MET_VAHBIZ && !RAND:10
+        ; IF 1 == 1
+        PRINTFORMDW 帕露西抱着瓦赫比兹。 你伸出手抚摸她的头。
+        PRINTFORMDW 瓦赫比兹发出了开心的咕噜声。
+        SELECTCASE K60_ATTITUDE()
+            CASE 0
+                PRINTFORMDW 帕露西对你微笑。
+                PRINTFORMW 「她几乎和你一样喜欢你。 而且她非常会看人……」
+            CASE 1
+                PRINTFORMDW 帕露西脸上露出了恶作剧般的笑容。
+                PRINTFORMW 「……你真的很喜欢我的小猫咪，对吧？」
+                PRINTFORMDW 她窃笑着。
+                PRINTFORMDW 天啊，帕露西……
+            CASE 2
+                PRINTFORMW 「喂！ 别想勾引我的猫，你这个变态！」
+                PRINTFORMDW 帕露西一把抱走瓦赫比兹，怒视着你。
+            CASE 3
+                CALL M_KOJO_COLOR_K60_JEALOUS
+                PRINTFORMW 「她真的很喜欢你……」
+                PRINTFORMDW 帕露西皱着眉头，挠着瓦赫比兹的耳朵后面。
+                PRINTFORMW 「但你最喜欢妈妈，对吧？」
+                CALL M_KOJO_COLOR_K60
+        ENDSELECT
+        IF ITEM:鱼 > 0
+            PRINTFORMDW 要给瓦赫比兹一条鱼吗？
+            CALL ASK_YN("0 - 是", "1 - 否")
+            IF !RESULT
+                PRINTFORMDW 你给瓦赫比兹一条鱼。
+                RESETCOLOR
+                PRINTFORMW 「呜噜！」
+                CALL M_KOJO_COLOR_K60
+                PRINTFORMDW 瓦赫比兹似乎很开心……
+                CALL LOST_ITEM("鱼", 1, 1)
+                PRINTFORML
+                SELECTCASE K60_ATTITUDE()
+                    CASE 0
+                        PRINTFORMW 「啊……谢谢你，%K60_MASTER()%。」
+                        PRINTFORMDW 帕露西容光焕发地看着你。
+                    CASE 1
+                        PRINTFORMDW %BREAKENG("帕露西看起来想再说一个糟糕的“小猫咪”双关语，但当她看到你毫无笑意的表情后，决定不说了。")%
+                    CASE 2
+                        PRINTFORMW 「你是笨蛋吗？！ 我告诉过你，离我的猫远点！」
+                        PRINTFORMW 「就算你觉得“猫也可以”，去找阿燐、橙、三花或影狼！ 别烦瓦赫比兹！」
+                        PRINTFORMDW 她在说什么？ 影狼不是猫！
+                        PRINTFORMDW 但是尽管她言辞刻薄，帕露西似乎很感激你喂了瓦赫比兹……
+                    CASE 3
+                        PRINTFORMW 「哦？ 你真是太好了，%K60_MASTER()%。」
+                        PRINTFORMDW 帕露西对你微笑。
+                ENDSELECT
+            ENDIF
+            PRINTFORML
+            IF K60_ATTITUDE() == 2
+                LOCAL:1 = 5 * MAX(ABL:[[帕露西]]:亲密, ABL:[[帕露西]]:欲望)
+            ELSE
+                LOCAL:1 = 10 * MAX(ABL:[[帕露西]]:亲密, ABL:[[帕露西]]:欲望)
+            ENDIF
+            CFLAG:[[帕露西]]:好感度 += LOCAL:1
+            CALL CHANGE_CFLAG(GETNUM(CFLAG, "好感度"), [[帕露西]], LOCAL:1)
+            CALL COLORMESSAGE(@"Favor +100 (Vahbiz)",C_YELLOW,2,1)
+        ENDIF
+    ENDIF
+ELSE
+;Parsee enters the room
+    IF !RAND:10 && !TALENT:[[帕露西]]:妊娠 && !TCVAR:[[帕露西]]:今天有否见面
+        CALL K60_PARSEE_HUNGOVER()
+    ELSE
+        SELECTCASE K60_ATTITUDE()
+	;Loving
+            CASE 0
+                $PARSEE_ENTERS_ROOM_LOVING
+                SELECTCASE RAND:4
+                    CASE 0
+                        PRINTFORMW 「啊，%K60_MASTER()%！ 我就在想你在哪里呢。」
+                    CASE 1
+                        PRINTFORMW 「%K60_MASTER()%！ 我一直在找你。」
+                    CASE 2
+                        PRINTFORMW 「我希望我没有打扰到什么重要的事情。」
+                        PRINTFORMDW 帕露西有些紧张地对你微笑。
+                    CASE 3
+					;只有当你在和别人一起时
+                        IF GET_TARGETNUM() > 1
+                            PRINTFORMDW 当帕露西看到你不是一个人时，她皱着眉头，开始自言自语。
+                            CALL M_KOJO_COLOR_K60_JEALOUS
+                            PRINTFORMW 「别嫉妒，别嫉妒，别嫉妒……」
+                            CALL M_KOJO_COLOR_K60
+                        ELSE
+                            GOTO PARSEE_ENTERS_ROOM_LOVING
+                        ENDIF
+                ENDSELECT
+		;善良，好色
+            CASE 1
+                SELECTCASE RAND:3
+                    CASE 0
+                        PRINTFORML 「啊……原来你在这里啊。」
+                        IF GET_TARGETNUM() > 1
+                            PRINTFORMW 「我们不如去一个更私密的地方吧？」
+                        ELSE
+                            PRINTFORMW 「而且只有我们两个人……我喜欢这样。」
+                        ENDIF
+                    CASE 1
+                        PRINTFORML 「我希望我没有打扰到你。」
+                        PRINTFORMW 「如果我没有……我们不如一起做点什么吧？ 只有我们两个人。」
+                    CASE 2
+                        PRINTFORMW 「啊，你在这里啊。」
+                        PRINTFORMDW 帕露西走到你身边时，迅速地捏了一下你的屁股。
+                ENDSELECT
+		;爱抱怨的傲娇
+            CASE 2
+                SELECTCASE RAND:4
+                    CASE 0
+                        PRINTFORMDL 帕露西一言不发地盯着你。
+                        PRINTFORMDW 过了一会儿，她皱了皱眉头。
+                        PRINTFORMW 「你难道不打算离开吗？ 大多数人看到我出现时都会这样做。」
+                    CASE 1
+                        PRINTFORMDW 当帕露西看到你时，她皱着眉头。
+                        PRINTFORMW 「你在这里做什么？」
+                    CASE 2
+                        PRINTFORMDW 帕露西看到你时笑了。
+                        PRINTFORMW 「哦！ 你好，%K60_MASTER()% 撒-哼」
+                        PRINTFORMDW 她打断了自己的话，清了清嗓子，然后怒视着你。
+					;灵感来自佩迪的设计文档
+                    CASE 3
+                        PRINTFORML 「你今天看起来心情很好。」
+                        PRINTFORMW 「如果我是你，我会去其他地方。 好心情在桥姬身边很难持久。」
+                ENDSELECT
+		;虚伪的善良
+            CASE 3
+                SELECTCASE RAND:3
+                    CASE 0
+                        PRINTFORMW 「啊，%K60_MASTER()%！ 原来你在这里啊。」
+                    CASE 1
+                        PRINTFORMW 「你介意我加入吗？」
+                        PRINTFORMDW 帕露西走到你身边，没有等待你的回答。
+                    CASE 2
+                        PRINTFORMW 「啊……%K60_MASTER()%。」
+                        PRINTFORMDW 帕露西饥渴地看着你……
+                ENDSELECT
+        ENDSELECT
+    ENDIF
+ENDIF
+PRINTFORML
+RETURN 1
+
+@K60_CHANGE_GREETINGS(ARG)
+;-------------------------------------------------
+;Attitude changes
+;-------------------------------------------------
+IF MARK:[[帕露西]]:快乐刻印 < 3 && TALENT:[[帕露西]]:恋慕 && FIRSTTIME("ParseeAttitudeChangeLove", 1)
+    PRINTFORMW 「啊……你好，%K60_MASTER()%。」
+    PRINTFORMDW 帕露西对你微笑。 不是她平时那种讽刺的笑容……而是她过去常用的那种虚假的开朗笑容。
+    PRINTFORMDW 这个女人到底是怎么回事？ 她一夜之间从友善变得粗鲁，现在又变回友善了？
+    PRINTFORMDW 她只是在玩弄你吗？ 她又傲娇了吗？ 还是她只是疯了？
+    PRINTFORMW 「你为什么盯着我看，%K60_MASTER()%？ 我脸上有什么东西吗？」
+    PRINTFORMDW 也许你应该放弃试图理解帕露西的动机。
+    PRINTFORMDW 至少她不再侮辱你了。
+    CALLF FIRSTTIME("ParseeAttitudeChangeLove")
+ELSEIF TALENT:[[帕露西]]:炮友 && FIRSTTIME("ParseeAttitudeChangeLust", 1)
+    PRINTFORMW 「你好呀，%K60_MASTER()%～」
+    PRINTFORMDW 帕露西充满诱惑地对你笑着。
+    SIF TALENT:[[帕露西]]:胸围 >= -2
+        PRINTFORMDW %BREAKENG(@"她也稍微改变了一下她的服装。 她调整了一下，露出更多\@ TALENT:[[帕露西]]:胸围 == -1 ? 乳沟……虽然她没什么可露的。 # 乳沟。\@")%
+    PRINTFORMDW 这个女人是谁，她把真正的帕露西怎么了？
+    PRINTFORMDW 是在玩弄吗？ 又傲娇了吗？ 还是疯了？
+    PRINTFORMW 「你为什么盯着我看，%K60_MASTER()%？ 我脸上有什么东西吗？」
+    PRINTFORMDW 也许你应该放弃试图理解帕露西的动机。
+    PRINTFORMDW 至少她不再侮辱你了。
+    CALLF FIRSTTIME("ParseeAttitudeChangeLust")
+ELSEIF TALENT:[[帕露西]]:思慕 && FIRSTTIME("ParseeAttitudeChangeTsundere", 1)
+    PRINTFORMW 「哦。 是你啊。」
+    PRINTFORMDW 帕露西怒视着你。
+    IF FLAG:周回数
+        PRINTFORMDW 看起来她又想把你赶走了。
+    ELSE
+        PRINTFORMDW 咦？ 为什么她突然心情这么差？
+        PRINTFORMDW 你问她是不是有什么不对劲。
+        PRINTFORMW 「你在说什么啊？ 你是笨蛋吗？！」
+        PRINTFORMDW 帕露西抱起胳膊，把头转向一边，不看你。
+    ENDIF
+    IF FLAG:周回数 && GETBIT(CFLAG:继承, 1)
+        CALL ASK_YN(@"告诉%CALLNAME:[[帕露西]]%你知道她在做什么","保持沉默")
+        IF !RESULT
+            PRINTFORMDW %CALLNAME:[[帕露西]]%的脸变得苍白。
+            PRINTFORMW 「纳纳纳纳纳纳尼...」
+            PRINTFORMW 「你到底在胡说八道什么啊，你这白痴？！ 我这辈子都没听过这么胡说八道的话！」
+            IF FIRSTTIME("BTDReveal")
+                PRINTFORMDW 如果那是真的……那你怎么知道她以前是亚扎塔？
+                PRINTFORMDW 并且她以前在真理部工作？
+                PRINTFORMDW 并且%CALLNAME:49%在她成为桥姬之后救了她一命？？
+                PRINTFORMW 「%CALLNAME:49%...」
+                PRINTFORMDW %CALLNAME:[[帕露西]]%嘶嘶地说出这个词。 她的手握成了拳头。
+                PRINTFORMW 「那个%PRINT_MALE("狗娘养的:婊子", 49)%！ 她让你来做这件事的，对吧？！」
+                PRINTFORMW 「当然。 她想让我离开。」
+                PRINTFORMW %BREAKENG(@"「所以她雇佣你来伪装成一个曾经是我的爱人的时间旅行者，只是为了让我出丑，让我羞愧地离开旧地狱！」")%
+                PRINTFORMW 「好吧，告诉那个%PRINT_MALE("狗娘养的:婊子", 49)%我没那么蠢，不会上她的小当！」
+                PRINTFORMDW 该死。 这不管用。
+                PRINTFORMDW 必须要做些什么才能说服%CALLNAME:[[帕露西]]%你说的是真话——啊哈！
+            ENDIF
+            PRINTFORMDW 你伸进口袋，拿出一个卷起来的画布，递给%CALLNAME:[[帕露西]]%。
+            PRINTFORMDW 她的下巴都快掉下来了。
+            PRINTFORMW 「这是……！」
+            PRINTFORMDW 这是你使用败者食尘之前，她画的一幅你俩的画。
+            PRINTFORMDW 手牵着手。 欢笑着。 微笑着。
+            PRINTFORML 「不……这不可能是真的。 她一定是雇人伪造的——」
+            PRINTFORMDW 你开始失去耐心了。 你停止时间，拍拍她的肩膀，走到她身后，然后让时间恢复。
+            PRINTFORMDW %CALLNAME:[[帕露西]]%转过身，傻眼地看着你。 汗水从她的额头上流下来。
+            PRINTFORMW 「所以你能控制时间……」
+            PRINTFORMDW 她的手抖得很厉害，几乎都握不住她的画了。
+            PRINTFORMW 「我……」
+            PRINTFORMDW 你走到她面前，给了她一个拥抱。
+            PRINTFORMDW %CALLNAME:[[帕露西]]%无力地靠在你身上。 她看起来好像要晕倒了。
+            PRINTFORMW 「但是……为什么？」
+            PRINTFORMW 「你为什么要回到过去？ 还有，为什么是我？」
+            PRINTFORMDW 这是一个很难回答的问题。 你想了一会儿才回答。
+            PRINTFORMW 「……我明白了。」
+            PRINTFORMW 「所以你回去之后，你想让我知道你仍然爱着我，并且你不希望我为了假装成不是我的人而伤害自己。」
+            PRINTFORMDW %CALLNAME:[[帕露西]]%摇了摇头。
+            PRINTFORMW 「我……我真的不知道该说什么好。」
+            PRINTFORMW 「一半的我相信你，另一半仍然认为这只是一些精心设计的骗局。」
+            PRINTFORMW 「但不管怎样……你是对的。 我试图把你推开。 显然现在行不通了。」
+            PRINTFORMW 「所以……我最好还是变回原来的自己。」
+            PRINTFORMDW %CALLNAME:[[帕露西]]%挣脱你的拥抱，擦去额头上的汗水。
+            PRINTFORMW 「我可以保留这幅画吗？ 毕竟，按照你说的，是我画的……或者说是我在另一个时间线的自己画的。」
+            PRINTFORMDW 你点点头。
+            PRINTFORMW 「……谢谢你。 现在，如果可以的话……我想我需要一些时间独自消化这件事。」
+            PRINTFORMDW %CALLNAME:[[帕露西]]%拿着她另一个自己的画，紧紧地握在手里，走开了。
+            CALLF FIRSTTIME("ParseeAttitudeChangeTsundere")
+            CFLAG:[[帕露西]]:K60EN_PARSEE_KNOWS_ABOUT_YOUR_BTD_RELATIONSHIP = 1
+            PRINTFORMDL 
+            CALL K60_CHANGE_TRAITS_AT_FALL_STATE()
+            CALL RUNOFF(60, 0)
+        ELSE
+            PRINTFORMDW 最好还是不要让她知道你的能力。
+            GOTO NORMAL_SCENE
+        ENDIF
+    ELSE
+        PRINTFORMDW 有些奇怪的事情正在发生。 帕露西从一个正常、开朗的女孩变成了一个冷漠、不合群的人。
+        PRINTFORMDW 她没事吧？
+        PRINTFORMW 「你盯着我做什么？！ 你难道没有比围着我转更有意义的事情做了吗？」
+        $NORMAL_SCENE
+        PRINTFORMDW 也许你应该离开。 \@ !FLAG:周回数 ? 不清楚帕露西发生了什么事，而且她似乎不愿意解释。 #\@
+    ENDIF
+    CALLF FIRSTTIME("ParseeAttitudeChangeTsundere")
+ELSE
+    TCVAR:[[帕露西]]:K60ENC_TCVAR_CHANGE_GREETING_SEEN = 2
+    RETURN 1
+ENDIF
+TCVAR:[[帕露西]]:K60ENC_TCVAR_CHANGE_GREETING_SEEN = 1
+
+;todo react to gender changes, age changes, genital changes, etc.
+
+@K60_HOLIDAY_GREETINGS(ARG)
+;-------------------------------------------------
+;Holidays
+;-------------------------------------------------
+;-------------------------------------------------
+;New Year's Day
+;-------------------------------------------------
+IF DAY:2 == 1 && DAY:3 == 1
+    SELECTCASE K60_ATTITUDE()
+	;Loving
+        CASE 0
+            PRINTFORMW 「新年快乐，%K60_MASTER()%！」
+            PRINTFORMDW 帕露西笑着拥抱你。
+            PRINTFORMW 「我迫不及待地想和你一起度过又一年。」
+	;善良，好色
+        CASE 1
+            PRINTFORMW 「新年快乐，%K60_MASTER()%！」
+            PRINTFORMDW 帕露西笑着拥抱你。
+            PRINTFORML 「新年意味着可以在床上尝试新的事物～」
+            PRINTFORMW 「我想知道我是否能找到一些能让你的其他女朋友嫉妒我的东西？」
+	;爱抱怨的傲娇
+        CASE 2
+            PRINTFORML 「哈啊……好吧，我又度过了一个新年。」
+            PRINTFORMW 「我完全预料到今年会更糟。 毕竟，我生命中的每一年都是这样的。」
+            PRINTFORMDW 她呻吟着，揉着额头。
+            PRINTFORML 「我的元旦宿醉似乎每年都在变得更糟……」
+            PRINTFORMW 「但我相信你不是来听我抱怨的。 新年快乐，%K60_MASTER()%。」
+            PRINTFORMW 「愿它像你去年一样充满着变态。」
+	;虚伪的善良
+        CASE 3
+            PRINTFORMW 「新年快乐，%K60_MASTER()%！」
+            PRINTFORMDW 帕露西对你微笑。
+            PRINTFORMW 「你制定了新年计划吗？」
+    ENDSELECT
+
+;-------------------------------------------------
+;Girls' Day
+;-------------------------------------------------
+; ELSEIF DAY:2 == 1 && DAY:3 == 3
+; todo
+
+;-------------------------------------------------
+;Mother's Day
+;-------------------------------------------------
+ELSEIF DAY:2 == 1 && DAY:3 == 11
+	;already has a child
+    IF EXP:分娩经验
+        SELECTCASE K60_ATTITUDE()
+		;Loving
+            CASE 0
+                PRINTFORMW 「母亲节快乐，%K60_MASTER()%！」
+                PRINTFORMDW 帕露西笑着拥抱你。
+                PRINTFORML 「我希望你今天能和我以及我们的\@EXP:分娩经验 > 1 ? 孩子们 # 孩子\@一起度过？」
+                PRINTFORMW 「我们真的没有像我希望的那样经常能像一家人一样……」
+		;善良，好色
+            CASE 1
+                PRINTFORMW 「母亲节快乐，%K60_MASTER()%！」
+                PRINTFORMDW 帕露西笑着拥抱你。
+                PRINTFORML 「我希望你今天能和我以及我们的\@EXP:分娩经验 > 1 ? 孩子们 # 孩子\@一起度过？」
+                CALL HPH_PRINT, @"「也许我们可以通过再造一个来结束这一天～HPH」", "W"
+		;爱抱怨的傲娇
+            CASE 2
+                PRINTFORMW 「母亲节快乐，%K60_MASTER()%。」
+                PRINTFORMDW 帕露西怒视着你。
+                PRINTFORML 「你是打算帮我抚养\@EXP:分娩经验 > 1 ? 这些孩子 # 这个孩子\@，还是我必须独自承担？」
+                PRINTFORMW 「虽然了解你之后，你的参与可能只会让情况变得更糟……」
+		;虚伪的善良
+            CASE 3
+                PRINTFORMW 「母亲节快乐，%K60_MASTER()%！」
+                PRINTFORMDW 帕露西对你微笑。
+                PRINTFORML 「你真的应该花更多的时间和我以及我们的\@EXP:分娩经验 > 1 ? 孩子们 # 孩子\@在一起……」
+                PRINTFORMW 「即使你对如何抚养孩子一无所知，你仍然是他们的父母。」
+                PRINTFORMW 「你需要认真对待你的责任。」
+        ENDSELECT
+	;第一次怀孕
+    ELSEIF TALENT:妊娠
+        SELECTCASE K60_ATTITUDE()
+			;充满爱意
+            CASE 0
+                PRINTFORMW 「母亲节快乐，%K60_MASTER()%！」
+                $PARSEE_PREGNANT_FIRST_TIME_HAPPY
+                PRINTFORMDW 帕露西握住你的手，把它放在她隆起的腹部上。 几秒钟后，你感觉到了一下踢动。
+                PRINTFORMW 「你感觉到了吗？ 那是我们的孩子。」
+                PRINTFORMW 「我很兴奋，但也很紧张。 如果我变成一个糟糕的母亲怎么办？ 如果我们的孩子继承了我的嫉妒心怎么办？」
+                PRINTFORMDW 她笑了。
+                PRINTFORMW 「但是有你在我身边，帮助我……我已经准备好迎接任何事情。」
+			;善良，好色
+            CASE 1
+                PRINTFORMW 「母亲节快乐，%K60_MASTER()%！」
+                PRINTFORML 「怀孕的时候不能做爱，这有点令人沮丧……」
+                PRINTFORMW 「但在遇到你之前，我度过了几个世纪的独身生活。 我可以忍受几个季节……尤其是在你支持我的情况下。」
+                GOTO PARSEE_PREGNANT_FIRST_TIME_HAPPY
+			;爱抱怨的傲娇
+            CASE 2
+                PRINTFORMW 「母亲节快乐，%K60_MASTER()%。」
+                PRINTFORMDW 帕露西怒视着你。
+                PRINTFORML 「我仍然无法相信我怀孕了……」
+                PRINTFORMW 「这个可怜的孩子……我祈祷它不会继承我的嫉妒心。」
+                PRINTFORMW 「不管怎样我也不适合抚养孩子……而且我很怀疑你会不会帮忙抚养。」
+                PRINTFORML 「我前几天实际上去了永远亭，问八意大人她是否能解决我的小问题……」
+                IF GAMEBASE_TITLE == "eraThe World: Omogatari"
+                    PRINTFORMW 「但她告诉我她只为你提供这项服务。 没有其他人。」
+                    PRINTFORMW 「这到底是什么样的商业模式？！」
+                ELSE
+                    PRINTFORMW 「但她只是告诉我她不在这个世界提供这些服务，我应该找另一个有另一个她的世界。」
+                    PRINTFORMW 「这到底是什么意思？！」
+                ENDIF
+                PRINTFORMDW 帕露西叹了口气。
+                PRINTFORMW 「有时候我在想，她喝下的那杯药是否扰乱了她的脑子。」
+			;Fake nice
+			; CASE 3
+			; todo
+        ENDSELECT
+
+	;no child
+    ELSE
+        SELECTCASE K60_ATTITUDE()
+			; todo
+			; ;Loving
+			; CASE 0
+			; ;Nice, horny
+			; CASE 1
+			; ;Grumpy tsundere
+			; CASE 2
+			;Fake nice
+            CASE 3
+                PRINTFORMW 「母亲节快乐，%K60_MASTER()%！」
+                PRINTFORMDW 帕露西鞠躬并对你微笑。
+                IF !CFLAG:[[帕露西]]:K60EN_PARSEE_ASKS_IF_YOU_HAVE_CHILDREN && !TALENT:[[帕露西]]:恋人
+                    PRINTFORMW 「你有孩子吗？」
+                    IF CFLAG:MASTER:儿童人数 > 0
+                        PRINTFORMDW 你告诉她你有。
+                        IF TALENT:MASTER:恋人
+                            PRINTFORMW 「哦？ 那太好了！ 我相信你和你的恋人一定是优秀的父母。」
+                        ELSE
+                            PRINTFORMDW 帕露西看起来有点担心。
+                            PRINTFORMW 「单身父亲，嗯？ 那一定很困难……我羡慕你坚强的性格。」
+                            PRINTFORMW 「如果你需要倾诉，我随时愿意伸出同情之耳。」
+                        ENDIF
+                    ELSE
+                        PRINTFORMDW 你告诉她你没有。
+                        IF TALENT:MASTER:恋人
+                            PRINTFORMW 「哦？ 你和你的恋人正在努力要个孩子吗？ 还是你们两个不想要孩子？」
+                        ELSE
+                            PRINTFORML 「我并不感到惊讶。 毕竟，你是单身，而且似乎没有稳定的工作。」
+                            PRINTFORMW 「你打算在和某人安定下来后要一些吗？」
+                        ENDIF
+                        PRINTFORML 「就我个人而言，我不想生孩子。」
+                        PRINTFORMW 「我有一种……疾病，我不希望我的孩子遗传它。」
+                        PRINTFORML 「当然，我可以收养，但即使那样……」
+                        PRINTFORMW 「我不知道如何抚养孩子，而且即使我知道，我也没有钱给孩子一个舒适的成长环境。」
+                        CALL M_KOJO_COLOR_K60_JEALOUS
+                        PRINTFORMW 「我有点嫉妒那些拥有这些东西的人……」
+                        CALL M_KOJO_COLOR_K60
+                        PRINTFORMDW 帕露西若有所思地看了一会儿。
+                    ENDIF
+                    CFLAG:[[帕露西]]:K60EN_PARSEE_ASKS_IF_YOU_HAVE_CHILDREN = 1
+                ELSE
+				;todo
+                ENDIF
+        ENDSELECT
+    ENDIF
+;-------------------------------------------------
+;White Day
+;-------------------------------------------------
+	; ELSEIF DAY:2 == 1 && DAY:3 == 14
+	; todo
+
+
+;-------------------------------------------------
+;Reitaisai
+;-------------------------------------------------
+	; ELSEIF DAY:2 == 1 && DAY:3 == 25
+	; todo
+
+;-------------------------------------------------
+;Nowruz
+;-------------------------------------------------
+ELSEIF DAY:2 == 2 && DAY:3 == 17
+    PRINTFORML 「Jamshed-i Nowruz mobaarak, %K60_MASTER()%！」
+    PRINTFORMDW %CALLNAME:[[帕露西]]%向你鞠躬。
+    IF FIRSTTIME("Nowruz")
+        PRINTFORMW 「纳吾肉孜是波斯新年。」
+        PRINTFORMW %BREAKENG(@"「它最初是在贾姆希德王的庆祝活动中举行的，他是世界的伟大国王，坐在他的王座上，被他征服的恶魔抬着在空中飞行。」")%
+        PRINTFORMW 「世界上的人们非常惊讶，他们宣称这是新的一天，或者“now ruz”，并设立了一个节日来纪念它。」
+        PRINTFORMW 「在纳吾肉孜，我们拜访我们的朋友和家人，并为他们提供茶、点心和一种叫做samanak的甜羹。」
+        PRINTFORMDW 她皱了皱眉头。
+        PRINTFORMW 「虽然我从来没有做过samanak。 在旧都，我必须看守桥梁，所以我从来没有学过如何做饭。」
+        PRINTFORMW 「但我确实有一些茶。 来，喝吧。」
+        PRINTFORMW 「嗯？ 你想知道我在哪里找到了茶具和煮茶的设备？」
+        PRINTFORMDW %CALLNAME:[[帕露西]]%笑了。
+        PRINTFORMW 「当然是在你找到你的那些东西的同一个地方。 你问的是什么问题？」
+    ELSE
+        PRINTFORMW 「你想喝点茶吗？」
+    ENDIF
+    IF K60_ATTITUDE() == 2 && FIRSTTIME("TsundereTea", 1)
+        PRINTFORMDW 你开始伸手去拿茶，但犹豫了一下。
+        PRINTFORMW 「怎么了？ 只是茶而已。 还是说我的茶配不上你？」
+        PRINTFORMDW 她盯着你看了一会儿，然后恍然大悟，翻了个白眼。
+        PRINTFORMW 「不，我没有在里面下毒，也没有放任何令人不快的物质……虽然你非常需要在你的饮食中添加更多的抗抑郁药。」
+        PRINTFORMW 「但是如果你不信任我，我也不会强迫你。 强迫别人接受东西本来就是你的风格。」
+        PRINTFORMW 「那是你的损失。」
+        CALLF FIRSTTIME("TsundereTea")
+    ENDIF
+    IF K60_ATTITUDE() == 2
+        CALL ASK_YN("喝","不喝")
+        IF !RESULT
+            $DRINK_TEA
+            PRINTFORMDW %CALLNAME:[[帕露西]]%递给你一杯茶，你喝了下去。
+            CALL RECOVER(MASTER, 300, "气力", "波斯茶")
+        ELSE
+            PRINTFORMW 「好吧。 那我就给勇仪桑喝吧。」
+        ENDIF
+    ELSE
+        GOTO DRINK_TEA
+    ENDIF
+
+;-------------------------------------------------
+;Khordad Sal
+;-------------------------------------------------
+ELSEIF DAY:2 == 1 && DAY:3 == 26
+    ; TODO revise
+    ; PRINTFORMDW Parsee is carrying several bags in her hands. You ask her what she bought.
+    ; PRINTFORMW 「Oh, just the usual Khordad Sal things. New clothes, some chalk to make gahuli, some nice flowers...」
+    ; IF FIRSTTIME("KhordadSal")
+    ;     PRINTFORMDW She sees your baffled expression and smiles.
+    ;     PRINTFORML 「Khordad Sal is the day that Zarosht-sama was born. He's the prophet who founded Zoroastrianism.」
+    ; ENDIF
+    ; PRINTFORMW 「Normally, today would be a day to get together with my fellow Zoroastrians and celebrate...」
+    ; PRINTFORMW 「But I'm the only Zoroastrian in Gensokyo. So, as usual, I'm alone.」
+    ; PRINTFORMDW Parsee sighs.
+    ; IF GROUPMATCH(K60_ATTITUDE(), 0, 1)
+    ;     PRINTFORMW 「Unless you'd like to celebrate with me...?」
+    ;     CALL ASK_YN(@"Celebrate Khordad Sal with %CALLNAME:[[帕露西]]%", "Don't")
+    ;     IF !RESULT
+    ;         PRINTFORMDW You celebrate Khordad Sal with %CALLNAME:[[帕露西]]%.
+    ;         IF FIRSTTIME("Rangoli101")
+    ;             PRINTFORMDW %CALLNAME:[[帕露西]]% teaches you how to make gahuli.
+    ;             PRINTFORMDW They're elaborate, colorful designs made drawn on the floor with chalk.
+    ;             PRINTFORMDW %HES_SHES([[帕露西]],1)% very insistent that they have nothing to do with "pagan" mandalas.
+    ;             PRINTFORMDL
+    ;             PRINTFORMDW %CALLNAME:[[帕露西]]% turns out to be a surprisingly talented artist.
+    ;             PRINTFORMDW %BREAKENG(@"You ask her how long she's been doing this, but she only replies \"Longer than you've been alive\" and changes the subject.")%
+    ;         ELSE
+    ;             PRINTFORMDW The two of you draw gahuli on the floor of %CALLNAME:[[帕露西]]%'s house.
+    ;             PRINTFORMDW her drawings are just as impressive as last year's.
+    ;         ENDIF
+    ;         PRINTFORMDW You can't help but feel a little jealous of her skills... and just like that, your jealousy is gone.
+    ;         PRINTFORMDW %CALLNAME:[[帕露西]]% licks her lips and smiles at you.
+    ;         PRINTL .........
+    ;         PRINTL ......
+    ;         PRINTL ...
+    ;         PRINTFORMDW %CALLNAME:[[帕露西]]% wipes away the last of your gahuli.
+    ;         PRINTFORMW 「I'm sorry I couldn't treat you to a feast, but... well, cooking isn't my strong suit.」
+    ;         PRINTFORMDW she stands up and kisses you on the cheek.
+    ;         PRINTFORMW 「Thank you for celebrating with me today. I had a wonderful time, and I can't wait to do it again next year.」
+    ;         CFLAG:MASTER:当前位置 = 940
+    ;         CFLAG:[[帕露西]]:当前位置 = 940
+    ;         CALL CHANGE_CFLAG(GETNUM(CFLAG, "好感度"), [[帕露西]], 100)
+    ;         TIME = 900
+    ;     ELSE
+    ;         GOTO DENIED
+    ;     ENDIF
+    ; ELSE
+    ;     $DENIED
+    ;     PRINTFORMW 「It's for the best, I suppose. What fool would want to spend an entire day with a hashihime?」
+    ; ENDIF
+
+;-------------------------------------------------
+;Bunny Day
+;-------------------------------------------------
+ELSEIF DAY:3 == 28
+    SELECTCASE K60_ATTITUDE()
+	;Loving
+        CASE 0
+            PRINTFORMW 「我看起来怎么样，%K60_MASTER()%？」
+            PRINTFORMDW 帕露西笑着摆了个姿势。
+            IF CFLAG:MASTER:衣物暂时更换 == 55 || (CFLAG:MASTER:基本服装SET == 55 && CFLAG:MASTER:衣物暂时更换 == 0)
+                PRINTFORML 「我通常不喜欢穿这些东西……」
+                PRINTFORMW 「但是现在我看到你也穿着一件，我感觉好多了。」
+                PRINTFORMDW 她皱了皱眉头。
+                CALL M_KOJO_COLOR_K60_JEALOUS
+                PRINTFORMW 「虽然你穿起来比我好看多了。 我-」
+                CALL M_KOJO_COLOR_K60
+                PRINTFORMDW 帕露西打断了自己的话，叹了口气。
+                PRINTFORMW 「没关系。 那么……你今天过得怎么样？」
+                PRINTFORMDW 她对你微笑。
+            ENDIF
+	;善良，好色
+        CASE 1
+            PRINTFORML 「我看起来怎么样，%K60_MASTER()%？」
+            PRINTFORMDL 帕露西笑着摆了个挑逗性的姿势。
+            IF CFLAG:MASTER:衣物暂时更换 == 55 || (CFLAG:MASTER:基本服装SET == 55 && CFLAG:MASTER:衣物暂时更换 == 0)
+                PRINTFORML 「我通常不喜欢穿这些东西……」
+                PRINTFORMW 「但是现在我看到你也穿着一件，我感觉好多了。」
+                PRINTFORMDW 她皱了皱眉头。
+                CALL M_KOJO_COLOR_K60_JEALOUS
+                PRINTFORMW 「虽然你穿起来比我好看多了。 我-」
+                CALL M_KOJO_COLOR_K60
+                PRINTFORMDW 帕露西打断了自己的话，叹了口气。
+                PRINTFORMW 「没关系。」
+            ENDIF
+            PRINTFORMW 「实际上……如果你有空闲时间，我们为什么不做兔子众所周知的事情呢～？」
+            PRINTFORMDL 帕露西眨了眨眼，用她的手做了一个猥亵的手势。
+            PRINTFORMDW 有件事告诉你她不是在说捣年糕……也许是捣别的东西。
+			;爱抱怨的傲娇
+        CASE 2, 3
+            PRINTFORMD 帕露西皱着眉头，并且
+            IF IS_MALE(TARGET)
+                PRINTFORMDW 拉起她的兔女郎服，以防止服装脱落。
+            ELSE
+                SELECTCASE TALENT:[[帕露西]]:胸围
+						;大/巨大/普通
+                    CASE 1, 2, 0
+                        PRINTFORMDW 调整她的兔女郎服，遮住更多胸部。
+						;小/平坦
+                    CASE -1, -2
+                        PRINTFORMDW 拉起她的兔女郎服，以防止服装脱落。
+                ENDSELECT
+            ENDIF
+            CALL M_KOJO_COLOR_K60_JEALOUS
+            PRINTFORML 「额……我受不了穿这些愚蠢的东西。」
+            IF IS_MALE(TARGET)
+                PRINTFORMW 「为什么男人也必须穿它们？ 我必须整个晚上都在刮胡子，这样我看起来才只是可笑，而不是丑陋。」
+                PRINTFORMW 「而且我没有任何东西可以支撑它，所以我必须一直拉着它，以防止它掉下来。」
+            ELSE
+                SELECTCASE TALENT:[[帕露西]]:胸围
+						;大/巨大
+                    CASE 1, 2
+                        PRINTFORMW 「我总是觉得我快要从里面蹦出来了……」
+						;普通
+                    CASE 0
+                        PRINTFORMW 「这让我想起了我的胸部与其他人相比有多小……」
+						;小
+                    CASE -1
+                        PRINTFORMW 「这让我想起了我没有胸可以炫耀……」
+						;平坦
+                    CASE -2
+                        PRINTFORMW 「我总是觉得衣服快要掉下来了。 为什么他们不做带肩带的兔女郎服？」
+                ENDSELECT
+            ENDIF
+            PRINTFORMW 「我认识的其他人穿起来都很好看\@CFLAG:MASTER:衣物暂时更换 == 55 || (CFLAG:MASTER:基本服装SET == 55 && CFLAG:MASTER:衣物暂时更换==0) ? - 甚至你！ # 。\@ 我太嫉妒了……」
+            CALL M_KOJO_COLOR_K60
+    ENDSELECT
+
+;-------------------------------------------------
+;Star Festival
+; -------------------------------------------------
+	; ELSEIF DAY:2 == 1 && DAY:3 == 7
+
+;-------------------------------------------------
+;Lantern Festival
+;-------------------------------------------------
+	; ELSEIF DAY:2 == 1 && DAY:3 == 14
+
+;-------------------------------------------------
+;Storm Day
+;-------------------------------------------------
+	; ELSEIF DAY:2 == 3 && DAY:3 == 1
+
+;-------------------------------------------------
+;Mid-Autumn Festival
+;-------------------------------------------------
+	; ELSEIF DAY:2 == 3 && DAY:3 == 15
+
+;-------------------------------------------------
+;Harvest Festival
+;-------------------------------------------------
+	; ELSEIF DAY:2 == 3 && DAY:3 == 27
+
+;-------------------------------------------------
+;Setsubun Festival
+;-------------------------------------------------
+	; ELSEIF DAY:2 == 4 && DAY:3 == 3
+
+;-------------------------------------------------
+;Valentine's Day
+;-------------------------------------------------
+ELSEIF DAY:2 == 4 && DAY:3 == 14
+    SELECTCASE K60_ATTITUDE()
+			; ;Loving
+			; CASE 0
+			; ;Nice, horny
+			; CASE 1
+			;Grumpy tsundere
+        CASE 2
+            PRINTFORMDL 帕露西的脸上带着酸涩的表情。
+            PRINTFORMDW 你从未见过有人吃柠檬，但你很确定，如果有人吃了柠檬，他们看起来就会像帕露西。
+            CALL M_KOJO_COLOR_K60_VERY_JEALOUS
+            PRINTFORML 「这是今年最糟糕的一天。 这说明了一些问题，因为一年中的其他每一天都非常痛苦。」
+            PRINTFORMW 「我可以拆散很多情侣，这还不错……但我在圣诞节也可以做同样的事情。」
+            PRINTFORMW 「而且至少在圣诞节，我不必看到人们送巧克力。」
+            PRINTFORML 「有时候我的朋友会给我礼物……」
+            CALL PRINT_STRW, @"「但从来没有巧克力。 我从来没有得到过巧克力，@ITALIC@从来没有@。」"
+            PRINTFORML 「要是我也能得到，除非人们开始凭借嫉妒心来制作巧克力……」
+            PRINTFORMW 「事情就是这样。 得到巧克力意味着人们在某种感情上重视你。」
+            PRINTFORMW 「所以从来没有得到巧克力，意味着……」
+            PRINTFORMDW 她的肩膀塌了下来，她叹了口气。
+            PRINTFORMDW 你为她感到难过……要是她没有在几秒钟前吹嘘那些拆散情侣的事。
+            CALL M_KOJO_COLOR_K60
+			; ;Fake nice
+			; CASE 3
+    ENDSELECT
+	;PRINTFORMW 「Thank you for being with me, %K60_MASTER()%.」
+	;PRINTFORMW 「You've made me so happy. Happier than words can possibly express.」
+
+;-------------------------------------------------
+;Parsee's birthday
+;-------------------------------------------------
+ELSEIF DAY:2 == 3 && DAY:3 == 4
+		;First time, todo variant
+    IF FIRSTTIME("ParseeBirthday")
+        PRINTFORMDL 当你看到帕露西时，你愣了一下。
+        PRINTFORMDW 她戴着……生日帽？ 她到底是从哪里弄来的？
+        PRINTFORMDW 而且她的嘴里还含着一个派对吹笛？！ 今天是她的生日吗？
+        IF IS_NONHUMAN(MASTER)
+            PRINTFORMDW 大多数妖怪不知道他们的生日，所以他们会根据双关语来选择一个生日……你想知道是什么。
+        ELSE
+            PRINTFORMDW 你不知道妖怪有生日。
+        ENDIF
+        PRINTFORMD 帕露西看到你盯着她看，并且
+        SELECTCASE K60_ATTITUDE()
+		;充满爱意
+            CASE 0, 1
+                PRINTFORMDW 紧张地笑了笑。
+            CASE 2, 3
+                PRINTFORMDW 她的怒容加深了。
+        ENDSELECT
+        IF IS_NONHUMAN(MASTER)
+            PRINTFORML 「今天是8月4日。 8可以发音为“ha”，4可以发音为“shi”。」
+        ELSE
+            PRINTFORML 「这并不是真的我的生日。 如果我曾经有过生日，我早在几个世纪前就忘记了日期。」
+            PRINTFORMW 「妖怪通常根据双关语来选择生日。」
+            PRINTFORML 「就我而言，8可以发音为“ha”，4可以发音为“shi”。」
+        ENDIF
+        PRINTFORMW 「把它们放在一起，你就会得到“hashi”，就像“桥姬”中的“hashi”一样。」
+        SELECTCASE K60_ATTITUDE()
+            CASE 0, 1, 3
+                PRINTFORMDW 帕露西咯咯地笑了。
+                PRINTFORML 「这并不是一个特别聪明的双关语，但我没有选择它。」
+                PRINTFORMW 「勇仪桑选择它是因为她想为我举办一个生日派对。」
+                PRINTFORMW 「她，%K60_NAME_WITH_HONORIFICS("山女")%，%K60_NAME_WITH_HONORIFICS("琪斯美")%今晚要一起庆祝……你愿意加入我们吗？」
+            CASE 2
+                PRINTFORMDW 帕露西翻了个白眼。
+                PRINTFORML 「请注意，这不是我的主意。 勇仪桑选择它是因为她想为我举办一个生日派对。」
+                PRINTFORMW 「我真的不明白她为什么要这样做……」
+                PRINTFORMW 「但是她，%K60_NAME_WITH_HONORIFICS("山女")%，和%K60_NAME_WITH_HONORIFICS("琪斯美")%似乎很喜欢庆祝我的生日，所以我为了她们忍受了下来。」
+        ENDSELECT
+    ELSE
+        PRINTFORMDL 帕露西戴着生日帽，嘴里含着一个派对吹笛。
+        SELECTCASE K60_ATTITUDE()
+            CASE 0
+                PRINTFORMW 「祝我生日快乐！」
+                PRINTFORMDW 她对你微笑。
+                PRINTFORMW 「而且我看到你给我带来了一份很棒的礼物……」
+                PRINTFORMDW 帕露西从她的嘴里拿出吹笛，并给你一个快速的吻。
+                CALL MUTUAL_KISS
+                PRINTFORML 「我的朋友们和我今晚在酒馆庆祝我的生日。」
+                PRINTFORML 「我知道我正在努力减少饮酒……但是如果你不能在你的生日放纵一下，那么你什么时候可以放纵呢？」
+                PRINTFORMW 「你会加入我们……对吧？」
+                PRINTFORMDW 帕露西看起来有点焦虑。
+            CASE 1
+                PRINTFORMW 「祝我生日快乐！」
+                PRINTFORMDW 她对你咧嘴一笑。
+                PRINTFORMW 「而且我看到你给我带来了一份很棒的礼物……」
+                PRINTFORMDW 帕露西从她的嘴里拿出吹笛，并给你一个快速的吻。
+                CALL MUTUAL_KISS
+                PRINTFORML 「我的朋友们和我今晚在酒馆庆祝我的生日。」
+                PRINTFORMW 「我希望你会加入我们？ 然后……你可以回到我的房间，并给我我的另一份礼物。」
+                PRINTFORMDW 帕露西眨了眨眼。
+            CASE 2
+                PRINTFORMDW 她怒视着你。
+                PRINTFORML 「我非常清楚我看起来很可笑。」
+                PRINTFORMW 「甚至不要想说一些讽刺的话。」
+                PRINTFORML 「话虽如此……我的朋友们和我今晚在酒馆庆祝我的生日。」
+                PRINTFORMW 「如果你愿意，欢迎你加入我们。 或者不。 我不在乎。」
+                PRINTFORMDW 她这么说，但她脸红并转移视线的方式表明了相反的意思。
+            CASE 3
+                PRINTFORMW 「祝我生日快乐……」
+                PRINTFORMDW 她僵硬地对你笑了笑。
+                PRINTFORML 「我的朋友们和我今晚在酒馆庆祝我的生日。」
+                PRINTFORMW 「如果你愿意，欢迎你加入我们。」
+        ENDSELECT
+    ENDIF
+;todo give option to give her a box of cakes if you have one
+
+;-------------------------------------------------
+;Halloween
+;-------------------------------------------------
+ELSEIF DAY:2 == 3 && DAY:3 == 30
+    CALL K60_HALLOWEEN_GREETING()
+;-------------------------------------------------
+;christmas
+;-------------------------------------------------
+ELSEIF DAY:2 == 4 && DAY:3 == 25
+	;如果她喜欢你，就送她一份礼物（待完成）
+    PRINTFORMW 「圣诞快乐，%K60_MASTER()%！」
+    PRINTFORMDW 帕露西对你微笑。
+    SELECTCASE K60_ATTITUDE()
+		;充满爱意
+        CASE 0, 1
+            PRINTFORMDW 她咧嘴一笑，拿出一张符卡。
+            PRINTFORMDW ――剪舌麻雀「大葛笼与小葛笼」！！！
+            PRINTFORMDL 第二个帕露西突然出现在你们两个旁边。 帕露西伸进口袋，递给分身一些东西。
+            PRINTFORMDW 第二个帕露西把它举在你的和帕露西的头上。 你抬头一看……
+            PRINTFORMW 「哦，天哪，看起来我们正站在槲寄生下面。」
+            PRINTFORMDW 帕露西的笑容更加灿烂。
+            PRINTFORMW 「这是怎么发生的呢？ 好吧，你知道这意味着什么……」
+            PRINTFORMDW 她抓住你，把你拉过来亲吻。
+            CALL MUTUAL_KISS()
+            PRINTFORMDL 你对帕露西微笑。 聪明的女孩……
+            PRINTFORMDW 她脸红了，并用手指一弹，解除了分身。
+		;爱抱怨的傲娇
+        CASE 2
+            PRINTFORMDL 哦，不。 看到这么多情侣约会的压力一定导致她崩溃了。
+            PRINTFORMDL 她看到了你的表情，笑了出来。 对于这样一个刻薄的人来说，帕露西的笑声出乎意料地悦耳。
+            PRINTFORMDW 这让你希望她能多笑一笑……
+            PRINTFORML 「怎么，你以为我今天会很痛苦吗？ 因为被快乐、微笑的情侣包围着？」
+            PRINTFORML 「当我永远单身并不断抱怨它时？」
+            PRINTFORML 「哦，不。 远非如此。 圣诞节实际上是我最喜欢的节日！」
+            PRINTFORMDL 她邪恶地笑了笑。
+            PRINTFORMW 「我可以拆散很多情侣……」
+		;虚伪的善良
+        CASE 3
+            PRINTFORML 「这是一个如此美好的节日，你不觉得吗？ 几乎和情人节一样美好。」
+            PRINTFORML 「如此多快乐的情侣，欢笑着、微笑着、手牵着手，彼此凝视着……」
+            PRINTFORMDL 她摇了摇头。
+            PRINTFORML 「可惜的是，这么多关系最终都没有成功。」
+            PRINTFORMW 「事实上，我在这两天看到了令人惊讶的多的分手。」
+            PRINTFORMDW 你突然注意到帕露西的笑容中有些阴暗……
+    ENDSELECT
+    IF CFLAG:[[帕露西]]:好感度 >= 2000
+        PRINTFORMDL
+        SELECTCASE K60_ATTITUDE()
+            CASE 0
+                PRINTFORMW 「如果我不给你准备一份圣诞礼物，我就不会像个女朋友了，对吧？」
+            CASE 1
+                PRINTFORMW 「我给你准备了一点东西～」
+            CASE 2
+                PRINTFORMW 「给你。 拿着。」
+                PRINTFORMW 「别说我从来没有为你做过任何事情。」
+            CASE 3
+                IF TALENT:TARGET:恋慕 || MARK:TARGET:快乐刻印 == 3
+                    PRINTFORMW 「给你。」
+                    PRINTFORMW 「我不是想以此来换取你的原谅或其他什么。 我只是想给你。」
+                ELSE
+                    PRINTFORMW 「这是一个朋友们互相赠送礼物的时刻，不是吗？ 来吧，拿着。」
+                ENDIF
+        ENDSELECT
+        PRINTFORMDW %CALLNAME:[[帕露西]]%递给你一个包装精美的包裹。
+        PRINTFORMDW 你打开它……
+        CALL GIFT_EVENT([[帕露西]])
+    ENDIF
+;-------------------------------------------------
+;Zartosht No-Diso
+;-------------------------------------------------
+ELSEIF DAY:2 == 4 && DAY:3 == 26
+    ; TODO revise
+    ; PRINTFORMDW %CALLNAME:[[帕露西]]% has a pensive expression on her face.
+    ; IF FIRSTTIME("Zartosht")
+    ;     PRINTFORMDW You ask her what's wrong.
+    ;     PRINTFORMW 「Today's Zartosht No-Diso. The day Zartosht-sama was murdered by the Turanians.」
+    ;     PRINTFORMW 「We Zoroastrians spend it praying, studying the scriptures, and holding a feast to celebrate his life.」
+    ;     PRINTFORMW 「You're welcome to join me, if you'd like.」
+    ;     PRINTFORMW 「Although I don't eat regular food, so you'll have to provide your own feast.」
+    ; ELSE
+    ;     PRINTFORMW 「Would you like to celebrate Zartosht No-Diso with me?」
+    ; ENDIF
+    ; CALL ASK_YN(@"Join %CALLNAME:[[帕露西]]%","Don't")
+    ; IF !RESULT
+    ;     PRINTFORMDW You spend the day celebrating with %CALLNAME:[[帕露西]]%.
+    ;     PRINTFORMDW You cook up a modest feast while she prays and reads to you from the Avesta and other Zoroastrian sacred texts.
+    ;     PRINTFORMDW her voice becomes a little quieter and sadder when she reads the parts condemning envy and drunkenness.
+    ;     PRINTFORMDW %BREAKENG(@"And you can hear the envy dripping from her words when she reads about the Daena, the divine being who guides the souls of the righteous across the bridge to Heaven.")%
+    ;     PRINTFORMDW When the sun goes down, %CALLNAME:[[帕露西]]% puts her books away and stretches.
+    ;     PRINTFORMW 「And that's that. I hope you weren't too bored.」
+    ;     PRINTFORMDW It was a little boring at times... but you learned a lot and got some cooking practice in.
+    ;     PRINTFORMDW And %CALLNAME:[[帕露西]]% seems grateful to have spent the day with you instead of praying alone in her house.
+    ;     CFLAG:MASTER:当前位置 = 940
+    ;     CFLAG:[[帕露西]]:当前位置 = 940
+    ;     CALL CHANGE_CFLAG(GETNUM(CFLAG, "好感度"), [[帕露西]], 100)
+    ;     CALL AddEXP("料理经验", MASTER, 10)
+    ;     CALL AddEXP("学习经验", MASTER, 25)
+    ;     TIME = 1080
+    ; ELSE
+    ;     SELECTCASE K60_ATTITUDE()
+    ;         CASE 0, 1
+    ;             PRINTFORML 「I see.」
+    ;             PRINTFORMDW %CALLNAME:[[帕露西]]% looks a little disappointed.
+    ;         CASE 2
+    ;             PRINTFORML 「I suppose it's for the best.」
+    ;             PRINTFORMW 「Knowing you, just looking at a copy of the Avesta would cause you to burst into flames.」
+    ;         CASE 3
+    ;             PRINTFORMW 「Fair enough. I wasn't really expecting a non-Zoroastrian to want to spend all day studying the Avesta.」
+    ;     ENDSELECT
+    ; ENDIF
+
+ELSE
+    TCVAR:[[帕露西]]:K60ENC_TCVAR_HOLIDAY_GREETING_SEEN = 2
+    RETURN 1
+ENDIF
+TCVAR:[[帕露西]]:K60ENC_TCVAR_HOLIDAY_GREETING_SEEN = 1
+
+@K60_HALLOWEEN_GREETING()
+DEBUGPRINTFORML PARSEE ENG DIALOGUE: It's Halloween
+$PARSEE_PICK_A_COSTUME
+SELECTCASE RAND:3
+    CASE 0 ;L**k - please don't dmca me
+        PRINTFORMDW 帕露西穿着一件cos服。
+        PRINTFORMDW 她没有穿平常的外套和衬衫，而是穿了一件绿色的束腰外衣。
+        PRINTFORMDW 她平常的鞋子换成了棕色皮靴。
+        PRINTFORMDW 她金色的头发大部分藏在一顶绿色的帽子下。
+        PRINTFORMDW 而且她一手拿着剑，一手拿着盾牌。
+        PRINTFORMD 帕露西注意到你在盯着她看，笑了笑
+        SELECTCASE K60_ATTITUDE()
+            CASE 0, 1
+                PRINTFORMDW 。
+            CASE 2, 3
+                PRINTFORMDW 淡淡地笑了笑。
+        ENDSELECT
+        PRINTFORML 「勇仪桑坚持要我穿成这样。」
+        PRINTFORMW 「显然我应该打扮成外界小说里的精灵。」
+        PRINTFORMDL 帕露西翻了个白眼。
+        PRINTFORML 「我可能要后悔给人们更多理由认为我是精灵了……」
+        PRINTFORMW 「但是勇仪桑有办法说服我做这些事。」
+        PRINTFORMW 「特别是当我们喝醉了的时候……」
+    CASE 1 ;A sprig of parsley
+        PRINTFORMDW 你张开嘴想和帕露西打招呼……却僵住了。
+        PRINTFORMDW 她穿着……某种绿色的紧身衣。 她头上戴着某种覆盖着树叶的头饰。
+        PRINTFORMDW 这到底是什么鬼cos服？！ 她看起来几乎像一小枝……
+        PRINTFORMDW 不。 她不会吧。
+        PRINTFORMD 帕露西看到你盯着她看，并且
+        SELECTCASE K60_ATTITUDE()
+            CASE 0, 1
+                PRINTFORMDL 紧张地笑了笑。
+                PRINTFORMW 「这是我昨晚想出来的。 我没有任何更好的主意，而且，是的，我有点醉了……」
+            CASE 2, 3
+                PRINTFORMDL 她的怒容加深了。
+                PRINTFORMW 「如果我告诉你恋恋偷了我的钓竿，除非我穿上这个，否则她拒绝还给我，你会相信吗？」
+                PRINTFORMDW 她看到你怀疑的表情，叹了口气。
+                PRINTFORMW 「我就知道你不信。 如果你真的想知道，我没有任何更好的主意，而且，是的，我有点醉了……」
+        ENDSELECT
+        PRINTFORMW 「所以我就想， “为什么不呢？ 为什么不在万圣节打扮成一小枝欧芹呢？ 这听起来像我的名字！ 这会很可爱又有趣的！”」
+        PRINTFORMW 「现在我却被困在穿着它了。 来吧，笑吧。 我不在乎了。」
+        PRINTFORMDW 你思考了一下，试图想出一些积极的话来说……
+        PRINTFORMDW 然后你告诉她，这看起来不错，而且是一个非常有创意的想法。
+        SELECTCASE K60_ATTITUDE()
+            CASE 0, 1
+                PRINTFORMDW 你对她笑了笑，拥抱了她，小心不要压坏她的头饰。
+                PRINTFORMDW 帕露西也笑了。
+                PRINTFORMW 「谢谢你，%K60_MASTER()%。 你总是知道如何让我振作起来。」
+            CASE 2, 3
+                PRINTFORMDW 帕露西嗤之以鼻。
+                PRINTFORMW 「你真是个该死的骗子，%K60_MASTER()%……但还是谢谢你。」
+        ENDSELECT
+        PRINTFORMW 「现在我可能应该\@CFLAG:MASTER:当前位置 != 940 ? # 回家并\@ 脱下这身可笑的衣服。」
+        SELECTCASE K60_ATTITUDE()
+            CASE 0, 1, 3
+                PRINTFORMW 「你有什么其他关于我可以穿什么的建议吗？」
+            CASE 2
+                PRINTFORMW 「我会问你有什么建议，但以我对你的了解，都会是些变态的想法。」
+        ENDSELECT
+    CASE 2 ;Rostam
+        PRINTFORMDW 帕露西穿着棕色的束腰外衣、高筒靴、白色裤子和一顶头盔，头盔上插着一根深红色的羽毛。
+        PRINTFORMDW 她一手拿着剑，一手拿着圆形盾牌。
+        PRINTFORMDW 而且她还戴着假胡子。
+        PRINTFORMD 帕露西看到你在看，并且
+        SELECTCASE K60_ATTITUDE()
+            CASE 0, 1, 3
+                PRINTFORMDW 笑了笑。
+            CASE 2
+                PRINTFORMDW 怒视着。
+        ENDSELECT
+        PRINTFORMW 「你喜欢吗？ 我打扮成了罗斯塔姆，波斯历史上最著名的英雄。」
+        SELECTCASE K60_ATTITUDE()
+            CASE 0, 1
+                CALL M_KOJO_COLOR_K60_JEALOUS
+                PRINTFORMW 「强大、忠诚、英勇、睿智……一切我所-」
+                CALL M_KOJO_COLOR_K60
+                PRINTFORMDW 她打断了自己的话，看起来很尴尬。
+            CASE 2, 3
+                CALL M_KOJO_COLOR_K60_JEALOUS
+                PRINTFORMW 「强大、忠诚、英勇、睿智……一切我所没有的。 我太嫉妒他了……」
+                CALL M_KOJO_COLOR_K60
+        ENDSELECT
+        PRINTFORML
+        IF IS_FEMALE(TARGET)
+            SELECTCASE TALENT:[[帕露西]]:胸围
+					;大/巨大
+                CASE 1, 2
+                    PRINTFORMW 「我开始认为为了这身cos服束胸是个错误。 我快喘不过气来了……」
+                CASE -1, -2
+                    CALL M_KOJO_COLOR_K60_JEALOUS
+                    CALL PRINT_STRW, @"「我甚至不必为了它束胸。 虽然也不是说我@ITALIC@有@什么可以束缚的……」"
+                    SELECTCASE K60_ATTITUDE()
+                        CASE 0, 1
+                            PRINTFORMDW 帕露西似乎想说更多，但她咬了咬嘴唇，保持沉默。
+                            PRINTFORMDW 她的表情清楚地表明她嫉妒胸部较大的女性。
+                            PRINTFORMDW 你告诉她，她现在的样子就很美。
+                            PRINTFORMDW 帕露西笑了。
+                            CALL M_KOJO_COLOR_K60
+                            PRINTFORMW 「我知道你只是想奉承我……但我很感激你的好意。」
+                        CASE 2, 3
+                            PRINTFORMW 「我可能是旧地狱最平的女人了。\@TALENT:[[恋]]:胸围 < 0 ? %" "%甚至比恋恋还平！ #\@」
+                            PRINTFORMDW 帕露西继续抱怨她有多嫉妒胸部较大的女性……
+                            CALL M_KOJO_COLOR_K60
+                    ENDSELECT
+            ENDSELECT
+        ENDIF
+
+    CASE 3 ;Rudaba
+        SIF IS_MALE(TARGET)
+            GOTO PARSEE_PICK_A_COSTUME
+        PRINTFORMDL 你在看到帕露西之前就闻到了她的味道。 这是一种浓郁的麝香味，带着淡淡的雪松气息。
+        PRINTFORMD 当你真的看到她时，你惊呆了。 帕露西一直都很可爱
+        SELECTCASE K60_ATTITUDE()
+            CASE 2
+                PRINTFORMD （当她不刻薄的时候，反正）
+            CASE 3
+                PRINTFORMD （当她不阴阳怪气的时候，反正）
+        ENDSELECT
+        PRINTFORMDW ，但现在她简直美得惊人。
+        PRINTFORMDW 她把头发染成了黑色，不知怎么地编成了两条辫子，并且长到了脚边（她用了魔法吗？）。
+        PRINTFORMDW 她化了妆……口红、白色粉底和脸颊上的腮红。
+        PRINTFORMDW 她的右脸颊上还有一颗美人痣。
+        PRINTFORMDW 她还对她的眉毛做了一些处理。 它们现在是蓝黑色的，而且非常长，几乎形成了一条连心眉。
+        PRINTFORMDW 她的手和脚完全被指甲花覆盖。
+        PRINTFORMDW 她平常的衣服不见了，取而代之的是一件粉红色的连衣裙，遮住了她的脚。
+        PRINTFORMDW 到底花了多长时间才把这身衣服弄好？ 她从哪里弄到她需要的一切东西？ 她是怎么付钱的？
+        PRINTFORMDW 而且她能看出来你脸红得有多厉害吗？
+        PRINTFORMD 至少，最后一个问题得到了解答。 帕露西
+        SELECTCASE K60_ATTITUDE()
+            CASE 0
+                PRINTFORMD 笑了笑
+            CASE 1
+                PRINTFORMD 咧嘴一笑
+            CASE 2, 3
+                PRINTFORMD 假笑了一下
+        ENDSELECT
+        PRINTFORMDW 并向你鞠躬。
+        PRINTFORML 「啊，我看到我的努力没有白费。 我打扮成了鲁达芭，一个来自《列王纪》的角色。」
+        PRINTFORML 「她被描述为全伊朗最美丽的女人。 我肯定我远不及她……」
+        PRINTFORMW 「但你似乎至少喜欢它。」
+        IF TALENT:妊娠
+            PRINTFORMW 「鲁达芭因为她的宝宝太大，生孩子的时候很困难……我希望我不会那样。」
+        ELSE
+            SELECTCASE K60_ATTITUDE()
+						;充满爱意
+                CASE 0
+                    PRINTFORMW 「我想亲你，但我不想弄脏我的口红——去他妈的，管他的。」
+                    PRINTFORMDL 帕露西抓住你，热情地吻了你。
+                    CALL MUTUAL_KISS()
+                    PRINTFORMDW 当你结束亲吻时，帕露西叹了口气。
+                    PRINTFORMW 「《列王纪》没有说鲁达芭有多擅长接吻……但我认为我做得还不错。」
+
+						;善良，好色
+                CASE 1
+                    PRINTFORMW 「你想看看我脱下这身衣服是什么样子吗？」
+						;爱抱怨的傲娇
+                CASE 2
+                    PRINTFORMW 「提醒我以后不要再穿这身衣服了。 我已经很难避开你了。」
+                    PRINTFORMDW 她的假笑消失了，取而代之的是她平常的怒容。
+						;虚伪的善良
+                CASE 3
+                    IF TALENT:MASTER:恋人
+                        CALL M_KOJO_COLOR_K60_JEALOUS
+                        PRINTFORMW 「不过，我敢肯定你的女朋友更漂亮。」
+                        CALL M_KOJO_COLOR_K60
+                        PRINTFORMDW 帕露西的假笑开始转变成鬼脸……
+                    ELSEIF IS_FEMALE(MASTER)
+                        PRINTFORMW 「你想让我告诉你我是怎么把这一身穿上吗？ 你用上合适的衣服和化妆品也会很漂亮的。」
+                    ELSEIF TALENT:[[帕露西]]:恋慕 || MARK:[[帕露西]]:快乐刻印 >= 3
+                        PRINTFORMDL 帕露西自己的脸上爬上了一抹红晕。
+                        PRINTFORMDW 她撅起嘴唇片刻，然后将目光从你身上移开。
+                    ELSE
+                        CALL M_KOJO_COLOR_K60_JEALOUS
+                        PRINTFORMW 「不过，我敢肯定你的女朋友更漂亮。」
+                        CALL M_KOJO_COLOR_K60
+                        PRINTFORMW 「哦？ 你没有女朋友吗？ 我道歉。」
+                        PRINTFORMDW 帕露西的道歉听起来不是很真诚……
+                    ENDIF
+            ENDSELECT
+        ENDIF
+ENDSELECT
+
+
+@K60_SPECIAL_GREETINGS(ARG)
+;-------------------------------------------------
+;Marriage event chain: Parsee proposes to you
+;Must be at Love, be your lover, and have 250+ Love EXP
+;-------------------------------------------------
+; IF TALENT:[[帕露西]]:恋人 && EXP:[[帕露西]]:爱情经验 >= 250 && TALENT:[[帕露西]]:恋慕
+;Other special scenes
+IF ARG == 0
+    IF TALENT:[[帕露西]]:母乳体质 == 2 && CFLAG:2 >= 1500 && FIRSTTIME("ParseeMilking", 1)
+        PRINTFORMD %CALLNAME:[[帕露西]]%抱起胳膊，并且
+        SELECTCASE K60_ATTITUDE(1)
+            CASE 0, 1
+                PRINTFORMDW 俏皮地笑了。
+                PRINTFORMW 「你来了。 我在等你。」
+            CASE 2, 3
+                PRINTFORMDW 皱着眉头。
+                PRINTFORMW 「你总算出现了。」
+        ENDSELECT
+        PRINTFORMW 「看看你对我做了什么。」
+        PRINTFORMDW 她放下胳膊，指了指自己的胸部。
+        PRINTFORMDW 她的外套正面有两块很大的湿斑。
+        PRINTFORMW 「我从八意大人那里订购了一些可以减少产奶量的药，但还没准备好。」
+        PRINTFORMW 「我不能这样去工作。 所以，因为这是你的错……你得帮我把它们都挤出来。」
+        SELECTCASE K60_ATTITUDE(1)
+            CASE 0, 1
+                PRINTFORMDL %CALLNAME:[[帕露西]]%的笑容更灿烂了。
+                CALL HPH_PRINT, @"「我想知道……这是你一直以来的计划吗？ 你真是个变态……HPH」", "W"
+            CASE 2, 3
+                PRINTFORMDL %CALLNAME:[[帕露西]]%的怒容更深了。
+                PRINTFORMW 「这可能就是你一直以来的计划。 你这个堕落者。」
+        ENDSELECT
+        IF !CFLAG:TARGET:当前位置 == 940
+            PRINTFORMD 她
+            SELECTCASE K60_ATTITUDE(1)
+                CASE 0, 1
+                    PRINTFORMDW 牵起你的手，带你到她的房间。
+                CASE 2, 3
+                    PRINTFORMDW 抓住你的手臂，把你拖到她的房间。
+            ENDSELECT
+        ENDIF
+        ;将玩家和帕露西移动到她的房子
+        CALL OMANEKI_ENTER(MASTER)
+        CALL OMANEKI_ENTER([[帕露西]])
+        PRINTFORMDW ………
+        PRINTFORMDW …
+        PRINTFORML
+        SELECTCASE K60_ATTITUDE(1)
+            CASE 0, 1
+                PRINTFORMDW %CALLNAME:[[帕露西]]%笑着摇了摇头。
+                PRINTFORMW 「走了这么远的路，你一定渴了吧？」
+                PRINTFORMW 「我给你喝点东西。 别担心，我有很多～」
+            CASE 2, 3
+                PRINTFORMDW %CALLNAME:[[帕露西]]%怒视着你。
+                PRINTFORMW 「好吧，我们快点结束这件事吧。」
+                PRINTFORMW 「还有，请别再那样盯着我的胸部看了。 这样已经够丢人了。」
+        ENDSELECT
+        PRINTFORMDW 她坐在她的蒲团上，脱下外套，放到一边。
+        PRINTFORMDW 然后她把紧身衣从头上拉下来，让她肿胀的乳房自由地弹跳出来。
+        SELECTCASE K60_ATTITUDE(1)
+            CASE 0, 1
+                PRINTFORMDW %CALLNAME:[[帕露西]]%咧嘴一笑，挺起胸膛。
+            CASE 2, 3
+                PRINTFORMDW %CALLNAME:[[帕露西]]%脸红了，遮住了她的乳房。 几滴牛奶从她的指缝间渗出。
+        ENDSELECT
+        PRINTFORMW 「我不但开始泌乳，而且罩杯还大了好几个尺寸。 我以前的胸罩都穿不下了……」
+        SELECTCASE K60_ATTITUDE(1)
+            CASE 0, 1
+                PRINTFORMW 「看来我只好让你帮我拿着它们了～」
+            CASE 2, 3
+                PRINTFORMW 「你知道八意大人不做缩胸手术吗？」
+                PRINTFORMDW 她摇了摇头。
+                SIF TALENT:TARGET:胸围 >= TALENT:[[永琳]]:胸围
+                    PRINTFORMW 「至少我在那里吃了一顿好的。 我能感觉到她在那里的时候一直很嫉妒。」
+        ENDSELECT
+        PRINTFORMW 「总之……我没有吸奶器，所以我们只能用别的东西了。」
+        PRINTFORMDW %CALLNAME:[[帕露西]]%指了指堆在墙边的一些空酒瓶。
+        PRINTFORMW 「你可以……用它们……吸我的奶。」
+        SELECTCASE K60_ATTITUDE()
+            CASE 0, 1
+                PRINTFORMW 「除非你更喜欢直接对着水龙头喝……？」
+                PRINTFORML
+                ;PRINTFORMDL [0] Yes please!
+                ;PRINTFORMDL [1] No thanks
+                CALL ASK_YN("拜托了！","还是算了")
+                SELECTCASE RESULT
+                    CASE 0
+                        PRINTFORMDW %CALLNAME:[[帕露西]]%笑了。
+                        PRINTFORMW 「我就知道你会这么说。 来吧，喝吧。」
+                        PRINTFORMDW 你不需要她再说第二遍。
+                        PRINTFORMDW 你急切地坐在她的腿上，把一个乳头塞进嘴里，开始吮吸。
+                        PRINTFORMDW %CALLNAME:[[帕露西]]%喘息一声，甜美的乳汁涌入你的口中。
+                        PRINTFORMW 「对！ 就这样！ 别停……」
+                        PRINTFORMDW 你没打算停。 乳汁源源不断地涌入你的口中，你不停地喝着。
+                        PRINTFORMDW 它很稀，水水的，有点酸，但%CALLNAME:[[帕露西]]%的喘息和呻吟弥补了这一点。
+                        IF HAS_PENIS(TARGET)
+                            PRINTFORMDW 你能感觉到有什么东西在你的背后变硬了。 你暗自笑了笑，加倍努力。
+                        ELSE
+                            PRINTFORMDW 她的胯部在你背后变得温热起来。 你暗自笑了笑，加倍努力。
+                        ENDIF
+                        PRINTFORMD 然后你倒吸一口凉气。
+                        ;PRINTFORMDW %CALLNAME:[[帕露西]]%, seemingly without realizing it, reaches down and starts rubbing your %PRINT_CLIT()% through your %SHOW_BOTTOM(MASTER,1)%.
+                        PRINTFORMDW %CALLNAME:[[帕露西]]%似乎没有意识到，她伸手摸到你的私处，隔着%SHOW_BOTTOM(MASTER,1)%开始刺激起来。
+                        PRINTFORMDW 当她意识到自己在做什么时，她脸红了，停了下来。
+                        PRINTFORMW 「我可以……吗？」
+                        PRINTFORMDW 你从嘴里拔出她的乳头，擦掉下巴上的牛奶，热情地点点头，然后继续工作。
+                        PRINTFORMDW %CALLNAME:[[帕露西]]%的脸上露出了笑容，她拉下了你的%SHOW_BOTTOM(MASTER,1)%和%PANTS_DESCRIPTION(MASTER)%。
+                        PRINTFORMW 「如果我不奖励你这么努力的工作，我就愧对一个琐罗亚斯德教徒的职责。」
+                        PRINTFORMW 「你知道在旧都有一句谚语吗？ “帕西人，你的名字是慈善”？」
+                        PRINTFORMW 「从技术上讲，我不是帕西人……但我曾经和他们住在一起。」
+                        PRINTFORMDW 她看起来有点悲伤……
+                        PRINTFORMW 「但那都过去了。」
+                        PRINTFORMDW 她用拇指在\@ HAS_PENIS(MASTER) ? 龟头 # 阴蒂\@上画圈。
+                        PRINTFORMW 「现在，在我们开始之前……你能换到我的另一个乳房吗？ 它也需要排空……」
+                        PRINTFORMDW 你换了个姿势，以便可以够到她的另一个乳房，并开始吮吸。
+                        PRINTFORMDW %CALLNAME:[[帕露西]]%愉悦地呻吟着，并开始刺激你。
+                        PRINTFORMDW 这变成了一场比赛，看谁能先让对方达到高潮。
+                        PRINTFORMD 你用舌头在她乳头上画圈，然后轻弹一下，她反击，
+                        IF HAS_PENIS(MASTER)
+                            PRINTFORMDW 俯下身子舔你的龟头。
+                        ELSE
+                            PRINTFORMDW 用食指摩擦你的G点。
+                        ENDIF
+                        PRINTFORMD 你抬起手开始按摩她的另一个乳房，她反击，
+                        IF HAS_PENIS(MASTER)
+                            PRINTFORMDW 用另一只手抓住肉棒轻轻地来回扭动。
+                        ELSE
+                            PRINTFORMDW 用另一只手刺激阴蒂。
+                        ENDIF
+                        PRINTFORMDW 最后，你们的小游戏以平局结束。
+                        IF HAS_PENIS(MASTER)
+                            PRINTFORMD 精液喷涌而出
+                            IF HAS_VAGINA(MASTER)
+                                PRINTFORMD 蜜液也从小穴中喷出
+                            ELSE
+                                PRINTFORMD 蜜液从小穴中喷出
+                            ENDIF
+                        ENDIF
+                        PRINTFORMDW 因为%CALLNAME:[[帕露西]]%用颤抖的手把你带向高潮。
+                        PRINTFORMDW 与此同时，你感觉到背部有湿润感，胸部有其他东西喷出来，牛奶充满了你的嘴。
+                        PRINTFORMDW 你太饱了，咽不下更多了。 你挪到一边，让它喷到你的肩膀上，专注于高潮带来的快感。
+                        PRINTFORMDW 你用手臂环绕着%CALLNAME:[[帕露西]]%的腰，躺了一会儿，然后坐起来清理干净。
+                        PRINTFORMD 空气中弥漫着牛奶的甜味，蒲团上沾满了牛奶
+                        IF HAS_PENIS(MASTER)
+                            PRINTFORMDW 、精液和液体。
+                        ELSE
+                            PRINTFORMDW 和液体。
+                        ENDIF
+                        PRINTFORMW 「哈啊……啊……」
+                        PRINTFORMDW %CALLNAME:[[帕露西]]%气喘吁吁。 她对你笑了笑。
+                        PRINTFORMW 「这……太激烈了。 但我很喜欢。」
+                        PRINTFORMDW 她的笑容变成了淫荡的笑容。
+                        PRINTFORMW 「不幸的是，我的乳房还远未排空。」
+                        CALL HPH_PRINT, @"「所以你最好回去工作HPH」", "W"
+                        PRINTFORMDW 你亲吻了她一下，并对她咧嘴一笑。
+                        CALL MUTUAL_KISS(TARGET)
+                        PRINTFORMDW 但这次你只是打算把她的奶吸到那些瓶子里。 你没有肚子再喝了。
+                        EXP:[[帕露西]]:Ｂ绝顶经验 ++
+                        EXP:[[帕露西]]:Ｂ经验 += 10
+                        EXP:[[帕露西]]:喷乳经验 += 10
+                        EXP:MASTER:口淫经验 += 10
+                        CALL RECOVER(MASTER,90 * 5,"体力", " ")
+                        CALL RECOVER(MASTER,120 * 8,"气力", " ")
+                        CALL RECOVER(MASTER,200,"精力", " ")
+                        PRINTFORMDL 
+                        CALL PARSEE_HAND_MILKING(3)
+                    CASE 1
+                        CALL PARSEE_HAND_MILKING(1)
+                ENDSELECT
+            CASE 2, 3
+                CALL PARSEE_HAND_MILKING(2)
+        ENDSELECT
+        CALLF FIRSTTIME("ParseeMilking")
+    ELSEIF MARK:反抗刻印 >= 1 && FIRSTTIME("ParseeDanmakuHint")
+        PRINTFORMDW 帕露西抱紧双臂，怒视着你。
+        PRINTFORMDW 看来她还在生你的气呢……
+        PRINTFORMDW 要不，向她发起弹幕挑战？
+        PRINTFORMDW 如果能让她借此发泄一下，说不定她会原谅你……
+	;If in Tavern (this will only display if the player is living in the Underworld since you can only access it then)
+	;Parsee will stop binge drinking if she's pregnant and/or in love or lust with you (giving her a healthier way of handling her emotions)
+    ELSEIF CFLAG:MASTER:当前位置 == 933 && GROUPMATCH(K60_ATTITUDE(), 2, 3) && !TALENT:[[帕露西]]:妊娠
+        IF !RAND:5 && !CFLAG:[[帕露西]]:K60EN_PARSEE_CRYING_AT_THE_TAVERN
+            CALL RECOVER(TARGET, 1500, "酒气", " ")
+            PRINTFORMDW 帕露西趴在吧台上，手边放着一个空酒杯。
+            PRINTFORMDW 你一开始还以为她只是睡着了，但随即注意到她的肩膀微微抽动，听到一丝压抑的啜泣声。
+            CALL ASK_YN("0 - 留下", "1 - 离开")
+            IF !RESULT
+                PRINTFORMDW 想到她之前对你的态度，你本想就这么把她丢下不管，但内心深处有个声音阻止了你。
+                PRINTFORMDW 你在她身旁坐下，轻轻地呼唤她的名字。
+                PRINTFORMDW 她一开始没有反应，但过了一会儿，她缓缓抬起头，擦去眼角的泪水，转过脸看向你。
+                SELECTCASE K60_ATTITUDE()
+                    CASE 2
+                        PRINTFORMW 「你、你是来看我笑话的吗？」
+                        PRINTFORMW 「那个冷酷、尖酸刻薄的桥姬，那个把你当垃圾一样对待的家伙，现在却沦落到在酒馆里哭哭啼啼的醉鬼。」
+                        PRINTFORMW 「想嘲笑就嘲笑吧，我无所谓，反正这也是我应得的。」
+                    CASE 3
+                        PRINTFORMW 「你来干什么？走开，让我一个人安静地难过。」
+                ENDSELECT
+                PRINTFORMDW 你没有理会她，只是问她发生了什么事。帕露西怒视着你。
+                PRINTFORMW 「我不想说。就算想说，也不会跟你说。」
+                SELECTCASE K60_ATTITUDE()
+                    CASE 2
+                        PRINTFORMW 「我已经跟你说得够多了。我不会再给你任何可以用来伤害我的信息。」
+                        PRINTFORMW 「你肯定想报复我之前对你的态度吧。」
+                        PRINTFORMW 「但如果你能放过我的话，我就不会那样对你！」
+                        PRINTFORMW 「我到底要说多少遍你才能明白啊？！」
+                        PRINTFORMDW 这个女人到底怎么了？！
+                        PRINTFORMDW 她在不到一分钟的时间里，从自怜自艾、自我厌恶，变成了被害妄想和受害者有罪论！
+                        PRINTFORMDW 就算是傲娇，也不会有这么剧烈的情绪波动吧。难道只是因为她喝醉了？
+                    CASE 3
+                        IF ABL:[[帕露西]]:亲密 >= 5
+                            PRINTFORMW 「我已经跟你说得够多了。我不会再给你任何可以用来伤害我的信息。」
+                        ELSE
+                            PRINTFORMW 「我根本不了解你。你几乎是个陌生人。」
+                            PRINTFORMW 「我怎么知道能不能信任你？」
+                        ENDIF
+                ENDSELECT
+                PRINTFORMDW 你不是第一次怀疑，自己为什么不听帕露西的劝告，离她远一点，而是要@K60_ATTITUDE() == 2 ? 一直尝试和她说话#一直尝试和她说话@。
+                PRINTFORMDW 她嘴里说出来的每一句话，都带着@K60_ATTITUDE() == 2 ? 尖酸刻薄#阴阳怪气@的侮辱。
+                PRINTFORMDW 她是很可爱没错，但在幻想乡里，和她一样可爱的女孩多得是。
+                PRINTFORMDW 也许你真的应该离开。她明显不想和你说话。
+                PRINTFORMDW 你站起身，正准备离开——
+                PRINTFORMW 「等等！」
+                PRINTFORMDW 你回头看向帕露西。她不再怒气冲冲，现在的表情充满了恳求。
+                PRINTFORMW 「你要去哪里？对不起，好吗？！」
+                PRINTFORMDW 然后，她用低沉而悲伤的声音说：
+                PRINTFORMW 「求你，不要离开我，%K60_MASTER()%……」
+                CALL ASK_YN("0 - 留下", "1 - 离开")
+                IF !RESULT
+                    CFLAG:[[帕露西]]:K60EN_PARSEE_CRYING_AT_THE_TAVERN = 1
+                    PRINTFORMDW 你还是心软了，在她身边坐了下来。
+                    PRINTFORMDW 两人沉默了一会儿，她才开口说话。
+                    PRINTFORMW 「我请你喝一杯，可以吗？」
+                    PRINTFORMDW 她的目光快速地瞥了你一眼，但头却没有动。你点点头。
+                    PRINTFORMDW 帕露西向酒保示意，%SPLIT_G("他:她")%为你倒了一杯酒。
+                    SELECTCASE K60_ATTITUDE()
+                        CASE 2
+                            PRINTFORMW 「别误会，我不是想勾引你。」
+                        CASE 3
+                            PRINTFORMW 「别一口气喝完，慢慢品尝，味道会更好。」
+                    ENDSELECT
+                    PRINTFORMDW 她似乎恢复正常了……至少以她的标准来说是这样。
+                    CFLAG:[[帕露西]]:好感度 += 100
+                ELSE
+                    CFLAG:[[帕露西]]:K60EN_PARSEE_CRYING_AT_THE_TAVERN = 2
+                    PRINTFORMDW 帕露西喝醉了，情绪波动剧烈，你现在真的不想应付她。
+                    PRINTFORMDW 你转过身，离开了。
+                    PRINTFORMW 「%K60_MASTER()%！不要！拜托，回来！」
+                    PRINTFORMDW 帕露西试图起身追赶你……但她的表情瞬间垮了下来，又无力地跌回座位，一脸颓废。
+                    PRINTFORMDW 当你走出酒馆时，又听到了她的啜泣声。
+                    CFLAG:[[帕露西]]:好感度 -= 100
+                    CFLAG:MASTER:当前位置 = KICKOUT()
+                ENDIF
+            ELSE
+                CFLAG:[[帕露西]]:K60EN_PARSEE_CRYING_AT_THE_TAVERN = 3
+                PRINTFORMDW 你决定离开。帕露西清醒的时候就已经很难对付了。
+                CFLAG:MASTER:当前位置 = KICKOUT()
+            ENDIF
+        ELSEIF !TCVAR:[[帕露西]]:今天有否见面
+            PRINTFORMDL 帕露西坐在吧台旁。
+            PRINTFORMDW 看她满脸通红的样子，显然已经在这里待了相当长的时间。
+            PRINTFORMDL 你看着她喝完一杯清酒，然后用酒杯敲了敲吧台。
+            PRINTFORMDW 酒保又给她满上，帕露西再次啜饮了一口。
+            PRINTFORMDL 她的挚友是鬼族，酒量好似乎也不足为奇……
+            PRINTFORMDW 但你还是有点担心。就算妖怪不会酒精中毒，过度饮酒对身体也没好处。
+            PRINTFORMDW 而且她到底是怎么支付酒钱的？
+            PRINTFORMDW 是勇仪借钱给她了吗？还是说，酒吧只是害怕得不敢向桥姬收费？
+            CALL RECOVER(TARGET, 500, "酒气", " ")
+        ENDIF
+        RETURN 1
+    ELSEIF CFLAG:[[帕露西]]:当前位置 == CFLAG:30:当前位置 && YOUBI_MATCH(DAY, "金")
+        IF FIRSTTIME("ParseeExperiencesTheHorrorsOfTHESHIRT")
+            PRINTFORMW 「……」
+            PRINTFORMW 「……」
+            PRINTFORMW 「……映姬大人，您为什么穿着那件衬衫？」
+            PRINTFORMDW 映姬发出了没有一丝笑意的笑声。
+        ;copied directly from Eiki's dialogue
+            PRINTFORML
+            CALL CHARA_TEXT([[映姬]], "「……似乎是由于，赫卡提亚大人在观察外界时，对某种传统产生了兴趣。」")
+            CALL CHARA_TEXT([[映姬]], "「她称之为“轻松星期五”。据说穿着休闲的服装工作可以提高工作效率……」", "w")
+            CALL CHARA_TEXT([[映姬]], "「她立刻在这里实施了这个制度。正如你所见，她坚持分享自己最喜欢的休闲服装……」")
+            CALL CHARA_TEXT([[映姬]], "「现在，这已经成了阎魔大人每周五的制服了……」", "w")
+            PRINTFORML
+            PRINTFORMW 「……我明白了。」
+            PRINTFORMDW 帕露西同情地向映姬点了点头。
+            PRINTFORMDW 「自从那时候开始，真的改变了很多呢。」
+            PRINTFORMDW 映姬叹了口气。
+            PRINTFORML
+            CALL CHARA_TEXT([[映姬]], "「的确如此。但改变是不可避免的。人们必须适应它……就像你必须适应你自己的改变一样。」", "w")
+            CALL CHARA_TEXT([[映姬]], "「说起来……」", "w")
+            PRINTFORMDW 映姬脸上露出了担心的表情。
+            PRINTFORML
+            SELECTCASE K60_ATTITUDE()
+                CASE 0
+                    CALL CHARA_TEXT([[映姬]], @"「我很高兴你在%K30_C_NAME(MASTER)%的帮助下，在克服嫉妒心方面取得了进展。」")
+                    CALL CHARA_TEXT([[映姬]], @"「但是你不能过于害怕他会离开你。」", "w")
+                    CALL CHARA_TEXT([[映姬]], "「否则，你的恐惧会成为自我实现的预言，并让你之前取得的所有进展都付诸东流……」", "w")
+                CASE 1
+                    CALL CHARA_TEXT([[映姬]], @"「我很高兴你在%K30_C_NAME(MASTER)%的帮助下，在克服嫉妒心方面取得了进展。」")
+                    CALL CHARA_TEXT([[映姬]], @"「但是你不能让你的欲望反过来支配你。」", "w")
+                    CALL CHARA_TEXT([[映姬]], "「用五种障碍之一代替另一种，并不能让你摆脱地狱之火……」", "w")
+                CASE 2
+                    CALL CHARA_TEXT([[映姬]], "「我知道你厌倦了我的说教，帕露西酱，但我只是为了你好才这样做的。」")
+                    CALL SET_KOJO_COLOR([[映姬]])
+                    CALL PRINT_DIALOGUE, @"你难道看不出来吗？你害怕成为%K30_C_NAME(MASTER)%的恋人会伤害他，而这种恐惧正在驱使你以另一种方式伤害他？", "w"
+                    CALL CHARA_TEXT([[映姬]], @"「你的罪孽正在堆积，我担心如果你继续虐待他，它们会进一步玷污你的灵魂……」", "w")
+                CASE 3
+                    CALL CHARA_TEXT([[映姬]], "「我知道你厌倦了我的说教，帕露西酱，但我只是为了你好才这样做的。」")
+                    CALL CHARA_TEXT([[映姬]], "「你的人生很艰难。我很清楚这一点。但你不能失去希望。」", "w")
+                    CALL CHARA_TEXT([[映姬]], "「你不是曾经告诉过我关于罗斯塔姆大人的事情吗？即使在杀死了自己的儿子之后，他也仍然抱有希望……」", "w")
+            ENDSELECT
+            PRINTFORML
+            PRINTFORMDL 帕露西似乎因为在你面前被训话而感到难为情。
+            PRINTFORMDW 也许你应该给他们送茶来打断一下……
+        ELSE
+            PRINTFORMDW 帕露西同情地向眼神空洞的映姬点了点头，并让自己做好心理准备。
+            PRINTFORMDW 映姬开始训斥帕露西。桥姬那可怜的惊恐表情始终没有消失……
+        ENDIF
+		;Parsee tries to get her drinking under control if she's in a relationship with you/your sex friend, so you're less likely to run into her when she's hung over
+    ELSEIF ((!RAND:10 && GROUPMATCH(K60_ATTITUDE(), 2, 3)) || (!RAND:20 && GROUPMATCH(K60_ATTITUDE(), 0, 1))) && !TALENT:[[帕露西]]:妊娠
+        CALL K60_PARSEE_HUNGOVER()
+    ELSEIF CFLAG:MASTER:当前位置 / 100 == 9 && !CFLAG:K60EN_MET_VAHBIZ && !RAND:10
+        CALL K60_MEET_VAHBIZ()
+    ELSE
+        ;Set this to 0 so the player has multiple chances to see special scenes in a given day
+        TCVAR:[[帕露西]]:K60ENC_TCVAR_SPECIAL_GREETING_SEEN = 0
+        RETURN 1
+    ENDIF
+    TCVAR:[[帕露西]]:K60ENC_TCVAR_SPECIAL_GREETING_SEEN = 1
+ENDIF

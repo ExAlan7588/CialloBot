@@ -1,0 +1,61 @@
+﻿;固有Counter可否
+@UNIQUE_COUNTER1_ABLE_K63
+SIF !TALENT:恋慕
+	RETURN 0
+SIF ABL:[[影狼]]:舌 < 2
+	RETURN 0
+SIF TEQUIP:PLAYER:50 >= 0 || TEQUIP:PLAYER:51 >= 0
+	RETURN 0
+RETURN 1
+
+;固有Counterの种别と频度
+@UNIQUE_COUNTER1_FREQUENCY_K63
+;ソフト/ベリーソフト/コミュ/着衣/脱衣爱抚/脱衣强迫/抱き着き/性交/责め/おねだりの中なら选ぶべし
+;タイプによって发生しない状况があるので注意
+RESULTS = 脱衣爱抚
+;发生率、基本值(10)にこの数值を足す
+;通常のCounterはプラ​舞​5以下なので、テストプレイ以外であんまり极端な数字を入れない方がいい
+RETURN 10 + ABL:[[影狼]]:舌 * 3
+
+;文本
+@UNIQUE_COUNTER1_MESSAGE_K63
+{
+PRINTFORML %CALLNAME:TARGET%%TEXTR(@"在%CALLNAME:MASTER%的后颈上伸出舌头轻轻地舔舐起来/
+将%CALLNAME:MASTER%的脸埋在脖子上，并用温热的舌头舔舐起来")%
+}
+{
+PRINTFORML （%TEXTR(@"嗯～～～果然很棒啊……也给你染上人家的味道……♪/
+不管舔%CALLNAME:MASTER%的哪里都有很好闻的味道呢/%CALLNAME:MASTER%看起来也很舒服呢…再多给你舔舔/
+荷尔蒙好厉害……变得想要更多了……")%）
+}
+
+;固有Counterのソース等
+@UNIQUE_COUNTER1_SOURCE_K63
+
+;体势の变更
+;=============================
+CALL TOUCH_SET(SET_FROM_M, 3 ,63)
+TFLAG:MASTERの手使用中 ++
+
+;ソース计算および内部处理系统
+;=============================
+
+SOURCE:63:性行动 += 200
+SOURCE:63:挑衅 += 200
+SOURCE:63:征服 += 300
+SOURCE:63:侍奉 += 100
+SOURCE:63:快Ｍ += 100
+
+EXP:63:口淫经验 += 2
+;侍奉FLAG
+TCVAR:63:108 = 1
+
+;マ斯塔Counter制御
+;(ビット立ちで不可 0=摸屁股 1=拥抱 2=接吻 3=胸爱抚 4=肛门爱抚 5=阴蒂爱抚 6=指插入れ 7=掀裙子)
+;SETBIT TCVAR:XX:26 ,X	といったかたちで设定し、你侧で该当の指令を使えなくする
+SETBIT TCVAR:63:26 ,1
+SETBIT TCVAR:63:26 ,2
+;=============================
+
+
+;「COUNTER1_」ってなってるところを「COUNTER2_」と置换すれば2框目以降も作れます。「COUNTER5_」まで可能。

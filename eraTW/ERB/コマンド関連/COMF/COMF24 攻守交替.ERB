@@ -1,0 +1,59 @@
+﻿;-------------------------------------------------
+;攻守交替
+;-------------------------------------------------
+@COM24
+VARSET LOCAL
+CFLAG:MASTER:诶嘿嘿 = 2
+TFLAG:COMABLE管理 = 3
+FOR LOCAL,1,CHARANUM
+	IF CFLAG:MASTER:当前位置 == CFLAG:LOCAL:当前位置
+		CFLAG:LOCAL:诶嘿嘿 = 2
+		LOCAL:1 ++
+	ENDIF
+NEXT
+PRINTFORML 把主导权交给了%NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%\@ LOCAL:1 > 1 ? 她们 #  \@
+TIME += 5
+
+RETURN 1
+
+;-------------------------------------------------
+;实行判定
+;-------------------------------------------------
+@COM_ABLE24
+SIF !TFLAG:100
+	RETURN 0
+;批量管理
+SIF GLOBAL_COMABLE(150)
+	RETURN RESULT
+;相手の情欲
+SIF GETPALAMLV(PALAM:情欲,10) < 5
+	RETURN 0
+SIF TCVAR:强行
+	RETURN 0
+;时间停止中も駄目
+SIF !SHIRAHU(TARGET)
+	RETURN 0
+;なんか装着してるとダメ
+FOR LOCAL,11,25
+	SIF TEQUIP:LOCAL
+		RETURN 0
+NEXT
+;插入中は駄目
+SIF TEQUIP:50 != -1
+	RETURN 0
+SIF TEQUIP:51 != -1
+	RETURN 0
+;淋浴中はダメ
+SIF TEQUIP:32
+	RETURN 0
+;吸乳头中はダメ
+SIF TEQUIP:41
+	RETURN 0
+;乳揉み中はダメ
+SIF TEQUIP:42
+	RETURN 0
+;继续接吻
+SIF TEQUIP:继续接吻
+	RETURN 0
+
+RETURN 1

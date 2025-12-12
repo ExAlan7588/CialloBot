@@ -1,0 +1,176 @@
+﻿;--------------------------------------------------
+;地点名变更函数
+;--------------------------------------------------
+@MAP_PLACENAME_1(ARG)
+#FUNCTIONS
+IF GET_MAPID(ARG) == MAIN_MAP
+	SELECTCASE ARG
+		CASE SUMIKOMI_ROOM
+			;※このMapでは未实装
+			IF FLAG:住宿人物
+				RETURNF CALLNAME:(FLAG:住宿人物) + "的房间"
+			ELSE
+				RETURNF "空的房间"
+			ENDIF
+		CASE MINROOM() TO (MAXROOM - 1)
+			RETURNF STR:(ARG + 8000)
+		CASE OMANEKIBEYA()
+			RETURNF OMANEKI_PLACE()
+		CASE SUKIMA()
+			RETURNF "隙间空间"
+		CASE MAXROOM
+			RETURNF "参道的另一边"
+		CASEELSE
+			RETURNF "不明"
+	ENDSELECT
+ELSE
+	RETURNF "道路的另一边"
+ENDIF
+
+;--------------------------------------------------
+;场所ARGがどのエリアにあるか
+;表示するMapの番号と连动（TFLAG:地图切换）
+;ARG     场所ID
+;--------------------------------------------------
+@MAP_AREASELECT_1(ARG)
+#FUNCTION
+SELECTCASE ARG
+	CASE P140地藏小路
+		RETURNF 1
+	;命莲寺
+	CASE P101山门 TO P122梵钟楼, P135走廊 TO P137猯藏的小屋
+		RETURNF 1
+	;神灵庙
+	CASEELSE
+		RETURNF 2
+ENDSELECT
+
+;--------------------------------------------------
+;内部构造がある场所の内部の判定
+;TFLAG:地图切换  内部察觉が必要なMap番号
+;                P_ID  表示ボタンの场所ID
+;                Q_ID  判定する内部の场所ID,必ずP_IDと一致した数值も含める
+;--------------------------------------------------
+@GETMAP_BUILDING_1(P_ID, Q_ID)
+#FUNCTION
+#DIM P_ID
+#DIM Q_ID
+IF TFLAG:地图切换 == 1
+	SELECTCASE P_ID
+		;神灵庙
+		CASE P123灵庙大门
+			SELECTCASE Q_ID
+			CASE P123灵庙大门 TO P134藏, P138钟楼, P139邪仙楼
+				RETURNF 1
+			ENDSELECT
+	ENDSELECT
+ELSEIF TFLAG:地图切换 == 2
+	SELECTCASE P_ID
+		;命莲寺
+		CASE P101山门
+			SELECTCASE Q_ID
+			CASE P101山门 TO P122梵钟楼, P135走廊 TO P137猯藏的小屋
+				RETURNF 1
+			ENDSELECT
+	ENDSELECT
+ENDIF
+RETURNF 0
+
+;--------------------------------------------------
+;移动制限设定
+;ARG    场所ID
+;CHARA  移动する角色ID
+;RETURNF 1=移动できる,0=移动できない
+;TFLAG:移动不能信息   ↓の@MAP_CANNOT_WORD用の设定
+;--------------------------------------------------
+@MAP_CAN_MOVE_1(ARG, CHARA)
+#FUNCTION
+#DIM CHARA
+SELECTCASE ARG
+	;谁かが住んでないと入れない
+	CASE P119别馆
+		IF !PRIVATEROOM:(ARG % 100) && CFLAG:MASTER:初始位置 != ARG
+			TFLAG:移动不能信息 = 999
+			RETURNF 0
+		ENDIF
+ENDSELECT
+RETURNF 1
+
+;--------------------------------------------------
+;移动不能时に表示されるメッセージ
+;--------------------------------------------------
+@MAP_CANNOT_WORD_1(ARG)
+RETURN
+SELECTCASE TFLAG:移动不能信息
+	CASE 1
+		PRINTFORMW ※在这里输入消息。执行行数+1的CLEARLINE
+		CLEARLINE 2
+ENDSELECT
+REUSELASTLINE
+
+;-----------------------------------------
+;据点専用の情景描写
+;WAITはかけないように
+;-----------------------------------------
+@MAP_UNIQUEMESSAGE_1
+VARSET LOCAL
+SELECTCASE CFLAG:MASTER:当前位置
+	CASE P104讲堂
+		PRINTFORML 放置着大木鱼
+		RETURN 1
+	CASE P129客房
+		PRINTFORML 放置着木刻的熊
+		RETURN 1
+	CASE P110走廊
+		PRINTFORML 房檐上挂着萝卜
+		RETURN 1
+	CASE P119别馆
+		FOR LOCAL, 1, CHARANUM
+			IF CFLAG:LOCAL:当前位置 == P112澡堂
+				LOCAL:1 = LOCAL
+				LOCAL:2 ++
+			ENDIF
+		NEXT
+		IF !LOCAL:2
+			PRINTFORML 有着在这房间能偷窥浴室的秘密装置
+		ELSE
+			PRINTFORML 通过秘密装置看到了入浴中的%NAME_OUTPUT_TRANSLATION("CALLNAME", (LOCAL:1))%\@ LOCAL:2 > 1? 们# \@
+			PRINTFORML 真是绝景！
+		ENDIF
+		RETURN 1
+	CASEELSE
+ENDSELECT
+
+;-----------------------------------------
+;据点の场所IDをお出かけMap上の场所IDに置换する函数
+;ARG      对象の场所ID（据点Map）
+;RETURNF  差し替え场所ID（お出かけMap）
+;-----------------------------------------
+@MAP_SEARCH_REPLACEMENT_1(ARG)
+#FUNCTION
+SELECTCASE ARG
+	CASE P140地藏小路
+		RETURNF 地藏小路
+	CASE P101山门 TO P106后院, P119别馆, P120库房, P122梵钟楼, P137猯藏的小屋
+		RETURNF 命莲寺境内
+	CASE P121墓地
+		RETURNF 墓地
+	CASE P123灵庙大门, P124灵庙广场, P138钟楼, P139邪仙楼
+		RETURNF 神灵庙广场
+	CASE P125屠自古私室 TO P134藏
+		RETURNF 神灵庙道场
+	CASEELSE
+		RETURNF 命莲寺方丈
+ENDSELECT
+RETURNF 0
+
+;--------------------------------------------------
+;Mapの介绍文
+;--------------------------------------------------
+@Map介绍_1
+;とりあえず5行
+PRINTFORML ※介绍文募集中※
+PRINTFORML 虽然地图名字是是命莲寺、但其实也包括神灵庙。
+PRINTFORML 
+PRINTFORML 
+PRINTFORML 

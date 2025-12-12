@@ -1,0 +1,229 @@
+﻿;-----------------------------------------------------------
+;地点の接续设定
+;ARG    基准の地点
+;ARG:1  对象の地点
+;RETURNF 0=不能移动,不能看
+;        1=  能移动,不能看
+;        2=不能移动,  能看
+;        3=  能移动,  能看（直通）
+;-----------------------------------------------------------
+@CAN_MOVE_0(ARG, ARG:1)
+#FUNCTION
+SELECTCASE ARG
+	CASE P1鸟居
+		SIF GROUPMATCH(ARG:1, P2境内, P22参道)
+			RETURNF 3
+		SIF ARG:1 == MAXROOM
+			RETURNF 2
+	CASE P2境内
+		SIF GROUPMATCH(ARG:1, P6库房, P16破旧小屋, P20本殿内部, P56阿吽的小屋)
+			RETURNF 1
+		SIF GROUPMATCH(ARG:1, P1鸟居, P3功德箱, P5净手池, P21守矢神社分社)
+			RETURNF 3
+	CASE P3功德箱
+		SIF GROUPMATCH(ARG:1, P4本堂)
+			RETURNF 1
+		SIF GROUPMATCH(ARG:1, P2境内)
+			RETURNF 3
+	CASE P4本堂
+		SIF GROUPMATCH(ARG:1, P3功德箱)
+			RETURNF 1
+	CASE P5净手池
+		SIF GROUPMATCH(ARG:1, P2境内)
+			RETURNF 3
+	CASE P6库房
+		SIF GROUPMATCH(ARG:1, P2境内, P20本殿内部)
+			RETURNF 1
+	CASE P7土间
+		SIF GROUPMATCH(ARG:1, P9起居室, P20本殿内部)
+			RETURNF 1
+		SIF GROUPMATCH(ARG:1, P8厨房)
+			RETURNF 3
+	CASE P8厨房
+		SIF GROUPMATCH(ARG:1, P9起居室, P10走廊)
+			RETURNF 1
+		SIF GROUPMATCH(ARG:1, P7土间)
+			RETURNF 3
+	CASE P9起居室
+		SIF GROUPMATCH(ARG:1, P7土间, P8厨房, P15灵梦私室, P17小的仓库, P53仓库, P54小人的虫笼, P55和室)
+			RETURNF 1
+		SIF GROUPMATCH(ARG:1, P10走廊)
+			RETURNF 3
+	CASE P10走廊
+		SIF GROUPMATCH(ARG:1, P8厨房, P12更衣间, P14厕所, P19大的仓库, P54小人的虫笼)
+			RETURNF 1
+		SIF GROUPMATCH(ARG:1, P9起居室, P11庭)
+			RETURNF 3
+	CASE P11庭
+		SIF GROUPMATCH(ARG:1, P20本殿内部, P52别馆, P69先代巫女的小屋)
+			RETURNF 1
+		SIF GROUPMATCH(ARG:1, P10走廊)
+			RETURNF 3
+	CASE P12更衣间
+		SIF GROUPMATCH(ARG:1, P10走廊, P13澡堂)
+			RETURNF 1
+	CASE P13澡堂
+		SIF GROUPMATCH(ARG:1, P12更衣间)
+			RETURNF 1
+	CASE P14厕所
+		SIF GROUPMATCH(ARG:1, P10走廊)
+			RETURNF 1
+	CASE P15灵梦私室
+		SIF GROUPMATCH(ARG:1, P9起居室, P17小的仓库, P18壁橱间)
+			RETURNF 1
+	CASE P16破旧小屋
+		SIF GROUPMATCH(ARG:1, P2境内, P20本殿内部)
+			RETURNF 1
+	CASE P17小的仓库
+		SIF GROUPMATCH(ARG:1, P9起居室)
+			RETURNF 1
+	CASE P18壁橱间
+		SIF GROUPMATCH(ARG:1, P15灵梦私室)
+			RETURNF 1
+	CASE P19大的仓库
+		SIF GROUPMATCH(ARG:1, P10走廊)
+			RETURNF 1
+	CASE P20本殿内部
+		SIF GROUPMATCH(ARG:1, P6库房, P7土间, P11庭, P16破旧小屋)
+			RETURNF 1
+		SIF GROUPMATCH(ARG:1, P2境内)
+			RETURNF 3
+	CASE P21守矢神社分社
+		SIF GROUPMATCH(ARG:1, P2境内)
+			RETURNF 3
+	CASE P22参道
+		SIF ARG:1 == MAXROOM
+			RETURNF 2
+		SIF GROUPMATCH(ARG:1, P1鸟居, P36梦幻遗迹前,P68大广场)
+			RETURNF 3
+		SIF GROUPMATCH(ARG:1, P23温泉・更衣间, P25镇守之森)
+			RETURNF 1
+	CASE P23温泉・更衣间
+		SIF GROUPMATCH(ARG:1, P22参道, P24温泉, P25镇守之森)
+			RETURNF 1
+	CASE P24温泉
+		SIF GROUPMATCH(ARG:1, P23温泉・更衣间)
+			RETURNF 1
+	CASE P25镇守之森
+		SIF GROUPMATCH(ARG:1, P22参道)
+			RETURNF 3
+		SIF GROUPMATCH(ARG:1, P23温泉・更衣间, P27三妖精之家・大厅)
+			RETURNF 1
+
+	CASE P27三妖精之家・大厅
+		SIF GROUPMATCH(ARG:1, P25镇守之森, P30三妖精之家・澡堂, P31三妖精之家・二层走廊, P35三妖精之家・地下室)
+			RETURNF 1
+		SIF GROUPMATCH(ARG:1, P29三妖精之家・厨房)
+			RETURNF 3
+	CASE P29三妖精之家・厨房
+		SIF GROUPMATCH(ARG:1, P27三妖精之家・大厅)
+			RETURNF 3
+	CASE P30三妖精之家・澡堂
+		SIF GROUPMATCH(ARG:1, P27三妖精之家・大厅)
+			RETURNF 1
+	CASE P31三妖精之家・二层走廊
+		SIF GROUPMATCH(ARG:1, P27三妖精之家・大厅, P32桑尼私室, P33露娜私室, P34斯塔私室)
+			RETURNF 1
+	CASE P32桑尼私室, P33露娜私室, P34斯塔私室
+		SIF GROUPMATCH(ARG:1, P31三妖精之家・二层走廊)
+			RETURNF 1
+	CASE P35三妖精之家・地下室
+		SIF GROUPMATCH(ARG:1, P27三妖精之家・大厅)
+			RETURNF 1
+
+	CASE P36梦幻遗迹前
+		SIF GROUPMATCH(ARG:1, P22参道)
+			RETURNF 3
+		SIF GROUPMATCH(ARG:1, P37梦幻遗迹・一层廊道)
+			RETURNF 1
+	CASE P37梦幻遗迹・一层廊道
+		SIF GROUPMATCH(ARG:1, P36梦幻遗迹前, P38梦幻遗迹・盥洗间, P41梦幻遗迹・食堂兼会客厅, P43梦美私室, P44千百合私室, P46梦幻遗迹・二层廊道)
+			RETURNF 1
+	CASE P38梦幻遗迹・盥洗间
+		SIF GROUPMATCH(ARG:1, P37梦幻遗迹・一层廊道, P39梦幻遗迹・浴室, P40梦幻遗迹・厕所)
+			RETURNF 1
+	CASE P39梦幻遗迹・浴室, P40梦幻遗迹・厕所
+		SIF GROUPMATCH(ARG:1, P38梦幻遗迹・盥洗间)
+			RETURNF 1
+	CASE P41梦幻遗迹・食堂兼会客厅
+		SIF GROUPMATCH(ARG:1, P37梦幻遗迹・一层廊道)
+			RETURNF 1
+		SIF GROUPMATCH(ARG:1, P42梦幻遗迹・调理室)
+			RETURNF 3
+	CASE P42梦幻遗迹・调理室
+		SIF GROUPMATCH(ARG:1, P41梦幻遗迹・食堂兼会客厅)
+			RETURNF 3
+	CASE P43梦美私室, P44千百合私室
+		SIF GROUPMATCH(ARG:1, P37梦幻遗迹・一层廊道)
+			RETURNF 1
+	CASE P46梦幻遗迹・二层廊道
+		SIF GROUPMATCH(ARG:1, P37梦幻遗迹・一层廊道, P47梦幻遗迹・舰桥, P48梦幻遗迹・第一资料室, P49梦幻遗迹・研究室, P50梦幻遗迹・第二资料室, P51梦幻遗迹・仓库)
+			RETURNF 1
+	CASE P47梦幻遗迹・舰桥
+		SIF GROUPMATCH(ARG:1, P46梦幻遗迹・二层廊道)
+			RETURNF 1
+		SIF GROUPMATCH(ARG:1, P36梦幻遗迹前)
+			RETURNF 2
+	CASE P48梦幻遗迹・第一资料室, P49梦幻遗迹・研究室, P50梦幻遗迹・第二资料室, P51梦幻遗迹・仓库
+		SIF GROUPMATCH(ARG:1, P46梦幻遗迹・二层廊道)
+			RETURNF 1
+
+	CASE P52别馆
+		SIF GROUPMATCH(ARG:1, P11庭)
+			RETURNF 1
+	CASE P53仓库, P55和室
+		SIF GROUPMATCH(ARG:1, P9起居室)
+			RETURNF 1
+	CASE P54小人的虫笼
+		SIF GROUPMATCH(ARG:1, P9起居室, P10走廊)
+			RETURNF 1
+	CASE P56阿吽的小屋
+		SIF GROUPMATCH(ARG:1, P2境内)
+			RETURNF 1
+	CASE MAXROOM
+		SIF ARG:1 == P22参道
+			RETURNF 1
+;顺序:从Case 去 ARG 	
+	;广场
+	CASE P68大广场
+		SIF GROUPMATCH(ARG:1,P57大温泉,P60大客厅,P67宴会厅)
+			RETURNF 1
+		SIF GROUPMATCH(ARG:1,P22参道)
+			RETURNF 3
+	;大温泉
+	CASE P57大温泉
+		SIF GROUPMATCH(ARG:1,P68大广场)
+			RETURNF 1
+	;主卧
+	CASE P58大主卧
+		SIF GROUPMATCH(ARG:1,P57大温泉,P68大广场)
+			RETURNF 2
+		SIF GROUPMATCH(ARG:1,P59大厨房,P60大客厅)
+			RETURNF 3
+	;大厨房
+	CASE P59大厨房
+		SIF GROUPMATCH(ARG:1,P58大主卧)
+			RETURNF 1
+		SIF GROUPMATCH(ARG:1,P60大客厅)
+			RETURNF 3
+	;大客厅
+	CASE P60大客厅
+		SIF GROUPMATCH(ARG:1,P58大主卧,P59大厨房,P61地の间,P62水の间,P63火の间,P64风の间,P65光の间,P66暗の间)
+			RETURNF 1
+		SIF GROUPMATCH(ARG:1,P68大广场)
+			RETURNF 3
+	;六系炮房
+	CASE P61地の间,P62水の间,P63火の间,P64风の间,P65光の间,P66暗の间
+		SIF GROUPMATCH(ARG:1,P60大客厅)
+			RETURNF 1
+	;宴会厅
+	CASE P67宴会厅
+		SIF GROUPMATCH(ARG:1,P68大广场)
+			RETURNF 3
+	CASE P69先代巫女的小屋
+		SIF	GROUPMATCH(ARG:1,P52别馆,P10走廊)
+			RETURNF 2
+		SIF	GROUPMATCH(ARG:1,P11庭)
+			RETURNF 3
+ENDSELECT
+RETURNF 0

@@ -1,0 +1,102 @@
+﻿;-------------------------------------------------
+;听牢骚
+;日常系指令、レベル2
+;-------------------------------------------------
+@COM333
+VARSET LOCAL
+
+;固定で获得するソース
+SOURCE:欢乐 = 400
+
+LOCAL = 50 + ABL:MASTER:话术技能 * 5 + ABL:亲密 * 2
+
+SIF BASE:酒气 > MAXBASE:酒气 / 2
+	LOCAL -= 15
+
+SELECTCASE TFLAG:192
+	;通常
+	CASE 0
+		SELECTCASE RAND:LOCAL
+			CASE IS < 20
+				TFLAG:193 = 1
+			CASE 20 TO 50
+				TFLAG:193 = 2
+			CASEELSE
+				TFLAG:193 = 3
+		ENDSELECT
+	;强制成功or大成功
+	CASE 1
+		SELECTCASE RAND:LOCAL
+			CASE IS < 50
+				TFLAG:193 = 2
+			CASEELSE
+				TFLAG:193 = 3
+		ENDSELECT
+	;强制失败
+	CASE -1
+		TFLAG:193 = 1
+	;指令结束
+	CASE -2
+		TFLAG:102 = 0
+		TFLAG:193 = -1
+		RETURN 0
+ENDSELECT
+SIF BASE:酒气 > MAXBASE:酒气 / 2
+	TFLAG:193 += 3
+
+SELECTCASE TFLAG:193
+	CASE 1
+		SOURCE:反感 = 100
+	CASE 2
+		SOURCE:欢乐 += ABL:亲密 * 30
+		TALENT:心情 ++
+		BASE:愤怒 /= 2
+		CFLAG:心情不快 = 0
+	CASE 3
+		SOURCE:欢乐 += ABL:亲密 * 50
+		SOURCE:情爱 = 200
+		TALENT:心情 ++
+		BASE:愤怒 /= 2
+		CFLAG:心情不快 = 0
+	CASE 4
+		SOURCE:反感 = 1000
+		SOURCE:欢乐 += ABL:亲密 * 30
+	CASE 5
+		SOURCE:欢乐 += ABL:亲密 * 50
+	CASE 6
+		SOURCE:欢乐 += ABL:亲密 * 75
+		SOURCE:情爱 = 300
+		TALENT:心情 = 1
+		BASE:愤怒 /= 2
+		CFLAG:心情不快 = 0
+ENDSELECT
+
+TIME += 20
+
+;-------------------------------------------------
+;实行判定
+;-------------------------------------------------
+@COM_ABLE333
+;听牢骚实行判定
+SIF !TFLAG:100
+	RETURN 0
+;批量管理
+SIF GLOBAL_COMABLE(333)
+	RETURN RESULT
+SIF FLAG:70
+	RETURN 0
+SIF ABL:亲密 < 3
+	RETURN 0
+SIF MARK:反抗刻印
+	RETURN 0
+SIF CFLAG:诶嘿嘿
+	RETURN 0
+SIF TALENT:心情 >= 0
+	RETURN 0
+;气力0
+SIF BASE:MASTER:气力 <= 0
+	RETURN 0
+;睡眠中
+SIF CFLAG:睡眠
+	RETURN 0
+RETURN 1

@@ -1,0 +1,275 @@
+﻿@遭遇判定
+#DIM 基本遭遇率
+#DIM 遭遇率
+
+遭遇率 = 0
+CVARSET CFLAG, GETNUM(CFLAG, "遭遇位置")
+
+;出禁人数が多いほど遭遇率は高くなる（あんまり密にならないようにする）
+;※从来は低いほど遭遇しやすかったけど分かりにくいんで直感的％に,全体的にやや上方修正
+SELECTCASE (FLAG:出禁人数 * 100 / CHARANUM)
+	CASE IS >= 60
+		基本遭遇率 = 51
+	CASE IS >= 45
+		基本遭遇率 = 48
+	CASE IS >= 30
+		基本遭遇率 = 45
+	CASE IS >= 15
+		基本遭遇率 = 42
+	CASE IS >= 10
+		基本遭遇率 = 39
+	CASEELSE
+		基本遭遇率 = 36
+ENDSELECT
+
+;连动设定もあるのでこの处理は出禁角色も行う
+FOR LOCAL, 1, CHARANUM
+	;自宅在住角色は遭遇しない
+	SIF CFLAG:LOCAL:神社在住
+		CONTINUE
+	SIF TALENT:LOCAL:路人
+		CONTINUE
+	IF !(CFLAG:LOCAL:据点来访 && CFLAG:LOCAL:宴会参加)
+		遭遇率 = 基本遭遇率 + TALENT:LOCAL:思慕 * 3 + TALENT:LOCAL:恋慕 * 6 + CFLAG:LOCAL:依赖状况 * 6
+		SIF 遭遇率 > RAND:100
+			CALL 遭遇フラグ决定(LOCAL)
+	ENDIF
+NEXT
+
+;全角色决定后、连动角色を设定する
+FOR LOCAL, 1, CHARANUM
+	VARSET RESULT
+	;addition custom code, for custom charadata movement
+	CALL KOJO_CHECK(LOCAL, "CHARADATA", "MOVE", 1)
+	IF RESULT == -1 ;do nothing
+		VARSET RESULT
+		CALLFORM CHARAMOVE_DATA_{NO:LOCAL}(1)
+	ELSEIF RESULT || RESULT:1 ;use these values
+	ELSE
+	CALLFORM CHARAMOVE_DATA_{NO:LOCAL}(1)
+	ENDIF
+	;依存连动
+	IF RESULT
+		CFLAG:LOCAL:遭遇位置 = CFLAG:RESULT:遭遇位置
+	;对等连动
+	ELSEIF RESULT:1
+		;连动设定する
+		CFLAG:LOCAL:遭遇位置 = CFLAG:连动角色设定(RESULT:1, RESULT:2, RESULT:3):遭遇位置
+	ENDIF
+NEXT
+[IF_DEBUG]
+	PRINTL 【今日の遭遇位置】※デ背包用
+	FOR LOCAL, 1, CHARANUM
+		IF CFLAG:LOCAL:遭遇位置
+			PRINTFORM %NAME_OUTPUT_TRANSLATION("CALLNAME", LOCAL), 18, LEFT%%NAME_FROM_PLACE(CFLAG:LOCAL:遭遇位置)%
+			VARSET RESULT
+			;addition custom code, for custom charadata movement
+			CALL KOJO_CHECK(LOCAL, "CHARADATA", "MOVE", 1)
+			IF RESULT == -1 ;do nothing
+				VARSET RESULT
+				CALLFORM CHARAMOVE_DATA_{NO:LOCAL}(1)
+			ELSEIF RESULT || RESULT:1 ;use these values
+			ELSE
+			CALLFORM CHARAMOVE_DATA_{NO:LOCAL}(1)
+			ENDIF
+			IF RESULT
+				PRINTFORM （依存连动）
+			ELSEIF RESULT:1
+				PRINTFORM （对等连动）
+			ENDIF
+			PRINTL 
+		ENDIF
+	NEXT
+	WAIT
+[ENDIF]
+;-----------------------------------------------------------
+;角色の遭遇位置を设定する函数
+;-----------------------------------------------------------
+@遭遇フラグ决定(CHARA)
+#DIM CHARA
+#DIM P_ID
+#DIM LPCOUNT
+VARSET LOCAL
+;最初に出现タイプを决定,他のタイプになったらその位置には出现不会うに
+;自宅位置：经常去的地方：其他＝１：２：１
+WHILE !LOCAL
+	SELECTCASE RAND:1000
+	CASE IS < 250
+		;自宅位置はそのまま决定
+		IF CFLAG:CHARA:自宅位置
+			LOCAL = 1
+			CFLAG:CHARA:遭遇位置 = CFLAG:CHARA:自宅位置
+			RETURN
+		ENDIF
+	CASE IS < 750
+		SIF CFLAG:CHARA:经常去的地方 >= 0 && CFLAG:CHARA:经常去的地方 != MAIN_MAP
+			LOCAL = 2
+	CASEELSE
+		LOCAL = 3
+	ENDSELECT
+WEND
+
+LPCOUNT = 0
+;遭遇位置の决定
+WHILE 1
+	LPCOUNT ++
+	P_ID = RANDOM_ODEKAKE()
+	;经常去的地方に自宅しかない、经常去的地方しか行かない场合は无限ループになるので100で妥协する
+	IF LPCOUNT < 100
+		;自宅位置はなるべく行かない
+		IF P_ID == CFLAG:CHARA:自宅位置
+			CONTINUE
+		;经常去的地方の场合,经常去的地方以外には行かない
+		ELSEIF LOCAL == 2
+			SIF GET_MAPID(P_ID) != CFLAG:CHARA:经常去的地方
+				CONTINUE
+		;其他の地域の场合,经常去的地方にはなるべく行かない
+		ELSE
+			SIF GET_MAPID(P_ID) == CFLAG:CHARA:经常去的地方
+				CONTINUE
+		ENDIF
+	ENDIF
+	;出现场所かチェック
+	RESULT = 0
+	CALL KOJO_CHECK(CHARA, "CHARADATA", "MOVE", 7, P_ID)
+	IF RESULT == -1 ;等于-1时,表明口上侧需要是结果为0
+		RESULT = 0 
+		CALLFORM CHARAMOVE_DATA_{NO:CHARA}(7, P_ID)
+	ELSEIF RESULT ;等于其他正值时，表明口上侧有自己的值
+	ELSE 
+		;addition custom code, duplicated characters
+		CALLFORM CHARAMOVE_DATA_{NO:CHARA}(7, P_ID)
+	ENDIF 
+	SIF !RESULT
+		CONTINUE
+	CFLAG:CHARA:遭遇位置 = P_ID
+	BREAK
+WEND
+RETURN
+
+;-----------------------------------------------------------
+;角色が他の角色に依存した挙动をするのを设定する
+;暂定3人まで。遭遇位置でのみ使用されている
+;暂定恋慕と思慕のみ（遭遇率に影响があるので）
+;同列なら小さい方が优先
+;CHARA:1～3  この三人（二人）のうちもっとも评价が高い角色に依存する
+;-----------------------------------------------------------
+@连动角色设定(CHARA:1, CHARA:2, CHARA:3)
+#FUNCTION
+#DIM CHARA, 4
+FOR LOCAL, 1, 4
+	SIF !CHARA:LOCAL
+		BREAK
+	SIF TALENT:(CHARA:LOCAL):恋慕
+		RETURNF CHARA:LOCAL
+NEXT
+FOR LOCAL, 1, 4
+	SIF !CHARA:LOCAL
+		BREAK
+	SIF TALENT:(CHARA:LOCAL):思慕
+		RETURNF CHARA:LOCAL
+NEXT
+;全部无いならCHARA:1で决定
+RETURNF CHARA:1
+
+;-----------------------------------------------------------
+;角色の出现フラグを判定する函数
+;=1据点には来ない =2来る =3 住んでる
+;-----------------------------------------------------------
+@出现状态(ARG)
+#FUNCTION
+IF CFLAG:ARG:出禁 || TALENT:ARG:路人
+	RETURNF 0
+ELSEIF CFLAG:ARG:神社在住
+	RETURNF 3
+ELSEIF CFLAG:ARG:据点来访
+	RETURNF 2
+ELSEIF CFLAG:ARG:宴会参加
+	RETURNF 2
+ELSEIF !CHARA_HOLIDAY(ARG)
+	RETURNF 1
+ELSEIF CFLAG:ARG:招待
+	RETURNF 1
+ELSEIF CFLAG:ARG:遭遇位置
+	RETURNF 1
+ELSE
+	RETURNF 0
+ENDIF
+
+;-----------------------------------------------------------
+;OPTIONから呼ばれる角色の出现场所列表
+;-----------------------------------------------------------
+@SHOW_APPEAR_LIST
+#DIM LPCOUNT
+#DIM LPCOUNT2
+#DIM LPCOUNT3
+#DIM P_ID
+#DIM MAPID
+#DIM メイン保管
+メイン保管 = MAIN_MAP
+MAIN_MAP = MAXHOME
+LPCOUNT3 = 0
+SIF FLAG:排序
+	CALL CHARASORT_EX
+FOR LPCOUNT, 1, EX_CHARANUM
+	IF FLAG:排序
+		LOCAL = RESULT:LPCOUNT
+		SIF LOCAL < 0
+			CONTINUE
+	ELSE
+		LOCAL = LPCOUNT
+		SIF LOCAL >= CHARANUM
+			BREAK
+	ENDIF
+	SIF TALENT:LOCAL:路人
+		BREAK
+	LPCOUNT3 ++
+	SIF LPCOUNT3 % 10 == 1
+		PRINTFORML 　　 %" ", 18, LEFT% 移率 节度　博　寺　里　湖　竹　森　冥　山　守　地　月　自宅位置
+	PRINTFORM [{LOCAL,3 }] %NAME_OUTPUT_TRANSLATION("CALLNAME", LOCAL), 18, LEFT% {CFLAG:LOCAL:移动率补正, 2} 　
+	IF CFLAG:LOCAL:移动节制 > 0
+		PRINTFORM +{ABS(CFLAG:LOCAL:移动节制), 2, LEFT}　
+	ELSEIF CFLAG:LOCAL:移动节制 < 0
+		PRINTFORM -{ABS(CFLAG:LOCAL:移动节制), 2, LEFT}　
+	ELSE
+		PRINTFORM  0 　
+	ENDIF
+	FOR MAPID, 0, MAXHOME
+		IF MAPID == GET_MAPID(CFLAG:LOCAL:自宅位置) && CFLAG:LOCAL:自宅位置 && CFLAG:LOCAL:自宅位置 != 99
+			PRINT ☆
+		ELSEIF MAPID == CFLAG:LOCAL:经常去的地方
+			PRINT ◎
+		ELSE
+			FOR LPCOUNT2, 1, 10
+				P_ID = MAPID * 100 + LPCOUNT2 * 10
+				;addition custom code, for custom charadata movement
+				CALL KOJO_CHECK(LOCAL , "CHARADATA", "MOVE", 7 , P_ID)
+				IF RESULT == -1 ;等于-1时,表明口上侧需要是结果为0
+					RESULT = 0
+					CALLFORM CHARAMOVE_DATA_{NO:LOCAL}(7, P_ID)
+				ELSEIF RESULT ;等于其他正值时，表明口上侧有自己的值
+				ELSE 
+					CALLFORM CHARAMOVE_DATA_{NO:LOCAL}(7, P_ID)
+				ENDIF 
+				IF RESULT
+					PRINT ○
+					BREAK
+				ELSEIF LPCOUNT2 == 9
+					PRINT －
+					BREAK
+				ENDIF
+			NEXT
+		ENDIF
+		PRINT 　
+	NEXT
+	PRINTFORM %NAME_FROM_PLACE(CFLAG:LOCAL:自宅位置)%
+	PRINTL 
+NEXT
+MAIN_MAP = メイン保管
+DRAWLINE
+PRINTL 是全角色的出现地域。选择除了发光什么都不会发生。也有根据条件而变化的角色。
+PRINTL 移率：在据点时的移动概率
+PRINTL 节度：在据点时对于隐私的考虑程度
+PRINTL ☆：自宅地域　◎：经常去的地域　○：会出现的地域　－：不会出现的地域
+PRINTL [  0] 返回
+INPUT

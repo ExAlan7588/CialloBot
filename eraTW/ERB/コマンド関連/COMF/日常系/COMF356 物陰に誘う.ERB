@@ -1,0 +1,91 @@
+﻿;-------------------------------------------------
+;邀请去阴暗处
+;日常系指令、レベル1
+;-------------------------------------------------
+@COM356
+;邀请去阴暗处
+;LOCAL:1 潜伏场所
+
+;口上处理による强制成功
+SIF TFLAG:192 == 1
+	GOTO SENPUKU
+;口上处理による强制失败
+SIF TFLAG:192 == -1
+	RETURN -1
+;无知でない场合、露出癖3以上(羞耻心で增减)必须
+IF !TALENT:无知 && ABL:露出癖 + TALENT:羞耻心 < 3
+	DRAWLINE
+	PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%似乎对在外面做的事情还很抵触
+	TFLAG:193 = -1
+	TFLAG:102 = 0
+	TIME += 5
+	RETURN 0
+
+ENDIF
+
+$SENPUKU
+CALL 潜伏场所决定处理
+
+
+IF TALENT:无知
+	DRAWLINE
+	PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%用花言巧语把什么都不知道的%NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%邀请进了%NAME_HIDING_PLACE()%……
+ELSE
+	DRAWLINE
+	PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%将满脸通红的%NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%邀请进了%NAME_HIDING_PLACE()%……
+ENDIF
+
+CFLAG:MASTER:诶嘿嘿 = 1
+CFLAG:TARGET:诶嘿嘿 = 1
+
+SETBIT CFLAG:TARGET:潜伏状态,0
+SETBIT FLAG:潜伏,0
+
+;开始时に潜伏率を100%に
+BASE:MASTER:潜伏率 = 100
+
+;经过时间表示用に开始时间を取っておく
+IF !UFUFU_START_TIME
+	UFUFU_START_TIME = TIME
+	UFUFU_START_DAY = DAY
+ENDIF
+
+
+;-------------------------------------------------
+;实行判定
+;-------------------------------------------------
+@COM_ABLE356
+SIF !TFLAG:100
+	RETURN 0
+;时间停止中は不可
+SIF FLAG:时间停止
+	RETURN 0
+;批量管理
+SIF GLOBAL_COMABLE(356)
+	RETURN RESULT
+;自室不可
+;21/06/25,注记どおり动作するよう变更しました
+;SIF CFLAG:MASTER:当前位置 == (CFLAG:MASTER:初始位置 || CFLAG:TARGET:初始位置)
+SIF GROUPMATCH(CFLAG:MASTER:当前位置, CFLAG:MASTER:初始位置, CFLAG:TARGET:初始位置)
+	RETURN 0
+SIF CFLAG:MASTER:当前位置 == OMANEKIBEYA()
+	RETURN 0
+SIF CFLAG:诶嘿嘿
+	RETURN 0
+SIF !(CFLAG:既成事实 & 合意_诶嘿嘿)
+	RETURN 0
+;睡眠中
+SIF CFLAG:睡眠 && !CFLAG:陪睡中
+	RETURN 0
+;潜伏モード中は不可
+SIF GETBIT(FLAG:潜伏,0)
+	RETURN 0
+;气力0
+SIF BASE:MASTER:气力 <= 0
+	RETURN 0
+;甲斐性无しにそんな度胸はない
+SIF FLAG:甲斐性无
+	RETURN 0
+SIF TARGET < 1
+	RETURN 0
+RETURN 1

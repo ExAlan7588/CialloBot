@@ -1,0 +1,137 @@
+﻿;-----------------------------------------------------------
+;远距离移动の设定
+;ARG     目的地
+;ARG:1   现在地
+;RETURN  次の目的地
+;-----------------------------------------------------------
+@SKIP_MOVE_5(ARG:0, ARG:1)
+#DIM 现在的位置
+;当前位置取得
+IF ARG:1
+	现在的位置 = ARG:1
+ELSE
+	现在的位置 = CFLAG:MASTER:当前位置
+ENDIF
+
+;目的地に直接移动できる场合そこに移动
+SIF CAN_MOVE(现在的位置, ARG) & 1
+	RETURN ARG
+
+;袋小路から行ける场所は固定なので、そこを目指す
+SELECTCASE 现在的位置
+	CASE P502香霖堂
+		RETURN P501魔法之森入口
+	CASE P506无缘冢
+		RETURN P509再思之道
+	CASE P521人偶洋馆・爱丽丝的房间, P522人偶洋馆・神绮的房间, P523人偶洋馆・梦子的房间, P524人偶洋馆・研究室, P526人偶洋馆・澡堂
+		RETURN P525人偶洋馆・客厅
+	CASE P528人偶洋馆・仓库, P531人偶洋馆・空的房间
+		RETURN P530人偶洋馆・二层
+	CASE P535艾伦宅・寝室, P536艾伦宅・仓库, P537艾伦宅・澡堂
+		RETURN P534轻飘飘的艾伦魔法商店
+	CASE P541朱鹭子的栖息处, P542莉格露的栖息处, P543露米亚的栖息处
+		RETURN P540古木的大树
+	CASE P545慧之子的栖息处
+		RETURN P508魔法之广场
+ENDSELECT
+
+;直接移动できない场合、1つ近い位置を暂定目的地に设定し直してループ
+;基本的に最短で行けるコースを设定する
+;现在地によってコースが变わることも考虑して对応する
+SELECTCASE ARG
+	CASE P501魔法之森入口
+		RETURN P503岔道
+	CASE P502香霖堂
+		RETURN P501魔法之森入口
+	CASE P503岔道
+		SELECTCASE 现在的位置
+		CASE P521人偶洋馆・爱丽丝的房间 TO P531人偶洋馆・空的房间
+			RETURN P520人偶洋馆前
+		CASE P535艾伦宅・寝室 TO P537艾伦宅・澡堂
+			RETURN P534轻飘飘的艾伦魔法商店
+		CASEELSE
+			RETURN P508魔法之广场
+		ENDSELECT
+	CASE P506无缘冢
+		RETURN P509再思之道
+	CASE P507菌菇群生地
+		SELECTCASE 现在的位置
+		CASE P520人偶洋馆前 TO P531人偶洋馆・空的房间
+			RETURN P540古木的大树
+		CASEELSE
+			RETURN P508魔法之广场
+		ENDSELECT
+	CASE P508魔法之广场
+		SELECTCASE 现在的位置
+		CASE P511魔理沙宅・起居室 TO P514魔理沙宅・澡堂
+			RETURN P510雾雨魔法店
+		CASEELSE
+			RETURN P503岔道
+		ENDSELECT
+	CASE P509再思之道
+		RETURN P508魔法之广场
+	CASE P510雾雨魔法店
+		SELECTCASE 现在的位置
+		CASE P512魔理沙宅・寝室 TO P515魔理沙宅・仓库
+			RETURN P511魔理沙宅・起居室
+		CASEELSE
+			RETURN P508魔法之广场
+		ENDSELECT
+	CASE P511魔理沙宅・起居室
+		SELECTCASE 现在的位置
+		CASE P506无缘冢 TO P509再思之道
+			RETURN P510雾雨魔法店
+		CASEELSE
+			RETURN P503岔道
+		ENDSELECT
+	CASE P512魔理沙宅・寝室 TO P514魔理沙宅・澡堂
+		RETURN P511魔理沙宅・起居室
+	CASE P515魔理沙宅・仓库
+		SELECTCASE 现在的位置
+		CASE P510雾雨魔法店 TO P514魔理沙宅・澡堂
+			RETURN P511魔理沙宅・起居室
+		CASEELSE
+			RETURN P503岔道
+		ENDSELECT
+	CASE P520人偶洋馆前
+		SELECTCASE 现在的位置
+		CASE P521人偶洋馆・爱丽丝的房间 TO P531人偶洋馆・空的房间
+			RETURN P525人偶洋馆・客厅
+		CASE P507菌菇群生地
+			RETURN P540古木的大树
+		CASEELSE
+			RETURN P503岔道
+		ENDSELECT
+	CASE P521人偶洋馆・爱丽丝的房间, P522人偶洋馆・神绮的房间, P523人偶洋馆・梦子的房间, P524人偶洋馆・研究室, P526人偶洋馆・澡堂
+		RETURN P525人偶洋馆・客厅
+	CASE P525人偶洋馆・客厅
+		RETURN P520人偶洋馆前
+	CASE P528人偶洋馆・仓库, P531人偶洋馆・空的房间
+		RETURN P530人偶洋馆・二层
+	CASE P529人偶洋馆・露台, P530人偶洋馆・二层
+		RETURN P525人偶洋馆・客厅
+	CASE P534轻飘飘的艾伦魔法商店
+		RETURN P503岔道
+	CASE P535艾伦宅・寝室, P536艾伦宅・仓库, P537艾伦宅・澡堂
+		RETURN P534轻飘飘的艾伦魔法商店
+	CASE P540古木的大树
+		SELECTCASE 现在的位置
+		CASE P506无缘冢 TO P509再思之道
+			RETURN P507菌菇群生地
+		CASE P521人偶洋馆・爱丽丝的房间 TO P531人偶洋馆・空的房间
+			RETURN P520人偶洋馆前
+		CASEELSE
+			RETURN P503岔道
+		ENDSELECT
+	CASE P541朱鹭子的栖息处, P542莉格露的栖息处, P543露米亚的栖息处
+		RETURN P540古木的大树
+	CASE P544成美的小屋
+		SELECTCASE 现在的位置
+		CASE P506无缘冢 TO P509再思之道, P510雾雨魔法店
+			RETURN P508魔法之广场
+		CASEELSE
+			RETURN P503岔道
+		ENDSELECT
+	CASE P545慧之子的栖息处
+		RETURN P508魔法之广场
+ENDSELECT

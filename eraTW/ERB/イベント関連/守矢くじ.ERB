@@ -1,0 +1,400 @@
+﻿;守矢神社谨制一番くじ、ついに贩卖开始です！
+;
+;ルール
+;1.くじは全部で300枚、引ききるか特赏を引くと箱が入れ替わる
+;2.最初に引くとき、もしくは箱の入れ替え时にどの顺番で何が出るかは确定している（シャッフル配列を専用のくじ配列にコピー）
+;3.くじの结果を确认したら引いたくじを废弃して前詰めする
+;4.特赏は1本、引いたらSETBIT FLAG:999, 3 で箱交换フラグを立てる
+;特赏の药がどちらなのかはFLAG:999の第４ビットで判定（判定后INVERTBITでフラグを入れ替える）
+;ユーザー变量がセーブ出来ないのでSAVESTRを一つ拝借してそこに结果を文字列で残しておく
+;(16/07/02)仕样变更によりユーザー变量のセーブが可能になったのでSAVESTRの利用を停止
+@FOTUNE_MORIYA
+#DIM RANK_FORTUNE
+#DIM お相手
+#DIM SKIP_FLAG
+#DIMS くじ枚数,300
+
+IF MATCH(MORIYA_BOX, 0) >= 2 && STRLENS(SAVESTR:9)
+	SPLIT SAVESTR:9, ",", くじ枚数
+	FOR LOCAL:0, 0, 300
+		MORIYA_BOX:(LOCAL:0) = TOINT(くじ枚数:(LOCAL:0))
+	NEXT
+	SAVESTR:9 = ""
+ENDIF
+
+;兔符「开运大纹」
+WHILE TFLAG:194 && MORIYA_BOX:0 >= 60
+	SETCOLOR COLOR ("YELLOW")
+	PRINTFORMW 兔符「开运大纹」发动！
+	RESETCOLOR
+	ARRAYSHIFT MORIYA_BOX, -1, -1
+	TFLAG:194 --
+WEND
+
+;博丽神签による幸运补正、结果が恶ければそれを消灭して引き直す
+DO
+	SKIP_FLAG = 0
+	SELECTCASE TFLAG:幸运补正
+		CASE IS <= 0
+		;たわし回避
+		CASE 1 TO 2
+			SIF MORIYA_BOX:0 >= 130
+					SKIP_FLAG = 1
+		;７等までを回避
+		CASE 3 TO 4
+			SIF MORIYA_BOX:0 >= 60
+					SKIP_FLAG = 1
+		;５等までを回避
+		CASE 5
+			SIF MORIYA_BOX:0 >= 25
+					SKIP_FLAG = 1
+		CASEELSE
+	ENDSELECT
+	IF SKIP_FLAG
+		ARRAYSHIFT MORIYA_BOX, -1, -1
+		PRINTFORML 比起博丽神社那抽的神签、也许可以抽出相当好的东西
+		TFLAG:幸运补正 --
+	ENDIF
+
+LOOP SKIP_FLAG
+
+;くじの结果は0～299。これを各赏に振り分けておく
+;内译 特赏:1本, １等:3本, ２等:5本, ３等:6本, ４等:10本, ５等:15本, ６等:20本, ７等:30本, ８等:40本, ９等(たわし):70本, 10等(スカ):100本
+;RANK_FORTUNEをMORIYA_BOX:0へ依存させないように(やろうと思えば既存のものを弄らず下に追加できるよ。RANK_FORTUNEが混乱するからやらないと思うけど)
+SELECTCASE MORIYA_BOX:0
+;特赏：奇数回目で那个ば体力、偶数回で那个ば气力が上がる丸药（最大值＋50）
+CASE 0
+	SETBIT FLAG:999, 3
+	RANK_FORTUNE = 0
+;１等：守矢神社の２柱＋风祝との约会チケット。各１枚
+CASE 1 TO 3
+	お相手 = MORIYA_BOX:0 + 30
+	RANK_FORTUNE = 1
+;２等：东风谷早苗样による幸福の奇迹（全员心情愉快＋自分のステータス恢复）
+CASE 4 TO 8
+	RANK_FORTUNE = 2
+;３等：MORIYAブートキャンプ招待券、わずか1时间で见违えるような效果が！
+CASE 9 TO 14
+	RANK_FORTUNE = 3
+;４等：乐しく吞もう、幻想乡吞み比べセット
+CASE 15 TO 24
+	RANK_FORTUNE = 4
+;５等：健康に兴味ない你に、元气ハツラツぅ～？セット
+CASE 25 TO 39
+	RANK_FORTUNE = 5
+;６等：これであの子とイイ仲に！？恋のハプニングセット
+CASE 40 TO 59
+	RANK_FORTUNE = 6
+;７等：实りの喜びを你に、野菜苗セット（野菜ができるとは言っていない）
+CASE 60 TO 89
+	RANK_FORTUNE = 7
+;８等：一度食べると止まらない、义理巧克力の王样のエントリーだ！
+CASE 90 TO 129
+	RANK_FORTUNE = 8
+;残念…９等：たわし、10个集めると金のたわしと交换です！
+CASE 130 TO 199
+	RANK_FORTUNE = 9
+;スカ：ハズレくじ、5枚集めるともう一度引けます
+CASE 200 TO 299
+	RANK_FORTUNE = 10
+CASEELSE
+	RANK_FORTUNE = 99
+ENDSELECT
+;引いたくじは废弃处分して前詰め、空いたところは-1で詰める
+ARRAYSHIFT MORIYA_BOX, -1, -1
+;SAVESTR:9 = {MORIYA_BOX:0}
+;FOR LOCAL:0, 1, 300
+;	SAVESTR:9 = %SAVESTR:9%,{MORIYA_BOX:(LOCAL:0)}
+;NEXT
+PRINTDATAW
+	DATAFORM 「那么、结果是…」
+	DATAFORM 「唔唔、这个是……」
+	DATAFORM 「啊ー…啊ー？啊ー、啊ー！」
+	DATAFORM 「那个、这是…」
+	DATAFORM 「这就是结果吗……」
+	DATAFORM 「会是什么呢、会是什么呢？」
+	DATAFORM 「哎呀呀、抽到这个了吗」
+	DATAFORM 「那个、这还真是…」
+	DATAFORM 「奇怪的文字呢…啊、上下拿反了」
+	DATAFORM 「呵～呵～、这还真是不得了…」
+	DATAFORM 「没想到会是这样～」
+	DATAFORM 「……？……！………！？」
+ENDDATA
+PRINTW 
+;结果处理。地の文まで书き込んでいます
+SELECTCASE RANK_FORTUNE
+;特赏：奇数回目で那个ば体力、偶数回で那个ば气力が上がる丸药（最大值＋50）
+CASE 0
+	PRINTW 虽然面有难色但还是急忙摆出了满脸笑容
+	PRINTL 「恭喜恭喜ー！中了特等奖呢！」
+	PRINTFORML 「请你收下作为特等奖的、\@GETBIT(FLAG:999, 4) ? 活力的丸药 # 生命的秘粉 \@」
+	PRINTL 「来、请放心饮用吧。啊、这里有水」
+	PRINTW 一将接过的药混着水一起喝下、便感到力量从体内不断地涌了上来……
+	IF GETBIT(FLAG:999, 4)
+		MAXBASE:MASTER:气力 += 50
+	ELSE
+		MAXBASE:MASTER:体力 += 50
+	ENDIF
+	PRINTFORML 当力量涌上来的感觉渐渐消失后、发觉自己的\@GETBIT(FLAG:999, 4) ? 气力 # 体力 \@上限稍微增加了
+	INVERTBIT FLAG:999, 4
+	
+	PRINTFORMW 「哦对了、差点忘记说了」
+	PRINTFORML 「因为这个箱子里已经开出了特等奖、所以希望你能允许我更换下一个签箱」
+	PRINTFORML 「如果不想换新的箱子的话可以先提出来」
+	PRINTFORMW 「不过、请注意换了新箱子后刚才的箱子就会被废弃掉了哦」
+;１等：守矢神社の２柱＋风祝との约会チケット。各１枚
+CASE 1
+	PRINTW 「这个是……」
+	IF CFLAG:お相手:出禁
+		PRINTFORML 「对不起、这是%NAME_OUTPUT_TRANSLATION("NAME", お相手)%的约会权、但是%NAME_OUTPUT_TRANSLATION("NAME", お相手)%现在不太方便、不能履行这个权力
+		PRINTFORML 「请从下面选择代替的奖品」
+		CALL ASK_M("返金",1,@"%NAME_OUTPUT_TRANSLATION("NAME", 31)%的约会权",!CFLAG:31:出禁,@"%NAME_OUTPUT_TRANSLATION("NAME", 32)%的约会权",!CFLAG:32:出禁,@"%NAME_OUTPUT_TRANSLATION("NAME", 33)%的约会权",!CFLAG:33:出禁,"不需要",1)
+		SELECTCASE RESULT
+			CASE 0
+				PRINTFORML 「那么请让我退钱」
+				PRINTFORML 「这次因为我们的不方便而给您添麻烦了」
+				MONEY += 3000
+				RETURN 0
+			CASE 1 TO 3
+				お相手 = RESULT + 30
+			CASE 4
+				PRINTFORML 「这样的话、我的良心过不去……！」
+				PRINTFORML 「至少请收下这个」
+				PRINTFORML 一扎落空的守札
+				ITEM:守矢之守札 += 50
+				RETURN 0
+		ENDSELECT
+	ELSEIF FLAG:约会的对象
+		PRINTFORMW 「祝贺你、１等奖的和%NAME_OUTPUT_TRANSLATION("NAME", お相手)%大人共处的机会！？」
+		PRINTFORML 「什么啊、突然!诶?我现在在约会、你不要大声说嘛」
+		PRINTFORML 「“还不是你、不该带着女孩子去抽这种可疑的签的!”」
+		PRINTFORML 我说过了很可疑吧。
+		PRINTFORMW 「总而言之、和%NAME_OUTPUT_TRANSLATION("NAME", お相手)%的约会权、恭喜你中奖啦」
+	ELSE
+		PRINTFORML 「祝贺您！您得到了１等的%NAME_OUTPUT_TRANSLATION("NAME", お相手)%大人的约会权！」
+	ENDIF	
+	FLAG:守矢约会权 = お相手
+	PRINTFORML 「那么、准备好了的话请跟我打招呼」
+	CALL COLORMESSAGE(@"如果不行使约会权、再次中奖、上次的权利就会消失哦 。",C_YELLOW,2)
+;２等：幸福の奇迹が幻想乡を包みます（全员心情愉快＋自分のステータス恢复）
+CASE 2
+	PRINTL 「恭喜你、２等奖是东风谷早苗大人所引发的幸福之奇迹的表演」
+	PRINTW 「一直以来总是傲的要命的女孩子或许今天会变的娇起来哦？」
+	FOR LOCAL:0, 1, CHARANUM
+		TALENT:(LOCAL:0):心情 = 1
+		BASE:(LOCAL:0):愤怒 = 0
+	NEXT
+	PRINTL 感觉情绪变得格外的平稳
+	PRINTL 「啊、虽然变得娇了不过要是做了过分的事情还是会被惹怒的、请注意哦」
+	PRINTL 奇迹看来也不是万能的呢
+	PRINTW 另外感觉自己的身体也变轻了呢
+	BASE:MASTER:体力 = MAXBASE:MASTER:体力
+	BASE:MASTER:气力 = MAXBASE:MASTER:气力
+	BASE:MASTER:精力 = MAXBASE:MASTER:精力
+	BASE:MASTER:TSP  = MAXBASE:MASTER:TSP
+	BASE:MASTER:酒气 = 0
+
+;３等：MORIYAブートキャンプ招待券、わずか1时间で见违えるような效果が！
+CASE 3
+	PRINTL 「恭喜获得３等奖？」
+	PRINTL 「３等奖是守矢新人训练营的优待券哦」
+	PRINTW 「刚好使用期限就在今天那么就从现在开始吧」
+	PRINTL 不了、接下来还有别的预定……
+	PRINTW 「你可没有拒绝的权力哦。来来、请往这边……」
+	PRINTL ………
+	PRINTL ……
+	PRINTL …
+	;会话经验、战斗经验、学习经验のうち最も低いものを底上げする
+	;なお讲师は会话／战斗／学习で早苗／神奈子／诹访子が担当
+	;……ケロちゃんのほうが战斗高くて神奈子と教养が同じのは秘密だよ
+	;あ、ついでに讲师にも経験を追加。教えるのもいい経験だし
+	IF EXP:MASTER:会话经验 < EXP:MASTER:战斗经验 &&  EXP:MASTER:会话经验 < EXP:MASTER:学习经验
+		PRINTW 通过早苗的演讲讲座掌握了会话的诀窍！
+		EXP:MASTER:会话经验 += 10
+		EXP:31:会话经验 += 5
+	ELSEIF EXP:MASTER:战斗经验 < EXP:MASTER:学习经验
+		PRINTL 通过神奈子的直接指导对战斗技术略窥门径了！
+		PRINTW 另外训练的疲劳也被治愈了
+		EXP:MASTER:战斗经验 += 10
+		EXP:32:战斗经验 += 5
+	ELSE
+		PRINTW 诹访子严谨的填鸭教育以后一定会派的上用场吧
+		EXP:MASTER:学习经验 += 10
+		EXP:33:学习经验 += 5
+	ENDIF
+	;那个だけ过酷な训练でもわずか一时间、MORIYAブートキャンプ、恐るべし……
+	TIME += 20
+
+;４等：乐しく吞もう、幻想乡吞み比べセット
+CASE 4
+	PRINTL 「中４等奖了呢」
+	PRINTL 「４等的奖品是幻想乡拼酒礼包」
+	PRINTL 「为你准备了神奈子大人秘藏的甜酒浊酒和清酒、还有鬼杀酒哦」
+	PRINTW 「请仔细品尝吧！」
+	ITEM:甜酒 = MIN(ITEM:甜酒 + 1, 99)
+	ITEM:浊酒 = MIN(ITEM:浊酒 + 1, 99)
+	ITEM:清酒 = MIN(ITEM:清酒 + 1, 99)
+	ITEM:鬼杀酒 = MIN(ITEM:鬼杀酒 + 1, 99)
+	PRINTW 「啊、拿不下的份可得还给神奈子大人、请放在这里吧」
+
+;５等：健康に兴味ない你に、元气ハツラツぅ～？セット
+CASE 5
+	PRINTL 「恭喜、是５等奖哦」
+	PRINTL 「为体力不足而烦恼的你、想变得精力充沛吗～？特为你送上这一礼包」
+	PRINTW 「精疲力竭的时候请用这个来熬过去吧」
+	PRINTL 里面是精力剂、大回复药、药水、姜黄饮料5份
+	PRINTL 还有青汁颗粒10杯份（守矢的美味水2L瓶装）、运动饮料10份
+	PRINTW 虽然光是拿着这些走路就已经挺累的说……
+	ITEM:精力剂 = MIN(ITEM:精力剂 + 1, 99)
+	ITEM:大恢复药 = MIN(ITEM:大恢复药 + 1, 99)
+	ITEM:药水 = MIN(ITEM:药水 + 1, 99)
+	ITEM:姜黄饮料 = MIN(ITEM:姜黄饮料 + 5, 99)
+	ITEM:青汁 = MIN(ITEM:青汁 + 10, 99)
+	ITEM:运动饮料 = MIN(ITEM:运动饮料 + 10, 99)
+	PRINTW 「啊、拿不下的份还请做为对守矢神社的赠品来归还」
+
+;６等：これであの子とイイ仲に！？恋のハプニングセット
+CASE 6
+	PRINTL 「是６等奖呢」
+	PRINTL 「奖品是…恋之惊喜礼包、呢」
+	PRINTW 红着脸送出了奖品。
+	ITEM:润滑液 = MIN(ITEM:润滑液 + 1, 99)
+	ITEM:媚药 = MIN(ITEM:媚药 + 1, 99)
+	ITEM:催情药 = MIN(ITEM:催情药 + 1, 99)
+	ITEM:避孕套 = MIN(ITEM:避孕套 + 1, 99)
+	ITEM:口服避孕药 = MIN(ITEM:口服避孕药 + 1, 99)
+
+;７等：实りの喜びを你に、野菜苗セット（野菜ができるとは言っていない）
+CASE 7
+	PRINTL 「是７等奖」
+	PRINTL 「奖品是蔬菜苗礼包」
+	PRINTL 「请努力地以丰收为目标吧」
+	PRINTW 「顺便一提、我们守矢神社也受理进行丰收祈愿的业务哦」
+	FOR LOCAL, 0, 1000
+		SIF STRCOUNT(ITEMNAME:LOCAL, "苗")
+			ITEM:LOCAL = MIN(ITEM:LOCAL + 1, 99)
+	NEXT
+	PRINTW 「啊、拿不下的份还请做为对守矢神社的赠品来归还哦」
+
+;８等：一度食べると止まらない、义理巧克力の王样のエントリーだ！
+CASE 8
+	PRINTL 「是８等奖」
+	PRINTL 「奖品是吃过一次就停不下来的、作为义理巧克力代名词的标识性品牌哦！」
+	PRINTL 「总而言之请收下吧」
+	PRINTW 听完后得到了一个巧克力点心盒
+	ITEM:黑雷神巧克力 = MIN(ITEM:黑雷神巧克力 + 20, 99)
+
+;残念…９等：たわし、10个集めると金のたわしと交换です！
+CASE 9
+	PRINTL 「这个是特别奖呢」
+	PRINTL 「特别奖就是刷帚」
+	PRINTL 「这个刷帚、并不是普通的刷帚哦」
+	PRINTW 「收集10个前来奉纳的话、就能从我们这换到一个金刷帚哦」
+	FLAG:999 += 1 << 5
+	
+	IF (FLAG:999 >> 5 & 15) == 10
+		PRINTL 「恭喜你、因为收集了10个刷帚所以能够交换金刷帚了哦」
+		PRINTL 得到了金刷帚！
+		PRINTFORMW 感觉\@GETBIT(FLAG:999, 9)? 扫除 # 料理 \@稍微变好了一点
+		IF GETBIT(FLAG:999, 9)
+			EXP:MASTER:清扫经验 += 1
+		ELSE
+			EXP:MASTER:料理经验 += 1
+		ENDIF
+		;金のたわしの效果を变换、たわし收集个数をリセット
+		;15(0b1111)を5ビットシフトし、ビット反转したもの(0b000011111)をFLAG:999とビットごとの论理和させています、多分
+		INVERTBIT FLAG:999, 9
+		FLAG:999 &= ~(15 << 5)
+	ELSE
+		PRINTFORMW 「现在共收集了{(FLAG:999 >> 5) & 15}个刷帚、请以金刷帚为目标而努力吧」
+	ENDIF
+;スカ：守矢之守札（落空了くじ）、5枚でもう一回引けるドン
+CASE 10
+	PRINTW 满脸笑容把签递了过来
+	PRINTW ……
+	PRINTW …
+	PRINTL ┌─────────────┐
+	PRINTL ｜　　　　　　　　　　　　　｜
+	PRINTL ｜　　守矢之守札　　　　　　｜
+	PRINTL ｜　　　　　　　　　　　　　｜
+	PRINTL ｜　　    积攒五枚　　　　　｜
+	PRINTL ｜　　　      额外赠送一回　｜
+	PRINTL ｜　　　　　　　　　　　　　｜
+	PRINTL ｜　            不保证利益　｜
+	PRINTL ｜　　　　　　　　　　　　　｜
+	PRINTL ｜　　　　　　　　守矢神社　｜
+	PRINTL └─────────────┘
+	PRINTW 虽然说得拐弯抹角、但这不就是落空了么？
+	PRINTFORMW 「下次一定会抽到更好的、加油%UNICODE(0x2665)%加油%UNICODE(0x2665)%」
+	ITEM:守矢之守札 ++
+
+CASEELSE
+	PRINTFORML 「哎呀、好奇怪呢」
+	PRINTFORML 看着神签的内容歪了歪脑袋
+	PRINTFORMW 「明明神签上不应该写着这些东西啊」
+	PRINTFORML 「真没办法、这次就当没抽过把代金退给你吧」
+	PRINTFORMW 好像是把无关的神签给混进去了呢
+	MONEY += 3000
+ENDSELECT
+RETURN 0
+
+@守矢神签约会的对象のリセット()
+;守矢神签の约会のときに该当角色の起床时间etcを元に戻す
+IF FLAG:守矢神签约会的对象
+	CFLAG:(FLAG:守矢神签约会的对象):来访时间 = CSVCFLAG(FLAG:守矢神签约会的对象,352)
+	CFLAG:(FLAG:守矢神签约会的对象):回家时间 = CSVCFLAG(FLAG:守矢神签约会的对象,353)
+	CFLAG:(FLAG:守矢神签约会的对象):就寝时间 = CSVCFLAG(FLAG:守矢神签约会的对象,354)
+	CFLAG:(FLAG:守矢神签约会的对象):起床时间 = CSVCFLAG(FLAG:守矢神签约会的对象,355)
+	FLAG:守矢神签约会的对象 = 0
+ENDIF
+
+
+@DATE_RIGHT
+#DIM お相手
+お相手 = FLAG:守矢约会权
+FLAG:守矢约会权 = 0
+PRINTL 「请稍等一下！」传来打招呼的声音
+IF CFLAG:お相手:睡眠 || CFLAG:お相手:衰弱
+	PRINTFORML 「诶？困吗？累了吗？」
+	PRINTFORML 「请稍等、我马上就回来」
+	PRINTFORMW 小跑往里面跑去了
+	PRINTFORMW ……
+	PRINTFORMW 这么模糊不清、这样也是神吗、这种工作谁做都一样、这里根本就不是信仰是挣钱、听到过这样的说法……
+	PRINTFORMW ……
+	PRINTFORMW 回来了
+	PRINTFORMW 「啊、让您久等了」
+	CFLAG:お相手:睡眠 = 0
+	CFLAG:お相手:衰弱 = 0
+	BASE:お相手:体力 = MAXBASE:お相手:体力 / 2
+	TALENT:お相手:心情 = -1
+ENDIF
+IF GET_MAPID(CFLAG:MASTER:当前位置) == MAIN_MAP
+	FOR LOCAL,1,CHARANUM
+		SIF !CFLAG:LOCAL:同行
+			CONTINUE
+		CFLAG:LOCAL:同行 = 0
+		SIF MATCH(LOCAL,31,32,33)
+			CALL 守矢神签约会的对象のリセット()
+	NEXT
+ENDIF
+CFLAG:お相手:当前位置 = CFLAG:MASTER:当前位置
+;お相手の角色の同行(MASTERも)，当前位置，约会中のCFLAGをセット
+IF GET_MAPID(CFLAG:MASTER:当前位置) != MAIN_MAP
+	CFLAG:MASTER:同行 = 60
+	CFLAG:お相手:同行 = 60
+	CFLAG:お相手:约会中 = CFLAG:MASTER:当前位置 / 100
+	FLAG:约会的对象 = お相手
+	;守矢神签约会的对象に约会の相手を格纳
+	FLAG:守矢神签约会的对象 = FLAG:约会的对象
+	CFLAG:(FLAG:约会的对象):来访时间 = 0
+	CFLAG:(FLAG:约会的对象):回家时间 = 0
+	CFLAG:(FLAG:约会的对象):就寝时间 = 0
+	CFLAG:(FLAG:约会的对象):起床时间 = 0
+;メインMap时は最大三时间まで
+ELSE
+	CFLAG:MASTER:同行 = 180
+	CFLAG:お相手:同行 = 180
+	FLAG:守矢神签约会的对象 = お相手
+ENDIF
+SIF !CFLAG:(お相手):认识
+	CALL KOJO_MESSAGE_SEND("ENCOUNTER",MASTER,FLAG:守矢神签约会的对象,1,0)

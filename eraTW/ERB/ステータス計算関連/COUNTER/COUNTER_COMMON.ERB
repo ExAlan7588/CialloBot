@@ -1,0 +1,199 @@
+﻿;*****************************************************
+;指定した指令が今回使われていたかを取得する函数
+;使われていた场合は使用した角色の番号を返す
+;*****************************************************
+@FIND_SELECTCCOM(ARG)
+#FUNCTION
+FOR LOCAL, 0, 最大被逆推人数 - 1
+	SIF SELECTCCOM:LOCAL:1 == ARG
+		RETURNF SELECTCCOM:LOCAL:0
+NEXT
+RETURNF 0
+
+;*****************************************************
+;指定した角色(番号)が今回行动したかを取得する函数
+;行动していた场合はその角色の行ったCounter指令番号を返す
+;*****************************************************
+@FIND_SELECTCCOM_CHARA(ARG)
+#FUNCTION
+FOR LOCAL, 0, 最大被逆推人数 - 1
+	SIF SELECTCCOM:LOCAL:0 == ARG
+		RETURNF SELECTCCOM:LOCAL:1
+NEXT
+RETURNF 0
+
+;*****************************************************
+;指定した指令が前回使われていたかを取得する函数
+;使われていた场合は使用した角色の番号を返す
+;*****************************************************
+@FIND_PREVCCOM(ARG)
+#FUNCTION
+FOR LOCAL, 0, 最大被逆推人数 - 1
+	SIF PREVCCOM:LOCAL:1 == ARG
+		RETURNF PREVCCOM:LOCAL:0
+NEXT
+RETURNF 0
+
+;*****************************************************
+;指定した角色(番号)が前回行动したかを取得する函数
+;行动していた场合はその角色の行ったCounter指令番号を返す
+;*****************************************************
+@FIND_PREVCCOM_CHARA(ARG)
+#FUNCTION
+FOR LOCAL, 0, 最大被逆推人数 - 1
+	SIF PREVCCOM:LOCAL:0 == ARG
+		RETURNF PREVCCOM:LOCAL:1
+NEXT
+RETURNF 0
+
+;************************************************************
+;Counter时六九式移行共通处理
+;参数1 对象の角色番号 2 六九式移行への概率
+;************************************************************
+@EVENT_COUNTER_POSE_69(ARG,ARG:2)
+IF ARG:2 == 0
+	TEQUIP:ARG:六九式 = 0
+	RETURN 0
+ENDIF
+IF TEQUIP:ARG:六九式
+	TFLAG:60 ++
+	RETURN 0
+ENDIF
+SIF TFLAG:60
+	RETURN 0
+IF RAND:(ARG:2) == 1
+	TEQUIP:ARG:六九式 = 1
+	TCVAR:ARG:27 = 1
+ENDIF
+
+;**************************************************************************
+;Counter中の插入继续共通处理
+;ARG = 角色番号
+;**************************************************************************
+@Counter插入继续处理(ARG)
+;你にＶ插入中で、今回のCounter指令がＶ插入系以外の场合
+IF TEQUIP:PLAYER:50 == ARG && !GROUPMATCH(TCVAR:ARG:20, 80, 83, 84, 85) && CFLAG:ARG:诶嘿嘿 == 2
+	CALL TOUCH_SET(SET_FROM_P,SET_V,ARG)
+	SOURCE:ARG:性行动 += 150
+	SOURCE:ARG:征服 += 400
+	SOURCE:PLAYER:液体 += 100
+	SOURCE:ARG:施虐 += 250
+	SOURCE:ARG:强迫 += 400
+	SOURCE:PLAYER:快Ｖ += 500
+	CALL PAIN_CHECK_V_MASTER(ARG)
+	LOCALS = {ARG}/
+	CSTR:PLAYER:10 += LOCALS
+	TCVAR:PLAYER:2 = 13
+	TCVAR:PLAYER:4 += 75
+	LOCALS = {PLAYER}/
+	CSTR:ARG:10 += LOCALS
+	TCVAR:ARG:2 = 1
+	TCVAR:ARG:4 += 500
+	STAIN:ARG:2 |= STAIN:PLAYER:6
+	STAIN:PLAYER:6 |= STAIN:ARG:2
+	EXP:PLAYER:Ｖ性交经验 ++
+	TCVAR:ARG:嗜虐フラグ = 1
+ENDIF
+
+;你にＡ插入中で、今回のCounter指令が逆Ａ系以外の场合
+IF TEQUIP:PLAYER:51 == ARG && !GROUPMATCH(TCVAR:ARG:20, 90, 93, 94) && CFLAG:ARG:诶嘿嘿 == 2
+	CALL TOUCH_SET(SET_FROM_P,SET_A,ARG)
+	SOURCE:ARG:性行动 += 150
+	SOURCE:ARG:征服 += 400
+	SOURCE:PLAYER:液体 += 100
+	SOURCE:ARG:施虐 += 400
+	SOURCE:ARG:强迫 += 400
+	SOURCE:PLAYER:快Ａ += 500
+	CALL PAIN_CHECK_A_MASTER(ARG)
+	LOCALS = {ARG}/
+	CSTR:PLAYER:10 += LOCALS
+	TCVAR:PLAYER:2 = 12
+	TCVAR:PLAYER:4 += 125
+	LOCALS = {PLAYER}/
+	CSTR:ARG:10 += LOCALS
+	TCVAR:ARG:2 = 2
+	TCVAR:ARG:4 += 400
+	STAIN:ARG:2 |= STAIN:PLAYER:6
+	STAIN:PLAYER:6 |= STAIN:ARG:2
+	EXP:PLAYER:Ａ性交经验 ++
+	TCVAR:ARG:嗜虐フラグ = 1
+ENDIF
+RETURN 1
+
+;**************************************************************************
+;射精对象登录共通处理
+;ARG = 射精する角色
+;ARG:1 = 射精される角色
+;ARG:2 = 射精部位（1=膣内 2=肛门 3=手淫 4=口淫 5=乳交 6=素股 7=足交 8=体表 9=肛门侍奉 10=道具 11=触手 12=Ａ调教 13=Ｖ调教）
+;**************************************************************************
+@射精对象登录(ARG, ARG:1, ARG:2)
+SIF !(SAMEN_DIRECTION(ARG,ARG:1))
+	CSTR:ARG:10 += @"{ARG:1}/"
+TCVAR:ARG:2 = ARG:2
+RETURN 1
+
+;***************************************************************************
+;插入され继续中マ斯塔Counter共通制御
+;ARG =  角色番号
+;***************************************************************************
+@Counter插入され继续中处理(ARG)
+;TCVAR:26 マ斯塔Counter制御 
+;(ビット 0=摸屁股不可 1=拥抱 2=接吻 3=胸爱抚 4=肛门爱抚 5=阴蒂爱抚 6=指插入れ 7=掀裙子)
+
+;你にＶまたはＡ插入中で、今回のCounter指令が逆Ａ系以外の场合
+IF (TEQUIP:PLAYER:50 == ARG || TEQUIP:PLAYER:51 == ARG) && !GROUPMATCH(TCVAR:ARG:20, 90, 93)
+	IF TEQUIP:MASTER:体位 == 2
+		SETBIT TCVAR:ARG:26 ,0
+		SETBIT TCVAR:ARG:26 ,1
+		SETBIT TCVAR:ARG:26 ,2
+		SETBIT TCVAR:ARG:26 ,3
+	ENDIF
+	SETBIT TCVAR:ARG:26 ,4
+	SETBIT TCVAR:ARG:26 ,5
+	SETBIT TCVAR:ARG:26 ,6
+	SETBIT TCVAR:ARG:26 ,7
+ENDIF
+
+;***************************************************************************
+;Counter脱衣插入时共通制御
+;ARG =  角色番号
+;***************************************************************************
+@DATUI_FOR_INSERT(ARG)
+IF BEDROOM(CFLAG:MASTER:当前位置)
+	SIF TEQUIP:ARG:0
+		CALL DATUI_BOTTOM_T(ARG,0)
+ELSE
+	SIF TEQUIP:ARG:0 & 14
+		CALL DATUI_BOTTOM_T(ARG,1)
+ENDIF
+
+;***************************************************************************
+;胸弄り解除共通制御
+;ARG =  角色番号
+;***************************************************************************
+@胸弄り解除处理(ARG)
+;なんでもかんでも性交してたらリセットしてるので条件を变更
+;揉胸ながら插入とか普通にするし…
+IF (TEQUIP:MASTER:Ｖ性交 >= 0 || TEQUIP:MASTER:Ａ性交 >= 0)
+	;IF TEQUIP:ARG:揉胸
+	;	TEQUIP:ARG:揉胸 = 0
+	;	PRINTL ＜揉胸解除＞
+	;ENDIF
+	IF TEQUIP:ARG:吸乳头 && (TEQUIP:ARG:体位 == 2 || TEQUIP:ARG:体位 == 5)
+		TEQUIP:ARG:吸乳头 = 0
+		PRINTL ＜吸乳头解除＞
+	ENDIF
+ENDIF
+
+;***************************************************************************
+;位置关系确认共通函数
+;ARG =  位置关系
+;***************************************************************************
+@POSITION_OCCUPATION(ARG)
+#FUNCTION
+FOR LOCAL, 1, GET_TARGETNUM() + 1
+	SIF TARGET:LOCAL <= 0
+		CONTINUE
+	SIF TCVAR:(TARGET:LOCAL):位置关系 == ARG
+		RETURNF 1
+NEXT

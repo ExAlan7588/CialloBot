@@ -1,0 +1,1418 @@
+﻿;依赖关联の泛用函数を置いておく
+
+;----------------------------------------------------------------------------------------------------
+;依赖情报全般の情报取得
+;----------------------------------------------------------------------------------------------------
+@INT_DATA_IRAI(IRAI_ID, TYPE, CHARA)
+#FUNCTION
+#DIM  IRAI_ID
+#DIMS TYPE
+#DIM  CHARA
+;一般依赖
+SIF IS_COMMON_IRAI(IRAI_ID)
+	RETURNF GET_INT(CHARA, "一般依赖", IRAI_ID % 1000, TYPE)
+;固有依赖
+RETURNF GET_INT(IRAI_ID, "キャラデータ", CHARA, TYPE)
+
+@STR_DATA_IRAI(IRAI_ID, TYPE, CHARA)
+#FUNCTIONS
+#DIM  IRAI_ID
+#DIMS TYPE
+#DIM  CHARA
+;一般依赖
+SIF IS_COMMON_IRAI(IRAI_ID)
+	RETURNF GET_STR(CHARA, "一般依赖", IRAI_ID % 1000, TYPE)
+;固有依赖
+RETURNF GET_STR(IRAI_ID, "キャラデータ", CHARA, TYPE)
+
+
+
+;----------------------------------------------------------------------------------------------------
+;固有依赖に关するキャラデータ取得
+;直接使用するのではなく@INT/STR_DATA_IRAIを使用こと
+;----------------------------------------------------------------------------------------------------
+@INT_UNIQUE_IRAI(CHARA, TYPE, IRAI_ID)
+#FUNCTION
+#DIM  CHARA
+#DIMS TYPE
+#DIM  IRAI_ID
+RETURNF GET_INT(IRAI_ID, "キャラデータ", CHARA, TYPE)
+
+@STR_UNIQUE_IRAI(CHARA, TYPE, IRAI_ID)
+#FUNCTIONS
+#DIM  CHARA
+#DIMS TYPE
+#DIM  IRAI_ID
+RETURNF GET_STR(IRAI_ID, "キャラデータ", CHARA, TYPE)
+
+
+
+;----------------------------------------------------------------------------------------------------
+;一般依赖情报取得
+;直接使用するのではなく@INT/STR_DATA_IRAIを使用こと
+;----------------------------------------------------------------------------------------------------
+@INT_COMMON_IRAI(CHARA, TYPE, IRAI_ID)
+#FUNCTION
+#DIM  CHARA
+#DIMS TYPE
+#DIM  IRAI_ID
+RETURNF GET_INT(CHARA, "一般依赖", IRAI_ID, TYPE)
+
+@STR_COMMON_IRAI(CHARA, TYPE, IRAI_ID)
+#FUNCTIONS
+#DIM  CHARA
+#DIMS TYPE
+#DIM  IRAI_ID
+RETURNF GET_STR(CHARA, "一般依赖", IRAI_ID, TYPE)
+
+
+
+;----------------------------------------------------------------------------------------------------
+;依赖实行时の指令表示用
+;----------------------------------------------------------------------------------------------------
+@NAME_IRAI_ACT()
+#FUNCTIONS
+#DIM CHK_SLOT
+CHK_SLOT = SEARCH_ACTIVE_IRAI_SLOT()
+RETURNF IRAI_SLOT_TO_ACTNAME(CHK_SLOT)
+
+;----------------------------------------------------------------------------------------------------
+;依赖实行时の指令表示用、SLOT指定でいけるように
+;----------------------------------------------------------------------------------------------------
+@IRAI_SLOT_TO_ACTNAME(CHK_SLOT)
+#FUNCTIONS
+#DIM CHK_SLOT
+RETURNF STR_DATA_IRAI(IRAI_SLOT:CHK_SLOT, "依赖实行指令名", IRAI_SLOT_TO_CLIENT(CHK_SLOT))
+
+
+
+;----------------------------------------------------------------------------------------------------
+;依赖发生时の依赖ID设定用
+;----------------------------------------------------------------------------------------------------
+@MAKE_IRAI_ID(CHARA, ID)
+#FUNCTION
+#DIM CHARA
+#DIM ID
+RETURNF CHARA * 1000 + ID
+
+
+
+;----------------------------------------------------------------------------------------------------
+;依赖发生时の依赖データ设定用
+;----------------------------------------------------------------------------------------------------
+@MAKE_IRAI_DATA(SUB_ID, TASK)
+#FUNCTION
+#DIM  SUB_ID
+#DIMS TASK
+RETURNF SUB_ID * 1000 + IRAI_TASK_TO_DATA(TASK)
+
+
+
+;----------------------------------------------------------------------------------------------------
+;依赖が一般依赖か、固有依赖か
+;----------------------------------------------------------------------------------------------------
+@IS_COMMON_IRAI(IRAI_ID)
+#FUNCTION
+#DIM IRAI_ID
+SIF INRANGE(IRAI_ID % 1000, 1, 99)
+	RETURNF 1
+RETURNF 0
+
+
+
+;----------------------------------------------------------------------------------------------------
+;空のスロット探し
+;----------------------------------------------------------------------------------------------------
+@SEARCH_IRAI_EMPTY()
+#FUNCTION
+RETURNF SEARCH_IRAI_SLOT(0)
+
+
+
+;----------------------------------------------------------------------------------------------------
+;何番スロットで依赖IDを受けてるか
+;----------------------------------------------------------------------------------------------------
+@SEARCH_IRAI_SLOT(IRAI_ID)
+#FUNCTION
+#DIM IRAI_ID
+RETURNF MAX(0, FINDELEMENT(IRAI_SLOT, IRAI_ID, 1))
+
+
+
+;----------------------------------------------------------------------------------------------------
+;受注中の依赖数
+;----------------------------------------------------------------------------------------------------
+@COUNT_IRAI_SLOT()
+#FUNCTION
+LOCAL = SEARCH_IRAI_EMPTY()
+SIF !LOCAL
+	RETURNF 9
+RETURNF LOCAL - 1
+
+
+;----------------------------------------------------------------------------------------------------
+;遭遇用の依赖受托可否判定
+;苦し纷れで强行解决
+;通常の366指令と挙动を变えたくないのでCALL COM_ABLE366
+;CALLするのでFUNCTIONにはできない
+;TFLAG:100が原因でRESULTが0になっていたのでTFLAGを一时退避して判定させた
+;----------------------------------------------------------------------------------------------------
+@CAN_IRAI_START
+#DIM PREV_TFLAG
+PREV_TFLAG = TFLAG:100
+TFLAG:100 = 1
+CALL COM_ABLE366
+TFLAG:100 = PREV_TFLAG
+RETURN RESULT
+
+
+
+;----------------------------------------------------------------------------------------------------
+;依赖ID→依赖者
+;----------------------------------------------------------------------------------------------------
+@IRAI_ID_TO_CLIENT(IRAI_ID)
+#FUNCTION
+#DIM IRAI_ID
+RETURNF IRAI_ID / 1000
+
+
+
+;----------------------------------------------------------------------------------------------------
+;依赖SLOT→依赖者
+;----------------------------------------------------------------------------------------------------
+@IRAI_SLOT_TO_CLIENT(CHK_SLOT)
+#FUNCTION
+#DIM CHK_SLOT
+RETURNF IRAI_ID_TO_CLIENT(IRAI_SLOT:CHK_SLOT)
+
+
+
+;----------------------------------------------------------------------------------------------------
+;依赖SLOT→要求物品
+;----------------------------------------------------------------------------------------------------
+@IRAI_SLOT_TO_ITEM(CHK_SLOT)
+#FUNCTION
+#DIM IRAI_ID
+#DIM CHK_SLOT
+SIF IRAI_SLOT_TO_TASKNAME(CHK_SLOT) == "调达"
+	RETURNF IRAI_DATA:CHK_SLOT / 1000
+
+
+
+;----------------------------------------------------------------------------------------------------
+;依赖SLOT→要求人物
+;----------------------------------------------------------------------------------------------------
+@IRAI_SLOT_TO_PERSON(CHK_SLOT)
+#FUNCTION
+#DIM CHK_SLOT
+SIF GROUPMATCH(IRAI_SLOT_TO_TASKNAME(CHK_SLOT), "传令（人物）", "捜索（人物）", "讨伐")
+	RETURNF IRAI_DATA:CHK_SLOT / 1000
+
+
+
+;----------------------------------------------------------------------------------------------------
+;依赖SLOT→目的地
+;----------------------------------------------------------------------------------------------------
+@IRAI_SLOT_TO_PLACE(CHK_SLOT)
+#FUNCTION
+#DIM CHK_SLOT
+SIF GROUPMATCH(IRAI_SLOT_TO_TASKNAME(CHK_SLOT), "传令（场所）", "捜索（场所）")
+	RETURNF IRAI_DATA:CHK_SLOT / 1000
+
+
+
+;----------------------------------------------------------------------------------------------------
+;ある角色が依赖で连れ出せるかどうか
+;----------------------------------------------------------------------------------------------------
+@CAN_IRAI_CHARA_GO_TOGATHER(CHARA)
+#FUNCTION
+#DIM CHARA
+#DIM IRAI_NUM
+#DIM CHK_SLOT
+IRAI_NUM = COUNT_IRAI_SLOT()
+FOR CHK_SLOT, 1, IRAI_NUM + 1
+	SIF CAN_IRAI_SLOT_GO_TOGATHER(CHARA, CHK_SLOT)
+		RETURNF 1
+NEXT
+RETURNF 0
+
+
+;----------------------------------------------------------------------------------------------------
+;ある角色が依赖で连れ出せるかどうか
+;个々の委托接口の判定
+;----------------------------------------------------------------------------------------------------
+@CAN_IRAI_SLOT_GO_TOGATHER(CHARA, CHK_SLOT)
+#FUNCTION
+#DIM CHARA
+#DIM CHK_SLOT
+#DIM CLIENT_ID
+CLIENT_ID = IRAI_SLOT_TO_CLIENT(CHK_SLOT)
+SIF IRAI_CHARA_TO_PROGRESS(CLIENT_ID) != "依赖中"
+	RETURNF 0
+SIF CHARA == CLIENT_ID && INT_DATA_IRAI(IRAI_SLOT:CHK_SLOT, "依赖人连れ出し可能", CLIENT_ID)
+	RETURNF 1
+SIF CHARA == INT_DATA_IRAI(IRAI_SLOT:CHK_SLOT, "依赖连れ出し对象", CLIENT_ID)
+	RETURNF 1
+RETURNF 0
+
+
+
+;----------------------------------------------------------------------------------------------------
+;[697]访问房间　指令の机能扩张
+;----------------------------------------------------------------------------------------------------
+;CHARAがCHK_SLOTの依赖者として报告对象になるか
+;----------------------------------------------------------------------------------------------------
+@CAN_IRAI_VISIT_HOME_CLIENT(CHARA, CHK_SLOT)
+#FUNCTION
+#DIM CHARA
+#DIM CHK_SLOT
+#DIM CLIENT_ID
+CLIENT_ID = IRAI_SLOT_TO_CLIENT(CHK_SLOT)
+SIF CHARA != CLIENT_ID
+	RETURNF 0
+SIF !GROUPMATCH(IRAI_CHARA_TO_PROGRESS(CLIENT_ID), "依赖达成", "期限切れ", "报告忘れ", "依赖失败")
+	RETURNF 0
+RETURNF 1
+
+;----------------------------------------------------------------------------------------------------
+;CHARAがCHK_SLOTの对象者として实行对象になるか
+;----------------------------------------------------------------------------------------------------
+@CAN_IRAI_VISIT_HOME_PERSON(CHARA, CHK_SLOT)
+#FUNCTION
+#DIM CHARA
+#DIM CHK_SLOT
+SIF !CAN_IRAI_SLOT_DO(CHK_SLOT)
+	RETURNF 0
+SIF IRAI_SLOT_TO_PERSON(CHK_SLOT) != CHARA
+	RETURNF 0
+SIF IRAI_SLOT_TO_TASKNAME(CHK_SLOT) == "讨伐"
+	RETURNF 0
+RETURNF 1
+
+
+
+;----------------------------------------------------------------------------------------------------
+;现在实行可能な委托接口を返す
+;----------------------------------------------------------------------------------------------------
+@SEARCH_ACTIVE_IRAI_SLOT()
+#FUNCTION
+#DIM IRAI_NUM
+#DIM CHK_SLOT
+#DIM CLIENT_ID
+IRAI_NUM = COUNT_IRAI_SLOT()
+FOR CHK_SLOT, 1, IRAI_NUM + 1
+	SIF CAN_IRAI_SLOT_DO(CHK_SLOT)
+		RETURNF CHK_SLOT
+NEXT
+
+
+
+;----------------------------------------------------------------------------------------------------
+;各委托接口の实行可否判定
+;----------------------------------------------------------------------------------------------------
+@CAN_IRAI_SLOT_DO(CHK_SLOT)
+#FUNCTION
+#DIM CHK_SLOT
+#DIM CLIENT_ID
+CLIENT_ID = IRAI_SLOT_TO_CLIENT(CHK_SLOT)
+SIF IRAI_CHARA_TO_PROGRESS(CLIENT_ID) != "依赖中"
+	RETURNF 0
+SELECTCASE IRAI_SLOT_TO_TASKNAME(CHK_SLOT)
+CASE "作业"
+	SIF !TARGET
+		RETURNF 0
+	SIF TARGET != CLIENT_ID
+		RETURNF 0
+	SIF SHIRAHU(TARGET) != 1
+		RETURNF 0
+CASE "传令（人物）", "捜索（人物）", "讨伐"
+	SIF !TARGET
+		RETURNF 0
+	SIF TARGET != IRAI_SLOT_TO_PERSON(CHK_SLOT)
+		RETURNF 0
+	;时间停止/睡眠/添い寝/诶嘿嘿中は不可
+	SIF SHIRAHU(TARGET) != 1
+		RETURNF 0
+CASE "传令（场所）", "捜索（场所）"
+	;场所一致
+	SIF CFLAG:MASTER:当前位置 != GET_MAP_REPLACEMENT(IRAI_SLOT_TO_PLACE(CHK_SLOT))
+		RETURNF 0
+CASE "调达"
+	SIF !TARGET
+		RETURNF 0
+	SIF TARGET != CLIENT_ID
+		RETURNF 0
+	SIF SHIRAHU(TARGET) != 1
+		RETURNF 0
+	SIF ITEM:IRAI_SLOT_TO_ITEM(CHK_SLOT) < IRAI_SUB:CHK_SLOT
+		RETURNF 0
+ENDSELECT
+SIF !INT_DATA_IRAI(IRAI_SLOT:CHK_SLOT, "依赖实行可能条件", CLIENT_ID)
+	RETURNF 0
+RETURNF 1
+
+
+
+;----------------------------------------------------------------------------------------------------
+;依赖结果の定义（そのままRETURNだと成否との对応がわからないので）
+;----------------------------------------------------------------------------------------------------
+@IRAI_CONST_RESULT(TYPE)
+#FUNCTION
+#DIMS TYPE
+#DIM  CONST 依赖结果_实行して未解决 = 3
+#DIM  CONST 依赖结果_实行して失败   = 2
+#DIM  CONST 依赖结果_实行して成功   = 1
+#DIM  CONST 依赖结果_中止     = -1
+SELECTCASE TYPE
+CASE "中止"
+	RETURNF 依赖结果_中止
+CASE "实行して成功"
+	RETURNF 依赖结果_实行して成功
+CASE "实行して失败"
+	RETURNF 依赖结果_实行して失败
+CASE "实行して未解决"
+	RETURNF 依赖结果_实行して未解决
+CASEELSE
+	THROW 错误的文字列です%TYPE%
+ENDSELECT
+
+
+
+;----------------------------------------------------------------------------------------------------
+;各角色の依赖状况文字列
+;----------------------------------------------------------------------------------------------------
+@IRAI_CHARA_TO_PROGRESS(CHARA)
+#FUNCTIONS
+#DIM CHARA
+SELECTCASE CFLAG:CHARA:依赖状况
+CASE -1
+	RETURNF "依赖发生直后"
+CASE 1
+	RETURNF "依赖未受托"
+CASE 2
+	RETURNF "依赖中"
+CASE 3
+	RETURNF "依赖达成"
+CASE 4
+	RETURNF "期限切れ"
+CASE 5
+	RETURNF "报告忘れ"
+CASE 6
+	RETURNF "依赖失败"
+CASE 103
+	RETURNF "依赖结束（成功）"
+CASE 104
+	RETURNF "依赖结束（期限切れ）"
+CASE 105
+	RETURNF "依赖结束（报告忘れ）"
+CASE 106
+	RETURNF "依赖结束（失败）"
+ENDSELECT
+
+
+
+;----------------------------------------------------------------------------------------------------
+;依赖SLOT→依赖状况文字列
+;----------------------------------------------------------------------------------------------------
+@IRAI_SLOT_TO_PROGRESS(CHK_SLOT)
+#FUNCTIONS
+#DIM CHK_SLOT
+#DIM CLIENT_ID
+CLIENT_ID = IRAI_SLOT_TO_CLIENT(CHK_SLOT)
+RETURNF IRAI_CHARA_TO_PROGRESS(CLIENT_ID)
+
+
+
+;----------------------------------------------------------------------------------------------------
+;文字列各を利用して各角色の依赖状况を设定
+;----------------------------------------------------------------------------------------------------
+@SET_IRAI_PROGRESS(CHARA, TYPE)
+#DIM  CHARA
+#DIMS TYPE
+SELECTCASE TYPE
+CASE "依赖发生直后"
+	CFLAG:CHARA:依赖状况 = -1
+CASE "依赖未受托"
+	CFLAG:CHARA:依赖状况 = 1
+	;#;DEBUGPRINTFORML ＞依赖发生　%NAME_OUTPUT_TRANSLATION("CALLNAME", CHARA), 20%　{CFLAG:CHARA:依赖内容, 6}
+CASE "依赖中"
+	CFLAG:CHARA:依赖状况 = 2
+CASE "依赖达成"
+	CFLAG:CHARA:依赖状况 = 3
+CASE "期限切れ"
+	CFLAG:CHARA:依赖状况 = 4
+CASE "报告忘れ"
+	CFLAG:CHARA:依赖状况 = 5
+CASE "依赖失败"
+	CFLAG:CHARA:依赖状况 = 6
+CASE "依赖结束（成功）"
+	CFLAG:CHARA:依赖状况 = 103
+CASE "依赖结束（期限切れ）"
+	CFLAG:CHARA:依赖状况 = 104
+CASE "依赖结束（报告忘れ）"
+	CFLAG:CHARA:依赖状况 = 105
+CASE "依赖结束（失败）"
+	CFLAG:CHARA:依赖状况 = 106
+CASE "依赖消灭"
+	[IF_DEBUG]
+		IF CFLAG:CHARA:依赖状况 == 1
+			DEBUGPRINTFORML ＞でばっぐ中につき自然消灭回避　%NAME_OUTPUT_TRANSLATION("CALLNAME", CHARA), 20%　{CFLAG:CHARA:依赖内容, 6}
+			RETURN
+			DEBUGPRINTFORML ＞依赖消灭　%NAME_OUTPUT_TRANSLATION("CALLNAME", CHARA), 20%　{CFLAG:CHARA:依赖内容, 6}
+		ENDIF
+	[ENDIF]
+	CFLAG:CHARA:依赖状况 = 0
+	CFLAG:CHARA:依赖内容 = 0
+CASEELSE
+	DEBUGPRINTFORML ＞不明な依赖进捗设定　%NAME_OUTPUT_TRANSLATION("CALLNAME", CHARA), 20%　%TYPE%
+ENDSELECT
+
+
+
+;----------------------------------------------------------------------------------------------------
+;依赖SLOT→业种を取得
+;----------------------------------------------------------------------------------------------------
+@IRAI_SLOT_TO_TASKNAME(CHK_SLOT)
+#FUNCTIONS
+#DIM CHK_SLOT
+SELECTCASE IRAI_DATA:CHK_SLOT % 1000
+CASE 0
+	;THROW 错误的业种{IRAI_DATA:CHK_SLOT}
+	PRINTFORM 错误的业种{IRAI_DATA:CHK_SLOT}
+CASE 1
+	RETURNF "作业"
+;达成困难な依赖としてオミット
+;CASE 2
+;	RETURNF "面会"
+CASE 3
+	RETURNF "调达"
+CASE 4
+	RETURNF "传令（人物）"
+CASE 5
+	RETURNF "传令（场所）"
+CASE 6
+	RETURNF "捜索（人物）"
+CASE 7
+	RETURNF "捜索（场所）"
+CASE 8
+	RETURNF "讨伐"
+CASE 99
+	RETURNF "其他"
+ENDSELECT
+
+
+
+;依赖の业种别、文字列→数字变换
+@IRAI_TASK_TO_DATA(TASK)
+#FUNCTION
+#DIMS TASK
+SELECTCASE TASK
+CASE "作业"
+	RETURNF 1
+;达成困难な依赖としてオミット
+;CASE "面会"
+;	RETURNF 2
+CASE "调达"
+	RETURNF 3
+CASE "传令（人物）"
+	RETURNF 4
+CASE "传令（场所）"
+	RETURNF 5
+CASE "捜索（人物）"
+	RETURNF 6
+CASE "捜索（场所）"
+	RETURNF 7
+CASE "讨伐"
+	RETURNF 8
+CASE "其他"
+	RETURNF 99
+ENDSELECT
+
+
+
+;----------------------------------------------------------------------------------------------------
+;场所の随机选抜函数
+;落とし物の场所抽选に使ってる
+;书き方もう稍微どうにかなんねぇのか感が自己もあるがとりあえずで实装
+;何が问题って番号直打ちなもんだからMapの仕样が变わるとバグる
+;----------------------------------------------------------------------------------------------------
+@RAND_PLACE(ARG, TYPE)
+#FUNCTION
+#DIM  NG_MAP
+#DIM  RESULT_MAP
+#DIM  RESULT_PLACE
+#DIMS TYPE
+#DIMS CONST LOCAL_MAPNAME = "博丽神社", "命莲寺", "人间之里", "雾之湖～红魔馆", "迷途竹林", "魔法之森", "三途之川～冥界", "妖怪之山 (山麓)", "妖怪之山 (山顶)", "地底", "梦之世界～月"
+SELECTCASE TYPE
+CASE "LOST_ITEM"
+	;ARG = 落とし物をした角色の登录番号
+	NG_MAP = GET_MAPID(GET_CHARAHOME(ARG))
+	DO
+		RESULT_MAP = RAND:11
+	LOOP RESULT_MAP == NG_MAP
+	;无限ループ的可能性が0ではないが气にするほどでもないだろう
+	;FISHER_YATES_SHAFFLEをやるのはちと大袈裟だしなぁ
+	
+	SELECTCASE LOCAL_MAPNAME:RESULT_MAP
+	CASE "博丽神社"
+		SELECTCASE RAND:11
+		CASE 0
+		;1,鸟居
+			RESULT_PLACE = 1
+		CASE 1
+		;2,境内
+			RESULT_PLACE = 2
+		CASE 2
+		;3,功德箱
+			RESULT_PLACE = 3
+		CASE 3
+		;5,净手池
+			RESULT_PLACE = 5
+		CASE 4
+		;20,本殿内部
+			RESULT_PLACE = 20
+		CASE 5
+		;21,守矢神社分社
+			RESULT_PLACE = 21
+		CASE 6
+		;22,参道
+			RESULT_PLACE = 22
+		CASE 7
+		;23,温泉・更衣间
+			RESULT_PLACE = 23
+		CASE 8
+		;24,温泉
+			RESULT_PLACE = 24
+		CASE 9
+		;25,镇守之森
+			RESULT_PLACE = 25
+		CASE 10
+		;36,梦幻遗迹前
+			RESULT_PLACE = 36
+		ENDSELECT
+	CASE "命莲寺"
+		SELECTCASE RAND:6
+		CASE 0
+		;8101,山门
+			RESULT_PLACE = 101
+		CASE 1
+		;8102,境内
+			RESULT_PLACE = 102
+		CASE 2
+		;8121,墓地
+			RESULT_PLACE = 121
+		CASE 3
+		;8122,梵钟堂
+			RESULT_PLACE = 122
+		CASE 4
+		;8123,灵庙大门
+			RESULT_PLACE = 123
+		CASE 5
+		;8124,灵庙广场
+			RESULT_PLACE = 124
+		ENDSELECT
+	CASE "人间之里"
+		SELECTCASE RAND:17
+		CASE 0
+		;8201,人里的门
+			RESULT_PLACE = 201
+		CASE 1
+		;8202,中央广场
+			RESULT_PLACE = 202
+		CASE 2
+		;8203,南大街
+			RESULT_PLACE = 203
+		CASE 3
+		;8204,东大街
+			RESULT_PLACE = 204
+		CASE 4
+		;8205,北大街
+			RESULT_PLACE = 205
+		CASE 5
+		;8206,西大街
+			RESULT_PLACE = 206
+		CASE 6
+		;8207,龙神像
+			RESULT_PLACE = 207
+		CASE 7
+		;8211,酒屋
+			RESULT_PLACE = 211
+		CASE 8
+		;8212,咖啡馆
+			RESULT_PLACE = 212
+		CASE 9
+		;8213,铃奈庵
+			RESULT_PLACE = 213
+		CASE 10
+		;8214,长屋前
+			RESULT_PLACE = 214
+		CASE 11
+		;8215,花屋
+			RESULT_PLACE = 215
+		CASE 12
+		;8216,食料品店
+			RESULT_PLACE = 216
+		CASE 13
+		;8217,甜品店
+			RESULT_PLACE = 217
+		CASE 14
+		;8218,小料理屋
+			RESULT_PLACE = 218
+		CASE 15
+		;8219,集会所
+			RESULT_PLACE = 219
+		CASE 16
+		;8222,寺子屋
+			RESULT_PLACE = 222
+		ENDSELECT
+	CASE "雾之湖～红魔馆"
+		SELECTCASE RAND:6
+		CASE 0
+		;8301,正门
+			RESULT_PLACE = 301
+		CASE 1
+		;8302,庭
+			RESULT_PLACE = 302
+		CASE 2
+		;8306,后院
+			RESULT_PLACE = 306
+		CASE 3
+		;8309,大厅
+			RESULT_PLACE = 309
+		CASE 4
+		;8334,废洋馆・入口
+			RESULT_PLACE = 334
+		CASE 5
+		;8343,湖畔
+			RESULT_PLACE = 343
+		ENDSELECT
+	CASE "迷途竹林"
+		SELECTCASE RAND:8
+		CASE 0
+		;8401,永远亭入口
+			RESULT_PLACE = 401
+		CASE 1
+		;8402,永远亭玄关
+			RESULT_PLACE = 402
+		CASE 2
+		;8403,等候室
+			RESULT_PLACE = 403
+		CASE 3
+		;8433,斜角的竹林
+			RESULT_PLACE = 433
+		CASE 4
+		;8434,迷失的小道
+			RESULT_PLACE = 434
+		CASE 5
+		;8436,无名之丘
+			RESULT_PLACE = 436
+		CASE 6
+		;8438,太阳花田
+			RESULT_PLACE = 438
+		CASE 7
+		;8447,竹林入口
+			RESULT_PLACE = 447
+		ENDSELECT
+	CASE "魔法之森"
+		SELECTCASE RAND:11
+		CASE 0
+		;8501,魔法之森入口
+			RESULT_PLACE = 501
+		CASE 1
+		;8502,香霖堂
+			RESULT_PLACE = 502
+		CASE 2
+		;8503,岔道
+			RESULT_PLACE = 503
+		CASE 3
+		;8506,无缘冢
+			RESULT_PLACE = 506
+		CASE 4
+		;8507,菌菇群生地
+			RESULT_PLACE = 507
+		CASE 5
+		;8508,魔法之广场
+			RESULT_PLACE = 508
+		CASE 6
+		;8509,再思之道
+			RESULT_PLACE = 509
+		CASE 7
+		;8510,雾雨魔法店
+			RESULT_PLACE = 510
+		CASE 8
+		;8520,人偶洋馆前
+			RESULT_PLACE = 520
+		CASE 9
+		;8534,轻飘飘的艾伦魔法商店
+			RESULT_PLACE = 534
+		CASE 10
+		;8540,古木的大树
+			RESULT_PLACE = 540
+		ENDSELECT
+	CASE "三途之川～冥界"
+		SELECTCASE RAND:9
+		CASE 0
+		;6061,中有之道
+			RESULT_PLACE = 610
+		CASE 1
+		;6062,三途之川
+			RESULT_PLACE = 620
+		CASE 2
+		;6063,迷途之家
+			RESULT_PLACE = 630
+		CASE 3
+		;6064,彼岸
+			RESULT_PLACE = 640
+		CASE 4
+		;6065,白玉楼庭院
+			RESULT_PLACE = 650
+		CASE 5
+		;6066,白玉楼
+			RESULT_PLACE = 660
+		CASE 6
+		;6067,地狱
+			RESULT_PLACE = 670
+		CASE 7
+		;6068,畜生界
+			RESULT_PLACE = 680
+		CASE 8
+		;6069,灵长园
+			RESULT_PLACE = 690
+		ENDSELECT
+	CASE "妖怪之山 (山麓)"
+		SELECTCASE RAND:8
+		CASE 0
+		;8701,树海道入口
+			RESULT_PLACE = 701
+		CASE 1
+		;8702,山道・通往沼泽之道
+			RESULT_PLACE = 702
+		CASE 2
+		;8703,玄武之泽
+			RESULT_PLACE = 703
+		CASE 3
+		;8705,山道・中腹
+			RESULT_PLACE = 705
+		CASE 4
+		;8707,山道・分岐点
+			RESULT_PLACE = 707
+		CASE 5
+		;8708,大蛤蟆之池
+			RESULT_PLACE = 708
+		CASE 6
+		;8711,休憩所
+			RESULT_PLACE = 711
+		CASE 7
+		;8732,通向山顶的路
+			RESULT_PLACE = 732
+		ENDSELECT
+	CASE "妖怪之山 (山顶)"
+		SELECTCASE RAND:12
+		CASE 0
+		;8801,山顶入口
+			RESULT_PLACE = 801
+		CASE 1
+		;8802,桥
+			RESULT_PLACE = 802
+		CASE 2
+		;8803,索道站
+			RESULT_PLACE = 803
+		CASE 3
+		;8804,守矢神社鸟居
+			RESULT_PLACE = 804
+		CASE 4
+		;8805,顶上
+			RESULT_PLACE = 805
+		CASE 5
+		;8806,瀑布背面
+			RESULT_PLACE = 806
+		CASE 6
+		;8811,境内
+			RESULT_PLACE = 811
+		CASE 7
+		;8814,湖畔
+			RESULT_PLACE = 814
+		CASE 8
+		;8830,玄云海
+			RESULT_PLACE = 830
+		CASE 9
+		;8831,比那名居邸前
+			RESULT_PLACE = 831
+		CASE 10
+		;8832,有顶天街
+			RESULT_PLACE = 832
+		CASE 11
+		;8833,桃园
+			RESULT_PLACE = 833
+		ENDSELECT
+	CASE "地底"
+		SELECTCASE RAND:11
+		CASE 0
+		;8901,地灵殿前
+			RESULT_PLACE = 901
+		CASE 1
+		;8902,入口
+			RESULT_PLACE = 902
+		CASE 2
+		;8926,中庭
+			RESULT_PLACE = 926
+		CASE 3
+		;8931,大街
+			RESULT_PLACE = 931
+		CASE 4
+		;8932,后街
+			RESULT_PLACE = 932
+		CASE 5
+		;8933,酒场
+			RESULT_PLACE = 933
+		CASE 6
+		;8939,小胡同
+			RESULT_PLACE = 939
+		CASE 7
+		;8944,街道
+			RESULT_PLACE = 944
+		CASE 8
+		;8945,河岸
+			RESULT_PLACE = 945
+		CASE 9
+		;8946,桥
+			RESULT_PLACE = 946
+		CASE 10
+		;8948,竖井底部
+			RESULT_PLACE = 948
+		ENDSELECT
+	CASE "梦之世界～月"
+		SELECTCASE RAND:5
+		CASE 0
+		;6101,槐安通路
+			RESULT_PLACE = 1010
+		CASE 1
+		;6105,月之都
+			RESULT_PLACE = 1050
+		CASE 2
+		;6107,玉兔之街
+			RESULT_PLACE = 1070
+		CASE 3
+		;6108,桃林～沙滩
+			RESULT_PLACE = 1080
+		CASE 4
+		;6109,宁静海
+			RESULT_PLACE = 1090
+		ENDSELECT
+	CASEELSE
+		THROW 存在しないMAP{RESULT_MAP}
+	ENDSELECT
+ENDSELECT
+SIF !RESULT_PLACE
+	THROW 存在しないPLACE{RESULT_PLACE}
+RETURNF RESULT_PLACE
+
+
+
+
+
+;----------------------------------------------------------------------------------------------------
+;文通可否函数
+;扮演你は考虑外
+;----------------------------------------------------------------------------------------------------
+;文通相手が一人でも登录されていればTRUE
+;----------------------------------------------------------------------------------------------------
+@IS_LETTER_CHARA(CHARA)
+#FUNCTION
+#DIM CHARA
+RETURNF STOCK_LETTER_TO("IS_LETTER_CHARA", CHARA)
+
+;----------------------------------------------------------------------------------------------------
+;登录上で2角色が文通可能であるならTRUE
+;----------------------------------------------------------------------------------------------------
+@IS_PEN_FRIEND(CHARA_A, CHARA_B)
+#FUNCTION
+#DIM CHARA_A
+#DIM CHARA_B
+RETURNF STOCK_LETTER_TO("IS_PEN_FRIEND", CHARA_A, CHARA_B)
+
+;----------------------------------------------------------------------------------------------------
+;文通相手の抽选
+;CAN_MEETも考虑する
+;宛先登录とCAN_MEETを见た上でCHARAが手纸を出せる相手がいないなら0
+;相手がいるなら随机な相手を取得
+;依赖发生时と受托时で出禁设定を变更したりするとバグる
+;そこら边は限界である
+;----------------------------------------------------------------------------------------------------
+@WHO_LETTER_TO(CHARA)
+#FUNCTION
+#DIM CHARA
+RETURNF STOCK_LETTER_TO("WHO_LETTER_TO", CHARA)
+
+
+
+;----------------------------------------------------------------------------------------------------
+;文通宛先设定函数
+;角色知识が全然无いのであまり出来はよろしくない
+;直接あったことないんです＞＜くらいの关系でも文通なら不自然にはならん、かも？
+;これは一方的なものではなく、差出人设定すれば相手から手纸が返される可能性が出ます
+;番号の若い顺に登录してるので后一位角色ほど设定は少なくて済むはず
+;
+;以下、この奇怪なコードに至った経緯
+;处理の效率化等はまるっきり考虑してないです
+;
+;・CHARA_AからCHARA_Bの登录とCHARA_Bからの登录を何度もやるのが面倒くさいので双方が同时に登录されるようにしたい
+;・HOGE:CHARA:Xの多次元配列で管理する案
+;→多次元配列にFINDELEMENTが使えないので重复を弹く検索处理が面倒くさい、FOR-NEXTは论外（コードが长くなる的な意味で）
+;・各角色の宛先配列の保存用函数を别个に用意して各々のプライベート变量で管理、登录と参照は别函数から行う案
+;→配列を管理したいがためだけに函数100个も作ってられねぇ
+;・文字列に突っ込んで强行解决することにした
+;----------------------------------------------------------------------------------------------------
+@SETUP_ALL_LETTERS
+#DIM LETTER_TO, 人物数量上限
+SIF LOCAL
+	RETURN
+;配列の要素0が手纸の差出人、其他の要素が受取人
+;使用する要素数を指定して渡す
+;灵梦
+VARSET LETTER_TO
+LETTER_TO = [[魔理沙]], [[琪露诺]], [[咲夜]], [[蕾米莉亚]], [[爱丽丝]], [[妖梦]], [[蓝]], [[紫]], [[早苗]], [[天子]], [[华扇]], [[觉]], [[铃仙]], [[白莲]], [[神子]], [[慧音]], [[幽香]], [[小铃]], [[阿求]], [[哆来咪]], [[成美]], [[紫苑]]
+CALL SET_LETTER_TO([[灵梦]], LETTER_TO)
+;魅魔
+VARSET LETTER_TO
+LETTER_TO = [[梦美]], [[魔理沙]], [[爱丽丝]], [[紫]], [[神绮]]
+CALL SET_LETTER_TO([[魅魔]], LETTER_TO)
+;桑尼, 露娜, 斯塔
+VARSET LETTER_TO
+LETTER_TO = [[魔理沙]], [[琪露诺]], [[大妖精]], [[克劳恩皮丝]] 
+CALL SET_LETTER_TO([[桑尼]], LETTER_TO)
+CALL SET_LETTER_TO([[露娜]], LETTER_TO)
+CALL SET_LETTER_TO([[斯塔]], LETTER_TO)
+;萃香
+VARSET LETTER_TO
+LETTER_TO = [[紫]], [[文]], [[天子]], [[衣玖]], [[勇仪]]
+CALL SET_LETTER_TO([[萃香]], LETTER_TO)
+;魔理沙
+VARSET LETTER_TO
+LETTER_TO = [[琪露诺]], [[大妖精]], [[咲夜]], [[爱丽丝]], [[妖梦]], [[蓝]], [[文]], [[早苗]], [[芙兰]], [[铃仙]], [[慧音]], [[幽香]], [[哆来咪]], [[成美]]
+CALL SET_LETTER_TO([[魔理沙]], LETTER_TO)
+;大妖精
+VARSET LETTER_TO
+LETTER_TO = [[莉莉Ｗ]], [[莉莉Ｂ]], [[小恶魔]]
+CALL SET_LETTER_TO([[大妖精]], LETTER_TO)
+;咲夜
+VARSET LETTER_TO
+LETTER_TO = [[爱丽丝]], [[妖梦]], [[蓝]], [[鵺]], [[荷取]], [[铃仙]]
+CALL SET_LETTER_TO([[咲夜]], LETTER_TO)
+;蕾米莉亚
+;随意大物感を
+VARSET LETTER_TO
+LETTER_TO = [[紫]], [[阿求]]
+CALL SET_LETTER_TO([[蕾米莉亚]], LETTER_TO)
+;爱丽丝
+;TWでは人里公演やってるのでプリリバと多少は交流があっても
+;三月精と认识あるんだっけ？
+VARSET LETTER_TO
+LETTER_TO = [[莉莉卡]], [[梅露兰]], [[露娜萨]], [[帕秋莉]], [[梅蒂欣]]
+CALL SET_LETTER_TO([[爱丽丝]], LETTER_TO)
+;莉莉卡, 梅露兰, 露娜萨
+;音乐、艺能关联特化
+VARSET LETTER_TO
+LETTER_TO = [[米斯蒂亚]], [[响子]], [[弁弁]], [[八桥]], [[雷鼓]]
+CALL SET_LETTER_TO([[莉莉卡]], LETTER_TO)
+CALL SET_LETTER_TO([[梅露兰]], LETTER_TO)
+CALL SET_LETTER_TO([[露娜萨]], LETTER_TO)
+;妖梦
+VARSET LETTER_TO
+LETTER_TO = [[蓝]], [[铃仙]]
+CALL SET_LETTER_TO([[妖梦]], LETTER_TO)
+;橙
+;ぜんぜんわからなかったので随意ケモケモしく
+VARSET LETTER_TO
+LETTER_TO = [[阿燐]], [[影狼]], [[椛]], [[慧音]], [[阿吽]]
+CALL SET_LETTER_TO([[橙]], LETTER_TO)
+;蓝
+;独立して动いてそうなやや大物感のある日本の连中
+VARSET LETTER_TO
+LETTER_TO = [[文]], [[鵺]]
+CALL SET_LETTER_TO([[蓝]], LETTER_TO)
+;紫
+VARSET LETTER_TO
+LETTER_TO = [[神奈子]], [[诹访子]], [[天子]], [[衣玖]], [[华扇]], [[觉]], [[白莲]], [[神子]], [[辉夜]], [[勇仪]], [[幽幽子]], [[慧音]], [[猯藏]], [[小铃]], [[永琳]], [[阿求]], [[依姫]], [[丰姫]], [[神绮]], [[哆来咪]], [[隐岐奈]]
+CALL SET_LETTER_TO([[紫]], LETTER_TO)
+;米斯蒂亚
+VARSET LETTER_TO
+LETTER_TO = [[响子]], [[弁弁]], [[八桥]], [[雷鼓]]
+CALL SET_LETTER_TO([[米斯蒂亚]], LETTER_TO)
+;映姫
+VARSET LETTER_TO
+LETTER_TO = [[觉]], [[赫卡提亚]]
+CALL SET_LETTER_TO([[映姫]], LETTER_TO)
+;早苗
+VARSET LETTER_TO
+LETTER_TO = [[华扇]], [[阿吽]]
+CALL SET_LETTER_TO([[早苗]], LETTER_TO)
+;天子
+VARSET LETTER_TO
+LETTER_TO = [[哆来咪]], [[紫苑]]
+CALL SET_LETTER_TO([[天子]], LETTER_TO)
+;鵺
+;寺以外との交游关系は不明だが
+;TWでは仕事で红魔馆に出入りするので随意
+VARSET LETTER_TO
+LETTER_TO = [[美铃]], [[小恶魔]]
+CALL SET_LETTER_TO([[鵺]], LETTER_TO)
+;华扇
+VARSET LETTER_TO
+LETTER_TO = [[神子]], [[哆来咪]]
+CALL SET_LETTER_TO([[华扇]], LETTER_TO)
+;铃仙
+VARSET LETTER_TO
+LETTER_TO = [[依姫]], [[丰姫]], [[铃仙二号]], [[清兰]], [[铃瑚]], [[纯狐]]
+CALL SET_LETTER_TO([[铃仙]], LETTER_TO)
+;白莲
+VARSET LETTER_TO
+LETTER_TO = [[神子]], [[慧音]], [[阿求]]
+CALL SET_LETTER_TO([[白莲]], LETTER_TO)
+;神子
+VARSET LETTER_TO
+LETTER_TO = [[慧音]], [[阿求]]
+CALL SET_LETTER_TO([[神子]], LETTER_TO)
+;小恶魔
+VARSET LETTER_TO
+LETTER_TO = [[梦月]], [[幻月]]
+CALL SET_LETTER_TO([[小恶魔]], LETTER_TO)
+
+;赤蛮奇が本当に认识あんのか、つるんでるのかというのは置いといて
+;二次ではよくみるので入れとけ
+;影狼
+VARSET LETTER_TO
+LETTER_TO = [[蛮奇]], [[若鹭姫]]
+CALL SET_LETTER_TO([[影狼]], LETTER_TO)
+;赤蛮奇
+VARSET LETTER_TO
+LETTER_TO = [[若鹭姫]]
+CALL SET_LETTER_TO([[蛮奇]], LETTER_TO)
+
+;永琳
+VARSET LETTER_TO
+LETTER_TO = [[依姫]], [[丰姫]]
+CALL SET_LETTER_TO([[永琳]], LETTER_TO)
+
+LOCAL ++
+
+
+
+;----------------------------------------------------------------------------------------------------
+;各角色の宛先登录函数
+;----------------------------------------------------------------------------------------------------
+
+@SET_LETTER_TO(LETTER_FROM, LETTER_TO)
+#DIM     LETTER_FROM
+#DIM REF LETTER_TO
+#DIM     L_ID
+#DIM     ID_LAST
+ID_LAST = FINDELEMENT(LETTER_TO, 0)
+FOR L_ID, 0, ID_LAST
+	CALLF STOCK_LETTER_TO("SET", LETTER_FROM, LETTER_TO:L_ID)
+NEXT
+
+
+
+;----------------------------------------------------------------------------------------------------
+;文通宛先函数
+;----------------------------------------------------------------------------------------------------
+@STOCK_LETTER_TO(COMMAND, CHARA_A, CHARA_B)
+#FUNCTION
+#DIMS COMMAND
+#DIMS LETTER_TO, 人物数量上限
+#DIM  CHARA_A
+#DIM  CHARA_B
+#DIMS TMP_LETTER, 人物数量上限
+#DIM  TMP_ID
+#DIM  L_RESULT   ;RESULT退避用
+#DIM  CNT_CHARA  ;登录されていた宛先の数
+SELECTCASE COMMAND
+CASE "SET"
+;SETはCHARA_AとCHARA_Bの两方が必须、返回值无
+	IF CHARA_A == CHARA_B || CHARA_A <= 0 || CHARA_B <= 0
+		DEBUGPRINTFORML 无效な登录　{CHARA_A}, {CHARA_B}
+		RETURNF 0
+	ENDIF
+	SIF !STRCOUNT(LETTER_TO:CHARA_A, @"{CHARA_B}/")
+		LETTER_TO:CHARA_A += @"{CHARA_B}/"
+	SIF !STRCOUNT(LETTER_TO:CHARA_B, @"{CHARA_A}/")
+		LETTER_TO:CHARA_B += @"{CHARA_A}/"
+CASE "IS_LETTER_CHARA"
+;文通相手が一人でも存在すればTRUE
+	SIF !STRLENS(LETTER_TO:CHARA_A)
+		RETURNF 0
+	RETURNF 1
+CASE "IS_PEN_FRIEND"
+;2角色が文通可能であるならTRUE
+	SIF !STRCOUNT(LETTER_TO:CHARA_A, @"{CHARA_B}/")
+		RETURNF 0
+	RETURNF 1
+CASE "WHO_LETTER_TO"
+;随机な宛先を返す
+;CHARA_Aだけ指定、返回值あり
+	;SIF !STRLENS(LETTER_TO:CHARA_A)
+	;	RETURNF RAND_PERSON(CHARA_A)
+	SIF !STRLENS(LETTER_TO:CHARA_A)
+		RETURNF 0
+	VARSET TMP_LETTER
+	;F函数でRESULTを变えるのは若干危ない
+	L_RESULT = RESULT
+	SPLIT LETTER_TO:CHARA_A, "/", TMP_LETTER
+	CNT_CHARA = RESULT
+	RESULT = L_RESULT
+	RETURNF RAND_LETTER_TO(TMP_LETTER, CNT_CHARA)
+ENDSELECT
+
+
+
+;----------------------------------------------------------------------------------------------------
+;随机宛先函数
+;シャッフルを利用して随机に角色を选择する
+;DO-LOOP＋RANDだと挙动が怪しくなりそう
+;なおかつ、宛先の少ない角色だと出禁で容易に无限ループに陷るので
+;シャッフルアルゴリズムを使用する
+;构文がちょいと复杂化した
+;----------------------------------------------------------------------------------------------------
+@RAND_LETTER_TO(TMP_LETTER, CNT_CHARA)
+#FUNCTION
+#DIMS REF TMP_LETTER
+#DIM  CNT_CHARA
+#DIM  LETTER_ID, 人物数量上限
+#DIM  CHK_ID
+#DIM  ELE_SHAFFLE
+SIF !LETTER_STOP(TMP_LETTER, 0, CNT_CHARA)
+	LETTER_ID:0 = TOINT(TMP_LETTER:0)
+SIF !CNT_CHARA
+	RETURNF 0
+SIF CNT_CHARA == 1
+	RETURNF LETTER_ID:0
+FOR CHK_ID, 1, CNT_CHARA
+	SIF !STRLENS(TMP_LETTER:CHK_ID)
+		BREAK
+	DEBUGPRINTFORML CHK_ID{CHK_ID}　CNT_CHARA{CNT_CHARA}
+	IF LETTER_STOP(TMP_LETTER, CHK_ID, CNT_CHARA)
+		SIF CNT_CHARA <= 1
+			BREAK
+		;要素を削除するのでもう一度同じIDで调查
+		CHK_ID --
+		CONTINUE
+	ELSE
+		ELE_SHAFFLE = RAND(0, CHK_ID + 1)
+		LETTER_ID:CHK_ID = LETTER_ID:ELE_SHAFFLE
+		LETTER_ID:ELE_SHAFFLE = TOINT(TMP_LETTER:CHK_ID)
+	ENDIF
+NEXT
+RETURNF LETTER_ID:0
+
+
+
+;----------------------------------------------------------------------------------------------------
+;手纸停止函数
+;文字列のTMP_LETTERが出现不能の时にその要素を削除する
+;削除が起きたら1
+;----------------------------------------------------------------------------------------------------
+@LETTER_STOP(TMP_LETTER, CHK_ID, CNT_CHARA)
+#FUNCTION
+#DIMS REF TMP_LETTER
+#DIM      CHK_ID
+#DIM  REF CNT_CHARA
+IF !CAN_MEET(TOINT(TMP_LETTER:CHK_ID))
+	ARRAYREMOVE TMP_LETTER, CHK_ID, 1
+	CNT_CHARA --
+	RETURNF 1
+ELSE
+	RETURNF 0
+ENDIF
+
+;----------------------------------------------------------------------------------------------------
+;讨伐对象として敌对关系にある角色を选出する函数
+;----------------------------------------------------------------------------------------------------
+@RAND_HANTING(ARG)
+#FUNCTION
+#DIM CHARA
+#DIM LPCOUNT
+LPCOUNT = 0
+RESULT = 0
+;相性が恶い角色を优先する
+WHILE !RESULT
+	CHARA = RAND:CHARANUM
+	LPCOUNT ++
+	;除外条件
+	;依赖人
+	SIF CHARA == ARG
+		CONTINUE
+	;MASTER,出禁,路人子
+	SIF CHARA == MASTER || CFLAG:CHARA:出禁 || TALENT:CHARA:路人
+		CONTINUE
+	;非战斗员
+	SIF CSVABL(CHARA, GETNUM(ABL, "战斗能力")) == 0
+		CONTINUE
+	;住人同士は争わない
+	SIF CFLAG:ARG:神社在住 && CFLAG:CHARA:神社在住
+		CONTINUE
+	;战斗能力が高すぎる
+	SIF ABL:CHARA:战斗能力 >= ABL:MASTER:战斗能力 + 3
+		CONTINUE
+	IF INRANGE(RELATION:ARG:CHARA, 10, 90)
+		RESULT = CHARA
+	ELSEIF LPCOUNT > 1000
+		BREAK
+	ENDIF
+WEND
+
+LPCOUNT = 0
+WHILE !RESULT
+	CHARA = RAND:CHARANUM
+	LPCOUNT ++
+	;无限ループ防止
+	IF LPCOUNT > 1000
+		IF TALENT:ARG:人类
+			IF !RAND:2
+				RESULT = [[紫]]
+			ELSE
+				RESULT = [[正邪]]
+			ENDIF
+		ELSE
+			IF !RAND:2
+				RESULT = [[灵梦]]
+			ELSE
+				RESULT = [[魔理沙]]
+			ENDIF
+		ENDIF
+		;最恶自分はだめ
+		IF RESULT == ARG
+			CONTINUE
+		ELSE
+			BREAK
+		ENDIF
+	ENDIF
+	;除外条件
+	;依赖人
+	SIF CHARA == ARG
+		CONTINUE
+	;MASTER,出禁,路人子
+	SIF CHARA == MASTER || CFLAG:CHARA:出禁 || TALENT:CHARA:路人
+		CONTINUE
+	;非战斗员
+	SIF CSVABL(CHARA, GETNUM(ABL, "战斗能力")) == 0
+		CONTINUE
+	;相性が良い
+	SIF RELATION:ARG:CHARA > 100
+		CONTINUE
+	;住人同士は争わない
+	SIF CFLAG:ARG:神社在住 && CFLAG:CHARA:神社在住
+		CONTINUE
+	;战斗能力が高すぎる
+	SIF ABL:CHARA:战斗能力 >= ABL:MASTER:战斗能力 + 3
+		CONTINUE
+	
+	;相手侧の相性が恶い
+	IF RELATION:CHARA:ARG < 100 && RELATION:CHARA:ARG > 0
+		RESULT = CHARA
+	;月人＞妖精
+	ELSEIF CHECK_CHARA(ARG, "月人")
+		SIF CHECK_CHARA(CHARA, "妖精")
+			RESULT = CHARA
+	;神灵・天人・仙人＞妖怪・幽灵
+	ELSEIF CHECK_CHARA(ARG, "神灵") || CHECK_CHARA(ARG, "天人") || CHECK_CHARA(ARG, "仙人")
+		IF CHECK_CHARA(CHARA, "妖怪")
+			RESULT = CHARA
+		ELSEIF CHECK_CHARA(CHARA, "幽灵")
+			RESULT = CHARA
+		ENDIF
+	;人类＞妖精・妖怪・幽灵
+	ELSEIF CHECK_CHARA(ARG, "人类")
+		IF CHECK_CHARA(CHARA, "妖精")
+			RESULT = CHARA
+		ELSEIF CHECK_CHARA(CHARA, "妖怪")
+			RESULT = CHARA
+		ELSEIF CHECK_CHARA(CHARA, "幽灵")
+			RESULT = CHARA
+		ENDIF
+	;妖精＞人类・妖怪・付丧神・人形
+	ELSEIF CHECK_CHARA(ARG, "妖精")
+		IF CHECK_CHARA(CHARA, "人类")
+			RESULT = CHARA
+		ELSEIF CHECK_CHARA(CHARA, "妖怪")
+			RESULT = CHARA
+		ELSEIF CHECK_CHARA(CHARA, "付丧神")
+			RESULT = CHARA
+		ELSEIF CHECK_CHARA(CHARA, "人形")
+			RESULT = CHARA
+		ENDIF
+	;妖怪・幽灵＞人类・人形
+	ELSEIF CHECK_CHARA(ARG, "妖怪") || CHECK_CHARA(ARG, "幽灵")
+		IF CHECK_CHARA(CHARA, "人类")
+			RESULT = CHARA
+		ELSEIF CHECK_CHARA(CHARA, "人形")
+			RESULT = CHARA
+		ENDIF
+	;其他（付丧神・人形）＞妖怪・妖精
+	ELSE
+		IF CHECK_CHARA(CHARA, "妖精")
+			RESULT = CHARA
+		ELSEIF CHECK_CHARA(CHARA, "妖怪")
+			RESULT = CHARA
+		ENDIF
+	ENDIF
+	;二次判定,神灵选出
+	IF !RESULT && ABL:ARG:战斗能力 >= 3 && !CHECK_CHARA(ARG, "神灵")
+		SIF CHECK_CHARA(CHARA, "神灵")
+			RESULT = CHARA
+	ENDIF
+WEND
+RETURNF RESULT
+
+;----------------------------------------------------------------------------------------------------
+;（依赖用に）随机な素材を选出する函数
+;季节道具の扱いに困って未完成
+;----------------------------------------------------------------------------------------------------
+@RAND_MATERIAL
+#FUNCTION
+#DIM MATER
+#DIM LPCOUNT
+#DIM 难易度
+RESULT = 0
+LPCOUNT = 0
+;难易度の设定
+SELECTCASE RAND:100
+CASE IS < 50
+	难易度 = 1
+CASE IS < 80
+	难易度 = 2
+CASE IS < 95
+	难易度 = 3
+CASEELSE
+	难易度 = 4
+ENDSELECT
+;难易度が高い场合は难易度を下げる（最低1）
+WHILE 难易度 > ABL:MASTER:教养 + 1
+	难易度 --
+WEND
+WHILE !RESULT
+	MATER = RAND:100 + 600
+	LPCOUNT ++
+	;无限ループ防止
+	IF LPCOUNT > 1000
+		RESULT = GETNUM(ITEM, "普通的菌菇")
+		BREAK
+	ENDIF
+	SIF ITEMNAME:MATER == ""
+		CONTINUE
+	SELECTCASE ITEMPRICE:MATER
+	CASE IS < 1000
+		SIF 难易度 == 1
+			RESULT = MATER
+	CASE IS < 3000
+		SIF 难易度 == 2
+			RESULT = MATER
+	CASE IS < 10000
+		SIF 难易度 == 3
+			RESULT = MATER
+	CASEELSE
+		SIF 难易度 == 4
+			RESULT = MATER
+	ENDSELECT
+WEND
+RETURNF RESULT

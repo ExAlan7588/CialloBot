@@ -1,0 +1,105 @@
+﻿;-----------------------------------------------------------
+;地点の接续设定
+;ARG    基准の地点
+;ARG:1  对象の地点
+;RETURNF 0=移动できない,见えない
+;        1=移动できる,见えない
+;        2=移动できない,见える
+;        3=移动できる,见える（直通）
+;-----------------------------------------------------------
+@CAN_MOVE_5(ARG, ARG:1)
+#FUNCTION
+SELECTCASE ARG
+	CASE P501魔法之森入口
+		SIF GROUPMATCH(ARG:1, P503岔道)
+			RETURNF 3
+		SIF GROUPMATCH(ARG:1, P502香霖堂) && KOURINDOU_IS_WORKING_HOURS()
+			RETURNF 1
+		SIF GROUPMATCH(ARG:1, P534轻飘飘的艾伦魔法商店)
+			RETURNF 1
+		SIF ARG:1 == MAXROOM
+			RETURNF 2
+	CASE P502香霖堂
+		SIF GROUPMATCH(ARG:1, P501魔法之森入口)
+			RETURNF 1
+	CASE P503岔道
+		SIF GROUPMATCH(ARG:1, P501魔法之森入口)
+			RETURNF 3
+		SIF GROUPMATCH(ARG:1, P508魔法之广场, P511魔理沙宅・起居室, P515魔理沙宅・仓库, P520人偶洋馆前, P534轻飘飘的艾伦魔法商店, P540古木的大树, P544成美的小屋)
+			RETURNF 1
+	CASE P506无缘冢
+		SIF GROUPMATCH(ARG:1, P509再思之道)
+			RETURNF 3
+	CASE P507菌菇群生地
+		SIF GROUPMATCH(ARG:1, P508魔法之广场, P540古木的大树)
+			RETURNF 1
+	CASE P508魔法之广场
+		SIF GROUPMATCH(ARG:1, P503岔道, P507菌菇群生地, P509再思之道, P510雾雨魔法店, P544成美的小屋, P545慧之子的栖息处)
+			RETURNF 1
+	CASE P509再思之道
+		SIF GROUPMATCH(ARG:1, P506无缘冢)
+			RETURNF 3
+		SIF GROUPMATCH(ARG:1, P508魔法之广场)
+			RETURNF 1
+
+	CASE P510雾雨魔法店
+		SIF GROUPMATCH(ARG:1, P508魔法之广场, P511魔理沙宅・起居室)
+			RETURNF 1
+	CASE P511魔理沙宅・起居室
+		SIF GROUPMATCH(ARG:1, P503岔道, P510雾雨魔法店, P512魔理沙宅・寝室, P513魔理沙宅・研究房间, P514魔理沙宅・澡堂, P515魔理沙宅・仓库)
+			RETURNF 1
+	CASE P512魔理沙宅・寝室, P513魔理沙宅・研究房间, P514魔理沙宅・澡堂
+		SIF GROUPMATCH(ARG:1, P511魔理沙宅・起居室)
+			RETURNF 1
+	CASE P515魔理沙宅・仓库
+		SIF GROUPMATCH(ARG:1, P503岔道, P511魔理沙宅・起居室)
+			RETURNF 1
+
+	CASE P520人偶洋馆前
+		SIF GROUPMATCH(ARG:1, P503岔道, P540古木的大树, P525人偶洋馆・客厅)
+			RETURNF 1
+	CASE P521人偶洋馆・爱丽丝的房间, P522人偶洋馆・神绮的房间, P523人偶洋馆・梦子的房间, P524人偶洋馆・研究室, P526人偶洋馆・澡堂
+		SIF GROUPMATCH(ARG:1, P525人偶洋馆・客厅)
+			RETURNF 1
+	CASE P525人偶洋馆・客厅
+		SIF GROUPMATCH(ARG:1, P520人偶洋馆前, P521人偶洋馆・爱丽丝的房间, P522人偶洋馆・神绮的房间, P523人偶洋馆・梦子的房间, P524人偶洋馆・研究室)
+			RETURNF 1
+		SIF GROUPMATCH(ARG:1, P526人偶洋馆・澡堂, P529人偶洋馆・露台, P530人偶洋馆・二层)
+			RETURNF 1
+	CASE P528人偶洋馆・仓库, P531人偶洋馆・空的房间
+		SIF GROUPMATCH(ARG:1, P530人偶洋馆・二层)
+			RETURNF 1
+	CASE P529人偶洋馆・露台
+		SIF GROUPMATCH(ARG:1, P525人偶洋馆・客厅, P530人偶洋馆・二层)
+			RETURNF 1
+	CASE P530人偶洋馆・二层
+		SIF GROUPMATCH(ARG:1, P525人偶洋馆・客厅, P528人偶洋馆・仓库, P529人偶洋馆・露台, P531人偶洋馆・空的房间)
+			RETURNF 1
+
+	CASE P534轻飘飘的艾伦魔法商店
+		SIF GROUPMATCH(ARG:1, P501魔法之森入口, P503岔道, P535艾伦宅・寝室, P536艾伦宅・仓库, P537艾伦宅・澡堂)
+			RETURNF 1
+	CASE P535艾伦宅・寝室, P536艾伦宅・仓库, P537艾伦宅・澡堂
+		SIF GROUPMATCH(ARG:1, P534轻飘飘的艾伦魔法商店)
+			RETURNF 1
+
+	CASE P540古木的大树
+		SIF GROUPMATCH(ARG:1, P503岔道, P507菌菇群生地, P520人偶洋馆前)
+			RETURNF 1
+		SIF GROUPMATCH(ARG:1, P541朱鹭子的栖息处, P542莉格露的栖息处, P543露米亚的栖息处)
+			RETURNF 1
+	CASE P541朱鹭子的栖息处, P542莉格露的栖息处, P543露米亚的栖息处
+		SIF GROUPMATCH(ARG:1, P540古木的大树)
+			RETURNF 1
+	CASE P544成美的小屋
+		SIF GROUPMATCH(ARG:1, P503岔道, P508魔法之广场)
+			RETURNF 1
+	CASE P545慧之子的栖息处
+		SIF GROUPMATCH(ARG:1, P508魔法之广场)
+			RETURNF 1
+
+	CASE MAXROOM
+		SIF ARG:1 == P501魔法之森入口
+			RETURNF 1
+ENDSELECT
+RETURNF 0

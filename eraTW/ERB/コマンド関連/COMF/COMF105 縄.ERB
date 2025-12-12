@@ -1,0 +1,139 @@
+﻿;-------------------------------------------------
+;绳
+;SM系指令、レベル3
+;-------------------------------------------------
+@COM105
+;着脱の处理
+IF TCVAR:TARGET:强行 && (CFLAG:TARGET:好感度 < 500 || CFLAG:TARGET:信赖度 < 200)
+	PRINTFORML 现在解开绳子不太好吧…
+	RETURN -1
+ELSE
+	TEQUIP:绳 = !TEQUIP:绳
+ENDIF
+;-------------------------------------------------
+;COM别FLAGの设定
+;-------------------------------------------------
+;行为者
+TCVAR:116 = PLAYER
+;-------------------------------------------------
+;ソース追加处理
+;-------------------------------------------------
+;消费体力、气力
+IF FLAG:70 == 1
+	BASE:MASTER:TSP -= 120
+	SOURCE:苦痛 = 150
+
+ELSE
+
+	DOWNBASE:体力 += 30
+	DOWNBASE:气力 += 120
+
+	SOURCE:苦痛 = 300
+	SOURCE:恐怖 = 900
+	SOURCE:露出 = 200
+	SOURCE:屈从 = 250
+	SOURCE:偏离正轨 = 300
+	SOURCE:反感 = 700
+
+	;-------------------------------------------------
+	;特殊ソース处理
+	;-------------------------------------------------
+	;紧缚经验が高いと消费减少
+	IF EXP:紧缚经验 < EXPLV:3
+		TIMES DOWNBASE:体力 , 1.00
+		TIMES DOWNBASE:气力 , 1.00
+	ELSEIF EXP:紧缚经验 < EXPLV:4
+		TIMES DOWNBASE:体力 , 0.90
+		TIMES DOWNBASE:气力 , 0.90
+	ELSE
+		TIMES DOWNBASE:体力 , 0.70
+		TIMES DOWNBASE:气力 , 0.70
+	ENDIF
+ENDIF
+;-------------------------------------------------
+;経験の处理
+;-------------------------------------------------
+IF FLAG:70 == 1
+	IF HETEROSEX(TARGET,PLAYER)
+		EXP:PLAYER:(50 + HETEROSEX(TARGET,PLAYER)) += 1
+	ENDIF
+ELSE
+	EXP:紧缚经验 += 5
+	;同性爱　レズなら返回值1ゲイなら返回值2
+	IF HETEROSEX(TARGET,PLAYER)
+		EXP:(50 + HETEROSEX(TARGET,PLAYER)) += 1
+		EXP:PLAYER:(50 + HETEROSEX(TARGET,PLAYER)) += 1
+	ENDIF
+ENDIF
+RETURN 1
+;-------------------------------------------------
+;装着继续の处理
+;-------------------------------------------------
+@EQUIP_COM105(ARG)
+PRINTL ＜紧缚中＞
+;-------------------------------------------------
+;ソース追加处理
+;-------------------------------------------------
+IF FLAG:70 == 1
+	SOURCE:ARG:苦痛 += 80
+
+ELSE
+
+	;消费体力、气力
+	DOWNBASE:ARG:体力 += 15
+
+	SOURCE:ARG:苦痛 += 150
+	SOURCE:ARG:恐怖 += 450
+	SOURCE:ARG:露出 += 100
+	SOURCE:ARG:屈从 += 125
+	SOURCE:ARG:偏离正轨 += 150
+	SOURCE:ARG:反感 += 350
+
+	;-------------------------------------------------
+	;特殊ソース处理
+	;-------------------------------------------------
+	;紧缚经验が高いと消费减少
+	LOCAL = 60
+	IF EXP:ARG:紧缚经验 < EXPLV:3
+		TIMES LOCAL , 1.00
+	ELSEIF EXP:ARG:紧缚经验 < EXPLV:4
+		TIMES LOCAL , 0.90
+	ELSE
+		TIMES LOCAL , 0.70
+	ENDIF
+	DOWNBASE:ARG:气力 += LOCAL
+
+
+	;-------------------------------------------------
+	;経験の处理
+	;-------------------------------------------------
+	EXP:ARG:紧缚经验 ++
+ENDIF
+RETURN 1
+
+;-------------------------------------------------
+;实行判定
+;-------------------------------------------------
+@COM_ABLE105
+;绳实行判定
+SIF !TFLAG:100
+	RETURN 0
+;批量管理
+SIF GLOBAL_COMABLE(105)
+	RETURN RESULT
+;解除是つでも可能
+SIF TEQUIP:绳
+	RETURN 1
+;道具を持っているか、道具无设定で无いとダメ
+SIF ITEM:16 == 0 && NOITEM == 0
+	RETURN 0
+;调教者の技巧が1无いとできない
+SIF ABL:PLAYER:技巧 < 1
+	RETURN 0
+;助手は技巧3でないとダメ
+IF ASSIPLAY
+	SIF ABL:ASSI:技巧 < 3
+		RETURN 0
+ENDIF
+RETURN 1
+

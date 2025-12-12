@@ -1,0 +1,1217 @@
+﻿@潜伏场所决定处理
+IF CFLAG:MASTER:当前位置 != MAIN_MAP
+	SELECTCASE CFLAG:MASTER:当前位置
+		;博丽神社
+		CASE 10
+			SELECTCASE RAND(3)
+				CASE 0
+					FLAG:潜伏场所 = 樱花树
+				CASE 1
+					FLAG:潜伏场所 = 鸟居之上
+				CASEELSE
+					SELECTCASE RAND(5) ;固有がある场合泛用は一段分ける
+						CASE 0 
+							FLAG:潜伏场所 = 草丛
+						CASE 1
+							FLAG:潜伏场所 = 灌木丛
+						CASE 2
+							FLAG:潜伏场所 = 树林
+						CASE 3
+							FLAG:潜伏场所 = 树上
+						CASE 4
+							FLAG:潜伏场所 = 岩石阴影
+					ENDSELECT
+			ENDSELECT
+		CASE 20
+			SELECTCASE RAND(4)
+				CASE 0
+					FLAG:潜伏场所 = 灯篭的阴影
+				CASE 1
+					FLAG:潜伏场所 = 净手池里
+				CASE 2
+					FLAG:潜伏场所 = 本堂里
+				CASEELSE
+					SELECTCASE RAND(3)
+						CASE 0 
+							FLAG:潜伏场所 = 暗处
+						CASE 1
+							FLAG:潜伏场所 = 灌木丛
+						CASE 2
+							FLAG:潜伏场所 = 岩石阴影
+					ENDSELECT
+			ENDSELECT
+		CASE 30
+			SELECTCASE RAND(3)
+				CASE 0
+					FLAG:潜伏场所 = 功德箱的阴影
+				CASE 1
+					FLAG:潜伏场所 = 御神体的阴影
+				CASEELSE
+					SELECTCASE RAND(4)
+						CASE 0 
+							FLAG:潜伏场所 = 屋顶上
+						CASE 1
+							FLAG:潜伏场所 = 房梁上
+						CASE 2
+							FLAG:潜伏场所 = 黑暗中
+						CASE 3
+							FLAG:潜伏场所 = 暗处
+					ENDSELECT
+			ENDSELECT
+		CASE 40
+			SELECTCASE RAND(3)
+				CASE 0
+					FLAG:潜伏场所 = 走廊の下
+				CASE 1
+					FLAG:潜伏场所 = 库房里
+				CASEELSE
+					SELECTCASE RAND(4)
+						CASE 0 
+							FLAG:潜伏场所 = 屋顶上
+						CASE 1
+							FLAG:潜伏场所 = 房梁上
+						CASE 2
+							FLAG:潜伏场所 = 柱字的阴影
+						CASE 3
+							FLAG:潜伏场所 = 暗处
+					ENDSELECT
+			ENDSELECT
+		CASE 50
+			SELECTCASE RAND(2)
+				CASE 0
+					FLAG:潜伏场所 = 树根的阴影
+				CASEELSE
+					SELECTCASE RAND(4)
+						CASE 0 
+							FLAG:潜伏场所 = 草丛
+						CASE 1
+							FLAG:潜伏场所 = 灌木丛
+						CASE 2
+							FLAG:潜伏场所 = 树林
+						CASE 3
+							FLAG:潜伏场所 = 树上
+					ENDSELECT
+			ENDSELECT
+		CASE 60
+			SELECTCASE RAND(4)
+				CASE 0
+					FLAG:潜伏场所 = 谜之装置的阴影
+				CASE 1
+					FLAG:潜伏场所 = 通风管道内
+				CASE 2
+					FLAG:潜伏场所 = 研究台下
+				CASEELSE
+					SELECTCASE RAND(5)
+						CASE 0 
+							FLAG:潜伏场所 = 屋顶上
+						CASE 1
+							FLAG:潜伏场所 = 房梁上
+						CASE 2
+							FLAG:潜伏场所 = 柱字的阴影
+						CASE 3
+							FLAG:潜伏场所 = 屏风
+						CASE 4
+							FLAG:潜伏场所 = 暗处
+					ENDSELECT
+			ENDSELECT
+		;命莲寺
+		CASE 110
+			SELECTCASE RAND(2)
+				CASE 0
+					FLAG:潜伏场所 = 地藏的阴影
+				CASEELSE
+					SELECTCASE RAND(3)
+						CASE 0 
+							FLAG:潜伏场所 = 草丛
+						CASE 1
+							FLAG:潜伏场所 = 灌木丛
+						CASE 2
+							FLAG:潜伏场所 = 岩石阴影
+					ENDSELECT
+			ENDSELECT
+		CASE 120
+			SELECTCASE RAND(3)
+				CASE 0
+					FLAG:潜伏场所 = 柳树的阴影
+				CASE 1
+					FLAG:潜伏场所 = 柳の树上
+				CASEELSE
+					SELECTCASE RAND(3)
+						CASE 0 
+							FLAG:潜伏场所 = 草丛
+						CASE 1
+							FLAG:潜伏场所 = 灌木丛
+						CASE 2
+							FLAG:潜伏场所 = 树上
+					ENDSELECT
+			ENDSELECT
+		CASE 130
+			SELECTCASE RAND(4)
+				CASE 0
+					FLAG:潜伏场所 = 山门の上
+				CASE 1
+					FLAG:潜伏场所 = 祈祷殿
+				CASE 2
+					FLAG:潜伏场所 = 钟楼
+				CASEELSE
+					SELECTCASE RAND(4)
+						CASE 0 
+							FLAG:潜伏场所 = 屋顶上
+						CASE 1
+							FLAG:潜伏场所 = 岩石阴影
+						CASE 2
+							FLAG:潜伏场所 = 柱字的阴影
+						CASE 3
+							FLAG:潜伏场所 = 暗处
+					ENDSELECT
+			ENDSELECT
+		CASE 140
+			SELECTCASE RAND(3)
+				CASE 0
+					FLAG:潜伏场所 = 旁间
+				CASE 1
+					FLAG:潜伏场所 = 宫殿里
+				CASEELSE
+					SELECTCASE RAND(5)
+						CASE 0 
+							FLAG:潜伏场所 = 屋顶上
+						CASE 1
+							FLAG:潜伏场所 = 房梁上
+						CASE 2
+							FLAG:潜伏场所 = 柱字的阴影
+						CASE 3
+							FLAG:潜伏场所 = 屏风
+						CASE 4
+							FLAG:潜伏场所 = 暗处
+					ENDSELECT
+			ENDSELECT
+		CASE 150
+			SELECTCASE RAND(3)
+				CASE 0
+					FLAG:潜伏场所 = 墓的阴影
+				CASE 1
+					FLAG:潜伏场所 = 纳骨堂里
+				CASEELSE
+					SELECTCASE RAND(5)
+						CASE 0 
+							FLAG:潜伏场所 = 岩石阴影
+						CASE 1
+							FLAG:潜伏场所 = 草丛
+						CASE 2
+							FLAG:潜伏场所 = 灌木丛
+						CASE 3
+							FLAG:潜伏场所 = 围墙的阴影
+						CASE 4
+							FLAG:潜伏场所 = 暗处
+					ENDSELECT
+			ENDSELECT
+		CASE 160
+			SELECTCASE RAND(2)
+				CASE 0
+					FLAG:潜伏场所 = 大门の上
+				CASEELSE
+					SELECTCASE RAND(5)
+						CASE 0 
+							FLAG:潜伏场所 = 屋顶上
+						CASE 1
+							FLAG:潜伏场所 = 房梁上
+						CASE 2
+							FLAG:潜伏场所 = 屏风
+						CASE 3
+							FLAG:潜伏场所 = 空的房间
+						CASE 4
+							FLAG:潜伏场所 = 暗处
+					ENDSELECT
+			ENDSELECT
+		;人间之里
+		CASE 210
+			SELECTCASE RAND(3)
+				CASE 0
+					FLAG:潜伏场所 = 瞭望楼上
+				CASE 1
+					FLAG:潜伏场所 = 龙神像の阴
+				CASEELSE
+					SELECTCASE RAND(3)
+						CASE 0 
+							FLAG:潜伏场所 = 巷子
+						CASE 1
+							FLAG:潜伏场所 = 推车的阴影
+						CASE 2
+							FLAG:潜伏场所 = 暗处
+					ENDSELECT
+			ENDSELECT
+		CASE 220
+			SELECTCASE RAND(4)
+				CASE 0 
+					FLAG:潜伏场所 = 屋顶上
+				CASE 1
+					FLAG:潜伏场所 = 商品架的阴影
+				CASE 2
+					FLAG:潜伏场所 = 巷子
+				CASE 3
+					FLAG:潜伏场所 = 暗处
+			ENDSELECT
+		CASE 230
+			SELECTCASE RAND(2)
+				CASE 0
+					FLAG:潜伏场所 = 空桶
+				CASEELSE
+					SELECTCASE RAND(4)
+						CASE 0 
+							FLAG:潜伏场所 = 屋顶上
+						CASE 1
+							FLAG:潜伏场所 = 商品架的阴影
+						CASE 2
+							FLAG:潜伏场所 = 巷子
+						CASE 3
+							FLAG:潜伏场所 = 暗处
+					ENDSELECT
+			ENDSELECT
+		CASE 240
+			SELECTCASE RAND(3)
+				CASE 0
+					FLAG:潜伏场所 = 保健室
+				CASE 1
+					FLAG:潜伏场所 = 指导室
+				CASEELSE
+					SELECTCASE RAND(6)
+						CASE 0 
+							FLAG:潜伏场所 = 屋顶上
+						CASE 1
+							FLAG:潜伏场所 = 房梁上
+						CASE 2
+							FLAG:潜伏场所 = 柱字的阴影
+						CASE 3
+							FLAG:潜伏场所 = 屏风
+						CASE 4
+							FLAG:潜伏场所 = 空的房间
+						CASE 5
+							FLAG:潜伏场所 = 暗处
+					ENDSELECT
+			ENDSELECT
+		CASE 250
+			SELECTCASE RAND(4)
+				CASE 0 
+					FLAG:潜伏场所 = 屋顶上
+				CASE 1
+					FLAG:潜伏场所 = 屏风
+				CASE 2
+					FLAG:潜伏场所 = 巷子
+				CASE 3
+					FLAG:潜伏场所 = 暗处
+			ENDSELECT
+		CASE 270
+			SELECTCASE RAND(5)
+				CASE 0 
+					FLAG:潜伏场所 = 屋顶上
+				CASE 1
+					FLAG:潜伏场所 = 推车的阴影
+				CASE 2
+					FLAG:潜伏场所 = 巷子
+				CASE 3
+					FLAG:潜伏场所 = 空的房间
+				CASE 4
+					FLAG:潜伏场所 = 暗处
+			ENDSELECT
+		;雾之湖～红魔馆
+		CASE 310
+			SELECTCASE RAND(5)
+				CASE 0 
+					FLAG:潜伏场所 = 浓雾
+				CASE 1
+					FLAG:潜伏场所 = 岩石阴影
+				CASE 2
+					FLAG:潜伏场所 = 草丛
+				CASE 3
+					FLAG:潜伏场所 = 灌木丛
+				CASE 4
+					FLAG:潜伏场所 = 树林
+			ENDSELECT
+		CASE 320
+			SELECTCASE RAND(3)
+				CASE 0
+					FLAG:潜伏场所 = 冰墙后
+				CASE 1
+					FLAG:潜伏场所 = 冰屋里
+				CASEELSE
+					SELECTCASE RAND(3)
+						CASE 0 
+							FLAG:潜伏场所 = 草丛
+						CASE 1
+							FLAG:潜伏场所 = 灌木丛
+						CASE 2
+							FLAG:潜伏场所 = 树林
+					ENDSELECT
+			ENDSELECT
+		CASE 330
+			SELECTCASE RAND(3)
+				CASE 0
+					FLAG:潜伏场所 = 古旧の窗帘
+				CASE 1
+					FLAG:潜伏场所 = オルガンの阴
+				CASEELSE
+					SELECTCASE RAND(8)
+						CASE 0 
+							FLAG:潜伏场所 = 屋顶上
+						CASE 1
+							FLAG:潜伏场所 = 空的房间
+						CASE 2
+							FLAG:潜伏场所 = 服装箱
+						CASE 3
+							FLAG:潜伏场所 = 柱字的阴影
+						CASE 4
+							FLAG:潜伏场所 = 黑暗中
+						CASE 5
+							FLAG:潜伏场所 = 围墙的阴影
+						CASE 6
+							FLAG:潜伏场所 = 沙发的阴影
+						CASE 7
+							FLAG:潜伏场所 = 暗处
+					ENDSELECT
+			ENDSELECT
+		CASE 340
+			SELECTCASE RAND(3)
+				CASE 0
+					FLAG:潜伏场所 = 守卫小屋里
+				CASE 1
+					FLAG:潜伏场所 = 空的小屋里
+				CASEELSE
+					SELECTCASE RAND(7)
+						CASE 0 
+							FLAG:潜伏场所 = 屋顶上
+						CASE 1
+							FLAG:潜伏场所 = 花圃
+						CASE 2
+							FLAG:潜伏场所 = 灌木丛
+						CASE 3
+							FLAG:潜伏场所 = 树上
+						CASE 4
+							FLAG:潜伏场所 = 树林
+						CASE 5
+							FLAG:潜伏场所 = 围墙的阴影
+						CASE 6
+							FLAG:潜伏场所 = 暗处
+					ENDSELECT
+			ENDSELECT
+		CASE 350
+			SELECTCASE RAND(4)
+				CASE 0
+					FLAG:潜伏场所 = 会客厅的家具
+				CASE 1
+					FLAG:潜伏场所 = 厕所的隔间
+				CASE 2
+					FLAG:潜伏场所 = 大窗户的窗帘
+				CASEELSE
+					SELECTCASE RAND(6)
+						CASE 0 
+							FLAG:潜伏场所 = 房梁上
+						CASE 1
+							FLAG:潜伏场所 = 屏风
+						CASE 2
+							FLAG:潜伏场所 = 空的房间
+						CASE 3
+							FLAG:潜伏场所 = 服装箱
+						CASE 4
+							FLAG:潜伏场所 = 黑暗中
+						CASE 5
+							FLAG:潜伏场所 = 暗处
+					ENDSELECT
+			ENDSELECT
+		CASE 360
+			SELECTCASE RAND(4)
+				CASE 0
+					FLAG:潜伏场所 = 餐桌下
+				CASE 1
+					FLAG:潜伏场所 = 餐具柜的阴影
+				CASE 2
+					FLAG:潜伏场所 = 熄了火的壁炉
+				CASEELSE
+					SELECTCASE RAND(4)
+						CASE 0 
+							FLAG:潜伏场所 = 房梁上
+						CASE 1
+							FLAG:潜伏场所 = 屏风
+						CASE 2
+							FLAG:潜伏场所 = 黑暗中
+						CASE 3
+							FLAG:潜伏场所 = 暗处
+					ENDSELECT
+			ENDSELECT
+		CASE 370
+			SELECTCASE RAND(4)
+				CASE 0
+					FLAG:潜伏场所 = 书架的阴影
+				CASE 1
+					FLAG:潜伏场所 = 长桌下
+				CASE 2
+					FLAG:潜伏场所 = 古书の山
+				CASEELSE
+					SELECTCASE RAND(4)
+						CASE 0 
+							FLAG:潜伏场所 = 房梁上
+						CASE 1
+							FLAG:潜伏场所 = 柱字的阴影
+						CASE 2
+							FLAG:潜伏场所 = 黑暗中
+						CASE 3
+							FLAG:潜伏场所 = 暗处
+					ENDSELECT
+			ENDSELECT
+		CASE 380
+			SELECTCASE RAND(3)
+				CASE 0
+					FLAG:潜伏场所 = 大浴场深处
+				CASE 1
+					FLAG:潜伏场所 = 佣人房间深处
+				CASEELSE
+					SELECTCASE RAND(4)
+						CASE 0 
+							FLAG:潜伏场所 = 房梁上
+						CASE 1
+							FLAG:潜伏场所 = 屏风
+						CASE 2
+							FLAG:潜伏场所 = 黑暗中
+						CASE 3
+							FLAG:潜伏场所 = 暗处
+					ENDSELECT
+			ENDSELECT
+		;迷途竹林
+		CASE 410
+			SELECTCASE RAND(4)
+				CASE 0 
+					FLAG:潜伏场所 = 竹薮
+				CASE 1
+					FLAG:潜伏场所 = 祠堂的阴影
+				CASE 2
+					FLAG:潜伏场所 = 灌木丛
+				CASE 3
+					FLAG:潜伏场所 = 摊位的阴影
+			ENDSELECT
+		CASE 420
+			SELECTCASE RAND(2)
+				CASE 0
+					FLAG:潜伏场所 = 废屋里
+				CASEELSE
+					SELECTCASE RAND(4)
+						CASE 0 
+							FLAG:潜伏场所 = 竹薮
+						CASE 1
+							FLAG:潜伏场所 = 草丛
+						CASE 2
+							FLAG:潜伏场所 = 灌木丛
+						CASE 3
+							FLAG:潜伏场所 = 岩石阴影
+					ENDSELECT
+			ENDSELECT
+		CASE 430
+			SELECTCASE RAND(4)
+				CASE 0 
+					FLAG:潜伏场所 = 竹薮
+				CASE 1
+					FLAG:潜伏场所 = 草丛
+				CASE 2
+					FLAG:潜伏场所 = 灌木丛
+				CASE 3
+					FLAG:潜伏场所 = 岩石阴影
+			ENDSELECT
+		CASE 440
+			SELECTCASE RAND(4)
+				CASE 0 
+					FLAG:潜伏场所 = 竹薮
+				CASE 1
+					FLAG:潜伏场所 = 草丛
+				CASE 2
+					FLAG:潜伏场所 = 灌木丛
+				CASE 3
+					FLAG:潜伏场所 = 岩石阴影
+			ENDSELECT
+		CASE 450
+			SELECTCASE RAND(3)
+				CASE 0
+					FLAG:潜伏场所 = 床下
+				CASE 1
+					FLAG:潜伏场所 = 来客用厕所的隔间
+				CASEELSE
+					SELECTCASE RAND(4)
+						CASE 0 
+							FLAG:潜伏场所 = 屋顶上
+						CASE 1
+							FLAG:潜伏场所 = 屏风
+						CASE 2
+							FLAG:潜伏场所 = 房梁上
+						CASE 3
+							FLAG:潜伏场所 = 暗处
+					ENDSELECT
+			ENDSELECT
+		CASE 460
+			SELECTCASE RAND(3)
+				CASE 0
+					FLAG:潜伏场所 = 小川
+				CASE 1
+					FLAG:潜伏场所 = 草原
+				CASEELSE
+					SELECTCASE RAND(3)
+						CASE 0 
+							FLAG:潜伏场所 = 岩石阴影
+						CASE 1
+							FLAG:潜伏场所 = 山脊
+						CASE 2
+							FLAG:潜伏场所 = 灌木丛
+					ENDSELECT
+			ENDSELECT
+		CASE 470
+			SELECTCASE RAND(3)
+				CASE 0
+					FLAG:潜伏场所 = 向日葵田
+				CASE 1
+					FLAG:潜伏场所 = 向日葵田
+				CASE 2
+					FLAG:潜伏场所 = 向日葵田
+			ENDSELECT
+		CASE 480
+			SELECTCASE RAND(4)
+				CASE 0
+					FLAG:潜伏场所 = 屏风的阴影
+				CASE 1
+					FLAG:潜伏场所 = 竹帘背面
+				CASE 2
+					FLAG:潜伏场所 = 整块天花板里
+				CASEELSE
+					SELECTCASE RAND(4)
+						CASE 0 
+							FLAG:潜伏场所 = 屋顶上
+						CASE 1
+							FLAG:潜伏场所 = 空的房间
+						CASE 2
+							FLAG:潜伏场所 = 房梁上
+						CASE 3
+							FLAG:潜伏场所 = 暗处
+					ENDSELECT
+			ENDSELECT
+		CASE 490
+			SELECTCASE RAND(2)
+				CASE 0
+					FLAG:潜伏场所 = 窗帘
+				CASEELSE
+					SELECTCASE RAND(8)
+						CASE 0 
+							FLAG:潜伏场所 = 屋顶上
+						CASE 1
+							FLAG:潜伏场所 = 空的房间
+						CASE 2
+							FLAG:潜伏场所 = 房梁上
+						CASE 3
+							FLAG:潜伏场所 = 服装箱
+						CASE 4
+							FLAG:潜伏场所 = 花圃
+						CASE 5
+							FLAG:潜伏场所 = 仓库深处
+						CASE 6
+							FLAG:潜伏场所 = 沙发的阴影
+						CASE 7
+							FLAG:潜伏场所 = 暗处
+					ENDSELECT
+			ENDSELECT
+		;魔法之森
+		CASE 510
+			SELECTCASE RAND(3)
+				CASE 0
+					FLAG:潜伏场所 = 树上
+				CASE 1
+					FLAG:潜伏场所 = 草丛
+				CASE 2
+					FLAG:潜伏场所 = 树林
+			ENDSELECT
+		CASE 520
+			SELECTCASE RAND(2)
+				CASE 0
+					FLAG:潜伏场所 = 香霖堂里
+				CASEELSE
+					SELECTCASE RAND(6)
+						CASE 0 
+							FLAG:潜伏场所 = 屋顶上
+						CASE 1
+							FLAG:潜伏场所 = 商品架的阴影
+						CASE 2
+							FLAG:潜伏场所 = 灌木丛
+						CASE 3
+							FLAG:潜伏场所 = 树林
+						CASE 4
+							FLAG:潜伏场所 = 草丛
+						CASE 5
+							FLAG:潜伏场所 = 暗处
+					ENDSELECT
+			ENDSELECT
+		CASE 530
+			SELECTCASE RAND(4)
+				CASE 0
+					FLAG:潜伏场所 = 大树の树上
+				CASE 1
+					FLAG:潜伏场所 = 巨根的狭缝
+				CASE 2
+					FLAG:潜伏场所 = 妖怪蘑菇伞
+				CASEELSE
+					SELECTCASE RAND(4)
+						CASE 0 
+							FLAG:潜伏场所 = 树林
+						CASE 1
+							FLAG:潜伏场所 = 灌木丛
+						CASE 2
+							FLAG:潜伏场所 = 草丛
+						CASE 3
+							FLAG:潜伏场所 = 岩石阴影
+					ENDSELECT
+			ENDSELECT
+		CASE 540
+			SELECTCASE RAND(3)
+				CASE 0
+					FLAG:潜伏场所 = 魔法店里
+				CASE 1
+					FLAG:潜伏场所 = 柜台下
+				CASEELSE
+					SELECTCASE RAND(4)
+						CASE 0 
+							FLAG:潜伏场所 = 灌木丛
+						CASE 1
+							FLAG:潜伏场所 = 商品架的阴影
+						CASE 2
+							FLAG:潜伏场所 = 仓库深处
+						CASE 3
+							FLAG:潜伏场所 = 暗处
+					ENDSELECT
+			ENDSELECT
+		CASE 550
+			SELECTCASE RAND(3)
+				CASE 0
+					FLAG:潜伏场所 = 歌莉亚人偶的裙子里
+				CASE 1
+					FLAG:潜伏场所 = 楼梯旁
+				CASEELSE
+					SELECTCASE RAND(4)
+						CASE 0 
+							FLAG:潜伏场所 = 柱字的阴影
+						CASE 1
+							FLAG:潜伏场所 = 服装箱
+						CASE 2
+							FLAG:潜伏场所 = 空的房间
+						CASE 3
+							FLAG:潜伏场所 = 暗处
+					ENDSELECT
+			ENDSELECT
+		CASE 560
+			SELECTCASE RAND(3)
+				CASE 0
+					FLAG:潜伏场所 = 彼岸花圃
+				CASE 1
+					FLAG:潜伏场所 = 彼岸花簇
+				CASE 2
+					FLAG:潜伏场所 = 彼岸花的絨毯
+			ENDSELECT
+		CASE 570
+			SELECTCASE RAND(3)
+				CASE 0
+					FLAG:潜伏场所 = 紫色樱树
+				CASE 1
+					FLAG:潜伏场所 = 无名墓标的阴影
+				CASEELSE
+					SELECTCASE RAND(4)
+						CASE 0 
+							FLAG:潜伏场所 = 灌木丛
+						CASE 1
+							FLAG:潜伏场所 = 岩石阴影
+						CASE 2
+							FLAG:潜伏场所 = 山脊
+						CASE 3
+							FLAG:潜伏场所 = 草丛
+					ENDSELECT
+			ENDSELECT
+		;三途之川～冥界
+		CASE 610
+			SELECTCASE RAND(2)
+				CASE 0
+					FLAG:潜伏场所 = 大看板的阴影
+				CASEELSE
+					SELECTCASE RAND(6)
+						CASE 0 
+							FLAG:潜伏场所 = 灌木丛
+						CASE 1
+							FLAG:潜伏场所 = 摊位的阴影
+						CASE 2
+							FLAG:潜伏场所 = 屋顶上
+						CASE 3
+							FLAG:潜伏场所 = 推车的阴影
+						CASE 4
+							FLAG:潜伏场所 = 巷子
+						CASE 5
+							FLAG:潜伏场所 = 暗处
+					ENDSELECT
+			ENDSELECT
+		CASE 620
+			SELECTCASE RAND(3)
+				CASE 0
+					FLAG:潜伏场所 = 渡船
+				CASE 1
+					FLAG:潜伏场所 = 山水濑
+				CASEELSE
+					SELECTCASE RAND(3)
+						CASE 0 
+							FLAG:潜伏场所 = 灌木丛
+						CASE 1
+							FLAG:潜伏场所 = 岩石阴影
+						CASE 2
+							FLAG:潜伏场所 = 浓雾
+					ENDSELECT
+			ENDSELECT
+		CASE 630
+			SELECTCASE RAND(5)
+				CASE 0
+					FLAG:潜伏场所 = 围墙的阴影
+				CASE 1
+					FLAG:潜伏场所 = 屏风
+				CASE 2
+					FLAG:潜伏场所 = 房梁上
+				CASE 3
+					FLAG:潜伏场所 = 空的房间
+				CASE 4
+					FLAG:潜伏场所 = 方便合适的间隙
+			ENDSELECT
+		CASE 640
+			SELECTCASE RAND(3)
+				CASE 0
+					FLAG:潜伏场所 = 花圃
+				CASE 1
+					FLAG:潜伏场所 = 花圃
+				CASE 2
+					FLAG:潜伏场所 = 花圃
+			ENDSELECT
+		CASE 650
+			SELECTCASE RAND(4)
+				CASE 0
+					FLAG:潜伏场所 = 西行妖的阴影
+				CASE 1
+					FLAG:潜伏场所 = 石灯篭的阴影
+				CASE 2
+					FLAG:潜伏场所 = 树篱
+				CASEELSE
+					SELECTCASE RAND(3)
+						CASE 0 
+							FLAG:潜伏场所 = 屋顶上
+						CASE 1
+							FLAG:潜伏场所 = 岩石阴影
+						CASE 2
+							FLAG:潜伏场所 = 暗处
+					ENDSELECT
+			ENDSELECT
+		CASE 660
+			SELECTCASE RAND(4)
+				CASE 0
+					FLAG:潜伏场所 = 房梁上
+				CASE 1
+					FLAG:潜伏场所 = 空的房间
+				CASE 2
+					FLAG:潜伏场所 = 屏风
+				CASE 3
+					FLAG:潜伏场所 = 暗处
+			ENDSELECT
+		CASE 670
+			SELECTCASE RAND(4)
+				CASE 0
+					FLAG:潜伏场所 = 岩石阴影
+				CASE 1
+					FLAG:潜伏场所 = 浓雾
+				CASE 2
+					FLAG:潜伏场所 = 黑暗中
+				CASE 3
+					FLAG:潜伏场所 = 暗处
+			ENDSELECT
+		CASE 680
+			SELECTCASE RAND(4)
+				CASE 0
+					FLAG:潜伏场所 = 暗处
+				CASE 1
+					FLAG:潜伏场所 = 暗处
+				CASE 2
+					FLAG:潜伏场所 = 暗处
+				CASE 3
+					FLAG:潜伏场所 = 暗处
+			ENDSELECT
+		CASE 690
+			SELECTCASE RAND(4)
+				CASE 0
+					FLAG:潜伏场所 = 暗处
+				CASE 1
+					FLAG:潜伏场所 = 暗处
+				CASE 2
+					FLAG:潜伏场所 = 暗处
+				CASE 3
+					FLAG:潜伏场所 = 暗处
+			ENDSELECT
+		;妖怪之山・山麓
+		CASE 710
+			SELECTCASE RAND(2)
+				CASE 0
+					FLAG:潜伏场所 = 小屋里
+				CASEELSE
+					SELECTCASE RAND(5)
+						CASE 0 
+							FLAG:潜伏场所 = 草丛
+						CASE 1
+							FLAG:潜伏场所 = 岩石阴影
+						CASE 2
+							FLAG:潜伏场所 = 灌木丛
+						CASE 3
+							FLAG:潜伏场所 = 树林
+						CASE 4
+							FLAG:潜伏场所 = 树上
+					ENDSELECT
+			ENDSELECT
+		CASE 720
+			SELECTCASE RAND(2)
+				CASE 0
+					FLAG:潜伏场所 = 河边的岩石阴影
+				CASEELSE
+					SELECTCASE RAND(5)
+						CASE 0 
+							FLAG:潜伏场所 = 草丛
+						CASE 1
+							FLAG:潜伏场所 = 岩石阴影
+						CASE 2
+							FLAG:潜伏场所 = 灌木丛
+						CASE 3
+							FLAG:潜伏场所 = 树林
+						CASE 4
+							FLAG:潜伏场所 = 树上
+					ENDSELECT
+			ENDSELECT
+		CASE 730
+			SELECTCASE RAND(5)
+				CASE 0 
+					FLAG:潜伏场所 = 草丛
+				CASE 1
+					FLAG:潜伏场所 = 祠堂的阴影
+				CASE 2
+					FLAG:潜伏场所 = 灌木丛
+				CASE 3
+					FLAG:潜伏场所 = 树林
+				CASE 4
+					FLAG:潜伏场所 = 树上
+			ENDSELECT
+		CASE 740
+			SELECTCASE RAND(5)
+				CASE 0
+					FLAG:潜伏场所 = 围墙的阴影
+				CASE 1
+					FLAG:潜伏场所 = 屏风
+				CASE 2
+					FLAG:潜伏场所 = 房梁上
+				CASE 3
+					FLAG:潜伏场所 = 空的房间
+				CASE 4
+					FLAG:潜伏场所 = 方便合适的间隙
+			ENDSELECT
+		CASE 750
+			SELECTCASE RAND(3)
+				CASE 0
+					FLAG:潜伏场所 = 书房深处
+				CASE 1
+					FLAG:潜伏场所 = 回廊深处
+				CASEELSE
+					SELECTCASE RAND(5)
+						CASE 0 
+							FLAG:潜伏场所 = 柱字的阴影
+						CASE 1
+							FLAG:潜伏场所 = 房梁上
+						CASE 2
+							FLAG:潜伏场所 = 屋顶上
+						CASE 3
+							FLAG:潜伏场所 = 围墙的阴影
+						CASE 4
+							FLAG:潜伏场所 = 暗处
+					ENDSELECT
+			ENDSELECT
+		CASE 760
+			SELECTCASE RAND(3)
+				CASE 0
+					FLAG:潜伏场所 = 核聚变炉保养通道
+				CASE 1
+					FLAG:潜伏场所 = 非常用七千楼梯
+				CASE 2
+					FLAG:潜伏场所 = 错综复杂的管道网
+				CASEELSE
+					SELECTCASE RAND(5)
+						CASE 0 
+							FLAG:潜伏场所 = 柱字的阴影
+						CASE 1
+							FLAG:潜伏场所 = 黑暗中
+						CASE 2
+							FLAG:潜伏场所 = 洞穴
+						CASE 3
+							FLAG:潜伏场所 = 岩石阴影
+						CASE 4
+							FLAG:潜伏场所 = 暗处
+					ENDSELECT
+			ENDSELECT
+		;妖怪之山・山顶
+		CASE 810
+			SELECTCASE RAND(3)
+				CASE 0
+					FLAG:潜伏场所 = 洞穴
+				CASE 1
+					FLAG:潜伏场所 = 灌木丛
+				CASE 2
+					FLAG:潜伏场所 = 岩石阴影
+			ENDSELECT
+		CASE 820
+			SELECTCASE RAND(5)
+				CASE 0 
+					FLAG:潜伏场所 = 草丛
+				CASE 1
+					FLAG:潜伏场所 = 祠堂的阴影
+				CASE 2
+					FLAG:潜伏场所 = 灌木丛
+				CASE 3
+					FLAG:潜伏场所 = 树林
+				CASE 4
+					FLAG:潜伏场所 = 山脊
+			ENDSELECT
+		CASE 830
+			SELECTCASE RAND(5)
+				CASE 0 
+					FLAG:潜伏场所 = 草丛
+				CASE 1
+					FLAG:潜伏场所 = 岩石阴影
+				CASE 2
+					FLAG:潜伏场所 = 灌木丛
+				CASE 3
+					FLAG:潜伏场所 = 树林
+				CASE 4
+					FLAG:潜伏场所 = 树上
+			ENDSELECT
+		CASE 840
+			SELECTCASE RAND(4)
+				CASE 0
+					FLAG:潜伏场所 = 机器人型广告气球
+				CASE 1
+					FLAG:潜伏场所 = 御柱
+				CASE 2
+					FLAG:潜伏场所 = 像大蛇形状的石头
+				CASEELSE
+					SELECTCASE RAND(5)
+						CASE 0 
+							FLAG:潜伏场所 = 围墙的阴影
+						CASE 1
+							FLAG:潜伏场所 = 屋顶上
+						CASE 2
+							FLAG:潜伏场所 = 岩石阴影
+						CASE 3
+							FLAG:潜伏场所 = 灌木丛
+						CASE 4
+							FLAG:潜伏场所 = 暗处
+					ENDSELECT
+			ENDSELECT
+		CASE 850
+			SELECTCASE RAND(5)
+				CASE 0 
+					FLAG:潜伏场所 = 屏风
+				CASE 1
+					FLAG:潜伏场所 = 房梁上
+				CASE 2
+					FLAG:潜伏场所 = 空的房间
+				CASE 3
+					FLAG:潜伏场所 = 柱字的阴影
+				CASE 4
+					FLAG:潜伏场所 = 暗处
+			ENDSELECT
+		CASE 890
+			SELECTCASE RAND(3)
+				CASE 0
+					FLAG:潜伏场所 = 桃树
+				CASE 1
+					FLAG:潜伏场所 = 要石
+				CASEELSE
+					SELECTCASE RAND(5)
+						CASE 0 
+							FLAG:潜伏场所 = 围墙的阴影
+						CASE 1
+							FLAG:潜伏场所 = 屋顶上
+						CASE 2
+							FLAG:潜伏场所 = 岩石阴影
+						CASE 3
+							FLAG:潜伏场所 = 巷子
+						CASE 4
+							FLAG:潜伏场所 = 暗处
+					ENDSELECT
+			ENDSELECT
+		;地底
+		CASE 910
+			SELECTCASE RAND(3)
+				CASE 0
+					FLAG:潜伏场所 = 洞穴
+				CASE 1
+					FLAG:潜伏场所 = 岩石阴影
+				CASE 2
+					FLAG:潜伏场所 = 黑暗中
+			ENDSELECT
+		CASE 920
+			SELECTCASE RAND(2)
+				CASE 0
+					FLAG:潜伏场所 = 桥台
+				CASEELSE
+					SELECTCASE RAND(3)
+						CASE 0 
+							FLAG:潜伏场所 = 岩石阴影
+						CASE 1
+							FLAG:潜伏场所 = 洞穴
+						CASE 2
+							FLAG:潜伏场所 = 黑暗中
+					ENDSELECT
+			ENDSELECT
+		CASE 930
+			SELECTCASE RAND(5)
+				CASE 0 
+					FLAG:潜伏场所 = 巷子
+				CASE 1
+					FLAG:潜伏场所 = 屋顶上
+				CASE 2
+					FLAG:潜伏场所 = 推车的阴影
+				CASE 3
+					FLAG:潜伏场所 = 摊位的阴影
+				CASE 4
+					FLAG:潜伏场所 = 围墙的阴影
+			ENDSELECT
+		CASE 940
+			SELECTCASE RAND(2)
+				CASE 0
+					FLAG:潜伏场所 = 水雾
+				CASEELSE
+					SELECTCASE RAND(3)
+						CASE 0 
+							FLAG:潜伏场所 = 岩石阴影
+						CASE 1
+							FLAG:潜伏场所 = 巷子
+						CASE 2
+							FLAG:潜伏场所 = 暗处
+					ENDSELECT
+			ENDSELECT
+		CASE 960
+			SELECTCASE RAND(3)
+				CASE 0
+					FLAG:潜伏场所 = 玫瑰园
+				CASE 1
+					FLAG:潜伏场所 = 办公桌下
+				CASEELSE
+					SELECTCASE RAND(10)
+						CASE 0 
+							FLAG:潜伏场所 = 围墙的阴影
+						CASE 1
+							FLAG:潜伏场所 = 屋顶上
+						CASE 2
+							FLAG:潜伏场所 = 服装箱
+						CASE 3
+							FLAG:潜伏场所 = 屏风
+						CASE 4
+							FLAG:潜伏场所 = 房梁上
+						CASE 5
+							FLAG:潜伏场所 = 空的房间
+						CASE 6
+							FLAG:潜伏场所 = 柱字的阴影
+						CASE 7
+							FLAG:潜伏场所 = 桌子下
+						CASE 8
+							FLAG:潜伏场所 = 沙发的阴影
+						CASE 9
+							FLAG:潜伏场所 = 暗处
+					ENDSELECT
+			ENDSELECT
+		CASE 970
+			SELECTCASE RAND(4)
+				CASE 0
+					FLAG:潜伏场所 = 烟燻湖
+				CASE 1
+					FLAG:潜伏场所 = 灰之湖
+				CASE 2
+					FLAG:潜伏场所 = 最初之火的火炉
+				CASEELSE
+					SELECTCASE RAND(3)
+						CASE 0 
+							FLAG:潜伏场所 = 岩石阴影
+						CASE 1
+							FLAG:潜伏场所 = 黑暗中
+						CASE 2
+							FLAG:潜伏场所 = 暗处
+					ENDSELECT
+			ENDSELECT
+		;梦之世界～月
+		CASE 1010
+			SELECTCASE RAND(3)
+				CASE 0
+					FLAG:潜伏场所 = 胖次巨像
+				CASE 1
+					FLAG:潜伏场所 = 扫除道具和茶具的山
+				CASE 2
+					FLAG:潜伏场所 = 跳蛋田
+			ENDSELECT
+		CASE 1050
+			SELECTCASE RAND(5)
+				CASE 0 
+					FLAG:潜伏场所 = 巷子
+				CASE 1
+					FLAG:潜伏场所 = 屋顶上
+				CASE 2
+					FLAG:潜伏场所 = 推车的阴影
+				CASE 3
+					FLAG:潜伏场所 = 摊位的阴影
+				CASE 4
+					FLAG:潜伏场所 = 围墙的阴影
+			ENDSELECT
+		CASE 1060
+			SELECTCASE RAND(5)
+				CASE 0 
+					FLAG:潜伏场所 = 围墙的阴影
+				CASE 1
+					FLAG:潜伏场所 = 屋顶上
+				CASE 2
+					FLAG:潜伏场所 = 柱字的阴影
+				CASE 3
+					FLAG:潜伏场所 = 桌子下
+				CASE 4
+					FLAG:潜伏场所 = 暗处
+			ENDSELECT
+		CASE 1070
+			SELECTCASE RAND(5)
+				CASE 0 
+					FLAG:潜伏场所 = 巷子
+				CASE 1
+					FLAG:潜伏场所 = 屋顶上
+				CASE 2
+					FLAG:潜伏场所 = 推车的阴影
+				CASE 3
+					FLAG:潜伏场所 = 摊位的阴影
+				CASE 4
+					FLAG:潜伏场所 = 围墙的阴影
+			ENDSELECT
+		CASE 1080
+			SELECTCASE RAND(3)
+				CASE 0
+					FLAG:潜伏场所 = 桃林
+				CASE 1
+					FLAG:潜伏场所 = 砂丘
+				CASE 2
+					FLAG:潜伏场所 = 洼地
+			ENDSELECT
+		CASE 1090
+			SELECTCASE RAND(3)
+				CASE 0
+					FLAG:潜伏场所 = 结界的狭间
+				CASE 1
+					FLAG:潜伏场所 = 地球的影子
+				CASE 2
+					FLAG:潜伏场所 = 水面的地球
+			ENDSELECT
+		CASEELSE
+					FLAG:潜伏场所 = 暗处
+		ENDSELECT
+ELSE
+	;据点MAPの潜伏场所选定はまだ作成していない
+	FLAG:潜伏场所 = 暗处
+ENDIF

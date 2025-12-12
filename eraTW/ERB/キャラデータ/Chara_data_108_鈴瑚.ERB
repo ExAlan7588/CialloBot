@@ -1,0 +1,182 @@
+﻿@CHARAMOVE_DATA_108(ARG, ARG:2)
+LOCAL = 108
+SELECTCASE ARG
+	;连动设定（RETURN=依存する角色, RESULT:1～3=对等に连动する角色）
+	CASE 1
+		;たまに连动
+		IF FLAG:每日变更事件 % 10 == 0
+			RESULT:1 = [[清兰]]
+			RESULT:2 = [[铃瑚]]
+		ENDIF
+	;特殊生活时间设定（CFLAG:LOCAL:生活时间补正を设定する）
+	CASE 3
+	;移动倾向（±～10=行きやすい/行きにくい, -100=行かない）
+	CASE 4
+		SELECTCASE ARG:2
+			;宁静海の方へは行かない
+			CASE P1016入海口, P1060纯狐邸・玄关 TO P1072赫卡提亚私室
+				RETURN -100
+			;哆来咪宅には行かない
+			CASE P1050哆来咪宅・起居室 TO P1055哆来咪宅・厕所
+				RETURN -100
+			;门卫值班室は行かない
+			CASE P1023门卫值班室
+				RETURN -100
+			;二阶はあまり行かない
+			CASE P1040二层回廊 TO P1044会客厅
+				RETURN -5
+			;玉兔街方面,玉兔食堂,玉兔值班室によく居る
+			CASE P1003玉兔街, P1004广场, P1010饭店 TO P1013蔬菜店, P1024玉兔食堂, P1025玉兔值班室
+				RETURN 5
+		ENDSELECT
+	;出现场所
+	CASE 7
+		SELECTCASE ARG:2
+			CASE 竹林入口, 迷失的小道, 斜角的竹林, 兔的洞穴, 永远亭
+				RETURN 1
+			CASE 广场, 商业街, 吞屋小道
+				RETURN 1
+			CASE 月之都, 绵月亭, 玉兔之街, 桃林～沙滩
+				RETURN 1
+		ENDSELECT
+	;引力设定（CFLAG:LOCAL:引力点を设定する）
+	CASE 8
+ENDSELECT
+
+@EXIST_キャラデータ108
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@キャラデータ108(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "称呼"
+	CALLF MAKE_STR(V_NAME, "铃瑚")
+;こっから衣装设定
+CASE "今天的睡衣"
+	CALLF MAKE_STR(V_NAME, "睡衣（裤子）套")
+
+CASE "便装：帽子"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("帽子", "鴨舌帽"))
+CASE "便装：上身衣服２"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("上身衣服２", "Ｔ恤衬衫"))
+CASE "便装：裤子"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("裤子", "南瓜裤"))
+
+CASE "固有内衣形容词"
+	CALLF MAKE_STR(V_NAME, "画上【铃瑚屋】的")
+CASE "固有下半身内衣名"
+	CALLF MAKE_STR(V_NAME, "宣传用胖次")
+CASE "固有上半身内衣"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "固有上半身内衣名"
+	CALLF MAKE_STR(V_NAME, "非钢丝胸罩")
+CASE "固有内衣着用条件"
+	SIF !RAND:(1 + (2 * 胜负内衣判定([[铃瑚]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "固有内衣半透明(前)"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "固有内衣半透明(后)"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "固有内衣布料厚度"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;料理关联
+CASE "料理：喜欢的味道"
+	CALLF MAKE_STR(V_NAME, "野趣/中华/锅物/丰盛/浓厚/秋物/野趣/新鲜/豪快/软糯的/玉兔流/月都风/赏月/甜/甜/辣/辣/胡萝卜/胡萝卜/胡萝卜/胡萝卜/胡萝卜/")
+CASE "料理：讨厌的味道"
+	CALLF MAKE_STR(V_NAME, "简易/清淡/朴素/咸/咸/" + "青蛙/野味/虫肉/" * 3 + "谜料理/" * 5)
+CASE "料理：助手效果"
+	CALLF MAKE_STR(V_NAME, "玉兔流/浓郁/")
+;赠り物关联
+CASE "感性：好き"
+	CALLF MAKE_STR(V_NAME, "朱/秩序/可爱的/朴素/" + "食器/" * 3 + "橘色の/兔の/苹果の/" * 5)
+CASE "感性：嫌い"
+	CALLF MAKE_STR(V_NAME, "洛丽塔/威严/" + "刃物/生体品/护臂/" * 3 + "浅葱色の/" * 10)
+ENDSELECT
+
+;-------------------------------------------------
+;固有料理设定
+;DISH_NAME          料理名
+;RESULTS            料理の种类（轻食/主食/甜点）
+;CALL 材料设定("")  材料の指定。"泛用"を入れると自动で泛用食材になる
+;DISH_TASTE         味の设定
+;DISH_COMMENT       （任意）一行コメント
+;DISH_TIME          （任意）调理にかかる时间
+;DISH_MAXLIMIT      （任意）料理の持续时间
+;-------------------------------------------------
+@SPECIAL_MENU_108
+DISH_NAME = 铃瑚印的团子
+RESULTS = 甜点
+CALL 材料设定("仙桃")
+DISH_TASTE = 和食/团子/甜/朴素/家庭的/豪快/软糯的/玉兔流/魔性/
+DISH_COMMENT = 铃瑚卖的仙桃团子。能让人充满力量。
+RETURN 1
+
+;IMAGE_I108_特殊服装(CHARA)-------------------------------------------------------------------
+;角色特有の服装表示条件
+;エフェクトを共有する服装差分はこちらで指定する
+;使用时注意点:
+;	RESULTSに特殊服装を格纳すること
+;	书式は %服装%%特殊服装% 适宜"_"等入れること
+;-------------------------------------------------------------------------------------------
+@IMAGE_I108_特殊服装(CHARA)
+#DIM CHARA
+VARSET RESULTS
+
+IF CFLAG:CHARA:应用差分替换
+	;替换用画像
+	IF CHECK_NUDE(CHARA)
+		;裸
+		IF FLAG:立绘种类
+			;颜绘
+		ELSE
+			;立绘
+		ENDIF
+	ELSE
+		;服
+		IF FLAG:立绘种类
+			;颜绘
+		ELSE
+			;立绘
+		ENDIF
+	ENDIF
+ELSE
+	;通常画像
+	IF CHECK_NUDE(CHARA)
+		;裸
+		IF FLAG:立绘种类
+			;颜绘
+		ELSE
+			;立绘
+		ENDIF
+	ELSE
+		;服
+		IF CFLAG:CHARA:衣物暂时更换 == 55 || (CFLAG:CHARA:基本服装SET == 55 && CFLAG:CHARA:衣物暂时更换==0)
+			IF FLAG:立绘种类
+				;颜绘
+				RESULTS = _バニー
+			ELSE
+				;立绘
+				RESULTS = _バニー
+			ENDIF
+		ENDIF
+	ENDIF
+ENDIF
+
+;********************************************************************************************
+@IMAGE_EX_I108_PREリソースチェック(CHARA, 表示形式, 服装, 表情, 表情_マウスオーバー, 差分, 乳量)
+#DIM CHARA
+#DIMS 表示形式
+#DIMS 服装
+#DIMS 表情
+#DIMS 表情_マウスオーバー
+#DIMS 差分
+#DIMS 乳量
+
+SIF CFLAG:CHARA:应用差分替换 == 1
+	CALL COMPOSE_SPRITE_PRESET(CHARA)

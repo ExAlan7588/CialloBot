@@ -1,0 +1,9 @@
+﻿;お出かけイベント最大数
+;イベント增やしたら适宜变更してください
+#DEFINE GO_OUT_MAX_NO 10
+
+;イベント用广域变量
+;#DIM SAVEDATAは败者・食尘しても值が残ります
+;必要で那个ば@BITE_THE_DUST_CLEAR_GLOBAL_VARIABLEにリセット处理置いてください
+;EV06
+#DIM SAVEDATA GO_OUT_FLAG_06

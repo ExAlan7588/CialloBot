@@ -1,0 +1,41 @@
+﻿;DAILY_EV23の作成にあたって广域变量が欲しくなった
+;他のデイリー用にもどうぞ
+
+;デイリーイベント最大数（40で那个ば EV0 ～ EV39 まで）
+#DEFINE DAILY_EV_MAX 40
+
+;----------------------------
+;EV23：访问贩卖
+;----------------------------
+#DIM SAVEDATA FLAG_DAILY_EV23
+;BIT0 イベントが一度でも发生した
+;BIT1 脉无、もう二度と贩卖员は来ない
+;BIT2 说明を最后まで闻いた
+;BIT3 奇迹之石を购入した
+;BIT4 贩卖员が炮友になった
+
+#DIM SAVEDATA FLAG_DAILY_EV23_贩卖员
+
+#DIM CONST DAILY_EV23_ミラダ_定价 = 980000
+#DIM CONST DAILY_EV23_ミラダ_安值 = 49800
+#DIM CONST DAILY_EV23_ミラダ_底值 = 29800
+
+;----------------------------
+;EV28：通い狼
+;----------------------------
+#DIM SAVEDATA FLAG_DAILY_EV28
+;BIT0 イベントが一度でも发生した
+;BIT1 オオカミ狩り
+
+#DIM SAVEDATA DAILY_EV28_壁ドン
+
+;----------------------------
+;EV29：职场见学
+;----------------------------
+#DIM SAVEDATA FLAG_DAILY_EV29
+;BIT0 イベントが一度でも发生した
+;BIT1 ツケ
+#DIM SAVEDATA DAILY_EV29_NIKOMI			;煮込み杂烩粥
+#DIM SAVEDATA FLAG_DAILY_EV29_PAID		;支払回数
+#DIM SAVEDATA FLAG_DAILY_EV29_DEBT		;借金
+#DIM SAVEDATA FLAG_DAILY_EV29_LASTTIME	;最后に发生した日

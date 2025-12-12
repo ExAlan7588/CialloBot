@@ -1,0 +1,2323 @@
+﻿;CALL K42_4KANO
+;==========================================================================================
+;君のことが大大大大大好きな４人の天狗
+;==========================================================================================
+;どっちから告白したか判别できないんでお互いに思いを传えあった体で
+;他の口上作者さんの角色をツッコミ役にするのもどうかと思ったので果に顽张ってもらいました
+@K42_4KANO
+	PRINTFORML ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+	PRINTFORML ┃%"事件：超超超超喜欢你的4个天狗",72,LEFT%┃
+	PRINTFORML ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+	PRINTW 
+	PRINTFORML %CALLNAME:MASTER%的家里，4个天狗像包围%CALLNAME:MASTER%一样坐着
+	PRINTFORML 是乌鸦天狗射命丸文、同事姬海棠果、白狼天狗犬走椛、以及大天狗饭纲丸龙
+	PRINTW 
+	PRINTFORML …………
+	PRINTFORML 「…………」
+	PRINTFORML 「…………」
+	PRINTFORML 「…………」
+	PRINTFORML 「…………」
+	PRINTW 
+	PRINTFORML 总之……就是这样，%CALLNAME:MASTER%要和大家交往了……
+	PRINTFORML 「等一下！等等等等等等一下！！！！！！」
+	PRINTFORML 猛烈吐槽的是果
+	PRINTW 
+	PRINTFORML 「脚踏两条船我都觉得过分了，竟然是四条船！？文就算了，连椛和龙龙都卷进来了！！」
+	SIF GROUPMATCH(TALENT:妊娠, [[文]], [[果]], [[椛]], [[龙]]) && GROUPMATCH(CFLAG:身份认同_母 == 1, [[文]], [[果]], [[椛]], [[龙]]) && GROUPMATCH(!CFLAG:无自觉妊娠, [[文]], [[果]], [[椛]], [[龙]])
+		PRINTFORML 「而且肚子里还有%CALLNAME:MASTER%的孩子什么的…简直不敢相信…」
+	PRINTFORML 「稍微等一下，果刚才说的话我不能当没听见。话说回来除了我以外还有恋人是什么意思？」
+	PRINTFORML 「呜哇哇…我在这里面也不是能大声说话的立场…如果%CALLNAME:MASTER%能珍惜我的话…」
+	PRINTFORML 「%CALLNAME:MASTER%…虽然我说过想和你一起走下去…但没想到不只是有伴跑者，甚至还在进行激烈的冲刺赛」
+	PRINTW 
+	PRINTFORML 「%MASTERNAME:42%…难道说，你讨厌我了吗…？」
+	PRINTFORML 果用湿润的眼瞳询问%CALLNAME:MASTER%
+	PRINTFORMW %CALLNAME:MASTER%摇了摇头，表示没有这回事
+	PRINTL 
+	PRINTFORML 果天真率直的地方很可爱
+	PRINTFORML 直率地表达喜欢的心情的地方很可爱
+	PRINTFORML 津津有味地吃饭的样子也很可爱
+	PRINTFORML 对各种事情都感兴趣并享受其中的样子也很可爱
+	PRINTW 
+	CALL HPH_PRINT,@"「%MASTERNAME:42%…HPH」","L"
+	PRINTFORML 果听着毫不保留地夸赞自己的魅力，脸颊微微泛红
+	PRINTL 
+	PRINTFORML 文虽然有时候会说些毒舌的话，但只有两个人的时候非常坦率可爱
+	PRINTFORML 其实非常喜欢身体接触的地方也很可爱
+	PRINTFORML 对工作认真的时候也很可爱
+	PRINTFORML 摸摸头的时候意外地喜欢撒娇的地方也很可爱
+	PRINTL 
+	PRINTFORML 椛有礼貌很可爱
+	PRINTFORML 有高兴的事情尾巴会啪嗒啪嗒地摇很可爱
+	PRINTFORML 发情时的反差很可爱
+	PRINTFORML 工作时凛凛的样子很可爱
+	PRINTL 
+	PRINTFORML 龙是工作能干的女性，很可爱
+	PRINTFORML 撒娇的时候会让你尽情撒娇，很可爱
+	PRINTFORML 明明很厉害却擅长料理和打扫，很可爱
+	PRINTFORML 经常关注部下，也经常提起他们，很可爱
+	PRINTW 
+	PRINTFORML 「呜哇哇哇哇！把我刚才的感动还回来！」
+	PRINTFORML 「%CALLNAME:MASTER%桑，稍微、稍微在她们面前暴露这些…///」
+	PRINTFORML 「%CALLNAME:MASTER%桑，竟然这么关注我…///」
+	PRINTFORML 「%CALLNAME:MASTER%…被你这么堂堂正正地说出来…那个…即使是我也会害羞的…」
+	PRINTW 
+	PRINTFORML 「…那么，从4个人中选谁？别告诉我你要继续脚踏四条船哦？」
+	PRINTFORML 因为太喜欢4个人了所以选不出来「哇～这家伙真的说出口了」
+	PRINTW 
+	PRINTFORML %CALLNAME:MASTER%辩解道
+	PRINTFORML 龙的拿手菜是大天狗的麦饭，果的拿手菜是公主甜点
+	PRINTFORML 喜欢上了大天狗的麦饭，并不代表讨厌公主甜点
+	PRINTFORML 只是在大喜欢这个类别里，加入了「大天狗的麦饭」和「公主甜点」而已
+	PRINTFORML 同样地，在最爱这个项目里，加入了龙和果
+	PRINTFORML 不用说，文和椛也包含在这个项目里
+	PRINTW 
+	PRINTFORML 「别用『最喜欢的小菜是炸鸡块』的感觉来说我的恋心啊…」
+	PRINTFORML 「嘛，等等姬海棠。用这个来确认%CALLNAME:MASTER%是不是认真的吧」
+	PRINTFORML 这么说着，龙从丰满的胸口拿出了一副像单片眼镜一样的机械
+	PRINTW 
+	PRINTFORML 「那是什么？」
+	PRINTFORML 「山童说是叫做『测定仪』的东西」
+	PRINTFORML 「通常好像是用来数值化战斗能力的，但这个是把我们从你那里获得的好感度数值化」
+	PRINTFORML 「听山童说，3000以上的话就代表真的爱着对方。超过8000就毋庸置疑了」
+	PRINTFORML 「总感觉是个非常方便主义的道具…
+	PRINTFORML 「话是这么说，但至少能成为判断材料之一吧？山童和河童一样技术力可是很可靠的」
+	PRINTW 
+	PRINTFORML 龙把测定仪戴在右眼侧，开始测定%CALLNAME:MASTER%
+	PRINTFORML 「让我看看…7000…8000…！！不可能！」
+	PRINTFORML 「龙、龙龙，%MASTERNAME:42%的好感度是多少？」
+	PRINTFORML 「8000以上…！」
+	PRINTFORML 「8000…！哇哇，饭纲丸大人，您被深爱着呢…」
+	PRINTFORML 椛瞪大了眼睛，交替看着%CALLNAME:MASTER%和龙
+	PRINTW 
+	PRINTFORML 「好了，射命丸。接下来你来试试」
+	PRINTFORML 「诶！？我吗！？我最后再…或者说不测也可以…」
+	PRINTFORML 「文…你，平时那么强势，一谈恋爱就认真过头，意外地胆小呢…」
+	PRINTFORML 4个人的视线集中在文身上
+	PRINTFORML 「呜…我知道了啦…我测就是了…」
+	PRINTFORML 文用如同世界末日一般的表情戴上测定仪，开始了测定
+	PRINTL 
+	PRINTFORML 「……」
+	PRINTFORML 「啊，文桑？你没事吧？」
+	PRINTFORML 「…以上…」
+	PRINTFORML 「诶？」
+	PRINTFORML 「8000以上…了…呵呵呵，嘛，像我这么有魅力的女人，当然是这样了…太好了……」
+	PRINTFORML 「…总觉得悲壮感太浓厚了，让人都不好意思捉弄了。太好了呢～，文」
+	PRINTFORML 果轻轻抱住啜泣着安心的泪水的文，抚摸着她的头
+	PRINTW 
+	PRINTFORML 「接下来，轮到我了吗？呜呜，好紧张啊…」
+	PRINTFORML 椛的耳朵无力地垂了下来
+	PRINTFORML 「没事的啦椛！%MASTERNAME:42%绝对爱着你的！」
+	PRINTFORML 「这样好吗姬海棠？恋敌会增加哦？」
+	PRINTFORML 「呜、但是龙龙和文都被爱着了嘛！既然这样，在这里的椛没有被爱着就很奇怪了吧！」
+	PRINTL 
+	PRINTFORML 「哇、哇哇、数值在不断上升！哦～、哦哦哦～～」
+	PRINTFORML 随着数值的上升，耳朵一动一动，尾巴也呼噜呼噜地转着
+	PRINTFORML 「……犬走的反应真可爱啊」
+	PRINTFORML 「……最可怕的地方就是她不是故意装出来的」
+	PRINTFORML 「所以，结果怎么样？」
+	PRINTFORML 「我也是8000以上！%CALLNAME:MASTER%桑，我也最喜欢你了！」
+	PRINTFORML 椛露出了如同盛开的鲜花一般灿烂的笑容
+	PRINTW 
+	PRINTFORML 「那么，姬海棠，轮到你了…」
+	PRINTFORML 「知、知道啦！来，椛，借我！」
+	PRINTFORML 「果，你好像很紧张，没事吧？」
+	PRINTFORML 「果桑！请加油！」
+	PRINTL 
+	PRINTFORML 「%MASTERNAME:42%。你这个人，对女人没节操，平时也总是飘忽不定…」
+	CALL HPH_PRINT,@"「但是，我没有忘记你一直以来对我的珍惜…HPH」","L"
+	PRINTFORML 测定仪的数值开始上升…
+	PRINTFORML 3000…4000…5000……6000…7000…
+	PRINTL 
+	PRINTFORML 「姬海棠…」
+	PRINTFORML 「果…」
+	PRINTFORML 「果桑…」
+	PRINTW 
+	PRINTFORML 「哈…超过8000啦！！啊～真是的，真是的，差点以为要窒息了！」
+	PRINTFORML 确认自己也被爱着，果摆出了用尽全力的胜利姿势
+	PRINTW 
+	PRINTFORML 「然而…这样就证明了%CALLNAME:MASTER%爱着所有人呢」
+	PRINTFORML 「嘛…虽然脚踏四条船不太好…但是他一直很珍惜我们是事实…」
+	PRINTFORMW 「我只是个下级天狗，能被你选择并爱着就很幸福了，所以如果今后也能一如既往地爱着我…」
+	PRINTFORML 「啊～真是的，这种情况下我怎么可能一个人反对嘛」
+	PRINTFORML 「作为交换，我们所有人，都要像至今为止一样，全力去爱你哦！」
+	PRINTL 
+	CALL 画像セット(@"颜绘_服_笑颜_{[[龙]]}", 0, 0, 100, 0, 0, "", "默认颜绘")
+	CALL 画像セット(@"颜绘_服_笑颜_{[[文]]}", 0, 0, 100, 0, 0, "", "默认颜绘")
+	CALL 画像セット(@"颜绘_服_笑颜_{[[椛]]}", 0, 0, 100, 0, 0, "", "默认颜绘")
+	CALL 画像セット(@"颜绘_服_笑颜_{[[果]]}", 0, 0, 100, 0, 0, "", "默认颜绘")
+	CALL 画像一斉表示("左", 0, 1)
+	CALL HPH_PRINT,@"「我爱你」「我爱您」「我爱您！！」「我爱你哟」『%CALLNAME:MASTER%HPHHPHHPHHPH』","L"
+	PRINTW 
+	CFLAG:1415 = 1
+
+;CALL K42_XXX
+;==========================================================================================
+;子どもがほしいな
+;==========================================================================================
+@K42_PREGNANCY_DESIRE
+	PRINTFORML ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+	PRINTFORML ┃%"事件：真想要孩子哪",72,LEFT%┃
+	PRINTFORML ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+	PRINTW 
+	PRINTFORML 一天、和果在人里散步的时候、看到了母亲和男孩牵着手走着
+	PRINTFORML 虽然男孩的措辞很拙劣、但还是很开心地向母亲报告了些什么
+	PRINTFORML 母亲带着充满了慈爱的眼神、对男孩的话频频点头
+	PRINTW 
+	PRINTFORML 那个场景、果正作仔细地盯着看
+	CALL ASK_YN("怎么了吗？","想要把人绑架走吗？")
+	IF !RESULT
+		PRINTFORML 「唉？　啊ー、唔嗯、那对人类的母子、感觉真棒呀ー什么的」
+		PRINTFORML 「不管是孩子还是妈妈、双方都露出了幸福的表情呢」
+		PRINTW 
+		PRINTFORML 「我也、变成了母亲的话、会变成那样吗」
+		PRINTFORML 「开ー玩笑的、说这话也太早了呢ー♪　唉嘿♪」
+		CALL ASK_YN("来制造、小宝宝吧？","还太早了呢")
+		IF !RESULT
+			PRINTFORML 「唉！？」
+			PRINTFORML 由于这边的话语、果的脸完全染成了红色
+			PRINTW 
+			PRINTFORML 「呐、呐ー、这句话、你是认真的吗？」
+			PRINTFORML 「并不是讨厌什么的、那个、我们、比较种族不一样ー…」
+			PRINTW 
+			CALL ASK_YN("我认真的想要和果的孩子","骗你的ーpiongｗｗｗｗｗ")
+			IF !RESULT
+				PRINTFORML 果！
+				PRINTFORML 「咿呀…咿呀咿！？」
+				PRINTW 
+				PRINTFORML 嗖得！抓住了果的双肩、从正前方直视着她
+				PRINTFORML 「怎怎怎怎、怎么ー了吗…？」
+				PRINTFORML 因为突然的事情大脑无法跟上、果变成了使用敬语的状态
+				PRINTW 
+				PRINTFORML 想要让你生下自己的孩子如此认真地拜托着
+				PRINTFORML 不要在意种族差异、生活费也会好好赚的所以请不要担心…如此极力主张着
+				PRINTW 
+				PRINTFORML 「好、好的！」
+				PRINTFORML 被气势压倒、卡哒卡哒直点头的果
+				PRINTW 
+				PRINTFORML 「会、会生的！　和%MASTERNAME:42%的孩子、我想要生！」
+				PRINTFORML （%MASTERNAME:42%、他的眼神是认真的ー…就这么地想要、和我的孩子啊ー…呜哇ー、呜哇ー…\/\/\/）
+				PRINTW 
+				PRINTFORML 果知道了你想到了那么远的情况、觉得即使是生下%CALLNAME:MASTER%的孩子也可以的…
+				PRINTFORML 果获得了「怀孕愿望」！
+				PRINTW 
+				TALENT:怀孕愿望 = 1
+			ELSE
+				PRINTFORML 一瞬间不知道你在说什么、目瞪口呆的果
+				PRINTFORML 渐渐的理解浸透后、身体微微的颤抖着、握紧了拳头
+				PRINTW 
+				PRINTFORML 「……………………别开玩笑了你这笨蛋！！！！　反应迟钝！！！！！！」
+				PRINTFORML 受到了果强力的巴掌慰问
+				PRINTW 
+				PRINTFORML 「%MASTERNAME:42%什么的才不知道！　我回去了！！！！」
+				PRINTFORML 肩膀愤怒得颤动着、果直接回去了…
+				PRINTFORML 把倒在地上的自己放在那里不管了…
+				PRINTW 
+				MARK:反抗刻印 = 3
+			ENDIF
+		RETURN 1
+		ELSE
+			PRINTFORML 「啊ー、%MASTERNAME:42%还不想要孩子的感觉？」
+			PRINTFORML 「这样啊、那么暂且就保持二人世界呢」
+			PRINTW 
+			PRINTFORML 「我？　呼呼、到底是怎样的呢ー♪」
+			PRINTFORML 「但是嘛啊、或许真的对我们来说太早了呢」
+			PRINTW 
+			RETURN 1
+		ENDIF
+	ELSE
+		PRINTFORML 「哈？　才不可能吧那种事情！」
+		PRINTFORML 「就算我是天狗、也不会在这街道的正中央引起骚动的啊！」
+		PRINTW 
+		PRINTFORML 「话说回来、真的这么做了的话连%MASTERNAME:42%都会有不好的流言吧」
+		PRINTFORML 「姑且ー、我在这种方面也有好好的考虑过了呢？」
+		PRINTW 
+		PRINTFORML 「而且呢ー、做了多余的事情被博丽的巫女给追赶什么的还是算了吧ー」
+		PRINTFORML 「我可不想从追逐案件的一方变成为被追赶的一方啊ー」
+		PRINTW 
+		RETURN 1
+	ENDIF
+
+;==========================================================================================
+;大丈夫？
+;==========================================================================================
+@K42_HEALTH
+	PRINTFORML ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+	PRINTFORML ┃%"事件：没问题？",72,LEFT%┃
+	PRINTFORML ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+	PRINTW 
+	PRINTFORML 好像怎么也消除不了疲劳…
+	PRINTFORML 是表现在了脸上吗、果很担心的看着你的脸
+	PRINTW 
+	PRINTFORML 「总觉得你没什么精神呢。没问题ー吗？」
+	PRINTFORML 「不要太勉强自己呢。悠闲地休息下ー更好哟」
+	PRINTW 
+	PRINTFORML 「啊、对了。还有这个呢…」
+	PRINTFORML 果从书架上拿出了一个小瓶子
+	PRINTW 
+	PRINTFORML 「虽然是别人送的东西ー、说是能让人打起精神的药呢。我也喝过了哟、确实可以消除疲劳♪」
+	PRINTFORML 看上去像是营养饮料一样的呢、那么…
+	PRINTW 
+	CALL ASK_YN("我开动了","我就收下这份心意了")
+	IF !RESULT
+		K = RAND:99
+		IF K >= 20
+			PRINTFORML 味道没有想象中的差劲…
+			PRINTFORML 也许是心理作用吧、感觉身体都变轻了
+			PRINTW 
+			PRINTFORML 「就是说吧♪　但是、不好好的让身体休息下可不行呢？」
+			PRINTFORML 被果责备着、你坦率地点了点头
+			PRINTW 
+			BASE:MASTER:体力 += 500
+		ELSE
+			PRINTFORML 喝光了之后、总觉得肚子周围变得热起来了…
+			PRINTFORML 就好像是活力从身体底涌出来了似的…
+			PRINTW 
+			PRINTFORML 心脏在怦怦直跳着。有一种全身血管都扩张了的错觉
+			PRINTFORML 现在心脏像警钟一样剧烈地跳动着
+			PRINTW 
+			PRINTFORML 「啊…这个、并不是营养饮料！精力剂『天元凸破』…？」
+			PRINTFORML 看了瓶子上的标签、果一副慌忙的样子说着
+			PRINTW 
+			PRINTFORML 「『让你的×××一飞冲天！　效能：精力・体力・气力恢复』…等、Kya！？」
+			PRINTFORML 果捂住了嘴、用手指指着这边
+			PRINTW 
+			IF TALENT:MASTER:性别 == 2 || TALENT:MASTER:性别 == 3
+				PRINTFORML 不知何时、胯股之间的一物翻到肚脐的程度般直冲天际
+				PRINTFORML 正可谓「天元凸破」啊。肉棒在一抽一抽得脉打着、硬得厉害都能感到痛了
+				PRINTW 
+				PRINTFORML 无论如何、必须将这个镇住──
+				PRINTFORML 「唉、唉ー哆、%MASTERNAME:42%、十分的、靠近的说ー…」
+				PRINTW 
+				PRINTFORML 已经、再也忍不住了！
+				IF TALENT:处女 == 1
+					PRINTFORML 「等等、稍微等等、呕哈！？」
+					PRINTFORML 抓住果的双马尾，将阴茎塞入口腔
+					PRINTW 
+					PRINTFORML 「唔噗！ 嗯噗！ 唔～、呜噗、嗯噗、呕哈！」
+					PRINTFORML 对于毫不顾忌、只是单纯寻求射精的口内射精，果的眼神变得茫然
+					PRINTW 
+					PRINTFORML 「嗯咕！ 嗯～～～～！ 嗯～～～～～！！」
+					PRINTFORML 果敲打着%CALLNAME:MASTER%的大腿表示抗议，但腰部的动作非但没有停止，反而更加激烈
+					PRINTW 
+					PRINTFORML 「唔～、唔～、嗯唔～、嗯～、呼唔～」
+					PRINTFORML 阴茎微微颤抖，龟头多次收缩。射精临近
+					PRINTW 
+					PRINTFORML 「唔哦哦哦哦！？ 唔、唔、唔、嗯唔！」
+					PRINTFORML 将肉棒塞进喉咙最深处的瞬间，大量的白浊液体从龟头喷涌而出
+					PRINTW 
+					PRINTFORML 「咕啊、咕、咕、咕、嗯咕、嗯唔、咳、咕咳」
+					PRINTFORML 在喉咙深处被紧密接触的状态下射精，果拼命地喝干精液，以免窒息
+					PRINTW 
+					PRINTFORML （还在出、要溺水了、要被精液、溺水了）
+					PRINTFORML （比平时更浓稠、量也好多…这种东西如果射在子宫里、绝对会怀孕…）
+					PRINTW 
+					PRINTFORML （终于、要去了吗…这样就…诶？）
+					PRINTFORML 尽管已经射精，但口腔内的肉棒完全没有萎缩的迹象
+					PRINTW 
+					PRINTFORML 「唔噗！ 嗯噗！ 唔～、呜噗、嗯噗、呕哈！」
+					PRINTFORML 毫不顾忌的口内射精再次折磨果的喉咙深处
+					PRINTW 
+					PRINTFORML （要死了、这样下去、真的会死掉的）
+					PRINTFORML 果被解放，是在精力比体力先耗尽的%CALLNAME:MASTER%第三次射精之后…
+					PRINTW 
+					PRINTFORML 「哈…啊啊…啊、啊…」
+					PRINTFORML 「呜、呜…精、精液、不要了…不行了…」
+					PRINTW 
+					PRINTFORML 果的脸上沾满了精液，用空洞的眼神仰面躺在地板上
+					PRINTFORML 从嘴角，无法喝完的精液正滴滴答答地流下来…
+					PRINTW 
+				ELSE
+					PRINTFORML 「等等、稍微等等、还没、准备好…嗯～咿咿咿咿！？」
+					PRINTFORML 推倒果，猛烈地亲吻她的下身
+					PRINTW 
+					PRINTFORML 「嗯～～～～%UNICODE(0x2665) *1% 嗯嗯%UNICODE(0x2665) *1% 嗯%UNICODE(0x2665) *1%」
+					PRINTFORML （舔法、好厉害、明明比平时更激烈、却好舒服%UNICODE(0x2665) *1%）
+					PRINTW 
+					PRINTFORML 「！？ 哈啊！？啊、啊、啊啊、啊啊！？ 啊、哈！？ 咿咿！？」
+					PRINTFORML 「舌头、进去了、不要、不行、不行不行、那里%UNICODE(0x2665) *1% 因为、很敏感%UNICODE(0x2665) *1%」
+					PRINTW 
+					PRINTFORML 「嗯～～～～～～%UNICODE(0x2665) *1%%UNICODE(0x2665) *1% 嗯～～～～～～～%UNICODE(0x2665) *1%%UNICODE(0x2665) *1%」
+					PRINTFORML 果颤抖着大腿，轻轻喷出潮水，达到了高潮
+					PRINTW 
+					PRINTFORML 「呜～～～～%UNICODE(0x2665) *1% 呜%UNICODE(0x2665) *1% 呜%UNICODE(0x2665) *1%」
+					PRINTFORML 果露出了放荡的痴呆表情，从私处流出爱液，倒在地板上
+					PRINTW 
+					PRINTFORML 覆盖在果身上，一边拨开丰满的臀肉，一边将超过极限膨胀的龟头插入私处
+					PRINTFORML 没有丝毫抵抗，肉棒一口气没入果的阴道深处
+					PRINTW 
+					PRINTFORML 「嗯！？ 啊、啊、啊、啊、啊、啊%UNICODE(0x2665) *1%」
+					PRINTFORML 果的身体猛地弹起
+					PRINTW 
+					PRINTFORML 「啊%UNICODE(0x2665) *1% 哈%UNICODE(0x2665) *1% 啊啊啊%UNICODE(0x2665) *1%」
+					PRINTFORML （骗人、骗人%UNICODE(0x2665) *1% 到、肚脐下面了%UNICODE(0x2665) *1% 鸡鸡、来了%UNICODE(0x2665) *1%）
+					PRINTW 
+					PRINTFORML 拨开果充分湿润的阴道，用渗出前液的龟头多次敲击子宫口
+					PRINTFORML 每次挺腰进入，结合部都发出咕叽、咕叽的声音，搅动着爱液
+					PRINTW 
+					PRINTFORML 「嗯咿！？ 啊%UNICODE(0x2665) *1% 呜、呜、再、慢一点%UNICODE(0x2665) *1%」
+					PRINTFORML 「嗯～～～～%UNICODE(0x2665) *1% 嗯～～～～%UNICODE(0x2665) *1% 嗯～～～～%UNICODE(0x2665) *1%%UNICODE(0x2665) *1%」
+					PRINTW 
+					PRINTFORML 果试图在地板上爬行逃跑，但被从背后用惊人的力量抱住，只能抓挠着榻榻米
+					PRINTFORML 果的脸上沾满了眼泪、汗水、口水等体液，浮现出混合着快乐、恐惧、欢喜等复杂表情
+					PRINTW 
+					PRINTFORML 「好厉害%UNICODE(0x2665) *1% 好舒服%UNICODE(0x2665) *1% 舒服%UNICODE(0x2665) *1% 好%UNICODE(0x2665) *1%%UNICODE(0x2665) *1%」
+					PRINTFORML 「哈%UNICODE(0x2665) *1% 啊%UNICODE(0x2665) *1% 已经不行了%UNICODE(0x2665) *1% 不要啊%UNICODE(0x2665) *1%」
+					PRINTW 
+					PRINTFORML 视野闪烁不定。可以感觉到精子被紧急制造出来，并向上涌入尿道
+					PRINTFORML 「呜%UNICODE(0x2665) *1% 变得、好大、变得好大%UNICODE(0x2665) *1%」
+					PRINTW 
+					PRINTFORML 「啊%UNICODE(0x2665) *1% 等、等等%UNICODE(0x2665) *1% 现在要去了%UNICODE(0x2665) *1%」
+					PRINTFORML 「去了%UNICODE(0x2665) *1% 要去了%UNICODE(0x2665) *1% 现在要去了%UNICODE(0x2665) *1%」
+					PRINTW 
+					PRINTFORML 嘟噜！！！ 嘟噜噜！！ 嘟噜噜噜噜噜！！！！
+					PRINTFORML 通常不可能出现的惊人数量的精液，像浊流一样在果的阴道内横冲直撞
+					PRINTW 
+					PRINTFORML 「啊～～～～～%UNICODE(0x2665) *1% 啊～～～～～～%UNICODE(0x2665) *1% 啊～～～～～～～～%UNICODE(0x2665) *1%%UNICODE(0x2665) *1%」
+					PRINTFORML （好热、精液、在阴道里、好多%UNICODE(0x2665) *1%%UNICODE(0x2665) *1% 要有、宝宝了%UNICODE(0x2665) *1%）
+					PRINTFORML （停下来%UNICODE(0x2665) *1% 射精、停下来%UNICODE(0x2665) *1% 停不下来了）
+					PRINTW 
+					PRINTFORML 尽管已经大量射精，%CALLNAME:MASTER%的勃起非但没有衰退，反而似乎更加坚硬
+					PRINTFORML 毫无间隙，%CALLNAME:MASTER%重新开始了毫不留情的活塞运动
+					PRINTW 
+					PRINTFORML 「呜%UNICODE(0x2665) *1% 呜%UNICODE(0x2665) *1% 已经不行了%UNICODE(0x2665) *1% 要太多了%UNICODE(0x2665) *1% 呜%UNICODE(0x2665) *1%」
+					PRINTFORML 「现在、好敏感%UNICODE(0x2665) *1% 呜%UNICODE(0x2665) *1% 要去了%UNICODE(0x2665) *1% 呜%UNICODE(0x2665) *1% 要去了%UNICODE(0x2665) *1%」
+					PRINTW 
+					PRINTFORML 啪叽！ 啪叽！ 啪叽！
+					PRINTFORML 尽管毫不留情，只考虑自己的快感地摇动着腰部，但果还是被远远凌驾于痛苦之上的快感所征服
+					PRINTW 
+					PRINTFORML 「要死了%UNICODE(0x2665) *1% 果、要死了%UNICODE(0x2665) *1% 要被鸡鸡搞死了%UNICODE(0x2665) *1%%UNICODE(0x2665) *1%」
+					PRINTFORML 「～～～～～～～%UNICODE(0x2665) *1% 嗯～～～～～～～～～%UNICODE(0x2665) *1%%UNICODE(0x2665) *1% 嗯～～～～%UNICODE(0x2665) *1%%UNICODE(0x2665) *1%」
+					PRINTW 
+					PRINTFORML 肉棒再次膨胀起来。射精临近
+					PRINTFORML 仿佛在呼应着这一点，果的阴道不由自主地缠绕住阴茎，寻求着子种
+					PRINTW 
+					PRINTFORML 咚！
+					PRINTFORML 「！？ 不、不行」
+					PRINTW 
+					PRINTFORML 嘟噜噜噜！！ 嘟噜噜噜噜！！
+					PRINTFORML 「再、再进去、就要怀孕了、要生宝宝了%UNICODE(0x2665) *1%」
+					PRINTW 
+					PRINTFORML 嘟噜噜！ 嘟噜噜噜！ 嘟噜！ 嘟噜、嘟噜…嘟、嘟…
+					PRINTFORML 「！！！！ 啊%UNICODE(0x2665) *1% 啊、啊%UNICODE(0x2665) *1% 啊%UNICODE(0x2665) *1%%UNICODE(0x2665) *1% 出、出来了%UNICODE(0x2665) *1% 明明说了不行了%UNICODE(0x2665) *1% 内射、在里面啊%UNICODE(0x2665) *1%%UNICODE(0x2665) *1%」
+					PRINTW 
+					PRINTFORML …………
+					PRINTFORML ……
+					PRINTW 
+					PRINTFORML 「哈～～～～…哈～～～～…哈～～…哈…哈…」
+					PRINTFORML 「坏掉了…%UNICODE(0x2665) *1% 呜、阴道、变得奇怪了…%UNICODE(0x2665) *1% 啊～～…%UNICODE(0x2665) *1%」
+					PRINTW 
+					PRINTFORML 果用无法聚焦的眼神凝视着虚空，喃喃自语
+					PRINTFORML 被彻底侵犯，已经奄奄一息，与平时可爱的声音不同，声音变得像老太婆一样沙哑
+					PRINTW 
+					PRINTFORML 从果敞开的肉洞中，像喷泉一样喷涌出噗叽、噗哔的声音
+					PRINTFORML 尽管如此，果的肚子却已经像怀孕了一样鼓了起来…
+					PRINTW 
+					PRINTFORML %CALLNAME:MASTER%和果像烂泥一样沉睡了…
+					PRINTFORML 第二天，恢复冷静的两人之间一直很尴尬…
+					PRINTW 
+				ENDIF
+			ELSE
+				PRINTFORML 不知何时，鼻血滴滴答答地流了下来
+				PRINTFORML 尽管如此，全身却充满了活力
+				PRINTW 
+				PRINTFORML 「哇哇！手帕、手帕！%MASTERNAME:42%、对不起！」
+				PRINTFORML 鼻血流了一阵子才止住，但疲劳似乎已经消失了…
+				PRINTW 
+				BASE:MASTER:体力 += 500
+			ENDIF
+		ENDIF
+		RETURN 1
+	ELSE
+		PRINTFORML 「诶，不需要吗？明明可以恢复精神的…」
+		PRINTFORML 「如果有什么我能做的事情，请尽管告诉我♪ 不要勉强自己哦？」
+		PRINTFORML 果紧紧地抱住了你
+		PRINTW 
+		RETURN 1
+	ENDIF
+
+;==========================================================================================
+;果のアトリエ
+;==========================================================================================
+@K42_HATATE_ATELIER
+;日常系/RECIPE_DATA.ERBに材料详细
+;果の调合经验が１以上かつ调合技能が１以下、恋慕を取得した状态で、椛との交流值が１以上あること
+	PRINTFORML ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+PRINTFORML ┃%"事件：果的工房",72,LEFT%┃
+PRINTFORML ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+PRINTW 
+PRINTFORML 果在自己的房间里进行着什么可疑的实验……
+PRINTFORML 似乎想用刚学会的调合术制作什么东西
+PRINTW 
+PRINTFORML 「嗯……这个和这个……蛤蟆油……呜～～好恶心～……」
+PRINTFORML 「然后，再加入这种看起来很危险的蘑菇……那个，是这边吗……嘛，算了，两边都放进去吧」
+PRINTW 
+PRINTFORML 「完成啦！　催情药～！」
+PRINTFORML 「如果把这个给%MASTERNAME:42%喝下去，他会不会说‘果，我喜欢你！　请和我结婚吧！’之类的呢～♪」
+PRINTW 
+PRINTFORML 「……哎，想得美，不可能发生这种好事啦～」
+PRINTFORML 「不过，至少能让他心跳加速吧」
+PRINTW 
+PRINTFORML 「味道，没问题吧……稍微试一下……嗯……总觉得有点微妙……」
+PRINTFORML 「……光是喝下去，总觉得效果不太明显啊。果然还是得让%MASTERNAME:42%喝下去才行吧～」
+PRINTW 
+PRINTFORML 果抱着胳膊苦恼的时候，有客人来了
+PRINTFORML 从声音来判断，好像是椛
+PRINTW 
+PRINTFORML 「欢迎光临～。椛，怎么了？」
+PRINTFORML 『你好，果小姐。其实，我收到了大量点心，一个人吃不完，所以想说要不要一起吃』
+PRINTW 
+PRINTFORML 「好开心～%UNICODE(0x2665) *1%　吃吃吃！」
+PRINTFORML 『嘻嘻，果小姐，你很【喜欢】点心嘛』
+PRINTW 
+PRINTFORML 「………………」
+PRINTFORML 「那个，果小姐？　你怎么了吗？」
+PRINTW 
+PRINTFORML 「嗯，喜欢……」
+PRINTFORML 『是，是呢……我说，果小姐，你的脸，靠太近了吧？』
+PRINTW 
+PRINTFORML 「喜欢……喜欢椛哦……%UNICODE(0x2665) *1%」
+PRINTFORML 『哇哇哇哇哇哇！？　我，我们，是同性啊！？　你有在听吗！？　你没在听吧！？』
+PRINTW 
+PRINTFORML 「因为椛说喜欢，我的肚子深处，就啾地一下……%UNICODE(0x2665) *1%　呐，椛，可以吧……%UNICODE(0x2665) *1%」
+PRINTFORML 『什什什什什么可以啊！？　我不是很明白，但大概不行！』
+PRINTW 
+PRINTFORML 「对不起呢，我已经，忍不住了……%UNICODE(0x2665) *1%」
+PRINTFORML 『不要啊～～～～～～～～！！』
+PRINTW 
+PRINTFORML ………………
+PRINTFORML …………
+PRINTFORML ……
+PRINTW 
+PRINTFORML 拜访果的家时，听到了什么悲鸣和娇声
+PRINTFORML 窥视发出声音的方向，竟然看到，果和椛在庭院里做出不知羞耻的事情！
+PRINTW 
+PRINTFORML 『啊！　%CALLNAME:MASTER%先生，请救救我！　果小姐，果小姐她—！』
+PRINTFORML 「椛，不要逃嘛%UNICODE(0x2665) *1%　和我做舒服的事情吧……%UNICODE(0x2665) *1%」
+PRINTW 
+PRINTFORML 能够看到可爱天狗少女二人的百合，这里是极乐净土吗……！
+SIF TALENT:MASTER:性别 == 2
+	;PRINTFORML 百合说到底不就是屈服于鸡巴之前的前奏吗？
+	PRINTFORML 在这么美好的光景中加入自己，简直是毫无情趣……！
+PRINTW 
+PRINTFORML 『等，等等啊！　为什么哭着无视我啊！　救命，啊嗯%UNICODE(0x2665) *1%　住，住手，那里不行啊%UNICODE(0x2665) *1%』
+PRINTFORML 「椛%UNICODE(0x2665) *1%　喜欢，喜欢你……%UNICODE(0x2665) *1%」
+PRINTW 
+PRINTFORML 文用仿佛在说「那群家伙在干什么啊」的表情，从上空眺望着三人的样子……
+PRINTFORML 嘛，难得，文将同事二人的痴态拍成照片，然后无声无息地飞走了
+	PRINTW 
+	CFLAG:1401 = 1
+	RETURN 1
+
+;==========================================================================================
+;ＫＩＥ～教育に「花果子念报」を
+;==========================================================================================
+@K42_HATATE_NIE
+;けーねの口吻は口上をベースにしています
+	PRINTFORML ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+PRINTFORML ┃%"事件：KIE～「花果子念报」用作教育",72,LEFT%┃
+PRINTFORML ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+PRINTW 
+PRINTFORML 某一天，我在人里闲逛时，被慧音叫住了
+PRINTFORML 看来她有事想拜托我。是约会邀请吗？
+PRINTW 
+PRINTFORML 拜托我的事情是，她希望使用果发行的《花果子念报》作为教材
+PRINTFORML 并且希望发行人果，能够讲授报纸制作和新闻解读的方法
+PRINTW 
+PRINTFORML 我心想直接跟她说就好了，但她似乎担心，一个素不相识的人类，向天狗提出委托，对方是否会答应
+PRINTFORML 因此，她便选中了和我私下关系不错的果
+PRINTW 
+PRINTFORML 果（作为天狗来说）认真的文风，似乎触动了慧音的内心
+PRINTFORML 慧音的授课也比较缺乏趣味性，或许她们之间存在共通之处
+PRINTFORML 那么该怎么办呢…
+PRINTW 
+CALL ASK_YN("接受","拒绝")
+IF !RESULT
+	PRINTFORML 慧音表示感谢，我说与其口头道谢不如和我约会一次，结果被她以「改天再说」为由婉拒了
+	PRINTFORML 作为代替，她似乎会准备一些谢礼
+	PRINTW 
+	PRINTFORML 「嘿，人类要用我的报纸当教材，是吗」
+	PRINTFORML 「没问题哦。不如说，我求之不得呢！」
+	PRINTW 
+	PRINTFORML 「终于可以取代文的《文文。新闻》，占据人类村庄的份额了！」
+	PRINTFORML 果似乎信心满满，但到了当天，会变成什么样呢…
+	PRINTW 
+	PRINTFORML ～当天～
+	PRINTW 
+	PRINTFORML 『今天，是关于【新闻解读方法】的课程』
+	PRINTFORML 『我们请来了乌鸦天狗的姬海棠果小姐担任讲师』
+	PRINTFORML 『可能有人知道，姬海棠小姐是【花果子念报】的记者』
+	PRINTFORML 『大家要认真听讲。姬海棠小姐，请多关照』
+	PRINTW 
+	PRINTFORML 「呀吼～。我是今天受邀前来的，姬海棠果～♪」
+	PRINTFORML 「今天我会向大家～，介绍我的报纸的魅力哦～♪」
+	PRINTW 
+	PRINTFORML 总觉得和原本的目的不太一样，没问题吗…
+	PRINTFORML 
+	;取材累积值によって、授业の質が变化
+	SELECTCASE CFLAG:1008
+	CASE IS < 10
+		PRINTFORML 「我的取材呢～，就是像这样用念写随意地拍照片…」
+		PRINTFORML 「然后根据照片推测着写报道…」
+		PRINTFORML 「嘛，就算稍微有点错误，那部分也随意啦～…」
+		PRINTW 
+		PRINTFORML 果然不出所料，是让人想抱头痛哭的讲课内容
+		PRINTFORML 虽然最近取材的态度有所改变，但死宅的体质也不是那么容易改变的
+		PRINTW 
+		PRINTFORML 我不经意地转移视线，发现慧音也露出了复杂的表情
+		PRINTFORML 她的表情雄辩地诉说着「不应该是这样的…」
+		PRINTW 
+		PRINTFORML 
+		PRINTFORML 「唔～，总觉得我的课好像不太受欢迎呢～？」
+		PRINTFORML 「明明我已经很认真地教了啊，到底是哪里不好呢」
+		PRINTW 
+		PRINTFORML 在回家的路上，果双手抱在脑后，愁眉苦脸
+		PRINTFORML 「%MASTERNAME:42%觉得哪里不好呢～？　嗯～…」
+		PRINTW 
+		PRINTFORML 如果非要说的话，那就是全部都不好
+		PRINTFORML 我决定把这句话藏在心里
+		PRINTW 
+		PRINTFORML 收到了慧音的谢礼%金额表示(500)%
+		MONEY += 500
+	CASE IS < 50
+		PRINTFORML 「照片基本上是用念写拍摄的。但是，报道会直接与采访对象会面进行核实…」
+		PRINTFORML 「因为容易成为别人的跟风，所以比起速度更重视准确性…」
+		PRINTFORML 「其实，这个横排文章在幻想乡，我是第一个写的…」
+		PRINTW 
+		PRINTFORML 或许应该说是取材的成果吧，果的讲课相当不错
+		PRINTFORML 虽然在回答问题时，偶尔会有卡壳，但我觉得她完全胜任了老师的角色
+		PRINTW 
+		PRINTFORML 我不经意地转移视线，发现慧音也大致满意地点着头
+		PRINTFORML 委托似乎成功了
+		PRINTW 
+		PRINTFORML 
+		PRINTFORML 「呼哼，大家似乎都有好好听我的课呢♪」
+		PRINTFORML 「时代已经不是《文文。新闻》而是《花果子念报》了呢～，呼哼～♪」
+		PRINTW 
+		PRINTFORML 在回家的路上，果心情很好
+		PRINTFORML 她一边绕着我转，一边问我「我的课怎么样？」，「我只要努力就能做到吧♪」之类的问题
+		PRINTW 
+		PRINTFORML 「呐呐，为了奖励我努力了，请我吃点甜的东西嘛～♪」
+		PRINTFORML 我苦笑着，无奈地答应了她，果便笑着跳了起来
+		PRINTW 
+		PRINTFORML 「太好了♪　所以我才最喜欢%MASTERNAME:42%了～♪」
+		PRINTFORML 果抱住了我的手臂，把头靠了过来
+		PRINTW 
+		PRINTFORML 收到了慧音的谢礼%金额表示(1000)%
+		MONEY += 1000
+	CASEELSE
+		PRINTFORML 「对于报纸来说，最重要的是标题。字数要简短明了。极端地说，要做到即使不看内容，也能知道新闻是什么…」
+		PRINTFORML 「报道要在导语部分写完最重要的内容。不要忘记何时、何人、何地、何事、为何、如何」
+		PRINTFORML 「顺带一提，还要考虑到排版的原因，可能会出现版面不够的情况，所以文章要采用从后往前删也能成立的结构…」
+		PRINTW 
+		PRINTFORML 从家里蹲蜕变，成为了靠自己的双脚赚钱的记者，果的课程非常出色
+		PRINTFORML 她以通俗易懂的方式向没有读过报纸的人进行讲解，并且巧妙地穿插着玩笑和问答，不会让人感到厌倦
+		PRINTW 
+		PRINTFORML 我不经意地转移视线，发现慧音也非常满意。或许是被感动了，她不停地对果的讲课内容点头
+		PRINTFORML 说委托大获成功也毫不为过
+		PRINTW 
+		PRINTFORML 
+		PRINTFORML 「嘿嘿～，%MASTERNAME:42%，你有好好看着吗～？」
+		PRINTFORML 「孩子们和慧音老师都很高兴的样子。太好了～♪」
+		PRINTW 
+		PRINTFORML 在回家的路上，果露出了完成了一项工作般的，满足的表情
+		PRINTFORML 我夸她做得很好，抚摸着她的头，果露出了放松的笑容
+		PRINTW 
+		PRINTFORML 「呐呐，我想要奖励我努力了，可以吗？」
+		PRINTFORML 是甜点呢，还是美味的饭菜呢，又或者是时髦的伴手礼呢。今天就满足她的任性吧
+		PRINTW 
+		PRINTFORML 「可以吗？　那个，那个呢，想要你亲亲我的脸颊……不行吗？」
+		PRINTFORML 果用手指互相戳着，窥视着我的脸
+		PRINTW 
+		PRINTFORML 怎么可能有好与不好之分
+		PRINTFORML 我把手放在果的肩膀上，靠近了她的脸──
+		PRINTW 
+		PRINTFORML 「……%UNICODE(0x2665) *1%」
+		PRINTFORML 「%MASTERNAME:42%，最喜欢你了%UNICODE(0x2665) *1%」
+		PRINTW 
+		PRINTFORML 收到了慧音的谢礼%金额表示(2000)%
+		MONEY += 2000
+	ENDSELECT
+	CFLAG:1402 = 1
+	RETURN 1
+ELSE
+	PRINTFORML 我把无法满足她的期望的事情告诉了她，慧音露出了遗憾的表情
+	PRINTFORML 她说如果有机会，还会再联系我的。我答应了，然后和她告别了
+		PRINTW 
+		RETURN 1
+	ENDIF
+;==========================================================================================
+;果と通贩
+;==========================================================================================
+@K42_HATATE_ORDER
+;果が跳蛋で绝顶した场合发生
+IF CFLAG:K42C_果と通贩 == 1
+	PRINTFORML ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+	PRINTFORML ┃%"事件：果和邮购",72,LEFT%┃
+	PRINTFORML ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+	PRINTW 
+	PRINTFORML 「买回来了啊…」
+	PRINTFORML 果在巨大的箱子面前抱着胳膊、脸上露出了神妙的表情
+	PRINTW 
+	PRINTFORML 和%MASTERNAME:42%H的时候、使用了名为「跳蛋」的道具
+	PRINTFORML 情事之后、因为告诉了我用这个来自慰的女性也不少、就对它产生了兴趣
+	PRINTW 
+	PRINTFORML 作为新闻记者、必须要对任何事物都表示关心、然后亲身体验才行如此为自己想好了借口
+	PRINTFORML （没错哟、这就是所谓的求知欲好奇心！　到底有多舒服、不自己体验下是不行的…%UNICODE(0x2665) *1%）
+	PRINTFORML 反正都是要使用的、颜色选择是喜欢的紫色
+	PRINTW 
+	PRINTFORML 「唉ー哆、把电池放到这个盒子里…电池是、外面世界的燃料呢」
+	PRINTFORML 「有这种东西大概也说明了、隙间妖怪桑也在使用这个吧…」
+	PRINTW 
+	PRINTFORML 「唉ー哆、然后打开这里的开关…」
+	PRINTFORML 嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡！！！
+	PRINTFORML 「噢哇啊！？　动起来啦！」
+	PRINTW 
+	PRINTFORML 被不断震动的跳蛋吓了一跳的果
+	PRINTFORML 在性行为中根本没有余裕去看它是怎么使用的啊
+	PRINTW 
+	PRINTFORML 「原来如此ー…虽然不知道具体的机制、总之就是电池的力量让跳蛋运作起来的呢」
+	PRINTFORML 「嗯那么、用这个震动来刺激会感觉舒服的部分、呢…」
+	PRINTW 
+	PRINTFORML 「………………」
+	PRINTFORML 果吞了口唾沫喉咙发出咕嘟的响声
+	PRINTW 
+	PRINTFORML 「总、总之先用用看吧…对了、要是弄脏了就不好了…」
+	PRINTFORML 果脱掉了裙子和内裤、将下半身全部露出来后、轻轻张开了健康的双腿
+	PRINTW 
+	PRINTFORML 「呜呜～…真紧张啊。总之、把这个ー压到这里就可以了吧…」
+	PRINTFORML 果没怎么思考、就把震动着的跳蛋放到了阴核上面
+	PRINTW 
+	PRINTFORML 「嗯咿哟噢噢噢噢噢噢噢噢噢噢噢！！！？？？」
+	PRINTFORML 强烈的刺激以下半身为中心袭来、果睁大了眼睛闷绝着
+	PRINTW 
+	PRINTFORML 「啊啊啊啊啊啊啊啊…腰、腰软了…什、什么呀这个…」
+	PRINTFORML 仰着身子不断微微颤抖着的果。下半身已经因为快感而麻痹了
+	PRINTW 
+	PRINTFORML 「…………可以用这个开关来改变强弱…我、这不是调成了最强档吗…」
+	PRINTFORML 「不习惯的人请放到衣服上面使用…这样的、一开始就该写上去啊…呜呜…」
+	PRINTW 
+	PRINTFORML 重振精神的果、只穿着内裤、从布料上轻轻地打开了跳蛋
+	PRINTFORML binbinbinbinbinーーーーーー…
+	PRINTW 
+	PRINTFORML 「呼…很痒的感觉呢…」
+	PRINTFORML 「啊…总觉得、变得舒服起来了呢…」
+	PRINTW 
+	PRINTFORML 跳蛋温柔地摩擦着秘唇、爱液的污渍缓缓地在内裤上扩散着
+	PRINTFORML 「呀嗯、乳头、立起来了…」
+	PRINTW 
+	PRINTFORML 在小腹和肚脐、大腿、锁骨之类的、性器以外的部分刺激着、仿佛是被爱抚一般的感觉
+	PRINTFORML 果的内裤已经完全浸湿了、它粘在股间浮现出了性器的形状
+	PRINTW 
+	PRINTFORML 「这次的话、放到小豆豆上应该没问题了吧…」
+	PRINTFORML 果脱下了沾满爱液的内裤。秘唇已经绽放开来、阴蒂也从包皮中露出了脸
+	PRINTW 
+	PRINTFORML 这次提心吊胆的、将跳蛋贴在了已经充血变大的阴蒂上
+	PRINTFORML 紧接着、和隔着内裤所不能比拟的快感浪潮向她袭来
+	PRINTW 
+	PRINTFORML 「啊%UNICODE(0x2665) *1%　这是什么%UNICODE(0x2665) *1%　好舒服%UNICODE(0x2665) *1%」
+	PRINTFORML 「和刚才不同%UNICODE(0x2665) *1%　呀啊%UNICODE(0x2665) *1%」
+	PRINTW 
+	PRINTFORML 并非强烈的刺激、而是不断持续的缓慢快感的波浪向果袭来
+	PRINTFORML 「和、手指、不同%UNICODE(0x2665) *1%　啊、这个、喜欢%UNICODE(0x2665) *1%」
+	PRINTFORML 「不行%UNICODE(0x2665) *1%　要去了%UNICODE(0x2665) *1%　小豆豆要去了%UNICODE(0x2665) *1%%UNICODE(0x2665) *1%」
+	PRINTFORML 「啊%UNICODE(0x2665) *1%　啊啊啊啊啊啊～～～～%UNICODE(0x2665) *1%%UNICODE(0x2665) *1%」
+	PRINTW 
+	PRINTFORML 从果的膣穴中、噗哧地迸射出爱液达到了绝顶
+	PRINTFORML 就这样子仰着倒在了地板上、身体不断微微痉挛着
+	PRINTW 
+	PRINTFORML 「………………不妙、这个、说不定超赞的…%UNICODE(0x2665) *1%」
+	PRINTFORML 果露出了下流的笑容、染上了粉红色的脑袋不断思考着下次要用什么来做好呢…
+	PRINTW 
+	CFLAG:K42C_果と通贩 = 2
+	RETURN 1
+ENDIF
+
+;==========================================================================================
+;果と通贩その２
+;==========================================================================================
+@K42_HATATE_ORDER2
+;果が跳蛋で绝顶した场合发生
+IF CFLAG:K42C_果と通贩その２ == 1
+	PRINTFORML ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+	PRINTFORML ┃%"事件：果和邮购其二",72,LEFT%┃
+	PRINTFORML ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+	PRINTW 
+	PRINTFORML 「还是买了…」
+	PRINTFORML 果在过于巨大的箱子前双手抱胸，表情严肃
+	PRINTW 
+	PRINTFORML 和%MASTERNAME:42%做爱时，被使用了名为「E按摩器」的道具
+	PRINTFORML 本来好像是用来缓解僵硬的健康器具，但似乎也能用于「那边」的用途
+	PRINTW 
+	PRINTFORML 第一次使用「那个」的时候，果差点晕过去。或者说差点就晕过去了
+	PRINTFORML 「那个」就是那么强烈地带来快感
+	PRINTW 
+	PRINTFORML 作为新闻记者，要对任何事物都抱有关心，必须亲身体验——她也想好了这种随便的借口
+	PRINTFORML （没错，这简直就是知性好奇心！不自己体验一下到底有多舒服，就…%UNICODE(0x2665) *1%）
+	PRINTFORML （才不是想随时都体验那种舒服的感觉…%UNICODE(0x2665) *1%）
+	PRINTW 
+	PRINTFORML 「真够大的呢…嘛，如果真是健康器具的话，也是正常的」
+	PRINTFORML 「但是，外面的世界的科技…真是不可小觑」
+	PRINTW 
+	PRINTFORML 「嗯，按这里的开关…」
+	PRINTFORML 呜～～～～～～～～～～～～～～～～～～～～
+	PRINTFORML 「哇啊！？ 动了！」
+	PRINTW 
+	PRINTFORML 果对开始震动的电按摩器感到惊讶
+	PRINTFORML 意外地声音很大。外面不会听见吧
+	PRINTW 
+	PRINTFORML 「原来如此…虽然不太清楚详细的结构，但是用电池的力量让前端震动呢」
+	PRINTFORML 「然后，用这种震动来刺激让人感到舒服的部分，是吗…」
+	PRINTW 
+	PRINTFORML 「………………」
+	PRINTFORML 果咕嘟一声咽了口唾沫
+	PRINTW 
+	PRINTFORML 「总、总之先试用一下…对了，为了不弄脏…」
+	PRINTFORML 果脱掉衣服，只剩下内衣，然后轻轻地张开了健康的双腿
+	PRINTW 
+	PRINTFORML 「嗯、嗯，果然最初还是用原本的用法…」
+	PRINTFORML 有点胆怯的果，试着把电按摩器放在肩膀上
+	PRINTW 
+	PRINTFORML 呜～～～～～～～～～～～～～～～～～～～～
+	PRINTFORML 「呜～～～～～～～～～～～…真～～舒服～～～～～～♪」
+	PRINTW 
+	PRINTFORML 虽然肩膀并没有很僵硬，但是感觉相当舒服
+	PRINTFORML 果用陶醉的表情暂时享受了按摩
+	PRINTW 
+	PRINTFORML 「……不对不对！我想尝试的是，色色的用法！」
+	PRINTFORML 差点忘记原本的使命（？），果用力地摇了摇头。双马尾啪嗒啪嗒地摇晃着
+	PRINTW 
+	PRINTFORML 「和%MASTERNAME:42%做的时候，因为被直接按在小豆豆上，吃了不少苦头…所以要从外面慢慢地…」
+	PRINTFORML 果隔着内裤，小心翼翼地将电按摩器贴在私处的嘴唇上
+	PRINTW 
+	PRINTFORML 「啾呜呜呜呜嗯%UNICODE(0x2665) *1% 来了%UNICODE(0x2665) *1%」
+	PRINTFORML 比想象中更强烈的快感袭来，果皱着眉头忍耐着快感
+	PRINTW 
+	PRINTFORML 只是错开舒服的部位就已经这样了。如果贴在更舒服的地方的话…
+	PRINTFORML 果咕嘟一声咽了口唾沫，将电按摩器靠近了私处的中心
+	PRINTW 
+	PRINTFORML 「嗯%UNICODE(0x2665) *1% 嗯嗯%UNICODE(0x2665) *1% 这个%UNICODE(0x2665) *1% 糟了%UNICODE(0x2665) *1%」
+	PRINTFORML （这、这是什么、太厉害了、糟了、舒服得停不下来）
+	PRINTW 
+	PRINTFORML 果完全忘记了要分析道具的心情，沿着纵向纹路上下摩擦着电按摩器
+	PRINTFORML 内裤上出现了大片的污渍，重点摩擦那里可以获得更强烈的快感
+	PRINTW 
+	PRINTFORML 正入迷地用电按摩器摩擦着下身时，手一滑，不小心擦到了阴蒂
+	PRINTFORML 「～～～～～～～～～～～～～～～～%UNICODE(0x2665) *1%%UNICODE(0x2665) *1% %UNICODE(0x2665) *1% %UNICODE(0x2665) *1% 呜%UNICODE(0x2665) *1%」
+	PRINTW 
+	PRINTFORML 「啊%UNICODE(0x2665) *1% 要%UNICODE(0x2665) *1% 呜%UNICODE(0x2665) *1%」
+	PRINTFORML （要去了、这样马上就要去了
+	PRINTW 
+	PRINTFORML 受到手指绝对无法获得的强烈快感的袭击，果浑身颤抖
+	PRINTFORML 「啊%UNICODE(0x2665) *1% 去了%UNICODE(0x2665) *1% 还要去%UNICODE(0x2665) *1% 呜%UNICODE(0x2665) *1%」
+	PRINTFORML 「已经不行了%UNICODE(0x2665) *1% 还要去%UNICODE(0x2665) *1% 不要%UNICODE(0x2665) *1%%UNICODE(0x2665) *1%」
+	PRINTFORML （啊、要尿了、要尿出来了、不行、不行不行不行）
+	PRINTW 
+	PRINTFORML 「呜～～～～～～～～～～～%UNICODE(0x2665) *1% %UNICODE(0x2665) *1%%UNICODE(0x2665) *1%%UNICODE(0x2665) *1%」
+	PRINTFORML 果向后仰着上半身，从阴道射出噗嗤一声的爱液，达到了高潮
+	PRINTFORML 之后便仰面躺在地板上，身体痉挛着。啪嗒一声，电按摩器掉在了地板上
+	PRINTFORML 从尿道口流出金黄色的液体，污染了地板…
+	PRINTW 
+	PRINTFORML 「………………按摩器…最棒了…%UNICODE(0x2665) *1%」
+	PRINTFORML 果露出放荡的笑容，用染成粉红色的脑袋思考着下次要尝试什么…
+	PRINTW 
+	IF CFLAG:K42C_椛交流值 >= 20
+		PRINTFORML 「果桑，我从河童那里拿到了原稿纸哦…呀啊啊啊啊啊啊！？」
+		PRINTFORML 发现果大张着腿倒在地板上，用荡漾的脸流着爱液和尿液的半裸身体，椛发出了惨叫…
+		PRINTW 
+	ENDIF
+	CFLAG:K42C_果と通贩その２ = 2
+	RETURN 1
+ENDIF
+
+;==========================================================================================
+;果と通贩その３
+;==========================================================================================
+@K42_HATATE_ORDER3
+;果が阴蒂夹で绝顶した场合发生
+IF CFLAG:K42C_果と通贩その３ == 1
+	PRINTFORML ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+	PRINTFORML ┃%"事件：果和邮购其三",72,LEFT%┃
+	PRINTFORML ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+	PRINTW 
+	PRINTFORML 「还是买了…」
+	PRINTFORML 果在过于巨大的箱子前双手抱胸，表情严肃
+	PRINTW 
+	PRINTFORML 和%MASTERNAME:42%做爱时，被使用了名为「阴蒂夹」的道具
+	PRINTFORML 据说正如其名，是盖在阴蒂上，提高性感的道具
+	PRINTW 
+	PRINTFORML 第一次使用「那个」的时候，阴核被啾啾地吸吮的感觉非常舒服
+	PRINTFORML %MASTERNAME:42%用的是电动的，但也有廉价的手动型，容易获得快感，也不容易被看作是自慰道具，因此很受女性欢迎
+	PRINTFORML 顺便一提，果买的是电动型（带防水功能）。对自己感兴趣的事情绝不妥协（偶尔会妥协）
+	PRINTW 
+	PRINTFORML （没错，这简直就是知性好奇心！不自己体验一下使用感，到底有多舒服，就…%UNICODE(0x2665) *1%）
+	PRINTFORML （才不是想随时都体验那种舒服的感觉…%UNICODE(0x2665) *1%）
+	PRINTW 
+	PRINTFORML 「嗯…这个隔着内裤不行吧。要好好脱掉才行…」
+	PRINTFORML 果迫不及待地脱掉内裤扔到一边，用充满期待和兴奋的表情将阴蒂夹贴在自己的阴核上
+	PRINTW 
+	PRINTFORML 「那么，开始吧！」
+	PRINTFORML 果下定决心，按下了阴蒂夹的电源按钮
+	PRINTW 
+	PRINTFORML 嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡
+	PRINTFORML 「啊痛痛痛痛痛痛痛痛痛痛痛痛豆豆要掉了！要掉了！！！！！！」
+	PRINTW 
+	PRINTFORML 果因过于强大的吸引力而痛苦呻吟，慌忙关掉开关
+	PRINTFORML 在地板上蜷缩了近一分钟，持续发出没有意义的话语
+	PRINTW 
+	PRINTFORML 「为什么一开始强度就是最大啊！差点把我的豆豆弄掉了！」
+	PRINTFORML 果对着阴蒂夹发泄着愤怒，仿佛能看到她不认识的销售者的脸
+	PRINTW 
+	PRINTFORML 「先用手指试试，嗯，大概这样…好，没问题，应该」
+	PRINTFORML 「重新振作起来，再战！」
+	PRINTW 
+	PRINTFORML 果用手指剥开阴核的包皮，将阴蒂夹的吸入口贴了上去
+	PRINTFORML 这次强度适中，果裸露的阴豆被吸入道具中
+	PRINTW 
+	PRINTFORML 「啊、啊啊啊啊%UNICODE(0x2665) *1% 嗯嗯嗯%UNICODE(0x2665) *1% 嗯%UNICODE(0x2665) *1% 嗯嗯%UNICODE(0x2665) *1%」
+	PRINTFORML 「啊哈%UNICODE(0x2665) *1% 啊啊啊%UNICODE(0x2665) *1% 这个好%UNICODE(0x2665) *1%」
+	PRINTW 
+	PRINTFORML （这个，和手指不同，舒服的感觉一直持续！）
+	PRINTFORML （而且因为是电动的，空出的双手可以触摸别的地方，非常好）
+	PRINTW 
+	PRINTFORML 果一边刺激着阴蒂，一边开始用左手抚慰乳头，用右手指抚慰阴道内
+	PRINTFORML 「啊%UNICODE(0x2665) *1% 好舒服%UNICODE(0x2665) *1% 全部%UNICODE(0x2665) *1% 全部都好舒服%UNICODE(0x2665) *1%」
+	PRINTW 
+	PRINTFORML 三点同时进行的爱抚，迅速提高了果的性感
+	PRINTFORML 「要去了、要去了要去了、要去了要去了要去了、啊、啊～～～～～～～%UNICODE(0x2665) *1%」
+	PRINTW 
+	PRINTFORML 「啊啊啊%UNICODE(0x2665) *1% 明明已经去了%UNICODE(0x2665) *1% 还在动%UNICODE(0x2665) *1% 啊%UNICODE(0x2665) *1% 不行%UNICODE(0x2665) *1% 呜%UNICODE(0x2665) *1%」
+	PRINTFORML 即使已经迎来高潮，阴蒂夹仍然没有停止运动，继续刺激着变得敏感的果的阴核
+	PRINTW 
+	PRINTFORML 「不行%UNICODE(0x2665) *1% 停下来%UNICODE(0x2665) *1% 要去了、又要去了%UNICODE(0x2665) *1% 呜%UNICODE(0x2665) *1% 呜呜呜%UNICODE(0x2665) *1%」
+	PRINTFORML 再次迎来高潮的果，还没来得及品味余韵，下一个快感就到来了
+	PRINTFORML 最终，在关掉电源之前，果被阴蒂夹弄了五次
+	PRINTW 
+	PRINTFORML 「啊～…%UNICODE(0x2665) *1% 太好了…%UNICODE(0x2665) *1% 阴蒂夹、好厉害啊…%UNICODE(0x2665) *1%」
+	PRINTFORML 果露出放荡的笑容，用染成粉红色的脑袋思考着下次要尝试什么…
+	CFLAG:K42C_果と通贩その３ = 2
+	RETURN 1
+ENDIF
+
+;==========================================================================================
+;果と通贩その４
+;==========================================================================================
+@K42_HATATE_ORDER4
+;果が振动棒で绝顶した场合发生
+IF CFLAG:K42C_果と通贩その４ == 1
+	PRINTFORML ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+	PRINTFORML ┃%"事件：果和网购 其四",72,LEFT%┃
+	PRINTFORML ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+	PRINTW 
+	PRINTFORML 「还是买了…」
+	PRINTFORML 果在过于巨大的箱子前双手抱胸，表情严肃
+	PRINTW 
+	PRINTFORML 和%MASTERNAME:42%做爱时，被使用了名为「按摩棒」的道具
+	PRINTFORML 是一种模仿男性阴茎的性玩具，女性在自慰时，可以用它来享受模拟性爱
+	PRINTW 
+	PRINTFORML 第一次使用「那个」的时候，体验了在阴道内高潮的感觉
+	PRINTFORML 虽然以前也用手指插入过，但是没有深入过。只是在浅处抽插的程度
+	PRINTFORML 这次购买的是标准尺寸。也有出售带凸起或像马一样大的，但感觉难度很高所以放弃了
+	PRINTW 
+	PRINTFORML （但是，被按摩棒顶撞深处时，体验到了至今为止完全不同的感觉…和入口相比简直是天壤之别）
+	PRINTFORML （即使在同一个阴道内，也会因为场所不同，舒服程度也不同吗）
+	PRINTW 
+	PRINTFORML （没错，这简直就是知性好奇心！不自己体验一下使用感，到底有多舒服，就…%UNICODE(0x2665) *1%）
+	PRINTFORML （才不是想随时都体验那种舒服的感觉…%UNICODE(0x2665) *1%）
+	PRINTW 
+	PRINTFORML 「唔…做得真够精巧的呢…特别是这个变粗的地方…原来是这种感觉啊…」
+	PRINTFORML 「这个小一点的是什么？用这个让小豆豆舒服的吗…原来如此…」
+	PRINTFORML 「…啊，不知不觉就看得入迷了。得赶快试试才行」
+	PRINTW 
+	PRINTFORML 呜咿咿咿咿咿
+	PRINTFORML 果打开电源，按摩棒震动起来，发出了声音
+	PRINTFORML 「哇！？ 动了！？」
+	PRINTW 
+	PRINTFORML （直接放进去好像会很痛，还是先把阴道弄湿比较好吧）
+	PRINTFORML 果决定先用手指抚慰
+	PRINTW 
+	PRINTFORML 「啊嗯，呼…嗯…这样差不多，可以了吧…」
+	PRINTFORML 果看着拉丝的手指，确认阴道内已经湿润，然后小心翼翼地将按摩棒埋入阴道
+	PRINTW 
+	PRINTFORML 扭噗噗噗噗
+	PRINTFORML 「呜、呜…进、进来了…%UNICODE(0x2665) *1% 啊、到深处了、真好…%UNICODE(0x2665) *1%」
+	PRINTW 
+	PRINTFORML 和手指不同，压倒性的质量感支配着阴道。肉壁被噗嗤噗嗤地分开的感觉难以言喻
+	PRINTFORML （好厉害…这，真的像在做爱一样…）
+	PRINTW 
+	PRINTFORML 「啊%UNICODE(0x2665) *1% 这里%UNICODE(0x2665) *1% 这里真好%UNICODE(0x2665) *1%」
+	PRINTFORML 果找到了自己的G点，然后重点用按摩棒刺激那里
+	PRINTW 
+	PRINTFORML （啊，感觉好像要尿出来了，啊，这个糟糕，超级舒服）
+	PRINTFORML 「好厉害%UNICODE(0x2665) *1% 啊%UNICODE(0x2665) *1% 来了%UNICODE(0x2665) *1% 呜%UNICODE(0x2665) *1%」
+	PRINTFORML 果摇晃着腰，噗嗤、噗嗤地喷出爱液。这是中出的感觉
+	PRINTW 
+	PRINTFORML 「啊哈…%UNICODE(0x2665) *1% 最棒了…%UNICODE(0x2665) *1% 按摩棒，真好啊～…%UNICODE(0x2665) *1%」
+	PRINTFORML 果仰面躺下，沉浸在高潮的余韵中
+	PRINTFORML 她的表情非常满足
+	PRINTW 
+	PRINTFORML 「………………」
+	PRINTFORML 「………………总觉得，突然，变得空虚了…………」
+	PRINTW 
+	PRINTFORML 在行为中因为过于专注所以完全没有在意，但是从高潮中醒来，头脑变得冷静后，就越来越感到一个人的寂寞
+	PRINTFORML 「虽然很舒服…但是，果然，还是做爱后被紧紧拥抱更好啊…」
+	PRINTW 
+	PRINTFORML 使用道具的独自一人性爱很轻松也不错，但是果然自己还是更适合和他人卿卿我我地做爱
+	PRINTFORML 「嘛，不过，偶尔也还不错吧…%UNICODE(0x2665) *1%」
+	PRINTW 
+	CFLAG:K42C_果と通贩その４ = 2
+	RETURN 1
+ENDIF
+
+;==========================================================================================
+;果と通贩その５
+;==========================================================================================
+@K42_HATATE_ORDER5
+;果が乳头夹で绝顶した场合发生
+IF CFLAG:K42C_果と通贩その５ == 1
+	PRINTFORML ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+	PRINTFORML ┃%"事件：果和网购 其五",72,LEFT%┃
+	PRINTFORML ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+	PRINTW 
+	PRINTFORML 「还是买了…」
+	PRINTFORML 果在过于巨大的箱子前双手抱胸，表情严肃
+	PRINTW 
+	PRINTFORML 和%MASTERNAME:42%做爱时，被使用了名为「乳头夹」的道具
+	PRINTFORML 似乎是用夹住乳头的夹子通过电的力量来震动。也有像奶瓶奶嘴形状的类型
+	PRINTW 
+	PRINTFORML 第一次使用「那个」的时候，体验了用乳头感受到的未知的快感
+	PRINTFORML 仅仅是夹住就有一种奇妙的感觉，而且还会震动。会让人一直品尝到又痒又舒服的感觉
+	PRINTW 
+	PRINTFORML （一开始只是有点痒痒的感觉，但是因为一直被刺激，所以会渐渐地变得舒服起来呢）
+	PRINTFORML （被触摸乳头，或者自己触摸乳头的时候，会分散触摸其他部分的注意力，所以双手能空出来是优点呢）
+	PRINTW 
+	PRINTFORML （没错，这简直就是知性好奇心！不自己体验一下使用感，到底有多舒服，就…%UNICODE(0x2665) *1%）
+	PRINTFORML （才不是想随时都体验那种舒服的感觉…%UNICODE(0x2665) *1%）
+	PRINTW 
+	PRINTFORML 下定决心，脱掉衣服，摘下胸罩
+	IF TALENT:TARGET:胸围 == 2 
+		PRINTFORML 像蜜瓜一样的胸部晃动了一下
+		PRINTW 
+		PRINTFORML 「啊哈哈…没想到我竟然会变得这么大」
+		PRINTFORML 「看起来也不像是食物或者疾病的原因…但是好重啊，肩膀都僵硬了…」
+	ELSEIF TALENT:TARGET:胸围 == 1 
+		PRINTFORML 丰满的胸部晃动了一下
+		PRINTW 
+		PRINTFORML 「完全变大了呢」
+		PRINTFORML 「以前因为小而烦恼，但现在肩膀僵硬，又被男人们盯着看，这样也很不方便呢」
+	ELSEIF TALENT:TARGET:胸围 == -1
+		PRINTFORML 小小的胸部露了出来
+		PRINTW 
+		PRINTFORML 「…又不是说女人胸大就是一切」
+		PRINTFORML 「我很自信，即使小巧，形状也很好看」
+	ELSEIF TALENT:TARGET:胸围 == -2
+		PRINTFORML 像洗衣板一样单薄的胸部露了出来
+		PRINTW 
+		PRINTFORML 「呜呜…以前明明稍微大一点的…」
+		PRINTFORML 「为什么会缩水呢…」
+	ELSE
+		PRINTFORML 形状美好的胸部露了出来
+		PRINTW 
+		PRINTFORML 「嗯哼哼♪ 果然，比以前更大了呢♪」
+		PRINTFORML 「曾经为小而叹息的日子，现在也已经成为过去的故事了，就是这样」
+	ENDIF
+	PRINTW 
+	PRINTFORML 「嗯…果然，戴上的时候感觉怪怪的…」
+	PRINTFORML 「……从旁边看，可能会显得有点傻…不想被人看到这个呢…」
+	PRINTW 
+	PRINTFORML 噗噗噗噗噗噗噗噗…
+	PRINTFORML 「嗯嗯，好痒… 乳头、在颤抖…」
+	PRINTW 
+	PRINTFORML 「啊，好像来了，感觉不错…%UNICODE(0x2665) *1%」
+	PRINTFORML 「……嗯，虽然很舒服…但是，总觉得、不够尽兴…」
+	PRINTW 
+	PRINTFORML 「啊，感觉不错，升上来了，要去了」
+	PRINTFORML 「啊，要来了，要去了，要去了要去了%UNICODE(0x2665) *1%」
+	PRINTW 
+	PRINTFORML 「嗯，呜呜呜呜呜%UNICODE(0x2665) *1%」
+	PRINTFORML 「哈啊、哈啊、虽然是去了，但总觉得有点平淡啊…」
+	PRINTW 
+	PRINTFORML 「如果是乳头敏感的人，光是这个可能就能高潮了，但是对于不敏感的人来说，可能只是觉得痒而已」
+	PRINTFORML 「在使用过程中会变得更舒服吗」
+	PRINTW 
+	CFLAG:K42C_果と通贩その５ = 2
+	RETURN 1
+ENDIF
+
+;==========================================================================================
+;果と通贩その６
+;==========================================================================================
+@K42_HATATE_ORDER6
+;果が后庭拉珠で绝顶した场合发生
+IF CFLAG:K42C_果と通贩その６ == 1
+	PRINTFORML ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+	PRINTFORML ┃%"事件：果和网购 其六",72,LEFT%┃
+	PRINTFORML ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+	PRINTW 
+	PRINTFORML 「买回来了啊…」
+	PRINTFORML 果在巨大的箱子面前抱着胳膊，脸上露出了神妙的表情
+	PRINTW 
+	PRINTFORML 在和%MASTERNAME:42%的H中，使用了叫做「肛门拉珠」的道具
+	PRINTFORML 据说是把串成一串的珠子放入肛门又取出，从而获得快感的道具
+	PRINTW 
+	PRINTFORML 第一次使用「那个」的时候，不自觉地在屁眼里高潮了
+	PRINTFORML 虽然作为知识是知道屁眼也能感受到快感的，但是自己尝试还是觉得害怕
+	PRINTW 
+	PRINTFORML 和阴道和阴蒂都不同，仿佛被他人窥视着排泄的某种禁忌的快乐，果一直无法忘记
+	PRINTFORML 因为在屁眼里高潮了，感觉就像打开了不能打开的门，但还是装作没有注意到
+	PRINTW 
+	PRINTFORML 顺便一提，这次购买的是十个珠子的。不知道是多还是少
+	PRINTFORML 总觉得珠子比想象中大，不过总会有办法的吧
+	PRINTW 
+	PRINTFORML （最初，哇，感觉肚子里面不舒服，但是渐渐地变成了像上完厕所后一样舒畅的感觉呢）
+	PRINTFORML （难道说我，有屁眼方面的资质吗…虽然有点不爽）
+	PRINTW 
+	PRINTFORML （没错哟，这就是所谓的求知欲好奇心！ 到底有多舒服，不自己体验下是不行的…%UNICODE(0x2665) *1%）
+	PRINTFORML （才不是想要能够一直体验到那种快感，这样色色的想法呢…%UNICODE(0x2665) *1%）
+	PRINTW 
+	PRINTFORML 「好，开始吧」
+	PRINTFORML 下半身赤裸的果下定了决心
+	PRINTW 
+	PRINTFORML 为了今天，已经完成了屁股的清洗
+	PRINTFORML 刚才也用手指完成了肛门的放松
+	PRINTW 
+	PRINTFORML 「这、这个能进去吗…比我的手指还粗」
+	PRINTFORML 有点害怕了，但是最终还是好奇心占了上风
+	PRINTW 
+	PRINTFORML 「首先第一个…嗯、这个、真难进去啊…嗯嗯、终于、进去了」
+	PRINTFORML 第一个珠子因为润滑液太滑而陷入苦战，但是在肛门放松的瞬间噗地一下进去了
+	PRINTW 
+	PRINTFORML 第二、三个珠子
+	PRINTFORML 「嗯」
+	PRINTW 
+	PRINTFORML 第四、五个珠子
+	PRINTFORML 「嗯嗯…」
+	PRINTW 
+	PRINTFORML 第六、七、八个珠子
+	PRINTFORML 「嗯嗯嗯～%UNICODE(0x2665) *1%」
+	PRINTW 
+	PRINTFORML 第九个珠子
+	PRINTFORML 「嗯嗯嗯%UNICODE(0x2665) *1%%UNICODE(0x2665) *1%」
+	PRINTW 
+	PRINTFORML 第十个珠子
+	PRINTFORML 「呼哦哦%UNICODE(0x2665) *1% 哦～%UNICODE(0x2665) *1%」
+	PRINTW 
+	PRINTFORML 「全、全部、进去了…%UNICODE(0x2665) *1% 肚子、膨膨的…%UNICODE(0x2665) *1%」
+	PRINTFORML 「啊、但是只是放进去不行呢…不拔出来看看不行呢」
+	PRINTW 
+	PRINTFORML 果吞了口唾沫，喉咙发出咕嘟的声音。 难道说，比起慢慢拔出，一口气拔出来会更舒服吗
+	PRINTFORML （那样可能很危险…不、但是、绝对会很舒服）
+	PRINTW 
+	PRINTFORML 将风险和期待感放在天平上，简易的期待感胜出了
+	PRINTFORML 「要、要上了哦，要一口气拔出来了哦…？ 预、预备」
+	PRINTW 
+	PRINTFORML 嗖嗖嗖嗖嗖嗖嗖嗖嗖！
+	PRINTFORML 「～～～～～～～～～～～～～～～～！ 啊～～～～～～～%UNICODE(0x2665) *1% 啊～～%UNICODE(0x2665) *1% 啊～～%UNICODE(0x2665) *1%%UNICODE(0x2665) *1%%UNICODE(0x2665) *1%」
+	PRINTW 
+	PRINTFORML 果像被电流击中一样，全身颤抖着高潮了
+	PRINTFORML 在最后一个珠子拔出的同时，从敞开的肛门中，润滑液像潮水一样噗噗地喷出
+	PRINTW 
+	PRINTFORML 「哈啊～～～～%UNICODE(0x2665) *1% 哈啊～～～～%UNICODE(0x2665) *1% 这个太棒了…%UNICODE(0x2665) *1%」
+	PRINTFORML 「屁股、最棒了～%UNICODE(0x2665) *1% 这个、停不下来了…%UNICODE(0x2665) *1%」
+	PRINTW 
+	CFLAG:K42C_果と通贩その６ = 2
+	RETURN 1
+ENDIF
+;==========================================================================================
+;果と通贩その７
+;==========================================================================================
+@K42_HATATE_ORDER7
+;果が肛用振动棒で绝顶した场合发生
+IF CFLAG:K42C_果と通贩その７ == 1
+	PRINTFORML ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+	PRINTFORML ┃%"事件：果和网购 其七",72,LEFT%┃
+	PRINTFORML ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+	PRINTW 
+	PRINTFORML 「买回来了啊…」
+	PRINTFORML 果在巨大的箱子面前抱着胳膊、脸上露出了神妙的表情
+	PRINTW 
+	PRINTFORML 在和%MASTERNAME:42%的H中、使用了叫做「肛门按摩棒」的道具
+	PRINTFORML 是一种模仿男性阴茎的性玩具，正如其名，是放入肛门又取出，从而获得快感的道具
+	PRINTW 
+	PRINTFORML 第一次使用「那个」的时候，不自觉地在屁眼里高潮了
+	PRINTFORML 虽然作为知识是知道屁眼也能感受到快感的，但是自己尝试还是觉得害怕
+	PRINTW 
+	PRINTFORML 和阴道和阴蒂都不同，某种禁忌的快乐，果一直无法忘记
+	PRINTFORML 因为用肛门按摩棒高潮了，感觉就像打开了不能打开的门，但还是装作没有注意到
+	PRINTW 
+	PRINTFORML 顺便一提，这次购买的是稍微小一点的尺寸。只想避免一下子买了太粗的东西导致屁眼变得很糟糕的情况
+	PRINTFORML 即使是好奇心旺盛的果，也还是有这种程度的判断力的
+	PRINTW 
+	PRINTFORML （最初，哇，感觉肚子里面不舒服，但是渐渐地变成了像上完厕所后一样舒畅的感觉呢）
+	PRINTFORML （难道说我，有屁眼方面的资质吗…虽然有点不爽）
+	PRINTW 
+	PRINTFORML （没错哟，这就是所谓的求知欲好奇心！ 到底有多舒服，不自己体验下是不行的…%UNICODE(0x2665) *1%）
+	PRINTFORML （才不是想要能够一直体验到那种快感，这样色色的想法呢…%UNICODE(0x2665) *1%）
+	PRINTW 
+	PRINTFORML 「嗯…这边是相当普通的构造…这边有像珠子一样的东西…哇，软绵绵的！」
+	PRINTFORML 「这个小的是…要放一整天吗！？ 这个还是算了吧…」
+	PRINTFORML 「…啊，不知不觉就看得入迷了。得赶快试试才行」
+	PRINTW 
+	PRINTFORML 为了今天，已经完成了屁股的清洗。也练习了用手指尽可能地适应
+	PRINTFORML 即使如此，也还是需要前戏吧
+	PRINTW 
+	PRINTFORML 「首先要用手指放松才行…」
+	PRINTFORML 果裸露出下半身，张开腿，在手指上涂满润滑液，开始描绘紧闭的肛门
+	PRINTW 
+	PRINTFORML 「嗯…啊、果然我、可能是在屁眼里容易有感觉…」
+	PRINTFORML 一旦体验过屁眼高潮，肛门似乎就比以前更敏感了
+	PRINTW 
+	PRINTFORML 「呼ー、呼ー、放松…手指、进去了…」
+	PRINTFORML 注意着不要弄伤里面，将手指埋入肛门
+	PRINTW 
+	PRINTFORML 「啊、感觉好像要出来了、好棒%UNICODE(0x2665) *1%」
+	PRINTFORML 果一边玩弄着阴蒂，一边重复着手指的抽插
+	PRINTW 
+	PRINTFORML 「哈ー…、差不多、可以了吗…%UNICODE(0x2665) *1%」
+	PRINTFORML 果将手指从肛门拔出，原本用于排泄的洞穴为了接受异物而绽放，微微蠕动着
+	PRINTW 
+	PRINTFORML 「那么、首先从这个普通的开始、呜、呜、呜%UNICODE(0x2665) *1% 呜～～～～%UNICODE(0x2665) *1%」
+	PRINTFORML 比自己的手指稍微粗一点的按摩棒，噗啾噗啾地被肛门吞噬
+	PRINTW 
+	PRINTFORML （这种进去时候难受ー的感觉、也开始不讨厌了、可能…）
+	PRINTFORML （但是、果然舒服的是…）
+	PRINTW 
+	PRINTFORML 「呜、哈%UNICODE(0x2665) *1% 拔出来、拔出来好舒服%UNICODE(0x2665) *1%」
+	PRINTFORML 「明明是屁眼的洞穴%UNICODE(0x2665) *1% 明明是拉屎的地方%UNICODE(0x2665) *1% 放入取出%UNICODE(0x2665) *1% 好舒服%UNICODE(0x2665) *1%」
+	PRINTFORML 「啊、这里%UNICODE(0x2665) *1% 这里好舒服%UNICODE(0x2665) *1% 这里太棒了%UNICODE(0x2665) *1%」
+	PRINTFORML 「啊要去了%UNICODE(0x2665) *1% 在屁眼里要去了要去了要去了～～～～%UNICODE(0x2665) *1%」
+	PRINTW 
+	PRINTFORML 「呼～，呼～……这个，我喜欢哦……%UNICODE(0x2665) *1%　那，那么，接下来是这边……」
+	PRINTFORML 「啊、哈啊…%UNICODE(0x2665) *1% 几乎没有抵抗就进去了…%UNICODE(0x2665) *1%」
+	PRINTW 
+	PRINTFORML 「要、要打开开关了哦、？ 要打开了哦？ 已经停不下来了哦？」
+	PRINTFORML 向着谁也没在看的方向确认着，果咕嘟一声咽了口唾沫，打开了按摩棒的开关
+	PRINTW 
+	PRINTFORML 呜呜呜呜呜呜呜
+	PRINTFORML 「哈嗯，哦%UNICODE(0x2665) *1%　这是什么%UNICODE(0x2665) *1%　不知道啦%UNICODE(0x2665) *1%　不知道啦%UNICODE(0x2665) *1%」
+	PRINTFORML 「手指、不行%UNICODE(0x2665) *1% 按摩棒 好厉害%UNICODE(0x2665) *1% 和手指完全不一样%UNICODE(0x2665) *1%」
+	PRINTW 
+	PRINTFORML 另一个按摩棒在果的肠内横冲直撞。而且、前端恰到好处地刺激着G点部分
+	PRINTFORML 「又要去了%UNICODE(0x2665) *1% 屁眼%UNICODE(0x2665) *1% 要在屁眼里去了%UNICODE(0x2665) *1%」
+	PRINTFORML 「太棒了%UNICODE(0x2665) *1% 要飞了%UNICODE(0x2665) *1% 要飞走了%UNICODE(0x2665) *1%」
+	PRINTFORML 「嗯%UNICODE(0x2665) *1% 嗯呼～～～～%UNICODE(0x2665) *1%」
+	PRINTW 
+	PRINTFORML 果从阴道盛大地喷出汁液，达到了高潮
+	PRINTFORML 全身都松弛下来，肛门按摩棒从肛门里噗啾！地滑落出来。按摩棒在地板上滚动，发出低沉的嗡嗡声
+	PRINTW 
+	PRINTFORML 「哈～～～～～～…%UNICODE(0x2665) *1% 哈～～～～～～…%UNICODE(0x2665) *1% 用屁眼自慰、最棒了…%UNICODE(0x2665) *1%」
+	PRINTFORML 「说不定比前面还要上瘾…%UNICODE(0x2665) *1%」
+	PRINTFORML 果没有意识到自己已经深深地陷入其中了…
+	PRINTW 
+	CFLAG:K42C_果と通贩その７ = 2
+	RETURN 1
+ENDIF
+
+;==========================================================================================
+;オナホ发觉
+;==========================================================================================
+@K42_HATATE_ONAHOBREAK
+PRINTFORML 「啊ーーーーーーーー！！」
+PRINTFORML 某一天、不小心放置在一边的飞机杯被果给发现了
+PRINTW 
+PRINTFORML 「明明约好了不再使用的…」
+PRINTFORML 「%MASTERNAME:42%个大骗子！　笨蛋！　踩到猫屎去吧！」
+PRINTW 
+PRINTFORML 不仅大大损害了果对你的信赖、刚刚买来的飞机杯也被撕裂了…
+PRINTFORML 果的【风骚】【容易高潮】消失了
+PRINTW 
+
+CFLAG:好感度 -= 1000
+CFLAG:信赖度 -= 200
+ITEM:飞机杯 = 0
+TALENT:风骚 = 0
+TALENT:容易高潮 = 0
+CFLAG:K42C_果オナホ = 0
+
+RETURN 1
+
+;==========================================================================================
+;出轨プレイ
+;==========================================================================================
+@K42_CHEATING
+	PRINTFORML ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+	PRINTFORML ┃%"事件：果的出轨PLAY（※实际上不出轨）",72,LEFT%┃
+	PRINTFORML ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+	PRINTW 
+PRINTFORML ※这个事件，可能包含让100％纯爱爱好者不快的内容
+PRINTFORML 看过概要后也可以中止
+CALL ASK_M("不要再发生", 1,"暂时保留", 1,"没关系，让我看", 1)
+SELECTCASE RESULT
+CASE 0
+	PRINTFORML 之后，这个事件将不再发生
+	CFLAG:K42C_出轨プレイ消失フラグ = 1
+	RETURN 1
+CASE 1
+	PRINTFORML 这次中止。满足条件的情况下，这个事件会再次发生
+	RETURN 1
+CASE 2
+	PRINTFORML 果幸福地结合，也怀上了孩子
+	PRINTFORML 虽然一如既往地和睦生活，但总觉得缺少了点刺激
+	PRINTFORMW 于是乎…
+
+		PRINTFORML [0] 果，能被痴汉一下吗？
+		$INPUT_LOOP_UWAKI
+		INPUT
+		IF !RESULT
+			PRINTFORML 　　　_／＼_
+			PRINTFORML 　[＞/└┴┘ヽｽ
+			PRINTFORML ＃( ｜ ﾉノ)人) )　
+			PRINTFORML 　 )人Cﾙﾟヮﾟﾉﾙ(同
+			PRINTFORML 　(′(_)`介ｲ)つ凵
+			PRINTFORML 　　 (ﾉ<井井>　i
+			PRINTFORML 　　　　k|k|
+			PRINTFORML 　　　　〒〒
+			PRINTFORML 
+			PRINTFORML ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+			PRINTFORML ┃%"果的强烈一击！",72,LEFT%┃
+			PRINTFORML ┃%"%CALLNAME:MASTER%受到了128点伤害！",72,LEFT%┃
+			PRINTFORML ┃%"%CALLNAME:MASTER%陷入了恍惚",72,LEFT%┃
+			PRINTFORML ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+			PRINTW 
+			PRINTFORML 果的拳头和自己的脸上冒起了烟…
+			PRINTFORML 身手不错嘛…
+			PRINTFORML 容易因为外表而忘记，果也是如假包换的天狗。比想象中还要能打
+			PRINTW 
+			PRINTFORML 「你你你你你你你你你你你你你你你你你你你这个白痴！！！！！！！！！！　我为什么要去做那种事啊！」
+			PRINTFORML 「而且，我可是对%MASTERNAME:42%…一心一意的，被其他人碰什么的绝对不可能！」
+			PRINTW 
+			PRINTFORML 说的真让人高兴
+			PRINTFORML 脸部变形的同时笑着竖起大拇指，果满脸通红地转过脸
+			PRINTW 
+			PRINTFORML 看来是我的措辞不够。让我来解释一下
+			PRINTFORML 你说明中……
+			PRINTFORML 
+			PRINTW ………………
+			PRINTW …………
+			PRINTW ……
+			PRINTFORML 
+			PRINTFORML 「我家的老公，偶尔会觉得他有点笨，但没想到会这么笨…」
+			PRINTFORML 果用三根手指抵着额头，用严肃的表情摇了摇头
+			PRINTW 
+			PRINTFORML 哎呀，别这么夸「才没夸你！」
+			PRINTW 
+			PRINTFORML 「……总之，虽然真的被别的男人抱是绝对不行的，但想要一边那样妄想着一边做爱，对吧」
+			PRINTFORML 不愧是老婆。真是了解我
+			PRINTW 
+			PRINTFORML 「……就算只是妄想，被%MASTERNAME:42%以外的人做，我也讨厌…」
+			PRINTFORML 「而且，我喜欢和%MASTERNAME:42%做爱…」
+			PRINTFORML 果嘟着嘴，扭扭捏捏的
+			PRINTW 
+			PRINTFORML 「…………」
+			PRINTFORML 「…………非、非做不可吗？」
+			PRINTFORML 果用手指戳着的同时，眼巴巴地看着这边
+			PRINTW 
+			CALL ASK_YN("果酱求你了，我就是想做","果然强求是不好的")
+			IF !RESULT
+				PRINTFORML 「呜……我知道啦……但是，你别太期待我的演技哦」
+				PRINTW 
+				PRINTFORML 得到了果的出轨PLAY的同意！
+				PRINTFORML 同意状态下推倒的话，一部分台词会变成出轨模式
+				PRINTFORML 请一边嫉妒着不存在的某人，一边把高涨的欲望发泄在WAIFU果身上吧
+				PRINTW 
+				CFLAG:K42C_出轨プレイフラグ = 1
+			ELSE
+				PRINTFORML 「太好了ー。话说，和我做爱，已经腻了吗ー？」
+				PRINTFORML 果嘟着嘴，拽着我的耳朵
+				PRINTFORML 咿呀呀呀，耳朵要变成ディー〇リト了！
+				PRINTW 
+				PRINTFORML 「虽然做太奇怪的事情我果然还是不喜欢的，但是」
+				PRINTFORML 果红着脸，悄悄地在我耳边说道
+				PRINTFORML 「如果好好疼爱我的话，做再多次都可以哦…%UNICODE(0x2665) *1%」
+				PRINTW 
+			ENDIF
+		ELSE
+			GOTO INPUT_LOOP_UWAKI
+		ENDIF
+ENDSELECT
+RETURN 1
+
+;==========================================================================================
+;里花果子念报
+;==========================================================================================
+@K42_HATATE_URAKAKASHI
+#DIM BUSUU
+	;花果子念报と违ってかなりユルい文体です
+	;书こうと思ったときはエロくなると思ってたのにいざ书いたら思ってたよりエロくない
+	PRINTFORML ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+	PRINTFORML ┃%"事件：里花果子新闻报",72,LEFT%┃
+	PRINTFORML ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+	PRINTW
+	PRINTFORML 仅仅依靠普通死板的版面，很难增加发行量
+	PRINTFORML 于是，为了发挥自己喜欢的领域，果想到的企划是…
+	PRINTW 
+	;希望能一点点增加种类
+	SELECTCASE RAND:3
+	CASE 0
+		PRINTFORML 「和他的约会！　想要卿卿我我的话就来这里！」
+		PRINTFORML 「记者推荐的恩爱地点%UNICODE(0x2665) *1%」
+		PRINTW 
+		PRINTFORML 大家，和男朋友外出的时候，想做爱的时候怎么办？
+		PRINTFORML 高手也许会在外面做…但大多数人应该会觉得不好意思。
+		PRINTFORML 我也…在外面稍微有点抵触。
+		PRINTW 
+		PRINTFORML 但是又忍不住想马上到家…！
+		PRINTFORML 所以，要介绍约会中，当有这种感觉的时候，推荐的去处。
+		PRINTFORML 
+		PRINTW 
+		SELECTCASE RAND:2
+		CASE 0
+			PRINTFORML 这次是人间之里篇！　个人最推荐的地方%UNICODE(0x2665) *1%
+			PRINTW 
+			PRINTFORML 首先是人里的小旅馆！
+			PRINTFORML 可以带着想要做爱的对象，到名为街道的设施过夜。
+			PRINTFORML 虽然每天都去有点吃不消，但使用费还算便宜。
+			PRINTW 
+			PRINTFORML 不过，因为会和其他客人碰面，所以在人里熟人多的时候要注意。
+			PRINTFORML 如果被看到和不是男朋友/女朋友的人进去…哇～哦，糟糕了！
+			PRINTFORML 还有，害羞的人可能需要一点勇气吧？
+			PRINTW 
+			PRINTFORML 房间很简单，不是很大，但是打扫得很干净，这点是〇。
+			PRINTFORML 只是，因为墙壁很薄，而且隔着走廊的是纸拉门，所以隔壁的声音什么的很容易听到。
+			PRINTFORML 如果是能享受那种气氛的人还好，不然的话难度可能有点高。
+			PRINTW 
+			PRINTFORML 第二个是同样在人里的大众浴场！
+			PRINTFORML 其实这里，只告诉读者们哦，可以花5000円包场！
+			PRINTFORML 不过，好像必须和住在街上的人一起才行。
+			PRINTW 
+			PRINTFORML 使用费比小旅馆贵一点，但是一整天可以随意进出！
+			PRINTFORML 肚子饿了可以在附近的饭店解决，也可以去喝酒。
+			PRINTFORML 和出去一次就要再次支付入场费的小旅馆不同，用法可能不太一样
+			PRINTW 
+			PRINTFORML 如果目的是卿卿我我的话就去小旅馆。
+			PRINTFORML 如果想在途中观光或者吃饭什么的就去大众浴场。
+			PRINTFORML 请根据目的来选择哦♪
+			PRINTW 
+		CASE 1
+			PRINTFORML 这次是地底篇！　不过不推荐给新手。因为地底有很多强大的妖怪。
+			PRINTW 
+			PRINTFORML 首先是情人旅馆！
+			PRINTFORML 这又是一个直球的名字呢。不是单纯为了睡觉，而是为了文字意义上的「相爱」的旅馆。
+			PRINTFORML 为什么地底会有这么棒的设施？　如果介意的话就输了
+			PRINTW 
+			PRINTFORML 从面板上选择想要进入的房间，从服务员那里拿到房间的钥匙。
+			PRINTFORML 因为是从小缝隙里交换钥匙，所以不用见面，交流也很少
+			PRINTFORML 推荐给那些想尽量避免和他人见面的人！
+			PRINTW 
+			PRINTFORML 房间非常宽敞，可以选从可爱到可怕氛围的各种各样的房间。
+			PRINTFORML 还有澡堂，所以即使身体脏了也能马上冲洗干净，真不错♪
+			PRINTFORML 顺便一提，另外付费的话还可以提供饭菜，所以如果愿意的话可以在那里过一天哦 笑
+			PRINTW 
+			PRINTFORML 隔音效果很好，所以发出多大的声音都没关系♪
+			PRINTFORML 平时因为「被别人听到会很害羞…」而忍耐的孩子们，在这里尽情发出声音吧♪
+			PRINTFORML 说不定会因为和平时的反差而让男朋友燃起来哦？
+			PRINTW 
+			PRINTFORML 没有什么缺点，非要说的话就是从地上前往很麻烦？
+			PRINTFORML 应该也有人会觉得，特意跑到地底来还不如…
+			PRINTFORML 推荐给那些「想享受非日常」「想悠闲地在地底观光，顺便享受做爱」的人♪
+			PRINTW 
+		ENDSELECT
+	CASE 1
+		PRINTFORML 告诉我！　你喜欢的场景！
+		PRINTFORML 以匿名为条件，赤裸裸地讲述了喜欢的体位和让人心动的场景，以及感觉到的地方♪
+		PRINTFORML 这样就完全掌握了幻想乡的性事！？
+		PRINTW 
+		;看了CSV的TALENT之类的妄想写出来的。
+		;肯定会有人吐槽说这家伙们肯定不会接受这种采访也不会这么回答，但是因为是个人的妄想产物…
+
+		;种族：人类・外来人
+			SELECTCASE RAND:6
+			CASE 0
+				PRINTFORML 住在神社的巫女・Ｒさん
+				PRINTFORML 「没什么特别的…只要有心仪的对象，自然就会那样吧」
+				PRINTFORML 「我说你别问奇怪的事情啦」
+				PRINTW 
+			CASE 1
+				PRINTFORML 住在魔法之森的魔法使Ｍさん
+				PRINTFORML 「你、你问什么啊…呜ー…\/\/\/」
+				PRINTFORML 「……被温柔地拥抱并接吻，好像也不错呢…」
+				PRINTW 
+			CASE 2
+				PRINTFORML 红魔馆的女仆・Ｓさん
+				PRINTFORML 「嗯…对方狼狈地恳求的样子，可能会让我兴奋」
+				PRINTFORML 「还有…同性之间意外地也不错哦。要试试吗？　呵呵…♪」
+				PRINTW 
+			CASE 3
+				PRINTFORML 妖怪之山的巫女・Ｓさん
+				PRINTFORML 「诶！？　嘻嘻嘻，秘密！！　说是秘密就是秘密啦！」
+				PRINTFORML 「……阴蒂最敏感，可能…还有，温柔引导我的人…」
+				PRINTW 
+			CASE 4
+				PRINTFORML 寺子屋的美女教师Ｋさん
+				PRINTFORML 「我的话…是呢，平时更喜欢侍奉对方。体位？　体位的话，果然还是传教士体位最好」
+				PRINTFORML 「只是，一旦兽人化的话，性欲就会高涨…一不小心就会榨干对方…」
+				PRINTW 
+			CASE 5
+				PRINTFORML 借书屋的看板娘Ｋさん
+				PRINTFORML 「那个嘛，我毕竟也是个到了适婚年龄的女孩子，所以还是有兴趣的哦。那种书也读了很多」
+				PRINTFORML 「是呢…和相爱的人紧紧拥抱，最后在里面结束什么的，很幸福呢%UNICODE(0x2665) *1%」
+				PRINTW 
+			ENDSELECT
+			
+		;种族：神灵・幽灵
+			SELECTCASE RAND:10
+			;映姫はこんなこと言わない
+			CASE 0
+				PRINTFORML 让哭泣的孩子也闭嘴的地狱裁判长Ｓさん
+				PRINTFORML 「和相爱的人加深爱情当然是好的，但是沉迷于享乐就是罪」
+				PRINTFORML 「……但是，屁眼不是性器，所以触摸或者进入都不会构成犯罪」
+				PRINTFORML 「……你那是什么表情」
+				PRINTW 
+			;自己负责的角色比较容易写
+			CASE 1
+				PRINTFORML 总是偷懒的死神Ｋさん
+				PRINTFORML 「喜欢什么样的情事？　你问的问题真够直接的」
+				PRINTFORML 「嘛，我的话不太喜欢拘谨，很多时候都是感觉来了就顺其自然了」
+				PRINTFORML 「用胸部帮他撸的话，他会露出很开心的表情，我也很开心」
+				PRINTFORML 「还有就是，稍微有点疼也不讨厌。可能是因为每天都被上司训斥吧」
+				PRINTW 
+			CASE 2
+				PRINTFORML 秋之神Ｓさん
+				IF TALENT:处女 == 1
+					PRINTFORML 「虽说是神，但我没什么经验…」
+				ENDIF
+				PRINTFORML 「和妹妹相比我很朴素，性格也不开朗，所以觉得没什么缘分…」
+				PRINTFORML 「能一起欣赏山上的红叶，即使交流的话语不多，也能和在一起内心平静的人在一起就很开心了」
+				PRINTW 
+			CASE 3
+				PRINTFORML 秋之神Ｈ…不是，是Ｍさん
+				PRINTFORML 「我最喜欢性交了♪　被做的和主动的都最喜欢♪」
+				PRINTFORML 「据说我的身体，出汗后甜香味会变浓。好像也有人沉迷于那种味道」
+				PRINTFORML 「虽然有点害羞，但我很喜欢大汗淋漓的性交♪」
+				PRINTW 
+			CASE 4
+				PRINTFORML 感觉是厄运之神的Ｈさん
+				PRINTFORML 「你问的问题真让人不知所措…」
+				PRINTFORML 「也不是没有经验…比起自己被做，我更喜欢让对方舒服」
+				PRINTFORML 「那个…用、用嘴，之类的」
+				PRINTW 
+			CASE 5
+				PRINTFORML 半人半灵的园丁Ｙさん
+				PRINTFORML 「欸欸欸！？　怎、怎么能好意思说出口…」
+				PRINTFORML 「不，自己做过…几次…（两手张开表示次数）」
+				PRINTFORML 「现在没有那样的人，如果对方能温柔对待我的话，我会很高兴的」
+				PRINTW 
+			CASE 6
+				PRINTFORML 山之神的一柱Ｋさん
+				PRINTFORML 「你问的问题真有趣。最近稍微收敛了一点，以前的话只要是喜欢的对象，和谁都可以，呢」
+				PRINTFORML 「同时和好几个男人，或者我在这里长出男人的东西和女人，呢…♪」
+				PRINTFORML 「你也想体验一下吗？　我的技术可是很好的哦？」
+				PRINTW 
+			CASE 7
+				PRINTFORML 山之神的一柱Ｓさん
+				PRINTFORML 「嘿ー，你问的问题真有趣。当然最喜欢让人舒服的事情了」
+				PRINTFORML 「就像稍微偷吃一点供品一样…%UNICODE(0x2665) *1%」
+				PRINTFORML 「不过，最近的话基本都是和神奈子做了吧…啊，这个不能说出来吗？」
+				PRINTW 
+			CASE 8
+				PRINTFORML 亡灵的Ｙさん
+				PRINTFORML 「是呢，我不喜欢那个总是命令我的人」
+				PRINTFORML 「也不喜欢自我中心的人。硬要说的话更喜欢同性」
+				PRINTW 
+			;感谢Ｋ和ＴＷ口上作者样让我认识到おっきーな是傲娇
+			;喜欢没用的强者呢…
+			CASE 9
+				PRINTFORML 能拿出随意门贤者之Ｏさん
+				PRINTFORML 「！！！？？？　你、你你你、你在问什么啊！？　那种事情是不能随便对别人说的啊！？」
+				PRINTFORML 「………………………………也许喜欢被温柔地疼爱…………」
+				PRINTW 
+			ENDSELECT
+		;种族：妖怪・魔法使
+			SELECTCASE RAND:7
+			CASE 0
+				PRINTFORML 妄想新闻记者…不如说是乌天狗的Ａさん
+				PRINTFORML 「哈…你、我以为你在背地里偷偷摸摸地做…」
+				PRINTFORML 「为什么你要问我那种事情…不，会减少的啦。我怎么可能说出口那种害羞的事情」
+				PRINTFORML 「啊，真是的。普通才是最好的。和组织的束缚无关，和能够平等地欢笑、吵架、觉得喜欢的人普通地结合就好了」
+				PRINTFORML 「觉得我很普通吗？　想笑就笑吧。…你摆出什么『我懂ー』一样的笑容啊。真让我生气」
+				PRINTW 
+			CASE 1
+				PRINTFORML 一本正经的白狼天狗的Ｍさん
+				PRINTFORML 「接受采访好紧张啊…那么，这次的内容是什么…哈啊啊啊啊啊！？」
+				PRINTFORML 「不不不不不！　不行！　我、我、我还未成年，而且…不，自己一个人的话做过几次…你在说什么啊！」
+				PRINTFORML 「理想的男人吗…那样的话，嘛…果然，还是认真的人比较好呢。之后，如果能陪我下将棋的话就更好了」
+				PRINTFORML 「我明明那么努力地说了，不要摆出那么无聊的表情啊！」
+				PRINTW 
+			CASE 2
+				PRINTFORML 能读取内心的妖怪Ｓさん
+				PRINTFORML 「我在想是什么采访呢…你真是异想天开呢」
+				PRINTFORML 「我同意分母越多内容会越充实，但你难道没想过企划会中途停止吗？　…嘛算了」
+				PRINTFORML 「是呢…大前提是，不厌恶被读取内心的人吧」
+				PRINTFORML 「从某种意义上来说，就像你一样。『真害羞ー』什么的，不要一次次地让我读取你的内心啊」
+				PRINTFORML 「还有，不能原谅出轨的人。还有，那种滥用能力捉弄女性的人」
+				PRINTFORML 「『这是怎么回事？』，有些事情不知道反而更幸福。『真小气ー』，我的外号什么时候变成那样了」
+				PRINTW 
+			;在我心里勇仪喜欢正太。不接受异议
+			CASE 3
+				PRINTFORML 鬼的四天王之一Ｙさん
+				PRINTFORML 「我以为是天狗来采访了…你问的问题真奇怪。还是说，只有你才会做那种事情」
+				PRINTFORML 「嘛，我想你也身为天狗的末端应该能理解，如果要被上的话，还是被强者上比较好」
+				PRINTFORML 「还有，不撒谎的人。比起用奇怪的手段接近我的人，我更喜欢坦率地说『我喜欢你，想上你』的人」
+				PRINTFORML 「还有…小孩子也不错呢。被我手把手教导的时候的表情，真是让人欲罢不能…♪」
+				PRINTW 
+			CASE 4
+				PRINTFORML 传闻说曾因为色情而毁灭国家的Ｒさん
+				PRINTFORML 「到底是从哪里听到那种传闻的…我不否认我喜欢交媾」
+				PRINTFORML 「是呢…被从后面激烈地突刺真是让人欲罢不能。在肉壶里被突刺的那种感觉真是让人欲罢不能」
+				PRINTFORML 「我喜欢进攻也喜欢被进攻。只不过，对方先求饶的情况比较多呢」
+				PRINTW 
+			CASE 5
+				PRINTFORML 红魔馆的门卫Ｍさん
+				PRINTFORML 「欸ー，喜欢的场景，吗…是呢…」
+				;本来应该是在时奸堕落flag成立之后，但这边无法判别…
+				IF MARK:58:时奸刻印 >= 3
+					PRINTFORML 「最近，我总是在不知不觉中被人恶作剧…已经不是恶作剧的程度了」
+					PRINTFORML 「所有的孔都被侵犯，被注入精液…甚至还在主人的面前高潮了…%UNICODE(0x2665) *1%」
+					PRINTFORML 「危险期和安全期都不管不顾地从小穴里溢出来…%UNICODE(0x2665) *1%」
+					PRINTFORML 「那个，糟、糟糕了…%UNICODE(0x2665) *1%　记者先生，您知道关于犯人的什么吗…%UNICODE(0x2665) *1%」
+					PRINTW 
+				ELSE
+					PRINTFORML 「做这种工作的话，很容易积累压力呢ー」
+					PRINTFORML 「所以，每天结束时的『日课』是必不可少的呢ー」
+					PRINTFORML 「一不小心就会沉迷其中，第二天困得不行的时候也有呢。啊哈哈ー」
+					PRINTW 
+				ENDIF
+			CASE 6
+				PRINTFORML 妖怪的贤者Ｙさん
+				PRINTFORML 「…至今为止见过很多吵吵闹闹乱飞的天狗…但问这种事情的你是第一个」
+				PRINTFORML 「是呢，对方是男是女都无所谓。不如说，重要的是身体和内心的相性」
+				PRINTFORML 「硬要说的话，我更喜欢进攻。一点点融化顽固的对方…那个过程很愉快呢」
+				PRINTW 
+			ENDSELECT
+		;种族：付丧神・人形
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 保姆的付丧神Ｋさん
+				PRINTFORML 「我们虽然是妖怪的一种，但是最喜欢人类了。最喜欢放在身边的人了♪」
+				PRINTFORML 「偶尔会被说太沉重了，但是最喜欢被侍奉了…%UNICODE(0x2665) *1%」
+				PRINTFORML 「侍奉您，让您喜欢上我，一口吃掉您敞开的心扉──啊，光是想想就口水直流了♪」
+				PRINTW 
+			CASE 1
+				PRINTFORML 人气爆棚的乐队付丧神Ｒさん
+				PRINTFORML 「刚成为付丧神的时候还想着要复仇人类，但是好像还是无法舍弃被人类演奏的喜悦」
+				PRINTFORML 「所以，音乐会结束后身体总是会发热…呢%UNICODE(0x2665) *1%」
+			CASE 2
+				PRINTFORML 被人偶师操控的人偶Ｓさん
+				PRINTFORML 白痴吗
+				PRINTW 
+			ENDSELECT
+		;种族:妖精
+			SELECTCASE RAND:6
+			CASE 0
+				PRINTFORML 假小子冰之妖精Ｃさん
+				PRINTFORML 「什么啊？　我不太懂」
+				PRINTFORML 「舒服的地方？　凉快的地方很舒服呢！」
+				PRINTW 
+			CASE 1
+				PRINTFORML 喜欢恶作剧的妖精ＳＭさん
+				PRINTFORML 「啥是性感带啥是体位的我不懂啦！　是稀罕的东西吗？」
+				PRINTFORML 「摸起来舒服的地方？　之前摸胸和胯的时候感觉很舒服…问这个干嘛？」
+				PRINTW 
+			CASE 2
+				PRINTFORML 喜欢恶作剧的妖精Lさん
+				PRINTFORML 「我完全不明白你在说什么…在天狗之间很流行吗？　问这种事情」
+				PRINTFORML 「也许喜欢一起玩耍，温柔对待我的人」
+				PRINTW 
+			CASE 3
+				PRINTFORML 喜欢恶作剧的妖精ＳＳさん
+				PRINTFORML 「我是妖精所以不太懂色色的事情♪」
+				PRINTFORML 「但是，被身材高大的人撒娇的话感觉还不错…%UNICODE(0x2665) *1%」
+				PRINTW 
+			CASE 4
+				PRINTFORML 哪里大是个秘密的妖精Ｄさん
+				PRINTFORML 男人…很可怕。会施暴的人，大声喧哗的人…
+				PRINTFORML 但是，温柔地抚摸我头的人，也许会喜欢…
+				PRINTW 
+			CASE 5
+				PRINTFORML 来自地狱的使者ＣＰさん
+				PRINTFORML 「色色的事情？　嗯ー有兴趣也想做那种事情，但是不知道该怎么做」
+				PRINTFORML 「姐姐你对那种事情很了解吗？　如果是的话就教教我嘛！」
+				PRINTW 
+			ENDSELECT
+		;种族：月人、蓬莱人、天人
+			SELECTCASE RAND:5
+			CASE 0
+				PRINTFORML 天人・Ｔさん
+				PRINTFORML 「哈？　所以说下界的生物就是…问题很低俗」
+				PRINTFORML 「慈悲为怀的我就来回答你吧。我喜欢能让我屈服的人」
+				PRINTFORML 「我很坚强，所以稍微碰一下或者轻轻地是不会受伤的。最好是那样激烈地爱我」
+				PRINTW 
+			CASE 1
+				PRINTFORML 喜欢甜食的仙人・Ｋさん
+				PRINTFORML 「沉迷于快乐什么的怎么可以。虽然我想这么说，但是我也不是完全能断绝，所以…」
+				PRINTFORML 「硬要说的话，我并不吝啬在那种氛围中被好好疼爱」
+				PRINTW 
+			CASE 2
+				PRINTFORML 住在竹林的健康狂人・Ｍさん
+				PRINTFORML 「……你、你是个笨蛋吧。一般会问这种事情吗？」
+				PRINTFORML 「…不太喜欢男人…和女性在一起比较安心。但是，不讨厌疼痛…因为感觉像活着」
+				PRINTW 
+			CASE 3
+				PRINTFORML 高贵出身的美少女Ｋさん
+				PRINTFORML 「是呢，我经常和永琳和因幡她们玩耍」
+				PRINTFORML 「即使到了尽头也永无止境的快乐，你有兴趣品尝一下吗？　库斯库斯…」
+				PRINTW 
+			CASE 4
+				PRINTFORML 迷途竹林的医生Ｅさん
+				PRINTFORML 「不是为了普及性教育？　嘛算了」
+				PRINTFORML 「我，看起来这样其实年纪不小了，所以也经历了很多事情了哦。对对方的性别没有要求」
+				PRINTFORML 「喜欢被人摸着胸插入，你要试试看吗？…%UNICODE(0x2665) *1%」
+				PRINTW 
+			ENDSELECT
+		;种族：仙人・魔界人
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 一本正经的仙人Ｋさん
+				PRINTFORML 「…嘛，仙人的秘术中有房中术，所以也不是完全不知道那种行为…」
+				PRINTFORML 「如果能重视气氛的话我会很高兴的。不太喜欢只是为了那种目的而急色的人」
+				PRINTW 
+			CASE 1
+				PRINTFORML 
+			CASE 2
+			ENDSELECT
+	CASE 2 && (CFLAG:1403 == 1 || CFLAG:1404 == 1 || CFLAG:1405 == 1 || CFLAG:1406 == 1 || CFLAG:1407 == 1 || CFLAG:1408 == 1 || CFLAG:1409 == 1)
+		PRINTFORML 「女生必看！　即使是单身之夜也不寂寞的精选自慰商品！」
+		PRINTFORML 「记者亲自体验！　彻底分析易用性和舒适度！」
+		PRINTW 
+		;跳蛋
+		SELECTCASE RAND:7
+		CASE 0 && CFLAG:1403 >= 1
+			PRINTFORML 说到女生的定番玩具，那就是跳蛋！
+			PRINTFORML 因为很小所以收纳和保养都很简单%UNICODE(0x2665) *1%
+			PRINTFORML 颜色也有粉色、水色、紫色等多种，外形可爱是重点♪
+			PRINTW 
+			PRINTFORML 没用过？　那就太可惜了！
+			PRINTFORML 只要用过一次，绝对会上瘾。
+			PRINTFORML 价格也很便宜，据说还可以栽培？
+			PRINTW 
+			PRINTFORML 朴素易用，非常适合新手第一次尝试♪
+			PRINTFORML 如果有男朋友/女朋友的话，也许可以成为做爱时的点缀？
+			PRINTW 
+			PRINTFORML 新手首先要贴在脖子和胸前，确认振动强度♪
+			PRINTFORML 如果直接贴在敏感的地方可能会很疼，所以不要直接贴，要从内衣上面或者周围开始贴。
+			PRINTFORML 隔着布的摩擦，和直接贴上去是不同的舒适感哦♪
+			PRINTW 
+			PRINTFORML 习惯之后，试着直接贴在乳头和小豆豆等敏感的地方♪
+			PRINTFORML 这时，重点是用弱而不是强！
+			PRINTFORML 特别是，女孩子的小豆豆很敏感，所以用强的话要注意。
+			PRINTW 
+			PRINTFORML 稍微有点可怕，但是也可以放进肉壶里%UNICODE(0x2665) *1%
+			PRINTFORML 在感觉到的地方振动的话，会高潮很多次%UNICODE(0x2665) *1%
+			PRINTFORML 只是，放入的时候要好好润湿♪　也可以使用润滑液♪
+			PRINTW 
+			PRINTFORML 顺便一提，我最喜欢淡紫色的跳蛋♪
+			PRINTFORML 比起贴在小豆豆上，放进小穴里更舒服呢…%UNICODE(0x2665) *1%
+			PRINTFORML 读者们也来寻找只属于自己的最敏感的地方吧♪
+			PRINTW 
+		
+		;电マ
+		CASE 1 && CFLAG:1404 >= 1
+			PRINTFORML 大家有在使用电マ吗？
+			PRINTFORML 电マ是电气按摩器的简称。
+			PRINTFORML 一般是用来贴在肩膀和背上，缓解僵硬的…
+			PRINTW 
+			PRINTFORML 其实，也可以用来给女孩子自慰♪
+			PRINTFORML 觉得自慰只能用手指？　那就太可惜了！
+			PRINTFORML 和手指完全不同的舒适感，只要知道一次就绝对会上瘾！
+			PRINTW 
+			PRINTFORML 电マ的好处是，外表看起来不像成人用品。
+			PRINTFORML 即使被发现了，因为原本就是健康器具，所以没关系♪
+			PRINTFORML 不过如果和其他玩具放在一起的话就会暴露了…笑。
+			PRINTW 
+			PRINTFORML 首先要注意的是，刺激非常强。
+			PRINTFORML 舒适感和振动强度都不是跳蛋能比的，所以使用时要注意。
+			PRINTFORML 推荐新手使用专门为自慰制作的电マ。
+			PRINTW 
+			PRINTFORML 首先推荐用电マ按摩整个胸部♪
+			PRINTFORML 振动也会传到乳头，非常舒服♪
+			PRINTFORML 无法直接接触的焦躁感，反而会提高兴奋度♪
+			PRINTW 
+			PRINTFORML 习惯之后，也试着用电マ按摩小豆豆吧♪
+			PRINTFORML 绝对会舒服到大脑一片空白！
+			PRINTFORML 也许一开始不习惯，但是只要持续按摩，就能高潮，所以请多尝试几次♪
+			PRINTW 
+			PRINTFORML 你虽然用电マ高潮了，但是高潮的瞬间就停下来了…太可惜了！
+			PRINTFORML 高潮之后，不要享受余韵，而是继续刺激。
+			PRINTFORML 这样就能舒服到大脑一片空白。
+			PRINTW 
+			PRINTFORML 总之电マ非常舒服，但是只有一个缺点…
+			PRINTFORML 也许会因为太舒服了，导致和恋人做爱的时候会觉得不够满足？
+			PRINTFORML 有对象的人，请尽量避免长时间使用，或者只刺激同一个地方。
+			PRINTW 
+			PRINTFORML 我第一次使用的时候，因为太舒服了所以尿出来了…
+			PRINTFORML 为了避免大家重蹈覆辙，请在柔软的布上等等铺上东西再试试♪
+			PRINTFORML 那么，祝大家有美好的自慰生活！
+			PRINTW 
+
+		;阴蒂夹
+		CASE 2 && CFLAG:1405 >= 1
+			PRINTFORML 欸？那是什么？　应该很多人会这么想。
+			PRINTFORML 话说就连我，在实际使用之前也完全get不到。
+			PRINTFORML 想要介绍一下阴蒂夹。
+			PRINTW 
+			PRINTFORML 如果说跳蛋是全身都能使用的商品，那么阴蒂夹就是专门为阴蒂设计的商品。
+			PRINTFORML 正如盖子的名字一样，是盖在阴蒂上使用的。因为是橡胶的，所以不需要电池，对钱包也很友好♪
+			PRINTFORML 也有电动TYPE的，根据喜好和钱包来决定吧。
+			PRINTW 
+			PRINTFORML 外观就像膨胀前的橡胶气球一样
+			PRINTFORML 将那个橡胶气球的口贴在阴蒂上，然后盖上去
+			PRINTFORML 事先自己摸摸，让阴蒂变大一点的话，可能会更容易戴上？
+			PRINTW 
+			PRINTFORML 作为注意点，请用手指按住气球膨胀的部分。那里很重要！
+			PRINTFORML 觉得阴蒂已经卡进气球口了吗ー？　如果觉得卡进去了，就试着放松或者用力按住膨胀部分的手指。
+			PRINTFORML 应该能感觉到挤压的程度在慢慢变化。
+			PRINTW 
+			PRINTFORML 为了快点变得舒服，强烈禁止激烈地挤压！
+			PRINTFORML 如果突然激烈挤压的话，会弄疼小豆豆的。做爱不要着急，慢慢来。
+			PRINTFORML 当然不阻止喜欢那种疼痛的人…笑。
+			PRINTW 
+			PRINTFORML 如果顺利完成的话，基本上就是重复手指的用力、放松。很简单吧！
+			PRINTFORML 特别推荐给喜欢用阴蒂感受的女孩子们。而且不占地方，即使被发现了也不容易看出来 笑。
+			PRINTFORML 保养也很简单，用水洗干净，然后在阴凉处晾干就行了♪　模拟万岁！
+			PRINTW 
+			PRINTFORML 如果只是吸引的话还不够满足，可以试着用手指敲打或者摇晃阴蒂夹。
+			PRINTFORML 和吸引的感觉又不一样了。
+			PRINTFORML 我喜欢敲打呢ー%UNICODE(0x2665) *1%
+			PRINTW 
+			PRINTFORML 高级玩家好像会戴着这个做爱。
+			PRINTFORML 虽然我觉得画面感会很厉害 笑，总之推荐给那些想要变得舒服的人♪
+			PRINTFORML 那么，祝大家有美好的自慰生活！
+			PRINTW 
+		
+		;振动棒
+		CASE 3 && CFLAG:1406 >= 1
+			PRINTFORML 说到定番中的定番，女性的自慰，那就是这个！
+			PRINTFORML 这次想介绍一下振动棒。
+			PRINTFORML 即使是没有用过的孩子，也应该有想尝试一次的想法吧？
+			PRINTW 
+			PRINTFORML 首先从振动棒本身开始说明。
+			PRINTFORML 外形从前端是圆形的棒状的朴素的东西，到模仿男性小鸡鸡的东西都有。
+			PRINTFORML 材质也从柔软的到金属的都有，范围很广，光是选择就很费劲。
+			PRINTW 
+			PRINTFORML 根据素材的不同，有的容易沾染污垢，有的价格昂贵。
+			PRINTFORML 对于别人来说是理所当然的，对于自己来说却变成了不好的体验…
+			PRINTFORML 正因为如此，当找到最适合自己的振动棒的时候，感动也会加倍♪
+			PRINTW 
+			PRINTFORML 个人推荐，第一次使用的人选择带有阴蒂振动棒的东西。
+			PRINTFORML 理由是，插入的时候也能让阴蒂感到舒适。
+			PRINTFORML 即使是没有过中出的经验的人，也应该有过阴蒂高潮的经验吧♪
+			PRINTW 
+			PRINTFORML 如果一边插入一边进行阴蒂高潮的话，也会更容易中出，所以也可以作为正式上阵的练习。
+			PRINTFORML 顺便一提，我是中出派%UNICODE(0x2665) *1%
+			PRINTFORML 只要用坚硬的东西顶到里面，就会立刻高潮，我很敏感%UNICODE(0x2665) *1%
+			PRINTW 
+			PRINTFORML 大小推荐稍微小一点的尺寸。
+			PRINTFORML 有男朋友的人可以以男朋友的小鸡鸡的尺寸为基准来考虑。
+			PRINTFORML 欸，男朋友的太大（太小）所以没有卖的？　…特制吗 笑
+			PRINTW 
+			PRINTFORML 顺便一提，电动TYPE的话，有只是振动的，有搅动的，有上下振动的。
+			PRINTFORML 前者暂且不提，后面两种是面向高级玩家的，所以新手总之选择机能朴素的东西！
+			PRINTFORML 我…都喜欢吧 笑
+			PRINTW 
+			PRINTFORML 使用时，要像平时自慰一样，抚摸乳头和阴蒂，好好湿润。
+			PRINTFORML 不容易湿润的人要使用润滑液，充分润湿。湿润的话会更舒服哦♪
+			PRINTFORML 我也喜欢好好润湿之后使用♪
+			PRINTFORML 还有，在振动棒上套上安全套的话，保养会更轻松哦。
+			PRINTW 
+			PRINTFORML 首先只放入前端，慢慢放松。一下子放进去里面是很可怕的呢。
+			PRINTFORML 觉得入口变柔软了，变得舒服了之后，就渐渐地放入里面。
+			PRINTFORML 特别是没有插入经验的孩子，要小心不要不小心放到最里面，弄破处女膜！
+			PRINTW 
+			PRINTFORML 习惯之后，也改变放入和取出的方式和角度。
+			PRINTFORML 一定会有只属于自己的舒适的地方。
+			PRINTFORML 也可以试试俯卧，抬起腰部，改变姿势。
+			PRINTFORML 我喜欢立在床上，然后噗滋噗滋地…%UNICODE(0x2665) *1%
+			PRINTW 
+			PRINTFORML 使用结束后，保养也很重要哦。
+			PRINTFORML 那么，祝大家有美好的自慰生活！
+			PRINTW 
+		
+		;乳头夹
+		CASE 4 && CFLAG:1407 >= 1
+			PRINTFORML 有人觉得是奶嘴吗？　可惜！
+			PRINTFORML 虽然是乳头，但却是套在自己的乳头上哦！
+			PRINTFORML 这次就来介绍这种乳头夹。
+			PRINTW 
+			PRINTFORML 大致分类的话，有夹住乳头的、吸引乳头的、振动乳头的这三种吧。
+			PRINTFORML 电池式的还有夹住+振动、吸引+振动之类的。
+			PRINTW 
+			PRINTFORML 乳头虽然没有性器那么敏感，但一开始就选择刺激性强的商品可不行！
+			PRINTFORML 而且，过度使用会导致乳头变得太大，所以使用要适度哦。
+			PRINTFORML 还有，好像会导致颜色变深。 幸好我还没到那种程度…
+			PRINTW 
+			PRINTFORM 安装方法都很简单。 普通地夹住、像吸管一样用力捏住、用泵来吸引。
+			PRINTFORML 选择自己觉得容易使用的就好。
+			PRINTW 
+			PRINTFORML 我觉得就是普通地舒服~的程度，但对于乳头敏感的人来说，这种商品简直是极品。
+			PRINTFORML 或者，也有人会因为使用了乳头夹而觉醒。
+			PRINTFORML 如果是不使用电池的商品，价格也不会太贵，而且体积也不大。
+			PRINTW 
+			PRINTFORML 顺便说一下，用乳头自慰叫做「チクニー」哦。 大家都知道吗？
+			PRINTFORML 好像是人类想出来的名字，真不知道他们怎么会想到这种东西 笑
+			PRINTFORML 大概妖怪再怎么和人类比想象力也是比不过的吧。
+			PRINTW 
+			PRINTFORML 还有呢，其实男人也是能感觉到乳头的。
+			PRINTFORML 有男朋友的人，要不要试试看这个商品呢？ 说不定会发现新的性癖！？
+			PRINTFORML 那么，祝你拥有美好的自慰生活！
+			PRINTW 
+		
+		;后庭拉珠
+		CASE 5 && CFLAG:1408 >= 1
+		;未实装だし省略で
+		
+		;肛用振动棒
+		CASE 6 && CFLAG:1409 >= 1
+			PRINTFORML 虽然是振动棒，但却是放入屁股里的振动棒。
+			PRINTFORML 放入屁股里什么的，简直不敢相信！
+			PRINTFORML 我以前也是这么想的。 直到我试了之后。
+			PRINTW 
+			PRINTFORML 肯定会想，屁股怎么能高潮呢？
+			PRINTFORML 重要的是，要再现从屁穴进出东西，像是在排泄一样的感觉。
+			PRINTFORML 所以，不是面向所有人的。 不行的人绝对不行。
+			PRINTW 
+			PRINTFORML 男人好像能从中获得快感，但女孩似乎没有这种构造。
+			PRINTFORML 所以，不习惯的时候，感觉「恶心」的可能性更高。
+			PRINTFORML 越过这一步，就能感受到与小穴完全不同的快感哦。
+			PRINTW 
+			PRINTFORML 首先，作为事前准备，一定要排空大便。 理由不用我说也明白吧？
+			PRINTFORML 其次，放入手指时，一定要把指甲剪短。
+			PRINTFORML 指甲锋利的种族可能会比较麻烦。 毕竟妖怪的指甲大多都很锋利。
+			PRINTW 
+			PRINTFORML 一开始先用手指按摩肛门周围。 不要直接插进去！
+			PRINTFORML 在不习惯的状态下直接插入东西会裂开的！
+			PRINTFORML 不要着急，用手指摩擦或揉捏。 啊，接触的手指最好戴上避孕套。
+			PRINTW 
+			PRINTFORML 觉得紧张感有所缓解了吗？ 试着放入细细的手指。
+			PRINTFORML 大概没人会这么做吧，不要一下子放入两根手指。
+			PRINTFORML 这时，要使用润滑液，让屁穴内部变得滑溜溜的。 屁穴基本上不会湿润的！
+			PRINTW 
+			PRINTFORML 如果屁穴接受了手指，就尝试着抽插手指。 感觉恶心？ 嗯嗯，那是正常的反应。
+			PRINTFORML 也许有些人需要花费很长时间才能适应。 不要着急，慢慢地让屁穴习惯。
+			PRINTW 
+			PRINTFORML 当屁穴接受了手指之后，就终于轮到振动棒出场了！
+			PRINTFORML 和手指的操作方法一样。 戴上避孕套，涂抹上大量的润滑液。
+			PRINTFORML 不要着急，先在入口附近轻轻地试着动动。
+			PRINTW 
+			PRINTFORML 抽插变得舒服了吗？ 恭喜你！
+			PRINTFORML 到达这一步就没问题了。 自己决定强度和速度，开发你的屁穴吧。
+			PRINTFORML 这样下去，说不定就能用屁穴高潮了♪
+			PRINTW 
+			PRINTFORML 差点忘了说明最重要的屁穴专用振动棒了！
+			PRINTFORML 对于不习惯的人，推荐选择前端细，越往根部越粗的类型♪
+			PRINTFORML 可以根据开发程度改变插入方式。
+			PRINTFORML 最推荐像念珠一样连接在一起的形状。
+			PRINTW 
+			PRINTFORML 接下来，选择能够细致调节振动的类型。 能够细致调节的话，就更容易根据自己屁穴的开发程度进行调整♪
+			PRINTFORML 还有，柔软度也很重要。 选择振动棒本身不易受损的材质。
+			PRINTFORML 之后就是，是否容易清洗！ 虽然不起眼，但这一点很重要。 可以整体清洗的类型是最理想的。
+			PRINTW 
+			PRINTFORML 总之屁屁需要花费很长时间才能感受到快感，但也有人会因此而上瘾♪
+			PRINTFORML 说不定有人意外地非常喜欢用菊穴做爱？ 当然，我也很喜欢♪
+			PRINTFORML 那么，祝你拥有美好的自慰生活！
+			PRINTW 
+		ENDSELECT
+	ENDSELECT
+	;今のところ发行部数はただのフレーバー要素です
+	BUSUU = RAND:1000 + ABL:42:教养 * 10 + ABL:42:欲望 * 25 + ABL:42:教养 * 10 + ABL:42:话术技能 * 5
+	PRINTFORML 果的里花果子念报卖出了{BUSUU}部
+	PRINTW 
+
+;==========================================================================================
+;果の疑念
+;==========================================================================================
+@K42_HATATE_GINEN
+	PRINTFORML ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+	PRINTFORML ┃%"事件：果的疑念",72,LEFT%┃
+	PRINTFORML ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+	PRINTW
+	PRINTFORML 今天身体又被不明物体随意玩弄了
+	PRINTFORML 而且屈辱的是，身体竟然对这种痴汉行为感到愉悦
+	IF CFLAG:K42C_结婚 >= 1
+		PRINTFORML 「即使这样，让%CALLNAME:MASTER%以外的人触碰身体…我还是讨厌」
+	ELSEIF TALENT:恋慕 || TALENT:恋人
+		PRINTFORML 「只有%MASTERNAME:42%才能随便对我做这种事」
+	ELSEIF TALENT:爱欲 || TALENT:炮友
+		PRINTFORML 「倒也不是不能接受，只是被白白被这么玩弄什么的，真让人恼火」
+	ELSE
+		PRINTFORML 「要是让我找到犯人，一定把他碎尸万段」
+	ENDIF
+	PRINTW 
+	PRINTFORML 也许除了自己以外，还有其他女性（也可能有男性）受到了同样的侵害
+	PRINTFORML 「虽然很麻烦…但还是去取材看看吧」
+	PRINTFORML 「如果能收集到很多情报，我的念力也会更加准确。 这样的话…」
+	PRINTW 
+	PRINTFORML 果似乎下定决心要寻找和自己一样的受害者
+	PRINTW 
+	CFLAG:1414 = 1
+
+;==========================================================================================
+;时奸警察
+;==========================================================================================
+@K42_HATATE_JIKAN
+	;书こうと思ったときはエロくなると思ってたのにいざ书いたら思ってたよりエロくない
+	PRINTFORML ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+	PRINTFORML ┃%"事件：时奸警察",72,LEFT%┃
+	PRINTFORML ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+	PRINTW
+PRINTFORML 正体不明的家伙做出的不知廉耻的行为，让果的身体被改造了
+SIF CFLAG:1016 >= 100
+	PRINTFORML 大量的精液被注入肉壶。现在只要一感觉到被注入，膣壁就会激烈地蠕动，子宫口也会下坠
+SIF CFLAG:1017 >= 100
+	PRINTFORML 大量的精液被注入了屁眼。现在肛门已经漂亮地纵向裂开，不再是排泄器官，而是变成了接受性器的穴
+SIF CFLAG:1018 >= 100
+	PRINTFORML 大量的精液被灌了下去。现在只要闻到精液的味道，喉咙就会忍不住要高潮
+PRINTW 
+PRINTFORML 全身变得敏感，仅仅是衣服的摩擦，乳头就会坚硬地勃起
+PRINTFORML 即使什么都不做，小穴也会不断地渴望着舒服的鸡巴形状，持续地骚动
+PRINTW 
+PRINTFORML 为了知道那个犯人的真面目──果，特意多次让自己遭受侵害，以此来记住他的特征
+PRINTFORML 精液的味道、气味、肉棒的形状，以及是如何让自己高潮的──
+PRINTFORML 在鲜明地回忆起这些的同时，同时也回忆起被侵犯时的情景，并将意念注入照相机
+PRINTW 
+PRINTFORML 照相机里映出的，是──
+PRINTW 
+PRINTFORML 某天，果突然对我说「我有话要说」
+PRINTFORML 不知道到底是什么事呢。我毫无戒心地拜访了果的家，片刻之后便开始闲聊
+PRINTW 
+PRINTFORML 果心情愉快。只是单纯地想要找个人聊聊天吗？
+PRINTFORML 「很有意思吧？　对了，要不要看看这个？」
+PRINTW 
+PRINTFORML 果若无其事地从怀里掏出手机型的照相机，「啪」地一声打开给我看
+PRINTFORML 照相机里，清晰地映出了我停止时间侵犯果的画面
+PRINTW 
+PRINTFORML 猝不及防，我不禁倒吸一口凉气。这是什么时候……
+PRINTFORML 「之前，我说过可能要说明一下吧──」
+PRINTFORML 不知道她是否注意到了我的动摇，果依然保持着心情愉快的表情，开口说道
+PRINTFORML 「我的念写，不需要亲眼看到现场哦」
+PRINTW 
+PRINTFORML 「大家总是容易误以为我的能力，只能找到别人拍摄的照片」
+PRINTFORML 「只要有关键词，什么都能拍到哦。连眼睛无法捕捉到的速度，或者平时隐藏身姿的家伙，都能拍到呢」
+PRINTW 
+PRINTFORML 「所以我决定，记住犯人的特征。这可真是太辛苦了。快要高潮到神志不清了」
+PRINTFORML 「即使如此，我还是拼命地记住了。不仅是被侵害的时刻，还有被淋上的精液的味道、量、性器的形状，以及是如何被高潮的」
+PRINTW 
+PRINTFORML 「光是这些还不够完美，接下来就是手段了。如何才能不被察觉地做到这些呢」
+PRINTFORML 「高速移动？　能够隐形？　能够操纵无意识？　催眠？　扭曲认知？　非常小？　或者──」
+PRINTFORML 「停止时间，只有自己可以行动」
+PRINTW 
+PRINTFORML 照相机里映出了我的身影，就意味着我的能力暴露了
+PRINTFORML 她一定是改变了关键词，然后进行了彻底的搜索
+PRINTFORML 事到如今，装傻也没用了吧
+PRINTW
+;そうはならんやろの展开。これエロゲだしね。仕方ないね
+IF CFLAG:K42C_结婚 >= 1
+PRINTFORML 「那个，亲爱的」
+PRINTFORML 「普通的爱爱，已经不能满足你了吗……？」
+PRINTW 
+PRINTFORML 「是不是因为我无法让你满足，所以你才做了那种事呢……」
+PRINTFORML 「如果是不满足的话，我……我会更加努力的」
+PRINTW 
+PRINTFORML 我并非对和果的性交感到不满
+PRINTFORML 只是在时间停止的世界里对少女们恶作剧，会让我感到强烈的兴奋
+PRINTW 
+PRINTFORML 「这样啊，如果是这样的话──」
+PRINTFORML 果然还是要离婚吗。我一定已经被她彻底鄙视了吧
+PRINTW 
+PRINTFORML 「今后，只对果做那种事，可以吗……」
+PRINTFORML 听到果这意想不到的提议，我惊讶地张大了嘴巴
+PRINTW 
+PRINTFORML 「一开始被不认识的人那样做，还觉得很恶心……」
+PRINTFORML 「但是被做了很多次之后，就开始觉得舒服了」
+PRINTFORML 「在人前GC，已经让我上瘾了……」
+PRINTFORML 「现在，好像已经开始期待被做了……///」
+PRINTW 
+CALL HPH_PRINT,@"「你看，现在，只是想象一下，就已经变成这样了……HPH」","L"
+PRINTFORML 果这么说着，撩起了裙子
+PRINTFORML 内裤已经湿透到无法发挥作用的程度，爱液顺着她修长的双腿，不停地滴落
+PRINTW 
+CALL HPH_PRINT,@"「我会替你保守秘密的，关于亲爱的能力……HPH」","L"
+CALL HPH_PRINT,@"「第一位，一定要是我哦……HPH　在喜欢的时候，用喜欢的方式……HPH」","L"
+PRINTW
+	CFLAG:1413 = 1
+;こんな彼女いないよなーいたらそれはそれで可怕的なー
+ELSEIF TALENT:恋慕 || TALENT:恋人
+PRINTFORML 「那个，%MASTERNAME:42%」
+PRINTFORML 果下定决心似的，开口说道
+PRINTW 
+PRINTFORML 「只有和我爱爱，你还是觉得不够吗……？」
+PRINTFORML 「如果不够的话，我会更加努力的……所以，这种事……」
+PRINTW 
+PRINTFORML 我并非对和果的性交感到不满
+PRINTFORML 只是在时间停止的世界里对少女们恶作剧，会让我感到强烈的兴奋和征服感
+PRINTW 
+PRINTFORML 「…………我知道了」
+PRINTFORML 我是不是已经被她厌恶了呢。我和果的关系，也许也要结束了
+PRINTW 
+PRINTFORML 「那，那么……下次如果想做那种事的话，能不能只对我做呢……///」
+PRINTFORML 听到果这意想不到的提议，我惊讶地张大了嘴巴
+PRINTW 
+PRINTFORML 「呃，那个……虽然说这种话有点……」
+PRINTFORML 「一开始，我以为是被不认识的人做了H的事情，所以觉得很恶心……」
+PRINTFORML 「但是，在想到会不会是%MASTERNAME:42%之后，就觉得舒服起来了……」
+PRINTFORML 「现在，已经开始有点期待了，应该说……///」
+PRINTW 
+PRINTFORML 果一边用手指互相戳着，一边坦白道
+PRINTFORML 确实，如果本人同意的话，那就只是play的一环
+PRINTW 
+PRINTFORML 「我觉得，对有喜欢的人的女孩子做那种事，不太好……」
+PRINTFORML 「如果是我的话，因为我喜欢%MASTERNAME:42%，所以，大概，能够接受的」
+PRINTW 
+PRINTFORML 果都说到这份上了，再加上我被她抓住了把柄，也不得不妥协
+PRINTFORML 我向果保证，会尽可能不做那种事
+PRINTW 
+PRINTFORML 「不是尽可能，而是绝对不要做……和其他的女孩子」
+PRINTFORML 「所以，我会学习更多H的事情，让%MASTERNAME:42%感到满足的……%UNICODE(0x2665) *1%」
+PRINTFORML 果轻轻地握住我的手，露出了温柔的笑容
+PRINTW 
+PRINTFORML 这是多么坚强的女孩子啊
+PRINTFORML 我虽然完全没有放弃时奸的打算，但是，今后就特别关照果吧
+	PRINTW 
+	CFLAG:1413 = 1
+ELSEIF TALENT:爱欲 || TALENT:炮友
+PRINTFORML 「你啊……对我做那种事有什么意义啊？」
+PRINTFORML 果露出了打从心底感到无语的表情
+PRINTW 
+PRINTFORML 「明明不用这么拐弯抹角，我们都已经做了那么多次爱了……」
+PRINTFORML 「是觉得普通的性交已经腻了吗，是这种感觉？」
+PRINTFORML 「然后就是，满足征服感啦，能轮流和喜欢的女人上床啦，或者说，背德感很棒之类的……」
+PRINTW 
+PRINTFORML 「原本以为你已经够烂了，没想到竟然烂到这种程度……」
+PRINTFORML 「总之，我回忆起自己一直被你白嫖就很火大，所以，让我打你一拳」
+PRINTW 
+PRINTFORML 「哈～，舒坦多了♪　嘛，这样就算一笔勾销了」
+PRINTFORML 我眼前一片漆黑……
+PRINTFORML 但是，只让我打一拳就一笔勾销，也太宽容了吧
+PRINTW 
+PRINTFORML 「啊……嘛，嘛呢……那个，我也，挺舒服的……」
+PRINTFORML 「我又不讨厌舒服，不如说，还挺喜欢的……」
+PRINTW 
+PRINTFORML 也就是说，已经上瘾了
+PRINTFORML 「是啊！　怎么了！？　不如说，这都是你的错！」
+PRINTW 
+PRINTFORML 我被她倒打一耙，但实际上是我的错，所以选择沉默
+PRINTFORML 「虽然我是受害者，但我要说，你如果到处乱搞的话，总有一天会吃苦头的哦」
+PRINTFORML 「如果想停止时间来做的话，就先找我吧」
+PRINTW 
+PRINTFORML 她为什么要对我这么好
+PRINTFORML 「我和你只是性交的关系，但是，如果你不在了，我也会觉得寂寞的」
+PRINTFORML 「而且，相性好的人又不好找。再找也很麻烦」
+PRINTW 
+PRINTFORML 又说这种话，明明就是喜欢我——「再多嘴一句我就揍你哦」
+PRINTFORML 请不要打完之后再说
+PRINTW 
+PRINTFORML 「嘛，幸好被温柔善良的果酱发现了呢」
+PRINTFORML 「作为封口费，我要你请我吃一年的甜点♪」
+PRINTW 
+PRINTFORML 一年！？　这是敲诈吧！？
+PRINTFORML 「我用这点东西就替你保密，你反而应该感谢我吧。对吧，时间使♪」
+PRINTFORML 总比在社会上和物理上被抹杀要好。我无力地垂下肩膀，点了点头
+PRINTFORML 「OK♪　契约成立♪　别忘了哦～」
+PRINTW 
+PRINTFORML 「啊，对了」
+PRINTFORML 我办完事正要回去，却被果叫住了
+CALL HPH_PRINT,@"「下次时间停止……是什么时候啊HPH　要不，今天也行哦……HPH」","L"
+CALL HPH_PRINT,@"「在人里正中央……也挺不错的，不是吗？HPH」","L"
+PRINTFORML 我似乎低估了果的性欲……
+	CFLAG:1413 = 1
+ELSEIF TALENT:思慕
+PRINTFORML 「我还稍微觉得%MASTERNAME:42%你挺好的呢……」
+PRINTFORML 「原本正在重新审视你，觉得你是个值得信赖的人呢？　结果……」
+PRINTW 
+PRINTFORML 「我真没想到，你看我的眼神竟然是这样的，最差劲了」
+PRINTFORML 果用看着垃圾一样的眼神瞪着我
+IF TALENT:处女 == -1
+	PRINTFORML 「而且，我最重要的第一次，竟然也被你……」
+ENDIF
+PRINTFORML 我被果抓住了衣领。呼吸困难
+PRINTFORML 「我莫名其妙地就被你侵犯了！」
+PRINTFORML 「还在人前被你羞辱！」
+PRINTFORML 「浑身上下都被你的脏东西弄脏了！」
+PRINTW 
+PRINTFORML 「明明是这样……明明是这样……」
+PRINTFORML 「我的身体……已经离不开那种舒服的感觉了啊！」
+PRINTFORML 「每天！　每时每刻！　身体都瘙痒得难受！　现在也是！」
+PRINTFORML 「给我负责！　负起责任啊啊啊，负起责任啊啊啊……」
+PRINTW 
+PRINTFORML 既然都被她说到这个份上了，就不能不负起所谓的「责任」了
+PRINTFORML 
+PRINTFORML ────────时间　停止────────
+PRINTFORML 
+PRINTW 
+CALL HPH_PRINT,@"「如果不负责的话，我就把你的OOO」　嗞嗞嗞嗞嗞嗞嗞HPH","L" 
+CALL HPH_PRINT,@"「OOO！？HPH」","L"
+CALL HPH_PRINT,@"咕叽HPH　咻叽HPH　尼几尼几HPH","L"
+CALL HPH_PRINT,@"「咿HPH　啊啊啊啊啊啊啊啊啊！！！？？？HPHHPHHPH」","L"
+PRINTFORML 
+CALL HPH_PRINT,@"嗞嗞嗞嗞嗞HPHHPH","L"
+CALL HPH_PRINT,@"　　　　　咕叽咕叽HPHHPH　库尼库尼HPHHPH　库里库里库里库里HPHHPH","L"
+CALL HPH_PRINT,@"「！？HPH　哦吼！？！？！？HPH　要GC了呜呜呜！！HPHHPH」","L"
+PRINTW 
+CALL HPH_PRINT,@"　　　啾HPH啾HPH啾HPH","L"
+CALL HPH_PRINT,@"　噗咻HPH　噗咻HPH　　嗯噗叽呜HPH　咕啾HPH　","L"
+CALL HPH_PRINT,@"「嗯嘿HPH　嗯咿咿咿咿咿咿咿咿HPH　要GC了HPH　又要来了HPH　咻姆HPH　要GC了呜HPHHPHHPH」","L"
+PRINTW 
+PRINTFORML 果在眼前展现了盛大的GC喷潮秀
+PRINTFORML 按照她的期望，我负起责任，在时间停止期间，全力地「爱」了她
+PRINTW 
+PRINTFORML 果吐着舌头，翻着白眼，任由各种体液流淌的样子，真是惨不忍睹，狼狈不堪
+IF TALENT:MASTER:性别 == 2 || TALENT:MASTER:性别 == 3
+	PRINTFORML 然而，我却对她这狼狈不堪的样子感到激烈地兴奋，胯间的家伙勃起到快要感到疼痛的程度
+ELSE
+	PRINTFORML 然而，我却对她这狼狈不堪的样子感到激烈地兴奋，大量流淌出来的爱液沾污了衣服
+ENDIF
+PRINTW 
+PRINTFORML 如果她能替我保守这个秘密，我就再对她负起「责任」
+PRINTFORML 我在痉挛得快要断气的果的耳边低语道
+PRINTW 
+CALL HPH_PRINT,@"「是，是的……HPH　会，会保密的……HPH　会保密的啦……HPH」","L"
+CALL HPH_PRINT,@"「再，再『负责』哦……HPH　啊，嘿啊……HPHHPH」","L"
+PRINTW 
+PRINTFORML 
+PRINTFORML 
+PRINTFORML 那之后，果明明受到了那样的对待，表面上却还是像平常一样和我交往
+PRINTFORML 虽然还是会说我「恶心」啦，「烦人」啦之类的
+PRINTFORML 简直就像什么都没发生过一样
+PRINTW 
+PRINTFORML 但是，有一点改变了
+PRINTFORML 当有我们以外的人在场时，果会向我投来充满热情的视线
+PRINTFORML 仿佛在渴望着什么一样──
+PRINTW 
+PRINTFORML 果获得了【解放】【喜欢引人注目】【淫乱】
+	TALENT:自己爱 = 1
+	TALENT:喜欢引人注目 = 1
+	TALENT:淫乱 = 1
+	;MARK:反抗刻印 = 3
+	CFLAG:1413 = 1
+;これ发生するとか、筋金入りのジカニストじゃないですかね
+ELSE
+PRINTFORML 「真没想到，你看我的眼神竟然是这样的，最差劲了」
+PRINTFORML 果用看着垃圾一样的眼神瞪着我
+IF TALENT:处女 == -1
+	PRINTFORML 「而且，我最重要的第一次，竟然也被你……」
+ENDIF
+PRINTFORML 我被果抓住了衣领。呼吸困难
+PRINTFORML 「我莫名其妙地就被你侵犯了！」
+PRINTFORML 「还在人前被你羞辱！」
+PRINTFORML 「浑身上下都被你的脏东西弄脏了！」
+PRINTW 
+PRINTFORML 「明明是这样……明明是这样……」
+PRINTFORML 「我的身体……已经离不开那种舒服的感觉了啊！」
+PRINTFORML 「每天！　每时每刻！　身体都瘙痒得难受！　现在也是！」
+PRINTFORML 「给我负责！　负起责任啊啊啊，负起责任啊啊啊……」
+PRINTW 
+PRINTFORML 既然都被她说到这个份上了，就不能不负起所谓的「责任」了
+PRINTFORML 
+PRINTFORML ────────时间　停止────────
+PRINTFORML 
+PRINTW 
+CALL HPH_PRINT,@"「如果不负责的话，我就把你的OOO」　嗞嗞嗞嗞嗞嗞嗞HPH","L" 
+CALL HPH_PRINT,@"「OOO！？HPH」","L"
+CALL HPH_PRINT,@"咕叽HPH　咻叽HPH　尼几尼几HPH","L"
+CALL HPH_PRINT,@"「咿HPH　啊啊啊啊啊啊啊啊啊！！！？？？HPHHPHHPH」","L"
+PRINTFORML 
+CALL HPH_PRINT,@"嗞嗞嗞嗞嗞HPHHPH","L"
+CALL HPH_PRINT,@"　　　　　咕叽咕叽HPHHPH　库尼库尼HPHHPH　库里库里库里库里HPHHPH","L"
+CALL HPH_PRINT,@"「！？HPH　哦吼！？！？！？HPH　要GC了呜呜呜！！HPHHPH」","L"
+PRINTW 
+CALL HPH_PRINT,@"　　　啾HPH啾HPH啾HPH","L"
+CALL HPH_PRINT,@"　噗咻HPH　噗咻HPH　　嗯噗叽呜HPH　咕啾HPH　","L"
+CALL HPH_PRINT,@"「嗯嘿HPH　嗯咿咿咿咿咿咿咿咿HPH　要GC了HPH　又要来了HPH　咻姆HPH　要GC了呜HPHHPHHPH」","L"
+PRINTW 
+PRINTFORML 果在眼前展现了盛大的GC喷潮秀
+PRINTFORML 按照她的期望，我负起责任，在时间停止期间，全力地「爱」了她
+PRINTW 
+PRINTFORML 果吐着舌头，翻着白眼，任由各种体液流淌的样子，真是惨不忍睹，狼狈不堪
+IF TALENT:MASTER:性别 == 2 || TALENT:MASTER:性别 == 3
+	PRINTFORML 然而，我却对她这狼狈不堪的样子感到激烈地兴奋，胯间的家伙勃起到快要感到疼痛的程度
+ELSE
+	PRINTFORML 然而，我却对她这狼狈不堪的样子感到激烈地兴奋，大量流淌出来的爱液沾污了衣服
+ENDIF
+PRINTW 
+PRINTFORML 如果她能替我保守这个秘密，我就再对她负起「责任」
+PRINTFORML 我在痉挛得快要断气的果的耳边低语道
+PRINTW 
+CALL HPH_PRINT,@"「是，是的……HPH　会，会保密的……HPH　会保密的啦……HPH」","L"
+CALL HPH_PRINT,@"「再，再『负责』哦……HPH　啊，嘿啊……HPHHPH」","L"
+PRINTW 
+PRINTFORML 
+PRINTFORML 
+PRINTFORML 那之后，果明明受到了那样的对待，表面上却还是像平常一样和我交往
+PRINTFORML 虽然还是会说我「恶心」啦，「烦人」啦之类的
+PRINTFORML 简直就像什么都没发生过一样
+PRINTW 
+PRINTFORML 但是，有一点改变了
+PRINTFORML 当有我们以外的人在场时，果会向我投来充满热情的视线
+PRINTFORML 仿佛在渴望着什么一样──
+PRINTW 
+PRINTFORML 果获得了【解放】【喜欢引人注目】【淫乱】
+	TALENT:自己爱 = 1
+	TALENT:喜欢引人注目 = 1
+	TALENT:淫乱 = 1
+	;履历やだ！　小生やだ！　っていう人もいるし、一応コメントアウト
+	;MARK:反抗刻印 = 3
+	CFLAG:1413 = 1
+ENDIF
+
+;==========================================================================================
+;时奸バレ后の喘ぎ声
+;==========================================================================================
+@K42_HATATE_JIKANAEGI
+PRINTFORML 
+PRINTFORML 　咚咚
+PRINTFORML 
+PRINTFORML （这种感觉，要来了……）
+PRINTL 
+CALL HPH_PRINT,@"呶噗噗噗HPH","L"
+CALL HPH_PRINT,@"　　　　　　　呶叽咿HPH","L"
+CALL HPH_PRINT,@"「哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦HPHHPHHPHHPHHPH」","L"
+PRINTL 
+CALL HPH_PRINT,@"　　库叽HPH　　咕叽HPH","L"
+CALL HPH_PRINT,@"　啾HPH　呶啾HPH」","L"
+CALL HPH_PRINT,@"「哦哦哦哦啊啊啊啊啊啊啊啊HPHHPHHPHHPHHPH」","L"
+PRINTL 
+CALL HPH_PRINT,@"　　　尼呜啾啾HPH","L"
+CALL HPH_PRINT,@"　　　　　噗咻啊啊啊啊啊啊啊啊啊啊啊HPH","L"
+CALL HPH_PRINT,@"「咿咕！？HPH　咿咕呜呜呜呜呜呜HPHHPHHPHHPH」","L"
+PRINTL 
+CALL HPH_PRINT,@"　　咕叽HPH　库叽噗HPH","L"
+CALL HPH_PRINT,@"　　　　　　　　　　啾啾啾HPH　咕啾HPH","L"
+CALL HPH_PRINT,@"「嗯哦哦哦哦！？HPH　还，还要啊啊啊啊啊啊HPHHPHHPHHPH」","L"
+PRINTL 
+CALL HPH_PRINT,@"库叽库叽HPH　咕叽叽咿HPH","L"
+CALL HPH_PRINT,@"嘎库嘎库HPH　嘎咕HPH　嘎咕HPH　嘎库HPH","L"
+CALL HPH_PRINT,@"「叽呜噗HPH　咿叽嗞叽嘚HPHHPH　叽呜呜呜呜呜呜HPHHPHHPHHPH」","L"
+PRINTL 
+CALL HPH_PRINT,@"　　咕叽HPH　库叽噗HPH","L"
+CALL HPH_PRINT,@"　　　　　　　　　　咚噗噗HPH　噗啵HPH　噗啵啵HPHHPH","L"
+CALL HPH_PRINT,@"「呀噗HPH　已，已经呦噜几噗HPHHPHHPHHPH　咿咕HPHHPH　还，还要噗HPHHPH　呀，啊啊啊啊HPHHPHHPHHPH」","L"
+PRINTL 
+PRINTW 
+IF GET_TARGETNUM() >= 2 || DATE_HITOGOMI(CFLAG:MASTER:当前位置)
+	PRINTFORML 在眼前发出野兽咆哮般的喘息声，并达到高潮的果，让周围的人都瞪大了眼睛
+ELSE
+	PRINTFORML 在我的眼前，果发出野兽咆哮般的喘息声，并达到了高潮
+ENDIF
+
+IF 充填率(TARGET,1) >= 100
+	IF 充填率(TARGET,2) >= 100
+		PRINTFORML 从所有的洞穴里都喷出喷泉般的精液，突然全身嘎嘎作响地痉挛，这姿态异常至极
+	ELSE
+		PRINTFORML 从敞开的肉穴里喷出喷泉般的精液，突然全身嘎嘎作响地痉挛，这姿态异常至极
+	ENDIF
+ELSEIF 充填率(TARGET,1) > 0 || 充填率(TARGET,2) > 0
+	PRINTFORML 从穴里滴落精液，突然全身嘎嘎作响地痉挛，这姿态异常至极
+ELSE
+	PRINTFORML 从秘处喷出咻啊啊啊的爱液，同时，突然全身嘎嘎作响地痉挛，这姿态异常至极
+ENDIF
+PRINTFORML 但是，这是她所期望的。我只不过是帮了她一把
+PRINTW 
+PRINTFORML 咻唰啊！
+CALL HPH_PRINT,@"「哦HPH　哦哦哦哦……HPH　啊HPH　嘿啊啊啊……HPHHPH」","L"
+PRINTW 
+PRINTFORML 果翻着白眼倒在地上，身体还在微微痉挛着
+PRINTFORML 即使被单方面地凌辱了，果的嘴角还是浮现出了微笑…
+PRINTW 

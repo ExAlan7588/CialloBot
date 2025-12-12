@@ -1,0 +1,3809 @@
+﻿;-------------------------------------------------
+; eraTheWorld 4.756用 リリーホワイト口上（キャラクターの名前を入れる、下にコンセプトなど一言あれば入れる）
+;-------------------------------------------------
+;他者による修正、加筆、改変については、同梱のライセンス条項に从ってください。
+
+;------ ｷﾘﾄﾘ ｶｲｼ -----------
+;eraTheWorld proto4.07パッチ取り込み用 Ver1.13
+;テンプレートの使い方
+;初めに置换コマンド等により K18 を K(キャラNo) に変更して下さい  
+;キャラNoはCSVフォルダのCharaファイルを参照　例(雾雨 魔理沙の场合)：K18 =置换=> K11
+;
+;------ ｷﾘﾄﾘ ｵﾜﾘ -----------
+
+;**** FlagManagement **********************************************************
+;本口上にて使用しているCFLAG・TCVAR等
+;
+;
+;
+;******************************************************************************
+
+;### 口上存在判定 ###################################
+@M_KOJO_K18(ARG)
+;ここでRESULTSを设定すると他の同キャラ口上を突っ込まれても正常动作する。
+
+;RESULTS = _TEST_
+
+;と设定すると、"EVENT"系イベントだと
+;M_KOJO_TEST_EVENT_K18_1() とかで呼ばれる…はず。（未テスト机能）
+
+;ここでCFLAG等のキャラ変数を使う场合、キャラ番号の指定が必要になります
+
+;コメントアウトを外して眠奸口上有、时间停止口上有に1を入れると、それぞれ时间停止时、眠奸时、扮演时にコマンド口上が読み込まれるように
+;入れないと时间停止时、眠奸时、扮演时は一切喋りません
+
+;破瓜中止口上有に1を入れると、@M_KOJO_EVENT_K18_LOST_VIRGIN_STOPでキャンセルの成否を操作できます
+;口上内抱き寄せ判定_初回と口上内抱き寄せ判定_通常に1を入れるとM_KOJO_EVENT_K18_PERMISSIONで推倒の成否を操作できます
+
+;Xにはキャラ番号を入れてください
+
+;CFLAG:X:眠奸口上有 = 0
+;CFLAG:X:时间停止口上有 = 0
+;CFLAG:X:扮演口上有 = 0
+;CFLAG:X:破瓜中止口上有 = 0
+;CFLAG:X:口上内抱き寄せ判定_初回 = 0
+;CFLAG:X:口上内抱き寄せ判定_通常 = 0
+
+;CFLAG:推倒禁止に1を入れると自分から推倒てこなくなります
+;以下は恋慕かセフレがつくまで推倒てこなくなる使用例
+;IF !TALENT:X:恋慕 && !TALENT:X:セフレ
+;	CFLAG:X:推倒禁止 = 1
+;ELSE
+;	CFLAG:X:推倒禁止 = 0
+;ENDIF
+
+;口上存在判定です、けしてコメントアウトしないでください
+RETURN 1
+;### 口上色判定 ###################################
+@M_KOJO_COLOR_K18
+;ここでSETCOLORすることで口上に色を付けられます
+;例：SETCOLOR 0xf7c9ff
+SETCOLOR 255,177,255
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+;"UPDATE判定"
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+@M_KOJO_UPDATE_K18
+;口上独自のUPDATE用
+;ENCOUNTER専用に独自分岐フラグを仕込んだ场合等にどうぞ
+;UPDATE判定でCFLAG等のキャラ変数を使う场合、キャラ番号の指定が必要になります
+RETURN 1
+
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+;"ENCOUNTER"系イベント（エクストラ構文）
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+@M_KOJO_ENCOUNTER_K18
+;初対面、挨拶のタイミング
+;TALENTの変更はここでどうぞ。
+;経験の変更は齟齬が出る场合がありますので、CSVを修正し同梱する事を推奨します
+#DIM LCOUNT
+;SETCOLOR C_PINK
+SELECTCASE DAY:2
+	;春
+	CASE 1
+		PRINTFORML 「春ですよ～」
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORML 春のぽかぽかとした陽气に1人の妖精が春を告げるのが見えた。
+		PRINTFORML 柔らかな暖かい风を身に受けながら、暖色系の服を着た妖精は%CALLNAME:MASTER%の元へと近づいてくる。
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORML 「春ですよ～！」
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORML 春爛漫を体言するような明るい笑颜で妖精は%CALLNAME:MASTER%に春を告げる。
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORML 「春ですよ～！！」
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORML …………………
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORML 「春ですよ～！！！」
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORML つられて%CALLNAME:MASTER%も返事をすると、満足气に妖精は頷いた。
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORML 「そう、春なんですよ～！」
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORML 春の到来を十分に伝え終わると、暖かなお日様の匂いを残してまた飛び立っていく。
+		PRINTFORML この季节はきっと、彼女が世話しなく春を告げる光景がどこでも見られるだろう。
+		PRINTFORMW またどこかで会うかもしれない。
+	;夏
+	CASE 2
+		PRINTFORML 夏の气怠い暑さにうんざりしていると、いつの间にか足元に妖精がへばりついていた。
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORML 「夏です…よぉ～…」
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORML 白い服と帽子も相まって地面に溶けたアイスクリームみたいのようだ。
+		PRINTFORML %CALLNAME:MASTER%が妖精をつまみあげると、熱さにやられたのか幼い颜を真っ赤にしてへたれている。
+		PRINTFORML 「あー…うぅー…」
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORML 汗だくで呻いている妖精を、拾ったついでに日阴で休ませておく。しばらくすればそのうち恢复するだろう。
+		PRINTFORML 火照ったリリーに冷えたお茶を押し付けると、ほぅと息をついて%CALLNAME:MASTER%に感謝を述べた。
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORML 「ありがとぉー…ほわぁ～冷たいー…」
+		PRINTFORML 「早く春になってほしいですよぉ…ふぅ」
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORML 近くにいると感じる、うだる暑さとは違う暖かい陽气な空气…恐らく彼女が春告精のリリーホワイトだろう。
+		PRINTFORMW %CALLNAME:MASTER%は暫く彼女を看病の恢复を待ってからその场を離れる事にした。
+	;秋
+	CASE 3
+		PRINTFORML 残暑が過ぎ幻想郷が黄色と红に染まっていく。すっかり涼しくなり過ごしやすくなった幻想郷を%CALLNAME:MASTER%を見て回る。
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORML 「秋ですよぉー…はぁー…」
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORML とぼとぼとこちらに歩いてくる白い服を着た妖精の姿が見える。
+		PRINTFORML 元气がないようで透き通る白い羽根もへんにょりと垂れて今にも抜け落ちそうだ。
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORML 「タメ息しか出ないですよぉー…」
+		PRINTFORML 彼女の白い服や帽子は舞い落ちた红叶で饰られているが、气落ちしているのか落とすそぶりすら見せない。
+		PRINTFORML そんな様子のままいるせいか立っている%CALLNAME:MASTER%に气付かずぶつかって转んでしまった。
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORML 「あぅっ…」
+		PRINTFORML 后ろめりに倒れて起き上がる气力もないのか、妖精はぼんやりとした表情でそのまま空を見ている。
+		PRINTFORML 苦笑いをしながら%CALLNAME:MASTER%は彼女を助け起こしても、妖精はポケッとした表情で%CALLNAME:MASTER%を見上げたままだ。
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORML 「ぁ……、ありがとぉ」
+		PRINTFORML 「ちょっとだけ、…春の气分ですよぉー…」
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORML 口少なくお礼を述べると、また妖精はとぼとぼと歩き出す。
+		PRINTFORMW 春の妖精は春以外だとあんなにもテンションが低いのかと思いながら、%CALLNAME:MASTER%は小さい背中を見送った。
+	;冬
+	CASE 4
+		PRINTFORML 吐く息を白くなることに冬の到来をシミジミと実感する。
+		PRINTFORML %CALLNAME:MASTER%がブルりと寒さに身を震わせると、视界の端に映る雪だるまもブルりと震えたような气がした。
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORML 「ｶﾞﾀｶﾞﾀｶﾞﾀｶﾞﾀｶﾞﾀｶﾞﾀ…」
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORML …震えてるどころか振动すらしている雪だるまに驚いて雪を払ってみる。
+		PRINTFORML すると中から颜面蒼白の妖精がブルブルと震えていた。
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORML 「は、はは春ですかぁ～？」
+		PRINTFORML ガチガチと歯を鳴らしながらこちらを見上げる妖精に今は冬だと告げる。
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORML 「も、もももう少し寝れば、きっと春ですよぉー…すぅー…」
+		PRINTFORML 冷たくなりながらも、眠ろうとする妖精に%CALLNAME:MASTER%は慌ててその场から引っ张り出す。
+		PRINTFORML 妖精と言えど目の前で凍死されたら目觉めが悪い。%CALLNAME:MASTER%は暖かいお茶を差し出すと、妖精は颜をとろけさせながらお茶で暖を取る。
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORML 「はぁ～暖かい…」
+		PRINTFORML 「春が待ち遠しいですよぉ～…。……あと幾つ寝れば、春ですかぁ？」
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORML %CALLNAME:MASTER%がもう少しで春になると告げると、嬉しそうに羽根をはためかせる。
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORML 「もう少しで春…あとちょっとで…春ですよぉー……へくちゅん！」
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORMW 冬にも負けない朗らかな暖かい笑颜。それが%CALLNAME:MASTER%とリリー・ホワイトとの出会いだった。
+	ENDSELECT
+;RESETCOLOR
+RETURN 1
+
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+;"SP_EVENT"系イベント
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+;==================================================
+;デート帰りにファーストKISS（合意も付く）
+;==================================================
+@M_KOJO_SPEVENT_K18_1(ARG,ARG:1)
+;口上主はTARGET
+;地の文表示
+CALL SPEVENT_MESSAGE_1(ARG,ARG:1)
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+;地の文
+CALL SPEVENT_MESSAGE_1(ARG,ARG:1)
+IF LOCAL
+	IF DAY:2 == 1  
+		;春
+		PRINTFORML 「%CALLNAME:MASTER%と一绪に春を告げるのって、とっても乐しかったですよぉ」
+		PRINTFORML 「お礼に%CALLNAME:MASTER%にだけ小さな春、あげちゃいますよぉ」
+		PRINTFORML 「ﾁｭ…」
+		PRINTFORML リリーの瞳を閉じた表情が目に映る。そして唇にあたる柔らかく甘い味。
+		PRINTFORML 口づけされたリリーの小さな唇からは、花の蜜のような味がした。
+		PRINTFORML 「春のおすそ分けですよー…%UNICODE(0x2665) *1%」
+		PRINTFORML リリーの颜は桜色に染まり、幸せそうに頬を抑えながら宙を漂う。
+		PRINTFORML %CALLNAME:MASTER%が驚いた表情でリリーを見つめると、彼女の頬は熱がこもり薔薇色になっていく。
+		PRINTFORML 「えーと…ま、また遊びましょー！」
+		PRINTFORML 恥ずかしかったのか、颜を手で隠したまま春风と共に飛び去っていってしまった。
+		PRINTFORMW 
+	ELSE
+		;それ以外の季节
+		PRINTFORML 「春じゃない季节でも、乐しいことばかりですよー」
+		PRINTFORML 「%CALLNAME:MASTER%が连れてってくれたおかげですー」
+		PRINTFORML 「何かお礼したいですけどー……！思いつきましたー」
+		PRINTFORML 「%CALLNAME:MASTER%－ちょっと颜を貸してくださいー。そのままそのまま…」
+		PRINTFORML 「…チュッ」
+		PRINTFORML 「少し早い春をお伝えしてあげますー」
+		PRINTFORML 「……また、连れてってくださいねー」
+		PRINTFORMW 
+	ENDIF
+	;キスをキャンセルしたい场合は以下を开放
+	;TCVAR:キスキャンセル = 1
+ENDIF
+RETURN 1
+
+;==================================================
+;デート帰りに告白（恋人が付く）
+;==================================================
+@M_KOJO_SPEVENT_K18_2(ARG,ARG:1)
+;口上主はTARGET
+;地の文表示
+CALL SPEVENT_MESSAGE_2(ARG,ARG:1)
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;告白内容
+	;この告白内容表示后に受けるかどうかの选择分が表示されます
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 0
+		IF DAY:2 == 1  || TALENT:恋慕
+			;春
+			PRINTFORML 「えへへー今日はとっても乐しかったですよー」
+			PRINTFORML 
+			PRINTFORML 
+			PRINTFORML 乐しげにクルクルと回るリリー。
+			PRINTFORML タンポポの綿毛のようにフワフワと%CALLNAME:MASTER%の先を乐しそうに飛び回っている。
+			PRINTFORML その身体がふと止まった。
+			PRINTFORML 
+			PRINTFORML 
+			PRINTFORML 「…乐しい时间って、あっという间に過ぎちゃいますよー」
+			PRINTFORML 「春も同じ。あっという间に過ぎちゃうんですよー」
+			PRINTFORML 「でも来年にはまた新しい春が来てくれるから、寂しくないんですよ」
+			PRINTFORML 
+			PRINTFORML 
+			PRINTFORML こちらに背を向けるリリーの声は、乐しげな口吻から物静かな口吻へと変わっていく。
+			PRINTFORML 
+			PRINTFORML 
+			PRINTFORML 「だけど…だけどね」
+			PRINTFORML リリーがそっと道端の若叶を持ち上げ春を告げると
+			PRINTFORML 妖精の力を受け見る间に蕾をつけ、可爱らしい花を咲かせた。
+			PRINTFORML 
+			PRINTFORML 
+			PRINTFORML 「%CALLNAME:MASTER%と過ごしたこの春だけは、過ぎ去って欲しくないの…」
+			PRINTFORML 「ずっと一绪にいたい…」
+			PRINTFORML 
+			PRINTFORML 
+			PRINTFORML リリーは花を抱えたまま%CALLNAME:MASTER%へと振り向く。
+			PRINTFORML 彼女が抱えているのは、まるでピンクの蝶が飛んでいるように見える花…胡蝶蘭だ。
+			PRINTFORML 
+			PRINTFORML 
+			PRINTFORML %CALLNAME:MASTER%は、前にリリーに教えてもらった事を思い出す。
+			PRINTFORML 『あのねー%CALLNAME:MASTER%。桃色の胡蝶蘭の花言叶は…』
+			PRINTFORML 「あなたを…爱してる」
+			PRINTFORML 
+			PRINTFORMW 
+		ELSE
+			;それ以外の季节
+			PRINTFORML 「…春以外の季节は好きじゃなかったんですよー」
+			PRINTFORML 「夏は暑いし、秋は寂しいし、冬は寒いし…乐しくないんですー」
+			PRINTFORML 「…でも最近、どの季节も乐しいことがあるの、教えてもらったんですよー」
+			PRINTFORML 「夏のお空はにゅうどう雲がとっても大きくてビックリしましたー」
+			PRINTFORML 「大きなひまわりも太陽みたいにまん丸に咲いて可爱かったですー」
+			PRINTFORML 「秋の田んぼは稲が金色にかがやいて見えて、見とれちゃったこともありますー」
+			PRINTFORML 「妖怪の山も红叶で染まって…秋はキレイなものがいっぱいあるんですねー」
+			PRINTFORML 「冬の雪が一面に積もった中を散歩してると、まるで私も雪に染まったように感じちゃいましたー」
+			PRINTFORML 「寒いのはまだ苦手ですけど、寒いと温かい食べ物がいつもよりずっと美味しくなるんですー」
+			PRINTFORML 「前の私だったらきっとどれも知らないでキライなままだったと思いますー」
+			PRINTFORML 「ぜーんぶ、%CALLNAME:MASTER%がつれてってくれたから、教えてくれたんですよー」
+			PRINTFORML 「もう%CALLNAME:MASTER%がいない季节なんて考えられないですー」
+			PRINTFORML 「だから…」
+			PRINTFORML 「これからもずーっといっしょにいてくれますかー？」
+			PRINTFORMW 
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;告白オッケー（恋人が付く）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+	PRINTFORML 「本当に…？」
+	PRINTFORML 「…わぁ、うれしいなぁ、カラダが空に飛んで行っちゃいそうですー…」
+	PRINTFORML 
+	PRINTFORML 
+	PRINTFORML 文字通り飛び立つような喜びで风に浚われそうなリリーを%CALLNAME:MASTER%は抱きとめた。
+	PRINTFORML 
+	PRINTFORML 
+	PRINTFORML 「キャッ…%CALLNAME:MASTER%…おっきいですねーそれにあったかくて…春みたいですー…」
+	PRINTFORML 「%CALLNAME:MASTER%は私の…春ですよー」
+	PRINTFORML 
+	PRINTFORML 
+	PRINTFORML %CALLNAME:MASTER%の懐に身体を預けリリーは颜をほころばせる。
+	PRINTFORML 
+	PRINTFORML 
+	PRINTFORML 「じゃあ……さっそく春を告げないといけないですねー」
+	PRINTFORML 
+	PRINTFORML 
+	PRINTFORML リリーは%CALLNAME:MASTER%から手を握ったまま、无邪气な笑颜で大きく息を吸い込む。
+	PRINTFORML 「幻想郷のみなさーん！春ですよー！」
+	PRINTFORML 
+	PRINTFORML 
+	PRINTFORMW その日、一番大きな春を告げる声が幻想郷に響いた。
+	ENDIF
+	;-------------------------------------------------
+	;告白失敗
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		PRINTFORML 「私じゃダメ…ですかー…？」
+		PRINTFORML 「…わかりましたー。…でも」
+		PRINTFORML 「どうか、今までと同じようにお話して欲しいですー…」
+		PRINTFORMW 「それだけで、私はうれしいですから…」
+		RETURN 1
+	ENDIF
+
+ENDIF
+RETURN 1
+
+;==================================================
+;デート帰り
+;==================================================
+@M_KOJO_SPEVENT_K18_3(ARG,ARG:1)
+;口上主はTARGET
+;地の文表示
+CALL SPEVENT_MESSAGE_3(ARG,ARG:1)
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;通常帰宅
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 0
+		IF CFLAG:318 == 1
+			PRINTFORML 
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;反抗刻印消去イベント
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		PRINTFORML 「捕まえて痛いことする人はキラいですよー！えいっ」
+		PRINTFORML リリーは%CALLNAME:MASTER%の头をポンポン叩いた。
+		PRINTFORMW 「もうやっちゃダメですよー」
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;反抗刻印2>1レベルダウンイベント
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		PRINTFORML 「春はまだ来ませんよー。イーっだ！」
+		PRINTFORML リリーは歯を見せながら怒っているジェスチャーをしている。
+		PRINTFORMW それを見せてくれる程に气持ちが和らいでいるのかもしれない。
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;反抗刻印3>2レベルダウンイベント
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		PRINTFORML 「ジー………」
+		PRINTFORML %CALLNAME:MASTER%は一日中不審者を見る目でリリーに見つめられていた。
+		PRINTFORML 「…………」
+		PRINTFORML 「…フンッ！」
+		PRINTFORML その视线もわずかに柔らかくなった气がする。
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	PRINTFORML
+ENDIF
+RETURN 1
+
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+;"EVENT"系イベント
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+;==================================================
+;房间で遭遇
+;==================================================
+@M_KOJO_EVENT_K18_1(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;MASTERが入ってきた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		IF FLAG:时间停止
+		ELSEIF CFLAG:318 == 1
+			PRINTFORML 
+		ELSEIF DAY:2 == 1  || TALENT:恋慕
+			;春
+			IF TALENT:恋慕 
+				PRINTFORML 「あ、%CALLNAME:MASTER%ですよー！」
+			ELSEIF TALENT:思慕
+				PRINTFORML 「%CALLNAME:MASTER%－、春ですよー！」
+			ELSE
+				PRINTFORML 「春ですよー！」
+			ENDIF
+		ELSE
+			SELECTCASE DAY:2
+				CASE 2
+				;夏
+					IF TALENT:思慕
+						PRINTFORML 「夏ですよー…暑いですよー…」
+					ELSE
+						PRINTFORML 「あーつーいーでーすーよー…」
+					ENDIF
+				CASE 3
+				;秋
+					IF TALENT:思慕
+						PRINTFORML 「秋ですよー…ふぅ…」
+					ELSE
+						PRINTFORML 「ボーッ…と春を待ちますよー…」
+					ENDIF
+				CASE 4
+				;冬
+					IF TALENT:思慕
+						PRINTFORML 「冬ですよー…ブルブル…」
+					ELSE
+						PRINTFORML 「クシュン！…寒いですよー…」
+					ENDIF
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;TARGETが入ってきた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		IF FLAG:时间停止
+		ELSEIF CFLAG:318 == 1
+			PRINTFORML 
+		ELSEIF DAY:2 == 1  || TALENT:恋慕
+			;春
+			IF TALENT:恋慕 
+				PRINTFORML 「春、見つけちゃいましたー！」
+			ELSEIF TALENT:思慕
+				PRINTFORML 「%CALLNAME:MASTER%－、春ですよー！」
+			ELSE
+				PRINTFORML 「春を伝えにきましたよー！」
+			ENDIF
+		ELSE
+			SELECTCASE DAY:2
+				CASE 2
+				;夏
+					IF TALENT:思慕
+						;PRINTFORML 「夏草や…春（つわもの）どもは梦の中ー…」
+						PRINTFORMW 「日阴はどこですかぁー…？」
+					ELSE
+						PRINTFORML 汗びっしょりのリリーがフラフラとやってきた。
+						PRINTFORML 「うー…ここも涼しくないですよー…」
+					ENDIF
+				CASE 3
+				;秋
+					IF TALENT:思慕
+						PRINTFORML 「小さいはーるー小さいはーるー小さいはーるー見ーつからないー…」
+						PRINTFORML 「%CALLNAME:MASTER%だけ見つかりましたよー…」
+					ELSE
+						PRINTFORML ボンヤリした颜のリリーがやってきた。
+						PRINTFORML 「歩いても歩いても春は来ないですよー…」
+					ENDIF
+				CASE 4
+				;冬
+					IF TALENT:思慕
+						PRINTFORML 何かを探しているように見下ろしながらリリーがやってきた。
+						PRINTFORML 「ハァ…春が落ちてないですよー…」
+					ELSE
+						PRINTFORML 羽根をプルプルと震わせながらリリーが現れた。
+						PRINTFORML 「动いてないと凍っちゃいますよー…」
+					ENDIF
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;TARGETが澡堂に入ってきて一绪に入る
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		IF FLAG:时间停止
+		ELSEIF CFLAG:318 == 1
+		ELSEIF DAY:2 == 1  || TALENT:恋慕
+			;春
+			IF TALENT:恋慕 
+				PRINTFORML リリーが入ってくると甘い香りで満たされていく…。
+				PRINTFORML 「温泉花じゃない春の花の匂いですよー」
+				PRINTFORMW 「お澡堂で心も气持ちもリラックスー」
+			ELSEIF TALENT:思慕
+				PRINTFORML 「一绪にお澡堂入っても…いいですかー？」
+				PRINTFORMW 「いいの？やったー！」
+			ELSE
+			ENDIF
+		ELSE
+			SELECTCASE DAY:2
+				CASE 2
+				;夏
+					IF TALENT:思慕
+						PRINTFORML 「嫌な汗はお澡堂でサッパリ流しますよー」
+						PRINTFORMW 「%CALLNAME:MASTER%の汗もついでに流してあげますよー」
+					ENDIF
+				CASE 3
+				;秋
+					IF TALENT:思慕
+						PRINTFORML 「お澡堂に入って气分转换しますよー…」
+						PRINTFORMW 
+					ENDIF
+				CASE 4
+				;冬
+					IF TALENT:思慕
+						PRINTFORML 「寒いからお澡堂で温まりますよー」
+						PRINTFORMW 「でも早くカラダを洗わないと凍えちゃいますよーブルブル…」
+					ENDIF
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;TARGETが澡堂に入ってきて出て行った
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 4
+		IF FLAG:时间停止
+		ELSEIF CFLAG:318 == 1
+		ELSEIF DAY:2 == 1  || TALENT:恋慕
+			;春
+				PRINTFORML ガラッ「今日もがんばって春を伝えましたよー………キャッ！？」
+				PRINTFORMW ピシャッ「な、何も見てないですよー！」
+		ELSE
+			SELECTCASE DAY:2
+				CASE 2
+				;夏
+					PRINTFORML 「…早く出てほしいですよー」
+					PRINTFORMW 「うぅー汗でびしょびしょなのに…」
+				CASE 3
+				;秋
+					PRINTFORML 「命の洗濯はお預けですよー…」
+				CASE 4
+				;冬
+					PRINTFORML 「お澡堂の前で凍死しちゃいますよー…ハ、ハクチュン！」
+					PRINTFORMW 「冰付けの妖精になっちゃいますー…」
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;TARGETが澡堂に入ってきて追い出された
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 5
+		IF FLAG:时间停止
+		ELSEIF CFLAG:318 == 1
+		ELSE
+			PRINTFORML 「お澡堂にも春を伝えたいですよー」
+			PRINTFORML 「でも、誰かさんが入っているから伝えられないですー」
+			PRINTFORML 「しょうがないから他の事を伝えに行こうか迷っちゃいますよー」
+			PRINTFORMW …リリーの弱みを握られてる%CALLNAME:MASTER%はお澡堂场から黙って退散することにした。
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;外出先で遭遇した
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 6
+		IF FLAG:时间停止
+		ELSEIF CFLAG:318 == 1
+			PRINTFORMW 
+		ELSEIF DAY:2 == 1  || TALENT:恋慕
+			;春
+			IF TALENT:恋慕 
+				PRINTFORML 「%CALLNAME:MASTER%をみつけちゃいましたよー♪」
+				PRINTFORMW 
+			ELSEIF TALENT:思慕
+				PRINTFORML 「%CALLNAME:MASTER%ですよ～」
+				PRINTFORMW 
+			ELSE
+				PRINTFORML 「春ですよ～」
+				PRINTFORMW 
+			ENDIF
+		ELSE
+			SELECTCASE DAY:2
+				CASE 2
+				;夏
+					IF TALENT:思慕
+						PRINTFORML 「この辺りは涼しいですよー…」
+						PRINTFORMW 
+					ELSE
+						PRINTFORML 「夏ですよー…」
+						PRINTFORMW 
+					ENDIF
+				CASE 3
+				;秋
+					IF TALENT:思慕
+						PRINTFORML 「だんだん寒くなるのを感じますよー…ハァ」
+						PRINTFORMW 
+					ELSE
+						PRINTFORML 「秋ですよー…フゥ」
+						PRINTFORMW 
+					ENDIF
+				CASE 4
+				;冬
+					IF TALENT:思慕
+						PRINTFORML 「どこかに暖かいところはないですかー？ブルブル…」
+						PRINTFORMW 
+					ELSE
+						PRINTFORML 「冬ですよーｶﾞｸｶﾞｸﾌﾞﾙﾌﾞﾙ」
+						PRINTFORMW 
+					ENDIF
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;他キャラと约会中に遭遇した
+	;ARG:1に约会的对象
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 7
+		IF FLAG:时间停止
+		ELSEIF CFLAG:318 == 1
+			PRINTFORML 
+		ELSEIF TALENT:恋慕
+			SELECTCASE RAND:3
+				CASE 1
+					PRINTFORML 「春は伝えないといけないけど…」
+					PRINTFORMW 「ちょっと元气がでないですよー…」
+				CASE 0
+					PRINTFORML 「春ですよー」
+					PRINTFORMW 「………」
+				CASEELSE
+					PRINTFORML 「…胸がキュッとしますよー？」
+					PRINTFORMW 「どうして…？」
+			ENDSELECT
+		ELSEIF TALENT:思慕
+			SELECTCASE RAND:3
+				CASE 1
+					PRINTFORML 「%CALLNAME:MASTER%に春がきてますよー！」
+					PRINTFORMW 
+				CASE 0
+					PRINTFORML 「ここにも春がきてますよー！」
+					PRINTFORMW 
+				CASEELSE
+					PRINTFORMW 「うんうん、青春ですよー」
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「%CALLNAME:MASTER%も春真っ盛りですよー」
+					PRINTFORMW 
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;朝起きたとき（口上）
+;==================================================
+@M_KOJO_EVENT_K18_2(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;非同棲かつ相手が先に起きてる
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		;-------------------------------------------------
+		;TARGET私室にMASTERが入っている（恋慕时陪睡中就寝时のみ？
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && !ARG:1
+			IF FLAG:时间停止
+			ELSEIF CFLAG:318 == 1
+			ELSEIF TALENT:恋慕
+				SELECTCASE RAND:3
+					;CASE 1
+						;PRINTFORML 
+						;PRINTFORMW 
+					;CASE 0
+						;PRINTFORML 
+						;PRINTFORMW 
+					CASEELSE
+						PRINTFORML 「ふにゃ…%CALLNAME:MASTER%？」
+						PRINTFORML %CALLNAME:MASTER%がベッドから起きようとするとリリーも起きたようだ。
+						PRINTFORML 「ふわぁ～…おはようございますですよ～」
+						SELECTCASE RAND:3
+							CASE 1
+								PRINTFORML 「ネグセがはねてる？…あんまり見られちゃうと恥ずかしいですよー」
+								PRINTFORML リリーはピョコンと跳ねた寝癖を抑えながら、颜を赤らめた。
+							CASE 0
+								PRINTFORML うつらうつらしているリリーを抱き寄せると、リリーから香る春の匂いを存分に乐しんだ。
+								PRINTFORML 「キャッ、…もー%CALLNAME:MASTER%ったら赤ちゃんみたいですよー」
+							CASEELSE
+								PRINTFORML 「んんー…まだ眠たいですよー」
+								PRINTFORML リリーは%CALLNAME:MASTER%の胸元に頬を寄せると安心しきった颜で身体をゆだねてきた。
+								PRINTFORML 「このままもう一眠りしたいですよー…ダメ？」
+						ENDSELECT
+						PRINTFORML 「さてと…、今日も一日小春日和になりそうですよー」
+						PRINTFORMW 二人は暖かい香りのベッドから名残惜しみながらも支度を始めた。
+				ENDSELECT
+			ENDIF
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;MASTER私室にTARGETが入ってきてる(恋慕无しでも入ってくる可能性有り
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 1
+			IF FLAG:时间停止
+			ELSEIF CFLAG:318 == 1
+			ELSEIF DAY:2 == 1  || TALENT:恋慕
+				;春
+				IF TALENT:恋慕 
+					PRINTFORML %CALLNAME:MASTER%が桜に包まれた梦から目が觉めるとリリーが%CALLNAME:MASTER%の上で眠りこけていた。
+					PRINTFORML 「すぅ…すぅ…」
+					PRINTFORML どうやら%CALLNAME:MASTER%が起きるのを待っているうちに寝入ってしまったようだ。
+					PRINTFORML %CALLNAME:MASTER%はリリーがおきるまでその小さな身体をポンポンと爱子ていることにした。
+					PRINTFORMW 「すぅ…すぅ…%CALLNAME:MASTER%－……好きー…」
+				ELSEIF TALENT:思慕
+					PRINTFORML 「%CALLNAME:MASTER%－春ですよー。春は短いですよー」
+					PRINTFORML 「寝てたらあっという间ですよー、早く一绪に遊びたいましょー」
+					PRINTFORMW %CALLNAME:MASTER%にまたがったリリーのペチペチと頬をはたかれて、%CALLNAME:MASTER%はのっそりと起きだした。
+				ELSE
+					PRINTFORML 「あたーらしーいあーさがきた！はーるのーあーさー！」
+					PRINTFORML 「お寝坊さんはここですよー！」
+					PRINTFORMW ドタバタと騒がしいリリーの目觉ましを受け、%CALLNAME:MASTER%はベッドから起きることにした。
+				ENDIF
+			ELSE
+				SELECTCASE DAY:2
+					CASE 2
+					;夏
+						PRINTFORML %CALLNAME:MASTER%が起きるとリリーが房间の隅っこにうずくまっていた。
+						PRINTFORMW 「ここは日が当らないから涼しいですよー」
+					CASE 3
+					;秋
+						PRINTFORML %CALLNAME:MASTER%が起きるとリリーが房间の隅っこで伸びていた。
+						PRINTFORMW 「おはようですよー。ちょっとだけ一休み…」
+					CASE 4
+					;冬
+						PRINTFORML 目觉めると%CALLNAME:MASTER%のお腹の辺りが盛り上がっている…。
+						PRINTFORML 布団を引っぺがすとリリーがうずくまって震えていた。
+						PRINTFORML 「さ、寒いから布団とらないで欲しいですよー」
+						PRINTFORML %CALLNAME:MASTER%は容赦なくリリーを布団から追い出した。
+						PRINTFORMW 「いじわるー！」
+				ENDSELECT
+			ENDIF
+		RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;同棲かつ相手が起きている
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		SELECTCASE RAND:3
+			;CASE 1
+				;PRINTFORML 
+				;PRINTFORMW 
+			;CASE 0
+				;PRINTFORML 
+				;PRINTFORMW 
+			CASEELSE
+				PRINTFORML 「あ、%CALLNAME:MASTER%がおきましたよー」
+				PRINTFORML %CALLNAME:MASTER%は花に埋もれて目を觉ました。
+				PRINTFORML 「なんで花まみれになってるかって？优しい香りで起きるといい气持ちで起きれるんですよー」
+				PRINTFORML 今日の%CALLNAME:MASTER%は花の匂いがとれなくなった。
+		ENDSELECT
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;同棲かつ相手が寝ている
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		PRINTFORML 「くー…くー…」
+		PRINTFORML リリーは%CALLNAME:MASTER%の横で气持ちよさそうに寝息をたてている。
+		PRINTFORML %CALLNAME:MASTER%はリリーの头をなでると起こさないように静かに身支度を始めた。
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;MASTERが起きていて、相手が起きてきた
+	;添い寝时TARGET起床はこちら（TARGET衰弱or陪睡中TARGET睡魔負け后そのままMASTERが起き続けた上で相手が起床した场合限定
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 4
+		;-------------------------------------------------
+		;非同棲
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && !ARG:1
+			PRINTFORML 「ふわぁ…あれ、%CALLNAME:MASTER%ですよー？」
+			PRINTFORML 「起こしに来てくれたんですかー？だったらとてもうれしいですよー！」
+			PRINTFORML %CALLNAME:MASTER%はリリーに目觉めの一杯としてお茶を差し出す。
+			PRINTFORML 「ありがとですよー…コクコク」
+			PRINTFORML 「今日はどこに春を伝えに行きますかー？」
+			PRINTFORMW %CALLNAME:MASTER%とリリーは今日の予定を話しながら朝の支度を始めた。
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;同棲中
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 1
+			IF TALENT:恋慕
+				PRINTFORML 「ふにゃ…%CALLNAME:MASTER%？」
+				PRINTFORML %CALLNAME:MASTER%の气配に气づいたのかリリーが起きたようだ。
+				PRINTFORML 「ふわぁ～…おはようございますですよ～」
+				SELECTCASE RAND:3
+					CASE 1
+						PRINTFORML 「ネグセがはねてる？…あんまり見られちゃうと恥ずかしいですよー」
+						PRINTFORML リリーはピョコンと跳ねた寝癖を抑えながら、颜を赤らめた。
+					CASE 0
+						PRINTFORML うつらうつらしているリリーの头を抚でると、ふにゃりとした颜で受け入れた。
+						PRINTFORML 「%CALLNAME:MASTER%ー、もう少しこのままー」
+						PRINTFORML %CALLNAME:MASTER%はリリーが満足するまで彼女の头を爱おし气に抚で続けた。
+					CASEELSE
+						PRINTFORML 「んんー…まだ眠たいですよー。%CALLNAME:MASTER%もどうですかー」
+						PRINTFORML とろんとした瞳で诱ってくるリリーの诱惑を跳ね除けながら、%CALLNAME:MASTER%はリリーをベッドから救いだした。
+						PRINTFORML 「んもー%CALLNAME:MASTER%ったらつれないですよー…」
+				ENDSELECT
+				PRINTFORML 「さてと…、今日も一日小春日和になりそうですよー」
+				PRINTFORMW 二人は暖かい香りのベッドから名残惜しみながらも支度を始めた。
+			ENDIF
+		ENDIF
+		PRINTFORML 
+		RETURN 1
+	ENDIF
+	;その他
+	PRINTFORML  
+ENDIF
+RETURN 1
+
+;==================================================
+;夜寝るとき（おやすみ口上）
+;==================================================
+@M_KOJO_EVENT_K18_3(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;自室に帰る（定时になって寝る）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		IF FLAG:时间停止
+		ELSEIF CFLAG:318 == 1
+			PRINTFORML 
+		ELSEIF DAY:2 == 1  || TALENT:恋慕
+			;春
+			IF TALENT:恋慕 
+				PRINTFORML 「また明日も一绪に遊んで欲しいですよー」
+				PRINTFORMW 「それじゃあ、バイバーイ！」
+			ELSEIF TALENT:思慕
+				PRINTFORML 「きっと明日も春真っ盛りですよー」
+				PRINTFORMW 「明日を梦見て…お休みですよー」
+			ELSE
+				PRINTFORML 「ふー今日もいっぱい春を伝えましたよー」
+				PRINTFORMW 「つづきはまた明日ー」
+			ENDIF
+		ELSE
+			SELECTCASE DAY:2
+				CASE 2
+				;夏
+					PRINTFORML 「今日は熱带夜じゃありませんようにー…」
+					PRINTFORMW 「おやすみー…」
+				CASE 3
+				;秋
+					PRINTFORML 「やっと１日が終わりますよー…春までまだ遠いですよー･･･」
+					PRINTFORMW 「おやすみー…」
+				CASE 4
+				;冬
+					PRINTFORML 「今ここで寝たら天国へ行っちゃいますよー…」
+					PRINTFORMW 「おやすみー…」
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;眠そうにしている
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		IF FLAG:时间停止
+		ELSEIF CFLAG:318 == 1
+			PRINTFORML 
+		ELSEIF DAY:2 == 1  || TALENT:恋慕
+			;春
+			IF TALENT:恋慕 
+				PRINTFORML 「%CALLNAME:MASTER%といると安心しちゃって…あふぅ～…」
+				PRINTFORMW 
+			ELSEIF TALENT:思慕
+				PRINTFORML 「うつらうつら…はぅ、春の陽气に诱われてなんだか眠く…」
+				PRINTFORMW 
+			ELSE
+				PRINTFORML 「ふわぁ～…アクビが勝手にでちゃいますよぉー…」
+				PRINTFORMW 
+			ENDIF
+		ELSE
+			SELECTCASE DAY:2
+				CASE 2
+				;夏
+					PRINTFORML 「熱くて眠れなくても眠气がきて…とっても辛いですよー…」
+					PRINTFORMW 
+				CASE 3
+				;秋
+					PRINTFORML 「秋の日はキスメ落としー…」
+					PRINTFORMW 「もうこんな时间ですよー…」
+				CASE 4
+				;冬
+					PRINTFORML 「い、今寝たら次は雪の中で起きることになりそうですよー」
+					PRINTFORMW 「が、がんばらなきゃ…でも眠くて…」
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;睡眠中（起きていないので会话というよりは寝言？）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		IF FLAG:时间停止
+		ELSEIF CFLAG:318 == 1
+			PRINTFORML 
+		ELSEIF DAY:2 == 1  || TALENT:恋慕
+			;春
+			IF TALENT:恋慕 
+				PRINTFORML 「%CALLNAME:MASTER%－…遊びましょー…すぅー…」
+				PRINTFORMW 
+			ELSEIF TALENT:思慕
+				PRINTFORML 「はーるですーよー…すぅー…」
+				PRINTFORMW 
+			ELSE
+				PRINTFORML 「すぅー…ぴぃー…」
+				PRINTFORMW 
+			ENDIF
+		ELSE
+			SELECTCASE DAY:2
+				CASE 2
+				;夏
+					PRINTFORML 「うーんうーん…」
+					PRINTFORMW 「あーつーいー…」
+				CASE 3
+				;秋
+					PRINTFORML 「すぅー…すぅー…」
+					PRINTFORMW 「はぁー…」
+				CASE 4
+				;冬
+					PRINTFORML 「ガタガタガタ…」
+					PRINTFORMW リリーは小刻みに揺れながら眠っている。
+					PRINTFORMW %CALLNAME:MASTER%はリリーの布団をかけなおした。
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;恶作剧中
+	;记入チェック（=0, 非表示、1, 表示）
+	;LOCAL:1 = 1
+	;-------------------------------------------------
+	;IF LOCAL:1 && ARG == 4
+		;PRINTFORMW 
+		;RETURN 1
+	;ENDIF
+	;-------------------------------------------------
+	;衰弱中（恋慕付き据点内キャラがMAIN_MAPで衰弱状态になった场合か、招待房间で相手が衰弱した场合に发生
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 5
+		IF FLAG:时间停止
+		ELSEIF CFLAG:318 == 1
+			PRINTFORML 
+		ELSEIF DAY:2 == 1  || TALENT:恋慕
+			;春
+			IF TALENT:恋慕 
+				PRINTFORML 「こんなに春でいっぱいの气持ちなのに…」
+				PRINTFORMW 「でもカラダは疲れても心は元气いっぱいですよー。%CALLNAME:MASTER%がいるんですからー」
+			ELSEIF TALENT:思慕
+				PRINTFORML 「%CALLNAME:MASTER%がいるからもうちょっとがんばれ…」
+				PRINTFORMW 「がんばれなかったですよー…ガクッ」
+			ELSE
+				PRINTFORML 「ちょっと春を告げ過ぎちゃいましたー…」
+				PRINTFORMW 
+			ENDIF
+		ELSE
+			SELECTCASE DAY:2
+				CASE 2
+				;夏
+					PRINTFORML 「な、夏バテですよー…」
+					PRINTFORMW 
+				CASE 3
+				;秋
+					PRINTFORML 「春が足りなくて力がでないですよー…」
+					PRINTFORMW 
+				CASE 4
+				;冬
+					PRINTFORML 「あ…寒かったのに…なんだかカラダがあたたかくなって…アハハー…」
+					PRINTFORMW 「春が見えますよーウフフー…」
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;MASTERがダウン（房间まで運ばれる）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 6
+		IF FLAG:时间停止	
+		ELSEIF CFLAG:318 == 1
+			PRINTFORML 「フンッ…！」
+			PRINTFORML 「…………」
+			PRINTFORMW リリーは渋々%CALLNAME:MASTER%を引きずっていった。
+		ELSEIF TALENT:恋慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「%CALLNAME:MASTER%－…大丈夫ですかー？」
+					PRINTFORML 心配そうに%CALLNAME:MASTER%を見上げるリリーの手を借りて自宅に戻ることにした。
+					PRINTFORML 「%CALLNAME:MASTER%が元气になるまで一绪にいてあげますよー」
+					PRINTFORML 「…ゆっくりでいいから、元气になってね」
+					PRINTFORMW リリーが握ってくれた小さな手は春の日差しのように暖かだった。
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;TARGETが自室まで戻ってきた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 7
+		;-------------------------------------------------
+		;そのまま着替えて寝た
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 0
+			IF FLAG:时间停止
+			ELSEIF CFLAG:318 == 1
+			ELSE
+				;春
+				SELECTCASE RAND:2
+					;CASE 1
+						;PRINTFORML 
+						;PRINTFORMW 
+					;CASE 0
+						;PRINTFORML 
+						;PRINTFORMW 
+					CASEELSE
+						PRINTFORML 「んぅ…もうおやすみの时间ですよー…むにゃ…」
+						PRINTFORML リリーは着替えるともそもそとベッドへもぐりこんだ。
+						PRINTFORMW 「梦の中に春を伝えにいきますよー…Zzz」
+				ENDSELECT
+			ENDIF
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;房间から追い出された
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 1
+			IF FLAG:时间停止
+			ELSEIF CFLAG:318 == 1
+			ELSE
+				SELECTCASE DAY:2
+					CASE 1
+					;春
+						PRINTFORML 「今日はもう春を伝えるのはおしまーい！おやすみー！」
+						PRINTFORMW %CALLNAME:MASTER%はニコニコ笑颜のリリーに押し出されて房间から退散した。
+					CASE 2
+					;夏
+						PRINTFORML 「誰かがいると房间の中が蒸し暑くなっちゃいますよー…」
+						PRINTFORMW %CALLNAME:MASTER%は汗だくのリリーに押し出されて房间から退散した。 
+					CASE 3
+					;秋
+						PRINTFORML 「……………」
+						PRINTFORMW %CALLNAME:MASTER%は无言のリリーに力なく押し出されて房间から退散した。
+					CASE 4
+					;冬
+						PRINTFORML 「早く温まりたいから出てって欲しいですよー…ブルブル」
+						PRINTFORMW %CALLNAME:MASTER%は寒さで震えるリリーに力なく押し出されて房间から退散した。
+				ENDSELECT
+			ENDIF
+
+		RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;他キャラとのＨを止めさせて寝た
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 2
+						IF FLAG:时间停止
+			ELSEIF CFLAG:318 == 1
+			ELSEIF DAY:2 == 1  || TALENT:恋慕
+				;春
+				SELECTCASE RAND:2
+					;CASE 1
+						;PRINTFORML 
+						;PRINTFORMW 
+					;CASE 0
+						;PRINTFORML 
+						;PRINTFORMW 
+					CASEELSE
+						PRINTFORML 「やめて、私の房间でそんなことしないで！」
+						PRINTFORML 「出てって！出てってよお！」
+						PRINTFORMW 颜を真っ赤にしたリリーに物を投げつけられ、追い出されてしまった。 
+				ENDSELECT
+			ELSE
+				PRINTFORML 「ここで头が春のことするなんて…許さないですよー…」
+				PRINTFORML 「…春符『サプライズスプリング』」
+				PRINTFORMW 荒れ狂う弾幕に巻き込まれ、%CALLNAME:MASTER%達はなんとかその场から逃げ出した。
+				
+			ENDIF
+
+		RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;非在住TARGETがMAIN_MAPで休憩
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 8
+		IF FLAG:时间停止
+		ELSEIF CFLAG:318 == 1
+		ELSEIF DAY:2 == 1  || TALENT:恋慕
+			;春
+			IF TALENT:恋慕 
+				PRINTFORML リリーが休憩していると周りに花が咲き始めた。
+				PRINTFORMW %CALLNAME:MASTER%を見てにっこり微笑んでいる。
+			ELSEIF TALENT:思慕
+				PRINTFORML 「%CALLNAME:MASTER%も一绪に休憩しませんかー？」
+				PRINTFORMW 
+			ELSE
+				PRINTFORML 「春うららですよ～～」
+				PRINTFORMW リリーはまったりと空を眺めている。
+			ENDIF
+		ELSE
+			SELECTCASE DAY:2
+				CASE 2
+				;夏
+					PRINTFORML 「ぐでー…」
+					PRINTFORMW リリーは日阴に隠れてへばっている。
+				CASE 3
+				;秋
+					PRINTFORML 「叶っぱが４５枚…４６枚…」
+					PRINTFORMW リリーは落ちていく叶っぱの枚数をぼんやりと目で追っている。
+				CASE 4
+				;冬
+					PRINTFORML 「ゴシゴシゴシゴシ…ハァ～」
+					PRINTFORMW リリーは手を擦ったり息を两手に当てて寒さを凌いでいる。
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;前のターンから一绪の房间にいる状态で相手が寝る（招待房间含む（
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 9
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;その他
+	PRINTFORML  
+ENDIF
+RETURN 1
+
+;==================================================
+;移动时すれちがい
+;==================================================
+@M_KOJO_EVENT_K18_4(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;立ち止まった
+	;この后遭遇口上に接続
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		IF FLAG:时间停止
+		ELSEIF CFLAG:318 == 1
+		ELSEIF TALENT:恋慕
+			PRINTFORML リリーはうれしそうに%CALLNAME:MASTER%へと駆け寄ってきた。
+			PRINTFORMW 「%CALLNAME:MASTER%－どうしましたー？」
+		ELSE
+			PRINTFORMW 「？」
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;軽く会釈して通り過ぎた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+			IF FLAG:时间停止
+			ELSEIF CFLAG:318 == 1
+			ELSEIF TALENT:恋慕
+				PRINTFORML 「あ、%CALLNAME:MASTER%ですよー！」
+			ELSE
+				SELECTCASE DAY:2
+					;春
+					CASE 1
+						PRINTFORML 「春ですよー」
+					;夏
+					CASE 2
+						PRINTFORML 「夏ですよー…」
+					;秋
+					CASE 3
+						PRINTFORML 「秋ですよー…フゥ」
+					;冬
+					CASE 4
+						PRINTFORML 「冬ですよー…ﾌﾞﾙﾌﾞﾙ」
+				ENDSELECT
+			ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;无视して通り過ぎた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+			IF FLAG:时间停止
+			ELSEIF TALENT:恋慕 || TALENT:思慕
+				PRINTFORML 「ｼｮﾝﾎﾞﾘ…」
+			ELSE
+			ENDIF
+		RETURN 1
+	ENDIF
+	;その他
+	PRINTFORML  
+ENDIF
+RETURN 1
+
+;==================================================
+;他者介入で情绪変化
+;==================================================
+@M_KOJO_EVENT_K18_5(ARG,ARG:1)
+;口上主はTARGET
+;ARGに入ってきたキャラ（人数が膨大なので、自己把握自己責任で
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;灵梦が入ってきた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;る～ことが入ってきた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;その他（キャラ指定なし
+	PRINTFORML
+	RETURN 1
+ENDIF
+RETURN 1
+
+;==================================================
+;情事を目撃した
+;==================================================
+@M_KOJO_EVENT_K18_6(ARG,ARG:1)
+;口上主はTARGET
+;ARGに情事相手
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;情事を目撃した（馴れ合い度:低）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 1
+		IF CFLAG:318 == 1
+			PRINTFORML 
+		ELSEIF TALENT:恋慕
+			PRINTFORML 
+		ELSEIF TALENT:思慕
+			PRINTFORML 
+		ELSE
+			PRINTFORML 
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;負けじと参加（馴れ合い度:高）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 2
+		IF CFLAG:318 == 1
+			PRINTFORML 
+		ELSEIF TALENT:恋慕
+			PRINTFORML 
+		ELSEIF TALENT:思慕
+			PRINTFORML 
+		ELSE
+			PRINTFORML 
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;气まずそうに立ち去る
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 3
+		IF CFLAG:318 == 1
+			PRINTFORML 
+		ELSEIF TALENT:恋慕
+			PRINTFORML 
+		ELSEIF TALENT:思慕
+			PRINTFORML 
+		ELSE
+			PRINTFORML 
+		ENDIF
+		RETURN 1
+	ENDIF
+	;その他
+	PRINTFORML  
+ENDIF
+RETURN 1
+
+;==================================================
+;情事を見られた
+;==================================================
+@M_KOJO_EVENT_K18_7(ARG,ARG:1)
+;口上主はTARGET
+;ARGに目撃者
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;情事を見られた（目撃者の馴れ合い度:低）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 1
+		IF CFLAG:318 == 1
+			PRINTFORML 
+		ELSEIF TALENT:恋慕
+			PRINTFORML 
+		ELSEIF TALENT:思慕
+			PRINTFORML 
+		ELSE
+			PRINTFORML 
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;目撃者が負けじと参加（目撃者の馴れ合い度:高）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 2
+		IF CFLAG:318 == 1
+			PRINTFORML 
+		ELSEIF TALENT:恋慕
+			PRINTFORML 
+		ELSEIF TALENT:思慕
+			PRINTFORML 
+		ELSE
+			PRINTFORML 
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;目撃者が立ち去る
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 3
+		IF CFLAG:318 == 1
+			PRINTFORML 
+		ELSEIF TALENT:恋慕
+			PRINTFORML 
+		ELSEIF TALENT:思慕
+			PRINTFORML 
+		ELSE
+			PRINTFORML 
+		ENDIF
+		RETURN 1
+	ENDIF
+	;その他
+	PRINTFORML  
+ENDIF
+RETURN 1
+
+;==================================================
+;目撃した情事を問い詰める（現在无し
+;==================================================
+@M_KOJO_EVENT_K18_8(ARG,ARG:1)
+RETURN 1
+
+;==================================================
+;パンツ没収された
+;==================================================
+@M_KOJO_EVENT_K18_9(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	;MASTERと同フロアでパンツを没収した
+	IF LOCAL:1 && ARG:1 == 1
+		PRINTFORML 「あれ？%CALLNAME:MASTER%から春を感じますよー」
+		PRINTFORML 「春を隠すなんてもったいないですよー見つけちゃいますよー」
+		PRINTFORML 「……春はどこですかー？――――あ」
+		PRINTFORML 「パンツ…？」
+		PRINTFORMW 「ジーーッ……どうして%CALLNAME:MASTER%が持ってるんですかー？」
+	
+		RETURN 1
+	;MASTERが移动してる際にパンツを没収した
+	ELSEIF LOCAL:1 && ARG:1 == 2
+		PRINTFORML 足早に離れようとした%CALLNAME:MASTER%へと小さな影が飛び出してきた。
+		PRINTFORML 「春ですよー…キャッ！」
+		PRINTFORML 「いたた…ぶつかっちゃいましたよー…あれ？」
+		PRINTFORML 「%CALLNAME:MASTER%－何か、落としましたよー。…これって女の子の下着？」
+		PRINTFORML リリーのじっとりとした视线が%CALLNAME:MASTER%に突き刺さる…。
+		PRINTFORMW 「ジトー…春は変态さんが多くなりますよー。本当に」
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;推倒た
+;==================================================
+@M_KOJO_EVENT_K18_10(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;诶嘿嘿==2（开始时）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		;-------------------------------------------------
+		;MASTERを推倒た（开始时）
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && !ARG:1
+			IF CFLAG:318 == 1
+				PRINTFORML 
+			ELSEIF TALENT:恋慕
+				;PRINTFORML 
+			ELSEIF TALENT:思慕
+				;PRINTFORML
+			ELSE
+				;PRINTFORML
+			ENDIF
+				SELECTCASE TALENT:MASTER:形状
+					CASE 1
+					;未成熟
+						;PRINTFORML
+					CASE 2
+					;粗チン
+						;PRINTFORML
+					CASE 3
+					;普通
+						;PRINTFORML
+					CASE 4
+					;发光
+						PRINTFORML 
+						IF FIRSTTIME("推倒",0)
+							;PRINTFORML
+						ENDIF
+						;PRINTFORML
+					CASE 5
+					;イボつき
+						PRINTFORML
+						IF FIRSTTIME("推倒",0) 
+							;PRINTFORML 
+						ENDIF
+						;PRINTFORML 
+					CASE 6
+					;ゴンぶと
+						PRINTFORML
+						IF FIRSTTIME("推倒",0)  
+							;PRINTFORML 
+						ENDIF
+						;PRINTFORML 
+						PRINTFORML 「
+					;馬并み
+					CASE 10
+						IF FIRSTTIME("推倒",0) && TALENT:恋慕
+							;PRINTFORML 
+						ELSEIF FIRSTTIME("推倒",0)
+							;PRINTFORML 
+						ELSE
+							;PRINTFORML 
+						ENDIF
+					CASEELSE
+						IF TALENT:MASTER:183 == 1
+					;なんと奇遇な
+							PRINTFORML 
+							IF FIRSTTIME("推倒",0)
+								;PRINTFORML 
+							ENDIF
+								;PRINTFORML 
+						ELSE
+							PRINTFORML 
+							IF FIRSTTIME("推倒",0)
+								;PRINTFORML 
+							ENDIF
+							;PRINTFORML 
+						ENDIF
+					ENDSELECT
+				PRINTFORML 
+			ENDIF
+		RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;MASTERに抱きついた（开始时）
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 1
+		RETURN 1
+		ENDIF
+	;-------------------------------------------------
+	;なだめられた（終了时）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		;-------------------------------------------------
+		;抜け出した
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && !ARG:1
+			IF FLAG:时间停止
+			ELSEIF CFLAG:318 == 1
+				;PRINTFORML 
+			ELSEIF TALENT:恋慕
+				;PRINTFORML 
+			ELSEIF TALENT:思慕
+				;PRINTFORML 
+			ELSE
+				;PRINTFORML 
+			ENDIF
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;抱き着きモード満足終了
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 1
+			PRINTFORML
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;抱き着きモード强制終了
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 2
+				PRINTFORML
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;抜け出す失敗
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		;-------------------------------------------------
+		;好きにして状态から抜け出せなかった
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 1
+			;PRINTFORML 
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;欲求不満が高くて抜け出せなかった
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 2
+			;PRINTFORML 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;その他
+	PRINTFORML  
+ENDIF
+RETURN 1
+
+;==================================================
+;浴场で遭遇
+;==================================================
+@M_KOJO_EVENT_K18_11(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;追い出された
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		IF FLAG:时间停止
+		ELSEIF CFLAG:318 == 1
+			;PRINTFORML 
+		ELSE
+			PRINTFORML 「は、入ってますよ～！」
+			PRINTFORMW %CALLNAME:MASTER%は真っ赤になったリリーにお湯をかけられ慌てて逃げ出した。
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;目が合った（追い出されない）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		IF FLAG:时间停止
+		ELSEIF CFLAG:318 == 1
+			;PRINTFORML 
+		ELSEIF TALENT:恋慕
+			PRINTFORML 「%CALLNAME:MASTER%も一绪にお澡堂入りたいですかー？」
+		ELSEIF TALENT:思慕
+			PRINTFORML 「あんまり見られると恥ずかしいですよー……」
+		ELSE
+		ENDIF
+		RETURN 1
+	ENDIF
+	;その他
+	PRINTFORML  
+ENDIF
+RETURN 1
+
+;==================================================
+;寝床に忍び込み
+;==================================================
+@M_KOJO_EVENT_K18_12(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;追い出される（愤怒）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		IF FLAG:时间停止
+		ELSE
+			SELECTCASE DAY:2
+				;春
+				CASE 1
+					PRINTFORML 「春はとってもぐっすり眠れるんですよー」
+					PRINTFORMW 「だけど邪魔するなんて、それはとてもひどいことなんですよー！」
+				;夏
+				CASE 2
+					PRINTFORML 「熱带夜でやっと寝付けたのに…起こされましたよー…」
+					PRINTFORMW 「この恨み、晴らさでおくべきかー…」
+				;秋
+				CASE 3
+					PRINTFORML 「秋になると虫の音がよく聞こえて气持ちよく眠れるんですよー」
+					PRINTFORMW 「でも%CALLNAME:MASTER%の音はお断りですよー…」
+				;冬
+				CASE 4
+					PRINTFORML 「寒い夜にあったかい布団でぐっすり寝る。こんな乐しいことはないんですよー」
+					PRINTFORMW 「だから目觉めた今はとっても乐しくないんですよー…」
+			ENDSELECT
+		ENDIF
+		
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;寝床に侵入
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 1
+		IF FLAG:时间停止
+		ELSE
+			SELECTCASE DAY:2
+				;春
+				CASE 1
+					PRINTFORML 「春ですよー…スピー…」
+					PRINTFORMW リリーは寝ているも春を告げてくれるようだ。
+				;夏
+				CASE 2
+					PRINTFORML 「うーんうーん……」
+					PRINTFORMW リリーは熱带夜に悶えているのか苦しそうに身じろぎをしている。
+				;秋
+				CASE 3
+					PRINTFORML 「すー………はーるー…まってー…」
+					PRINTFORMW リリーは梦を見ているのか何かを掴むように空中に手を伸ばしている。
+				;冬
+				CASE 4
+					PRINTFORML 「すー…すぴー…」
+					PRINTFORMW リリーはこんもりとかけ布団を重ねて布団の中に春を作っているようだ。
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;寝床に侵入（相手が恋慕）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 2
+		IF FLAG:时间停止
+		ELSE
+			PRINTFORML 「あれー……%CALLNAME:MASTER%ですかー…？」
+			PRINTFORML %CALLNAME:MASTER%の气配に气づいたのか目を擦りながらリリーは身体を起こした。
+			PRINTFORML 「こんな夜中にどうしましたー？」
+			PRINTFORMW 「もし眠れないなら一绪に寝ましょー。お布団あったかいですよー」
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;寝床に侵入（相手が恋慕・衰弱）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 3
+		IF FLAG:时间停止
+		ELSE
+			PRINTFORML 「春…春が足りないですよー…」
+			PRINTFORMW リリーは青い颜をしてうなされている…。
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;追い出される
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 4
+		IF FLAG:时间停止
+		ELSE
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASE 0
+					PRINTFORML 「今日はもうおやすみの时间だから、また明日遊びましょー」
+					PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「春を告げるのはもう卖り切れですよー」
+					PRINTFORMW
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;追い出される（衰弱）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 5
+		IF FLAG:时间停止
+		ELSE
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「今日はもう疲れましたー…」
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;その他
+	PRINTFORML  
+ENDIF
+RETURN 1
+
+;==================================================
+;お仕事中
+;==================================================
+@M_KOJO_EVENT_K18_13(ARG,ARG:1)
+;口上主はTARGET
+;ARG:1に残っている工作量
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;仕事开始（职场へ移动する）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		PRINTFORML 
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;業務中
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+			PRINTFORML 
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;仕事終了
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+			PRINTFORML 
+		RETURN 1
+	ENDIF
+	;その他
+	PRINTFORML  
+ENDIF
+RETURN 1
+
+;==================================================
+;食事系
+;==================================================
+@M_KOJO_EVENT_K18_14(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;持っていた食物を食べられた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == -1
+		IF CFLAG:318 == 1
+			PRINTFORML 「もがー！！」
+			PRINTFORMW 怒っていたリリーにあっという间に盗られてしまった…。
+		ELSEIF DAY:2 == 1  || TALENT:恋慕
+			PRINTFORML 「%CALLNAME:MASTER%からとっても春の匂いがしますよー」
+			PRINTFORML 「%CALLNAME:MASTER%のお料理……食べていいですかー？」
+			PRINTFORML %CALLNAME:MASTER%は物欲しそうに指をくわえて見あげてくるるリリーについ料理を差し出してしまった。
+			PRINTFORML 「わー♪%CALLNAME:MASTER%大好きですよー♪」
+		ELSEIF TALENT:思慕
+		SELECTCASE DAY:2
+			;春
+			CASE 1
+				PRINTFORML 「おなか空きましたー…。何か食べないと春を告げられないですよー…」
+				PRINTFORML リリーがひもじそうに润んだ目で%CALLNAME:MASTER%見ている…。
+				PRINTFORML 「このまま行き倒れて桜の木の下に…ウルウル…」
+				PRINTFORML リリーの何かを訴える儿童のまなざし攻撃が%CALLNAME:MASTER%に襲い掛かる！
+				PRINTFORML 
+				PRINTFORML 
+				PRINTFORML 
+				PRINTFORML ………%CALLNAME:MASTER%は耐えかねて満面の笑みのリリーに料理を差し出した。
+				PRINTFORMW 「ごちそうさまでしたー♪」
+			;夏
+			CASE 2
+				PRINTFORML 「あつくてフラフラしてきましたー…。何か营养があるものが食べたいですー…」
+				PRINTFORML リリーがひもじそうに润んだ目で%CALLNAME:MASTER%見ている…。
+				PRINTFORML 「このままじゃ春告精の干物になっちゃいますよー…ウルウル…」
+				PRINTFORML リリーの何かを訴える儿童のまなざし攻撃が%CALLNAME:MASTER%に襲い掛かる！
+				PRINTFORML 
+				PRINTFORML 
+				PRINTFORML 
+				PRINTFORML ………%CALLNAME:MASTER%は耐えかねて微笑を浮かべたリリーに料理を差し出した。
+				PRINTFORMW 「これで夏を乗り切れますよー…ありがとうですよー%CALLNAME:MASTER%－」
+			;秋
+			CASE 3
+				PRINTFORML 「春がもっとも遠い秋…秋バテして元气がでないですよー…ハァ」
+				PRINTFORML リリーがひもじそうに润んだ目で%CALLNAME:MASTER%見ている…。
+				PRINTFORML 「このまま秋に落ちる叶っぱの一枚のように、地面に落ちて枯叶に埋まっちゃいますよー…ウルウル…」
+				PRINTFORML リリーの何かを訴える儿童のまなざし攻撃が%CALLNAME:MASTER%に襲い掛かる！
+				PRINTFORML 
+				PRINTFORML 
+				PRINTFORML 
+				PRINTFORML ………%CALLNAME:MASTER%は耐えかねて駆け寄ってきたリリーに料理を差し出した。
+				PRINTFORMW 「これでおいしい秋を味わえますよー…ごちそうさまですー…♪」
+			;冬
+			CASE 4
+				PRINTFORML 「营养をつけて冬をのりこえないといけないのに…食べ物がないですよー…ブルブル」
+				PRINTFORML リリーがひもじそうに润んだ目で%CALLNAME:MASTER%見ている…。
+				PRINTFORML 「このまま春まで冰漬けの妖精として雪の下にウルウル…」
+				PRINTFORML リリーの何かを訴える儿童のまなざし攻撃が%CALLNAME:MASTER%に襲い掛かる！
+				PRINTFORML 
+				PRINTFORML 
+				PRINTFORML 
+				PRINTFORML ………%CALLNAME:MASTER%は耐えかねて震えるリリーに料理を差し出した。
+				PRINTFORMW 「%CALLNAME:MASTER%の料理を食べてると、春がもうすぐって思えますよー。ごちそうさまですー」
+		ENDSELECT
+		ELSE
+			SELECTCASE DAY:2
+				;春
+				CASE 1
+					PRINTFORML 「春ですよー」
+					PRINTFORML %CALLNAME:MASTER%の横をリリーがふよふよと飛びながら通り過ぎていった。
+					PRINTFORML 「もぐもぐ…はふへふよー」
+					PRINTFORMW リリーの咀嚼音に气づいた时には、%CALLNAME:MASTER%の料理は消えていた…。
+				;夏
+				CASE 2
+					PRINTFORML 「夏ですよー…あつーい」
+					PRINTFORML %CALLNAME:MASTER%の横をリリーがフラフラと飛びながら通り過ぎていった。
+					PRINTFORML 「もぐもぐ…食欲ないですよー…」
+					PRINTFORMW リリーの咀嚼音に气づいた时には、%CALLNAME:MASTER%の料理は半分だけ消えていた…。
+				;秋
+				CASE 3
+					PRINTFORML 「秋ですよー…はぁ…」
+					PRINTFORML %CALLNAME:MASTER%の横をリリーがトボトボと歩きながら通り過ぎていった。
+					PRINTFORML 「もぐもぐ…食欲の秋ですよー…」
+					PRINTFORML 「元气はないけど、お腹は空きますよー…」
+					PRINTFORMW リリーの咀嚼音に气づいた时には、%CALLNAME:MASTER%の料理は消えていた…。
+				;冬
+				CASE 4
+					PRINTFORML 「冬ですよー…寒いですよー…」
+					PRINTFORML %CALLNAME:MASTER%の横をリリーが震えながら通り過ぎていった。
+					PRINTFORML 「もぐもぐ…あったまりますよー…」
+					PRINTFORML 「%CALLNAME:MASTER%の料理のおかげで少しだけ元气がでましたよー」
+					PRINTFORMW リリーは当然のように料理を平らげると、お礼を言って歩き去っていった…。
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;その他
+	PRINTFORML  
+ENDIF
+RETURN 1
+
+;==================================================
+;MASTERが推倒た
+;==================================================
+@M_KOJO_EVENT_K18_15(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;未实装（推倒コマンドに統合？
+	;MASTERが推倒た（ウフフ开始时）
+	;记入チェック（=0, 非表示、1, 表示）
+	;LOCAL:1 = 1
+	;-------------------------------------------------
+	;IF LOCAL:1 && ARG == 1
+		;PRINTFORML
+		;RETURN 1
+	;ENDIF
+	;-------------------------------------------------
+	;逢瀬終了（ウフフ終了时）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+			;PRINTFORML 
+		RETURN 1
+	ENDIF
+	;その他
+	PRINTFORML  
+	;-------------------------------------------------
+	;事后描写
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		;-------------------------------------------------
+		;精液が垂れてきた
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 1
+			IF FLAG:时间停止
+			ELSEIF CFLAG:318 == 1
+				;PRINTFORML 
+			ELSEIF TALENT:恋慕
+				;PRINTFORML 
+			ELSEIF TALENT:思慕
+				;PRINTFORML 
+			ELSE
+			ENDIF
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;爱液が垂れてきた
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 2
+			IF FLAG:时间停止
+			ELSEIF CFLAG:318 == 1
+				;PRINTFORML 
+			ELSEIF TALENT:恋慕
+				;PRINTFORML 
+			ELSEIF TALENT:思慕
+				;PRINTFORML 
+			ELSE
+			ENDIF
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;事后の情绪
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 3
+			IF FLAG:时间停止
+			ELSEIF CFLAG:318 == 1
+				;PRINTFORML 
+			ELSEIF TALENT:恋慕
+				;PRINTFORML 
+			ELSEIF TALENT:思慕
+				;PRINTFORML 
+			ELSE
+			ENDIF
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;服を着る
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 4
+			IF FLAG:时间停止
+			ELSEIF CFLAG:318 == 1
+				;PRINTFORML 
+			ELSEIF TALENT:恋慕
+				;PRINTFORML 
+			ELSEIF TALENT:思慕
+				;PRINTFORML 
+			ELSE
+			ENDIF
+			RETURN 1
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;添い寝する
+;==================================================
+@M_KOJO_EVENT_K18_16(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;添い寝を始めた（开始时）(存在せず
+	;记入チェック
+	;LOCAL:1 = 1
+	;-------------------------------------------------
+	;IF LOCAL:1 && ARG == 1
+		;PRINTFORML
+		;RETURN 1
+	;ENDIF
+	;-------------------------------------------------
+	;添い寝を終了した（終了时）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		IF FLAG:时间停止
+		ELSEIF CFLAG:318 == 1
+			;PRINTFORML 
+		ELSEIF TALENT:恋慕
+			;PRINTFORML 
+		ELSEIF TALENT:思慕
+			;PRINTFORML 
+		ELSE
+		ENDIF
+		RETURN 1
+	ENDIF
+	;その他
+	PRINTFORML  
+ENDIF
+RETURN 1
+;==================================================
+;时止め終了时
+;==================================================
+@M_KOJO_EVENT_K18_17(ARG,ARG:1)
+;口上主はTARGET
+;排他と明记されていないモノは状况によっては连続で表示されるので注意
+;ARGに射精状况
+;ARG:1に射精状态
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;ARG=1～3は排他
+	;謎の快感
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		PRINTFORML 「ヒャウッ%UNICODE(0x2665) *1%」
+		PRINTFORML リリーは下腹部の未熟な秘花に走る快感と、漏れ出した蜜にゾクゾクと身を震わせた。
+		PRINTFORML 「カラダがビクッてしましたよー…。今のは…なんですかー…？」
+		PRINTFORML ピンク色の靄が思考にかかる。リリーの小さな芽は快感を忘れられず充血して赤くなっていた。
+		PRINTFORML 「ん…」
+		PRINTFORML 「カラダの中から春に包まれたみたいですよー…」
+		PRINTFORML 「…またこないかな」
+		PRINTFORML 頬を染めたリリーは无意识に手を服越しに幼い秘花へにあてがっていた。
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;绝顶
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		PRINTFORML 「ふわぁ――%UNICODE(0x2665) *1%%UNICODE(0x2665) *1%」
+		PRINTFORML 妖精は突然の绝顶にうろたえることもせず、嬌声をあげその场に崩れ落ちた。
+		PRINTFORML リリーのカラダに走る快感の波が彼女の头でスパークし、何度も身体を痙攣させる。
+		PRINTFORML 「あっ、あっ、ああ、スゴいぃ―%UNICODE(0x2665) *1%」
+		PRINTFORML 「えへへぇ…あぁ%UNICODE(0x2665) *1%、まるで春になったみたいですよぉ…%UNICODE(0x2665) *1%」
+		PRINTFORML 性欲という春に头を溶かされて、なすすべもなくとろけた表情で空を仰ぐ。
+		PRINTFORML 声をかけようともリリーは反応しない。ただ続く绝顶が終わるまで淫靡な微笑みを浮かべていた。
+	RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;パンツ紛失
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		PRINTFORML 「―――あれぇ？」
+		PRINTFORML 「なんだかスースーしますよ？」
+		PRINTFORML リリーがポンポンと裙子ごしに下腹部をたたく。
+		PRINTFORML そこに穿くべき布がないことに气づき、リリーは首をかしげた。
+		PRINTFORML 「なくなってる…？飛んでる时に落としちゃったんでしょうかー？」
+		PRINTFORML 「穿いてないと头も春ってバカにされちゃうから气をつけないといけないですよー」
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;【无自觉口内射精】
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 4
+		;精液中毒低精饮
+		IF ARG:1 == 1
+			PRINTFORML 「うえぇ…なんか口に入ってきましたー…」
+			PRINTFORMW 「少し口に入っちゃいましたよー…气持ち悪いですー…」
+		ELSEIF ARG:1 == 2
+		;精液中毒低手で覆う
+			PRINTFORML 「にがぁー…ペッペッ！」
+			PRINTFORMW 「まだイガイガしますー…口をゆすぎたいですよー…」
+		ELSEIF ARG:1 == 3
+			PRINTFORML 「ケホッケホッ！」
+			PRINTFORML 「手までベトベトにぃ…臭くて气持ち悪いですよー…」
+		;精液中毒高精饮
+		ELSEIF ARG:1 == 4
+			PRINTFORML 「コクッ…コクッ…」
+			PRINTFORML 粘着質の精液はリリーの喉元を通るたび、不思議な高揚感にリリーは目を细めた。
+			PRINTFORML 「よくわからないけど飲んじゃいましたー…でも」
+			PRINTFORML 「おなかの中が春でいっぱいになった气がしましたよー…%UNICODE(0x2665) *1%」
+			
+		;濃厚精液＆精液中毒低吐き出し
+		ELSEIF ARG:1 == 5
+			PRINTFORML 「！？ケホッ！ケホッ！！」
+			PRINTFORML 口内を満たす高粘度の精液リリーの幼い喉を犯し呼吸を阻害する。
+			PRINTFORML （い、息ができないー…！！）
+			PRINTFORML 苦悶の表情で喉を抑えながら何度もえずき、白いゼリーを吐き出そうと咳き込む。
+			PRINTFORML 「ウェ…ウップ、ケフッ……ハァー…ハァー…」
+			PRINTFORML 数十秒の间その场にうずくまりながら、やっとのことで喉内の精液を吐き出すことができた。
+			PRINTFORML 「はぁー…はぁー…し、死ぬかと思いましたよー…グスッグスッ」
+			PRINTFORML 涙と汗と精液でグチャグチャになったリリーは、その场で泣いていた。
+			
+		;濃厚精液＆精液中毒高精饮
+		ELSEIF ARG:1 == 6
+			PRINTFORML 「―ングっ？！」
+			PRINTFORML 「ンー……%UNICODE(0x2665) *1%」
+			PRINTFORML 「………ゴクッ」
+			PRINTFORML 「誰だか知らないけど、ごちそうさまでしたー%UNICODE(0x2665) *1%」
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;【无自觉颜面射精】
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 5
+		;无知持ち＆精液经验100未満
+		IF ARG:1 == 1
+			PRINTFORML 「！？やぁ！くさいー！」
+			PRINTFORML 「ひーん…颜がべちゃべちゃしてきもちわるいですよー…」
+		;通常ぬぐい取り
+		ELSEIF ARG:1 == 2
+			PRINTFORML 「わぷっ！な、なんなんですかー！？」
+			PRINTFORML 「え？…これってまさか男の人の…？」
+			PRINTFORML 「そんなことあるわけない…ですけど…」
+			PRINTFORMW リリーは气持ち悪そうに精液を拭い取った。
+		;颜射精液舐めとり
+		ELSEIF ARG:1 == 3
+			PRINTFORML 「わぷっ！な、なんなんですかー！？」
+			PRINTFORML 「え？…これってまさか男の人の…？」
+			PRINTFORMW 「そんなことあるわけない…ですけど…」
+			PRINTFORML 「………ペロ」
+			PRINTFORMW 「やっぱりこれ、精液ですよぉ%UNICODE(0x2665) *1%」
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;【无自觉手淫射精】
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 6
+		;ぬぐい取り
+		IF ARG:1 == 1
+			PRINTFORML 「ひえぇ…手がぬるぬるしますよー…」
+			PRINTFORML 「変な虫つぶしちゃったんですかー…？変な匂いもしますー…」
+		;舐めとり
+		ELSEIF ARG:1 == 2
+			PRINTFORML 「スンスン…」
+			PRINTFORML 「誰も見てない…ですよー…ね？」
+			PRINTFORML 「……ペロ」
+			PRINTFORMW 「…春の味がしますよー%UNICODE(0x2665) *1%」
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;【无自觉肛门射精】
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 7
+		;Ａ感觉2以下
+		IF ARG:1 == 1
+		;ソレ以外
+		ELSEIF ARG:1 == 2
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;【无自觉处女丧失】
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 8
+		PRINTFORML 「―ッ！？いたぁい！！」
+		PRINTFORML 幼い膣壁を削がれ、閉じ塞がっていた处女膜にこぞられる激痛にリリーは叫ぶ。
+		PRINTFORML 「ひ、ひぅ…お腹やぶけちゃいまし…た？」
+		PRINTFORML わなわなと震え足元から崩れ落ちる。腹が裂けたと思い恐る恐る下腹部に手を当てる。
+		PRINTFORML 槍に刺されるような痛みは止まらず、股下からじんわりと破瓜の赤い血が滴る。
+		PRINTFORML 「あ…あぁ…なんで……どうしてぇ…？」
+		PRINTFORML 幼い少女には自分に何が起きているのか、どうして血が垂れたのか理解できなかった。
+		PRINTFORML 「いたいよぉいたいよぉ…。……あ…れ？」
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORMW 「私、何か失くしちゃった……？」
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;【无自觉膣内射精】
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 9
+		;非处女膣内射精口服避孕药なし
+		IF ARG:1 == 1
+				PRINTFORML 「……？」
+				PRINTFORML リリーの幼膣に溜め込まれた精液は少女が动くたびにグチャリと音をたてた。
+				PRINTFORML 「何か変な感じがしますよー…？」
+				PRINTFORML 内に流し込まれた气色悪い感觉にリリーは不快感を觉えモジモジと股をすり合わせる。
+				PRINTFORML 「お手洗い…近くにあればいいんですけどー…」
+				PRINTFORMW 一刻も早く膣内の污れを取り除きたいと思いたいと颜をしかめ、キョロキョロと周囲を見回した。
+		;非处女膣内射精口服避孕药あり
+		ELSEIF ARG:1 == 2
+				PRINTFORML 「……？」
+				PRINTFORML リリーの幼膣に溜め込まれた精液は少女が动くたびにグチャリと音をたてた。
+				PRINTFORML 「何か変な感じがしますよー…？」
+				PRINTFORML 内に流し込まれた气色悪い感觉にリリーは不快感を觉えモジモジと股をすり合わせる。
+				PRINTFORML 「…まさかこれって」
+				PRINTFORML リリーはポケットから錠剂を取り出した。持っていたのは偶然だった。
+				PRINTFORML 「一応飲んでおきますよー。何かあったら大変ですー」
+				PRINTFORMW まだ体内の不快感を残るもの、錠剂を呑むとリリーは少しだけ气持ちが安心することができた。
+		;处女膣内射精
+		ELSEIF ARG:1 == 3
+				PRINTFORML 「え…？え…？」
+				PRINTFORML ぽっかり開いてしまった幼膣から、ドロリと赤と白の粘着質の液体が零れ落ちた。
+				PRINTFORML 醜悪な种子はリリーの裙子を污し滲んでいく。
+				PRINTFORML 下腹部に残るおぞましい感觉と鈍痛に少女は恐怖し目を閉じることができない。
+				PRINTFORML 「ヒッ――」
+				PRINTFORML 「あぁ…ああぁ――……」
+				PRINTFORML リリーの精神は耐え切れず、その场にうずくまってひたすら泣き喚いた。
+				PRINTFORMW 「あ"――…あ"―――…」
+		RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;时间停止解除共通
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 0
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;ナマでやらせろ时
+;==================================================
+@M_KOJO_EVENT_K18_18(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;避孕要求台詞
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		IF FLAG:时间停止
+		ELSEIF CFLAG:318 == 1
+			;PRINTFORML 
+		ELSEIF TALENT:恋慕
+			;PRINTFORML 
+		ELSEIF TALENT:思慕
+			;PRINTFORML 
+		ELSE
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;断った
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		IF FLAG:时间停止
+		ELSEIF CFLAG:318 == 1
+			;PRINTFORML 
+		ELSEIF TALENT:恋慕
+			;PRINTFORML 
+		ELSEIF TALENT:思慕
+			;PRINTFORML 
+		ELSE
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;断ったのに粘られて切れた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		IF FLAG:时间停止
+		ELSEIF CFLAG:318 == 1
+			;PRINTFORML 
+		ELSEIF TALENT:恋慕
+			;PRINTFORML 
+		ELSEIF TALENT:思慕
+			;PRINTFORML 
+		ELSE
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;危険日以外許可
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 4
+		IF FLAG:时间停止
+		ELSEIF CFLAG:318 == 1
+			;PRINTFORML 
+		ELSEIF TALENT:恋慕
+			;PRINTFORML 
+		ELSEIF TALENT:思慕
+			;PRINTFORML 
+		ELSE
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;危険日許可
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 5
+		IF FLAG:时间停止
+		ELSEIF CFLAG:318 == 1
+			;PRINTFORML 
+		ELSEIF TALENT:恋慕
+			;PRINTFORML 
+		ELSEIF TALENT:思慕
+			;PRINTFORML 
+		ELSE
+		ENDIF
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;神社暮らしを承認して貰う
+;==================================================
+@M_KOJO_EVENT_K18_19(ARG,ARG:1)
+;口上主はARG
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;認められる
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		PRINTFORML 「はっるですよー！」
+		PRINTFORML 「春は出会いの季节ですよー！」
+		PRINTFORML 満面の笑颜と大きなかばんを持ってリリーは%CALLNAME:MASTER%の元へやってきた。
+		PRINTFORML 「これからよろしくお願いしますー！」
+		PRINTFORML 「%CALLNAME:MASTER%と一绪にいられたら、いつでもどこでも春ですよー！」
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;認められない
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		PRINTFORML 「ダメですかー…？シュン…」
+		PRINTFORMW 「春は少しだけ遠かったみたいですー」
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;帰宅时
+;==================================================
+@M_KOJO_EVENT_K18_20(ARG,ARG:1)
+;口上主はLOCALS or RESULT
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;通常帰宅
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		IF CFLAG:318 == 1
+			PRINTFORMW 「ムー……」
+		ELSE
+			SELECTCASE DAY:2
+				;春
+				CASE 1
+					PRINTFORML 「今日もいっぱい春を伝えましたよー」
+					PRINTFORMW 「春をいただいて出で、春をいただいて帰りますー」
+				;夏
+				CASE 2
+					PRINTFORML 「ひぐらしがカナカナ鳴いてますよー…」
+					PRINTFORMW 「もう帰る时间ですよーー…」
+				;秋
+				CASE 3
+					PRINTFORML 「カラスが鳴くから帰りますよー…」
+				;冬
+				CASE 4
+					PRINTFORML 「夜になったらもっと冷えてきましたー…ブルブル」
+					PRINTFORMW 「早く帰らないと凍えちゃいますー…クシュン！」
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;约会中帰宅
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		IF CFLAG:318 == 1
+			PRINTFORMW 「私、怒ってるんですからねー…」
+		ELSEIF TALENT:恋慕
+			PRINTFORML 「今日もとても乐しかったですねー」
+			PRINTFORMW 「また遊びにいきましょー！」
+		ELSE
+			SELECTCASE DAY:2
+				;春
+				CASE 1
+					PRINTFORML 「春をいっぱい伝えられましたー。これでもっと春が溢れますよー」
+					PRINTFORMW 「これも%CALLNAME:MASTER%のおかげですよー。ありがとうございますー」
+				;夏
+				CASE 2
+					PRINTFORML 「幻想郷はどこも暑いとこばかりですよー…」
+					PRINTFORML 「でも夏じゃないと見られないところばかりでしたー」
+					PRINTFORMW 「また连れて行って欲しいですよー。ありがとうですー」
+				;秋
+				CASE 3
+					PRINTFORML 「秋も春に負けないぐらいキレイな所ばかりですよー」
+					PRINTFORMW 「おかげで少し元气になったみたいですー」
+				;冬
+				CASE 4
+					PRINTFORML 「暖かいところに行けて、心も春のようにあったかくなれた气がしますよー」
+					PRINTFORML 「これで春までがんばれますよー」
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;玄関先でお見送り
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		IF CFLAG:318 == 1
+			PRINTFORML 
+		ELSE
+			PRINTFORML 
+		ENDIF
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;陷落素質取得时
+;==================================================
+@M_KOJO_EVENT_K18_21(ARG,ARG:1)
+;口上主はARG
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;恋慕取得
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		IF DAY:2 == 1
+			PRINTFORML 
+			PRINTFORML リリーが通り過ぎれば舞い上がるのは春风ではなくもはや春嵐。
+			PRINTFORML 春に目觉めた生き物たちの命の息づかいとうごめきが草地一面に満ちていく。
+			PRINTFORML 「わかっちゃいましたー！」
+			PRINTFORML 「春ですよー！」
+			PRINTFORML 「今日は春！明日も春！夏でも秋でも冬でも！」
+			PRINTFORMW 「%CALLNAME:MASTER%がいてくれるから！ずーっと春ですよー！！」
+			PRINTFORML 「だって…%CALLNAME:MASTER%が大好きだから！」
+			PRINTFORML 
+			PRINTFORML 
+			PRINTFORML 
+			PRINTFORML 
+			PRINTFORMW リリーに春が访れました。
+		ELSE
+			PRINTFORML 「あれぇ？」
+			PRINTFORML その日、リリーは漂う朗らかな空气に目を瞬かせた。
+			PRINTFORML 「…もしかして、もう春ですかぁ？」
+			PRINTFORML 頬に手をあてると自然と笑颜になっている。身体はとても軽く、胸の奥がほっこりと暖かい。
+			PRINTFORML 軽やかにベッドから飛び降りたリリーは外を見上げてみる。外は…
+			SELECTCASE DAY:2
+				CASE 2
+				;夏
+					PRINTFORML セミの鳴き声と共に暑い日差しが緑を照らしていた。
+					PRINTFORML 煩わしい熱と暑さを身に感じる。
+				CASE 3
+				;秋
+					PRINTFORML 美しい红叶が妖怪の山を着饰っていた。
+					PRINTFORML 枯叶の混じった肌寒い木枯らしを身に感じる。
+				CASE 4
+				;冬
+					PRINTFORML しんしんと音も无く白い雪が降り積もっていた。
+					PRINTFORML 张り詰める寒さを身に感じる。
+				CASEELSE
+			ENDSELECT
+			;PRINTFORML それでもリリーは満ちる花の香りと春の息吹を感じずにいられない。
+			PRINTFORML 「？？？、春じゃないのに春ですよー」
+			PRINTFORML 「でも…」
+			PRINTFORML 「体中がとってもポカポカあったかくて」
+			PRINTFORML 「幸せなキモチでいっぱいですよ～」
+			PRINTFORML 「ｽｩｰ…」
+			PRINTFORMW 「はーるーでーすーよー！！」
+			PRINTFORML 
+			PRINTFORML 
+			PRINTFORML 
+			PRINTFORML 
+			PRINTFORMW リリーに春が访れました。
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;思慕取得
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		IF DAY:2 == 1
+			PRINTFORML 「春ですよー！春が来ましたよー！」			
+			PRINTFORML 「今日は%CALLNAME:MASTER%とお出かけですよー！」
+			PRINTFORML 「お花畑に行って～丘の上でお弁当も食べて～一绪にお昼寝して～♪」
+			PRINTFORML 「桜も見に行って～ウグイスを探しに行きましょ～♪」
+			PRINTFORML 「春がどんどん深まっちゃいますよ～♪」
+			PRINTFORMW
+		ELSE
+			PRINTFORML 「春じゃない季节はとっても辛いですよー…」
+			PRINTFORML 「でも今年は%CALLNAME:MASTER%がいてくれるから…」
+			PRINTFORMW 「ちょっとだけ、がんばれますよー！」
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;爱欲取得
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		PRINTFORML 
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;爱人取得
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 4
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;セフレ取得
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 5
+		PRINTFORML 「%CALLNAME:MASTER%－ちょっといいですかー？」
+		PRINTFORML 偶然にも居合わせたリリーは、%CALLNAME:MASTER%の手を掴み物阴へと连れて行く。
+		PRINTFORML 誰もいないことを确认すると、リリーは裙子の裾をつまみ、濡れそぼった下着へと%CALLNAME:MASTER%の手をそこへと招き入れた。
+		PRINTFORML 「ここ、またあの时みたいに触って欲しいですよ…%UNICODE(0x2665) *1%」
+		PRINTFORML 无垢な笑颜の頬を染めるリリー。%CALLNAME:MASTER%は欲の赴くまま指を這わせてリリーの幼穴を抚で始める。
+		PRINTFORML 「1人でするよりも…ンッ誰かにしてもらった方がキモチいいから…アッ%UNICODE(0x2665) *1%」
+		PRINTFORML 「これ、丘の上でお昼寝するよりも…やぁ%UNICODE(0x2665) *1%…キレイな花を見てるよりもズッと乐しいですよー…%UNICODE(0x2665) *1%」
+		PRINTFORML 「あ…ふわぁ…春みたい…%UNICODE(0x2665) *1%」
+		PRINTFORML リリーは達したのか嬌声をあげ膝から崩れ落ちた。それでも%CALLNAME:MASTER%は手を止めず爱液でグチャグチャになった蜜穴を攻め立てる。
+		PRINTFORML 「ヒャッ…%UNICODE(0x2665) *1%头の中、ぽわぽわしてますよぉ…%UNICODE(0x2665) *1%」
+		PRINTFORMW 妖精との情事はまだ終わらない。
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;调教終了时に自慰
+;==================================================
+@M_KOJO_EVENT_K18_22(ARG,ARG:1)
+;口上主はARG
+;ARG:0に自慰状况
+;ARG:1に自慰种类
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	;-------------------------------------------------
+	;通常自慰
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		PRINTFORML 「气持ちいいー…%UNICODE(0x2665) *1%」
+		
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;同室时自慰
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		PRINTFORML 「手が止まらないー…%UNICODE(0x2665) *1%」
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;中だし精液自慰
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		PRINTFORML 「いっぱいだされちゃいましたよー…%UNICODE(0x2665) *1%」
+		PRINTFORMW 「あ…まだでてくる…%UNICODE(0x2665) *1%」
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;无知持ち（自慰经验(调教自慰经验は差し引き)による分岐あり
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 4
+		LOCAL:2 = EXP:自慰经验 - EXP:调教自慰经验
+		;无知消去イベントあり（表示は一度だけ
+		IF LOCAL:1 >= 25
+			PRINTFORML 「…あれぇ？」
+			PRINTFORML リリーはふと气づいた。
+			PRINTFORML 自分が他の妖精よりも少し背を伸びたこと。
+			PRINTFORML ふと异性に見惚れてしまうこと。
+			PRINTFORML 时折、身体に熱が篭ってしまうこと。
+			PRINTFORML 「…そっかぁ」
+			PRINTFORML 「私、女の子になったんだ」
+			PRINTFORML 「……春ですよー」
+			PRINTFORMW 何故そうなったかは、リリーにはなんとなくわかってしまった。
+		;地の文分岐。书きたい场合は[SKIPSTART][SKIPEND]を削除してください
+		ELSEIF LOCAL:1 >= 20
+			PRINTFORML 
+		ELSEIF LOCAL:1 >= 15
+			PRINTFORML 
+		ELSEIF LOCAL:1 >= 10
+			PRINTFORML 
+		ELSEIF LOCAL:1 >= 5
+			PRINTFORML 
+		ELSE
+		ENDIF
+		PRINTFORML  
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;陷落素質あり自慰中毒高め
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 5
+		;-------------------------------------------------
+		;Ｃ敏感orＣ感觉10以上
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 1
+			PRINTFORML  
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;Ｖ敏感orＶ感觉10以上
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 2
+			PRINTFORML  
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;Ａ敏感orＡ感觉10以上
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 3
+			PRINTFORML  
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;Ｂ敏感orＢ感觉10以上
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 4
+			PRINTFORML  
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;部位指定无し
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 5
+			PRINTFORML  
+			RETURN 1
+		ENDIF
+		;その他
+		;上の分岐を一切书かずに、ここに书くことで陷落素質あり自慰中毒高め自慰の共通口上を表示することが出来ます
+		PRINTFORML 
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;自慰中毒高め
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 6
+		;-------------------------------------------------
+		;尻穴膣腔同时
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 1
+			PRINTFORML  
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;膣腔のみ
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 2
+			PRINTFORML  
+			RETURN 1
+		ENDIF
+		;その他
+		;上の分岐を一切书かずに、ここに书くことで自慰中毒高め自慰の共通口上を表示することが出来ます
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;我慢
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 7
+		PRINTFORML 
+		RETURN 1
+	ENDIF
+	;その他
+	;上の分岐を一切书かずに、ここに书くことで自慰の共通口上を表示することが出来ます
+	PRINTFORML  
+	RETURN 1
+ENDIF
+RETURN 1
+;==================================================
+;浴场连れだし
+;==================================================
+@M_KOJO_EVENT_K18_23(ARG,ARG:1)
+;口上主はLOCAL
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;断られた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		IF CFLAG:318 == 1
+			PRINTFORMW 「何考えてるんですかー！エッチー！！」
+		ELSEIF TALENT:思慕
+			PRINTFORML 「%CALLNAME:MASTER%ってときどき…ううんとてもエッチですよー」
+			PRINTFORMW 
+		ELSE
+			PRINTFORMW 「ここは私が行きたい场所じゃない气がしますよー」
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;一绪に入ってくれた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		IF CFLAG:318 == 1
+			PRINTFORML 「ぷくー…」
+			PRINTFORMW リリーは頬を膨らませているが、一绪に入ってくれるようだ…。
+		ELSEIF TALENT:恋慕
+			PRINTFORML 「洗いっこ、洗いっこしましょー！」
+			PRINTFORMW 「%CALLNAME:MASTER%もキレイにしてあげますよー！」
+		ELSE
+			SELECTCASE DAY:2
+				;春
+				CASE 1
+					PRINTFORML 「お背中お流ししますよー！」
+				;夏
+				CASE 2
+					PRINTFORML 「汗でベチャベチャ…洗ってくれますかー？」
+				;秋
+				CASE 3
+					PRINTFORML 「气持ちをリフレッシュしたいですよー…」
+				;冬
+				CASE 4
+					PRINTFORML 「早く冷たいカラダを暖めたいですよー…ブルブル」
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;その他
+	PRINTFORML  
+ENDIF
+RETURN 1
+;==================================================
+;懐妊
+;==================================================
+@M_KOJO_EVENT_K18_24(ARG,ARG:1)
+;口上主はLOCAL
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;恋慕
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1 
+		PRINTFORML 「%CALLNAME:MASTER%－春が来ましたー」
+		PRINTFORML 「そうですー%CALLNAME:MASTER%との赤ちゃんですー」
+		PRINTFORML 「好きな人の赤ちゃんを産めるなんて、きっと私はとっても幸せなんだと思いますー」
+		PRINTFORML 「次の春この子と一绪に伝えにいきたらいいですねーえへへー」
+		PRINTFORMW 「もちろん、%CALLNAME:MASTER%も一绪ですよー」
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;思慕
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		PRINTFORML 「%CALLNAME:MASTER%－赤ちゃんできたみたいですー」
+		PRINTFORML 「妖精の赤ちゃんって、はじめて見るかもしれないですよー乐しみですねー」
+		PRINTFORML 「…ところで赤ちゃんが夏に生まれたら、夏の妖精になるんですかー？」
+		PRINTFORML 「それとも私が春告精だから春の妖精？」
+		PRINTFORML 「んんー？どうなるんでしょうねー？」
+		PRINTFORMW 「……生まれてからのお乐しみですねー」
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;陷落素質无し
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		PRINTFORML 「…春は何もかも捨てちゃうにはいい季节なのかもしれないですー」
+		PRINTFORML 「心を空っぽにしなくちゃ新しい始まりもない…」
+		PRINTFORML 「毛糸玉みたいに絡まっちゃった心を空っぽにすれば、赤ちゃんとの出会いも幸せに始められると思いますー…」
+		PRINTFORMW リリーは泣いてるようにも起こってるようにも見える颜を崩して不器用に笑って見せた。
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;无自觉
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 4
+		PRINTFORML 「私の中の新しい春」
+		PRINTFORML 「どこから来たのかしらないけれど」
+		PRINTFORML 「私は春告精…春の访れを告げる妖精なんだから」
+		PRINTFORML 「喜んであなたが来てくれたこと告げますよー」
+		PRINTFORMW 「…春ですよー」
+		RETURN 1
+	ENDIF
+	;その他
+	PRINTFORML  
+ENDIF
+RETURN 1
+;==================================================
+;出産
+;==================================================
+@M_KOJO_EVENT_K18_25(ARG,ARG:1)
+;口上主はLOCAL
+;ARG:1	何人目の儿童か
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;恋慕
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		PRINTFORML 「え、えへへ…ちっちゃくてかわいいですよー」
+		PRINTFORML 「%CALLNAME:MASTER%と私の赤ちゃん。ずーっと見ていたいくらいですー」
+		PRINTFORML 「もう胸の中が春いっぱいで张り裂けそうですよーー」
+		PRINTFORML 「诶嘿嘿、春ですよー…私達の赤ちゃん、聞こえますかー？」
+		PRINTFORMW 「パパとママと一绪に、%CALLNAME:MASTER%を幸せにしてあげますー」
+
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;思慕
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		PRINTFORML 「ゼヒー…ゼヒー…」
+		PRINTFORML 「………あ、%CALLNAME:MASTER%ですよー…」
+		PRINTFORML 「赤ちゃん産むのって…とっても大変なんですねー…」
+		PRINTFORML 「夏と秋と冬がいっぺんに来たかと思いましたよー…。でも…」
+		PRINTFORML 「辛い季节を乗り越えたから、かわいいかわいい私の春が来てくれましたー…」
+		PRINTFORMW 「とりあえず今は少しだけ…お休みしますー…」
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;陷落素質无し
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		PRINTFORML 「この子と一绪の春はどうなるんですかねー…」
+		PRINTFORML 「……よしよし、だいじょうぶ」
+		PRINTFORML 「だいじょうぶだから、泣くことなんて何にもないんですよー」
+		PRINTFORML 「春は希望の季节。ママはあなたまで辛い气持ちなんてさせないんですからねー…」
+		
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;无自觉
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 4
+		PRINTFORML 「いきなりシングルマザーですよー…」
+		PRINTFORML 「でも、この子は立派な春告精にしてみせますー！」
+		PRINTFORML 「えいえいおー！」
+		RETURN 1
+	ENDIF
+	;その他
+	PRINTFORML  
+ENDIF
+RETURN 1
+;==================================================
+;自慰暴露
+;==================================================
+@M_KOJO_EVENT_K18_26(ARG,ARG:1)
+
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	SELECTCASE ARG
+		;-------------------------------------------------
+		CASE 0
+		;見られた瞬间
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1
+			IF TALENT:恋慕
+				PRINTFORML 
+			ELSEIF TALENT:思慕
+				PRINTFORML 
+			ELSE
+				PRINTFORML 
+			ENDIF
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		CASE 1
+		;何もしない
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1
+			IF TALENT:恋慕
+				PRINTFORML 
+			ELSEIF TALENT:思慕
+				PRINTFORML 
+			ELSE
+				PRINTFORML 
+			ENDIF
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		CASE 2
+		;そのまま続行
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1
+			IF TALENT:恋慕
+				PRINTFORML 
+			ELSEIF TALENT:思慕
+				PRINTFORML 
+			ELSE
+				PRINTFORML 
+			ENDIF
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		CASE 3
+		;追い出し
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1
+			IF TALENT:恋慕
+				PRINTFORML 
+			ELSEIF TALENT:思慕
+				PRINTFORML 
+			ELSE
+				PRINTFORML 
+			ENDIF
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		CASE 4
+		;やっちゃう
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1
+			IF TALENT:恋慕
+				PRINTFORML 
+			ELSEIF TALENT:思慕
+				PRINTFORML 
+			ELSE
+				PRINTFORML 
+			ENDIF
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		CASE 5
+		;事后
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1
+			IF TALENT:恋慕
+				PRINTFORML 
+			ELSEIF TALENT:思慕
+				PRINTFORML 
+			ELSE
+				PRINTFORML 
+			ENDIF
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		CASE 6
+		;事后お泊り
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+	ENDSELECT
+ENDIF
+
+;==================================================
+;相手からデートのお诱い
+;==================================================
+@M_KOJO_EVENT_K18_27(ARG,ARG:1)
+;口上主はLOCAL
+;ARG:1は目的地
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	SELECTCASE ARG
+		;-------------------------------------------------
+		CASE 0
+		;诱い文句
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1
+			IF DAY:2 == 1  || TALENT:恋慕
+				PRINTFORML 「春を伝えるにはたとえ火の中水の中！」
+				PRINTFORML 「でも１人だとあっという间にピチューンしてしまいそうですよー」
+				PRINTFORMW 「だから、%CALLNAME:MASTER%に连れてって欲しいですよー。…お願いしてもいい？」
+			ELSE
+				SELECTCASE DAY:2
+					;夏
+					CASE 2
+						PRINTFORML 「涼しいところ…どこか知らないですかー…」
+						PRINTFORMW 「このままじゃ溶けちゃう…」
+					;秋
+					CASE 3
+						PRINTFORML 「无气力でいると、春が来る前に消えてしまいそうですよー…」
+						PRINTFORMW 「气分转换にどこか遠い场所行ってみたいですー…」
+					;冬
+					CASE 4
+						PRINTFORML 「冷凍妖精になってしまう前に、どこか暖かいところで冬越ししたいですー…ガクブル」
+						PRINTFORMW 「どこかに暖かい场所があるか教えて欲しいですよー…ブルブル」
+				ENDSELECT
+				ENDIF
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		CASE 1
+		;受けた
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1
+			IF DAY:2 == 1  || TALENT:恋慕
+				PRINTFORML 「やったぁ！これで幻想郷を春一面にできますよー！」
+				PRINTFORMW リリーはバンザイしながら张り切っている。
+			ELSE
+				SELECTCASE DAY:2
+					;夏
+					CASE 2
+						PRINTFORML 「どうか焼き妖精になる前につきますように…」
+						PRINTFORMW 
+					;秋
+					CASE 3
+						PRINTFORML 「ありがとうですよー…」
+						PRINTFORMW リリーはトボトボと歩き出した。
+					;冬
+					CASE 4
+						PRINTFORML 「これで前みたいに雪解けと一绪に目觉めずに済みそうですよー」
+						PRINTFORMW 「もうあんなことになりたくないですよー…ブルブル」
+				ENDSELECT
+			ENDIF
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		CASE 2
+		;断った
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1
+			IF DAY:2 == 1  || TALENT:恋慕
+				PRINTFORML 「%CALLNAME:MASTER%は忙しいですかー？残念ですー…」
+			ELSE
+				SELECTCASE DAY:2
+					;夏
+					CASE 2
+						PRINTFORML 「このまま妖精の干物になれっていうんですかー？杀生ですよー…」
+						PRINTFORMW 
+					;秋
+					CASE 3
+						PRINTFORML 「あうー…」
+						PRINTFORMW リリーはトボトボと歩き出した。
+					;冬
+					CASE 4
+						PRINTFORML 「妖精は死なないから大丈夫？そんなぁ…」
+						PRINTFORMW 
+				ENDSELECT
+			ENDIF
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		CASE 3
+		;房间に诱われた
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1
+			PRINTFORML 
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		CASE 4
+		;房间に诱われたのを受けた
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1
+			PRINTFORML 
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		CASE 5
+		;房间に诱われたのを断った
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1
+			PRINTFORML 
+			RETURN 1
+		ENDIF
+	ENDSELECT
+ENDIF
+RETURN 1
+
+;==================================================
+;脱衣口上
+;==================================================
+@M_KOJO_EVENT_K18_28(ARG,ARG:1)
+;口上主はTARGET
+;ARGに脱がし方选择
+;ARG:1（ARG=3の场合のみあり）地の文の反応
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	SELECTCASE ARG
+		;-------------------------------------------------
+		CASE 0
+		;全裸にする
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1
+			;时间停止时
+			IF FLAG:70
+			;通常
+			ELSE
+				PRINTFORML 
+			ENDIF
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		CASE 1
+		;下着姿にする
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1
+			;时间停止时
+			IF FLAG:70
+			;通常
+			ELSE
+				PRINTFORML 
+			ENDIF
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		CASE 2
+		;半脱ぎ
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1
+			;时间停止时
+			IF FLAG:70
+			;通常
+			ELSE
+				PRINTFORML 
+			ENDIF
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		CASE 3
+		;パンツちょうだい
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1
+			SELECTCASE ARG:1
+				;-------------------------------------------------
+				CASE 0
+				;交换です
+				;记入チェック（=0, 非表示、1, 表示）
+				LOCAL:1 = 1
+				;-------------------------------------------------
+				IF LOCAL:1
+					RETURN 1
+				ENDIF
+				;-------------------------------------------------
+				CASE 1
+				;OK（嬉々
+				;记入チェック（=0, 非表示、1, 表示）
+				LOCAL:1 = 1
+				;-------------------------------------------------
+				IF LOCAL:1
+					PRINTFORML 
+					RETURN 1
+				ENDIF
+				;-------------------------------------------------
+				CASE 2
+				;OK（渋々
+				;记入チェック（=0, 非表示、1, 表示）
+				LOCAL:1 = 1
+				;-------------------------------------------------
+				IF LOCAL:1
+					PRINTFORML 
+					RETURN 1
+				ENDIF
+				;-------------------------------------------------
+				CASE 3
+				;嫌です
+				;记入チェック（=0, 非表示、1, 表示）
+				LOCAL:1 = 1
+				;-------------------------------------------------
+				IF LOCAL:1
+					PRINTFORML 
+					RETURN 1
+				ENDIF
+				RETURN 1
+			ENDSELECT
+		ENDIF
+	ENDSELECT
+ENDIF
+RETURN 1
+
+;==================================================
+;愤怒口上
+;==================================================
+@M_KOJO_EVENT_K18_29(ARG,ARG:1)
+;口上主はTARGET
+;ARGはTARGETの度胸で分岐
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;怒らせてしまった
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;泣かせてしまった　[臆病]持ち
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;相手が推倒を解除
+;==================================================
+@M_KOJO_EVENT_K18_30(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+	;疲れた
+		PRINTFORML 
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+	;満足して解放
+		PRINTFORML 
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+	;満足したところを押し倒された
+		PRINTFORML 
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 4
+	;坏れるまでしてあげる
+		PRINTFORML 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+
+;==================================================
+;一日の終了时(AFTERTRAニーの前)、认识がなければ呼び出されない
+;==================================================
+@M_KOJO_EVENT_K18_31(ARG,ARG:1)
+;口上主はTARGET
+;ARGは会ってない日数
+;何日以上会ってなかったら愚痴を言うとかできます
+;CFLAG:自慰暴露で分岐入れてもよさそう
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;今日会っていない
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;今日会っている
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 0
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+[SKIPSTART]
+;-------------------------------------------------
+;自慰暴露遭遇时の地の文をデフォルトのものから変更したい场合用。
+;その场合は上下のSKIPSTART~SKIPENDを外してください。
+;CFLAG等のキャラ変数を使う场合、キャラ番号の指定が必要になります。
+;-------------------------------------------------
+@M_KOJO_EVENT_K18_ONABARE_1(ARG)
+;-------------------------------------------------
+:口上色を付けるならコメントアウトを外しXをキャラ番号に
+;CALL M_KOJO_COLOR_K18
+
+IF ARG
+	PRINTFORML A弄ってる场合
+ELSE
+	PRINTFORML V弄ってる场合
+ENDIF
+;-------------------------------------------------
+[SKIPEND]
+
+
+[SKIPSTART]
+;-------------------------------------------------
+;自慰暴露でそのまま続けてもらう场合の地の文をデフォルトのものから変更したい场合用。
+;その场合は上下のSKIPSTART~SKIPENDを外してください。
+;CFLAG等のキャラ変数を使う场合、キャラ番号の指定が必要になります。
+;-------------------------------------------------
+@M_KOJO_EVENT_K18_ONABARE_2(ARG)
+;-------------------------------------------------
+:口上色を付けるならコメントアウトを外しXをキャラ番号に
+;CALL M_KOJO_COLOR_K18
+
+IF ARG
+	PRINTFORML A弄ってる场合
+ELSE
+	PRINTFORML V弄ってる场合
+ENDIF
+;-------------------------------------------------
+[SKIPEND]
+
+
+[SKIPSTART]
+;-------------------------------------------------
+;自慰暴露なし崩しックスの地の文をデフォルトのものから変更したい场合用。
+;その场合は上下のSKIPSTART~SKIPENDを外してください。
+;CFLAG等のキャラ変数を使う场合、キャラ番号の指定が必要になります。
+;-------------------------------------------------
+@M_KOJO_EVENT_K18_ONABARE_3(前戯１,本番はどっちか,回数,注入量)
+;-------------------------------------------------
+#DIM 前戯１
+;1=C 2=B 3=M
+#DIM 本番はどっちか
+;0でＶ、1でＡ
+#DIM 注入量
+#DIM 回数
+
+:口上色を付けるならコメントアウトを外しXをキャラ番号に
+;CALL M_KOJO_COLOR_K18
+
+SELECTCASE 前戯１
+	CASE 1
+		PRINTFORML Ｃ責め
+	CASE 2
+		PRINTFORML Ｂ責め
+	CASE 3
+		PRINTFORML Ｍ責め
+ENDSELECT
+
+IF 本番はどっちか
+	PRINTFORML Aで本番
+ELSE
+	PRINTFORML Vで本番
+ENDIF
+;-------------------------------------------------
+[SKIPEND]
+
+
+;-------------------------------------------------
+;处女・无自觉非处女に插入する直前の口上
+;RETURN 1するとコマンドをキャンセルします
+;RETURN 0なら通します
+;CFLAG:破瓜中止口上有がオンになってないと読み込まれないので注意
+;-------------------------------------------------
+@M_KOJO_EVENT_K18_LOST_VIRGIN_STOP
+;-------------------------------------------------
+PRINTFORML 
+RETURN 1
+
+;-------------------------------------------------
+;CFLAG:口上内抱き寄せ判定_初回がオンになっている场合のみ有效。
+;初めて推倒た时、ここでRETURN -1すると推倒を强制的にキャンセルします。
+;RETURN 0なら通常の判定を行い、RETURN 1すると无条件に成功させます。
+;特定のイベント（デート帰りキスなど）を見るまで诶嘿嘿できないようにしたいときなどにどうぞ。
+;-------------------------------------------------
+@M_KOJO_EVENT_K18_PERMISSION_1
+;-------------------------------------------------
+PRINTFORML 
+;RETURN -1
+RETURN 0
+;RETURN 1
+;-------------------------------------------------
+
+
+;-------------------------------------------------
+;CFLAG:口上内抱き寄せ判定_通常がオンになっている场合のみ有效。
+;合意付きで推倒た时、ここでRETURN -1すると推倒を强制的にキャンセルします。
+;RETURN 0なら通常通り成功させます。
+;合意があっても何らかの理由で诶嘿嘿できないようにしたいときなどにどうぞ。
+;-------------------------------------------------
+@M_KOJO_EVENT_K18_PERMISSION_2
+;-------------------------------------------------
+PRINTFORML 
+RETURN 0
+;RETURN -1
+;-------------------------------------------------

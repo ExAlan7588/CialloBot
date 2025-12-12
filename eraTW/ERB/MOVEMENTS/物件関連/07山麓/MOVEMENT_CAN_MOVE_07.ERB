@@ -1,0 +1,149 @@
+﻿;-----------------------------------------------------------
+;地点の接续设定
+;ARG    基准の地点
+;ARG:1  对象の地点
+;RETURNF 0=移动できない,见えない
+;        1=移动できる,见えない
+;        2=移动できない,见える
+;        3=移动できる,见える（直通）
+;-----------------------------------------------------------
+@CAN_MOVE_7(ARG, ARG:1)
+#FUNCTION
+SELECTCASE ARG
+CASE P701树海道入口
+	SIF GROUPMATCH(ARG:1, P734小屋)
+		RETURNF 1
+	SIF ARG:1 == MAXROOM
+		RETURNF 2
+	SIF GROUPMATCH(ARG:1, P702山道・通往沼泽之道)
+		RETURNF 3
+CASE P702山道・通往沼泽之道
+	SIF GROUPMATCH(ARG:1, P715秋姊妹的家・旱田, P716秋姊妹的家・土间)
+		RETURNF 1
+	SIF GROUPMATCH(ARG:1, P701树海道入口, P703玄武之泽)
+		RETURNF 3
+CASE P703玄武之泽
+	SIF GROUPMATCH(ARG:1, P704河童的宣传站, P709莉莉们的家, P735游泳场, P738森林深处)
+		RETURNF 1
+	SIF GROUPMATCH(ARG:1, P702山道・通往沼泽之道, P705山道・中腹)
+		RETURNF 3
+CASE P704河童的宣传站, P709莉莉们的家, P735游泳场
+	SIF GROUPMATCH(ARG:1, P703玄武之泽)
+		RETURNF 1
+CASE P705山道・中腹
+	SIF GROUPMATCH(ARG:1, P703玄武之泽, P707山道・分岐点)
+		RETURNF 3
+	SIF GROUPMATCH(ARG:1, P733正邪的藏身处)
+		RETURNF 1
+CASE P707山道・分岐点
+	SIF GROUPMATCH(ARG:1, P706厄神的家, P708大蛤蟆之池, P710猫之里, P711休憩所, P731帚木, P736山姥之家, P741美天的栖息处)
+		RETURNF 1
+	SIF GROUPMATCH(ARG:1, P705山道・中腹)
+		RETURNF 3
+CASE P711休憩所
+	SIF GROUPMATCH(ARG:1, P707山道・分岐点, P712间歇泉地下中枢, P732通向山顶的路, P736山姥之家, P741美天的栖息处)
+		RETURNF 1
+CASE P732通向山顶的路
+	SIF GROUPMATCH(ARG:1, P711休憩所, P712间歇泉地下中枢)
+		RETURNF 1
+CASE P734小屋
+	SIF GROUPMATCH(ARG:1, P701树海道入口)
+		RETURNF 1
+CASE P733正邪的藏身处
+	SIF GROUPMATCH(ARG:1, P705山道・中腹)
+		RETURNF 1
+CASE P708大蛤蟆之池
+	SIF GROUPMATCH(ARG:1, P707山道・分岐点)
+		RETURNF 1
+CASE P706厄神的家
+	SIF GROUPMATCH(ARG:1, P707山道・分岐点, P710猫之里)
+		RETURNF 1
+CASE P710猫之里
+	SIF GROUPMATCH(ARG:1, P707山道・分岐点, P706厄神的家, P737招财猫的家)
+		RETURNF 1
+CASE P737招财猫的家
+	SIF GROUPMATCH(ARG:1, P710猫之里)
+		RETURNF 1
+CASE P712间歇泉地下中枢
+	SIF GROUPMATCH(ARG:1, P711休憩所, P732通向山顶的路)
+		RETURNF 1
+CASE P736山姥之家, P741美天的栖息处
+	SIF GROUPMATCH(ARG:1, P707山道・分岐点, P711休憩所)
+		RETURNF 1
+CASE P716秋姊妹的家・土间
+	SIF GROUPMATCH(ARG:1, P702山道・通往沼泽之道, P715秋姊妹的家・旱田)
+		RETURNF 1
+	SIF GROUPMATCH(ARG:1, P718秋姊妹的家・起居室)
+		RETURNF 3
+CASE P718秋姊妹的家・起居室
+	SIF GROUPMATCH(ARG:1, P717秋姊妹的家・寝室)
+		RETURNF 1
+	SIF GROUPMATCH(ARG:1, P716秋姊妹的家・土间, P719秋姊妹的家・会客室)
+		RETURNF 3
+CASE P717秋姊妹的家・寝室
+	SIF GROUPMATCH(ARG:1, P718秋姊妹的家・起居室, P719秋姊妹的家・会客室)
+		RETURNF 1
+CASE P719秋姊妹的家・会客室
+	SIF GROUPMATCH(ARG:1, P717秋姊妹的家・寝室)
+		RETURNF 1
+	SIF GROUPMATCH(ARG:1, P715秋姊妹的家・旱田, P718秋姊妹的家・起居室)
+		RETURNF 3
+CASE P715秋姊妹的家・旱田
+	SIF GROUPMATCH(ARG:1, P702山道・通往沼泽之道, P716秋姊妹的家・土间)
+		RETURNF 1
+	SIF GROUPMATCH(ARG:1, P719秋姊妹的家・会客室)
+		RETURNF 3
+;仙人的宅邸华扇ちゃん！
+CASE P731帚木
+	SIF GROUPMATCH(ARG:1, P707山道・分岐点, P730仙人的宅邸・庭)
+		RETURNF 1
+CASE P730仙人的宅邸・庭
+	SIF GROUPMATCH(ARG:1, P731帚木)
+		RETURNF 1
+	SIF GROUPMATCH(ARG:1, P729仙人的宅邸・玄关)
+		RETURNF 3
+CASE P729仙人的宅邸・玄关
+	SIF GROUPMATCH(ARG:1, P720仙人的宅邸・厨房, P721仙人的宅邸・澡堂, P722仙人的宅邸・道场, P723仙人的宅邸・二层客房)
+		RETURNF 1
+	SIF GROUPMATCH(ARG:1, P730仙人的宅邸・庭)
+		RETURNF 3
+CASE P721仙人的宅邸・澡堂, P722仙人的宅邸・道场, P720仙人的宅邸・厨房
+	SIF GROUPMATCH(ARG:1, P729仙人的宅邸・玄关)
+		RETURNF 1
+CASE P723仙人的宅邸・二层客房
+	SIF GROUPMATCH(ARG:1, P729仙人的宅邸・玄关, P726仙人的宅邸・起居室, P724仙人的宅邸・书斋, P725仙人的宅邸・大鹫的房间)
+		RETURNF 1
+CASE P724仙人的宅邸・书斋
+	SIF GROUPMATCH(ARG:1, P723仙人的宅邸・二层客房)
+		RETURNF 1
+CASE P725仙人的宅邸・大鹫的房间
+	SIF GROUPMATCH(ARG:1, P723仙人的宅邸・二层客房)
+		RETURNF 1
+	;例外的に大鹫的房间から庭にジャンプできる
+	SIF GROUPMATCH(ARG:1, P730仙人的宅邸・庭)
+		RETURNF 3
+CASE P726仙人的宅邸・起居室
+	SIF GROUPMATCH(ARG:1, P723仙人的宅邸・二层客房, P727仙人的宅邸・华扇私室, P728仙人的宅邸・空的房间)
+		RETURNF 1
+CASE P727仙人的宅邸・华扇私室, P728仙人的宅邸・空的房间
+	SIF GROUPMATCH(ARG:1, P726仙人的宅邸・起居室)
+		RETURNF 1
+;深奥エリア
+CASE P738森林深处
+	SIF GROUPMATCH(ARG:1, P703玄武之泽, P740山童的宣传站)
+		RETURNF 1
+	SIF GROUPMATCH(ARG:1, P739秘天崖)
+		RETURNF 3
+CASE P739秘天崖
+	SIF GROUPMATCH(ARG:1, P738森林深处)
+		RETURNF 3
+CASE P740山童的宣传站
+	SIF GROUPMATCH(ARG:1, P738森林深处)
+		RETURNF 1
+
+CASE MAXROOM
+	SIF ARG:1 == P701树海道入口
+		RETURNF 1
+ENDSELECT
+
+RETURNF 0

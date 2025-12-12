@@ -1,0 +1,170 @@
+﻿@COM603
+;牵手
+LOCAL = RAND:110
+LOCAL:1 = 90 + GET_SUCCESS_RATE() / 5
+SIF LOCAL:1 > 109
+	LOCAL:1 = 109
+IF LOCAL <= 9
+	;大成功
+	TFLAG:193 = 1
+	EXP:MASTER:约会经验 ++
+	EXP:TARGET:约会经验 ++
+ELSEIF LOCAL >= LOCAL:1
+	;失败
+	TFLAG:193 = -1
+ELSE
+	;残りは成功
+	TFLAG:193 = 0
+ENDIF
+
+;先制发生时は失败しない
+;SIF TFLAG:102 == 3
+;	TFLAG:193 = MAX(TFLAG:193,0)
+DOWNBASE:气力 += 50
+DOWNBASE:MASTER:气力 += 50
+
+;固定で获得するソース
+SOURCE:欢乐 = 150
+SOURCE:情爱 = 150
+SOURCE:恭顺 = 100
+SOURCE:反感 = 100
+SOURCE:被动 = 100
+
+;ABL:亲密をみる
+IF ABL:亲密 <= 3
+	SOURCE:欢乐 += 150 + (ABL:亲密 * 50)
+	SOURCE:情爱 += 180 + (ABL:亲密 * 40)
+ELSEIF ABL:亲密 <= 5
+	SOURCE:欢乐 += 500 + (ABL:亲密 * 50)
+	SOURCE:情爱 += 450 + (ABL:亲密 * 30)
+ELSEIF ABL:亲密 <= 8
+	SOURCE:欢乐 += 800 + (ABL:亲密 * 50)
+	SOURCE:情爱 += 700 + (ABL:亲密 * 50)
+ELSEIF ABL:亲密 <= 11
+	SOURCE:欢乐 += 1000 + (ABL:亲密 * 90)
+	SOURCE:情爱 += 900 + (ABL:亲密 * 50)
+ELSE
+	SOURCE:欢乐 += 1800 + (ABL:亲密 * 40)
+	SOURCE:情爱 += 2000 + (ABL:亲密 * 20)
+ENDIF
+
+;ABL:顺从をみる
+IF ABL:顺从 <= 3
+	SOURCE:恭顺 += 100 + (ABL:顺从 * 50)
+	SOURCE:被动 += 170 + (ABL:顺从 * 40)
+ELSEIF ABL:顺从 <= 5
+	SOURCE:恭顺 += 300 + (ABL:顺从 * 50)
+	SOURCE:被动 += 350 + (ABL:顺从 * 30)
+ELSEIF ABL:顺从 <= 8
+	SOURCE:恭顺 += 500 + (ABL:顺从 * 50)
+	SOURCE:被动 += 600 + (ABL:顺从 * 50)
+ELSEIF ABL:顺从 <= 11
+	SOURCE:恭顺 += 800 + (ABL:顺从 * 90)
+	SOURCE:被动 += 700 + (ABL:顺从 * 50)
+ELSE
+	SOURCE:恭顺 += 1500 + (ABL:顺从 * 40)
+	SOURCE:被动 += 1000 + (ABL:顺从 * 20)
+ENDIF
+
+;好感度をみる
+IF CFLAG:2 <= 500
+	SOURCE:情爱 += CFLAG:2
+ELSEIF CFLAG:2 <= 5000
+	SOURCE:情爱 += 200 + (CFLAG:2 - 500) / 3
+ELSE
+	SOURCE:情爱 += 1000 + (CFLAG:2 - 5000) / 5
+ENDIF
+SIF SOURCE:欢乐 < 0
+	SOURCE:欢乐 = 0
+
+LOCAL = 0
+;亲密が低いと好感度低下
+IF ABL:亲密 == 0
+	LOCAL -= 3
+ELSEIF ABL:亲密 == 1
+	LOCAL -= 2
+ELSEIF ABL:亲密 == 2
+	LOCAL -= 1
+ENDIF
+;顺从が低いと好感度低下
+IF ABL:顺从 == 0
+	LOCAL -= 5
+ELSEIF ABL:顺从 == 1
+	LOCAL -= 3
+ELSEIF ABL:顺从 == 2
+	LOCAL -= 1
+ENDIF
+;好感度が低いと好感度低下
+IF CFLAG:2 <= 50
+	LOCAL -= 3
+ELSEIF CFLAG:2 <= 100
+	LOCAL -= 2
+ELSEIF CFLAG:2 <= 250
+	LOCAL -= 1
+ENDIF
+
+SOURCE:情欲 = 50 + 150 * ABL:欲望
+SOURCE:屈从 = 100 + 200 * ABL:受虐属性
+
+;好感度变化
+TFLAG:97 += LOCAL
+
+IF TFLAG:193 == -1
+	TIMES SOURCE:欢乐 , 0.10
+	TIMES SOURCE:情爱 , 0.50
+	TIMES SOURCE:恭顺 , 0.50
+	TIMES SOURCE:被动 , 1.50
+	TIMES SOURCE:情欲 , 0.50
+	TIMES SOURCE:反感 , 1.50
+ELSEIF TFLAG:193 == 0
+	TIMES SOURCE:欢乐 , 1.00
+	TIMES SOURCE:情爱 , 1.00
+	TIMES SOURCE:恭顺 , 1.00
+	TIMES SOURCE:被动 , 1.00
+	TIMES SOURCE:情欲 , 1.00
+	TFLAG:情绪BOUNS = 50
+ELSE
+	TIMES SOURCE:欢乐 , 2.00
+	TIMES SOURCE:情爱 , 2.00
+	TIMES SOURCE:恭顺 , 1.50
+	TIMES SOURCE:被动 , 2.00
+	TIMES SOURCE:情欲 , 2.00
+	TIMES SOURCE:反感 , 0.75
+	TFLAG:情绪BOUNS = 100
+ENDIF
+TIME += 10
+EXP:MASTER:约会经验 ++
+EXP:TARGET:约会经验 ++
+
+RETURN 1
+
+;-------------------------------------------------
+;实行可能判定
+;-------------------------------------------------
+;牵手
+@COM_ABLE603
+;批量管理
+SIF GLOBAL_COMABLE(603)
+	RETURN RESULT
+;相手が居ない
+SIF !TARGET
+	RETURN 0
+;约会道中以外
+SIF !TFLAG:约会道中
+	RETURN 0
+SIF CFLAG:MASTER:约会中 == MAIN_MAP
+	RETURN 0
+;待客室
+SIF CFLAG:MASTER:当前位置 == OMANEKIBEYA()
+	RETURN 0
+;前回手を繋いだ
+;SIF PREVCOM == 603
+;	RETURN 0
+;睡眠中
+SIF CFLAG:睡眠
+	RETURN 0
+;时间停止中
+SIF FLAG:70
+	RETURN 0
+RETURN 1
+

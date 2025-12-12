@@ -1,0 +1,3313 @@
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+;"COUNTER"系口上
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+;-------------------------------------------------
+;コミュニケーション
+;-------------------------------------------------
+;==================================================
+;距离が近い
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_1
+CALL M_KOJO_MESSAGE_COUNTER_K42_1_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_1_1
+IF TALENT:恋人
+		PRINTFORML 「啊—、果然%MASTERNAME:42%的旁边是最能冷静下来的啊—」
+ELSEIF TALENT:恋慕
+	PRINTFORML 「距离很近什么的、这不是当然的嘛。因为我想要在你身边—嘛」
+ELSEIF TALENT:思慕
+	PRINTFORML 「有什么问题嘛—、还是说我靠近了会困扰吗—？」
+ELSE
+	PRINTFORML 「为什么这么近什么的、还不是因为你的声音太小了」
+	PRINTFORML 「呜哇、难道说是误解了什么吗？　真—恶心！」
+ENDIF
+RETURN 1
+
+;==================================================
+;チラ见
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_2
+CALL M_KOJO_MESSAGE_COUNTER_K42_2_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_2_1
+IF TALENT:恋人
+	IF TALENT:恋慕
+		PRINTFORML 「这—没办法嘛。%MASTERNAME:42%的侧脸、很喜欢呀—♪」
+	ELSE
+		PRINTFORML 「欸嘿嘿、看着的事情暴露啦」
+	ENDIF
+ELSEIF TALENT:恋慕
+	PRINTFORML 「是问我为什么偷偷的看着吗？　肯定是因为在意你啦」
+	PRINTFORML （因为—这没办法嘛。正面看的话心里会跳个不停的）
+ELSEIF TALENT:思慕
+	PRINTFORML 「……并没有—、在看着你啊—」
+ELSE
+	PRINTFORML 「才没有呢—？　并没有在特别看着你—」
+	PRINTFORML 「是自我意识过剩的家伙吗？　真—恶心！」
+ENDIF
+RETURN 1
+
+;==================================================
+;おはなし
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_3
+CALL M_KOJO_MESSAGE_COUNTER_K42_3_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_3_1
+IF TALENT:恋人
+		PRINTFORML 「……就这样结束了呢—。怎—么啦、我的话就那么的有趣吗？」
+		PRINTFORML 「%MASTERNAME:42%呀、一直都在很开心地听着我说话呢。这—种地方很喜欢%UNICODE(0x2665) *1%」
+ELSEIF TALENT:恋慕
+	PRINTFORML 「……就是这样的故事哟」
+	PRINTFORML 「%MASTERNAME:42%真是个好观众呢—。不知不觉就聊起来了呀—」
+ELSEIF TALENT:思慕
+	PRINTFORML 「呐呐、之后就由你来说些什么吧」
+ELSE
+	PRINTFORML 「只有我一个人在说什么的真是无聊啊—、最糟了—」
+ENDIF
+RETURN 1
+
+;==================================================
+;いい匂い
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_4
+CALL M_KOJO_MESSAGE_COUNTER_K42_4_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_4_1
+IF TALENT:恋人
+	PRINTFORML 「之前呢—、说了闻味道很恶心什么的抱歉呢？」
+	PRINTFORML 「现在？　现在虽然很害羞但是想让你尽情地闻—什么的%UNICODE(0x2665) *1%」
+ELSEIF TALENT:恋慕
+	PRINTFORML 「欸嘿嘿、感觉到了—？　叫香水的那个、我喷上了哇—」
+ELSEIF TALENT:思慕
+	PRINTFORML 「很棒的香味什么的…竟然对女孩子—说这样的话呜～？」
+ELSE
+	PRINTFORML 「呜哇、为什么要闻其他人身上的味道啊？　真—恶心！」
+ENDIF
+RETURN 1
+
+;-------------------------------------------------
+;ベリーソフト
+;-------------------------------------------------
+;==================================================
+;近寄ってくる
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_11
+CALL M_KOJO_MESSAGE_COUNTER_K42_11_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_11_1
+IF TALENT:恋人
+	PRINTFORML 「%MASTERNAME:42%、可以呆在—你旁边吗？」
+ELSEIF TALENT:恋慕
+	PRINTFORML 「什—么？　我在你的身边不好吗—？」
+ELSEIF TALENT:思慕
+	PRINTFORML 「呐—呐—、听我说呀—！　这之前呢…」
+ELSE
+	PRINTFORML 「呐—呐—、有什么—好的捏他吗？」
+ENDIF
+RETURN 1
+
+;==================================================
+;笑颜を浮かべる
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_12
+CALL M_KOJO_MESSAGE_COUNTER_K42_12_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_12_1
+IF TALENT:恋人
+	PRINTFORML 「问我看起来很开心吗？　因为和%MASTERNAME:42%在一起嘛—」
+ELSEIF TALENT:恋慕
+	PRINTFORML 「问我看起来很开心吗？　你知道为什么嘛—？」
+ELSEIF TALENT:思慕
+	PRINTFORML 「是问我有什么有趣的事情吗？　嘛—算是呢—♪」
+ELSE
+	PRINTFORML 「问我是不是有什么有趣的事情吗？　是你的脸呢♪」
+ENDIF
+RETURN 1
+
+;==================================================
+;構って欲しがる
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_13
+CALL M_KOJO_MESSAGE_COUNTER_K42_13_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_13_1
+IF TALENT:恋人
+	PRINTFORML 「呐—来理我呀—。不理我的话—我就要亲你了呢！」
+ELSEIF TALENT:恋慕
+	PRINTFORML 「呐—、不来陪我什么的很寂寞啊—」
+ELSEIF TALENT:思慕
+	PRINTFORML 「快点啦—、来陪陪我吧—。你其实很开心对吧—？」
+ELSE
+	PRINTFORML 「呐—因为很闲所以来陪我吧—。　呜哇、无视我什么的—真的最糟了」」
+ENDIF
+RETURN 1
+
+;==================================================
+;身をすり寄せる
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_14
+CALL M_KOJO_MESSAGE_COUNTER_K42_14_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_14_1
+
+IF DAY:2 == 4
+	PRINTFORML 「%MASTERNAME:42%、你的手这不是很冷吗。稍微借我下」
+	PRINTFORML 「哈—、哈—…怎样？　暖合起来了吧？」
+	PRINTW 
+ENDIF
+
+IF TALENT:恋慕 || TALENT:恋人
+	SELECTCASE RAND:2
+	CASE 0
+		PRINTFORML 「欸嘿嘿、%MASTERNAME:42%真暖和呢—%UNICODE(0x2665) *1%」
+	CASE 1
+		PRINTFORML 「可以让我稍微这样靠一会儿吗？　现在有种想要紧贴在一起的心情呢—」
+	ENDSELECT
+ELSEIF TALENT:爱欲 || TALENT:炮友
+	IF TCVAR:发情 == 1
+		SELECTCASE RAND:2
+		CASE 0
+			PRINTFORML 「我说，不觉得差不多该做了吗…%UNICODE(0x2665) *1%」
+			PRINTFORML 果用手指温柔地挠着胯间…
+			PRINTW 
+		CASE 1
+			PRINTFORML 「差不多，想要这个了呢～…%UNICODE(0x2665) *1%」
+			PRINTFORML 果伸手到胯间，隔着衣服刺激肉棒…
+			PRINTW 
+		ENDSELECT
+	ELSE
+		PRINTFORML 「哎呀？ 靠着我，变得黏糊糊的啦♪」
+		IF TALENT:TARGET:胸围 > 0
+			PRINTFORML 丰满的胸部紧贴身体，非常舒服…
+			PRINTW 
+		ELSEIF TALENT:TARGET:胸围 == -1
+			PRINTFORML 小巧而富有弹性的触感贴在身上，很舒服…
+		ELSEIF TALENT:TARGET:胸围 == 0
+			PRINTFORML 形状美好的胸部紧贴身体，很舒服…
+		ENDIF
+		PRINTW 
+	ENDIF
+ELSEIF TALENT:思慕
+	PRINTFORML 「能够和可爱的小果黏在一起、你也很幸福的对吧？」
+ELSE
+	PRINTFORML 「啊—这里正好有块木头可以靠着休息一会儿呢—」
+ENDIF
+RETURN 1
+
+;==================================================
+;见つめてくる
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_15
+CALL M_KOJO_MESSAGE_COUNTER_K42_15_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_15_1
+IF TALENT:恋人
+	PRINTFORML 「唉—、这不是—挺好的嘛、就让我悠闲地欣赏喜欢的人的脸嘛—」
+ELSEIF TALENT:恋慕
+	PRINT 「嗯—虽然之前没有那种感觉—、不过现在就觉得%MASTERNAME:42%可以说是
+	IF TALENT:MASTER:性别 == 2
+		PRINT 很帅气
+	ELSE
+		PRINT 很可爱
+	ENDIF
+	PRINTFORML 了呢—♪」
+ELSEIF TALENT:思慕
+	PRINT 「嗯—……仔细看的话也不算
+	IF TALENT:MASTER:性别 == 2
+		PRINT 很帅气
+	ELSE
+		PRINT 很可爱
+	ENDIF
+	PRINTFORML 啊、虽然、有点好看……果然还是很普通啊—？」
+ELSE
+	PRINTFORML 「虽然我是在看着你、但是你可不准看我啊—」
+ENDIF
+RETURN 1
+
+;==================================================
+;肩にあご乘せ
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_16
+CALL M_KOJO_MESSAGE_COUNTER_K42_16_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_16_1
+IF TALENT:恋慕 || TALENT:恋人
+	SELECTCASE RAND:2
+	CASE 0
+		PRINTFORML 「呐—、肩膀借我下？　哈—、平静下来了哇—」
+		PRINTFORML 「顺便要是能朝这边亲下的话—就会更开心了呀—」
+	CASE 1
+		PRINTFORML 「在这里把下巴放下来总觉得很能平静下来呢—」
+	ENDSELECT
+ELSEIF TALENT:思慕
+	PRINTFORML 「怎—么了？　你明明—其实—很高兴的吧—」
+ELSE
+	PRINTFORML 「啊—、正好—有个地方可以放下巴啊—」
+ENDIF
+RETURN 1
+
+;-------------------------------------------------
+;ソフト
+;-------------------------------------------------
+;==================================================
+;色っぽい仕草
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_20
+CALL M_KOJO_MESSAGE_COUNTER_K42_20_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_20_1
+IF TALENT:恋慕 || TALENT:恋人
+	SELECTCASE RAND:2
+	CASE 0
+		PRINTFORML 「对这个动作、感到心跳不已了？　太好了呢♪」
+		PRINTFORML 「但是、我看着%MASTERNAME:42%的脸也心跳不已了所以是彼此彼此呢—」
+	CASE 1
+		PRINTFORML 「%MASTERNAME:42%呀、喜欢—这样子的对吧？」
+		PRINTFORML 「鸦天狗的观察眼、可不要小看了呢♪」
+	ENDSELECT
+ELSEIF TALENT:思慕
+	PRINTFORML 「呐呐、这种动作会让你心动吗？」
+	PRINTFORML 「噢、这不是挺棒的反应吗。拍下来吧♪」
+ELSE
+	PRINTFORML 「呐呐、我呢很有魅力色气的对吧？」
+	PRINTFORML 「呜哇、什么呀那个反应。真火大哇—」
+ENDIF
+RETURN 1
+
+;==================================================
+;见つめる
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_21
+CALL M_KOJO_MESSAGE_COUNTER_K42_21_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_21_1
+IF TALENT:恋慕 && TALENT:恋人
+	SELECTCASE RAND:2
+	CASE 0
+		PRINTFORML 「摆出一副散漫的表情、是—没办法的呀。毕竟在看着幻想乡里最喜欢的人的脸呀」
+		PRINTFORML 「不管看多少次都不会厌倦呀—」
+	CASE 1
+		PRINTFORM 「嗯—果然啊—、%MASTERNAME:42%很
+		IF TALENT:MASTER:性别 == 2
+			PRINT 帅气
+		ELSE
+			PRINT 可爱
+		ENDIF
+		PRINTFORML 呢—♪」
+	ENDSELECT
+ELSE
+	PRINTFORML 「什么什么？　已经心跳不已了吗—？　你可真的是—可爱呢♪」
+	PRINTW 
+ENDIF
+RETURN 1
+
+;==================================================
+;体を摺り寄せる
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_22
+CALL M_KOJO_MESSAGE_COUNTER_K42_22_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_22_1
+IF TALENT:恋人
+	PRINTFORML 「不也—挺好的嘛、毕竟都是恋人了」
+	PRINTFORML 「虽然想要一直这样—粘在一起呢—%UNICODE(0x2665) *1%」
+ELSEIF TALENT:恋慕
+	PRINTFORML 「这—种事情、只会对%MASTERNAME:42%之类的人做的、不也—挺好的嘛」
+	PRINTFORML 「要是做了这个被讨厌的话、我会超—受伤的呀—」
+ELSEIF TALENT:思慕
+	PRINTFORML 「什么哟—。也没什么—不好的吧。又不会少块肉—」
+	PRINTFORML 「为什么会损失呀。%MASTERNAME:42%总是说些扫兴的话—」
+	PRINTW 
+ENDIF
+RETURN 1
+
+;==================================================
+;掀裙子
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_23
+CALL M_KOJO_MESSAGE_COUNTER_K42_23_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_23_1
+IF TALENT:恋人
+	PRINTFORML 「等—咿！」
+	IF TALENT:MASTER:性别 == 2
+		IF !EQUIP:PLAYER:下半身内衣２
+			PRINTFORML 「～～～～～～～～！」
+			PRINTFORMW 「等等下—！　为什么不穿内裤呀—！　快遮起来快遮起来！」
+			PRINTFORML （真、真是的、明明除了我以外不想让其他人看见%MASTERNAME:42%的身体的）
+			CFLAG:1002 += 1
+		ELSE
+			PRINTFORML 「今天的%MASTERNAME:42%穿着的是%PANTS_DESCRIPTION(EQUIP:PLAYER:下半身内衣２, PLAYER)%%PANTSNAME(EQUIP:PLAYER:下半身内衣２, PLAYER)%呀—？」
+		ENDIF
+	ELSE
+		IF !EQUIP:PLAYER:下半身内衣２
+			PRINTFORML 「！？」
+			PRINTFORMW 「唉唉哆…那个、非常抱歉…」
+			PRINTFORML （虽说都是女孩子…%MASTERNAME:42%的那里、看到了呀…）
+			PRINTFORMW （除了我以外、没人看到过那里、对吧…？）
+		ELSE
+			PRINTFORML 「噢噢…今天是%PANTS_DESCRIPTION(EQUIP:PLAYER:下半身内衣２, PLAYER)%%PANTSNAME(EQUIP:PLAYER:下半身内衣２, PLAYER)%啊。不也—挺好的嘛」
+			PRINTFORMW 「那个在哪里可以买到呢—？　请告诉我呀—」
+			PRINTFORML 「啊好痛。都是恋人了—、掀—裙子之类的也是能原谅的吧—」
+		ENDIF
+	ENDIF
+ELSEIF TALENT:恋慕
+	PRINTFORML 「等—咿！」
+	IF TALENT:MASTER:性别 == 2
+		IF !EQUIP:PLAYER:下半身内衣２
+			PRINTFORML 「～～～～～～～～！」
+			PRINTFORMW 「Gya————！　为什么不穿内裤呀—！　变—态！」
+			PRINTFORML （哇哇、要怎—么办啊、%MASTERNAME:42%的那里、看到了呀…）
+			CFLAG:1002 += 1
+		ELSE
+			PRINTFORML 「嘿唉、%MASTERNAME:42%穿着%PANTS_DESCRIPTION(EQUIP:PLAYER:下半身内衣２, PLAYER)%%PANTSNAME(EQUIP:PLAYER:下半身内衣２, PLAYER)%呀—？」
+		ENDIF
+	ELSE
+		IF !EQUIP:PLAYER:下半身内衣２
+			PRINTFORML 「！？」
+			PRINTFORMW 「唉唉哆…那个、抱歉…」
+			PRINTFORML （虽说都是女孩子…%MASTERNAME:42%的那里、看到了呀…）
+			PRINTFORMW （除了我以外、没人看到过那里、对吧…？）
+		ELSE
+			PRINTFORML 「噢噢…今天是%PANTS_DESCRIPTION(EQUIP:PLAYER:下半身内衣２, PLAYER)%%PANTSNAME(EQUIP:PLAYER:下半身内衣２, PLAYER)%啊。不也—挺好的嘛」
+			PRINTFORML 「那个在哪里可以买到呢—？　请告诉我呀—」
+		ENDIF
+	ENDIF
+ELSEIF TALENT:思慕
+	PRINTFORML 「等—咿！」
+	IF TALENT:MASTER:性别 == 2
+		IF !EQUIP:PLAYER:下半身内衣２
+			PRINTFORML 「～～～～～～～～！」
+			PRINTFORMW 「Gya————！　不要给我看那么奇怪的东西啊！　色鬼、变—态！！」
+			PRINTFORML （哇哇、要怎—么办啊、%MASTERNAME:42%的那里、看到了呀…）
+			CFLAG:1002 += 1
+		ELSE
+			PRINTFORML 「呼—嗯、你穿着的是%PANTS_DESCRIPTION(EQUIP:PLAYER:下半身内衣２, PLAYER)%%PANTSNAME(EQUIP:PLAYER:下半身内衣２, PLAYER)%呀—？」
+		ENDIF
+	ELSE
+		IF !EQUIP:PLAYER:下半身内衣２
+			PRINTFORML 「！？」
+			PRINTFORML 「唉唉哆…那个、抱歉、你竟然有这样的兴趣什么的…」
+			PRINTFORMW （虽说都是女孩子…%MASTERNAME:42%的那里、看到了呀…）
+		ELSE
+			PRINTFORML 「噢噢…今天是%PANTS_DESCRIPTION(EQUIP:PLAYER:下半身内衣２, PLAYER)%%PANTSNAME(EQUIP:PLAYER:下半身内衣２, PLAYER)%啊。不也—挺好的嘛」
+		ENDIF
+	ENDIF
+ELSE
+	PRINTFORML 「等—咿！」
+	IF TALENT:MASTER:性别 == 2
+		IF !EQUIP:PLAYER:下半身内衣２
+			PRINTFORML 「～～～～～～～～！」
+			PRINTFORML 「Gya————！　不要给我看那么奇怪的东西啊！　恶心、色鬼、变—态！！」
+			CFLAG:1002 += 1
+		ELSE
+			PRINTFORML 「呼—嗯、原来男人会穿着那样的内裤吗—？」
+		ENDIF
+	ELSE
+		IF !EQUIP:PLAYER:下半身内衣２
+			PRINTFORML 「！？」
+			PRINTFORML 「唉唉哆…那个、抱歉、你竟然有这样的兴趣什么的…」
+		ELSE
+			PRINTFORML 「噢噢…你是穿着%PANTS_DESCRIPTION(EQUIP:PLAYER:下半身内衣２, PLAYER)%%PANTSNAME(EQUIP:PLAYER:下半身内衣２, PLAYER)%呢」
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;息を吹きかける
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_24
+CALL M_KOJO_MESSAGE_COUNTER_K42_24_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_24_1
+IF TALENT:恋人
+	PRINTFORML 「%MASTERNAME:42%的反应、超可爱的我很喜欢呢—♪
+ELSEIF TALENT:恋慕
+	PRINTFORML 「心跳不已了对吧。脸完全红透了呢—♪」
+ELSEIF TALENT:思慕
+	PRINTFORML 「啊哈哈、还是老样子很棒的反应呢—♪」
+ELSE
+	PRINTFORML 「啊哈哈、什么呀那个反应♪　真滑稽—♪」
+	PRINTFORML 「呜哇、不那么生气—不也挺好的嘛」
+ENDIF
+RETURN 1
+
+;==================================================
+;摸屁股
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_25
+CALL M_KOJO_MESSAGE_COUNTER_K42_25_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_25_1
+IF TALENT:恋慕 || TALENT:恋人
+	SELECTCASE RAND:2
+	CASE 0
+		PRINTFORML 「哈～、这个屁股就算摸一天也不会厌倦哇—…♪」
+	CASE 1
+		PRINTFORML 「还是老样子很棒的屁股呢—♪」
+		PRINTFORML 「想要触摸我的屁股？　嗯—、该—怎么办好呢—…♪」
+	ENDSELECT
+ELSEIF TALENT:思慕
+	PRINTFORML 「啊哈哈、还是老样子很棒的反应呢—♪」
+	PRINTFORML 「变得想要抚摸你的屁股了呢—」
+ELSE
+	IF TALENT:MASTER:性别 == 2
+		PRINTFORML 「噢、意外地有一副好屁股嘛♪」
+		PRINTFORML 「等下—、摸回来的话就是性骚扰了啊—、糟透了—」
+	ELSE
+		PRINTFORML 「这不是有副很棒的屁股嘛♪」
+		PRINTFORML 「不要那么生气嘛—。大家都是女孩子—没什么不好的嘛」
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;腕抱き付き
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_26
+CALL M_KOJO_MESSAGE_COUNTER_K42_26_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_26_1
+IF TALENT:恋人
+	PRINTFORML 「也没什么—不好的嘛。为了不让其他的坏虫子靠近我要紧紧地抱紧你呢—」
+ELSEIF TALENT:恋慕
+	PRINTFORML 「是问胸部碰到了吗？　胸部碰到了哟」
+ELSEIF TALENT:思慕
+	PRINTFORML 「能让我做—这种事情的人、也就只有你了吧」
+	PRINTFORML 「摆出更开心的表情也是可以的噢—？」
+ELSE
+	IF TALENT:MASTER:性别 == 2
+		PRINTFORML 「这种程度就露出一副色迷迷的表情什么的、也太好搞定了吧—」
+	ELSE
+		PRINTFORML 「只是被同性抱着为什么身体那么僵硬呀—？」
+		PRINTFORML 「难道说你、有那方面的兴趣？」
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;谷间を见せる
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_27
+CALL M_KOJO_MESSAGE_COUNTER_K42_27_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_27_1
+IF TALENT:恋人
+	PRINTFORML 「这—样得、会—兴奋起来吗？」
+	PRINTFORML 「现在的话只限恋人、第一名到的可以触摸哟—…%UNICODE(0x2665) *1%」
+ELSEIF TALENT:恋慕
+	PRINTFORML 「我呢、和文比起来的话没什么胸部呢—…」
+	PRINTFORML 「…听说胸部被喜欢的人摸了的话会变得越来越大呢—」
+ELSEIF TALENT:思慕
+	PRINTFORML 「怎样？看到我的胸后—兴奋了吧？」
+	IF TALENT:MASTER:性别 == 2
+		PRINTFORML 「虽然很可惜但是—结束啦♪」
+	ELSE
+		IF TALENT:MASTER:胸围 > TALENT:TARGET:胸围
+			PRINTFORML 「嘛—、虽然是输给你了啦…」
+		ELSEIF TALENT:MASTER:胸围 < TALENT:TARGET:胸围
+			PRINTFORML 「振作起来呀。胸部可不是女孩子的全部呢—」
+		ENDIF
+	ENDIF
+ELSE
+	IF TALENT:MASTER:性别 == 2
+		PRINTFORML 「为—什么鼻子要那么地向下伸…等、那个表情好—恶！」
+	ELSE
+		IF TALENT:MASTER:胸围 > TALENT:TARGET:胸围
+			PRINTFORML 「呜哇。什么呀那副得意洋洋的表情。真是火大—！」
+		ELSE
+			PRINTFORML 「总、总觉得是我胜利了呢？　虽然是空虚的胜利啊—」
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+
+;-------------------------------------------------
+;性骚扰
+;-------------------------------------------------
+;==================================================
+;接吻
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_30
+CALL M_KOJO_MESSAGE_COUNTER_K42_30_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_30_1
+IF TALENT:恋人
+	IF TALENT:MASTER:性别 == 2
+		PRINTFORML 「%MASTERNAME:42%的嘴唇呢—、虽然有点干巴巴的但是很柔软呢—%UNICODE(0x2665) *1%」
+		PRINTFORML 「呐—、更多地亲吻也可以—吗？」
+	ELSE
+		PRINTFORML 「%MASTERNAME:42%的嘴唇呢—、噗尼噗尼得很柔软呢—%UNICODE(0x2665) *1%」
+		PRINTFORML 「呐—、更多地亲吻也可以—吗？」
+	ENDIF
+ELSEIF TALENT:恋慕
+	PRINTFORML 「呼—嗯、这就是%MASTERNAME:42%的kiss的味道啊」
+	PRINTFORML 「虽然不是甜酸的味道、但是总觉得心跳不已呢—…%UNICODE(0x2665) *1%」
+ELSEIF TALENT:思慕
+	PRINTFORML 「怎—样？　有点心跳加速了对吧？」
+	PRINTFORML 「我呢—、稍微有点心动、这样的感觉呢—」
+ELSE
+	PRINTFORML 「总觉得呢—、比起想象的—还要心跳不已呢」
+	PRINTFORML 「啊—啊、总觉得失去了什么的气氛」
+ENDIF
+RETURN 1
+
+;==================================================
+;从后面将抱きつく
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_31
+CALL M_KOJO_MESSAGE_COUNTER_K42_31_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_31_1
+IF TALENT:恋人
+	IF TALENT:MASTER:性别 == 2
+		PRINTFORML 「%MASTERNAME:42%的背比我的想象、还要更加宽大、更加的温暖呢…%UNICODE(0x2665) *1%」
+		PRINTFORML 「想要一直—这样子靠着呀—%UNICODE(0x2665) *1%」
+	ELSE
+		PRINTFORML 「%MASTERNAME:42%的背后、滑溜溜得感觉很舒服—♪」
+		PRINTFORML 「呐—、我再这样靠一点—也可以吧？」
+	ENDIF
+ELSEIF TALENT:恋慕
+	PRINTFORML 「这样—做的话就像是恋人一样很棒呢—♪」
+	PRINTFORML 「%MASTERNAME:42%对这样的—讨厌吗？　我很喜欢呢—♪」
+ELSEIF TALENT:思慕
+	PRINTFORML 「能让我做—这种事情的人、也就只有你了吧」
+	PRINTFORML 「摆出更开心的表情也是可以的噢—？」
+ELSE
+	PRINTFORML 「被我所抱着、要稍微地表示感谢才行呢—」
+ENDIF
+RETURN 1
+
+;==================================================
+;前ろから抱きつく
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_32
+CALL M_KOJO_MESSAGE_COUNTER_K42_32_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_32_1
+IF TALENT:恋人
+	IF TALENT:MASTER:性别 == 2
+		PRINTFORML 「%MASTERNAME:42%的胸部比我的想象、还要更加的厚实、坚挺呢…%UNICODE(0x2665) *1%」
+		PRINTFORML 「想要一直—这样子靠着呀—%UNICODE(0x2665) *1%」
+	ELSE
+		PRINTFORML 「%MASTERNAME:42%呢、软软的很舒服呢—♪」
+		PRINTFORML 「呐—、我再这样靠一点—也可以吧？」
+	ENDIF
+ELSEIF TALENT:恋慕
+	PRINTFORML 「这样—做的话就像是恋人一样很棒呢—♪」
+	PRINTFORML 「%MASTERNAME:42%对这样的—讨厌吗？　我很喜欢呢—♪」
+ELSEIF TALENT:思慕
+	PRINTFORML 「能让我做—这种事情的人、也就只有你了吧」
+	PRINTFORML 「摆出更开心的表情也是可以的噢—？」
+ELSE
+	PRINTFORML 「被我所抱着、要稍微地表示感谢才行呢—」
+ENDIF
+RETURN 1
+
+;==================================================
+;胸を揉ませる
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_33
+CALL M_KOJO_MESSAGE_COUNTER_K42_33_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_33_1
+IF TALENT:TARGET:胸围 > 0
+	IF TALENT:恋人
+		IF TALENT:MASTER:性别 == 2
+			PRINTFORML 「呐—呐—、我的胸部、比起之前更大了对吧—」
+			PRINTFORML 「果然啊—、被喜欢的人触摸着是最有效果的、绝对是—这样的呢%UNICODE(0x2665) *1%」
+		ELSE
+			IF TALENT:MASTER:胸围 < TALENT:TARGET:胸围
+				PRINTFORML 「啊咧、我的胸、比起%MASTERNAME:42%的还要更大了？」
+				PRINTFORML 「真的吗？　啊、但是呢、我不管多大都会喜欢%MASTERNAME:42%的胸部哟%UNICODE(0x2665) *1%」
+			ELSEIF TALENT:MASTER:胸围 > TALENT:TARGET:胸围
+				PRINTFORML 「姆姆姆—、明明感觉我的胸部已经足够大了啊—」
+				PRINTFORML 「果然%MASTERNAME:42%的还—更大呢—」
+			ENDIF
+		ENDIF
+	ELSEIF TALENT:恋慕
+		PRINTFORML 「呐—呐—、我的胸部、比起之前更大了对吧？」
+		PRINTFORML 「果然啊—、是因为被%MASTERNAME:42%摸着了啊—」
+	ELSEIF TALENT:思慕
+		PRINTFORML 「我的胸、还是挺大的吧—、怎样—呀」
+	ELSE
+		PRINTFORML 「虽然胸部是会让你摸的啊—、但是那副恶心的表情快停下—啊—」
+	ENDIF
+ELSE
+	IF TALENT:恋人
+		PRINTFORML 「被%MASTERNAME:42%触摸的时候呢—、胸膛里就心跳不已呢—」
+		PRINTFORML 「你看、能理解吧？　在不停的跳着呢—、欸嘿嘿」
+	ELSEIF TALENT:恋慕
+		PRINTFORML 「呐—呐—、听说胸部被喜欢的人揉着会变大呢—」
+		PRINTFORML 「被%MASTERNAME:42%尽情地揉着的话、会不会变得更大呢—」
+	ELSEIF TALENT:思慕
+		PRINTFORML 「总觉得啊—、最近胸部有变大了呢—」
+		PRINTFORML 「感觉没怎么变化？　怎么会这样—」
+	ELSE
+		PRINTFORML 「还、还在成长期噢。不久就会变大的哟！」
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;股间をまさぐる
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_34
+CALL M_KOJO_MESSAGE_COUNTER_K42_34_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_34_1
+	IF CFLAG:1100 >= 1
+		IF K42_BOKKI() == 3
+			PRINTFORML 「啊哈、亲—爱的下面那个、已经硬邦邦的了呢—…%UNICODE(0x2665) *1%」
+			PRINTFORML 「就让果来、抚慰你吧…？」
+			PRINTW 
+		ELSEIF K42_BOKKI() == 2
+			PRINTFORML 「亲—爱的、这个硬硬的东西、是—什么呢…%UNICODE(0x2665) *1%」
+			PRINTW 
+		ELSEIF K42_BOKKI() == 1
+			PRINTFORML 「啊咧、亲—爱的、那里还是很软乎乎的呢…」
+			PRINTW 
+		ENDIF
+	ELSEIF TALENT:恋人
+		IF TALENT:MASTER:性别 == 2
+			PRINTFORML 「唉多…男人呢、被女朋友摸着那里的话—会很高兴对吧…？」
+			PRINTFORML 「哈啊！？　这种事情、除了%MASTERNAME:42%以外的人哪可能会做啊！　笨蛋！」
+		ELSEIF TALENT:MASTER:性别 == 3
+			PRINTFORML 「虽然现在说这个有点那啥—、抚摸着%MASTERNAME:42%的下面是、要摸哪里感觉很苦恼啊—」
+			PRINTFORML 「『我的话不管摸那里都都没问题？』这样啊—、那么啊、两边同时触摸着就解决了呢！」
+		ELSE
+			PRINTFORML 「不知为何—、即使是现在抚摸着%MASTERNAME:42%的那里—还是会感觉紧张呢—」
+			PRINTFORML 「你问为什么…你看、因为是%MASTERNAME:42%重要的地方啦！　到此为止啦！」
+		ENDIF
+	ELSEIF TALENT:恋慕
+		IF TALENT:MASTER:性别 == 2
+			PRINTFORML 「姆姆姆、最开始看的时候『不可理喻—！』虽然是这么想的啊。
+			PRINTFORML 「这样子看的话、意外的看上去很可爱呢—。唉、不是很明白？　这样啊—」
+		ELSEIF TALENT:MASTER:性别 == 3
+			PRINTFORML 「呐—呐—、这个比起男人的那里—还要大吗？」
+			PRINTFORML 「不是很明白？　这样啊—。你看—、会很在意这个的呀？」
+		ELSE
+			PRINTFORML 「不知为何、摸别人的比摸自己的还—要紧张什么的…」
+			PRINTFORML 「唉？　啊、什么都没说！　什么都没说呀！」
+		ENDIF
+	ELSEIF TALENT:思慕
+		IF TALENT:MASTER:性别 == 2
+			PRINTFORML 「姆姆姆、最开始是奇怪的感觉…不、现在也是—」
+			PRINTFORML 「习惯了的话就是噗尼噗尼挺可爱的—感觉…姆姆姆」
+		ELSEIF TALENT:MASTER:性别 == 3
+			PRINTFORML 「哇哦！　你明明是女性却有两性的特征吗？」
+			PRINTFORML 「也有—这种身体的人啊—。　嘛啊、神明大人好像也有那样的存在—。不也—挺好的吗？」
+		ELSE
+			PRINTFORML 「唉多、不痛吗…？」
+			PRINTFORML 「那样的话就好呀—、不要勉强自己忍耐呢？」
+		ENDIF
+	ELSE
+		IF TALENT:MASTER:性别 == 2
+			PRINTFORML 「呜哇、总觉得是奇怪的触感！　触摸真是亏大了！」
+		ELSEIF TALENT:MASTER:性别 == 3
+			PRINTFORML 「呀啊—！　总觉得碰到了什么！？」
+			PRINTFORML 「你、其实是男的吗？　唉、不对吗？　嘿—、还有这种事啊—」
+		ELSE
+			PRINTFORML 「哇哇、抱歉、很痛吗？」
+			PRINTFORML 「因为呢—、没什么机会和其他女孩子做这种事情…抱歉」
+		ENDIF
+	ENDIF
+RETURN 1
+
+;==================================================
+;裙子の中を见せる
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_35
+CALL M_KOJO_MESSAGE_COUNTER_K42_35_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_35_1
+	IF TALENT:恋人
+		IF TALENT:MASTER:性别 == 2
+			PRINTFORML 「看呀看呀、%MASTERNAME:42%就—喜欢这个对吧？」
+		ELSE
+			PRINTFORML 「看呀看呀、%MASTERNAME:42%明明是女孩子—但是喜欢这样子的对吧？」
+		ENDIF
+	ELSEIF TALENT:恋慕
+		IF TALENT:MASTER:性别 == 2
+			PRINTFORML 「偷看、偷看偷看」
+			PRINTFORML 「总觉得呢—、我也被%MASTERNAME:42%的变态给传染了啊—」
+		ELSE
+			PRINTFORML 「偷看、偷看偷看」
+			PRINTFORML 「总觉得看到%MASTERNAME:42%很开心的样子我也很开心、我也是个变态了呢—」
+		ENDIF
+	ELSEIF TALENT:思慕
+		IF TALENT:MASTER:性别 == 2
+			PRINTFORML 「…偷看」
+			PRINTFORML 「所—以—说—、别摆出那副表情啦！　很恶心的！」
+		ELSE
+			PRINTFORML 「…偷看」
+			PRINTFORML 「呜哇、身体在扭动着。并不恶…不果然还是恶心！」
+		ENDIF
+	ELSE
+		IF TALENT:MASTER:性别 == 2
+			PRINTFORML 「唉咿」
+			PRINTFORML 「呜哇、你在看什么呀。真—恶心！」
+		ELSE
+			PRINTFORML 「唉咿」
+			PRINTFORML 「呜哇、明明同时女孩子却—兴奋了吗？　真恶啊—」
+		ENDIF
+	ENDIF
+RETURN 1
+
+;==================================================
+;从后面将胸もみもみ
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_36
+CALL M_KOJO_MESSAGE_COUNTER_K42_36_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_36_1
+	IF TALENT:恋人
+		IF TALENT:MASTER:性别 == 2
+			PRINTFORML 「唉咿」
+			PRINTFORML 「问我揉男性的胸部感觉如何吗？」
+			PRINTFORML 「没什么—不好的嘛。毕竟很喜欢触摸%MASTERNAME:42%的身体嘛」
+		ELSE
+		PRINTFORML 「唉咿」
+			IF TALENT:MASTER:胸围 > TALENT:TARGET:胸围
+				PRINTFORML 「啊啊—、%MASTERNAME:42%的胸部真是至福哇—」
+				PRINTFORML 「绝对不会让给其他人摸的呢！　毕竟这是我—的嘛」
+			ELSEIF TALENT:MASTER:胸围 < TALENT:TARGET:胸围
+				PRINTFORML 「最近我理解了呀！　胸的好坏不是由胸部的大小决定的啊！」
+				PRINTFORML 「这取决于喜不喜欢那个人哟！　所以让我更多的摸摸吧♪」
+			ENDIF
+		ENDIF
+	ELSEIF TALENT:恋慕
+		IF TALENT:MASTER:性别 == 2
+			PRINTFORML 「唉咿」
+			PRINTFORML 「啊—、喂—、不要逃啊—。让我更多的摸摸啊—」
+		ELSE
+		PRINTFORML 「唉咿」
+			IF TALENT:MASTER:胸围 > TALENT:TARGET:胸围
+				PRINTFORML 「真好啊。%MASTERNAME:42%的胸、这么得大」
+			ELSEIF TALENT:MASTER:胸围 < TALENT:TARGET:胸围
+				PRINTFORML 「%MASTERNAME:42%的胸部、十分的柔软呢—♪」
+			ENDIF
+		ENDIF
+	ELSEIF TALENT:思慕
+		IF TALENT:MASTER:性别 == 2
+			PRINTFORML 「唉咿」
+			PRINTFORML 「你在扭个什么啊？　超滑稽的—」
+		ELSE
+		PRINTFORML 「唉咿」
+			IF TALENT:MASTER:胸围 > TALENT:TARGET:胸围
+				PRINTFORML 「姆姆姆、还是老样子很狂妄的大小呢—…」
+			ELSEIF TALENT:MASTER:胸围 < TALENT:TARGET:胸围
+				PRINTFORML 「呼哼、看来还是我的—更大—呢♪」
+				PRINTFORML 「虽然说触感也不坏呢—」
+			ENDIF
+		ENDIF
+	ELSE
+		IF TALENT:MASTER:性别 == 2
+			PRINTFORML 「唉咿」
+			PRINTFORML 「唔—嗯、并不是很有趣啊。呜哇、你在烦恼个什么啊！？　好恶！」
+		ELSE
+		PRINTFORML 「唉咿」
+			IF TALENT:MASTER:胸围 > TALENT:TARGET:胸围
+				PRINTFORML 「哇哦！　这个胸部太过于大了！　真是狂妄啊—」
+			ELSEIF TALENT:MASTER:胸围 < TALENT:TARGET:胸围
+				PRINTFORML 「呼哼、我的才—是更大—的呢♪」
+			ENDIF
+		ENDIF
+	ENDIF
+RETURN 1
+
+;==================================================
+;糖强夺
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_39
+CALL M_KOJO_MESSAGE_COUNTER_K42_39_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_39_1
+RETURN 1
+
+;-------------------------------------------------
+;おねだり/果は陷落素質がつかないと主动推倒てこない
+;-------------------------------------------------
+;==================================================
+;正常位Ｖおねだり
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_41
+CALL M_KOJO_MESSAGE_COUNTER_K42_41_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_41_1
+	IF TALENT:恋慕 || TALENT:恋人
+		IF TALENT:处女 == 1
+			SELECTCASE RAND:2
+			CASE 0
+				PRINTFORML 「果的第一次…就献给%MASTERNAME:42%了…%UNICODE(0x2665) *1%」
+				PRINTW 
+			CASE 1
+				PRINTFORML 「果的初女、请收下吧…%UNICODE(0x2665) *1%」
+				PRINTW 
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 「拜托了、%MASTERNAME:42%的…请给我吧？　不行…？」
+				PRINTW 
+			CASE 1
+				PRINTFORML 「想放进来对吧？　%MASTERNAME:42%的那个、看起来很辛苦…我也、想要呐」
+				PRINTW 
+			CASE 2
+				PRINTFORML 「呐、我已经忍耐不了了呀…%MASTERNAME:42%的、请给我啊。想要你、插进来呀…%UNICODE(0x2665) *1%」
+				PRINTW 
+			ENDSELECT
+		ENDIF
+	;ELSEIF TALENT:思慕
+	;	PRINTFORML 「想…想插进去的话赶紧插进去不就行了…」
+	;ELSE
+	;	PRINTFORML 「…想插进去的对吧？　因为很羞耻的、赶紧地来做呢」
+	ENDIF
+RETURN 1
+
+;==================================================
+;正常位Ｖおねだり２（后背位？）
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_43
+CALL M_KOJO_MESSAGE_COUNTER_K42_43_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_43_1
+	IF TALENT:恋慕 || TALENT:恋人
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 「从后面—把那个插进来吧…%UNICODE(0x2665) *1%　用%MASTERNAME:42%的那个、尽情地突戳着那里吧…%UNICODE(0x2665) *1%」
+			PRINTW 
+		CASE 1
+			PRINTFORML 「用%MASTERNAME:42%坚硬的那里、把果弄得乱七八糟的吧…%UNICODE(0x2665) *1%」
+			PRINTW 
+		CASE 2
+			PRINTFORML 「啊、还害羞…\/\/\/　快、快点给我呀…」
+			PRINTW 
+		ENDSELECT
+	ENDIF
+RETURN 1
+
+;==================================================
+;后背位Ａおねだり
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_44
+CALL M_KOJO_MESSAGE_COUNTER_K42_44_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_44_1
+	SELECTCASE RAND:2
+	CASE 0
+		PRINTFORML 「%MASTERNAME:42%、把屁股弄得啾啵啾啵得、来做吧…不行吗…？」
+		PRINTFORML 果晃动着自己柔软的屁股、诱惑着这边…
+		PRINTW 
+	CASE 1
+		PRINTFORML 「果、即使用屁股也能够舒服起来啦…\/\/\/」
+		PRINTFORML 「可以哟、是%MASTERNAME:42%的话…%UNICODE(0x2665) *1%」
+		PRINTW 
+	ENDSELECT
+RETURN 1
+
+;-------------------------------------------------
+;爱抚
+;-------------------------------------------------
+;==================================================
+;手淫
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_50
+CALL M_KOJO_MESSAGE_COUNTER_K42_50_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_50_1
+	IF ABL:指 >= 5
+		SELECTCASE RAND:2
+		CASE 0
+			PRINTFORML 「这—样子、上下撸动着的话会很舒服吧？　……%UNICODE(0x2665) *1%」
+			PRINTFORML 「可以—哟、用果的手biubiu得射出来吧…%UNICODE(0x2665) *1%」
+			PRINTW 
+		CASE 1
+			PRINTFORML 「啊哈%UNICODE(0x2665) *1%　从%MASTERNAME:42%噗尼噗尼的先端里面、汁液出—来了很多呢…♪」
+			PRINTFORML 「果的手、感觉—很舒服对吧？　可以—哟、不用忍耐的。用果的手射出来吧…？」
+			PRINTW 
+		ENDSELECT
+	ELSE
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 「粗壮的地方和噗尼噗尼的地方、哪边—更舒服呢？　来告诉果吧…%UNICODE(0x2665) *1%」
+			PRINTW 
+		CASE 1
+			PRINTFORML 「哇、噗尼噗尼的先端里面、透明的汁液渗出来了…」
+			PRINTFORML 「这就是说、%MASTERNAME:42%感觉到很舒服、这么一回事吧…♪」
+			PRINTW 
+		CASE 2
+			PRINTFORML 「怎样？　果、有做好吗？　用手有让你舒服起来吗…？」
+			PRINTW 
+		ENDSELECT
+	ENDIF
+RETURN 1
+
+;==================================================
+;口淫
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_51
+CALL M_KOJO_MESSAGE_COUNTER_K42_51_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_51_1
+	IF ABL:舌 >= 5
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 「呼%UNICODE(0x2665) *1%　嗯%UNICODE(0x2665) *1%　呼%UNICODE(0x2665) *1%　嗯呼%UNICODE(0x2665) *1%」
+			PRINTFORML 果的眼瞳里浮现出爱心、很美味似的吮吸着肉棒…
+			PRINTW 
+		CASE 1
+			PRINTFORML 「嗯～～～～～、呸咯～～～～～～…啾噜噜噜噜呜…呸咯、呸咯哩…♪」
+			PRINTFORML 「嗯呼♪　这里用舌头呸咯呸咯得舔的话、就会—很舒服对吧♪」
+			PRINTFORML 「因为、%MASTERNAME:42%在一颤一颤得动着嘛…ｗ」
+			PRINTW 
+		CASE 2
+			PRINTFORML 「啾、咕啵、咕啵、咕啵、咕啵、咕啵、啾噜噜噜噜噜呜、滋啾啾啾啾啾呜～～～、呼呜…」
+			PRINTFORML 「这—样子十分激烈的、呸咯呸咯那样的、喜欢哪一种呢？　两种都会给你做的哟…%UNICODE(0x2665) *1%」
+			PRINTW 
+		ENDSELECT
+	ELSE
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 「嗯、啾、呸咯、呸咯…」
+			PRINTFORML 「果的小嘴、感觉舒服么？　有—好好的做好吗…？」
+			PRINTW 
+		CASE 1
+			PRINTFORML 「呸咯、啾咯啾咯…啾、啾…%UNICODE(0x2665) *1%」
+			PRINTFORML 「先段、被舔着会很舒服地对吧？　会更多的舔着那里的…♪」
+			PRINTW 
+		CASE 2
+			PRINTFORML 「嗯咕、嗯、噗、噗啵、啾、啾啵、哈啊、哈啊…」
+			PRINTFORML 「并没有勉强自己什么的…因为果想要%MASTERNAME:42%、满足地射出来呀…」
+			PRINTW 
+		ENDSELECT
+	ENDIF
+RETURN 1
+
+;==================================================
+;素股
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_52
+CALL M_KOJO_MESSAGE_COUNTER_K42_52_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_52_1
+	IF TALENT:MASTER:性别 == 2 || TALENT:MASTER:性别 == 3
+		SELECTCASE RAND:5
+		CASE 0
+			PRINTFORML 「想要插进去吗？　现在、还不行%UNICODE(0x2665) *1%　再—稍微、忍耐下啦…%UNICODE(0x2665) *1%」
+			PRINTW 
+		CASE 1
+			PRINTFORML 「啊哈、一幅想要—插进去的表情呢♪　再稍微等一会、就让你插进去呢…%UNICODE(0x2665) *1%」
+			PRINTFORML 「好了、结束～啦♪　不～行、插入还要暂且保留哟%UNICODE(0x2665) *1%」
+			PRINTW 
+		CASE 2
+			PRINTFORML 「该怎么办好呢、要放进去吗…♪　你看、快插进来—了哟…%UNICODE(0x2665) *1%」
+			PRINTFORML 「呀嗯%UNICODE(0x2665) *1%　刚才的、真危险呢…%UNICODE(0x2665) *1%」
+			PRINTW 
+		CASE 3 && ESTRUS_CYCLE(TARGET) == 150
+			PRINTFORML 「今天、是危险日呀—…%UNICODE(0x2665) *1%　想插进去吗？　想不戴套插进去吗？」
+			PRINTFORML 「但是、插进去的话、说不定会怀上的哟—…？」
+			PRINTFORML 「%MASTERNAME:42%的欧金金已经、流出—这么多先走汁了呢…♪」
+			PRINTW 
+			PRINTFORML 「先走汁呢—、也是含有能、怀上小宝宝的因素的哟…♪」
+			PRINTFORML 「真的好吗—…？　就这样在诱惑中堕落、变成了爸爸也可以吗…♪」
+			PRINTW 
+			PRINTFORML 「你看、如果稍微顶一顶、先端就要进来—了哦…♪」
+			PRINTFORML 「%MASTERNAME:42%要是插进来的话、果、或许会无法抵抗呢…♪」
+			PRINTW 
+			PRINTFORML 「就算哭喊着拔出去、拔出去、%MASTERNAME:42%也只会一直狠狠地插进去责弄着、直到射精为止呢…♪」
+			PRINTFORML 「%MASTERNAME:42%的那个进入到果的最深处、在肉壶b—iu、b—iu地射出来呢…♪」
+			PRINTW 
+			PRINTFORML 「呼呼…%MASTERNAME:42%的表情、非—常地痛苦呢…♪」
+			PRINTFORML 「要—怎么办？　%MASTERNAME:42%想要、怎—么办…？　呼呼…%UNICODE(0x2665) *1%」
+			PRINTW 
+			PRINTFORML 果把渗出先走液的龟头按在自己的蜜唇、在你的耳边不断地低语着…
+			PRINTW 
+		CASE 4
+			PRINTFORML 「讨厌…%UNICODE(0x2665) *1%　咕啾咕啾的、H的声音出来了呀…%UNICODE(0x2665) *1%」
+			PRINTW 
+		ENDSELECT
+	ELSE
+		SELECTCASE RAND:2
+		CASE 0
+			PRINTFORML 「看到了吗？　我和%MASTERNAME:42%的那里在、咕啾咕啾地磨蹭着呢♪」
+			PRINTFORML 「十分的H%UNICODE(0x2665) *1%　更多、来做更多吧、呐%UNICODE(0x2665) *1%」
+			PRINTW 
+		CASEELSE
+			PRINTFORML 「嗯、那里相互磨蹭着、超级H的感觉…♪」
+			PRINTW 
+		ENDSELECT
+	ENDIF
+	
+	;IF ABL:腰 >= 5
+	;	SELECTCASE RAND:2
+	;	CASE 0
+	;		PRINTFORML 「呼呼、不～行%UNICODE(0x2665) *1%　现在呢、果要给你进行侍奉噢%UNICODE(0x2665) *1%」
+	;		PRINTFORML 「%MASTERNAME:42%你、除了舒服以外的事情都不可以去想哦～♪」
+	;		PRINTW 
+	;	CASE 1
+	;		PRINTFORML 「嗯%UNICODE(0x2665) *1%　嗯%UNICODE(0x2665) *1%　%MASTERNAME:42%的那个、小豆豆、磨蹭着…%UNICODE(0x2665) *1%」
+	;		PRINTFORML 「明明没插进去、看起来却像插进去了一样…%UNICODE(0x2665) *1%」
+	;		PRINTW 
+	;	ENDSELECT
+	;ELSE
+	;	SELECTCASE RAND:2
+	;	CASE 0
+	;		PRINTFORML 「嗯嗯…%UNICODE(0x2665) *1%　%MASTERNAME:42%、不要乱动呢…」
+	;		PRINTFORML 「这是我为了变得舒服的练习啦…哈呜嗯%UNICODE(0x2665) *1%」
+	;		PRINTW 
+	;	CASE 1
+	;		PRINTFORML 「这个、虽然—很舒服、但是、好令人着急啊…」
+	;		PRINTFORML 「小腹的深处、变得好难受、总觉得肿胀地好疼好难受啊…%UNICODE(0x2665) *1%」
+	;		PRINTW 
+	;	ENDSELECT
+	;ENDIF
+RETURN 1
+
+;==================================================
+;乳交
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_53
+CALL M_KOJO_MESSAGE_COUNTER_K42_53_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_53_1
+	IF TALENT:TARGET:胸围 > 0
+		PRINTFORML 「就用%MASTERNAME:42%最喜欢的胸部给夹着吧…%UNICODE(0x2665) *1%」
+		PRINTFORML 「你看、欧金金、被隐藏在胸部里面了啊…%UNICODE(0x2665) *1%」
+		PRINTFORML 「会尽—情地给你乳交的呢…%UNICODE(0x2665) *1%」
+		PRINTW 
+	ELSEIF TALENT:TARGET:胸围 == -1
+		PRINTFORML 「即使是果的娇小胸部也能有感觉呀—…♪」
+		PRINTFORML 「欸嘿嘿、即使只有一点也能用欧派夹住哟…♪」
+		PRINTW 
+		PRINTFORML 「你看、用先端推着胸部、很舒服—吧？」
+		PRINTFORML 「乳头也给你不停地磨蹭着…♪　嗯、这个、会让我更舒服起来呀…%UNICODE(0x2665) *1%」
+		PRINTW 
+	ELSEIF TALENT:TARGET:胸围 == -2
+		PRINTFORML 「像这样、小女孩一样的胸部—也能够兴奋起来啊…♪」
+		PRINTFORML 「还是说、%MASTERNAME:42%是会对幼小的女孩子—兴奋起来的变态呢—…♪」
+		PRINTFORML 「讨厌、好恶—心…♪　对于这么恶心的%MASTERNAME:42%、就用果的小女孩胸部、让你老实下来呢—…♪」
+		PRINTFORML 「为了让其他幼小的女孩子—不受害、就让果全部—都给搾取出来呢♪」
+		PRINTFORML 「你看、被小女孩的如头磨蹭着、很舒服—对吧？　不要忍耐、Biu—Biu—地射出来呢…♪」
+		PRINTW 
+	ELSE
+		PRINTFORML 「我的胸部、感觉—舒服吗？　%MASTERNAME:42%、毕竟很喜欢胸部呢…♪」
+		PRINTFORML 「不过、触摸我以外的女孩子的胸部是不行的呢？　这可会变成犯罪的呢？」
+		PRINTFORML 「但是、果的胸部的话、是%MASTERNAME:42%限定—可以随意使用的哟…♪」
+		PRINTFORML 「不管是揉也好、挟住也好、吮吸也好、不管怎样—都可以的哟♪」
+		PRINTFORML 「果的胸部可是、%MASTERNAME:42%的所有物呢…%UNICODE(0x2665) *1%」
+		PRINTW 
+	ENDIF
+RETURN 1
+
+;==================================================
+;足交
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_54
+CALL M_KOJO_MESSAGE_COUNTER_K42_54_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_54_1
+RETURN 1
+
+;==================================================
+;肛门爱抚
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_55
+CALL M_KOJO_MESSAGE_COUNTER_K42_55_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_55_1
+	SELECTCASE RAND:3
+	CASE 0
+		PRINTFORML 「呼呼、很棒的—反应♪　不要忍耐、要用屁股感受呢♪」
+		PRINTW 
+	CASE 1
+		PRINTFORML 「哇哦、%MASTERNAME:42%、真的是很喜欢屁股呢…♪」
+		SIF TALENT:MASTER:性别 == 2 || TALENT:MASTER:性别 == 3
+			PRINTFORML 「欧金金、弹跳得很厉害哟？　很舒服对吧…♪」
+		PRINTFORML 「没问题、不会痛的啦、来放松吧…？」
+		PRINTW 
+	CASE 2
+		PRINTFORML 「让手指咕昵咕昵还是—」
+		PRINTFORML 「让手指在里面旋转着、你喜欢哪一种呢？」
+		PRINTFORML 「…%UNICODE(0x2665) *1%　呼—嗯、你喜欢这种的呀—…♪」
+		PRINTW 
+	ENDSELECT
+RETURN 1
+
+;==================================================
+;舐肛
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_56
+CALL M_KOJO_MESSAGE_COUNTER_K42_56_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_56_1
+	SELECTCASE RAND:3
+	CASE 0
+		PRINTFORML 「才不会觉得脏什么的哟？　果、如果是%MASTERNAME:42%的话、完全没问题的」
+		PRINTW 
+	CASE 1
+		PRINTFORML 「明明你是喜欢我这样做的、所以才故意说出反对的话的对吧？」
+		PRINTFORML 「因为、%MASTERNAME:42%的屁股、在一颤一颤得渴求着啊…♪」
+		PRINTW 
+	CASE 2
+		PRINTFORML 「%MASTERNAME:42%的菊穴、在一抽一抽得真可爱—♪」
+		PRINTFORML 「要是给你呸咯呸咯得舔着、就会说着『呀昂、呀昂』蠕动着哟♪」
+		PRINTW 
+	ENDSELECT
+RETURN 1
+
+;==================================================
+;指插入
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_57
+CALL M_KOJO_MESSAGE_COUNTER_K42_57_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_57_1
+	IF TALENT:MASTER:处女 == 1
+		SELECTCASE RAND:2
+		CASE 0
+			PRINTFORML 「没问题的、不会伤到处女膜的」
+			PRINTFORML 「就用果的手指舒服起来吧…♪」
+		CASEELSE
+			PRINTFORML 「没问题的、一点也不可怕呢…」
+			PRINTFORML 「这边、手指咯吱咯吱地做喜欢吗？　那么就这边？　%MASTERNAME:42%、真可爱—%UNICODE(0x2665) *1%」
+		ENDSELECT
+	ELSE
+		SELECTCASE RAND:2
+		CASE 0
+			PRINTFORML 「哇哦、%MASTERNAME:42%、手指伸进去了两根呢♪」
+			PRINTFORML 「想要就这样子滋啵滋啵得？　没问题的、不会痛的啦…♪
+			PRINTW 
+		CASEELSE
+			PRINTFORML 「好厉害。%MASTERNAME:42%的肉壶、在紧紧的吸附着果的手指呢♪」
+			PRINTFORML 「真是个贪心的人呢—♪　再多恳求下的话、就让你感觉更舒服呢♪」
+			PRINTW 
+		ENDSELECT
+	ENDIF
+RETURN 1
+
+;==================================================
+;胸爱抚
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_58
+CALL M_KOJO_MESSAGE_COUNTER_K42_58_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_58_1
+	IF TALENT:MASTER:胸围 > 0
+		IF TALENT:恋慕 || TALENT:恋人
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 「哇哇，好厉害…手指都要陷进去了」
+				PRINTFORML 「\@ CFLAG:K42C_结婚 >= 1 ? 达令 # %MASTERNAME:42% \@，除了我以外，不许让别人碰这么厉害的胸部，也不许给别人看哦…」
+			CASE 1
+				PRINTFORML 「\@ CFLAG:K42C_结婚 >= 1 ? 达令 # %MASTERNAME:42% \@的乳头，变硬了哦…很舒服吗？」
+			CASE 2
+				CALL HPH_PRINT,@"「\@ CFLAG:K42C_结婚 >= 1 ? 达令 # %MASTERNAME:42% \@的胸部，非常柔软…HPH」","L"
+			ENDSELECT
+		ELSEIF TALENT:爱欲 || TALENT:炮友
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 「知道吗？ 你的胸部，被很多人看过哦」
+				PRINTFORML 「这么大又这么有魅力，也没办法呢…♪」
+				CALL HPH_PRINT,@"「但是，能独占的只有我而已…HPH」","L"
+			CASE 1
+				PRINTFORML 「好厉害…手指都要陷进去了啦♪」
+				CALL HPH_PRINT,@"「这种的，不揉才怪呢HPH」","L"
+			CASE 2
+				PRINTFORML 「嗯～？ 怎么了？ 摆出非常难过的表情…♪」
+				PRINTFORML 果故意只抚摸乳房的周围和乳晕，就是不碰关键的部位
+			ENDSELECT
+			PRINTW 
+		ENDIF
+	ELSEIF TALENT:MASTER:胸围 < 0
+		IF TALENT:恋慕 || TALENT:恋人
+			SELECTCASE RAND:3
+			CASE 0
+				CALL HPH_PRINT,@"「不用觉得害羞哦…HPH　即使小，形状也很漂亮…HPH」","L"
+			CASE 1
+				CALL HPH_PRINT,@"「\@ CFLAG:K42C_结婚 >= 1 ? 达令 # %MASTERNAME:42% \@，很敏感呢…HPH」","L"
+			CASE 2
+				CALL HPH_PRINT,@"「\@ CFLAG:K42C_结婚 >= 1 ? 达令 # %MASTERNAME:42% \@，胸部也很可爱…HPH」","L"
+				CALL HPH_PRINT,@"「果，总觉得有点不妙了…HPH」","L"
+			ENDSELECT
+			PRINTW 
+		ELSEIF TALENT:爱欲 || TALENT:炮友
+			SELECTCASE RAND:3
+			CASE 0
+				CALL HPH_PRINT,@"「感度真好HPH　只靠胸部来一发试试？」","L"
+			CASE 1
+				CALL HPH_PRINT,@"「%MASTERNAME:42%，喜欢这样玩弄乳头，对吧？HPH」","L"
+				CALL HPH_PRINT,@"「诚实一点嘛…HPH　我会让你舒服的…HPH」","L"
+			CASE 2
+				CALL HPH_PRINT,@"「小一点也没关系啦HPH　能感受到就好…HPH」","L"
+				CALL HPH_PRINT,@"「看HPH　被手掌抚摸，感觉很舒服，对吧…HPH」","L"
+			ENDSELECT
+			PRINTW 
+		ENDIF
+	ELSE
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 「%MASTERNAME:42%的胸部，真漂亮…」
+		CASE 1
+			PRINTFORML 「疼吗？ 可以继续吗…嗯，摸了哦」
+		CASE 2
+			PRINTFORML 「这里，尖起来了哦…♪」
+			PRINTFORML 果用手指捻着%CALLNAME:MASTER%勃起的乳头，%CALLNAME:MASTER%发出了%TEXTR("甜美的声音/全身抽搐…/扭动身体…")%
+		ENDSELECT
+		PRINTW 
+	ENDIF
+	RETURN 1
+
+;==================================================
+;吸乳头
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_59
+CALL M_KOJO_MESSAGE_COUNTER_K42_59_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_59_1
+	IF ABL:舌 >= 5
+		SELECTCASE RAND:2
+		CASE 0
+			PRINTFORML 「嗯呼呼、%MASTERNAME:42%、乳头也会有感觉呀—…♪」
+			IF TALENT:MASTER:性别 == 2
+				PRINTFORML 「就像女孩子一样、真可爱—…♪　想要更多的、玩弄你了呢…♪」
+				PRINTFORML 「啊哈、欧金金、在颤抖着跳动哟…？　只是玩弄着乳头就要去了吗？」
+				PRINTFORML 「可以—的哟、用乳头去了也可以的哟…发出女孩子般的声音、然后去吧？　快点…♪」
+			ELSE
+				PRINTFORML 「%MASTERNAME:42%的乳头、已经完全鼓起来了、感觉十分的H呢—…♪」
+				PRINTFORML 「可以—哟、去了也可以的哟♪　就用果的舌头prpr得、让你痛快的去呢…♪」
+				PRINTW 
+			ENDIF
+		CASE 1
+			PRINTFORML 「就算你忍耐着—、那里站起来的事也早就暴露了哟…？　看起来—感觉很舒服呢、乳头♪」
+			SIF TALENT:MASTER:性别 == 2
+				PRINTFORML 「你看、乳头就像女孩子那样已经大起来了呢…♪」
+				PRINTFORML 「不用忍耐着、就用果的舌头舔着—去了也可以的哟…♪　呼呼呼呼…♪」
+				PRINTW 
+		ENDSELECT
+	ELSE
+		SELECTCASE RAND:2
+		CASE 0
+			PRINTFORML 「%MASTERNAME:42%、欧派有感觉了吗…？」
+			PRINTFORML 「会更多的吸着呢…还有就是、想要被呸咯呸咯得对待吗…？」
+			PRINTW 
+		CASE 1
+			SIF TALENT:MASTER:性别 == 2
+				PRINTFORML 「看来即使是男人、乳头也会感觉舒服呢…？」
+				PRINTFORML 「乳头、这样—做了后—怎样呢？　呼呼、真的是—很可爱的表情哟…♪」
+				PRINTW 
+		ENDSELECT
+	ENDIF
+RETURN 1
+
+;==================================================
+;ディープキス
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_60
+CALL M_KOJO_MESSAGE_COUNTER_K42_60_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_60_1
+	IF EXP:接吻经验 == 0
+		PRINTFORML 「呼呼、把初吻献给%MASTERNAME:42%了…%UNICODE(0x2665) *1%」
+		PRINTFORML 「果的嘴唇、怎样？　很美味吗…？　还想要更多…？」
+		PRINTW 
+	ELSE
+		IF ABL:舌 >= 5
+			PRINTFORML 「噗哈啊、啊嗯…果的kiss、是怎样的感觉呢…？」
+			PRINTFORML 「这可是只有%MASTERNAME:42%才能够尝到的嘴唇呢…%UNICODE(0x2665) *1%　要更多得品味着呢…%UNICODE(0x2665) *1%」
+			PRINTW 
+		ELSE
+			PRINTFORML 「哈啊、kiss、喜欢…%UNICODE(0x2665) *1%　太过于喜欢、要变得奇怪了呀…%UNICODE(0x2665) *1%」
+			PRINTFORML 「还要更多、不可以停下…%UNICODE(0x2665) *1%　嗯%UNICODE(0x2665) *1%　嗯%UNICODE(0x2665) *1%　嗯～～%UNICODE(0x2665) *1%」
+			PRINTW 
+		ENDIF
+	ENDIF
+RETURN 1
+
+
+;-------------------------------------------------
+;侍奉
+;-------------------------------------------------
+;==================================================
+;强制舐阴
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_70
+CALL M_KOJO_MESSAGE_COUNTER_K42_70_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_70_1
+	IF ABL:MASTER:舌 >= 5
+		SELECTCASE RAND:2
+		CASE 0
+			PRINTFORML 「啊啊%UNICODE(0x2665) *1%、那里、好棒呀…%UNICODE(0x2665) *1%」
+			PRINTFORML 「再快点、再用舌头呸咯呸咯地舔着呀…%UNICODE(0x2665) *1%」
+			PRINTW 
+		CASE 1
+			PRINTFORML 「啊%UNICODE(0x2665) *1%　啊嗯%UNICODE(0x2665) *1%　
+			PRINTFORML 「讨厌、明明是很害羞的、但是下面不停地在溢出来呀…%UNICODE(0x2665) *1%」
+			PRINTW 
+		CASE 2
+			PRINTFORML 「这样子的、实在是太舒服了呀…%UNICODE(0x2665) *1%」
+			PRINTFORML 「再多舔着呀、用%MASTERNAME:42%的舌头搅拌着呀%UNICODE(0x2665) *1%」
+			PRINTW 
+		ENDSELECT
+	ELSE
+		SELECTCASE RAND:2
+		CASE 0
+			PRINTFORML 「快点、来舔我的那里…%UNICODE(0x2665) *1%」
+			PRINTFORML 「不能让我舒服起来就不行了呢…%UNICODE(0x2665) *1%」
+			PRINTW 
+		CASE 1
+			PRINTFORML 「那里、那里感觉、有电流流过一样呀…%UNICODE(0x2665) *1%」
+			PRINTFORML 「不行、要更加地、温柔呀…！」
+			PRINTW 
+		ENDSELECT
+	ENDIF
+RETURN 1
+
+;==================================================
+;フェラチオ强制
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_71
+CALL M_KOJO_MESSAGE_COUNTER_K42_71_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_71_1
+;你が幼儿
+IF (TALENT:MASTER:年龄 < 1 && TALENT:MASTER:幼儿／幼儿退行)
+	IF TALENT:MASTER:无知
+		SELECTCASE RAND:22
+		CASE 0
+			CALL HPH_PRINT,@"「哈、啊啊…HPH　什么都不知道的%MASTERNAME:42%的嘴里，进行了肉棒接吻…HPH」","L"
+			CALL HPH_PRINT,@"「软软的嘴，好舒服…HPH　」","L"
+			PRINTW 
+		CASE 1
+			CALL HPH_PRINT,@"「嗯…%MASTERNAME:42%如果舔我的话，肿胀就会消失…HPH」","L"
+			CALL HPH_PRINT,@"（啊啊…在被用仰慕的眼神看着的同时，肉棒被舔了HPH）","L"
+			CALL HPH_PRINT,@"（明明我对什么都不懂的%MASTERNAME:42%做了最过分的事，却停不下来…HPH）","L"
+			PRINTW 
+		CASE 2
+			CALL HPH_PRINT,@"「是、是啊…如果把那个软软的顶端放进嘴里的话，就会有白色的汁液出来，要好好喝掉哦…HPH」","L"
+			PRINTW 
+		CASE 3
+			CALL HPH_PRINT,@"（不行…明明想着要拔出来…却想一直放在温暖的嘴里…！HPH）","L"
+			PRINTW 
+		CASE 4
+			CALL HPH_PRINT,@"「啊啊…这么小的嘴张得这么大…含着我的肉棒…HPH」","L"
+			PRINTW 
+		CASE 5
+			CALL HPH_PRINT,@"「对不起，%MASTERNAME:42%，很难受吧…但是，我忍不住…HPH」","L"
+			PRINTW 
+		CASE 6
+			CALL HPH_PRINT,@"「啊啊啊，顶端，被啾啾地吸着HPH」","L"
+			PRINTW 
+		CASE 7
+			CALL HPH_PRINT,@"「啊，这个糟糕了…HPH　只是蹭在嘴唇上就非常舒服…HPH」","L"
+			PRINTW 
+		CASE 8
+			CALL HPH_PRINT,@"「只要张着嘴就可以了…HPH　我来运动…HPH」","L"
+			PRINTFORML 果把%TINKO(TARGET)%塞进年幼的%CALLNAME:MASTER%的口腔，前后摆动着腰
+			PRINTW 
+		CASE 9
+			CALL HPH_PRINT,@"「这是什么啊…肉棒，要融化了…HPH」","L"
+			PRINTFORML 因为%CALLNAME:MASTER%口腔内的温暖和柔软，果露出了没出息的融化表情…
+			PRINTW 
+		CASE 10
+			CALL HPH_PRINT,@"「啊啊…让这么小的孩子含着肉棒…我真是个变态…HPH」","L"
+			PRINTFORML 对自己变态行为的厌恶感、侵犯年幼孩子纯洁嘴唇的背德感、以及口腔内的舒适感混杂在一起，果露出了难以形容的表情…
+			PRINTW 
+		CASE 11
+			CALL HPH_PRINT,@"（呜、哇…完全按照我的指示，拼命地吮吸着肉棒…HPH）","L"
+			CALL HPH_PRINT,@"（光是这个光景就已经要去了…HPH）","L"
+		CASE 12
+			CALL HPH_PRINT,@"「呜、啊啊…被小小的手握着舔…非常不得了啊…HPH」","L"
+			PRINTW 
+		CASE 13
+			CALL HPH_PRINT,@"「呼HPH　呼呜HPH　嗯嗯呜HPH」","L"
+			CALL HPH_PRINT,@"（我、在这么小的嘴里…HPH　做了非常不好的事情…）","L"
+			PRINTW 
+		CASE 14
+			CALL HPH_PRINT,@"「呼～～～～～HPH　呜呜呜～～～～HPH」","L"
+			CALL HPH_PRINT,@"「这、这样下去HPH　马上就要出来了…HPH」","L"
+			PRINTW 
+		CASE 15
+			CALL HPH_PRINT,@"「什…！　这是什么…HPH」","L"
+			CALL HPH_PRINT,@"「柔软又温暖…HPH　要被融化了…HPH」","L"
+			PRINTW 
+		CASE 16
+			CALL HPH_PRINT,@"「骗人…要被这么小小的嘴，吞进去了…HPH」","L"
+			PRINTW 
+		CASE 17
+			CALL HPH_PRINT,@"「啊—张开嘴，啊—，乖孩子…哦、哦HPH　哦HPH」","L"
+			PRINTW 
+		CASE 18
+			CALL HPH_PRINT,@"（啊、啊啊…想在这个孩子的嘴里射出来，想泼在脸上弄脏…HPH）","L"
+			CALL HPH_PRINT,@"（我，变得奇怪了…HPH）","L"
+			PRINTW 
+		CASE 19
+			CALL HPH_PRINT,@"「呜、呜哇啊…HPH」","L"
+			CALL HPH_PRINT,@"（%MASTERNAME:42%，一边仔细地看着我的肉棒一边舔着…HPH）","L"
+			PRINTW 
+		CASE 20
+			CALL HPH_PRINT,@"「没错…就在那个软软的地方…啊啊HPH」","L"
+			CALL HPH_PRINT,@"（肉棒，被接吻了…%MASTERNAME:42%的嘴唇，好柔软…HPH）","L"
+			PRINTW 
+		CASE 21
+			CALL HPH_PRINT,@"「啊啊啊啊啊…HPH」","L"
+			CALL HPH_PRINT,@"（糟糕HPH糟糕糟糕糟糕糟糕糟糕HPHHPH）","L"
+			CALL HPH_PRINT,@"（如果学会了这么不好的事情HPH　就再也回不到普通了HPH）","L"
+			PRINTW 
+		ENDSELECT
+	;无知消失/无知无
+	ELSE
+		IF ABL:舌 >= 3
+			SELECTCASE RAND:6
+			CASE 0
+				CALL HPH_PRINT,@"「哈HPH　啊HPH　啊、啊啊HPH」","L"
+				CALL HPH_PRINT,@"「用小小的舌头HPH　为什么这么熟练啊HPH」","L"
+				PRINTW 
+			CASE 1
+				CALL HPH_PRINT,@"「明明摆着一副什么都不知道的表情，为什么这么熟练啊HPH」","L"
+				CALL HPH_PRINT,@"「啊、啊啊HPH　那里HPH　很弱的HPH」","L"
+				PRINTW 
+			CASE 2
+				CALL HPH_PRINT,@"「%MASTERNAME:42%HPH　那里HPH　那里啊HPH」","L"
+				PRINTW 
+			CASE 3
+				CALL HPH_PRINT,@"「啊、啊啊…HPH　%MASTERNAME:42%的小嘴，把我的吞进去了…HPH」","L"
+				PRINTW 
+			CASE 4
+				CALL HPH_PRINT,@"「%MASTERNAME:42%，真的是小孩子吗…？HPH」","L"
+				CALL HPH_PRINT,@"「舌头灵活，完全不像小孩子啊…HPH」","L"
+				PRINTW 
+			CASE 5
+				CALL HPH_PRINT,@"「啊哈HPH　%MASTERNAME:42%，好棒啊…HPH」","L"
+				CALL HPH_PRINT,@"「喜欢果的肉棒吧？　再多舔舔也可以哦…HPH」","L"
+				PRINTW 
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:4
+			CASE 0
+				CALL HPH_PRINT,@"「就算知道方法…也不用勉强含到最里面哦…HPH」","L"
+				CALL HPH_PRINT,@"「就这样，舔舔顶端…HPH　嗯…HPH　也不是，不行…HPH」","L"
+				PRINTW 
+			CASE 1
+				CALL HPH_PRINT,@"「明明还小，却知道怎么舔肉棒，%MASTERNAME:42%太糟糕了…HPH」","L"
+				CALL HPH_PRINT,@"「啊、啊啊…顶端，被啾啾地吸着…HPH」","L"
+				PRINTW 
+			CASE 2
+				CALL HPH_PRINT,@"「要放进去了哦？　要放进嘴里了哦？HPH」","L"
+				CALL HPH_PRINT,@"「啊、啊啊HPH　嘴唇，好柔软…HPH」","L"
+			CASE 3
+				CALL HPH_PRINT,@"「在和肉棒接吻…%MASTERNAME:42%，真是个坏孩子呢…HPH」","L"
+				PRINTW 
+			ENDSELECT
+		ENDIF
+	ENDIF
+;你が大人
+ELSE
+	;初回
+	IF FIRSTTIME("フェラチオ强制")
+		CALL HPH_PRINT,@"「%MASTERNAME:42%…舔我的肉棒…HPH」","L"
+		CALL HPH_PRINT,@"「啊啊…HPH　嘴里，好温暖…HPH　这就是，口交啊…HPH」","L"
+		PRINTW 
+	ELSE
+		;大人你无知
+		IF TALENT:无知
+			IF TALENT:恋人
+				SELECTCASE RAND:4
+				CASE 0
+					CALL HPH_PRINT,@"「因为%MASTERNAME:42%是恋人，所以用嘴让果的肉棒舒服吧…HPH」","L"
+					CALL HPH_PRINT,@"（我，在教%MASTERNAME:42%最糟糕的事情…HPH）","L"
+					CALL HPH_PRINT,@"（但是，这么舒服的事情，没法停止啊…HPH）","L"
+					PRINTW 
+				CASE 1
+					CALL HPH_PRINT,@"「是啊…因为恋人之间，谁都会做这种事…HPH」","L"
+					CALL HPH_PRINT,@"「恋人的话，舔肉棒也没关系哦HPH」","L"
+					CALL HPH_PRINT,@"（连我自己都觉得这是最糟糕的想法了…但是，这种诱惑，怎么可能忍受得了啊…HPH）","L"
+					PRINTW 
+				CASE 2
+					CALL HPH_PRINT,@"「%MASTERNAME:42%，喜欢精液，对吧HPH」","L"
+					CALL HPH_PRINT,@"「如果努力让我舒服的话，会给你很多很多的哦HPH」","L"
+					PRINTW 
+				CASE 3
+					CALL HPH_PRINT,@"「%MASTERNAME:42%，好棒啊…HPH」","L"
+					CALL HPH_PRINT,@"「没错HPH　肉棒舒服的话，果会很高兴的HPH」","L"
+					CALL HPH_PRINT,@"「再多舔舔肉棒HPH　让果更舒服HPH」","L"
+					PRINTW 
+				ENDSELECT
+			ELSEIF TALENT:恋慕
+				SELECTCASE RAND:6
+				CASE 0
+					CALL HPH_PRINT,@"「是啊，肉棒，只能让特别的人舔…HPH」","L"
+					CALL HPH_PRINT,@"「因为非常喜欢%MASTERNAME:42%，所以只让%MASTERNAME:42%舔…HPH」","L"
+					PRINTW 
+				CASE 1
+					CALL HPH_PRINT,@"「嗯，充分地湿润哦…很棒哦，%MASTERNAME:42%HPH」","L"
+					PRINTW 
+				CASE 2
+					CALL HPH_PRINT,@"「果然，比起自己弄，还是%MASTERNAME:42%的嘴更舒服…HPH」","L"
+					PRINTW 
+				CASE 3
+					CALL HPH_PRINT,@"「嗯呼HPH　嗯嗯嗯HPHHPH」","L"
+					CALL HPH_PRINT,@"「用%MASTERNAME:42%的嘴来爱抚肉棒，好舒服HPH」","L"
+					PRINTW 
+				CASE 4
+					CALL HPH_PRINT,@"「啊啊，好高兴…HPH　%MASTERNAME:42%，在舔我的肉棒…HPH」","L"
+					CALL HPH_PRINT,@"「嗯HPH　被喜欢的人舔肉棒，会变得非常高兴HPH　再多来点HPH」","L"
+					PRINTW 
+				CASE 5
+					CALL HPH_PRINT,@"「%MASTERNAME:42%，肉棒如果在嘴里迎接的话，会非常高兴的哦…HPH」","L"
+					CALL HPH_PRINT,@"「啊、哦、哦哦…HPH　这是什么啊，好温暖…HPH　看，在嘴里，是不是一抽一抽地，很高兴啊…HPH」","L"
+					PRINTW 
+				ENDSELECT
+			ELSEIF TALENT:爱欲 || TALENT:炮友
+				SELECTCASE RAND:6
+				CASE 0
+					CALL HPH_PRINT,@"「来HPH　好好地舔果的肉棒哦HPH」","L"
+					CALL HPH_PRINT,@"「如果努力的话，会让你喝很多白色奖励的哦HPH」","L"
+					PRINTW 
+				CASE 1
+					CALL HPH_PRINT,@"「啊啊，%MASTERNAME:42%的嘴，好舒服啊…HPH」","L"
+					CALL HPH_PRINT,@"「就这样，张着嘴不要动…HPH　马上，就要出来了…HPH」","L"
+					PRINTW 
+				CASE 2
+					CALL HPH_PRINT,@"「没错，用嘴来摩擦哦…HPH　如果含了很多的话，肉棒会变得更美味哦…HPH」","L"
+					PRINTW 
+				CASE 3
+					CALL HPH_PRINT,@"「%MASTERNAME:42%，真的，舔肉棒的时候看起来很美味呢…HPH」","L"
+					CALL HPH_PRINT,@"「不是不行哦…HPH　那样做是对的…HPH」","L"
+					PRINTW 
+				CASE 4
+					CALL HPH_PRINT,@"「%MASTERNAME:42%，好吃吗？　不是很清楚？　但是，摆着一副很好吃的表情哦…HPH」","L"
+					CALL HPH_PRINT,@"（即使没有在做色情事情的认识，女人的本能也已经理解了…HPH）","L"
+					PRINTW 
+				CASE 5
+					CALL HPH_PRINT,@"「没错，像平时一样，用嘴让肉棒舒服哦HPH」","L"
+					CALL HPH_PRINT,@"「最喜欢肉棒的味道了嘛HPH　要多多地舔哦…HPH」","L"
+					PRINTW 
+				ENDSELECT
+			ELSE
+				SELECTCASE RAND:4
+				CASE 0
+					CALL HPH_PRINT,@"（糟糕…要教什么都不知道的%MASTERNAME:42%做色情的事情，可能会兴奋起来…HPH）","L"
+					PRINTFORML （我，是不是有相当糟糕的性癖啊…）
+					PRINTW 
+				CASE 1
+					CALL HPH_PRINT,@"「嗯，就这样…不要用牙齿，移动脸就可以了…HPH」","L"
+					CALL HPH_PRINT,@"（完全按照我的指示，含着肉棒…非常心跳加速…HPH）","L"
+					PRINTW 
+				CASE 2
+					CALL HPH_PRINT,@"「是、是啊…如果%MASTERNAME:42%多舔舔肉棒的话，就会恢复原状的…HPH」","L"
+					CALL HPH_PRINT,@"「不只是顶端，硬的地方也…没错…很棒哦…HPH」","L"
+					PRINTW 
+				CASE 3
+					CALL HPH_PRINT,@"「就这样，含在嘴里，进进出出…HPH　啊、啊啊…里面，好温暖…HPH」","L"
+					CALL HPH_PRINT,@"「很棒哦，%MASTERNAME:42%…HPH」","L"
+					PRINTW 
+				ENDSELECT
+			ENDIF
+		;大人你无知无
+		ELSE
+			IF ABL:舌 >= 3
+				IF TALENT:恋人
+					SELECTCASE RAND:9
+					CASE 0
+						CALL HPH_PRINT,@"「来，%MASTERNAME:42%最喜欢的恋人肉棒…HPH」","L"
+						CALL HPH_PRINT,@"「像平时一样，和顶端接吻…HPH　嗯…HPH」","L"
+						PRINTW 
+					CASE 1
+						CALL HPH_PRINT,@"「%MASTERNAME:42%的嘴，好舒服HPH」","L"
+						CALL HPH_PRINT,@"「里面HPH　让我放进去里面HPH　啊、啊啊，好舒服HPH」","L"
+						PRINTW 
+					CASE 2
+						CALL HPH_PRINT,@"「%MASTERNAME:42%…舔果的肉棒…HPH」","L"
+						CALL HPH_PRINT,@"「啊HPH　那里，很弱的HPH　但是不要停HPH」","L"
+						PRINTW 
+					CASE 3
+						CALL HPH_PRINT,@"「%MASTERNAME:42%，喜欢舔果的肉棒吧…HPH」","L"
+						CALL HPH_PRINT,@"「非常用心地，舔着吸着…HPH」","L"
+						PRINTW 
+					CASE 4
+						CALL HPH_PRINT,@"「来…%MASTERNAME:42%也想要了吧…HPH」","L"
+						CALL HPH_PRINT,@"「非常硬吧…HPH　用嘴，好好地让我舒服…HPH」","L"
+						PRINTW 
+					CASE 5
+						CALL HPH_PRINT,@"「啊啊，糟糕…HPH　嘴里面，真的糟糕了HPH」","L"
+						PRINTW 
+					CASE 6
+						CALL HPH_PRINT,@"「啊啊…%MASTERNAME:42%的嘴，好像在强行侵犯一样…HPH」","L"
+						PRINTFORML 果啪嗒啪嗒地前后摇动着腰，把%CALLNAME:MASTER%的嘴当成飞机杯使用…
+						PRINTW 
+					CASE 7
+						CALL HPH_PRINT,@"「太舒服了，腰都停不下来了…HPH」","L"
+						PRINTFORML 果一边注意不顶到喉咙深处，一边用嘴唇激烈地爱抚着龟头…
+						PRINTW 
+					CASE 8
+						CALL HPH_PRINT,@"「啊啊…HPH　%MASTERNAME:42%，%MASTERNAME:42%…HPH」","L"
+						PRINTFORML 果把%TINKO(TARGET)%塞到%CALLNAME:MASTER%的喉咙深处，按住头，让她的脚颤抖着…
+						PRINTW 
+					ENDSELECT
+				ELSEIF TALENT:恋慕
+					SELECTCASE RAND:6
+					CASE 0
+						CALL HPH_PRINT,@"「%MASTERNAME:42%…舔果的肉棒…HPH」","L"
+						CALL HPH_PRINT,@"「啊HPH　那里，很弱的HPH　但是不要停HPH」","L"
+						PRINTW 
+					CASE 1
+						CALL HPH_PRINT,@"「%MASTERNAME:42%也，喜欢吮吸我的肉棒吧…HPH」","L"
+						CALL HPH_PRINT,@"「在肉棒上接吻，好几次…HPH　那个表情，非常诱人…HPH」","L"
+						PRINTW 
+					CASE 2
+						CALL HPH_PRINT,@"「啊啊…我，把%MASTERNAME:42%的嘴当成女孩子的下身一样对待…HPH」","L"
+						CALL HPH_PRINT,@"「对不起…但是，腰停不下来了HPH」","L"
+						PRINTW 
+					CASE 3
+						CALL HPH_PRINT,@"「%MASTERNAME:42%的嘴，非常舒服HPH」","L"
+						CALL HPH_PRINT,@"「里面HPH　让我放进去里面HPH　啊、啊啊，好舒服HPH」","L"
+						PRINTW 
+					CASE 4
+						CALL HPH_PRINT,@"「进入%MASTERNAME:42%的嘴里HPH　了HPH　啊HPH」","L"
+						CALL HPH_PRINT,@"「如果学会了这么舒服的事情，就再也停不下来了…HPH」","L"
+						PRINTW 
+					CASE 5
+						CALL HPH_PRINT,@"「啊啊，糟糕…HPH　嘴里面，真的糟糕了HPH」","L"
+						PRINTW 
+					ENDSELECT
+				ELSEIF TALENT:爱欲 || TALENT:炮友
+					SELECTCASE RAND:11
+					CASE 0
+						CALL HPH_PRINT,@"「来HPH　好好地舔果的肉棒哦HPH」","L"
+						CALL HPH_PRINT,@"「%MASTERNAME:42%的嘴里面，滑溜溜的，好舒服…HPH」","L"
+						PRINTW 
+					CASE 1
+						CALL HPH_PRINT,@"「啊啊，%MASTERNAME:42%的嘴，很好哦…HPH」","L"
+						CALL HPH_PRINT,@"「就这样，张着嘴不要动…HPH　马上，就要出来了…HPH」","L"
+						PRINTW 
+					CASE 2
+						CALL HPH_PRINT,@"「来，喜欢吧？　果的肉棒HPH」","L"
+						CALL HPH_PRINT,@"「果也很喜欢%MASTERNAME:42%的嘴，扯平了呢…HPH」","L"
+						PRINTW 
+					CASE 3
+						CALL HPH_PRINT,@"「%MASTERNAME:42%，真的好会吮吸哦HPH」","L"
+						CALL HPH_PRINT,@"「看，都吞到根部了…HPH　太贪心了…HPH」","L"
+						PRINTW 
+					CASE 4
+						CALL HPH_PRINT,@"「%MASTERNAME:42%，太喜欢肉棒了HPH」","L"
+						CALL HPH_PRINT,@"「被这么热情地舔着，感觉马上就要去了…HPH」","L"
+						PRINTW 
+					CASE 5
+						PRINTFORML 果的肉棒啪嗒啪嗒地敲打着%CALLNAME:MASTER%的额头
+						CALL HPH_PRINT,@"「来HPH　%MASTERNAME:42%期待已久的果的・阴・茎HPH」","L"
+						CALL HPH_PRINT,@"「不许用手哦HPH　只用嘴含着…没错，啊、啊啊…HPH」","L"
+						CALL HPH_PRINT,@"「稍微HPH　等等HPH　突然认真地口交什么的啊啊啊HPHHPH」","L"
+						PRINTW 
+					CASE 6
+						PRINTFORML 「可以哦，随便闻肉棒的味道」
+						CALL HPH_PRINT,@"「作为交换，要好好地用嘴弄出来哦…HPH」","L"
+						PRINTW 
+					CASE 7
+						CALL HPH_PRINT,@"「糟糕HPH　%MASTERNAME:42%的嘴，吸附在肉棒上了HPH」","L"
+						CALL HPH_PRINT,@"「那个，真的糟糕了啦HPH　啊糟糕了HPH　真的要去了HPH」","L"
+						PRINTW 
+					CASE 8
+						CALL HPH_PRINT,@"「哇HPH　舔肉棒的时候%MASTERNAME:42%的脸，真的是好色的脸HPH」","L"
+						CALL HPH_PRINT,@"「如果被果以外的人看到可能会吓一跳HPH　摆着一副真的糟糕的脸哦HPH」","L"
+						PRINTW 
+					CASE 9
+						CALL HPH_PRINT,@"「好厉害…HPH　舌头缠绕着，肉棒好像要融化了…HPH」","L"
+						CALL HPH_PRINT,@"「啊笨蛋HPH　在嘴里那么吸的话HPH」","L"
+						PRINTW 
+					CASE 10
+						CALL HPH_PRINT,@"「啊…HPH　%MASTERNAME:42%的嘴里面，真的最棒了…HPH」","L"
+						CALL HPH_PRINT,@"「喜欢那个HPH　在嘴里被舌头舔来舔去的HPH　喜欢HPH」","L"
+						PRINTW 
+					ENDSELECT
+				ELSE
+					SELECTCASE RAND:6
+					CASE 0
+						CALL HPH_PRINT,@"「对不起呢，%MASTERNAME:42%…对朋友做出这种事…HPH」","L"
+						CALL HPH_PRINT,@"「%MASTERNAME:42%的嘴太舒服了，也是没办法的事…HPH」","L"
+						PRINTW 
+					CASE 1
+						CALL HPH_PRINT,@"「啊啊，%MASTERNAME:42%…果的肉棒，好像很美味地被吮吸着…HPH」","L"
+						CALL HPH_PRINT,@"「朋友之间做这种事…真的糟糕了啦，啊糟糕了HPH」","L"
+						PRINTW 
+					CASE 2
+						CALL HPH_PRINT,@"「糟糕，%MASTERNAME:42%舔肉棒的时候的脸，非常兴奋…HPH」","L"
+						PRINTW 
+					CASE 3
+						CALL HPH_PRINT,@"「对不起，不让%MASTERNAME:42%让我的肉棒舒服的话，我好像会变得奇怪…HPH」","L"
+						PRINTW 
+					CASE 4
+						CALL HPH_PRINT,@"「啊、啊啊…朋友，在舔我的肉棒…HPH」","L"
+						CALL HPH_PRINT,@"「%MASTERNAME:42%的嘴里面真的糟糕了HPH　这是什么啊HPH」","L"
+						PRINTW 
+					CASE 5
+						CALL HPH_PRINT,@"「%MASTERNAME:42%，对肉棒也有兴趣吧…？HPH」","L"
+						CALL HPH_PRINT,@"「来，用嘴随便怎么样都行哦…HPH　果的，肉棒…HPH」","L"
+						PRINTW 
+					ENDSELECT
+				ENDIF
+			ELSE
+				IF TALENT:恋人
+					SELECTCASE RAND:9
+					CASE 0
+						CALL HPH_PRINT,@"「来，%MASTERNAME:42%最喜欢的恋人肉棒…HPH」","L"
+						CALL HPH_PRINT,@"「像平时一样，和顶端接吻…HPH　嗯…HPH」","L"
+						PRINTW 
+					CASE 1
+						CALL HPH_PRINT,@"「%MASTERNAME:42%的嘴，好舒服HPH」","L"
+						CALL HPH_PRINT,@"「里面HPH　让我放进去里面HPH　啊、啊啊，好舒服HPH」","L"
+						PRINTW 
+					CASE 2
+						CALL HPH_PRINT,@"「%MASTERNAME:42%…舔果的肉棒…HPH」","L"
+						CALL HPH_PRINT,@"「啊HPH　那里，很弱的HPH　但是不要停HPH」","L"
+						PRINTW 
+					CASE 3
+						CALL HPH_PRINT,@"「%MASTERNAME:42%，喜欢舔果的肉棒吧…HPH」","L"
+						CALL HPH_PRINT,@"「非常用心地，舔着吸着…HPH」","L"
+						PRINTW 
+					CASE 4
+						CALL HPH_PRINT,@"「来…%MASTERNAME:42%也想要了吧…HPH」","L"
+						CALL HPH_PRINT,@"「用嘴，好好地让我舒服…HPH」","L"
+						PRINTW 
+					CASE 5
+						CALL HPH_PRINT,@"「啊啊，糟糕…HPH　嘴里面，糟糕了HPH」","L"
+						PRINTW 
+					CASE 6
+						CALL HPH_PRINT,@"「啊啊…%MASTERNAME:42%的嘴，好像在强行侵犯一样…HPH」","L"
+						PRINTFORML 果吭哧吭哧地前后摇动着腰，把%CALLNAME:MASTER%的嘴当成飞机杯使用…
+						PRINTW 
+					CASE 7
+						CALL HPH_PRINT,@"「太舒服了，腰都停不下来了…HPH」","L"
+						PRINTFORML 果一边注意不顶到喉咙深处，一边用嘴唇爱抚着龟头…
+						PRINTW 
+					CASE 8
+						CALL HPH_PRINT,@"「啊啊…HPH　%MASTERNAME:42%，%MASTERNAME:42%…HPH」","L"
+						PRINTFORML 果把%TINKO(TARGET)%塞到%CALLNAME:MASTER%的喉咙深处，按住头，让她的脚颤抖着…
+						PRINTW 
+					ENDSELECT
+				ELSEIF TALENT:恋慕
+					SELECTCASE RAND:6
+					CASE 0
+						CALL HPH_PRINT,@"「%MASTERNAME:42%…舔果的肉棒…HPH」","L"
+						CALL HPH_PRINT,@"「啊HPH　那里，很弱的HPH　但是不要停HPH」","L"
+						PRINTW 
+					CASE 1
+						CALL HPH_PRINT,@"「%MASTERNAME:42%也，喜欢吮吸我的肉棒吧…HPH」","L"
+						CALL HPH_PRINT,@"「啊啊…%MASTERNAME:42%在和我的肉棒接吻…HPH　嗯呜呜HPH」","L"
+						PRINTW 
+					CASE 2
+						CALL HPH_PRINT,@"「啊啊…我，把%MASTERNAME:42%的嘴当成女孩子的下身一样对待…HPH」","L"
+						CALL HPH_PRINT,@"「对不起…但是，腰停不下来了HPH」","L"
+						PRINTW 
+					CASE 3
+						CALL HPH_PRINT,@"「%MASTERNAME:42%的嘴，非常舒服HPH」","L"
+						CALL HPH_PRINT,@"「里面HPH　让我放进去里面HPH　啊、啊啊，好舒服HPH」","L"
+						PRINTW 
+					CASE 4
+						CALL HPH_PRINT,@"「进入%MASTERNAME:42%的嘴里HPH　了HPH　啊HPH」","L"
+						CALL HPH_PRINT,@"「如果学会了这么舒服的事情，就再也停不下来了…HPH」","L"
+						PRINTW 
+					CASE 5
+						CALL HPH_PRINT,@"「啊啊，糟糕…HPH　嘴里面，糟糕了HPH」","L"
+						PRINTW 
+					ENDSELECT
+				ELSEIF TALENT:爱欲 || TALENT:炮友
+					SELECTCASE RAND:10
+					CASE 0
+						CALL HPH_PRINT,@"「来HPH　好好地舔果的肉棒哦HPH」","L"
+						CALL HPH_PRINT,@"「%MASTERNAME:42%的嘴里面，滑溜溜的，好舒服…HPH」","L"
+						PRINTW 
+					CASE 1
+						CALL HPH_PRINT,@"「啊啊，%MASTERNAME:42%的嘴，很好哦…HPH」","L"
+						CALL HPH_PRINT,@"「就这样，张着嘴不要动…HPH　马上，就要出来了…HPH」","L"
+						PRINTW 
+					CASE 2
+						CALL HPH_PRINT,@"「来，喜欢吧？　果的肉棒HPH」","L"
+						CALL HPH_PRINT,@"「摆着那副色情的脸吮吸着，完全没有说服力嘛HPH」","L"
+						PRINTW 
+					CASE 3
+						CALL HPH_PRINT,@"「%MASTERNAME:42%，好会吮吸哦HPH」","L"
+						CALL HPH_PRINT,@"「看，都吞到根部了…HPH　太贪心了…HPH」","L"
+						PRINTW 
+					CASE 4
+						CALL HPH_PRINT,@"「%MASTERNAME:42%是这么喜欢肉棒的孩子真是帮大忙了HPH」","L"
+						CALL HPH_PRINT,@"「把果的肉棒吮吸得这么美味HPH」","L"
+						PRINTW 
+					CASE 5
+						PRINTFORML 果的肉棒啪嗒啪嗒地敲打着%CALLNAME:MASTER%的额头
+						CALL HPH_PRINT,@"「来HPH　%MASTERNAME:42%期待已久的果的・阴・茎HPH」","L"
+						CALL HPH_PRINT,@"「不许用手哦HPH　只用嘴含着…没错，啊、啊啊…HPH」","L"
+						PRINTW 
+					CASE 6
+						PRINTFORML 「不要那么使劲闻啦…我每天都有好好洗的」
+						CALL HPH_PRINT,@"「哇，脸已经变得黏糊糊的了嘛…HPH　那么喜欢果的肉棒的味道…HPH」","L"
+						PRINTW 
+					CASE 7
+						CALL HPH_PRINT,@"「糟糕HPH　%MASTERNAME:42%的嘴，吸附在肉棒上了HPH」","L"
+						CALL HPH_PRINT,@"「那个，真的糟糕了啦HPH　啊糟糕了HPH　真的要去了HPH」","L"
+						PRINTW 
+					CASE 8
+						CALL HPH_PRINT,@"「哇HPH　吮吸肉棒的时候%MASTERNAME:42%的脸，真的是好色的脸HPH」","L"
+						CALL HPH_PRINT,@"「如果被果以外的人看到可能会吓一跳HPH　摆着一副真的糟糕的脸哦HPH」","L"
+						PRINTW 
+					CASE 9
+						CALL HPH_PRINT,@"「好厉害…HPH　舌头缠绕着，肉棒好像要融化了…HPH」","L"
+						CALL HPH_PRINT,@"「啊笨蛋HPH　在嘴里那么吸的话HPH」","L"
+						PRINTW 
+					ENDSELECT
+				ELSE
+					SELECTCASE RAND:6
+					CASE 0
+						CALL HPH_PRINT,@"「对不起呢，%MASTERNAME:42%…对朋友做出这种事…HPH」","L"
+						PRINTW 
+					CASE 1
+						CALL HPH_PRINT,@"「啊啊，%MASTERNAME:42%…果的肉棒，被吮吸着…HPH」","L"
+						PRINTW 
+					CASE 2
+						CALL HPH_PRINT,@"「糟糕，%MASTERNAME:42%舔肉棒的时候的脸，非常兴奋…HPH」","L"
+						PRINTW 
+					CASE 3
+						CALL HPH_PRINT,@"「对不起呢，%MASTERNAME:42%…不让谁让我的肉棒舒服的话，我好像会变得奇怪…HPH」","L"
+						PRINTW 
+					CASE 4
+						CALL HPH_PRINT,@"「啊、啊啊…朋友，在舔我的肉棒…HPH」","L"
+						PRINTW 
+					CASE 5
+						CALL HPH_PRINT,@"「%MASTERNAME:42%也，对肉棒有兴趣吧…？HPH」","L"
+						CALL HPH_PRINT,@"「来，用嘴随便怎么样都行哦…HPH　果的，肉棒…HPH」","L"
+						PRINTW 
+					ENDSELECT
+				ENDIF
+			ENDIF
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;肛门侍奉
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_72
+CALL M_KOJO_MESSAGE_COUNTER_K42_72_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_72_1
+	SELECTCASE RAND:3
+	CASE 0
+		PRINTFORML 「舔屁股那种地方什么的、%MASTERNAME:42%真的是、变态—…%UNICODE(0x2665) *1%」
+		PRINTFORML 「讨厌、舌头、放进来了呀…%UNICODE(0x2665) *1%」
+		PRINTW 
+	CASE 1
+		PRINTFORML 「%MASTERNAME:42%真是的、明明是在舔着屁股、却这么高兴呀—…%UNICODE(0x2665) *1%」
+		PRINTFORML 「会因为这样的事情—而兴奋的变态桑呀—、必须要由果密切监视才行呢—…%UNICODE(0x2665) *1%」
+		PRINTW 
+	CASE 2
+		PRINTFORML 「并不是果喜欢被舔着屁股呀、是%MASTERNAME:42%喜欢舔着屁股哟…%UNICODE(0x2665) *1%」
+		PRINTFORML 「明明都没有命令什么的、就已经开始舔上了呀…%UNICODE(0x2665) *1%」
+		PRINTFORML 「这种变态桑、大概只有果才能够应付的过来吧—…♪」
+		PRINTW 
+	ENDSELECT
+RETURN 1
+
+;==================================================
+;ぱふぱふ
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_73
+CALL M_KOJO_MESSAGE_COUNTER_K42_73_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_73_1
+	IF TALENT:TARGET:胸围 > 0
+		PRINTFORML 「被巨大的—胸部夹住什么的、你很喜欢的对吧…%UNICODE(0x2665) *1%」
+		PRINTFORML 「好啦、来撒娇也是可以的呢—…%UNICODE(0x2665) *1%」
+		PRINTW 
+	ELSEIF TALENT:TARGET:胸围 == -1
+		PRINTFORML 「即使是我娇小的胸部也很喜欢的%MASTERNAME:42%、真可爱—…%UNICODE(0x2665) *1%」
+		PRINTFORML 「不管是触摸、还是吮吸什么的—都可以哟…%UNICODE(0x2665) *1%」
+		PRINTW 
+	ELSEIF TALENT:TARGET:胸围 == -2
+		PRINTFORML 「明明没有胸部、却很—高兴啊…%UNICODE(0x2665) *1%」
+		PRINTFORML 「果也、对%MASTERNAME:42%、最—喜欢了哟…%UNICODE(0x2665) *1%」
+		PRINTW 
+	ELSE
+		PRINTFORML 「把脸埋在胸部里、真的很喜欢呢—…%UNICODE(0x2665) *1%」
+		PRINTFORML 「就让果来治愈%MASTERNAME:42%呢…%UNICODE(0x2665) *1%」
+		PRINTW 
+	ENDIF
+RETURN 1
+
+;==================================================
+;乳合わせ
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_74
+CALL M_KOJO_MESSAGE_COUNTER_K42_74_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_74_1
+RETURN 1
+
+;==================================================
+;タワシ洗い
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_75
+CALL M_KOJO_MESSAGE_COUNTER_K42_75_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_75_1
+RETURN 1
+
+;==================================================
+;强制アソコ爱抚
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_76
+CALL M_KOJO_MESSAGE_COUNTER_K42_76_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_76_1
+	IF PALAM:润滑 >= PALAMLV:3
+		PRINTFORML 「好啦、来摸摸看…♪　已经湿得很厉害了对吧？」
+		PRINTFORML 「向被%MASTERNAME:42%玩弄的不得了、已经期待成这样了呢…♪」
+		PRINTW 
+	ELSE
+		PRINTFORML 「%MASTERNAME:42%的手指、喜欢…♪」
+		PRINTFORML 「呐、让果的这里、舒服起来吧…♪」
+		PRINTW 
+	ENDIF
+RETURN 1
+
+;==================================================
+;乳を吸わせる
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_77
+CALL M_KOJO_MESSAGE_COUNTER_K42_77_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_77_1
+IF TALENT:恋慕 && TALENT:恋人
+	IF TALENT:TARGET:育儿中
+		PRINTFORML 「啊嗯%UNICODE(0x2665) *1%　这样子吸的话%CHILDNAME:42:(TALENT:TARGET:育儿中)%的份都要被吸干了呀%UNICODE(0x2665) *1%」
+		PRINTFORML 「真是—、喜欢撒娇啊…%UNICODE(0x2665) *1%　就好像有两个小宝宝一样…%UNICODE(0x2665) *1%」
+		PRINTW 
+	ELSE
+	ENDIF
+ELSEIF TALENT:恋慕 || TALENT:恋人
+	SELECTCASE RAND:2
+	CASE 0
+		PRINTFORML 「呀嗯%UNICODE(0x2665) *1%　同时吸两个乳头什么的、真是贪婪啊…%UNICODE(0x2665) *1%」
+		PRINTFORML 「不用这么贪心也可以的啦、果的胸部是%MASTERNAME:42%的东西哟…%UNICODE(0x2665) *1%」
+		PRINTW 
+	CASE 1
+		PRINTFORML 「快看、是%MASTERNAME:42%喜欢的胸部哟—%UNICODE(0x2665) *1%　嗯嗯%UNICODE(0x2665) *1%」
+		PRINTFORML 「呀昂%UNICODE(0x2665) *1%　婴儿才不会这么下流得吸乳头呀—…%UNICODE(0x2665) *1%」
+		PRINTW 
+	ENDSELECT
+;ELSEIF TALENT:思慕
+;	PRINTFORML 「好啦、这—样子的、你最喜欢了对吧？」
+;	PRINTFORML 「这样子的事情、估计只有我才会让你做吧、所以要好好地吸呢…%UNICODE(0x2665) *1%」
+;	PRINTW 
+;ELSE
+;	PRINTFORML 「啊哈、这么沉迷地吸着胸部、像个笨蛋似的…！」
+;	PRINTFORML 「现在的你、真的是一幅不像话的表情呢…！」
+;	PRINTW 
+ENDIF
+RETURN 1
+
+;-------------------------------------------------
+;性交
+;-------------------------------------------------
+;==================================================
+;正常位Ｖ插入される（对方主导正常位で你がＶに插入される）
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_80
+CALL M_KOJO_MESSAGE_COUNTER_K42_80_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_80_1
+;IF TALENT:处女 == 0
+;	TCVAR:次回Counter = 1
+;ENDIF
+IF (TALENT:MASTER:年龄 < 1 && TALENT:MASTER:幼儿／幼儿退行)
+	IF TCVAR:MASTER:破瓜 == 1
+	ELSE
+	ENDIF
+ELSE
+	IF CFLAG:K42C_结婚 >= 1
+		;你が处女だった
+		IF TCVAR:MASTER:破瓜 == 1
+			IF FIRSTTIME("被正常位")
+				PRINTFORML 「达令，血…！ 不疼吗？」
+				PRINTFORML 「嗯，在疼痛消失之前我会保持静止的。慢慢呼吸」
+				PRINTL 
+				PRINTFORML 「冷静下来了吗？ 没事吧？」
+				PRINTFORML 「至今为止，都是为了果好好地保留着的…？」
+				CALL HPH_PRINT,@"「好高兴…HPH　今天，由果来当新郎呢…HPH」","L"
+				PRINTL 
+				CALL HPH_PRINT,@"「再一次，运动呢。嗯，那个…」","L"
+				CALL HPH_PRINT,@"「因为达令很可爱，如果不小心激烈地做了，对不起哦…HPH」","L"
+				PRINTW 
+			ELSE
+				CALL HPH_PRINT,@"「对不起，达令的小穴，太舒服了，腰停不下来…HPH」","L"
+				PRINTW 
+			ENDIF
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				CALL HPH_PRINT,@"「不行了，腰，停不下来了…HPH」","L"
+			CASE 1
+				CALL HPH_PRINT,@"「嗯HPH　达令的肉壶，好舒服HPH」","L"
+			CASE 2
+				CALL HPH_PRINT,@"「达令HPH　喜欢HPH　喜欢HPH」","L"
+			ENDSELECT
+			PRINTW 
+		ENDIF
+	ELSEIF TALENT:恋慕 || TALENT:恋人
+		IF TCVAR:MASTER:破瓜 == 1
+			IF FIRSTTIME("被正常位")
+				PRINTFORML 「达令，血…！ 不疼吗？」
+				PRINTFORML 「嗯，在疼痛消失之前我会保持静止的。慢慢呼吸」
+				PRINTL 
+				PRINTFORML 「冷静下来了吗？ 没事吧？」
+				PRINTFORML 「至今为止，都是为了果好好地保留着的…？」
+				CALL HPH_PRINT,@"「好高兴…HPH　今天，由果来当新郎呢…HPH」","L"
+				PRINTW 
+				CALL HPH_PRINT,@"「再一次，运动呢。嗯，那个…」","L"
+				CALL HPH_PRINT,@"「因为达令很可爱，如果不小心激烈地做了，对不起哦…HPH」","L"
+				PRINTW 
+			ELSE
+				CALL HPH_PRINT,@"「对不起，达令的小穴，太舒服了，腰停不下来…HPH」","L"
+			ENDIF
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				CALL HPH_PRINT,@"「不行了，腰，停不下来了…HPH」","L"
+			CASE 1
+				CALL HPH_PRINT,@"「嗯HPH　达令的肉壶，好舒服HPH」","L"
+			CASE 2
+				CALL HPH_PRINT,@"「达令HPH　喜欢HPH　喜欢HPH」","L"
+			ENDSELECT
+			PRINTW 
+		ENDIF
+	ELSEIF TALENT:爱欲 || TALENT:炮友
+		IF TCVAR:MASTER:破瓜 == 1
+			IF FIRSTTIME("被正常位")
+				PRINTFORML 「%MASTERNAME:42%，血…！ 你，难道是…？」
+				PRINTFORML 「嗯，在疼痛消失之前我会保持静止的。慢慢呼吸」
+				PRINTL 
+				PRINTFORML 「冷静下来了吗？ 没事吧？」
+				PRINTFORML 「啊，那个？ 虽然现在说有点晚了，我的第一次，是和你，真的好吗…？」
+				PRINTFORML 「其实，是为重要的人保留着的之类的…如果，真的是那样的话…」
+				PRINTW 
+				PRINTFORML 「笨蛋，我是相当认真地在说的哦」
+				PRINTFORML 「虽然我和你是朋友，也会做爱，但并不是想要伤害你之类的」
+				PRINTL 
+				PRINTFORML 「对不起呢，在奇怪的地方这么认真。比起那个，疼痛怎么样了。稍微冷静下来了吗？」
+				PRINTFORML 「我会让你无法忘记你的第一次的对象的。给我做好觉悟」
+				PRINTW 
+			ELSE
+				CALL HPH_PRINT,@"「状态变得好起来了嘛…HPH　再稍微，激烈地运动哦…HPH」","L"
+			ENDIF
+		ELSE
+			SELECTCASE RAND:5
+			CASE 0
+				CALL HPH_PRINT,@"「糟糕，%MASTERNAME:42%的肉壶，太舒服了马上就要出来了…HPH」","L"
+			CASE 1
+				CALL HPH_PRINT,@"「嗯HPH　%MASTERNAME:42%的肉壶，好舒服HPH」","L"
+				CALL HPH_PRINT,@"「%CALLNAME:MASTER%也我的肉棒，舒服吗？HPH　舒服吗？HPH」","L"
+			CASE 2
+				CALL HPH_PRINT,@"「果然，我们身体的相性是最棒的…HPH」","L"
+			CASE 3
+				SELECTCASE ABL:腰
+				CASE IS >= 3
+					SELECTCASE RAND:3
+					CASE 0
+						CALL HPH_PRINT,@"「%MASTERNAME:42%，这里很弱呢HPH」","L"
+						PRINTFORML 果突刺着阴道壁粗糙的部分，仿佛要将其卷起来一般
+					CASE 1
+						CALL HPH_PRINT,@"「%MASTERNAME:42%的深处，有什么硬硬的东西碰到了…HPH」","L"
+						CALL HPH_PRINT,@"「发出了很大的声音哦…HPH　可能没有注意到HPH」","L"
+						PRINTFORML 果的龟头咚咚地撞击着子宫颈，%CALLNAME:MASTER%发出了野兽般的喘息声
+					CASE 2
+						CALL HPH_PRINT,@"「怎么样？　不只是猛烈地突刺，像这样也很舒服吧？HPH」","L"
+						PRINTFORML 果在蜜唇附近，以龟头勉强能拔出与不能拔出的绝妙时机，小幅度地抽插着
+						PRINTFORML 被玩弄着敏感的部位，%CALLNAME:MASTER%紧紧地抱住果，发出了不成声的声音
+					ENDSELECT
+					PRINTW 
+				CASEELSE
+					PRINTFORML 「再稍微慢一点？　就算你这么说…」
+					CALL HPH_PRINT,@"「%MASTERNAME:42%的肉壶太舒服了，根本没办法调整啊HPH」","L"
+				ENDSELECT
+			CASE 4
+				CALL HPH_PRINT,@"「%CALLNAME:MASTER%，手，握着吧…HPH」","L"
+				PRINTFORML 果和%CALLNAME:MASTER%，仿佛恋人一般手牵着手，同时互相摇晃着腰
+			ENDSELECT
+			PRINTW 
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;Ｖ插入する（对方主导で你がＶに插入させられる）
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_85
+CALL M_KOJO_MESSAGE_COUNTER_K42_85_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_85_1
+	IF TALENT:处女 == 1
+		PRINTFORML 「好高兴%UNICODE(0x2665) *1%　终于、成为了、%MASTERNAME:42%的东西了呀…%UNICODE(0x2665) *1%」
+		PRINTFORML 果忍耐着破瓜的疼痛、幸福感包围着的表情和、眼泪一起浮现了出来
+		PRINTW 
+	ELSE
+	;赤ちゃん作っちゃおうか～
+		IF CFLAG:TARGET:允许无套 == 2
+			IF TEQUIP:MASTER:避孕套 == 0 && TCVAR:TARGET:口服避孕药 == 0
+				IF TALENT:妊娠
+					PRINTFORML 「因为已经怀孕了、就不戴套直接放进来呢…%UNICODE(0x2665) *1%」
+					PRINTFORML 「现在的话就可以随心所欲地肉壶射精（内射）啦…要尽情地—射在果的肉壶呢%UNICODE(0x2665) *1%」
+					PRINTFORML 「啊哈、在肉壶里变得更大了…%UNICODE(0x2665) *1%　这个喜欢%UNICODE(0x2665) *1%」
+					PRINTW 
+				ELSEIF ESTRUS_CYCLE(TARGET) == 150
+					IF EXP:分娩经验 > 0
+						PRINTFORML 「呐～～、我们再、生个孩子吧」
+						PRINTFORML 「那孩子已经独立了、第{EXP:分娩经验 + 1}个孩子、想要了呢…%UNICODE(0x2665) *1%」
+						PRINTFORML 「今天大概是容易怀上的日子、要—尽情地对果播种呢…♪」
+						PRINTW 
+					ELSE
+						PRINTFORML 「呐、差不多该要个孩子了吧？」
+						PRINTFORML 「感觉今天很可能会受精、不戴套直接插入吧…%UNICODE(0x2665) *1%　嗯%UNICODE(0x2665) *1%」
+						PRINTFORML 「啊哈、%MASTERNAME:42%的、比起平时更硬了呀…%UNICODE(0x2665) *1%　是兴奋—起来了吗？」
+						PRINTW 
+					ENDIF
+				ELSE
+					IF EXP:分娩经验 > 0
+						PRINTFORML 「呐～～、我们再、生个孩子吧」
+						PRINTFORML 「那孩子已经独立了、第{EXP:分娩经验 + 1}个孩子、想要了呢…%UNICODE(0x2665) *1%」
+						PRINTFORML 「今天并不是危险日、所以现在开始要射出满满的精液才行呢…♪」
+						PRINTW 
+					ELSE
+						PRINTFORML 「呐、差不多该要个孩子了吧？」
+						PRINTFORML 「今天就不避孕直接来做吧…♪　%MASTERNAME:42%对、不戴套来做、讨厌吗…？」
+						PRINTFORML 「但是现在啊、可以没有许可就直接插～进去噢♪　啊嗯%UNICODE(0x2665) *1%」
+						PRINTW 
+					ENDIF
+				ENDIF
+			ELSE
+				PRINTFORML 「说实话—呢、不用避孕也是—可以的啦…♪　…嗯%UNICODE(0x2665) *1%」
+				PRINTW 
+			ENDIF
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 「我的那个、被%MASTERNAME:42%的欧金金、插进来了呀…%UNICODE(0x2665) *1%」
+				PRINTW 
+			CASE 1
+				PRINTFORML 「啊、想要的、进来啦…%UNICODE(0x2665) *1%　想要的、就是这个呀…%UNICODE(0x2665) *1%」
+				PRINTFORML 「果、才不淫乱呢…%UNICODE(0x2665) *1%　只是喜欢%MASTERNAME:42%而已嘛…%UNICODE(0x2665) *1%」
+				PRINTW 
+			CASE 2
+				PRINTFORML 「啊哈%UNICODE(0x2665) *1%　插进、来了啊…%UNICODE(0x2665) *1%」
+				PRINTW 
+			ENDSELECT
+		ENDIF
+	ENDIF
+RETURN 1
+
+;==================================================
+;だいしゅきホールド
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_86
+CALL M_KOJO_MESSAGE_COUNTER_K42_86_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_86_1
+	IF CFLAG:TARGET:允许无套 == 2
+		SELECTCASE RAND:6
+		CASE 0
+			PRINTFORML 「不可以拔出去啊%UNICODE(0x2665) *1%　射在外面的话我不会原谅你的%UNICODE(0x2665) *1%」
+			PRINTFORML 「在肉壶射出来%UNICODE(0x2665) *1%　全部%UNICODE(0x2665) *1%　都要在肉壶射出来呀%UNICODE(0x2665) *1%」
+			PRINTW 
+		CASE 1
+			PRINTFORML 「不可以逃开呀%UNICODE(0x2665) *1%　要紧紧的—%UNICODE(0x2665) *1%　紧紧的抱着—地来做呀%UNICODE(0x2665) *1%」
+			PRINTFORML 「爱你呀%UNICODE(0x2665) *1%　就这样子—永远的—紧紧的抱着地来做吧%UNICODE(0x2665) *1%」
+			PRINTW 
+		CASE 2
+			PRINTFORML 「一起去吧？　呐？　在果的最深处射出来吧%UNICODE(0x2665) *1%」
+			PRINTFORML 「射出来%UNICODE(0x2665) *1%　射出来%UNICODE(0x2665) *1%　制造小宝宝的子种汁%UNICODE(0x2665) *1%　请在肉壶—满满的射出来呀%UNICODE(0x2665) *1%」
+			PRINTW 
+		CASE 3
+			PRINTFORML 「不～行%UNICODE(0x2665) *1%　脚才不给你～放开%UNICODE(0x2665) *1%」
+			PRINTFORML 「%MASTERNAME:42%只用专注于射精就好了%UNICODE(0x2665) *1%」
+			PRINTW 
+		CASE 4
+			PRINTFORML 「呐、%MASTERNAME:42%…」
+			PRINTFORML 「…让我怀孕吧%UNICODE(0x2665) *1%」
+			PRINTFORML 「啊哈、在肉壶膨胀起来了…%UNICODE(0x2665) *1%　是真的想要我怀孕呢…%UNICODE(0x2665) *1%」
+			PRINTW 
+		CASE 5
+			PRINTFORML 「呐、%MASTERNAME:42%…」
+			PRINTFORML 「…喜欢%UNICODE(0x2665) *1%」
+			PRINTFORML 「啊哈、在肉壶不断颤抖着粗暴地搅动着着呢…%UNICODE(0x2665) *1%」
+		ENDSELECT
+	ELSE
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 「喜欢%UNICODE(0x2665) *1%　喜欢%UNICODE(0x2665) *1%」
+			PRINTFORML 「已经不想要、离开%MASTERNAME:42%了啊%UNICODE(0x2665) *1%」
+			PRINTW 
+		CASE 1
+			PRINTFORML 「呐%MASTERNAME:42%、我有个请求呀」
+			PRINTFORML 「从现在开始、希望能继续和果—尽情地H—呀…%UNICODE(0x2665) *1%」
+			PRINTFORML 「约好了呢…%UNICODE(0x2665) *1%　欸嘿嘿、%MASTERNAME:42%、最—喜欢了%UNICODE(0x2665) *1%」
+			PRINTW 
+		CASE 2
+			PRINTFORML 「呐、%MASTERNAME:42%…」
+			PRINTFORML 「…喜欢%UNICODE(0x2665) *1%」
+			PRINTFORML 「啊哈、在肉壶不断颤抖着粗暴地搅动着着呢…%UNICODE(0x2665) *1%」
+		ENDSELECT
+	ENDIF
+RETURN 1
+
+;==================================================
+;Ａ插入する（TARGET受け）
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_87
+CALL M_KOJO_MESSAGE_COUNTER_K42_87_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_87_1
+IF TALENT:爱欲 || TALENT:炮友
+	IF TCVAR:发情
+		IF 充填率(TARGET,1) >= 100 || 充填率(TARGET,2) >= 100
+			SELECTCASE RAND:5
+			CASE 0
+				PRINTFORML 「肚子要爆炸了%UNICODE(0x2665) *1%　好像被精液，怀孕了一样%UNICODE(0x2665) *1%」
+				PRINTFORML 果用注入肠内的精液像孕妇一样膨胀着肚子，仍然在用屁眼贪婪地享受着肉棒…
+				PRINTW 
+			CASE 1
+				PRINTFORML 「哦%UNICODE(0x2665) *1%　哦库%UNICODE(0x2665) *1%　碰到了不得了的地方%UNICODE(0x2665) *1%」
+				PRINTFORML 「已经不行了%UNICODE(0x2665) *1%　屁屁%UNICODE(0x2665) *1%　停不下来了%UNICODE(0x2665) *1%」
+				PRINTW 
+			CASE 2
+				PRINTFORML 「屁屁%UNICODE(0x2665) *1%　怀孕%UNICODE(0x2665) *1%　怀孕了%UNICODE(0x2665) *1%」
+				PRINTFORML 「精液噗咻噗咻地射进来了%UNICODE(0x2665) *1%　屁穴%UNICODE(0x2665) *1%　怀上了%UNICODE(0x2665) *1%」
+				PRINTW 
+			CASE 3
+				PRINTFORML 「还要%UNICODE(0x2665) *1%　还要射出来%UNICODE(0x2665) *1%」
+				PRINTFORML 「屁屁%UNICODE(0x2665) *1%　用%MASTERNAME:42%的精液让我怀孕%UNICODE(0x2665) *1%」
+				PRINTW 
+			CASE 4
+				PRINTFORML 「咔咻%UNICODE(0x2665) *1%　哈%UNICODE(0x2665) *1%　嘿%UNICODE(0x2665) *1%　啊～～%UNICODE(0x2665) *1%」
+				PRINTFORML 从肛门和肉棒的结合部噗啵、咻啵地喷出精液的同时，果仍然在摇晃着腰…
+				PRINTW 
+			CASE 5
+				PRINTFORML 「怀孕了%UNICODE(0x2665) *1%　屁屁%UNICODE(0x2665) *1%　怀孕了%UNICODE(0x2665) *1%」
+				PRINTW 
+			ENDSELECT
+		ELSE
+			IF ABL:Ａ感觉 > ABL:Ｖ感觉
+				SELECTCASE RAND:5
+				CASE 0
+					PRINTFORML 「屁屁%UNICODE(0x2665) *1%　比小穴更舒服%UNICODE(0x2665) *1%」
+					PRINTFORML 
+				CASE 1
+					PRINTFORML 「哦%UNICODE(0x2665) *1%」
+					PRINTFORML 果啪唧一声坐了下去
+					PRINTW 
+					PRINTFORML 「啊%UNICODE(0x2665) *1%　嘿%UNICODE(0x2665) *1%　咿%UNICODE(0x2665) *1%　%UNICODE(0x2665) *1%%UNICODE(0x2665) *1%%UNICODE(0x2665) *1%」
+					PRINTFORML 果抬起腰。肉冠每次像在粗糙地抓挠着肠壁时，果都会摆出因快乐而融化的表情
+					PRINTW 
+				CASE 2
+					PRINTFORML 「龟头、中、摩擦%UNICODE(0x2665) *1%」
+					PRINTFORML 「顶着子宫了%UNICODE(0x2665) *1%　屁股也子宫也%UNICODE(0x2665) *1%　感觉到了%UNICODE(0x2665) *1%」
+				CASE 3
+					PRINTFORML 「%MASTERNAME:42%的鸡鸡真大%UNICODE(0x2665) *1%」
+					PRINTFORML 「屁穴，变得松松垮垮的%UNICODE(0x2665) *1%　哦哦%UNICODE(0x2665) *1%」
+					PRINTW 
+				CASE 4
+					PRINTFORML 「糟糕%UNICODE(0x2665) *1%　屁屁%UNICODE(0x2665) *1%　好舒服%UNICODE(0x2665) *1%」
+					PRINTFORML 「还要%UNICODE(0x2665) *1%　屁穴%UNICODE(0x2665) *1%　哦哦%UNICODE(0x2665) *1%」
+					PRINTFORML 「要去了%UNICODE(0x2665) *1%　屁眼要去了%UNICODE(0x2665) *1%」
+					PRINTW 
+				ENDSELECT
+			ELSE
+				SELECTCASE RAND:4
+				CASE 0
+					PRINTFORML 「哦哦%UNICODE(0x2665) *1%　屁屁%UNICODE(0x2665) *1%　屁屁好舒服%UNICODE(0x2665) *1%」
+					PRINTFORML 「糟糕%UNICODE(0x2665) *1%　屁眼要去了%UNICODE(0x2665) *1%　要去了%UNICODE(0x2665) *1%」
+					PRINTW 
+				CASE 1
+					PRINTFORML 「还要，还要往里面搅动哦%UNICODE(0x2665) *1%」
+					PRINTFORML 「好厉害%UNICODE(0x2665) *1%　哦%UNICODE(0x2665) *1%　啊，啊～～～～%UNICODE(0x2665) *1%」
+					PRINTW 
+				CASE 2
+					PRINTFORML 「嘻啊%UNICODE(0x2665) *1%　屁股，屁股好舒服%UNICODE(0x2665) *1%」
+					PRINTFORML 「屁屁%UNICODE(0x2665) *1%　最喜欢屁眼性交了%UNICODE(0x2665) *1%」
+					PRINTW 
+				CASE 3
+					PRINTFORML 「来%UNICODE(0x2665) *1%　给我去吧%UNICODE(0x2665) *1%」
+					PRINTFORML 「用屁穴去吧%UNICODE(0x2665) *1%　给我射在里面啊%UNICODE(0x2665) *1%」
+					PRINTW 
+				ENDSELECT
+			ENDIF
+		ENDIF
+	ELSE
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 「啊%UNICODE(0x2665) *1%　啊，糟糕%UNICODE(0x2665) *1%」
+			PRINTFORML 「屁屁%UNICODE(0x2665) *1%　屁股要裂开了%UNICODE(0x2665) *1%」
+			PRINTW 
+		CASE 1
+			PRINTFORML 「啊%UNICODE(0x2665) *1%　啊啊啊啊～～～～%UNICODE(0x2665) *1%」
+			PRINTFORML 「鸡鸡、卡在屁屁里了%UNICODE(0x2665) *1%　～～%UNICODE(0x2665) *1%　～%UNICODE(0x2665) *1%%UNICODE(0x2665) *1%」
+		CASE 2
+			PRINTFORML 「呜呜呜呜、屁股、好厉害…%UNICODE(0x2665) *1%」
+			PRINTFORML 「啊%UNICODE(0x2665) *1%　啊啊啊啊啊%UNICODE(0x2665) *1%　啊要去了%UNICODE(0x2665) *1%　咿%UNICODE(0x2665) *1%」
+			PRINTW 
+		ENDSELECT
+	ENDIF
+ELSE
+ENDIF
+	
+	IF ABL:肛门 >= 5
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 「好啦赶快变得更坚挺吧%UNICODE(0x2665) *1%」
+			PRINTFORML 「不变得硬硬的话就要拔出来了呢%UNICODE(0x2665) *1%」
+			PRINTW 
+		CASE 1
+			PRINTFORML 「射精、不可以忍耐着不射呢%UNICODE(0x2665) *1%」
+			PRINTFORML 「要是射了的话、我会让它很快就硬起来的呢%UNICODE(0x2665) *1%」
+			PRINTFORML 「啊哈、好厉害的没出息的表情%MASTERNAME:42%、真可爱—%UNICODE(0x2665) *1%　好乖好乖♪」
+			PRINTW 
+		CASE 2
+			PRINTFORML 「还不行♪　毕竟才刚插进去不久呢%UNICODE(0x2665) *1%」
+			PRINTFORML 「在里面射到满满的—才能拔出来噢%UNICODE(0x2665) *1%」
+			PRINTFORML 「还要%UNICODE(0x2665) *1%　这样子还远远不够呀%UNICODE(0x2665) *1%」
+			PRINTW 
+		ENDSELECT
+	ELSE
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 「嗯嗯…！　屁股里、很紧呢…%UNICODE(0x2665) *1%」
+			PRINTFORML 「「我的尻穴、已经撑开变成%MASTERNAME:42%的形状了呀…」
+			PRINTW 
+		CASE 1
+			PRINTFORML 「呼呜、咕呜～～、好、好粗……」
+			PRINTFORML 「欸嘿嘿、插、插进去了呀…♪」
+			PRINTW 
+		CASE 2
+			PRINTFORML 「唔、呜呜、呜呜呜～～…屁股里面、好紧…」
+			PRINTFORML 「%CALLNAME:MASTER%的欧金金、正在侵犯我的屁股呀…%UNICODE(0x2665) *1%」
+			PRINTW 
+		ENDSELECT
+	ENDIF
+RETURN 1
+
+;==================================================
+;Ｖ腰振り（MASTER受け・你が插入させられる）
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_88
+CALL M_KOJO_MESSAGE_COUNTER_K42_88_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_88_1
+
+;搾り取り模式
+IF TCVAR:399 == 1
+	IF TEQUIP:体位 == 1;正常位
+		PRINTFORML 「反—正没办法忍耐了对吧？　好啦、赶紧射精吧%UNICODE(0x2665) *1%」
+		PRINTFORML 「快点、被紧紧地收缩着去吧%UNICODE(0x2665) *1%　让我看着你不像话的表情去吧%UNICODE(0x2665) *1%」
+		PRINTFORML 「%MASTERNAME:42%绝顶的表情喜欢%UNICODE(0x2665) *1%　去吧%UNICODE(0x2665) *1%　快点绝顶吧%UNICODE(0x2665) *1%」
+		PRINTW 
+	ELSEIF TEQUIP:体位 == 2;后背位
+		PRINTFORML 「%MASTERNAME:42%不动也没问题的哟%UNICODE(0x2665) *1%　就由果来让你去呢%UNICODE(0x2665) *1%」
+		PRINTFORML 「%MASTERNAME:42%只用考虑舒服地射精就好了噢%UNICODE(0x2665) *1%」
+		PRINTFORML 「要biubiu了吗？　想要biubiu地射出来吗？　还不行哟%UNICODE(0x2665) *1%　要和我一起绝顶呢%UNICODE(0x2665) *1%」
+		PRINTW 
+	ELSEIF TEQUIP:体位 == 3;骑乘位
+		SELECTCASE RAND:2
+		CASE 0
+			PRINTFORML 「你看、能感受到吧？　连深处都能感受到充满了精神哟%UNICODE(0x2665) *1%」
+			PRINTFORML 「还积攒在金玉里面对吧%UNICODE(0x2665) *1%　拿出更多精液呀%UNICODE(0x2665) *1%」
+			PRINTFORML 「用我的小穴将里面全部清空吧%UNICODE(0x2665) *1%　啊恩%UNICODE(0x2665) *1%」
+			PRINTW 
+		CASE 1
+			PRINTFORML 啪qiu嗯%UNICODE(0x2665) *1%　啪qiu嗯%UNICODE(0x2665) *1%　啪qiu嗯%UNICODE(0x2665) *1%
+			PRINTFORML 「啊啊啊～%UNICODE(0x2665) *1%　可以哟%UNICODE(0x2665) *1%　深处、被顶撞着%UNICODE(0x2665) *1%」
+			PRINTW 
+			PRINTFORML 「再多地%UNICODE(0x2665) *1%　展现你那丢人的样子%UNICODE(0x2665) *1%　只能展现给我看呢%UNICODE(0x2665) *1%」
+			PRINTFORML 「真可爱%UNICODE(0x2665) *1%　%MASTERNAME:42%、因为很可爱所以我会不停地侵犯你呢%UNICODE(0x2665) *1%」
+			PRINTW 
+		ENDSELECT
+	ELSEIF TEQUIP:体位 == 4;对面座位
+		PRINTFORML 「还没有满足%UNICODE(0x2665) *1%　还没有满足呀%UNICODE(0x2665) *1%」
+		PRINTFORML 「尖端在里面不停地搅弄着呀%UNICODE(0x2665) *1%」
+		PRINTFORML 「还是超级硬呀%UNICODE(0x2665) *1%　要射出好多好多呢%UNICODE(0x2665) *1%」
+		PRINTW 
+	ENDIF
+ELSE
+	IF TALENT:爱欲 || TALENT:炮友
+		IF TCVAR:发情
+			IF TEQUIP:体位 == 1;正常位
+				SELECTCASE RAND:5
+				CASE 0
+					PRINTFORML 「啊%UNICODE(0x2665) *1%　啊%UNICODE(0x2665) *1%　啊啊%UNICODE(0x2665) *1%　好棒%UNICODE(0x2665) *1%　好棒%UNICODE(0x2665) *1%」
+					PRINTW 
+				CASE 1
+					PRINTFORML 「还不行%UNICODE(0x2665) *1%　在精液不再出来之前不会放开的%UNICODE(0x2665) *1%」
+					PRINTFORML 果将胳膊和腿缠绕在对方的脖子和腰上，试图榨取最后一滴精液…
+					PRINTW 
+				CASE 2
+					PRINTFORML 「来%UNICODE(0x2665) *1%　再突刺一点%UNICODE(0x2665) *1%」
+					PRINTFORML 「精液，快点射出来啊%UNICODE(0x2665) *1%」
+					PRINTW 
+				CASE 3
+					PRINTFORML 「喜欢%UNICODE(0x2665) *1%　喜欢%UNICODE(0x2665) *1%　性爱%UNICODE(0x2665) *1%　性爱好舒服%UNICODE(0x2665) *1%」
+					PRINTFORML 果自己缠绕着腿摇晃着腰，化身为说着隐语的情欲野兽…
+				CASE 4
+					PRINTFORML 「还能射出来吧%UNICODE(0x2665) *1%　精液，再给我一点%UNICODE(0x2665) *1%」
+					PRINTFORML 平时那副活泼的样子消失了，果化身为贪婪地吸食精液的淫乱母猪…
+					PRINTW 
+				ENDSELECT
+			ELSEIF TEQUIP:体位 == 2;后背位
+				SELECTCASE TALENT:MASTER:形状
+				CASE 6,10;巨根、马并み
+					SELECTCASE RAND:3
+					CASE 0
+						PRINTFORML 「呜咕！？　笨、笨蛋…%UNICODE(0x2665) *1%　你的，太大了啦…%UNICODE(0x2665) *1%」
+						PRINTFORML （小穴要被%MASTERNAME:42%的形状改造了%UNICODE(0x2665) *1%　会变成%MASTERNAME:42%专用的%UNICODE(0x2665) *1%）
+						PRINTW 
+					CASE 1
+						PRINTFORML 「好大%UNICODE(0x2665) *1%　噗咕呜！　嗯嘿%UNICODE(0x2665) *1%」
+						PRINTFORML （糟糕，内脏要被顶起来了，但是，想要再突刺一点）
+						PRINTFORML （这是什么%UNICODE(0x2665) *1%　我不知道这是什么%UNICODE(0x2665) *1%）
+						PRINTW 
+					CASE 2
+						PRINTFORML 「好大%UNICODE(0x2665) *1%　喜欢大的%UNICODE(0x2665) *1%」
+						PRINTFORML 「啊%UNICODE(0x2665) *1%　啊啊%UNICODE(0x2665) *1%　咕啾%UNICODE(0x2665) *1%」
+						PRINTW 
+					ENDSELECT
+				CASEELSE
+					SELECTCASE RAND:3
+					CASE 0
+						PRINTFORML 「糟糕%UNICODE(0x2665) *1%　果然，这个，好棒%UNICODE(0x2665) *1%」
+						PRINTFORML 「你的、你的鸡鸡，喜欢%UNICODE(0x2665) *1%」
+						PRINTW 
+					CASE 1
+						PRINTFORML 「鸡鸡好厉害%UNICODE(0x2665) *1%　肉壶、像锯子一样%UNICODE(0x2665) *1%」
+						PRINTW 
+					CASE 2
+						PRINTFORML 「嗯啊%UNICODE(0x2665) *1%　嗯嗯嗯%UNICODE(0x2665) *1%　碰到了舒服的地方%UNICODE(0x2665) *1%」
+						PRINTFORML 「糟糕%UNICODE(0x2665) *1%　鸡鸡好舒服%UNICODE(0x2665) *1%」
+						PRINTFORML 「还要，还要用鸡鸡啪啪啪%UNICODE(0x2665) *1%」
+						PRINTW 
+					ENDSELECT
+				ENDSELECT
+			ELSEIF TEQUIP:体位 == 3;骑乘位
+				SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 「来%UNICODE(0x2665) *1%　还能射出来吧？」
+					PRINTFORML 「在鸡鸡上用力啊%UNICODE(0x2665) *1%　人家在让你舒服啊%UNICODE(0x2665) *1%」
+				CASE 1
+					PRINTFORML 「已经到果限了？　那就饶了你…才不饶呢%UNICODE(0x2665) *1%」
+					PRINTFORML 啪啾！　啪啾！　啪啾！　啪啾！　啪啾！　啪啾！　啪啾！　啪啾！　
+					PRINTFORML 啪啾！　啪啾！　啪啾！　啪啾！　啪啾！　啪啾！　啪啾！　啪啾！　
+					PRINTFORML 啪啾！　「啊哈，好表情%UNICODE(0x2665) *1%」　啪啾！　啪啾！　啪啾！　啪啾！　啪啾！　
+					PRINTFORML 啪啾！　啪啾！　啪啾！　啪啾！　啪啾！　啪啾！　啪啾！　啪啾！　
+					PRINTFORML 啪啾！　啪啾！　啪啾！　啪啾！　啪啾！　啪啾！　啪啾！　啪啾！　
+					PRINTFORML 啪啾！　啪啾！　啪啾！　啪啾！　「还不能去哦%UNICODE(0x2665) *1%」　啪啾！　啪啾！　
+					PRINTFORML 啪啾！　啪啾！　啪啾！　啪啾！　啪啾！　啪啾！　啪啾！　啪啾！　
+					PRINTW 
+				CASE 2
+					PRINTFORML 「要拔出来了？　不行%UNICODE(0x2665) *1%」
+					PRINTFORML 「你要射到蛋蛋空空为止啊%UNICODE(0x2665) *1%」
+					PRINTW
+				CASE 3 
+					SELECTCASE TALENT:MASTER:形状
+					CASE 6,10;巨根、马并み
+						PRINTFORML 「呜咕！？　噗叽%UNICODE(0x2665) *1%　咿叽%UNICODE(0x2665) *1%」
+						PRINTFORML （这是什么%UNICODE(0x2665) *1%　子宫，要被压碎了%UNICODE(0x2665) *1%）
+						PRINTFORML （如果品尝过这种感觉，绝对没法和其他男人交往了…%UNICODE(0x2665) *1%）
+						PRINTW 
+					CASE 1,2;粗チン
+						PRINTFORML 「啊哈%UNICODE(0x2665) *1%　小孩子鸡鸡，意外地能顶到舒服的地方…%UNICODE(0x2665) *1%」
+						PRINTFORML 「会顶着我的舒服的地方，咚咚%UNICODE(0x2665) *1%地撞击呢%UNICODE(0x2665) *1%」
+						PRINTFORML 「啊%UNICODE(0x2665) *1%　喜欢%UNICODE(0x2665) *1%　喜欢小孩子鸡鸡%UNICODE(0x2665) *1%」
+						PRINTW 
+					CASEELSE
+						PRINTFORML 「啊啊%UNICODE(0x2665) *1%　好厉害好硬%UNICODE(0x2665) *1%」
+						PRINTFORML 「鸡鸡好舒服%UNICODE(0x2665) *1%　想要再咚咚地动%UNICODE(0x2665) *1%」
+						PRINTW 
+					ENDSELECT
+				ENDSELECT
+			ELSEIF TEQUIP:体位 == 4;对面座位
+			ENDIF
+		ELSE
+			IF TEQUIP:体位 == 1;正常位
+				PRINTFORML 「喜欢%UNICODE(0x2665) *1%　喜欢%UNICODE(0x2665) *1%」
+				PRINTFORML 「%MASTERNAME:42%%UNICODE(0x2665) *1%　喜欢%MASTERNAME:42%的鸡鸡%UNICODE(0x2665) *1%」
+				PRINTW 
+			ELSEIF TEQUIP:体位 == 2;后背位
+				PRINTFORML 「啊～%UNICODE(0x2665) *1%　啊%UNICODE(0x2665) *1%　啊%UNICODE(0x2665) *1%　啊%UNICODE(0x2665) *1%」
+				PRINTFORML 「里面%UNICODE(0x2665) *1%　碰到了里面%UNICODE(0x2665) *1%」
+				PRINTW 
+			ELSEIF TEQUIP:体位 == 3;骑乘位
+				SELECTCASE RAND:5
+				CASE 0
+					PRINTFORML 「啊哈嗯%UNICODE(0x2665) *1%　进来了%UNICODE(0x2665) *1%」
+					PRINTFORML 「好厉害%UNICODE(0x2665) *1%　这个，好舒服%UNICODE(0x2665) *1%」
+					PRINTW 
+				CASE 1
+					PRINTFORML 「来，被女孩子侵犯的感觉怎么样%UNICODE(0x2665) *1%」
+					PRINTFORML 「没用地去吧%UNICODE(0x2665) *1%　来%UNICODE(0x2665) *1%　来%UNICODE(0x2665) *1%」
+					PRINTW 
+				CASE 2
+					PRINTFORML 「啊嗯%UNICODE(0x2665) *1%　好厉害%UNICODE(0x2665) *1%」
+					PRINTFORML 「%MASTERNAME:42%的鸡鸡，好硬%UNICODE(0x2665) *1%」
+					PRINTW 
+				CASE 3
+					SELECTCASE TALENT:MASTER:形状
+					CASE 6,10;巨根、马并み
+						PRINTFORML 「嘿咕%UNICODE(0x2665) *1%　子宫、要压扁了%UNICODE(0x2665) *1%」
+						PRINTFORML 「太、太大了啦%UNICODE(0x2665) *1%　你的鸡鸡啊%UNICODE(0x2665) *1%」
+						PRINTW 
+					CASE 1,2;粗チン
+						PRINTFORML 「来%UNICODE(0x2665) *1%　你的鸡鸡，只有硬度是优点啦」
+						PRINTFORML 「来%UNICODE(0x2665) *1%　来%UNICODE(0x2665) *1%　再硬一点%UNICODE(0x2665) *1%」
+						PRINTW 
+					CASEELSE
+						PRINTFORML 「啊%UNICODE(0x2665) *1%　碰到了好的地方%UNICODE(0x2665) *1%」
+						PRINTFORML 「喜欢%MASTERNAME:42%的鸡鸡%UNICODE(0x2665) *1%　喜欢%UNICODE(0x2665) *1%」
+						PRINTW 
+					ENDSELECT
+				CASE 4
+					PRINTFORML 「啊哈，%MASTERNAME:42%，摆着可爱的表情在呻吟%UNICODE(0x2665) *1%」
+					PRINTFORML 「没关系哦，发出没用的声音去吧%UNICODE(0x2665) *1%　来%UNICODE(0x2665) *1%　来%UNICODE(0x2665) *1%」
+					PRINTFORML 果用手指啪啪地玩弄着两边的乳头，肉壶里又被肉棒折磨，感觉马上就要到达顶峰了…
+					PRINTW 
+				ENDSELECT
+			ELSEIF TEQUIP:体位 == 4;对面座位
+			ENDIF
+		ENDIF
+	ENDIF
+ENDIF
+
+IF ABL:腰 >= 5
+	SELECTCASE RAND:3
+	CASE 0
+		PRINTFORML 「我们、相性说不定很好呢…%UNICODE(0x2665) *1%」
+		PRINTFORML 「因为、真的太舒服了呀%UNICODE(0x2665) *1%　
+	CASE 1
+		PRINTFORML 「啊啊%UNICODE(0x2665) *1%　讨厌、腰忍不住动了起来%UNICODE(0x2665) *1%」
+		PRINTFORML 「明明是这么寡廉鲜耻的事情、%MASTERNAME:42%、都是因为%MASTERNAME:42%让我这么舒服才变成这样的啦%UNICODE(0x2665) *1%」
+		PRINTFORML 「就是这样哟、都是因为%MASTERNAME:42%%UNICODE(0x2665) *1%　都怪%MASTERNAME:42%让我变得这么色情啦%UNICODE(0x2665) *1%」
+		PRINTW 
+	CASE 2
+		PRINTFORML 「啊%UNICODE(0x2665) *1%　啊啊%UNICODE(0x2665) *1%」
+		PRINTFORML 「唔嗯%UNICODE(0x2665) *1%　可以哟%UNICODE(0x2665) *1%　好舒服啊%UNICODE(0x2665) *1%」
+		PRINTFORML 「更多、还要更多%UNICODE(0x2665) *1%　%MASTERNAME:42%%UNICODE(0x2665) *1%　啊啊%UNICODE(0x2665) *1%」
+		PRINTW 
+	ENDSELECT
+ELSE
+	SELECTCASE RAND:3
+	CASE 0
+		PRINTFORML 「啊啊…这是进入了里面的感觉啊…%UNICODE(0x2665) *1%」
+		PRINTFORML 「好厉害、肉壶的形状能够明白呀…%UNICODE(0x2665) *1%」
+		PRINTW 
+	CASE 1
+		PRINTFORML 「因为%MASTERNAME:42%才变成这样的呢…%UNICODE(0x2665) *1%」
+		PRINTFORML 「果会变得这么H、都是%MASTERNAME:42%的错啊%UNICODE(0x2665) *1%　啊啊嗯%UNICODE(0x2665) *1%」
+		PRINTW 
+		PRINTFORML 「要负起、责任呢%UNICODE(0x2665) *1%」
+		PRINTFORML 「让果、变得这么H的责任呀%UNICODE(0x2665) *1%」
+		PRINTW 
+	CASE 2
+		PRINTFORML 「能和%MASTERNAME:42%H的、只能有我一个人呢%UNICODE(0x2665) *1%
+		PRINTFORML 「要是搞外遇的话、我绝对不会原谅的呢%UNICODE(0x2665) *1%　啊啊嗯%UNICODE(0x2665) *1%」
+		PRINTW 
+	ENDSELECT
+ENDIF
+RETURN 1
+
+;==================================================
+;Ａ腰振り（对方主导で你がＡに插入させられる）
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_89
+CALL M_KOJO_MESSAGE_COUNTER_K42_89_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_89_1
+IF ABL:肛门 >= 5
+	SELECTCASE RAND:3
+	CASE 0
+		PRINTFORML 「啊哈、插进来了呀…%UNICODE(0x2665) *1%」
+		PRINTFORML 「小穴和屁股、你觉得哪边更好呢？　是哪边都很舒服的表情呢—%UNICODE(0x2665) *1%」
+		PRINTFORML 「像这样子的事情也做得到哟…啊哈、收紧的话欧金金就在里面一跳一跳地颤抖着呢%UNICODE(0x2665) *1%」
+		PRINTW 
+	CASE 1
+		PRINTFORML 「欧金金、现在就要开始侵犯屁股了噢…♪」
+		PRINTFORML 「快看、从前段开始慢慢～～～～～～地插进来啦♪　全部插进来啦♪」
+		PRINTFORML 「啊哈、好厉害的没出息的表情%MASTERNAME:42%、真可爱—%UNICODE(0x2665) *1%　好乖好乖♪」
+		PRINTW 
+	CASE 2
+		PRINTFORML 「快看、果的尻穴、很轻易地就被%MASTERNAME:42%的欧金金插进来了呀…♪」
+		PRINTFORML 「但是紧绷绷的很舒服对吧…%UNICODE(0x2665) *1%」
+		PRINTFORML 「要在屁股里面尽—情地射精—呢…%UNICODE(0x2665) *1%」
+		PRINTW 
+	ENDSELECT
+ELSE
+	SELECTCASE RAND:3
+	CASE 0
+		PRINTFORML 「嗯嗯…！　屁股里、很紧呢…%UNICODE(0x2665) *1%」
+		PRINTFORML 「「我的尻穴、已经撑开变成%MASTERNAME:42%的形状了呀…」
+		PRINTW 
+	CASE 1
+		PRINTFORML 「呼呜、咕呜～～、好、好粗……」
+		PRINTFORML 「欸嘿嘿、插、插进去了呀…♪」
+		PRINTW 
+	CASE 2
+		PRINTFORML 「唔、呜呜、呜呜呜～～…屁股里面、好紧…」
+		PRINTFORML 「%CALLNAME:MASTER%的欧金金、正在侵犯我的屁股呀…%UNICODE(0x2665) *1%」
+		PRINTW 
+	ENDSELECT
+ENDIF
+
+IF TALENT:恋慕 || TALENT:恋人
+	SELECTCASE RAND:3
+	CASE 0
+		PRINTFORML 「啊%UNICODE(0x2665) *1%　啊、糟糕%UNICODE(0x2665) *1%」
+		PRINTFORML 「屁股%UNICODE(0x2665) *1%　屁股要裂开了%UNICODE(0x2665) *1%」
+		PRINTW 
+	CASE 1
+		PRINTFORML 「啊%UNICODE(0x2665) *1%　啊啊啊啊啊～～～～%UNICODE(0x2665) *1%」
+		PRINTFORML 「屁股、鸡鸡卡住了%UNICODE(0x2665) *1%　～～%UNICODE(0x2665) *1%　～%UNICODE(0x2665) *1%%UNICODE(0x2665) *1%」
+	CASE 2
+		PRINTFORML 「呜呜呜呜、屁股、好厉害…%UNICODE(0x2665) *1%」
+		PRINTFORML 「啊%UNICODE(0x2665) *1%　啊啊啊啊啊%UNICODE(0x2665) *1%　啊要去了%UNICODE(0x2665) *1%　咿%UNICODE(0x2665) *1%」
+		PRINTW 
+	ENDSELECT
+ELSEIF TALENT:爱欲 || TALENT:炮友
+	IF TCVAR:发情
+		IF 充填率(TARGET,1) >= 100 || 充填率(TARGET,2) >= 100
+			SELECTCASE RAND:5
+			CASE 0
+				PRINTFORML 「肚子要爆炸了%UNICODE(0x2665) *1%　好像被精液、怀孕了一样%UNICODE(0x2665) *1%」
+				PRINTFORML 果用注入肠内的精液像孕妇一样膨胀着肚子，仍然在用屁眼贪婪地享受着肉棒…
+				PRINTW 
+			CASE 1
+				PRINTFORML 「哦%UNICODE(0x2665) *1%　哦库%UNICODE(0x2665) *1%　碰到了不得了的地方%UNICODE(0x2665) *1%」
+				PRINTFORML 「已经不行了%UNICODE(0x2665) *1%　屁股%UNICODE(0x2665) *1%　停不下来了%UNICODE(0x2665) *1%」
+				PRINTW 
+			CASE 2
+				PRINTFORML 「屁股%UNICODE(0x2665) *1%　怀孕%UNICODE(0x2665) *1%　怀孕了%UNICODE(0x2665) *1%」
+				PRINTFORML 「精液噗咻噗咻地射进来了%UNICODE(0x2665) *1%　屁穴%UNICODE(0x2665) *1%　怀上了%UNICODE(0x2665) *1%」
+				PRINTW 
+			CASE 3
+				PRINTFORML 「还要%UNICODE(0x2665) *1%　还要射出来%UNICODE(0x2665) *1%」
+				PRINTFORML 「屁股%UNICODE(0x2665) *1%　用%MASTERNAME:42%的精液让我怀孕%UNICODE(0x2665) *1%」
+				PRINTW 
+			CASE 4
+				PRINTFORML 「咔咻%UNICODE(0x2665) *1%　哈%UNICODE(0x2665) *1%　嘿%UNICODE(0x2665) *1%　啊～～%UNICODE(0x2665) *1%」
+				PRINTFORML 从肛门和肉棒的结合部噗啵、咻啵地喷出精液的同时，果仍然在摇晃着腰…
+				PRINTW 
+			CASE 5
+				PRINTFORML 「怀孕了%UNICODE(0x2665) *1%　屁股%UNICODE(0x2665) *1%　怀孕了啊%UNICODE(0x2665) *1%」
+				PRINTW 
+			ENDSELECT
+		ELSE
+			IF ABL:Ａ感觉 > ABL:Ｖ感觉
+				SELECTCASE RAND:5
+				CASE 0
+					PRINTFORML 「屁股%UNICODE(0x2665) *1%　比屄更舒服%UNICODE(0x2665) *1%」
+					PRINTFORML 
+				CASE 1
+					PRINTFORML 「哦%UNICODE(0x2665) *1%」
+					PRINTFORML 果啪唧一声坐了下去
+					PRINTW 
+					PRINTFORML 「啊%UNICODE(0x2665) *1%　嘿%UNICODE(0x2665) *1%　咿%UNICODE(0x2665) *1%　%UNICODE(0x2665) *1%%UNICODE(0x2665) *1%%UNICODE(0x2665) *1%」
+					PRINTFORML 果抬起腰。肉冠每次像在粗糙地抓挠着肠壁时，果都会摆出因快乐而融化的表情
+					PRINTW 
+				CASE 2
+					PRINTFORML 「龟头啊、中、摩擦%UNICODE(0x2665) *1%」
+					PRINTFORML 「顶着子宫了%UNICODE(0x2665) *1%　屁股也子宫也%UNICODE(0x2665) *1%　感觉到了%UNICODE(0x2665) *1%」
+				CASE 3
+					PRINTFORML 「%MASTERNAME:42%的鸡鸡好大%UNICODE(0x2665) *1%」
+					PRINTFORML 「屁穴、要松松垮垮了%UNICODE(0x2665) *1%　哦哦%UNICODE(0x2665) *1%」
+					PRINTW 
+				CASE 4
+					PRINTFORML 「糟糕%UNICODE(0x2665) *1%　屁股%UNICODE(0x2665) *1%　好舒服%UNICODE(0x2665) *1%」
+					PRINTFORML 「还要%UNICODE(0x2665) *1%　屁穴%UNICODE(0x2665) *1%　哦哦%UNICODE(0x2665) *1%」
+					PRINTFORML 「要去了%UNICODE(0x2665) *1%　屁股要去了%UNICODE(0x2665) *1%」
+					PRINTW 
+				ENDSELECT
+			ELSE
+				SELECTCASE RAND:4
+				CASE 0
+					PRINTFORML 「哦哦%UNICODE(0x2665) *1%　屁股%UNICODE(0x2665) *1%　屁股好舒服%UNICODE(0x2665) *1%」
+					PRINTFORML 「糟糕%UNICODE(0x2665) *1%　屁股要去了%UNICODE(0x2665) *1%　要去了%UNICODE(0x2665) *1%」
+					PRINTW 
+				CASE 1
+					PRINTFORML 「还要、还要往里面搅动哦%UNICODE(0x2665) *1%」
+					PRINTFORML 「好厉害%UNICODE(0x2665) *1%　哦%UNICODE(0x2665) *1%　啊啊、啊啊～～～～%UNICODE(0x2665) *1%」
+					PRINTW 
+				CASE 2
+					PRINTFORML 「嘿啊%UNICODE(0x2665) *1%　屁股、屁股好舒服%UNICODE(0x2665) *1%」
+					PRINTFORML 「屁股%UNICODE(0x2665) *1%　喜欢屁眼性交%UNICODE(0x2665) *1%」
+					PRINTW 
+				CASE 3
+					PRINTFORML 「来%UNICODE(0x2665) *1%　给我去吧%UNICODE(0x2665) *1%」
+					PRINTFORML 「用屁穴去吧%UNICODE(0x2665) *1%　给我射在里面啊%UNICODE(0x2665) *1%」
+					PRINTW 
+				ENDSELECT
+			ENDIF
+		ENDIF
+	;发情していない
+	ELSE
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 「啊%UNICODE(0x2665) *1%　啊、糟糕%UNICODE(0x2665) *1%」
+			PRINTFORML 「屁股%UNICODE(0x2665) *1%　屁股要裂开了%UNICODE(0x2665) *1%」
+			PRINTW 
+		CASE 1
+			PRINTFORML 「啊%UNICODE(0x2665) *1%　啊啊啊啊啊～～～～%UNICODE(0x2665) *1%」
+			PRINTFORML 「屁股、鸡鸡卡住了%UNICODE(0x2665) *1%　～～%UNICODE(0x2665) *1%　～%UNICODE(0x2665) *1%%UNICODE(0x2665) *1%」
+		CASE 2
+			PRINTFORML 「呜呜呜呜、屁股、好厉害…%UNICODE(0x2665) *1%」
+			PRINTFORML 「啊%UNICODE(0x2665) *1%　啊啊啊啊啊%UNICODE(0x2665) *1%　啊要去了%UNICODE(0x2665) *1%　咿%UNICODE(0x2665) *1%」
+			PRINTW 
+		ENDSELECT
+	ENDIF
+ENDIF
+	
+	IF ABL:肛门 >= 5
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 「好啦赶快变得更坚挺吧%UNICODE(0x2665) *1%」
+			PRINTFORML 「不变得硬硬的话就要拔出来了呢%UNICODE(0x2665) *1%」
+			PRINTW 
+		CASE 1
+			PRINTFORML 「射精、不可以忍耐着不射呢%UNICODE(0x2665) *1%」
+			PRINTFORML 「要是射了的话、我会让它很快就硬起来的呢%UNICODE(0x2665) *1%」
+			PRINTFORML 「啊哈、好厉害的没出息的表情%MASTERNAME:42%、真可爱—%UNICODE(0x2665) *1%　好乖好乖♪」
+			PRINTW 
+		CASE 2
+			PRINTFORML 「还不行♪　毕竟才刚插进去不久呢%UNICODE(0x2665) *1%」
+			PRINTFORML 「在里面射到满满的—才能拔出来噢%UNICODE(0x2665) *1%」
+			PRINTFORML 「还要%UNICODE(0x2665) *1%　这样子还远远不够呀%UNICODE(0x2665) *1%」
+			PRINTW 
+		ENDSELECT
+	ELSE
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 「嗯嗯…！　屁股里、很紧呢…%UNICODE(0x2665) *1%」
+			PRINTFORML 「「我的尻穴、已经撑开变成%MASTERNAME:42%的形状了呀…」
+			PRINTW 
+		CASE 1
+			PRINTFORML 「呼呜、咕呜～～、好、好粗……」
+			PRINTFORML 「欸嘿嘿、插、插进去了呀…♪」
+			PRINTW 
+		CASE 2
+			PRINTFORML 「唔、呜呜、呜呜呜～～…屁股里面、好紧…」
+			PRINTFORML 「%CALLNAME:MASTER%的欧金金、正在侵犯我的屁股呀…%UNICODE(0x2665) *1%」
+			PRINTW 
+		ENDSELECT
+	ENDIF
+RETURN 1
+
+;==================================================
+;Ａ插入される（对方主导で你がＡに插入される）
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_90
+CALL M_KOJO_MESSAGE_COUNTER_K42_90_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_90_1
+	IF TALENT:恋慕 || TALENT:恋人
+		IF ABL:肛门 >= 3
+			SELECTCASE RAND:3
+			CASE 0
+				CALL HPH_PRINT,@"「啊啊，\@ CFLAG:K42C_结婚 >= 1 ? 达令 # %MASTERNAME:42% \@的屁眼，形状真是太色情了…HPH」","L"
+				CALL HPH_PRINT,@"「要进去了哦？HPH　对不起，忍不住了HPH　插入、进去了……HPH」","L"
+			CASE 1
+				CALL HPH_PRINT,@"「一下子，被吸进去了…HPH　这个，太糟糕了…HPH」","L"
+			CASE 2
+				CALL HPH_PRINT,@"「啊啊啊，%MASTERNAME:42%的屁股，好厉害啊……HPH　我的肉棒，好像要融化了…HPH」","L"
+				CALL HPH_PRINT,@"「可以开始动了吗？　可以动了吧？　要运动了哦？　哦HPH　哦哦HPH　这是什么HPH　这是什么啊HPH」","L"
+			ENDSELECT
+			PRINTW 
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 「%MASTERNAME:42%，疼吗？　没事吧？」
+				PRINTFORML 「因为\@ CFLAG:K42C_结婚 >= 1 ? 达令 # %MASTERNAME:42% \@的屁股太色情了，所以动情了…」
+			CASE 1
+				PRINTFORML 「对不起呢，\@ CFLAG:K42C_结婚 >= 1 ? 达令 # %MASTERNAME:42% \@，屁股，要插入了…」
+				PRINTFORML 「啊啊啊…这就是，\@ CFLAG:K42C_结婚 >= 1 ? 达令 # %MASTERNAME:42% \@的屁股里面…好厉害，紧紧的…」
+			CASE 2
+				PRINTFORML 「对不起呢，\@ CFLAG:K42C_结婚 >= 1 ? 达令 # %MASTERNAME:42% \@，我，想用屁股做…！」
+				CALL HPH_PRINT,@"「呜、呜呜…HPH　这就是，屁股里面的感觉…肉棒，被紧紧地夹着…HPH」","L"
+			ENDSELECT
+			PRINTW 
+		ENDIF
+	ELSEIF TALENT:爱欲 || TALENT:炮友
+		IF ABL:肛门 >= 3
+			SELECTCASE RAND:3
+			CASE 0
+				CALL HPH_PRINT,@"「啊哈，进去了…HPH」","L"
+				CALL HPH_PRINT,@"「这是什么，真的太糟糕了…HPH　和入口不一样，里面软绵绵的…HPH」","L"
+				PRINTW 
+			CASE 1
+				PRINTFORML 「现在开始，我要用鸡鸡来侵犯屁股了…♪」
+				PRINTFORML 「来，我可不会从顶端一点点慢慢地进去哦♪　全部进去了♪」
+				PRINTFORML 「啊哈，摆着一副非常没用的表情，%MASTERNAME:42%，真可爱%UNICODE(0x2665) *1%　乖乖♪」
+				PRINTW 
+			CASE 2
+				PRINTFORML 「来，果的肉棒，简单地就进入了%MASTERNAME:42%的屁股里了…♪」
+				CALL HPH_PRINT,@"「但是紧紧的，真的好舒服啊…HPH」","L"
+				CALL HPH_PRINT,@"「我会把精液满满地射在你的屁股里面的…HPH」","L"
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 「嗯嗯…！　屁股，好紧啊…%UNICODE(0x2665) *1%」
+				PRINTFORML 「屁眼，要扩散成果的肉棒的形状了…」
+				PRINTW 
+			CASE 1
+				PRINTFORML 「呼、咕～～、好、好窄……」
+				PRINTFORML 「诶嘿嘿，进、进去了哦…♪」
+				PRINTW 
+			CASE 2
+				PRINTFORML 「呜、呜呜、呜呜呜～～…屁股，好紧……」
+				PRINTFORML 「%CALLNAME:MASTER%的屁眼，被果的肉棒侵犯了啊…%UNICODE(0x2665) *1%」
+				PRINTW 
+			ENDSELECT
+		ENDIF
+	ENDIF
+	
+	IF TALENT:恋慕 || TALENT:恋人
+		IF ABL:MASTER:肛门 <= 2
+			CALL HPH_PRINT,@"「啊、啊啊…肉棒，紧得好像要断掉一样…HPH」","L"
+			CALL HPH_PRINT,@"「慢慢地运动…疼的时候要说哦…HPH」","L"
+			PRINTW 
+		ELSE
+			SELECTCASE RAND:2
+			CASE 0
+				CALL HPH_PRINT,@"「屁眼，进进出出太舒服了…HPH」","L"
+			CASE 1
+				CALL HPH_PRINT,@"「啊啊，%MASTERNAME:42%的屁眼，非常舒服…HPH」","L"
+			ENDSELECT
+		ENDIF
+	ELSEIF TALENT:爱欲 || TALENT:炮友
+		IF FIRSTTIME("腰振りＡ")
+			CALL HPH_PRINT,@"「啊、啊啊、啊…HPH」","L"
+			IF ABL:MASTER:肛门 <= 2
+				CALL HPH_PRINT,@"「非常紧…HPH　肉棒，好像要断掉一样…HPH」","L"
+				CALL HPH_PRINT,@"「来，再放松一点不然会疼哦…呜呜呜HPH　真的，好紧…HPH」","L"
+			ELSE
+				CALL HPH_PRINT,@"「这是什么，入口很紧，但是里面却软绵绵的…HPH」","L"
+				CALL HPH_PRINT,@"「对不起，可能没有温柔对待你的余裕了HPH」","L"
+			ENDIF
+			PRINTW 
+		ELSE
+			IF ABL:MASTER:肛门 <= 2
+				SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"「啊啊，肉棒，被推回来了…HPH」","L"
+				CASE 1
+					CALL HPH_PRINT,@"「糟糕，紧得过分了，有点疼…HPH」","L"
+				CASE 2
+					SELECTCASE TALENT:MASTER:形状
+					CASE 6,10;巨根、马并み
+						CALL HPH_PRINT,@"「来，再放松一点…HPH」","L"
+						PRINTFORML 「我的肉棒比其他人的都大，如果不放松，肛门会裂开的哦」
+					CASE 1,2;粗チン
+						CALL HPH_PRINT,@"「这种时候，我的肉棒小一点说不定是好事呢…HPH」","L"
+						CALL HPH_PRINT,@"「相当顺利地进去了嘛…HPH」","L"
+					CASEELSE
+						CALL HPH_PRINT,@"「再放松一点…屁股，会裂开的哦」","L"
+					ENDSELECT
+				ENDSELECT
+				PRINTW 
+			ELSE
+				SELECTCASE RAND:2
+				CASE 0
+					IF TALENT:MASTER:性别 == 2
+						SELECTCASE RAND:2
+						CASE 0
+							CALL HPH_PRINT,@"「啊哈，你的肉棒，是不是吓得一跳一跳的…HPH」","L"
+							CALL HPH_PRINT,@"「像女孩子一样被侵犯，感觉到了吗…HPH　真糟糕呢HPH」","L"
+							CALL HPH_PRINT,@"「要被我变成女孩子了吗？HPH　被屁眼屄搞到，变成女孩子了吗？HPH」","L"
+						CASE 1
+							CALL HPH_PRINT,@"「发出了像女孩子一样的声音。好可爱HPH」","L"
+							CALL HPH_PRINT,@"「来，如果能说出『请在屁眼屄里再多给我一些肉棒』的话，就让你更舒服哦…HPH」","L"
+						ENDSELECT
+					ELSE
+						SELECTCASE RAND:2
+						CASE 0
+							IF ABL:膣 <= ABL:肛门
+								CALL HPH_PRINT,@"「%MASTERNAME:42%比起屄，还是屁眼屄更舒服吧…HPH」","L"
+							ELSE
+								CALL HPH_PRINT,@"「虽然屁股也不错，但%MASTERNAME:42%果然还是屄更舒服吧…HPH」","L"
+								CALL HPH_PRINT,@"「都插在屁股里了还说这种话？　啊哈，因为这边也很舒服嘛HPH」","L"
+							ENDIF
+						CASE 1
+							CALL HPH_PRINT,@"「啊啊，%MASTERNAME:42%的屁股，太棒了…HPH」","L"
+							CALL HPH_PRINT,@"「糟糕，马上就要去了…HPH　就这样射在里面可以吗？　可以吧？」","L"
+						ENDSELECT
+					ENDIF
+				CASE 1
+					SELECTCASE RAND:5
+					CASE 0
+						CALL HPH_PRINT,@"「糟糕，腰，停不下来…HPH」","L"
+						CALL HPH_PRINT,@"「说真的%MASTERNAME:42%的屁眼，是最棒的…HPH」","L"
+					CASE 1
+						CALL HPH_PRINT,@"「%MASTERNAME:42%HPH　你，到底吞了多少根男人的肉棒才会变成这么舒服的屁眼啊HPH」","L"
+						CALL HPH_PRINT,@"「糟糕HPH　这个，真的太糟糕了HPH」","L"
+					CASE 2
+						CALL HPH_PRINT,@"「来，明白了吗…？HPH　果的肉棒，在%MASTERNAME:42%的屁眼里进进出出…HPH」","L"
+					CASE 3
+						CALL HPH_PRINT,@"「来HPH　去吧HPH　在屁眼里去吧HPHHPH」","L"
+					CASE 4
+						CALL HPH_PRINT,@"「啊啊…HPH　真的你的屁眼，太棒了…HPH」","L"
+					ENDSELECT
+					PRINTW 
+				ENDSELECT
+			ENDIF
+			PRINTW 
+		ENDIF
+	ENDIF
+	
+RETURN 1
+
+;==================================================
+;被深喉（MASTER受け）
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_91
+CALL M_KOJO_MESSAGE_COUNTER_K42_91_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_91_1
+	IF CFLAG:K42C_结婚 >= 1
+	SELECTCASE RAND:2
+	CASE 0
+		PRINTFORML 「对不起呢，达令，肉棒感到寂寞了…！」
+	CASE 1
+		CALL HPH_PRINT,@"「啊啊、对不起呢、对不起呢HPH」","L"
+		PRINTFORML 果一边道歉，一边没有停止对深爱的%CALLNAME:MASTER%的口头虐待
+	CASE 2
+		CALL HPH_PRINT,@"「啊啊…达令的嘴里，非常舒服…HPH」","L"
+		CALL HPH_PRINT,@"「我的肉棒好吃吗？　再让你多吃一点哦…HPH」","L"
+	ENDSELECT
+		PRINTW 
+	ELSEIF TALENT:恋慕 || TALENT:恋人
+		SELECTCASE RAND:3
+		CASE 0
+			CALL HPH_PRINT,@"「哈啊啊…HPH　%MASTERNAME:42%的嘴里，真的好舒服…HPH」","L"
+		CASE 1
+			CALL HPH_PRINT,@"「啊啊…糟糕了…肉棒，要融化了…HPH」","L"
+		CASE 2
+			CALL HPH_PRINT,@"「呜呜…对不起呢，%MASTERNAME:42%。我的肉棒，已经到极限了…HPH」","L"
+		ENDSELECT
+	ELSEIF TALENT:爱欲 || TALENT:炮友
+		SELECTCASE RAND:3
+		CASE 0
+			CALL HPH_PRINT,@"「来，你最喜欢的肉棒HPH　要含到最里面哦HPH」","L"
+		CASE 1
+			CALL HPH_PRINT,@"「对不起呢，可能会有点难受…但我非常想在%MASTERNAME:42%的嘴里射精HPH」","L"
+		CASE 2
+			CALL HPH_PRINT,@"「是%MASTERNAME:42%的错哦，因为你有着那么色情的嘴唇…HPH」","L"
+		ENDSELECT
+		PRINTW 
+	ENDIF
+RETURN 1
+
+;==================================================
+;肛门开发许可を求める
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_92
+CALL M_KOJO_MESSAGE_COUNTER_K42_92_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_92_1
+RETURN 1
+
+
+
+;抱き付き模式Counter
+;抱きつきは女同士（扶她含む）限定
+;==================================================
+;头抚で
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_120
+CALL M_KOJO_MESSAGE_COUNTER_K42_120_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_120_1
+SELECTCASE RAND:3
+CASE 0
+	PRINTFORML 「好～好～乖～乖♪」
+CASE 1
+	PRINTFORML 「只有现在可以把我当成姐姐一样看待哦♪」
+CASE 2
+	PRINTFORML 「嗯？　难道说害羞了？　真可爱呢～」
+ENDSELECT
+PRINTW 
+RETURN 1
+
+;==================================================
+;发梳き
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_121
+CALL M_KOJO_MESSAGE_COUNTER_K42_121_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_121_1
+SELECTCASE RAND:4
+CASE 0
+	PRINTFORML 「好好保养了吗？　头发可是女人的生命啊」
+CASE 1
+	PRINTFORML 「我喜欢你头发的触感哦」
+CASE 2
+	PRINTFORML 「不行。不许动。被我摸着就好」
+CASE 3
+	PRINTFORML 「不用担心，我不会弄乱的」
+ENDSELECT
+	PRINTW 
+RETURN 1
+
+;==================================================
+;抱きつき
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_122
+CALL M_KOJO_MESSAGE_COUNTER_K42_122_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_122_1
+IF TALENT:MASTER:胸围 >= 1
+	PRINTFORML 「哈…%MASTERNAME:42%的胸部，柔软又舒服…真想就这样埋在里面…」
+	IF TALENT:TARGET:胸围 > 0
+		PRINTFORML 当我指出果明明也有自己的胸部时，
+		PRINTFORML 她回答说「自己的胸部不能埋在里面嘛！　哈～好幸福～」
+		PRINTW 
+	ELSE
+		IF TALENT:恋慕 || TALENT:恋人
+			PRINTFORML 我抱住果，抚摸着她的头，说如果我的胸部也可以的话，就随你喜欢
+			PRINTW 
+		ELSE
+			PRINTFORML 虽然没有坏心情，但还是稍微有点害羞…
+			PRINTW 
+		ENDIF
+	ENDIF
+ELSE
+	IF CFLAG:K42C_结婚 >= 1
+		PRINTFORML 「达令，最喜欢你了%UNICODE(0x2665) *1%」
+		PRINTW 
+	ELSE
+		IF TALENT:恋慕 || TALENT:恋人
+			PRINTFORML 「%MASTERNAME:42%的胸，扑通、扑通地跳着」
+			PRINTFORML 「果的胸也，一定同样激动地跳动着哦」
+			PRINTW 
+		ELSEIF TALENT:爱欲 || TALENT:炮友
+			PRINTFORML 「啊～，感觉被治愈了～」
+			PRINTFORML 「难道说害羞了？　%MASTERNAME:42%真是，好可爱♪」
+			PRINTW 
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;抱きしめ
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_123
+CALL M_KOJO_MESSAGE_COUNTER_K42_123_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_123_1
+	IF TALENT:恋慕 || TALENT:恋人
+		SELECTCASE RAND:2
+		CASE 0
+			PRINTFORML 「%MASTERNAME:42%，喜欢你哦」
+		CASE 1
+			PRINTFORML 「即使是女孩子之间，也会这么心跳加速呢…♪」
+		ENDSELECT
+		PRINTW 
+	ELSEIF TALENT:爱欲 || TALENT:炮友
+		SELECTCASE RAND:2
+		CASE 0
+			PRINTFORML 「干嘛啊，我也不只是想着色色的事情嘛♪」
+			PRINTFORML 「还是说，你想要我做色色的事情？」
+		CASE 1
+			PRINTFORML 「害羞什么呀。我们，不是还做过更过分的事情吗♪」
+		ENDSELECT
+		PRINTW 
+	ENDIF
+RETURN 1
+
+;==================================================
+;颊抚で
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_124
+CALL M_KOJO_MESSAGE_COUNTER_K42_124_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_124_1
+	IF TALENT:恋慕 || TALENT:恋人
+		SELECTCASE RAND:2
+		CASE 0
+			PRINTFORML 「%MASTERNAME:42%，脸红了」
+			PRINTFORML 「我也是？　呵呵，那么，我们一样呢…♪」
+		CASE 1
+			PRINTFORML 「……」
+			PRINTFORML （哈…果然%MASTERNAME:42%，好可爱啊…）
+		ENDSELECT
+		PRINTW 
+	ELSEIF TALENT:爱欲 || TALENT:炮友
+		SELECTCASE RAND:2
+		CASE 0
+			PRINTFORML 「呵呵，现在开始要把你吃掉哦♪」
+		CASE 1
+			PRINTFORML 「喜欢这样被你反推的时候，%MASTERNAME:42%的表情呢…♪」
+		ENDSELECT
+		PRINTW 
+	ENDIF
+RETURN 1
+
+;==================================================
+;くすぐり
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_125
+CALL M_KOJO_MESSAGE_COUNTER_K42_125_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_125_1
+	PRINTFORML 「怎么样！　果果的挠痒攻击～♪」
+	PRINTW 
+RETURN 1
+
+;==================================================
+;膝枕させる
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_126
+CALL M_KOJO_MESSAGE_COUNTER_K42_126_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_126_1
+	IF CFLAG:K42C_结婚 >= 1
+		PRINTFORML 「每天都辛苦了♪　现在什么都不要想，好好休息吧」
+	ELSEIF TALENT:恋慕 || TALENT:恋人
+		PRINTFORML 「怎么样？　这样被对待是不是很治愈♪」
+	ELSEIF TALENT:爱欲 || TALENT:炮友
+		PRINTFORML 「怎么样？　果果的膝枕感觉如何？」
+	ENDIF
+RETURN 1
+
+;==================================================
+;匂いを嗅ぐ
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_127
+CALL M_KOJO_MESSAGE_COUNTER_K42_127_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_127_1
+	IF CFLAG:K42C_结婚 >= 1
+		SELECTCASE RAND:2
+		CASE 0
+			CALL HPH_PRINT,@"（啊…最喜欢的达令的味道…HPH）","L"
+		CASE 1
+			CALL HPH_PRINT,@"「吸吸、呼呼…对不起，再稍微一下下…吸吸、呼呼…HPH」","L"
+		CASE 2
+			CALL HPH_PRINT,@"「呀～，不要逃啊～。再让我稍微闻一下嘛～HPH」","L"
+		ENDSELECT
+		PRINTW 
+	ELSEIF TALENT:恋慕 || TALENT:恋人
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 「诶！？　我、我才不是什么味道控之类的！？」
+			PRINTFORML 「……啊，如果限定是%MASTERNAME:42%的味道的话，或许是控也说不定…」
+		CASE 1
+			PRINTFORML 「哈…%MASTERNAME:42%的味道…好喜欢…」
+			PRINTFORML 「哈！？　我、我竟然说出来了！？」
+		CASE 2
+			PRINTFORML 「……哈！？　对不起，不知不觉就着迷地闻起来了…」
+			PRINTFORML 「喜欢的人的味道，总觉得可以一直闻下去，那个…嘿嘿」
+		ENDSELECT
+		PRINTW 
+	ELSEIF TALENT:爱欲 || TALENT:炮友
+		SELECTCASE RAND:4
+		CASE 0
+			CALL HPH_PRINT,@"「呵呵，闻着你的味道就会心跳加速呢～HPH」","L"
+		CASE 1
+			CALL HPH_PRINT,@"「害羞什么呀HPH　来，这里的味道也要闻一下哦～HPH」","L"
+		CASE 2
+			CALL HPH_PRINT,@"「就算你说不要我也不会停下来的…HPH」","L"
+		CASE 3
+			CALL HPH_PRINT,@"「就算你不用那么讨厌，明明是很棒的味道哦HPH」","L"
+		ENDSELECT
+		PRINTW 
+	ENDIF
+RETURN 1
+
+;==================================================
+;话しかける
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_128
+CALL M_KOJO_MESSAGE_COUNTER_K42_128_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_128_1
+	IF CFLAG:K42C_结婚 >= 1
+		SELECTCASE RAND:3
+		CASE 0
+			CALL HPH_PRINT,@"「达令，谢谢你让我这么幸福…HPH」","L"
+			CALL HPH_PRINT,@"「我在幻想乡是最幸福的…HPH」","L"
+		CASE 1
+			CALL HPH_PRINT,@"「达令，要一直在一起哦…HPH」","L"
+		CASE 2
+			CALL HPH_PRINT,@"「那个时候，能遇到达令真是太好了…HPH」","L"
+		ENDSELECT
+		PRINTW 
+	ELSEIF TALENT:恋慕 || TALENT:恋人
+		SELECTCASE RAND:3
+		CASE 0
+			CALL HPH_PRINT,@"「我啊，现在非常幸福…HPH」","L"
+		CASE 1
+			CALL HPH_PRINT,@"「能感觉到我的心跳吗…？HPH」","L"
+			PRINTFORML 果握住我的手，悄悄地放在自己的胸口
+		CASE 2
+			CALL HPH_PRINT,@"「虽然不能再做普通朋友了，但是我，觉得喜欢上%MASTERNAME:42%真是太好了…HPH」","L"
+		ENDSELECT
+	ELSEIF TALENT:爱欲 || TALENT:炮友
+		SELECTCASE RAND:5
+		CASE 0
+			CALL HPH_PRINT,@"「呐，今天想要我做什么呢？HPH」","L"
+			CALL HPH_PRINT,@"「这里？　还是，这・里？HPH」","L"
+		CASE 1
+			CALL HPH_PRINT,@"「%MASTERNAME:42%，喜・欢HPH」","L"
+			CALL HPH_PRINT,@"「啊哈哈，身体都瑟瑟发抖了HPH　%MASTERNAME:42%也还有这么纯情的地方啊♪」","L"
+		CASE 2
+			CALL HPH_PRINT,@"「今天想好好地疼爱你一番呢…HPH」","L"
+		CASE 3
+			CALL HPH_PRINT,@"「你知道吗？　想要从性方面打你主意的妖怪可不少哦HPH」","L"
+			CALL HPH_PRINT,@"「为了不让除了我以外的家伙靠近，要好好地给你留下我的气味才行…HPH」","L"
+		CASE 4
+			CALL HPH_PRINT,@"「怎么办？　就这样，开始做色色的事情…？HPH」","L"
+		CASE 5
+			CALL HPH_PRINT,@"「今天想让%MASTERNAME:42%来亲我呢…HPH」","L"
+			PRINTFORML 果用手指轻轻点了点自己的嘴唇
+		ENDSELECT
+		PRINTW 
+	ENDIF
+RETURN 1
+
+;==================================================
+;舔舐脖子
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K42_129
+CALL M_KOJO_MESSAGE_COUNTER_K42_129_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K42_129_1
+IF TALENT:恋慕 || TALENT:恋人
+	SELECTCASE RAND:2
+	CASE 0
+		PRINTFORML 「这样的事情，我也会做的哦…♪」
+	CASE 1
+		PRINTFORML 「%MASTERNAME:42%，有淡淡的汗味…」
+	ENDSELECT
+	PRINTW 
+ELSEIF TALENT:爱欲 || TALENT:炮友
+	SELECTCASE RAND:3
+	CASE 0
+		CALL HPH_PRINT,@"「『那种地方，不行』？　那么，哪里可以舔呢…HPH」","L"
+	CASE 1
+		CALL HPH_PRINT,@"「%MASTERNAME:42%，平时也很可爱，但是这种时候的表情更加可爱呢…HPH」","L"
+	CASE 2
+		CALL HPH_PRINT,@"「不～行HPH　就算你说不要我也不会停下来的HPH」","L"
+	ENDSELECT
+	PRINTW 
+ENDIF
+RETURN 1
+
+;-------------------------------------------------
+;诶嘿嘿Counter
+;-------------------------------------------------
+;まだ

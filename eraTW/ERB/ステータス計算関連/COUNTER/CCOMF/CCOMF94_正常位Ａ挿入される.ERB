@@ -1,0 +1,99 @@
+﻿;*********************************************************************************************
+;Counter指令：正常位Ａ插入される
+;ARG = 对象の角色番号
+;*********************************************************************************************
+@CCOMF94(ARG)
+
+	;体势の变更
+	;=============================
+	SIF MASTER_POSE(0,SET_P) == ARG
+		CALL TOUCH_RESET_T(ARG)
+	CALL TOUCH_SET(SET_FROM_P,7,ARG)
+	TFLAG:MASTERのＡ使用中 ++
+	TEQUIP:MASTER:体位 = 1
+	;ソース计算および内部处理系统
+	;=============================
+	CALL DATUI_FOR_INSERT(ARG)
+	TCVAR:ARG:童贞丧失 = 1
+	TCVAR:PLAYER:Ａ丧失发生 = 1
+	SOURCE:ARG:快Ｃ += 100
+	SOURCE:ARG:性行动 += 300
+	SOURCE:ARG:征服 += 1000
+	SOURCE:ARG:诱惑 += 400
+	SOURCE:PLAYER:液体 += 100
+	SOURCE:ARG:施虐 += 600
+	SOURCE:ARG:强迫 += 800
+	SOURCE:PLAYER:快Ａ += 800
+	CALL PAIN_CHECK_A_MASTER(ARG)
+	;射精部位（1=膣内 2=肛门 3=手淫 4=口淫 5=乳交 6=素股 7=足交 8=体表 9=肛门侍奉 10=道具 11=触手 12=Ａ调教 13=Ｖ调教）
+	CALL 射精对象登录(PLAYER, ARG, 12)
+	TCVAR:PLAYER:4 += 250
+	;射精部位（1=膣内 2=肛门 3=手淫 4=口淫 5=乳交 6=素股 7=足交 8=体表 9=肛门侍奉 10=道具 11=触手 12=Ａ调教 13=Ｖ调教）
+	CALL 射精对象登录(ARG, PLAYER, 2)
+	TCVAR:ARG:4 += 1000
+	TEQUIP:MASTER:体位 = 1
+	CALL STAIN_肛门Ｐ插入
+	EXP:PLAYER:Ａ性交经验 ++
+	EXP:ARG:插入经验 ++
+	TEQUIP:PLAYER:51 = ARG
+	TCVAR:ARG:嗜虐フラグ = 1
+
+	;マ斯塔Counter制御
+	;(ビット立ちで不可 0=摸屁股 1=拥抱 2=接吻 3=胸爱抚 4=肛门爱抚 5=阴蒂爱抚 6=指插入れ 7=掀裙子)
+	;=============================
+	;CALL Counter插入され继续中处理(ARG)
+	SETBIT TCVAR:ARG:26 ,4
+	SETBIT TCVAR:ARG:26 ,5
+	SETBIT TCVAR:ARG:26 ,6
+	SETBIT TCVAR:ARG:26 ,7
+
+RETURN 1
+
+;*********************************************************************************************
+;Counter实行可否出力函数
+;ARG = 对象の角色番号
+;*********************************************************************************************
+@CCOM_ABLE94(ARG)
+
+	SIF FLAG:肛门开发无效
+		RETURN 0
+	SIF 插入不可(MASTER) >= 2
+		RETURN 0
+	SIF !(TALENT:ARG:2 & 2)
+		RETURN 0
+	SIF BASE:ARG:勃起 < 1000
+		RETURN 0
+	SIF TEQUIP:MASTER:50 >= 0 || TEQUIP:MASTER:51 >= 0
+		RETURN 0
+	SIF TFLAG:64
+		RETURN 0
+	SIF ABL:MASTER:2 < 2
+		RETURN 0
+	SIF !TALENT:ARG:施虐狂 && PALAM:MASTER:润滑 < PALAMLV:3
+		RETURN 0
+
+RETURN 1
+
+;*********************************************************************************************
+;Counter实行判定值算出函数
+;ARG = 对象の角色番号
+;*********************************************************************************************
+@CCOM_ORDER94(指令番号, ARG, 基本值)
+#DIM 指令番号
+#DIM 基本值
+#DIMS Counterタイプ
+
+	;Counterタイプ设定
+	;=============================
+	Counterタイプ = 责め
+
+	;实行判定值算出式
+	;=============================
+	LOCAL = (基本值*8/10) + ABL:ARG:Ｃ感觉 + MAX(EXP:ARG:射精经验 / 15, 15) - (TALENT:MASTER:2 & 1) * 4 + ABL:MASTER:肛门 * 2 - ABL:MASTER:膣
+	
+	;Counterタイプ别计算处理 实质实行判定处理を含む
+	;=============================
+	LOCAL = MAX(LOCAL + COUNTER_SIKOU:ARG:指令番号, 1)
+	LOCAL *= COUNTER_TYPE(Counterタイプ, ARG)
+
+RETURN LOCAL

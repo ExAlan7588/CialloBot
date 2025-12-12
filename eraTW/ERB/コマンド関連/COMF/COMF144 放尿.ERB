@@ -1,0 +1,108 @@
+﻿;-------------------------------------------------
+;放尿
+;ハードな调教指令、レベル2
+;-------------------------------------------------
+@COM144
+;-------------------------------------------------
+;COM别FLAGの设定
+;-------------------------------------------------
+;行为者
+TCVAR:116 = PLAYER
+
+;-------------------------------------------------
+;ソース追加处理
+;-------------------------------------------------
+;消费体力、气力
+IF FLAG:70 == 1
+	BASE:MASTER:TSP -= 200
+
+
+ELSE
+
+	DOWNBASE:体力 += 10
+	DOWNBASE:气力 += 200
+
+	SOURCE:恐怖 = 200
+	SOURCE:露出 = 800
+	SOURCE:屈从 = 500
+	SOURCE:偏离正轨 = 700
+	SOURCE:反感 = 700
+
+	;-------------------------------------------------
+	;特殊ソース处理
+	;-------------------------------------------------
+	;圧抑、抵抗持ちには、抑郁ソース追加
+	SIF TALENT:自己爱 < 0 || TALENT:抵抗
+		SOURCE:郁闷 += 700
+
+	;场所によって偏离正轨のソースが上下
+	;野外
+	IF TEQUIP:野外PLAY
+		TIMES SOURCE:偏离正轨 , 2.50
+	;镜の前（羞耻PLAY）
+	ELSEIF TEQUIP:羞耻PLAY
+		TIMES SOURCE:偏离正轨 , 1.50
+	;澡堂场
+	ELSEIF TEQUIP:浴室PLAY
+		TIMES SOURCE:偏离正轨 , 0.50
+	ENDIF
+ENDIF
+;-------------------------------------------------
+;経験の处理
+;-------------------------------------------------
+;放尿经验
+EXP:放尿经验 += 2
+;同性爱　レズなら返回值1ゲイなら返回值2
+IF FLAG:70 == 1
+	IF HETEROSEX(TARGET,PLAYER)
+		EXP:PLAYER:(50 + HETEROSEX(TARGET,PLAYER)) += 2
+	ENDIF
+ELSE
+	IF HETEROSEX(TARGET,PLAYER)
+		EXP:(50 + HETEROSEX(TARGET,PLAYER)) += 2
+		EXP:PLAYER:(50 + HETEROSEX(TARGET,PLAYER)) += 2
+	ENDIF
+
+	;野外放尿で异常经验
+	IF TEQUIP:野外PLAY && !GETBIT(CFLAG:3,6)
+		EXP:异常经验 += 1
+		SETBIT CFLAG:3,6
+	ENDIF
+ENDIF
+TCVAR:利尿剂 = 0
+
+RETURN 1
+
+;-------------------------------------------------
+;实行判定
+;-------------------------------------------------
+@COM_ABLE144
+;放尿实行判定
+SIF !TFLAG:100
+	RETURN 0
+;批量管理
+SIF GLOBAL_COMABLE(144)
+	RETURN RESULT
+
+;OPTIONで放尿を有效化してないとダメ
+SIF FLAG:癖好有效 == 0
+	RETURN 0
+
+;利尿剂使用中か漏尿癖ありでないとダメ
+SIF TCVAR:利尿剂 == 0 && TALENT:漏尿癖 == 0
+	RETURN 0
+
+;时间停止中は许可
+IF FLAG: 70 != 1
+	;顺从３以上でないとダメ（お澡堂场ならＯＫ）
+	IF !BATHROOM()
+		SIF ABL:顺从 <= 2
+			RETURN 0
+	ENDIF
+ENDIF
+
+;下半身着衣
+SIF TEQUIP:0 > 1
+	RETURN 0
+RETURN 1
+

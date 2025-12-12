@@ -1,0 +1,182 @@
+﻿;-------------------------------------------------
+;索求膝枕
+;日常系指令　レベル2
+;-------------------------------------------------
+@COM305
+IF TALENT:MASTER:体型 > TALENT:体型 + 2
+	PRINTFORML 被%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%的头枕着的%NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%发出了被踩扁的青蛙般的不满的声音
+	PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%慌忙把头挪开了
+	BASE:体力 -= 500
+	BASE:气力 -= 500
+	TFLAG:193 = -5
+	TFLAG:好感度没有取得 = 1
+	TFLAG:97 = -20
+	RETURN -1
+ELSE
+	SELECTCASE TFLAG:192
+		;通常
+		CASE 0
+			LOCAL = RAND:110
+			LOCAL:1 = 90 + GET_SUCCESS_RATE() / 5
+			SIF LOCAL:1 > 109
+				LOCAL:1 = 109
+			IF LOCAL <= 9
+				;10％で大成功
+				TFLAG:193 = 1
+				;信赖
+				TFLAG:98 = 5
+			ELSEIF LOCAL >= LOCAL:1
+				;10～1％で失败
+				TFLAG:193 = -1
+				;信赖
+				TFLAG:98 = -2
+			ELSE
+				;残りは成功
+				TFLAG:193 = 0
+				;信赖
+				TFLAG:98 = 3
+			ENDIF
+		;强制成功or大成功
+		CASE 1
+			IF RAND:100 <= 9
+				;10％で大成功
+				TFLAG:193 = 1
+				;信赖
+				TFLAG:98 = 5
+			ELSE
+				;残りは成功
+				TFLAG:193 = 0
+				;信赖
+				TFLAG:98 = 3
+			ENDIF
+		;强制失败
+		CASE -1
+			TFLAG:193 = -1
+			TFLAG:98 = -2
+		;指令结束
+		CASE -2
+			TFLAG:193 = -1
+			RETURN 0
+	ENDSELECT
+	;先制发生时は失败しない
+	SIF TFLAG:102 == 3 && TFLAG:192 != -1
+		TFLAG:193 = MAX(TFLAG:193,0)
+	DOWNBASE:气力 += 100
+	DOWNBASE:MASTER:气力 += 50
+
+	;固定で获得するソース
+	SOURCE:情爱 = 170
+	SOURCE:露出 = 55
+	SOURCE:反感 = 50
+	SIF TFLAG:193 == -1
+		SOURCE:反感 += 150
+
+	;ABL:亲密をみる
+	IF ABL:亲密 <= 1
+		SOURCE:情爱 += (ABL:亲密 * 20)
+	ELSEIF ABL:亲密 <= 3
+		SOURCE:情爱 += 200 + (ABL:亲密 * 20)
+	ELSEIF ABL:亲密 <= 5
+		SOURCE:情爱 += 400 + (ABL:亲密 * 20)
+	ELSEIF ABL:亲密 <= 8
+		SOURCE:情爱 += 600 + (ABL:亲密 * 30)
+		SOURCE:露出 += 200 + (ABL:欲望 * 10)
+	ELSEIF ABL:亲密 <= 11
+		SOURCE:情爱 += 800 + (ABL:亲密 * 30)
+		SOURCE:露出 += 300 + (ABL:欲望 * 10)
+	ELSE
+		SOURCE:情爱 += 1800 + (ABL:亲密 * 20)
+		SOURCE:露出 += 700 + (ABL:欲望 * 10)
+	ENDIF
+
+	;好感度をみる
+	IF CFLAG:2 <= 500
+		SOURCE:恭顺 = CFLAG:2 / 5
+	ELSEIF CFLAG:2 <= 5000
+		SOURCE:恭顺 = 150 + CFLAG:2 / 20
+	ELSE
+		SOURCE:恭顺 = 400 + CFLAG:2 / 100
+	ENDIF
+	SIF SOURCE:恭顺 < 0
+		SOURCE:恭顺 = 0
+
+	LOCAL = 0
+	;好感度が低いと好感度低下
+	IF CFLAG:2 <= 50
+		LOCAL -= 3
+	ELSEIF CFLAG:2 <= 100
+		LOCAL -= 2
+	ELSEIF CFLAG:2 <= 250
+		LOCAL -= 1
+	ENDIF
+
+
+	SOURCE:被动 = 120 + 240 * ABL:顺从
+
+	;好感度变化
+	TFLAG:97 += LOCAL
+
+	IF TFLAG:193 == -1
+		TIMES SOURCE:情爱 , 0.50
+		TIMES SOURCE:被动 , 0.50
+		TIMES SOURCE:露出 , 0.40
+	ELSEIF TFLAG:193 == 0
+		TIMES SOURCE:情爱 , 1.00
+		TIMES SOURCE:被动 , 1.00
+		TIMES SOURCE:露出 , 0.90
+		TFLAG:情绪BOUNS = 30
+	ELSE
+		TIMES SOURCE:情爱 , 1.50
+		TIMES SOURCE:被动 , 2.00
+		TIMES SOURCE:露出 , 1.80
+		TFLAG:情绪BOUNS = 50
+	ENDIF
+	TIME += 20
+	CALL SET_DERAY(6,TARGET)
+	;膝枕フラグ
+	TCVAR:310 = 1440 * DAY + TIME
+	RETURN 1
+ENDIF
+
+;-------------------------------------------------
+;实行判定
+;-------------------------------------------------
+@COM_ABLE305
+;膝枕实行判定
+SIF !TFLAG:100
+	RETURN 0
+;批量管理
+SIF GLOBAL_COMABLE(305)
+	RETURN RESULT
+;亲热强度1
+SIF TCVAR:MASTER:亲热 < 1
+	RETURN 0
+;室内のみ
+SIF !(INROOM(CFLAG:MASTER:当前位置))
+	RETURN 0
+;澡堂场
+SIF BATHROOM()
+	RETURN 0
+;睡眠中
+SIF CFLAG:睡眠
+	RETURN 0
+;仕事中
+SIF CFLAG:行动 == 5
+	RETURN 0
+;恶作剧中、陪睡中は无理
+SIF CFLAG:恶作剧 || CFLAG:陪睡中
+	RETURN 0
+;1时间间隔
+SIF TIME_PROGRESS(TCVAR:310) < 60
+	RETURN 0
+;气力0
+SIF BASE:MASTER:气力 <= 0
+	RETURN 0
+;六九式体势
+SIF TEQUIP:六九式
+	RETURN 0
+;停止中は不可
+SIF FLAG:70
+	RETURN 0
+RETURN 1
+

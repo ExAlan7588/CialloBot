@@ -1,0 +1,128 @@
+﻿;-------------------------------------------------
+;舐阴
+;爱抚系指令　レベル1
+;-------------------------------------------------
+@COM1
+;-------------------------------------------------
+;COM别FLAGの设定
+;-------------------------------------------------
+;行为者
+TCVAR:116 = PLAYER
+;侍奉快乐
+TCVAR:PLAYER:108 = 1
+
+CSTR:TARGET:10 += @"{PLAYER}/"
+;TCVAR:2 射精部位フラグ（-1=避孕套 1=膣内 2=肛门 3=手淫 4=口淫 5=乳交 6=素股 7=足交 8=体表 9=肛门侍奉 10=道具 11=触手 12=Ａ调教 13=Ｖ调教）
+TCVAR:TARGET:2 = 4
+;强度
+TCVAR:TARGET:4 = 500
+
+;-------------------------------------------------
+;ソース追加处理
+;-------------------------------------------------
+;消费体力、气力
+IF FLAG:70 == 1
+	BASE:MASTER:TSP -= 20
+	SOURCE:快Ｃ = 80
+	SOURCE:PLAYER:快Ｍ += 50
+	SOURCE:液体 = 1000
+	;性技补正
+	IF ABL:PLAYER:舌 >= 4
+		SOURCE:快Ｃ += 100
+		SOURCE:液体 += 400
+	ELSE
+		SOURCE:快Ｃ += ABL:PLAYER:舌 * 20
+		SOURCE:液体 += ABL:PLAYER:舌 * 80
+	ENDIF
+
+
+	IF HETEROSEX(TARGET,PLAYER)
+		EXP:PLAYER:(50 + HETEROSEX(TARGET,PLAYER)) += 3
+	ENDIF
+
+
+	;口淫经验
+	EXP:PLAYER:口淫经验 ++
+;时间停止无
+ELSE
+	DOWNBASE:体力 += 5
+	DOWNBASE:气力 += 50
+	SOURCE:PLAYER:快Ｍ += 50
+	SOURCE:快Ｃ = 80
+	SOURCE:液体 = 1000
+	SOURCE:露出 = 10
+	SOURCE:偏离正轨 = 15
+	SOURCE:反感 = 15
+
+	;-------------------------------------------------
+	;特殊ソース处理
+	;-------------------------------------------------
+	;圧抑、抵抗持ちには、抑郁ソース追加
+	SIF TALENT:自己爱 < 0 || TALENT:抵抗
+		SOURCE:郁闷 += 20
+
+	;性技补正
+	IF ABL:PLAYER:舌 >= 4
+		SOURCE:快Ｃ += 100
+		SOURCE:液体 += 400
+	ELSE
+		SOURCE:快Ｃ += ABL:PLAYER:舌 * 20
+		SOURCE:液体 += ABL:PLAYER:舌 * 80
+	ENDIF
+
+	;-------------------------------------------------
+	;経験の处理
+	;-------------------------------------------------
+	;同性爱　レズなら返回值1ゲイなら返回值2
+	IF HETEROSEX(TARGET,PLAYER)
+		EXP:(50 + HETEROSEX(TARGET,PLAYER)) += 3
+		EXP:PLAYER:(50 + HETEROSEX(TARGET,PLAYER)) += 3
+	ENDIF
+
+	;口淫经验
+	EXP:PLAYER:口淫经验 ++
+ENDIF
+;-------------------------------------------------
+;时间停止分岐终わり、共通する素質补正や污れの处理
+;-------------------------------------------------
+;舌を使用调教では、调教者の舌头灵活によって、快感のソース增加
+IF TALENT:PLAYER:舌头灵活
+	TIMES SOURCE:快Ｃ , 1.50
+	TIMES SOURCE:液体 , 1.50
+ENDIF
+;猫舌では减少、调教者に嗜虐快乐经验を追加
+IF TALENT:PLAYER:猫舌
+	TIMES SOURCE:快Ｃ , 0.75
+	EXP:PLAYER:嗜虐快乐经验 += 1
+ENDIF
+
+;奴隷のＶ⇔调教者の口的污垢が移动
+STAIN:Ｖ |= STAIN:PLAYER:口
+STAIN:PLAYER:口 |= STAIN:Ｖ
+IF HETEROSEX(TARGET,PLAYER)
+	EXP:PLAYER:(50 + HETEROSEX(TARGET,PLAYER)) += 3
+ENDIF
+
+RETURN 1
+
+;-------------------------------------------------
+;舐阴实行判定
+;-------------------------------------------------
+@COM_ABLE1
+SIF !TFLAG:100
+	RETURN 0
+;批量管理
+SIF GLOBAL_COMABLE(1)
+	RETURN RESULT
+;性器が污れているとPLAYERの场合舐阴はできない（调教者が污臭无视か爱液、母乳、巧克力のよごれならＯＫ）
+SIF STAIN:3 >= 2 && (STAIN:3 != 16 && STAIN:3 != 17 && STAIN:3 != 128 && STAIN:3 != 129 && STAIN:3 != 144 && STAIN:3 != 145) && ASSIPLAY == 0 && TALENT:PLAYER:污臭耐性 < 2
+	RETURN 0
+;性器が污れており、污臭敏感で顺从3以下のASSIの场合舐阴はできない（调教者が污臭无视か爱液、母乳、巧克力のよごれならＯＫ）
+IF STAIN:3 >= 2 && (STAIN:3 != 16 && STAIN:3 != 17 && STAIN:3 != 128 && STAIN:3 != 129 && STAIN:3 != 144 && STAIN:3 != 145) && ASSIPLAY
+	SIF ABL:ASSI:顺从 <= 3 && TALENT:ASSI:污臭耐性 < 0
+		RETURN 0
+ENDIF
+;下半身着衣
+SIF TEQUIP:0 & 4
+	RETURN 0
+RETURN 1

@@ -1,0 +1,579 @@
+﻿;FileName_SOURCE1.ERB ------------------------------ Rev1.00
+;素質等によるソース变动处理
+;ARG		角色NO
+;-----------------------------------------------------------
+
+@SOURCE_EXTRA(ARG)
+VARSET LOCAL
+;-------------------------------------------------
+;装备系（药等）
+;-------------------------------------------------
+;发情
+IF TCVAR:ARG:发情
+	TIMES CUP:ARG:恭顺 , 1.50
+	TIMES CUP:ARG:情欲 , 2.00
+	TIMES CUP:ARG:屈服 , 1.50
+	TIMES CUP:ARG:不快 , 0.70
+;媚药
+ELSEIF TCVAR:ARG:媚药
+	TIMES CUP:ARG:恭顺 , 1.20
+	TIMES CUP:ARG:情欲 , 1.50
+	TIMES CUP:ARG:屈服 , 1.20
+	TIMES CUP:ARG:不快 , 0.75
+ENDIF
+
+;利尿剂
+IF TCVAR:ARG:利尿剂
+	TIMES CUP:ARG:恭顺 , 0.80
+	TIMES CUP:ARG:情欲 , 0.80
+	TIMES CUP:ARG:羞耻 , 1.20
+	TIMES CUP:ARG:反感 , 1.50
+	TIMES CUP:ARG:不快 , 1.20
+ENDIF
+
+;烂醉
+IF TCVAR:ARG:烂醉
+	TIMES CUP:ARG:恭顺 , 0.30
+	TIMES CUP:ARG:情欲 , 0.75
+	TIMES CUP:ARG:屈服 , 0.50
+	TIMES CUP:ARG:羞耻 , 0.30
+	TIMES CUP:ARG:恐怖 , 0.30
+	TIMES CUP:ARG:好意 , 0.30
+	TIMES CUP:ARG:反感 , 0.50
+	TIMES CUP:ARG:不快 , 1.50
+	TIMES CUP:ARG:抑郁 , 0.30
+ENDIF
+;仙香玉兔・毒气花园は相乘
+IF IsInsenceValid(ARG) && IsGardenValid(ARG)
+	TIMES CUP:ARG:恭顺 , 1.30
+	TIMES CUP:ARG:情欲 , 1.50
+	TIMES CUP:ARG:屈服 , 1.30
+	TIMES CUP:ARG:羞耻 , 0.80
+	TIMES CUP:ARG:好意 , 1.10
+	TIMES CUP:ARG:反感 , 0.50
+	TIMES CUP:ARG:不快 , 0.50
+	TIMES CUP:ARG:苦痛 , 0.80
+	TIMES CUP:ARG:抑郁 , 0.40
+ELSEIF IsInsenceValid(ARG)
+	TIMES CUP:ARG:恭顺 , 1.20
+	TIMES CUP:ARG:情欲 , 1.40
+	TIMES CUP:ARG:屈服 , 1.10
+	TIMES CUP:ARG:好意 , 1.10
+	TIMES CUP:ARG:反感 , 0.60
+	TIMES CUP:ARG:不快 , 0.50
+	TIMES CUP:ARG:抑郁 , 0.50
+ELSEIF IsGardenValid(ARG)
+	TIMES CUP:ARG:情欲 , 1.40
+	TIMES CUP:ARG:屈服 , 1.20
+	TIMES CUP:ARG:羞耻 , 0.80
+	TIMES CUP:ARG:反感 , 0.70
+	TIMES CUP:ARG:不快 , 0.60
+	TIMES CUP:ARG:苦痛 , 0.80
+	TIMES CUP:ARG:抑郁 , 0.60
+ENDIF
+
+;-------------------------------------------------
+;状况系（睡眠等）
+;-------------------------------------------------
+;睡眠中
+IF CFLAG:ARG:睡眠
+	TIMES CUP:ARG:恭顺 , 0.10
+	TIMES CUP:ARG:情欲 , 0.30
+	TIMES CUP:ARG:屈服 , 0.10
+	TIMES CUP:ARG:羞耻 , 0.00
+	TIMES CUP:ARG:恐怖 , 0.30
+	TIMES CUP:ARG:好意 , 0.10
+	TIMES CUP:ARG:反感 , 0.20
+	TIMES CUP:ARG:不快 , 1.50
+	TIMES CUP:ARG:苦痛 , 0.60
+	TIMES CUP:ARG:抑郁 , 0.50
+	TIMES CUP:ARG:习得 , 0.10
+ENDIF
+;诱い受け
+SIF SELECTCOM == 22
+	TIMES CUP:ARG:优越, 2.00
+;-------------------------------------------------
+;陷落素質
+;-------------------------------------------------
+;恋慕
+IF TALENT:ARG:恋慕 && ASSIPLAY == 0
+	CUP:ARG:恭顺 = CUP:ARG:恭顺 * (10 + 5 * TALENT:ARG:恋慕) / 10
+	CUP:ARG:屈服 = CUP:ARG:屈服 * (10 + 5 * TALENT:ARG:恋慕) / 10
+	SIF CUP:ARG:好意 < 999999999
+	CUP:ARG:好意 = CUP:ARG:好意 * (10 + 5 * TALENT:ARG:恋慕) / 10
+	CUP:ARG:反感 = CUP:ARG:反感 * (10 - 8 * TALENT:ARG:恋慕) / 10
+	CUP:ARG:不快 = CUP:ARG:不快 * (10 - 8 * TALENT:ARG:恋慕) / 10
+	TIMES CUP:ARG:抑郁 , 0.50
+;爱欲
+ELSEIF TALENT:ARG:爱欲
+	CUP:ARG:恭顺 = CUP:ARG:恭顺 * (10 + 2 * TALENT:ARG:爱欲) / 10
+	CUP:ARG:屈服 = CUP:ARG:屈服 * (10 + 2 * TALENT:ARG:爱欲) / 10
+	CUP:ARG:反感 = CUP:ARG:反感 * (10 - 7 * TALENT:ARG:爱欲) / 10
+	CUP:ARG:不快 = CUP:ARG:不快 * (10 - 7 * TALENT:ARG:爱欲) / 10
+	TIMES CUP:ARG:抑郁 , 0.40
+ENDIF
+;思慕
+IF TALENT:ARG:思慕 && ASSIPLAY == 0
+	CUP:ARG:恭顺 = CUP:ARG:恭顺 * 11 / 10
+	CUP:ARG:屈服 = CUP:ARG:屈服 * 11 / 10
+	SIF CUP:ARG:好意 < 999999999
+	CUP:ARG:好意 = CUP:ARG:好意 * 11 / 10
+	CUP:ARG:反感 = CUP:ARG:反感 * 5 / 10
+	CUP:ARG:不快 = CUP:ARG:不快 * 5 / 10
+ENDIF
+;淫乱
+IF TALENT:ARG:淫乱
+	CUP:ARG:恭顺 = CUP:ARG:恭顺 * (10 + 2 * TALENT:ARG:淫乱) / 10
+	CUP:ARG:屈服 = CUP:ARG:屈服 * (10 + 2 * TALENT:ARG:淫乱) / 10
+	CUP:ARG:反感 = CUP:ARG:反感 * (10 - 2 * TALENT:ARG:淫乱) / 10
+	CUP:ARG:不快 = CUP:ARG:不快 * (10 - 2 * TALENT:ARG:淫乱) / 10
+	TIMES CUP:ARG:抑郁 , 0.40
+ENDIF
+;-------------------------------------------------
+;素質
+;-------------------------------------------------
+;坚强
+IF TALENT:ARG:胆量 > 0
+	TIMES CUP:ARG:恭顺 , 0.80
+	TIMES CUP:ARG:情欲 , 0.80
+	TIMES CUP:ARG:屈服 , 0.80
+	TIMES CUP:ARG:恐怖 , 0.80
+	TIMES CUP:ARG:好意 , 0.80
+	TIMES CUP:ARG:反感 , 1.20
+	TIMES CUP:ARG:抑郁 , 1.20
+ENDIF
+;胆怯
+IF TALENT:ARG:胆量 < 0
+	TIMES CUP:ARG:恐怖 , 1.20
+	TIMES CUP:ARG:反感 , 1.20
+ENDIF
+;叛逆（恋慕で无效）
+IF TALENT:ARG:态度 > 0 && !TALENT:ARG:恋慕
+	TIMES CUP:ARG:恭顺 , 0.80
+	TIMES CUP:ARG:屈服 , 0.80
+	TIMES CUP:ARG:好意 , 0.80
+	TIMES CUP:ARG:反感 , 1.20
+ENDIF
+;坦率
+IF TALENT:ARG:态度 < 0
+	TIMES CUP:ARG:恭顺 , 1.20
+	TIMES CUP:ARG:反感 , 0.80
+	SIF CUP:ARG:好意 < 999999999
+		TIMES CUP:ARG:好意 , 1.50
+ENDIF
+;傲慢
+IF TALENT:ARG:回应 > 0
+	TIMES CUP:ARG:恭顺 , 0.80
+	TIMES CUP:ARG:屈服 , 0.80
+	TIMES CUP:ARG:反感 , 1.20
+ENDIF
+;老实
+IF TALENT:ARG:回应 < 0
+	TIMES CUP:ARG:恭顺 , 0.80
+	TIMES CUP:ARG:反感 , 0.80
+ENDIF
+;自尊心高
+IF TALENT:ARG:自尊心 > 0
+	TIMES CUP:ARG:屈服 , 0.80
+	TIMES CUP:ARG:恐怖 , 0.80
+	TIMES CUP:ARG:反感 , 1.20
+ENDIF
+;自尊心低
+IF TALENT:ARG:自尊心 < 0
+	TIMES CUP:ARG:屈服 , 1.20
+	TIMES CUP:ARG:恐怖 , 1.20
+	TIMES CUP:ARG:反感 , 0.80
+ENDIF
+;傲娇
+IF TALENT:ARG:傲娇
+	;陷落素質がある场合と无い场合で变化する
+	IF TALENT:ARG:恋慕 || TALENT:ARG:淫乱 || TALENT:ARG:服从
+		TIMES CUP:ARG:恭顺 , 1.20
+		TIMES CUP:ARG:屈服 , 1.20
+		TIMES CUP:ARG:反感 , 0.80
+	ELSE
+		TIMES CUP:ARG:恭顺 , 0.80
+		TIMES CUP:ARG:屈服 , 0.80
+		TIMES CUP:ARG:反感 , 1.20
+	ENDIF
+ENDIF
+
+;自制心
+IF TALENT:ARG:自制心
+	TIMES CUP:ARG:屈服 , 0.80
+	TIMES CUP:ARG:恐怖 , 0.80
+	TIMES CUP:ARG:反感 , 1.20
+ENDIF
+;冷漠
+IF TALENT:ARG:冷漠
+	TIMES CUP:ARG:恭顺 , 0.80
+	TIMES CUP:ARG:情欲 , 0.80
+	TIMES CUP:ARG:屈服 , 0.80
+	TIMES CUP:ARG:好意 , 0.80
+	TIMES CUP:ARG:恐怖 , 0.80
+	TIMES CUP:ARG:反感 , 0.80
+ENDIF
+;感情缺乏
+IF TALENT:ARG:感情缺乏
+	TIMES CUP:ARG:恭顺 , 0.80
+	TIMES CUP:ARG:情欲 , 0.80
+	TIMES CUP:ARG:屈服 , 0.80
+	TIMES CUP:ARG:羞耻 , 0.80
+	TIMES CUP:ARG:恐怖 , 0.80
+	TIMES CUP:ARG:好意 , 0.80
+	TIMES CUP:ARG:反感 , 0.80
+	TIMES CUP:ARG:不快 , 0.80
+	TIMES CUP:ARG:抑郁 , 0.80
+ENDIF
+;愤怒
+IF CFLAG:ARG:勃然大怒
+	TIMES CUP:ARG:恭顺 , 0.50
+	TIMES CUP:ARG:情欲 , 0.80
+	TIMES CUP:ARG:屈服 , 0.50
+	TIMES CUP:ARG:羞耻 , 0.80
+	TIMES CUP:ARG:好意 , 0.50
+	TIMES CUP:ARG:反感 , 1.50
+	TIMES CUP:ARG:不快 , 1.50
+	TIMES CUP:ARG:抑郁 , 1.50
+ENDIF
+;好奇心
+SIF TALENT:ARG:性的兴趣 > 0
+	TIMES CUP:ARG:习得 , 1.20
+;保守的
+SIF TALENT:ARG:性的兴趣 < 0
+	TIMES CUP:ARG:习得 , 0.80
+;乐観的
+SIF TALENT:ARG:开朗／阴郁 > 0
+	TIMES CUP:ARG:抑郁 , 0.80
+;悲観的
+SIF TALENT:ARG:开朗／阴郁 < 0
+	TIMES CUP:ARG:抑郁 , 1.20
+;喜欢引人注目
+SIF TALENT:ARG:喜欢引人注目
+	TIMES CUP:ARG:恭顺 , 1.20
+
+;圧抑
+IF TALENT:ARG:自己爱 < 0
+	TIMES CUP:ARG:情欲 , 0.80
+	TIMES CUP:ARG:反感 , 1.20
+	TIMES CUP:ARG:抑郁 , 1.20
+ENDIF
+;解放
+IF TALENT:ARG:自己爱 > 0
+	TIMES CUP:ARG:情欲 , 1.20
+	TIMES CUP:ARG:屈服 , 1.20
+ENDIF
+;抵抗
+IF TALENT:ARG:抵抗
+	TIMES CUP:ARG:恭顺 , 0.80
+	TIMES CUP:ARG:反感 , 1.20
+	TIMES CUP:ARG:抑郁 , 1.20
+ENDIF
+
+;痛觉
+CUP:ARG:苦痛 = CUP:ARG:苦痛 * (10 + 2 * TALENT:ARG:痛觉) / 10
+
+;习得速度
+CUP:ARG:习得 = CUP:ARG:习得 * (10 + 2 * TALENT:ARG:习得速度) / 10
+
+
+;献身的
+SIF TALENT:ARG:献身的
+	TIMES CUP:ARG:屈服 , 1.20
+
+;接受快感
+SIF TALENT:ARG:快感应答 > 0
+	TIMES CUP:ARG:情欲 , 1.20
+;否定快感（淫乱、娼妇で无效）
+SIF TALENT:ARG:快感应答 < 0 && !TALENT:ARG:淫乱
+	TIMES CUP:ARG:情欲 , 0.80
+;容易高潮
+IF TALENT:ARG:容易高潮
+	TIMES CUP:ARG:恭顺 , 2.00
+	TIMES CUP:ARG:情欲 , 2.00
+	TIMES CUP:ARG:屈服 , 2.00
+	TIMES CUP:ARG:习得 , 2.00
+	TIMES CUP:ARG:羞耻 , 2.00
+	TIMES CUP:ARG:恐怖 , 2.00
+	TIMES CUP:ARG:反感 , 0.50
+	TIMES CUP:ARG:不快 , 0.50
+	TIMES CUP:ARG:抑郁 , 0.50
+ENDIF
+;自慰狂
+SIF TALENT:ARG:自慰狂
+	TIMES CUP:ARG:情欲 , 1.20
+;淫壶
+SIF TALENT:ARG:淫壶
+	TIMES CUP:ARG:恭顺 , 1.20
+;尻穴狂
+SIF TALENT:ARG:尻穴狂
+	TIMES CUP:ARG:屈服 , 1.20
+;淫乳
+SIF TALENT:ARG:淫乳
+	TIMES CUP:ARG:羞耻 , 1.20
+
+SIF TALENT:ARG:接吻魔
+	TIMES CUP:ARG:好意 , 1.10
+;倒错的
+IF TALENT:ARG:倒错的
+	TIMES CUP:ARG:屈服 , 1.20
+	TIMES CUP:ARG:羞耻 , 1.20
+ENDIF
+;风骚
+IF TALENT:ARG:风骚
+	TIMES CUP:ARG:情欲 , 1.20
+	SIF CFLAG:ARG:诶嘿嘿
+		TIMES CUP:ARG:反感 , 0.25
+ENDIF
+;讨厌男人
+IF OTOKOGIRAI(ARG)
+	TIMES CUP:ARG:恭顺 , 0.70
+	TIMES CUP:ARG:情欲 , 0.70
+	TIMES CUP:ARG:屈服 , 0.70
+	TIMES CUP:ARG:习得 , 0.70
+	TIMES CUP:ARG:反感 , 1.30
+	TIMES CUP:ARG:不快 , 1.30
+	TIMES CUP:ARG:恐怖 , 1.30
+ENDIF
+;施虐狂
+IF TALENT:ARG:施虐狂
+	TIMES CUP:ARG:优越 , 2.00
+	TIMES CUP:ARG:屈服 , 0.80
+	TIMES CUP:ARG:恐怖 , 0.80
+ENDIF
+;受虐狂
+IF TALENT:ARG:受虐狂
+	TIMES CUP:ARG:屈服 , 1.20
+	TIMES CUP:ARG:恐怖 , 1.20
+	TIMES CUP:ARG:抑郁 , 0.80
+ENDIF
+IF TALENT:ARG:小恶魔
+	TIMES CUP:ARG:优越 , 1.50
+ENDIF
+;迷信
+IF TALENT:ARG:迷信
+	TIMES CUP:ARG:屈服 , 1.20
+	TIMES CUP:ARG:反感 , 0.80
+ENDIF
+
+
+
+;-------------------------------------------------
+;其他
+;-------------------------------------------------
+;苦痛刻印
+IF MARK:ARG:苦痛刻印 == 3
+	TIMES CUP:ARG:苦痛 , 1.30
+	TIMES CUP:ARG:恐怖 , 1.30
+ELSEIF MARK:ARG:苦痛刻印 == 2
+	TIMES CUP:ARG:苦痛 , 1.20
+	TIMES CUP:ARG:恐怖 , 1.20
+ELSEIF MARK:ARG:苦痛刻印 == 1
+	TIMES CUP:ARG:苦痛 , 1.10
+	TIMES CUP:ARG:恐怖 , 1.10
+ENDIF
+
+;快乐刻印
+IF MARK:ARG:快乐刻印 < MARK:ARG:时奸刻印
+	SELECTCASE MARK:ARG:时奸刻印
+		CASE 3
+			TIMES CUP:ARG:情欲 , 1.30
+			TIMES CUP:ARG:习得 , 1.30
+		CASE 2
+			TIMES CUP:ARG:情欲 , 1.20
+			TIMES CUP:ARG:习得 , 1.20
+		CASE 1
+			TIMES CUP:ARG:情欲 , 1.10
+			TIMES CUP:ARG:习得 , 1.10
+	ENDSELECT
+ELSE
+	IF MARK:ARG:快乐刻印 == 3
+		TIMES CUP:ARG:情欲 , 1.35
+		TIMES CUP:ARG:习得 , 1.35
+	ELSEIF MARK:ARG:快乐刻印 == 2
+		TIMES CUP:ARG:情欲 , 1.25
+		TIMES CUP:ARG:习得 , 1.25
+	ELSEIF MARK:ARG:快乐刻印 == 1
+		TIMES CUP:ARG:情欲 , 1.15
+		TIMES CUP:ARG:习得 , 1.15
+	ENDIF
+ENDIF
+
+;屈服刻印
+IF MARK:ARG:屈服刻印 < MARK:ARG:时奸刻印
+	SELECTCASE MARK:ARG:时奸刻印
+		CASE 3
+			TIMES CUP:ARG:恭顺 , 1.30
+			TIMES CUP:ARG:屈服 , 1.30
+			TIMES CUP:ARG:反感 , 0.50
+		CASE 2
+			TIMES CUP:ARG:恭顺 , 1.20
+			TIMES CUP:ARG:屈服 , 1.20
+			TIMES CUP:ARG:反感 , 0.70
+		CASE 1
+			TIMES CUP:ARG:恭顺 , 1.10
+			TIMES CUP:ARG:屈服 , 1.10
+			TIMES CUP:ARG:反感 , 0.90
+	ENDSELECT
+ELSE
+	IF MARK:ARG:屈服刻印 == 3
+		TIMES CUP:ARG:恭顺 , 1.35
+		TIMES CUP:ARG:屈服 , 1.35
+		TIMES CUP:ARG:反感 , 0.40
+		TIMES CUP:ARG:好意, 1.30
+	ELSEIF MARK:ARG:屈服刻印 == 2
+		TIMES CUP:ARG:恭顺 , 1.25
+		TIMES CUP:ARG:屈服 , 1.25
+		TIMES CUP:ARG:反感 , 0.60
+		TIMES CUP:ARG:好意, 1.20
+	ELSEIF MARK:ARG:屈服刻印 == 1
+		TIMES CUP:ARG:恭顺 , 1.15
+		TIMES CUP:ARG:屈服 , 1.15
+		TIMES CUP:ARG:反感 , 0.75
+		TIMES CUP:ARG:好意, 1.10
+	ENDIF
+ENDIF
+
+;反抗刻印
+IF MARK:ARG:反抗刻印 == 3
+	TIMES CUP:ARG:恭顺 , 0.10
+	TIMES CUP:ARG:反感 , 3.00
+	TIMES CUP:ARG:好意, 0.20
+ELSEIF MARK:ARG:反抗刻印 == 2
+	TIMES CUP:ARG:恭顺 , 0.40
+	TIMES CUP:ARG:反感 , 2.00
+	TIMES CUP:ARG:好意, 0.50
+ELSEIF MARK:ARG:反抗刻印 == 1
+	TIMES CUP:ARG:恭顺 , 0.75
+	TIMES CUP:ARG:反感 , 1.50
+	TIMES CUP:ARG:好意, 0.80
+ENDIF
+
+;-------------------------------------------------
+;相性による上下の处理
+;-------------------------------------------------
+R = NO:PLAYER
+IF RELATION:ARG:R != 0
+	CUP:ARG:情欲 *= RELATION:ARG:R
+	CUP:ARG:情欲 /= 100
+	CUP:ARG:屈服 *= RELATION:ARG:R
+	CUP:ARG:屈服 /= 100
+	CUP:ARG:羞耻 *= RELATION:ARG:R
+	CUP:ARG:羞耻 /= 100
+	CUP:ARG:反感 *= 100
+	CUP:ARG:反感 /= RELATION:ARG:R
+	CUP:ARG:不快 *= 100
+	CUP:ARG:不快 /= RELATION:ARG:R
+	CUP:ARG:抑郁 *= 100
+	CUP:ARG:抑郁 /= RELATION:ARG:R
+ENDIF
+
+;-------------------------------------------------
+;气力０による上下の处理
+;-------------------------------------------------
+IF BASE:ARG:气力 <= 0
+	;UP:0,1,2は绝顶に络むので先に处理してある
+	CUP:ARG:情欲 /= 2
+	CUP:ARG:恭顺 /= 2
+	CUP:ARG:屈服 /= 2
+	CUP:ARG:习得 /= 2
+	CUP:ARG:羞耻 /= 2
+	CUP:ARG:恐怖 /= 2
+	CUP:ARG:苦痛 /= 2
+	IF !FLAG:70 && !CFLAG:恶作剧
+		DOWNBASE:ARG:体力 *= 2
+		SIF ARG == TARGET
+			DOWNBASE:ARG:体力 += 80
+	ENDIF
+ENDIF
+;-------------------------------------------------
+;对方主导
+;-------------------------------------------------
+IF ARG != MASTER && CFLAG:ARG:诶嘿嘿 == 2
+	BASE:MASTER:体力 -= (DOWNBASE:ARG:体力 / 3) * 2
+	BASE:MASTER:气力 -= (DOWNBASE:ARG:气力 / 3) * 2
+	DOWNBASE:ARG:体力 = DOWNBASE:ARG:体力 / 3
+	DOWNBASE:ARG:气力 = DOWNBASE:ARG:气力 / 3
+ENDIF
+;-------------------------------------------------
+;随便
+;-------------------------------------------------
+IF TCVAR:ARG:随便
+	TIMES CUP:ARG:恭顺 , 0.10
+	TIMES CUP:ARG:屈服 , 0.10
+	TIMES CUP:ARG:羞耻 , 0.50
+	TIMES CUP:ARG:优越 , 1.50
+	EXP:ARG:嗜虐快乐经验 ++
+	DOWNBASE:MASTER:体力 += ABL:ARG:施虐属性 * 5 + 10
+	DOWNBASE:MASTER:气力 += ABL:ARG:施虐属性 * 5 + 20
+ENDIF
+;-------------------------------------------------
+;苦痛からくる体力・气力の减少
+;-------------------------------------------------
+LOCAL = CUP:ARG:苦痛 / 20
+;ABL:受虐属性をみる
+SELECTCASE ABL:ARG:受虐属性
+	CASE 0
+		TIMES LOCAL , 1.00
+	CASE 1
+		TIMES LOCAL , 0.95
+	CASE 2
+		TIMES LOCAL , 0.90
+	CASE 3
+		TIMES LOCAL , 0.80
+	CASE 4
+		TIMES LOCAL , 0.65
+	CASEELSE
+		TIMES LOCAL , 0.50
+ENDSELECT
+;痛觉
+LOCAL = LOCAL * (10 + TALENT:ARG:痛觉 * 2) / 10
+
+DOWNBASE:ARG:体力 += LOCAL
+DOWNBASE:ARG:气力 += LOCAL
+
+;-------------------------------------------------
+;烙印系统
+;-------------------------------------------------
+IF TATTO_SYSTEM && exist_st:ARG:0
+    ; 主纹
+    SELECTCASE st_m_id:ARG:0
+        CASE 5
+            TIMES CUP:ARG:情欲, 1.50
+        ; 在这里添加其他分支（如果加入更多主纹类型）
+    ENDSELECT
+    ; 辅纹
+    ; 辅纹ID == 4, 5 对应情欲、屈服
+    IF st_a_lv:ARG:4 > 0
+        CUP:ARG:情欲 = CUP:ARG:情欲 * (100 + st_a_lv:ARG:4 * 10) / 100
+    ENDIF
+    IF st_a_lv:ARG:5 > 0
+        CUP:ARG:屈服 = CUP:ARG:屈服 * (100 + st_a_lv:ARG:5 * 10) / 100
+    ENDIF
+ENDIF
+
+
+;FileName_SOURCE1.ERB ------------------------------ Rev1.00
+;体力、气力の减少处理
+;CALL		USER
+;ARG		角色NO
+;RETURN		VOID
+;COMMENT	
+;-----------------------------------------------------------
+@SOURCE_DOWNBASE(ARG)
+#DIM 酒气减少
+IF ARG != NO:MASTER && TALENT:ARG:恋人 && CFLAG:ARG:诶嘿嘿
+	DOWNBASE:ARG:体力 = (DOWNBASE:ARG:体力 / 10) * 7
+	DOWNBASE:ARG:气力 = (DOWNBASE:ARG:气力 / 10) * 8
+ENDIF
+
+
+BASE:ARG:体力 = LIMIT(BASE:ARG:体力 - DOWNBASE:ARG:体力,0,MAXBASE:ARG:体力)
+BASE:ARG:气力 = LIMIT(BASE:ARG:气力 - DOWNBASE:ARG:气力,0,MAXBASE:ARG:气力)
+酒气减少 = 0
+IF TCVAR:ARG:烂醉 && CFLAG:ARG:诶嘿嘿 && !FLAG:70
+	酒气减少 = DOWNBASE:ARG:体力 / 2 + DOWNBASE:ARG:气力 / 4
+	酒气减少 = 酒气减少 * (5 + TALENT:ARG:酒耐性) / 5
+	BASE:ARG:酒气 = MAX(0,BASE:ARG:酒气 - 酒气减少)
+ENDIF
+CALL ADD_TIRED(ARG, 12 * CULC_TIRED(DOWNBASE:ARG:体力) + 8 * CULC_TIRED(DOWNBASE:ARG:气力))

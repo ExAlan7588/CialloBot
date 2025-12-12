@@ -1,0 +1,64 @@
+﻿@DAILY_CONDITION_EV8
+
+IF FLAG:田地工作的成果 > 60 && TALENT:MASTER:2 & 2 && FLAG:野菜娘デイリー != 2 && !RAND:20
+	CALL DAILY_EV8
+	RETURN 1
+ELSE
+	RETURN -1
+ENDIF
+
+@DAILY_EV8
+
+PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%打算上床睡觉的时候、一个陌生的姑娘访问了
+PRINTFORML 对说%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%是想要回报总是承蒙照顾的恩惠
+IF !FLAG:野菜娘デイリー
+	PRINTFORML 但是%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%完全没有头绪…
+ELSE
+	PRINTFORML 以前也有类似的事情的…
+ENDIF
+CALL ASK_YN("你认错人了吧","送上门怎能不吃")
+IF !RESULT
+	IF !FLAG:野菜娘デイリー
+		PRINTFORML 仙人跳什么的、弄不好的话是妖怪的陷阱
+		PRINTFORML 这样想着%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%把姑娘挡了回去
+		PRINTFORML 姑娘带着可惜的样子离开了
+	ELSE
+		PRINTFORML 总感觉很可怕所以不送了
+		PRINTFORML 姑娘带着可惜的样子离开了
+	ENDIF
+ELSEIF BASE:MASTER:气力 < 500 || BASE:MASTER:体力 < 750 || BASE:MASTER:精力 < 300
+	PRINTFORML 因为困了所以请回去
+	PRINTFORML 姑娘带着可惜的样子离开了
+ELSE
+	IF !FLAG:野菜娘デイリー
+		PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%打量着姑娘
+		PRINTFORML 稍微有些丰满还算可爱
+		PRINTFORML 不知道这样的时间来男人的地方与礼仪不通吗、虽然不明白情况不过以后再考虑
+	ELSE
+		PRINTFORM 没有努力培育作物的话不会变得这么好吃的、
+	ENDIF
+	PRINTFORML 这样想着%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%把姑娘带到房间里去了
+	PRINTFORMW 并且问想怎么感谢、像期待的那样姑娘把手搭到衣服上去…
+	PRINTFORMW …
+	PRINTFORMW ……
+	IF !FLAG:野菜娘デイリー
+		PRINTFORML 清晨、她放着还在做梦的%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%离开了
+		PRINTFORML 最后还是不知道承蒙照顾到底是什么事
+		PRINTFORMW 离开之际说着「会有很多孩子」这样令人不安的话……
+		PRINTFORMW …
+		PRINTFORMW ……
+		PRINTFORMW 照顾田地的时候%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%有了违和感
+		PRINTFORMW 突然间果实变好了一样……
+		PRINTFORML ……这个、可以吃吗？
+	ELSE
+		PRINTFORML 不出所料、第二天早上看到了田里生长的更好了
+		PRINTFORML 昨日射出的精液成了果实、收获、再出货吗……
+		PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%沉湎于微妙的感慨之中
+	ENDIF
+	BASE:MASTER:精力 -= 300
+	BASE:MASTER:体力 -= 200
+	FLAG:田地工作的成果 += 20
+	FLAG:野菜娘デイリー = 2
+ENDIF
+PRINTW 
+RETURN 1

@@ -1,0 +1,227 @@
+﻿;-----------------------------------------------------------
+;远距离移动の设定
+;ARG     目的地
+;ARG:1   现在地
+;RETURN  次の目的地
+;-----------------------------------------------------------
+@SKIP_MOVE_8(ARG, ARG:1)
+#DIM 现在的位置
+;当前位置取得
+IF ARG:1
+	现在的位置 = ARG:1
+ELSE
+	现在的位置 = CFLAG:MASTER:当前位置
+ENDIF
+
+;目的地に直接移动できる场合そこに移动
+SIF CAN_MOVE(现在的位置, ARG) & 1
+	RETURN ARG
+
+;袋小路から行ける场所は固定なので、そこを目指す
+SELECTCASE 现在的位置
+	CASE P806瀑布背面
+		RETURN P802桥
+	CASE P813社务所
+		RETURN P811境内
+	CASE P822厨房, P823空室, P824厕所, P825澡堂
+		RETURN P821土间
+	CASE P833桃园
+		RETURN P832有顶天街
+	CASE P837比那名居邸澡堂
+		RETURN P834比那名居邸土间
+	CASE P841衣玖私室, P842比那名居邸库房
+		RETURN P838比那名居邸起居室
+	CASE P851久侘歌的小屋, P852驹草的小屋, P853魅须丸的小屋, P854龙宅
+		RETURN P805顶上
+	CASE P856百百世的住所
+		RETURN P855虹龙洞
+ENDSELECT
+
+;直接移动できない场合、1つ近い位置を暂定目的地に设定し直してループ
+;基本的に最短で行けるコースを设定する
+;现在地によってコースが变わることも考虑して对応する
+SELECTCASE ARG
+	CASE P801山顶入口
+		RETURN P802桥
+	CASE P802桥
+		RETURN P803索道站
+	CASE P803索道站
+		SELECTCASE 现在的位置
+		CASE P801山顶入口, P807椛宅, P806瀑布背面
+			RETURN P802桥
+		CASEELSE
+			RETURN P804守矢神社鸟居
+		ENDSELECT
+	CASE P804守矢神社鸟居
+		SELECTCASE 现在的位置
+		CASE P801山顶入口, P807椛宅, P802桥, P806瀑布背面, P808文宅, P809果宅
+			RETURN P803索道站
+		CASE P811境内 TO P826走廊
+			RETURN P811境内
+		CASEELSE
+			RETURN P805顶上
+		ENDSELECT
+	CASE P805顶上
+		SELECTCASE 现在的位置
+		CASE P856百百世的住所
+			RETURN P855虹龙洞
+		CASE P831比那名居邸前 TO P842比那名居邸库房
+			RETURN P830玄云海
+		CASEELSE
+			RETURN P804守矢神社鸟居
+		ENDSELECT
+	CASE P806瀑布背面, P807椛宅
+		RETURN P802桥
+	CASE P808文宅, P809果宅
+		SELECTCASE 现在的位置
+		CASE P801山顶入口, P807椛宅, P806瀑布背面
+			RETURN P802桥
+		CASEELSE
+			RETURN P803索道站
+		ENDSELECT
+	CASE P810山小屋
+		SELECTCASE 现在的位置
+		CASE P801山顶入口, P807椛宅, P802桥, P806瀑布背面, P808文宅, P809果宅
+			RETURN P803索道站
+		CASEELSE
+			RETURN P804守矢神社鸟居
+		ENDSELECT
+	;▼守矢神社
+	CASE P811境内
+		SELECTCASE 现在的位置
+		CASE P815庭
+			RETURN P814湖畔
+		CASE P811境内 TO P826走廊
+			RETURN P821土间
+		CASEELSE
+			RETURN P804守矢神社鸟居
+		ENDSELECT
+	CASE P812本殿
+		SELECTCASE 现在的位置
+		CASE P814湖畔, P813社务所
+			RETURN P811境内
+		CASE P811境内 TO P826走廊
+			RETURN P826走廊
+		CASEELSE
+			RETURN P811境内
+		ENDSELECT
+	CASE P813社务所
+		RETURN P811境内
+	CASE P814湖畔
+		SELECTCASE 现在的位置
+		CASE P812本殿, P813社务所, P821土间
+			RETURN P811境内
+		CASE P811境内 TO P826走廊
+			RETURN P815庭
+		CASEELSE
+			RETURN P811境内
+		ENDSELECT
+	CASE P815庭
+		SELECTCASE 现在的位置
+		CASE P820早苗私室 TO P825澡堂
+			RETURN P821土间
+		CASE P811境内, P813社务所
+			RETURN P814湖畔
+		CASE P811境内 TO P826走廊
+			RETURN P816走廊
+		CASEELSE
+			RETURN P814湖畔
+		ENDSELECT
+	CASE P816走廊
+		SELECTCASE 现在的位置
+		CASE P814湖畔
+			RETURN P815庭
+		CASE P812本殿
+			RETURN P826走廊
+		CASEELSE
+			RETURN P821土间
+		ENDSELECT
+	CASE P817神奈子私室
+		SELECTCASE 现在的位置
+		CASE P820早苗私室
+			RETURN P819起居室
+		CASEELSE
+			RETURN P816走廊
+		ENDSELECT
+	CASE P818诹访子私室
+		SELECTCASE 现在的位置
+		CASE P815庭, P814湖畔, P826走廊, P812本殿, P819起居室
+			RETURN P816走廊
+		CASEELSE
+			RETURN P821土间
+		ENDSELECT
+	CASE P819起居室
+		SELECTCASE 现在的位置
+		CASE P818诹访子私室, P815庭, P814湖畔
+			RETURN P816走廊
+		CASEELSE
+			RETURN P826走廊
+		ENDSELECT
+	CASE P820早苗私室
+		SELECTCASE 现在的位置
+		CASE P817神奈子私室
+			RETURN P819起居室
+		CASE P812本殿
+			RETURN P826走廊
+		CASEELSE
+			RETURN P821土间
+		ENDSELECT
+	CASE P821土间
+		SELECTCASE 现在的位置
+		CASE P819起居室, P812本殿
+			RETURN P826走廊
+		CASE P817神奈子私室
+			RETURN P816走廊
+		CASEELSE
+			RETURN P811境内
+		ENDSELECT
+	CASE P822厨房, P823空室, P824厕所, P825澡堂
+		RETURN P821土间
+	CASE P826走廊
+		SELECTCASE 现在的位置
+		CASE P815庭, P817神奈子私室, P818诹访子私室
+			RETURN P816走廊
+		CASEELSE
+			RETURN P821土间
+		ENDSELECT
+	;▼天界
+	CASE P830玄云海
+		SELECTCASE 现在的位置
+		CASE P831比那名居邸前 TO P842比那名居邸库房
+			RETURN P832有顶天街
+		CASEELSE
+			RETURN P805顶上
+		ENDSELECT
+	CASE P831比那名居邸前
+		SELECTCASE 现在的位置
+		CASE P834比那名居邸土间 TO P842比那名居邸库房
+			RETURN P834比那名居邸土间
+		CASEELSE
+			RETURN P832有顶天街
+		ENDSELECT
+	CASE P832有顶天街
+		SELECTCASE 现在的位置
+		CASE P834比那名居邸土间 TO P842比那名居邸库房
+			RETURN P831比那名居邸前
+		CASEELSE
+			RETURN P830玄云海
+		ENDSELECT
+	CASE P833桃园
+		RETURN P832有顶天街
+	CASE P834比那名居邸土间
+		SELECTCASE 现在的位置
+		CASE P834比那名居邸土间 TO P842比那名居邸库房
+			RETURN P838比那名居邸起居室
+		CASEELSE
+			RETURN P831比那名居邸前
+		ENDSELECT
+	CASE P835比那名居邸会客厅, P836比那名居邸厨房, P837比那名居邸澡堂, P838比那名居邸起居室
+		RETURN P834比那名居邸土间
+	CASE P839比那名居邸和室 TO P842比那名居邸库房
+		RETURN P838比那名居邸起居室
+	;▼顶上部
+	CASE P851久侘歌的小屋, P852驹草的小屋, P853魅须丸的小屋, P854龙宅, P855虹龙洞
+		RETURN P805顶上
+	CASE P856百百世的住所
+		RETURN P855虹龙洞
+ENDSELECT

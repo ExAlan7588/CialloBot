@@ -1,0 +1,585 @@
+﻿;-------------------------------------------------
+;读书
+;日常系指令、レベル1
+;-------------------------------------------------
+@COM436
+#DIM READING_EXP
+READING_EXP = 1
+
+
+PRINTL 要读什么？ 
+CALL ASK_M("文学", 1, "实用书", 1, "小黄书", 1, "中止", 1)
+IF RESULT == 0
+	SELECTCASE RAND:10
+		;忍杀
+		CASE 0
+			TFLAG:193 = 1
+		;失败
+		CASE 1 TO 3
+			TFLAG:193 = 2
+		;文学
+		CASEELSE
+			TFLAG:193 = 3
+	ENDSELECT
+ELSEIF RESULT == 1
+	SELECTCASE RAND:10
+		;失败
+		CASE 0 TO 2
+			TFLAG:193 = 4
+		;实用
+		CASEELSE
+			TFLAG:193 = 5
+	ENDSELECT
+ELSEIF RESULT == 2
+	SELECTCASE RAND:9
+		;ｳｽｲﾀｶｲﾎﾝ
+		CASE 0 TO 2
+			TFLAG:193 = 6
+		;保健体育
+		CASE 3 TO 5
+			TFLAG:193 = 7
+		;カーマスートラ
+		CASE 6 TO 8
+			TFLAG:193 = 8
+		;やばい本
+;		CASEELSE
+;		IF !TALENT:MASTER:禁断的知识
+;			TFLAG:193 = 9
+;		ELSE
+;			GOTO LOOP
+;		ENDIF
+	ENDSELECT
+ELSEIF RESULT == 3
+	RETURN -1
+ENDIF
+
+IF TARGET == 54 && CFLAG:325 == 5
+	IF TALENT:恋慕
+		PRINTFORM 和帕秋莉一起享受着读书的快乐
+	ELSE
+		PRINTFORM 在帕秋莉停止读书之前你也把时间打发在了读书上
+	ENDIF
+ENDIF
+PRINTFORM %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%把书架上的
+SELECTCASE TFLAG:193
+	CASE 1
+		PRINT 『忍者杀手』
+	CASE 2 TO 3
+		PRINT 文艺书
+	CASE 4 TO 5
+		PRINT 实用书
+	CASE 6
+		PRINT 又薄又贵的书
+	CASE 7
+		PRINT 保健体育的书
+	CASE 8
+		PRINT 『印度爱经』
+;	CASE 9
+;		PRINT タイトルのない皮装丁の湿り气を带びた本
+ENDSELECT
+PRINTFORML 拿下读了起来
+
+;3分の1で追加イベント
+SIF !RAND:3 && TARGET == 54
+	TFLAG:194 = 1
+;TARGETが无知かつＨな本读みかつMASTERがTARGETより教养が高くTARGETの教养が2以上かつ五分の一
+SIF !RAND:5 && TALENT:TARGET:无知 && TFLAG:193 >= 6 && TFLAG:193 <= 8 && ABL:MASTER:教养 > ABL:教养 && ABL:教养 >= 2
+	TFLAG:194 = 2
+
+SELECTCASE TFLAG:193
+	CASE 1
+		EXP:MASTER:战斗经验 += 5
+	CASE 3
+	;文学
+		EXP:MASTER:学习经验 += READING_EXP
+	CASE 5
+	;实用
+		SELECTCASE RAND:7
+			CASE 0
+				EXP:MASTER:会话经验 += READING_EXP
+			CASE 1
+				EXP:MASTER:摄影经验 += READING_EXP
+			CASE 2
+				EXP:MASTER:料理经验 += READING_EXP
+			CASE 3
+				EXP:MASTER:钓鱼经验 += READING_EXP
+			CASE 4
+				EXP:MASTER:采集经验 += READING_EXP
+			CASE 5
+				EXP:MASTER:调合经验 += READING_EXP
+			CASEELSE
+				EXP:MASTER:采伐经验 += READING_EXP
+		ENDSELECT
+	CASE 6
+		CALL RECOVER(MASTER,100,"精力")
+		CALL RECOVER(MASTER,100,"勃起")
+ENDSELECT
+
+IF TARGET > 0 && CFLAG:行动 != 5
+	;固定で获得するソース
+	SOURCE:欢乐 = 200
+	;信赖
+	TFLAG:98 = 3
+
+	;ABL:顺从をみる
+	IF ABL:顺从 <= 1
+		SOURCE:欢乐 += (ABL:顺从 * 80)
+	ELSEIF ABL:顺从 <= 3
+		SOURCE:欢乐 += 300 + (ABL:顺从 * 80)
+	ELSEIF ABL:顺从 <= 5
+		SOURCE:欢乐 += 700 + (ABL:顺从 * 80)
+	ELSEIF ABL:顺从 <= 8
+		SOURCE:欢乐 += 950 + (ABL:顺从 * 100)
+	ELSEIF ABL:顺从 <= 11
+		SOURCE:欢乐 += 1200 + (ABL:顺从 * 90)
+	ELSE
+		SOURCE:欢乐 += 2000 + (ABL:顺从 * 50)
+	ENDIF
+
+	;好感度をみる
+	IF CFLAG:2 <= 500
+		SOURCE:欢乐 += CFLAG:2 * 2
+	ELSEIF CFLAG:2 <= 5000
+		SOURCE:欢乐 += 1000 + (CFLAG:2 - 500) / 2
+	ELSE
+		SOURCE:欢乐 += 5000 + (CFLAG:2 - 5000) / 3
+	ENDIF
+	SIF SOURCE:欢乐 < 0
+		SOURCE:欢乐 = 0
+ENDIF
+
+DOWNBASE:MASTER:体力 = 50
+DOWNBASE:MASTER:气力 = 200
+;贤者タイムは读书がはかどる
+IF IS_WISEMAN()
+	PRINTFORML 由于烦恼消失了、学习的效率提高了
+	TIME += 45
+ELSE
+	TIME += 60
+ENDIF
+RETURN 1
+
+
+;-------------------------------------------------
+;实行可能判定
+;-------------------------------------------------
+;读书
+@COM_ABLE436
+;实行判定
+SIF !TFLAG:100
+	RETURN 0
+;批量管理
+SIF GLOBAL_COMABLE(436)
+	RETURN RESULT
+;约会道中
+SIF TFLAG:约会道中
+	RETURN 0
+;陪睡中
+SIF CFLAG:MASTER:陪睡中
+	RETURN 0
+;诶嘿嘿中もだめ
+SIF CFLAG:MASTER:诶嘿嘿
+	RETURN 0
+;气力0では不可
+SIF BASE:MASTER:气力 <= 0
+	RETURN 0
+;图书馆
+SIF !IS_LIBRARY(CFLAG:MASTER:当前位置)
+	RETURN 0
+;睡眠中
+SIF CFLAG:睡眠
+	RETURN 0
+;时间停止中
+SIF FLAG:70
+	RETURN 0
+RETURN 1
+
+;藏书閲览判定・改＠下见パッチ
+;返回值はPLACE_IDにすること
+;MASTERの当前位置に关系なく判定可能に
+;PERMISSIONが真なら许可フリー
+@IS_LIBRARY(PLACE_ID, PERMISSION)
+#FUNCTION
+#DIM PLACE_ID
+#DIM PERMISSION
+;外にいる场合、据点用のPLACE_IDに置换
+IF !IN_HOME(PLACE_ID)
+	SELECTCASE PLACE_ID
+		CASE 梦幻遗迹 
+			PLACE_ID = P49梦幻遗迹・研究室
+		CASE 命莲寺境内
+			PLACE_ID = P105经藏
+		CASE 神灵庙道场
+			PLACE_ID = P126道场
+		CASE 商业街
+			PLACE_ID = P213铃奈庵
+		CASE 寺子屋
+			PLACE_ID = P222寺子屋
+		CASE 长屋街
+			PLACE_ID = P221稗田邸
+		CASE 大图书馆
+			PLACE_ID = P310图书馆
+		CASE 永远亭的内院
+			PLACE_ID = P414辉夜私室
+		CASE 雾雨魔法店
+			PLACE_ID = P513魔理沙宅・研究房间
+		CASE 人偶的洋馆
+			PLACE_ID = P524人偶洋馆・研究室
+		CASE 迷途之家
+			PLACE_ID = P633紫私室
+		CASE 白玉楼
+			PLACE_ID = P623幽幽子私室
+		CASE 仙人的宅邸
+			PLACE_ID = P724仙人的宅邸・书斋
+		CASE 天界
+			PLACE_ID = P842比那名居邸库房
+		CASE 地灵殿
+			PLACE_ID = P920书斋
+		CASE 绵月亭
+			PLACE_ID = P1043书斋
+		CASE 宁静海
+			PLACE_ID = P1065库房
+		CASEELSE
+			RETURNF 0
+	ENDSELECT
+ENDIF
+;PLACE_IDを返す
+SELECTCASE PLACE_ID
+	CASE P48梦幻遗迹・第一资料室, P49梦幻遗迹・研究室, P50梦幻遗迹・第二资料室
+		RETURNF PLACE_ID
+	CASE P105经藏, P126道场
+		RETURNF PLACE_ID
+	CASE P213铃奈庵, P222寺子屋
+		RETURNF PLACE_ID
+	CASE P221稗田邸
+		SIF PERMISSION
+			RETURNF PLACE_ID
+		;扮演/思慕/恋慕で开放
+		SIF FLAG:扮演 == [[阿求]]
+			RETURNF PLACE_ID
+		SIF TALENT:[[阿求]]:恋慕 || TALENT:[[阿求]]:思慕
+			RETURNF PLACE_ID
+	CASE P224慧音宅
+		SIF PERMISSION
+			RETURNF PLACE_ID
+		;扮演/信赖度30以上同室で许可
+		SIF FLAG:扮演 == [[慧音]]
+			RETURNF PLACE_ID
+		SIF CFLAG:[[慧音]]:同室 && CFLAG:[[慧音]]:信赖度 >= 30
+			RETURNF PLACE_ID
+	CASE P310图书馆
+		RETURNF PLACE_ID
+	CASE P414辉夜私室
+		SIF PERMISSION
+			RETURNF PLACE_ID
+		;扮演/思慕以上同室で许可
+		SIF GROUPMATCH(FLAG:扮演, [[铃仙]], [[帝]], [[辉夜]], [[永琳]])
+			RETURNF PLACE_ID
+		SIF CFLAG:[[辉夜]]:同室 && (TALENT:[[辉夜]]:恋慕 || TALENT:[[辉夜]]:思慕)
+			RETURNF PLACE_ID
+	CASE P424库房, P427仓库
+		SIF PERMISSION
+			RETURNF PLACE_ID
+		;扮演/同室で许可
+		SIF GROUPMATCH(FLAG:扮演, [[铃仙]], [[帝]], [[辉夜]], [[永琳]])
+			RETURNF PLACE_ID
+		SIF CFLAG:[[铃仙]]:同室 || CFLAG:[[帝]]:同室 || CFLAG:[[辉夜]]:同室 || CFLAG:[[永琳]]:同室
+			RETURNF PLACE_ID
+	CASE P513魔理沙宅・研究房间
+		SIF PERMISSION
+			RETURNF PLACE_ID
+		;扮演/信赖度30以上同室で许可
+		SIF FLAG:扮演 == [[魔理沙]]
+			RETURNF PLACE_ID
+		SIF CFLAG:[[魔理沙]]:同室 && CFLAG:[[魔理沙]]:信赖度 >= 30
+			RETURNF PLACE_ID
+	CASE P524人偶洋馆・研究室
+		SIF PERMISSION
+			RETURNF PLACE_ID
+		;扮演/住んでる/思慕以上同室で许可
+		SIF GROUPMATCH(FLAG:扮演, [[爱丽丝]], [[神绮]])
+			RETURNF PLACE_ID
+		SIF INRANGE(CFLAG:MASTER:初始位置, 521, 531)
+			RETURNF PLACE_ID
+		SIF (CFLAG:[[爱丽丝]]:同室 || CFLAG:[[神绮]]:同室) && (TALENT:[[爱丽丝]]:恋慕 || TALENT:[[爱丽丝]]:思慕 || TALENT:[[神绮]]:恋慕 || TALENT:[[神绮]]:思慕)
+			RETURNF PLACE_ID
+	CASE P623幽幽子私室
+		SIF PERMISSION
+			RETURNF PLACE_ID
+		;扮演/思慕以上同室で许可
+		SIF GROUPMATCH(FLAG:扮演, [[妖梦]], [[幽幽子]])
+			RETURNF PLACE_ID
+		SIF CFLAG:[[幽幽子]]:同室 && (TALENT:[[幽幽子]]:恋慕 || TALENT:[[幽幽子]]:思慕)
+			RETURNF PLACE_ID
+	CASE P633紫私室
+		SIF PERMISSION
+			RETURNF PLACE_ID
+		;扮演/思慕以上同室で许可
+		SIF GROUPMATCH(FLAG:扮演, [[橙]], [[蓝]], [[紫]])
+			RETURNF PLACE_ID
+		SIF CFLAG:[[紫]]:同室 && (TALENT:[[紫]]:恋慕 || TALENT:[[紫]]:思慕)
+			RETURNF PLACE_ID
+	CASE P724仙人的宅邸・书斋
+		SIF PERMISSION
+			RETURNF PLACE_ID
+		;扮演/住んでる/思慕以上同室で许可
+		SIF FLAG:扮演 == [[华扇]]
+			RETURNF PLACE_ID
+		SIF INRANGE(CFLAG:MASTER:初始位置, 720, 730)
+			RETURNF PLACE_ID
+		SIF CFLAG:[[华扇]]:同室 && (TALENT:[[华扇]]:恋慕 || TALENT:[[华扇]]:思慕)
+			RETURNF PLACE_ID
+	CASE P842比那名居邸库房
+		SIF PERMISSION
+			RETURNF PLACE_ID
+		;扮演/住んでる/同室で许可
+		SIF GROUPMATCH(FLAG:扮演, [[天子]], [[衣玖]])
+			RETURNF PLACE_ID
+		SIF INRANGE(CFLAG:MASTER:初始位置, 834, 842)
+			RETURNF PLACE_ID
+		SIF CFLAG:[[天子]]:同室 || CFLAG:[[衣玖]]:同室
+			RETURNF PLACE_ID
+	CASE P920书斋
+		SIF PERMISSION
+			RETURNF PLACE_ID
+		;扮演/住んでる/思慕以上同室で许可,ただし信赖度50未满はダメ
+		SIF FLAG:扮演 == [[觉]]
+			RETURNF PLACE_ID
+		SIF CFLAG:[[觉]]:信赖度 < 50
+			RETURNF 0
+		SIF INRANGE(CFLAG:MASTER:初始位置, 902, 926)
+			RETURNF PLACE_ID
+		SIF CFLAG:[[觉]]:同室 && (TALENT:[[觉]]:恋慕 || TALENT:[[觉]]:思慕)
+			RETURNF PLACE_ID
+	;绵月亭书斋
+	CASE P1043书斋
+		SIF PERMISSION
+			RETURNF PLACE_ID
+		;扮演/住んでるで许可
+		SIF GROUPMATCH(FLAG:扮演, [[铃仙二号]], [[依姫]], [[丰姫]])
+			RETURNF PLACE_ID
+		SIF INRANGE(CFLAG:MASTER:初始位置, 1020, 1049)
+			RETURNF PLACE_ID
+	;纯狐邸库房
+	CASE P1050哆来咪宅・起居室
+		SIF PERMISSION
+			RETURNF PLACE_ID
+		;扮演/住んでる/思慕以上同室で许可,ただし信赖度50未满はダメ
+		SIF FLAG:扮演 == [[纯狐]]
+			RETURNF PLACE_ID
+		SIF CFLAG:[[纯狐]]:信赖度 < 50
+			RETURNF 0
+		SIF INRANGE(CFLAG:MASTER:初始位置, 1060, 1072)
+			RETURNF PLACE_ID
+		SIF CFLAG:[[纯狐]]:同室 && (TALENT:[[纯狐]]:恋慕 || TALENT:[[纯狐]]:思慕)
+			RETURNF PLACE_ID
+ENDSELECT
+RETURNF 0
+
+;旧函数も一応残しておく
+[SKIPSTART]
+
+;藏书閲览判定
+;
+;据点/散步MAP两方使えます
+;MASTERの当前位置を放り込むと资料を见せてくれるかどうかを判定
+;返回值は0もしくは「据点MAPの场所ID」です
+;散步Mapでどこそこで资料见たよってやる用
+;PLACE_IDとMASTERの当前位置が违う场合は想定していません
+;つまり、博丽神社にいる时に阿求のお屋敷の判定しちゃダメ
+@IS_LIBRARY(PLACE_ID)
+#FUNCTION
+#DIM PLACE_ID              ;かならずMASTERの当前位置を渡すこと
+#DIM DYNAMIC PLACE_LIBRARY
+IF GET_MAPID(PLACE_ID) == MAIN_MAP
+	SELECTCASE GET_MAPNAME(GET_MAPID(PLACE_ID))
+	CASE "博丽神社"
+	;MAP_博丽神社　研究助手を每日やってたせいで谁でも资料閲览できそうなイメージ
+		SIF GROUPMATCH(NAME_FROM_PLACE(PLACE_ID), "梦幻遗迹・第一资料室", "梦幻遗迹・研究室", "梦幻遗迹・第二资料室")
+			PLACE_LIBRARY = PLACE_ID
+	CASE "命连寺"
+	;MAP_命连寺、寺/道场ともに赖めば资料を见せてくれそう
+		SIF GROUPMATCH(NAME_FROM_PLACE(PLACE_ID), "经藏", "道场")
+			PLACE_LIBRARY = PLACE_ID
+	CASE "人间之里"
+	;MAP_人里、借书屋と个人宅
+		SIF GROUPMATCH(NAME_FROM_PLACE(PLACE_ID), "铃奈庵", "寺子屋", "慧音宅", "稗田邸")
+			PLACE_LIBRARY = PLACE_ID
+	CASE "雾之湖～红魔馆"
+	;MAP_红魔馆、とりあえず使用条件とかないので素通し
+		SIF NAME_FROM_PLACE(PLACE_ID) == "图书馆"
+			PLACE_LIBRARY = PLACE_ID
+	CASE "迷途竹林"
+	;MAP_迷途竹林、このMap特に图书室的なものが无い
+		;永远亭はたくさん藏书がありそうなイメージ
+		SIF GROUPMATCH(NAME_FROM_PLACE(PLACE_ID), "辉夜私室", "库房", "仓库")
+			PLACE_LIBRARY = PLACE_ID
+	CASE "魔法之森"
+	;MAP_魔法之森、魔法使たちは资料持ってるでしょう
+		SIF GROUPMATCH(NAME_FROM_PLACE(PLACE_ID), "魔理沙宅・研究房间", "人偶洋馆・研究室")
+			PLACE_LIBRARY = PLACE_ID
+	CASE "妖怪之山 (山麓)"
+	;MAP_魔法之森、华扇屋敷のみ
+		SIF NAME_FROM_PLACE(PLACE_ID) == "仙人的宅邸・书斋"
+			PLACE_LIBRARY = PLACE_ID
+	CASE "地底"
+	;MAP_地底、觉の书斋のみ
+		SIF NAME_FROM_PLACE(PLACE_ID) == "书斋"
+			PLACE_LIBRARY = PLACE_ID
+	ENDSELECT
+ELSE
+	SELECTCASE GET_MAPNAME(GET_MAPID(PLACE_ID))
+	CASE "博丽神社"
+		SIF STR:(6000 + PLACE_ID / 10) == "梦幻遗迹"
+			PLACE_LIBRARY = 49
+	CASE "命莲寺"
+		SIF STR:(6000 + PLACE_ID / 10) == "命莲寺境内"
+			PLACE_LIBRARY = 105
+		SIF STR:(6000 + PLACE_ID / 10) == "神灵庙道场"
+			PLACE_LIBRARY = 126
+	CASE "人间之里"
+		SIF STR:(6000 + PLACE_ID / 10) == "商业街"
+			PLACE_LIBRARY = 213
+		SIF STR:(6000 + PLACE_ID / 10) == "寺子屋"
+			PLACE_LIBRARY = 222
+		SIF STR:(6000 + PLACE_ID / 10) == "长屋街"
+			PLACE_LIBRARY = 221
+	CASE "雾之湖～红魔馆"
+		SIF STR:(6000 + PLACE_ID / 10) == "大图书馆"
+			PLACE_LIBRARY = 310
+	CASE "迷途竹林"
+		SIF STR:(6000 + PLACE_ID / 10) == "永远亭的内院"
+			PLACE_LIBRARY = 427
+	CASE "魔法之森"
+		SIF STR:(6000 + PLACE_ID / 10) == "雾雨魔法店"
+			PLACE_LIBRARY = 513
+		SIF STR:(6000 + PLACE_ID / 10) == "人偶的洋馆"
+			PLACE_LIBRARY = 524
+	CASE "三途之川～冥界"
+;		[SKIPSTART]
+;		IF STR:(6000 + PLACE_ID / 10) == "迷途之家"
+;			PLACE_LIBRARY = 630
+;		ENDIF
+;		IF STR:(6000 + PLACE_ID / 10) == "白玉楼"
+;			PLACE_LIBRARY = 690
+;		ENDIF
+;		[SKIPEND]
+	CASE "妖怪之山 (山麓)"
+		IF STR:(6000 + PLACE_ID / 10) == "仙人的宅邸"
+			PLACE_LIBRARY = 724
+		ENDIF
+	CASE "妖怪之山 (山顶)"
+;		[SKIPSTART]
+;		IF STR:(6000 + PLACE_ID / 10) == "天界"
+;			PLACE_LIBRARY = 890
+;		ENDIF
+;		[SKIPEND]
+	CASE "地底"
+		IF STR:(6000 + PLACE_ID / 10) == "地灵殿"
+			PLACE_LIBRARY = 920
+		ENDIF
+	CASE "梦之世界～月"
+;		[SKIPSTART]
+;		IF STR:(6000 + PLACE_ID / 10) == "绵月亭"
+;			PLACE_LIBRARY = 1060
+;		ENDIF
+;		[SKIPEND]
+	ENDSELECT
+ENDIF
+RETURNF CAN_READ_BOOK_COLLECTION(PLACE_LIBRARY)
+
+
+
+
+;藏书閲览许诺判定
+;・かならず据点Mapの场所ID（详细な地点の方）を渡すこと
+;・MASTERがその场所にいるのが前提で处理を组んでます
+@CAN_READ_BOOK_COLLECTION(PLACE_ID)
+#FUNCTION
+#DIM PLACE_ID
+SELECTCASE PLACE_ID
+;梦幻遗迹は素通し
+CASE 48, 49, 50
+	RETURNF PLACE_ID
+;寺と神灵庙道场は素通し
+CASE 105, 126
+	RETURNF PLACE_ID
+;铃奈庵と寺子屋は素通し
+CASE 213, 222
+	RETURNF PLACE_ID
+;稗田邸
+;思慕/恋慕で解放
+CASE 221
+	SIF !TALENT:80:恋慕 && !TALENT:80:思慕
+		RETURNF 0
+	RETURNF PLACE_ID
+;慧音宅
+CASE 224
+	SIF FLAG:扮演 == 67
+		RETURNF PLACE_ID
+	SIF CFLAG:67:信赖度 < 30
+		RETURNF 0
+	SIF CFLAG:67:当前位置 == CFLAG:MASTER:当前位置
+		RETURNF PLACE_ID
+;图书馆は素通し
+CASE 310
+	RETURNF PLACE_ID
+;辉夜私室
+CASE 414
+	SIF GROUPMATCH(FLAG:扮演, 52, 53, 62, 72)
+		RETURNF PLACE_ID
+	SIF !TALENT:62:恋慕 && !TALENT:62:思慕
+		RETURNF 0
+	SIF CFLAG:62:当前位置 == CFLAG:MASTER:当前位置
+		RETURNF PLACE_ID
+;库房/仓库の捜索はゆるく
+;谁か一人同席してればよし
+CASE 424, 427
+	SIF GROUPMATCH(FLAG:扮演, 52, 53, 62, 72)
+		RETURNF PLACE_ID
+	SIF GROUPMATCH(CFLAG:MASTER:当前位置, CFLAG:52:当前位置, CFLAG:53:当前位置, CFLAG:62:当前位置, CFLAG:72:当前位置)
+		RETURNF PLACE_ID
+;魔理沙宅の研究室
+;多少の信赖度でおｋ
+CASE 513
+	SIF FLAG:扮演 == 11
+		RETURNF PLACE_ID
+	SIF CFLAG:11:信赖度 < 30
+		RETURNF 0
+	SIF CFLAG:11:当前位置 == CFLAG:MASTER:当前位置
+		RETURNF PLACE_ID
+;人形馆の研究室
+CASE 524
+	SIF GROUPMATCH(FLAG:扮演, 17, 102)
+		RETURNF PLACE_ID
+	SIF INRANGE(CFLAG:MASTER:初始位置, 521, 531)
+		RETURNF PLACE_ID
+	SIF !TALENT:17:恋慕 && !TALENT:17:思慕 && !TALENT:102:恋慕 && !TALENT:102:思慕
+		RETURNF 0
+	SIF GROUPMATCH(CFLAG:MASTER:当前位置, CFLAG:17:当前位置, CFLAG:102:当前位置)
+		RETURNF PLACE_ID
+;仙人屋敷の书斋
+CASE 724
+	SIF FLAG:扮演 == 43
+		RETURNF PLACE_ID
+	SIF INRANGE(CFLAG:MASTER:初始位置, 720, 730)
+		RETURNF PLACE_ID
+	SIF !TALENT:43:恋慕 && !TALENT:43:思慕
+		RETURNF 0
+	SIF CFLAG:43:当前位置 == CFLAG:MASTER:当前位置
+		RETURNF PLACE_ID
+;觉の书斋
+;同居してても信赖度50必要
+CASE 920
+	SIF FLAG:扮演 == 49
+		RETURNF PLACE_ID
+	SIF CFLAG:49:信赖度 < 50
+		RETURNF 0
+	SIF INRANGE(CFLAG:MASTER:初始位置, 902, 926)
+		RETURNF PLACE_ID
+	SIF !TALENT:49:恋慕 && !TALENT:49:思慕
+		RETURNF 0
+	SIF CFLAG:49:当前位置 == CFLAG:MASTER:当前位置
+		RETURNF PLACE_ID
+ENDSELECT
+[SKIPEND]

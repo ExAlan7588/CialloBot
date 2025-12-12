@@ -1,0 +1,736 @@
+;※※※※※※※※※※※※※※※※※※※※※※※※※
+;道具系コマンド
+;※※※※※※※※※※※※※※※※※※※※※※※※※
+;==================================================
+;40,跳蛋
+;==================================================
+@M_KOJO_MESSAGE_COM_K139_40
+CALL M_KOJO_MESSAGE_COM_K139_40_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K139_40_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		IF (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行)
+			CALL HPH_PRINT,@"「啊啦啊啦HPH　怎么会有这样的东西、是从哪里得到的呢HPH」","L"
+			CALL HPH_PRINT,@"「那个、可不是一个小孩该拥有的东西呢…HPH　因为那是色色用的东西呢HPH」","L"
+			PRINTL 
+			CALL HPH_PRINT,@"「使用的方法、知道吗…？　那好、那请对姐姐的小豆豆…呼呜呜HPH」","L"
+			CALL HPH_PRINT,@"「啊啊……嗯HPH　或许还比%CALLNAME:MASTER%的手更舒服呢…HPH」","W"
+		ELSE
+			CALL HPH_PRINT,@"「呵呵HPH　居然还拿出这样的用具…HPH」","L"
+			CALL HPH_PRINT,@"「难道不依赖道具就无法满足一个女人吗HPH」","L"
+			PRINTL 
+			CALL HPH_PRINT,@"「呼呜HPH　咕呜呜～～～HPH」","L"
+			CALL HPH_PRINT,@"「……啊、哈啊…HPH　感觉比%CALLNAME:MASTER%大人的手指、更爽呢…HPH」","W"
+		ENDIF
+		RETURN 1
+	ENDIF
+	;基本セット
+	;时奸中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		IF (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行)
+			IF ITEM:跳蛋 >= 3 && !TALENT:处女 && !RAND:2
+				CALL HPH_PRINT,@"「啊啊啊嗯HPH　插进小穴什么的不可以呀HPH」","L"
+				CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人、竟然、这样HPH　真是、太调皮了、哈～嗯嗯～HPH」","L"
+				CALL HPH_PRINT,@"（跳蛋在阴道里、震动着HPH　刺激感HPH　好强烈HPH）","L"
+				CALL HPH_PRINT,@"「等下、别、再继续、啊噫一～HPHHPH」","L"
+				PRINTFORML 典的阴道被塞入了{ITEM:跳蛋}个跳蛋、眼睛翻白…
+			ELSE
+				SELECTCASE ABL:Ｃ感觉
+				CASE IS >= 5
+					SELECTCASE RAND:3
+					CASE 0
+						CALL HPH_PRINT,@"「咿…HPH　好苏福HPHHPH」","L"
+					CASE 1
+						CALL HPH_PRINT,@"「嗯～HPH　哦～～HPHHPH　姐姐的小豆豆HPH　再多折磨折磨吧HPHHPH」","L"
+					CASE 2
+						CALL HPH_PRINT,@"「姊姐姐～～HPH　小豆豆好爽HPH　小豆豆好喜欢HPH」","L"
+					ENDSELECT
+				CASE IS >= 2
+					SELECTCASE RAND:3
+					CASE 0
+						CALL HPH_PRINT,@"「姐姐HPH　非常非常舒服哦HPH　啊啊嗯～HPHHPH」","L"
+					CASE 1
+						CALL HPH_PRINT,@"「嗯哦HPH　玩具、真厉害啊HPH」","L"
+					CASE 2
+						CALL HPH_PRINT,@"「哦哦呜HPH　玩具、不可以塞进小穴里啊HPH　嗯嗯～～HPHHPH」","L"
+					ENDSELECT
+				CASEELSE
+					SELECTCASE RAND:3
+					CASE 0
+						CALL HPH_PRINT,@"「嗯…HPH　又再捉弄小豆豆了…HPH」","L"
+					CASE 1
+						CALL HPH_PRINT,@"「啊嗯HPH　姐姐的小豆豆、不可以这样欺负啦…HPH」","L"
+					CASE 2
+						CALL HPH_PRINT,@"「嗯呜…这样、压得这么里面不可以啦…HPH」","L"
+					ENDSELECT
+				ENDSELECT
+			ENDIF
+		ELSE
+			IF ITEM:跳蛋 >= 3 && !TALENT:处女 && !RAND:2
+				CALL HPH_PRINT,@"「难、难道、要全都！？　等、等一下、嗯哦哦～～～HPHHPH」","L"
+				CALL HPH_PRINT,@"（肚子、好重啊HPH　但是HPH　太舒服了啦HPHHPH）","L"
+				CALL HPH_PRINT,@"「啊好棒HPHHPH　好厉害的HPH　咕呜HPH　嗯哦～噗啊HPH」","L"
+				PRINTFORML 在被刺激着阴蒂的同时、往阴道里塞入{ITEM:跳蛋 -1}个跳蛋后、典扭动着腰部呻吟着…
+			ELSE
+				SELECTCASE ABL:Ｃ感觉
+				CASE IS >= 5
+					SELECTCASE RAND:5
+					CASE 0
+						CALL HPH_PRINT,@"「居～然～HPH　放到里面嗯嗯～～～HPHHPH～HPH」","L"
+					CASE 1
+						CALL HPH_PRINT,@"「啊啊HPH　豆豆HPH　被直接～HPH　哈啊啊～HPHHPH」","L"
+					CASE 2
+						CALL HPH_PRINT,@"「噫～HPH　咕～～～HPH　这种HPH　绞住HPH　反应～～HPHHPH」","L"
+					CASE 3
+						CALL HPH_PRINT,@"「呜HPH　啊HPH　啊HPH　啊～～～HPH」","L"
+					CASE 4
+						CALL HPH_PRINT,@"「啊啊～～～～HPH　等下～HPHHPH　高潮HPH　要高潮了～～～HPHHPH」","L"
+					ENDSELECT
+				CASE IS >= 2
+					SELECTCASE RAND:3
+					CASE 0
+						CALL HPH_PRINT,@"「哈嗯嗯HPH　这样压着的话…HPH」","L"
+					CASE 1
+						CALL HPH_PRINT,@"「啊啊…HPH　呼呜HPH　嗯嗯呼HPH　呵呵…这个比%CALLNAME:MASTER%大人的手指更能让我快乐呢…HPH」","L"
+					CASE 2
+						CALL HPH_PRINT,@"「这样、慢慢环绕着小豆豆周围移动…HPH　呼、啊啊…HPH」","L"
+					ENDSELECT
+				CASEELSE
+					SELECTCASE RAND:3
+					CASE 0
+						CALL HPH_PRINT,@"「嗯…HPH　不要依赖这种东西、用自己的手来爱抚试试看吧…」","L"
+					CASE 1
+						CALL HPH_PRINT,@"「啊啊…HPH　这样子、就像在挑逗一样…HPH」","L"
+					CASE 2
+						CALL HPH_PRINT,@"「啊啊～～…HPH　持续性地用这种微弱的力道震动着…好好…HPH」","L"
+					ENDSELECT
+				ENDSELECT
+			ENDIF
+		ENDIF
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;41,电动按摩棒
+;==================================================
+@M_KOJO_MESSAGE_COM_K139_41
+CALL M_KOJO_MESSAGE_COM_K139_41_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K139_41_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORML 「这个…真是相当奇异的道具呢…」
+		PRINTFORML 「要把这个、放在股间吗…可以吧。就试用看看吧」
+		PRINTL 
+		PRINTFORML 「！！？　～哦～、啊啊啊～！！？」
+		PRINTFORML （这是什么～！？　震动的好剧烈、都变得麻酥酥的了！！？）
+		PRINTW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;时奸中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		IF (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行)
+			IF PALAM:润滑 >= 10000 && !TALENT:处女
+				CALL HPH_PRINT,@"「呼呜呜呜HPH　咕呜呜呜HPH」","L"
+				PRINTFORML 剧烈的快感使得典的阴道变得滑溜溜的、电动按摩棒滑到了里面去
+				SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"「啊嗯！！？HPH　啊嘎嘎嘎嘎嘎HPHHPH　这个嗯嗯嗯HPH　好难受要死了嗯嗯HPHHPH」","L"
+				CASE 1
+					CALL HPH_PRINT,@"「哦嗯！？HPH　喔嗯嗯！？HPH　哦哦哦哦喔嗯嗯嗯！！？HPH　啊嘻嗯HPH」","L"
+				CASE 2
+					CALL HPH_PRINT,@"「去了HPH　嘻噫噫一一一一一一！！！HPH　啂～HPH　拔掉啊～～HPH　去～～～咕～～～HPHHPH」","L"
+				ENDSELECT
+			ELSE
+				SELECTCASE ABL:Ｃ感觉
+				CASE IS >= 5
+					SELECTCASE RAND:5
+					CASE 0
+						CALL HPH_PRINT,@"「嘻～HPH　蒿苏福～～HPHHPH　去了HPH　去了～HPH」","L"
+					CASE 1
+						CALL HPH_PRINT,@"「嗯～HPH　哦～～HPHHPH　姐姐的小豆豆HPH　再多折磨折磨吧HPHHPH」","L"
+					CASE 2
+						CALL HPH_PRINT,@"「姊姊HPH　阴道HPH　会坏掉的HPH　嗯喔嗯HPHHPH」","L"
+					CASE 3
+						CALL HPH_PRINT,@"「更多HPH　给我更多HPH　往阴道里HPH　深深压去吧HPHHPH」","L"
+					CASE 4
+						CALL HPH_PRINT,@"「电动按摩棒、太糟糕HPH　嗯哦～HPH　哦～HPH　哦～HPH　嗯哦哦～HPH」","L"
+					ENDSELECT
+				CASE IS >= 2
+					SELECTCASE RAND:3
+					CASE 0
+						CALL HPH_PRINT,@"「呼、哦哦、喔～～！？HPH　这个、好棒HPH」","L"
+					CASE 1
+						CALL HPH_PRINT,@"「啊HPH　啊HPH　这里HPH　好苏福HPH　啊HPH」","L"
+					CASE 2
+						CALL HPH_PRINT,@"「啊啊呜HPH　玩具、进到小穴里了HPH　嗯嗯～～HPHHPH」","L"
+					ENDSELECT
+				CASEELSE
+					SELECTCASE RAND:3
+					CASE 0
+						CALL HPH_PRINT,@"「嗯呼呼HPH　这个HPH　好厉害HPH　还要HPH」","L"
+					CASE 1
+						CALL HPH_PRINT,@"「啊、啊、啊HPH　小豆豆HPH　哆嗦的好厉害啊～HPH」","L"
+					CASE 2
+						CALL HPH_PRINT,@"「哦呼！？HPH　这、这样子、大力压着不可以啦…HPH」","L"
+					ENDSELECT
+				ENDSELECT
+			ENDIF
+		ELSE
+			IF PALAM:润滑 >= 10000 && !TALENT:处女
+				CALL HPH_PRINT,@"「呼呜呜呜HPH　咕呜呜呜HPH」","L"
+				PRINTFORML 剧烈的快感使得典的阴道变得滑溜溜的、电动按摩棒滑到了里面去
+				SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"「啊嗯！！？HPH　啊嘎嘎嘎嘎嘎HPHHPH　这个嗯嗯嗯HPH　好难受要死了嗯嗯HPHHPH」","L"
+				CASE 1
+					CALL HPH_PRINT,@"「哦嗯！？HPH　喔嗯嗯！？HPH　哦哦哦哦喔嗯嗯嗯！！？HPH　啊嘻嗯HPH」","L"
+				CASE 2
+					CALL HPH_PRINT,@"「去了HPH　嘻噫噫一一一一一一！！！HPH　啂～HPH　拔掉啊～～HPH　去～～～咕～～～HPHHPH」","L"
+				ENDSELECT
+			ELSE
+				SELECTCASE ABL:Ｃ感觉
+				CASE IS >= 5
+					SELECTCASE RAND:5
+					CASE 0
+						CALL HPH_PRINT,@"「啊～～HPH　输了HPH　我认认输了啦HPH　还请HPH　饶过我吧HPH」","L"
+					CASE 1
+						CALL HPH_PRINT,@"「啊啊HPH　豆豆HPH　被直接～HPH　哈啊啊～HPHHPH」","L"
+					CASE 2
+						CALL HPH_PRINT,@"「等下HPHHPH　那边很敏感啊HPH　不行啊HPH　喔～～～！！？HPHHPHHPHHPH」","L"
+					CASE 3
+						CALL HPH_PRINT,@"「嗯呜呜呜呜呜呜HPH　已经不行了HPH　已经不行了HPH　不HPH」","L"
+					CASE 4
+						CALL HPH_PRINT,@"「啊HPH　啊HPH　啊HPH　啊HPH　去了去了去了去了去了～～HPHHPH」","L"
+					ENDSELECT
+				CASE IS >= 2
+					SELECTCASE RAND:5
+					CASE 0
+						CALL HPH_PRINT,@"「啊嗯！？HPH　那里、那里、不可以啦HPH　嗯嗯嗯HPH」","L"
+					CASE 1
+						CALL HPH_PRINT,@"「啊～不行HPH　啊～不行HPH　不行不行不行～HPH」","L"
+					CASE 2
+						CALL HPH_PRINT,@"「啊～～～～HPH　啊啊～～～～HPH」","L"
+					CASE 3
+						CALL HPH_PRINT,@"「好厉害～～HPH　好～HPH　厉害啊啊啊HPH」","L"
+					CASE 4
+						CALL HPH_PRINT,@"「哈、哈哈…HPH　不依靠工具就没办法让典高潮呢～～～～HPHHPHHPHHPH」","L"
+					ENDSELECT
+				CASEELSE
+					SELECTCASE RAND:3
+					CASE 0
+						CALL HPH_PRINT,@"「嘻噫、太、太强烈了HPH」","L"
+					CASE 1
+						CALL HPH_PRINT,@"「嘻噫一一、这个道具也太HPH」","L"
+					CASE 2
+						CALL HPH_PRINT,@"「啊啊啊HPH　啊啊HPH　嗯啊HPH」","L"
+					ENDSELECT
+				ENDSELECT
+			ENDIF
+		ENDIF
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;42,阴蒂夹
+;==================================================
+@M_KOJO_MESSAGE_COM_K139_42
+CALL M_KOJO_MESSAGE_COM_K139_42_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K139_42_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;装着
+	IF TEQUIP:阴蒂夹
+		;时奸中
+		IF FLAG:70
+			PRINTFORMW 
+			RETURN 1
+		;恋慕
+		ELSEIF TALENT:恋慕
+			PRINTFORMW 
+			RETURN 1
+		;屈服3
+		ELSEIF MARK:屈服刻印 == 3
+			PRINTFORMW 
+			RETURN 1
+		;それ以外
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	;解除
+	ELSE
+		PRINTFORMW
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;43,飞机杯
+;==================================================
+@M_KOJO_MESSAGE_COM_K139_43
+CALL M_KOJO_MESSAGE_COM_K139_43_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K139_43_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;装着
+	IF TEQUIP:飞机杯
+		;恋慕
+		IF TALENT:恋慕
+			PRINTFORMW 
+			RETURN 1
+		;屈服3
+		ELSEIF MARK:屈服刻印 == 3
+			PRINTFORMW 
+			RETURN 1
+		;それ以外
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	;解除
+	ELSE
+		PRINTFORMW
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;44,振动棒
+;==================================================
+@M_KOJO_MESSAGE_COM_K139_44
+CALL M_KOJO_MESSAGE_COM_K139_44_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K139_44_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		IF TCVAR:破瓜 == 1
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;基本セット
+	;装着
+	IF TEQUIP:振动棒
+		;时奸中
+		IF FLAG:70
+			PRINTFORMW 
+			RETURN 1
+		;恋慕
+		ELSEIF TALENT:恋慕
+			PRINTFORMW 
+			RETURN 1
+		;屈服3
+		ELSEIF MARK:屈服刻印 == 3
+			PRINTFORMW 
+			RETURN 1
+		;それ以外
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	;解除
+	ELSE
+		PRINTFORMW
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;45,肛用振动棒
+;==================================================
+@M_KOJO_MESSAGE_COM_K139_45
+CALL M_KOJO_MESSAGE_COM_K139_45_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K139_45_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;装着
+	IF TEQUIP:肛用振动棒
+		;时奸中
+		IF FLAG:70
+			PRINTFORMW 
+			RETURN 1
+		;恋慕
+		ELSEIF TALENT:恋慕
+			PRINTFORMW 
+			RETURN 1
+		;屈服3
+		ELSEIF MARK:屈服刻印 == 3
+			PRINTFORMW 
+			RETURN 1
+		;それ以外
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	;解除
+	ELSE
+		PRINTFORMW
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;46,后庭拉珠
+;==================================================
+@M_KOJO_MESSAGE_COM_K139_46
+CALL M_KOJO_MESSAGE_COM_K139_46_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K139_46_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;装着
+	IF TEQUIP:后庭拉珠
+		;恋慕
+		IF TALENT:恋慕
+			PRINTFORMW 
+			RETURN 1
+		;屈服3
+		ELSEIF MARK:屈服刻印 == 3
+			PRINTFORMW 
+			RETURN 1
+		;それ以外
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	;解除
+	ELSE
+		PRINTFORMW
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;47,乳头夹
+;==================================================
+@M_KOJO_MESSAGE_COM_K139_47
+CALL M_KOJO_MESSAGE_COM_K139_47_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K139_47_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;装着
+	IF TEQUIP:乳头夹
+		;时奸中
+		IF FLAG:70
+			PRINTFORMW 
+			RETURN 1
+		;恋慕
+		ELSEIF TALENT:恋慕
+			PRINTFORMW 
+			RETURN 1
+		;屈服3
+		ELSEIF MARK:屈服刻印 == 3
+			PRINTFORMW 
+			RETURN 1
+		;それ以外
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	;解除
+	ELSE
+		PRINTFORMW
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;48,搾乳机
+;==================================================
+@M_KOJO_MESSAGE_COM_K139_48
+CALL M_KOJO_MESSAGE_COM_K139_48_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K139_48_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;装着
+	IF TEQUIP:搾乳机
+		;恋慕
+		IF TALENT:恋慕
+			PRINTFORMW 
+			RETURN 1
+		;屈服3
+		ELSEIF MARK:屈服刻印 == 3
+			PRINTFORMW 
+			RETURN 1
+		;それ以外
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	;解除
+	ELSE
+		PRINTFORMW
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;49,乳头跳蛋
+;==================================================
+@M_KOJO_MESSAGE_COM_K139_49
+CALL M_KOJO_MESSAGE_COM_K139_49_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K139_49_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;时奸中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:恋慕
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;50,ゴム装着
+;==================================================
+@M_KOJO_MESSAGE_COM_K139_50
+CALL M_KOJO_MESSAGE_COM_K139_50_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K139_50_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;时奸中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	ELSEIF TALENT:恋慕 || TALENT:恋人
+		IF TCVAR:发情
+			SETCOLOR 0xFF69B4
+			CALL HPH_PRINT,@"「诶诶～HPH　这边已经做好授精的万全准备了呢HPH　这样的话、要不要无套呢HPHHPH」","L"
+			RESETCOLOR
+		ELSE
+			IF TALENT:怀孕愿望
+				PRINTFORML 「诶诶～～、不是说好要一起造个孩子的吗」
+			ELSE
+				IF TALENT:MASTER:万能孕 || TALENT:MASTER:让妖怪怀孕
+					CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人的种、对典来说只要一发就会怀上的呢…HPH」","L"
+					SIF TALENT:MASTER:浓厚精液
+						CALL HPH_PRINT,@"「不过、对于套子会不会爆掉的问题、典很担心呢…HPH」","L"
+				ELSE
+					SELECTCASE RAND:2
+					CASE 0
+						CALL HPH_PRINT,@"「不是为了造小孩、而是想要享受纯粹的性爱呢…HPH」","L"
+						CALL HPH_PRINT,@"「呵呵、这里有整一盒呢、有多少用多少吧HPH」","L"
+					CASE 1
+						CALL HPH_PRINT,@"「怀上%CALLNAME:MASTER%大人的孩子对典来说并不困扰哦…HPH」","L"
+						PRINTFORML 「只是、%CALLNAME:MASTER%大人不是这么想的呢」
+					ENDSELECT
+				ENDIF
+			ENDIF
+		ENDIF
+		PRINTW 
+		RETURN 1
+	;それ以外
+	ELSE
+		IF TEQUIP:PLAYER:避孕套
+			IF ESTRUS_CYCLE(TARGET) == 15
+				PRINTFORML 「这下就算无套也没问题了呢…是担心会怀孕吗？」
+			ELSE
+				CALL HPH_PRINT,@"「呵呵、我、也不讨厌戴套的性爱哦HPH」","L"
+				CALL HPH_PRINT,@"「会特地戴上保险套、就代表不是为了造孩子、而是为了做爱为目的对吧HPH」","L"
+				CALL HPH_PRINT,@"「啊啊、这个人、一定是非常想要侵犯我、什么的吧、想到这里就湿了起来呢…HPH」","L"
+			ENDIF
+		ELSE
+			CALL HPH_PRINT,@"「果然、还是想要无套的呢…HPH」","L"
+		ENDIF
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1

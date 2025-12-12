@@ -1,0 +1,5706 @@
+﻿;-------------------------------------------------
+; eraTheWorld 4.576用 サニーミルク口上（キャラクターの名前を入れる、下にコンセプトなど一言あれば入れる）
+;-------------------------------------------------
+;他者による修正、加筆、改変については、同梱のライセンス条項に从ってください。
+
+;------ ｷﾘﾄﾘ ｶｲｼ -----------
+;eraTheWorld proto4.07パッチ取り込み用 Ver1.13
+;テンプレートの使い方
+;初めに置换コマンド等により K5 を K(キャラNo) に変更して下さい  
+;キャラNoはCSVフォルダのCharaファイルを参照　例(雾雨 魔理沙の场合)：K5 =置换=> K11
+;
+;------ ｷﾘﾄﾘ ｵﾜﾘ -----------
+
+;**** FlagManagement **********************************************************
+;本口上にて使用しているCFLAG・TCVAR等
+;
+;
+;
+;******************************************************************************
+
+;### 口上存在判定 ###################################
+@M_KOJO_K5(ARG)
+;ここでRESULTSを设定すると他の同キャラ口上を突っ込まれても正常动作する。
+
+;RESULTS = _TEST_
+
+;と设定すると、"EVENT"系イベントだと
+;M_KOJO_TEST_EVENT_K5_1() とかで呼ばれる…はず。（未テスト机能）
+
+;ここでCFLAG等のキャラ変数を使う场合、キャラ番号の指定が必要になります
+
+;コメントアウトを外して眠奸口上有、时间停止口上有に1を入れると、それぞれ时间停止时、眠奸时、扮演时にコマンド口上が読み込まれるように
+;入れないと时间停止时、眠奸时、扮演时は一切喋りません
+
+;破瓜中止口上有に1を入れると、@M_KOJO_EVENT_K5_LOST_VIRGIN_STOPでキャンセルの成否を操作できます
+;口上内抱き寄せ判定_初回と口上内抱き寄せ判定_通常に1を入れるとM_KOJO_EVENT_K5_PERMISSIONで推倒の成否を操作できます
+
+;Xにはキャラ番号を入れてください
+
+;CFLAG:X:眠奸口上有 = 0
+;CFLAG:X:时间停止口上有 = 0
+;CFLAG:X:扮演口上有 = 0
+;CFLAG:X:破瓜中止口上有 = 0
+;CFLAG:X:口上内抱き寄せ判定_初回 = 0
+;CFLAG:X:口上内抱き寄せ判定_通常 = 0
+
+;CFLAG:推倒禁止に1を入れると自分から推倒てこなくなります
+;以下は恋慕かセフレがつくまで推倒てこなくなる使用例
+;IF !TALENT:X:恋慕 && !TALENT:X:セフレ
+;	CFLAG:X:推倒禁止 = 1
+;ELSE
+;	CFLAG:X:推倒禁止 = 0
+;ENDIF
+
+;口上存在判定です、けしてコメントアウトしないでください
+RETURN 1
+;### 口上色判定 ###################################
+@M_KOJO_COLOR_K5
+
+;ここでSETCOLORすることで口上に色を付けられます
+;例：SETCOLOR 0xf7c9ff
+SETCOLOR 255,230,250
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+;"UPDATE判定"
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+@M_KOJO_UPDATE_K5
+;口上独自のUPDATE用
+;ENCOUNTER専用に独自分岐フラグを仕込んだ场合等にどうぞ
+;UPDATE判定でCFLAG等のキャラ変数を使う场合、キャラ番号の指定が必要になります
+RETURN 1
+
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+;"ENCOUNTER"系イベント（エクストラ構文）
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+@M_KOJO_ENCOUNTER_K5
+;初対面、挨拶のタイミング
+;TALENTの変更はここでどうぞ。
+;経験の変更は齟齬が出る场合がありますので、CSVを修正し同梱する事を推奨します
+#DIM LCOUNT
+IF CFLAG:MASTER:初始位置  == 35
+	SETCOLOR 255,230,250
+	IF CFLAG:5:当前位置 == CFLAG:7:当前位置 
+		SETCOLOR C_BLUE
+		PRINTFORML 「…！あの人间が来たみたいよ」
+		PRINTFORML
+		RESETCOLOR
+	ENDIF
+	PRINTFORML 「あ、起きたわね！」
+	PRINTFORML 
+	IF CFLAG:5:当前位置 == CFLAG:6:当前位置 
+		SETCOLOR C_CREAM
+		PRINTFORML 「あんなの拾って大丈夫かしら。…！噂をすれば」
+		PRINTFORML 
+		RESETCOLOR
+	ENDIF
+	PRINTFORML %CALLNAME:MASTER%の前に人懐っこそうな少女が近寄ってくる。
+	PRINTFORML 髪のセミロングにツーサイドアップの少女姿、喋るたびに見える八重歯や明るそうな颜立ちと可爱らしい少女に見える。
+	PRINTFORMW ただ气になるのが…背中に生えている？透き通るような白い羽根。作り物とは思えないそれに%CALLNAME:MASTER%は釘付けになっていた。
+	PRINTFORML 
+	PRINTFORML 「随分长く寝てたみたいね。时间の感觉が狂っちゃったのかと思ったわ」
+	PRINTFORMW 「あなた、私達の家の前で寝てたのよ。放っておいたら今頃妖怪のおなかの中で寝てたかもね」
+	PRINTFORML 
+	PRINTFORML 「……そんなに私の羽が珍しい？その変な格好といい、もしかしてやっぱり外来人！？」
+	PRINTFORMW 「これは大きな拾い物だわ！ついに妖精達にも外の文明を享受する时が来たのね！」
+	PRINTFORML 
+	IF CFLAG:5:当前位置 == CFLAG:6:当前位置 
+		SETCOLOR C_CREAM
+		PRINTFORML 「あのメガネ店主の店からくすねた道具が何なのかもわかるかも…」
+		RESETCOLOR
+		PRINTFORML 
+	ENDIF
+	IF CFLAG:5:当前位置 == CFLAG:7:当前位置 
+		SETCOLOR C_BLUE
+		PRINTFORML 「もし違ってても恶作剧の実験台にもできそうね！」
+		RESETCOLOR
+		PRINTFORML
+	ENDIF
+	SIF CFLAG:5:当前位置 == CFLAG:7:当前位置 && CFLAG:5:当前位置 == CFLAG:6:当前位置
+		PRINTFORML ワイワイキャイキャイ！！
+	PRINTFORML
+	PRINTFORML ウキウキしながら髪を揺らして小躍りする少女。…反対に妖精や妖怪という幻想的な単語に%CALLNAME:MASTER%は戸惑いを隠せない。
+	PRINTFORMW 状况を确认しようとこの场から去ろうとする%CALLNAME:MASTER%の足に、少女は逃がすまいと猫のようにしがみ付いてくいとめてくる。
+	PRINTFORML 
+	PRINTFORML 「ちょ…待って！外来人が何もせずに外に出ると妖怪に食べられちゃうかもしれないのよ！」
+	PRINTFORML 「でも任せて！私達三妖精の家に住まわせてあげる！」
+	PRINTFORML 「この家なら大きな木にカモフラージュして妖怪に見つからないし、撃退できるように弹幕胜负も教えてあげるわ！」
+	PRINTFORMW 「代わりに、外の文明の事を教えて！悪くない提案でしょ？ね！」
+	PRINTFORML 
+	IF CFLAG:5:当前位置 == CFLAG:7:当前位置 
+		SETCOLOR C_BLUE
+		PRINTFORML 「住むからにはお房间のお扫除もお願いするわ♪」
+		RESETCOLOR
+		PRINTFORML 
+	ENDIF
+	IF CFLAG:5:当前位置 == CFLAG:6:当前位置 
+		SETCOLOR C_CREAM
+		PRINTFORML 「何か変なことしたら追い出すけどね」
+		RESETCOLOR
+		PRINTFORML 
+	ENDIF
+	PRINTFORMW 少女の气迫に%CALLNAME:MASTER%が頷けば、鬼气迫る表情がパァッと太陽のように明るくなった。
+	PRINTFORML 
+	PRINTFORML 「決まりね！……えっと、なんて名前だっけ？…%CALLNAME:MASTER%ね。よし觉えたわ」
+	PRINTFORML 「私はサニーミルク！」
+	IF CFLAG:5:当前位置 == CFLAG:6:当前位置 
+		SETCOLOR C_CREAM
+		PRINTFORML 「…ルナチャイルドよ」
+		SIF CFLAG:6:认识 != 0
+			PRINTFORML 「知ってるとは思うけど一応ね」	
+		RESETCOLOR
+	ENDIF
+	IF CFLAG:5:当前位置 == CFLAG:7:当前位置 
+		SETCOLOR C_BLUE
+		SIF CFLAG:7:认识 != 0
+			PRINTFORML 「改めて自己紹介しておくわ」
+		PRINTFORML 「私はスターサファイア。妖精は人を多分食べないから安心して」
+		RESETCOLOR
+	ENDIF
+	PRINTFORML 
+	PRINTFORML 「ルナチャイルドとスターサファイアの2人と合わせて光の三妖精って呼ばれてるの」
+	PRINTFORMW 「これからよろしく%CALLNAME:MASTER%！」
+	PRINTFORML 
+	PRINTFORML サニーミルクにしがみ付かれたままの%CALLNAME:MASTER%は、突然の出来事に驚きつつもまぁなんとかなるだろと高を括った。
+	PRINTFORMW 何故なら%CALLNAME:MASTER%には素晴らしい时を止める力を持っているのだから…
+	
+ELSE
+	SETCOLOR 255,230,250
+	PRINTFORML 「ふっふっふ…見たわよ」
+	PRINTFORMW 「まさかあの力を持っている人间がいるとは思わなかったわ」
+	PRINTFORML
+	PRINTFORML どこからともなく幼い少女の声がする。
+	PRINTFORML %CALLNAME:MASTER%が周囲を見回しても声の主の姿は見えない。
+	PRINTFORML 新手の危険な妖怪かもしれない…。%CALLNAME:MASTER%はその场から逃げ出そうとすると慌てた声が后ろから聞こえる。
+	PRINTFORML 
+	PRINTFORMW 「待って！别に捕って喰おうってわけじゃないの！」
+	PRINTFORML 「あなたのその力、私たち光の三妖精といっしょに使ってみない？」
+	PRINTFORML 
+	PRINTFORML 振り返ると、そこには妖精が一匹いつの间にか姿を現していた。
+	PRINTFORML 金髪のセミロングにツーサイドアップの少女姿、八重歯で不敵そうに笑う表情は他の妖精に漏れず
+	PRINTFORML 大の恶作剧好きだろうというのは想像に難くない。普通の妖精よりも大きいなら尚更だ。
+	PRINTFORML 
+	PRINTFORML 「私はサニーミルク！光の屈折を操って姿を消せる！」
+	PRINTFORML 「かくれんぼや恶作剧なら右に出るものはない妖精よ」
+	PRINTFORML 「他にルナチャイルドとスターサファイアの2人と合わせて光の三妖精って呼ばれてるの」
+	PRINTFORML 「あなたの名前は？なるほど、…%CALLNAME:MASTER%ね」
+	PRINTFORMW 「…で%CALLNAME:MASTER%。さっき偶然見ちゃったんだけど、あなたすごい能力持ってるじゃない！！」
+	PRINTFORML 
+	PRINTFORML …时间停止しているとこを見られたのかもしれない。
+	PRINTFORMW 焦燥する%CALLNAME:MASTER%は目の前で自信満々にお喋りを続ける妖精をどうすべきか考えていたとき、先にサニーミルクの口が開いた。
+	PRINTFORML 
+	PRINTFORML 「まさか…あんなに素早く瞬间移动を使える人间がいるとは思わなかったわ！」
+	PRINTFORML 「その力があればもう灵梦さんだって怖くないわね！」
+	PRINTFORML 「で、ものは相談だけど私達三妖精と組んでみない？」
+	PRINTFORML 「どんな时もあっという间に瞬间移动で逃げたり恶作剧できれば、私達妖精の天下よ！」
+	PRINTFORMW 「それに、%CALLNAME:MASTER%はなんだか人间なのに私達と同じ恶作剧好きな气がするのよね」
+	PRINTFORML 
+	PRINTFORML 勘違いで自身満々に勧诱するサニーミルクに%CALLNAME:MASTER%は開いた口が塞がらなかった。
+	PRINTFORML バレずに済んだが何にせよ恶作剧するには自分１人が都合がいい。
+	PRINTFORMW 丁重に彼女の诱いを断れば、サニーミルクは不満げに口を尖らせ睨んでくる。
+	PRINTFORML 
+	PRINTFORML 「えぇー%CALLNAME:MASTER%が来れば面白い恶作剧ができると思ったのに…」
+	PRINTFORML 「まぁいいわ。气が向いたら一绪に恶作剧して遊びましょ！」
+	PRINTFORML 「神社の裏にある大きな木があるのよ。そこに私達は住んでるの」
+	PRINTFORMW 「妖精以外だと私達の住処は見つけにくいけど、%CALLNAME:MASTER%は头良さそうだし大丈夫じゃない？」
+	PRINTFORML
+	PRINTFORML すぐに笑颜になったり小難しい颜したりコロコロ表情が変わるサニーミルクの气迫に押されそうになるも
+	PRINTFORMW %CALLNAME:MASTER%はサニーミルクの无邪气な姿に劣情を感じずにはいられなかった…。
+	RESETCOLOR
+ENDIF
+;ここから下の非表示选择妓はお遊びでつけたので实装にはくれぐれも注意してください。
+
+
+PRINTFORML
+PRINTFORML
+PRINTFORML
+PRINTFORML
+PRINTFORML
+PRINTFORMW この口上のサニーミルクは无知の有无で一部口上が変化します。
+PRINTFORMW サニーミルクを无知にしますか？
+$LOOP
+PRINTFORML 
+PRINTFORML 
+PRINTFORML 
+PRINTFORML 
+PRINTFORML [0] はい
+PRINTFORML [1] いいえ
+SIF TALENT:5:105 != 1
+	PRINTFORML [2] 巨乳ロリはいい
+;SIF TALENT:5:2 != 3
+	;PRINTFORML [3] だが何かが足りない。そう…おちんちんだ。
+SIF TALENT:5:105 == 1
+	PRINTFORML [4] やっぱり巨乳ロリはいらない。
+;SIF TALENT:5:母乳体質 != 1
+	;PRINTFORML [5] 母乳シチュエーションまである娘は支配的で絶対！
+;SIF TALENT:5:母乳体質 == 1
+	;PRINTFORML [6] やっぱり母乳はいらない。
+;SIF TALENT:5:性别 == 3
+	;PRINTFORML [7] やっぱりおちんちんはいらない。
+INPUT
+SELECTCASE RESULT
+	CASE 0
+		TALENT:5:无知 = 1
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORMW サニーミルクは「キャベツ畑」や「コウノトリ」を信じている可爱い女のコになりました。
+	CASE 1
+		TALENT:5:无知 = 0
+			PRINTFORML 
+			PRINTFORML 
+			PRINTFORMW サニーミルクはエッチなことに興味津々なお年頃になりました。
+	CASE 2
+		TALENT:5:105 = 1
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORMW サニーミルクは名前にふさわしい巨乳になりました。
+		GOTO LOOP
+		
+	CASE 3
+		;TALENT:5:性别 = 3
+		;TALENT:5:形状 = 3
+		;MAXBASE:5:5 = 1500
+		;MAXBASE:5:精力 = 1000
+		PRINTFORML 
+		PRINTFORML 
+		;PRINTFORML サニーミルクからおちんぽミルクがでるようになりました。
+		;PRINTFORMW 「え……どゆこと？」
+		GOTO LOOP
+	
+	CASE 4
+		TALENT:5:105 = -1
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORMW サニーミルクは贫乳に戻りました。
+		;PRINTFORMW 「オッパイ无い女なんてチンポ切った男と同じだよシンイチ」
+		GOTO LOOP
+	
+	CASE 5
+		;TALENT:5:母乳体質 = 1
+		PRINTFORML 
+		PRINTFORML 
+		;PRINTFORMW サニーミルクからミルクがでるようになりました。
+		;PRINTFORMW 「シンイチ…わかるようになったじゃないか」
+		GOTO LOOP
+	
+	CASE 6
+		;TALENT:5:母乳体質 = 0
+		PRINTFORML 
+		PRINTFORML 
+		;PRINTFORMW サニーミルクからミルクがでなくなりました。
+		;PRINTFORMW 「このサニーミルクは乳が…乳がでないんだ！」
+		GOTO LOOP
+	
+	CASE 7
+		;TALENT:5:性别 = 1
+		PRINTFORML 
+		PRINTFORML 
+		;PRINTFORML サニーミルクからおちんぽミルクがでなくなりました。
+		;PRINTFORML 「チンチンは…………？」
+		;PRINTFORMW 「と……取っちまった……よ」
+		GOTO LOOP
+
+	CASEELSE
+		IF LCOUNT >5
+			PRINTFORMW 设定されてねぇつってんだろ！
+		ELSE
+			PRINTFORMW 设定されていません。
+			LCOUNT ++	
+		ENDIF
+		GOTO LOOP
+ENDSELECT
+RETURN 1
+
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+;"SP_EVENT"系イベント
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+;==================================================
+;デート帰りにファーストKISS（合意も付く）
+;==================================================
+@M_KOJO_SPEVENT_K5_1(ARG,ARG:1)
+;口上主はTARGET
+;地の文表示
+CALL SPEVENT_MESSAGE_1(ARG,ARG:1)
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+;地の文
+CALL SPEVENT_MESSAGE_1(ARG,ARG:1)
+IF LOCAL
+	IF TALENT:5:无知 == 1
+		PRINTFORMW 「あー今日も乐しかった！%CALLNAME:MASTER%といると毎日飽きないわね！」
+		PRINTFORML 
+		PRINTFORML %CALLNAME:MASTER%はサニーと一绪に人が少ない帰路を歩いていた。
+		PRINTFORML サニーは%CALLNAME:MASTER%の腕を椅子にしながら土産にする土産話を水を流すように聞かせてくれる。
+		PRINTFORMW 笑颜で喋り続けるサニーは、デート的成果にご満悦のようだ。
+		PRINTFORML 
+		PRINTFORML 「まさか弹幕胜负の賭けごとで大勝ちできると思わなかったわ！%CALLNAME:MASTER%と会ってから運がいいみたい！」
+		PRINTFORML 「ねぇねぇ今度はさ无縁塚を探検行きましょ！」
+		PRINTFORMW 「前行ったときはガラクタしかなかったけど、今度は使えそうなガラクタが……」
+		PRINTFORML 
+		PRINTFORML ふと耳元ではしゃいだ声がふと止まった。見るとサニーが興味津々にどこか遠くを黙って見つめていたからだ。
+		PRINTFORMW つられてそちらを振り向くと、木の影で見つめ合っていただろう２人の人影が一つに重なっていく瞬间だった。
+		PRINTFORML 
+		PRINTFORMW 「ねぇ%CALLNAME:MASTER%。あの２人何して…むぎゅ」
+		PRINTFORML 
+		PRINTFORML 出歯亀はごめんとばかりにサニーの小さな口を塞ぎ、迂回するようにその场を離れる。
+		PRINTFORMW 見えなくなるほどまで距離をとれば、ムームーと抗議の鳴き声をあげるサニーの口から手を離した。
+		PRINTFORML 
+		PRINTFORML 「…ぷはっ！もうなんなのよいきなり！びっくりしたじゃない！」
+		PRINTFORMW 「あの２人が何してたか聞いただけなのに！…キスしてた？……キスって何？」
+		PRINTFORML 
+		PRINTFORMW 不思議そうに首を傾げて聞いてくるサニーに、%CALLNAME:MASTER%は立ち止まってキスの事を教えた。
+		PRINTFORML 
+		PRINTFORML 「ふぅんそうなんだ。好きな人とするのね」
+		PRINTFORMW 「………」
+		PRINTFORML 
+		PRINTFORML 目をパチクリさせてほっぺに手をあてて考え込むサニーを抱きなおし%CALLNAME:MASTER%は歩き出そうとした时
+		PRINTFORML サニーの小さな手が%CALLNAME:MASTER%の頬ペチペチとはたいた。
+		PRINTFORMW なんだろうと%CALLNAME:MASTER%が振り向けば、目の前にサニーの嬉しそうな颜が飛び込んできた。
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORMW 「ンッ…」
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORML サニーの唇が%CALLNAME:MASTER%の唇を塞ぐ。
+		PRINTFORMW つたないサニーのキス。约会中に食べた甘いキャンディーの香りが口に広がる。
+		PRINTFORML いきなり妖精の甘い味を味わうこの瞬间が、とても长いように感じられた。
+		PRINTFORML 
+		PRINTFORML 「んんんんんん～…ップハッ！」
+		PRINTFORMW 「これでよし！さ、早く帰りましょ！」
+		PRINTFORML 
+		PRINTFORML 満足げと笑いながらサニーは%CALLNAME:MASTER%を急かす。
+		PRINTFORMW 突然のキスに%CALLNAME:MASTER%は半ば呆然としながら、帰り道をフラフラと歩いていった。
+	ELSE
+		PRINTFORML 「やっほっほーカラスが鳴くからかーえろー♪」
+		PRINTFORMW 「今日も%CALLNAME:MASTER%のおかげで色々な场所を探検できたわ！」
+		PRINTFORML 
+		PRINTFORML %CALLNAME:MASTER%とサニーは手を繋ぎながら、デートからの帰路を歩いていく。
+		PRINTFORML 右手にお土産の芋団子の包みを、左手に%CALLNAME:MASTER%の手をつないでるサニーはとても上机嫌だ。
+		PRINTFORML 踊るような足取りの彼女の姿は儿童のようでほっこりと微笑ましく、%CALLNAME:MASTER%も笑みがこぼれる。
+		PRINTFORMW こちらの视线に气付いたサニーが笑颜のまま首を傾げる。すると何か閃いたのか、その瞳がパァと開いた。
+		PRINTFORML 
+		PRINTFORMW 「そうだ！たまにはお礼をしてあげなきゃね！%CALLNAME:MASTER%、ちょっと颜近づけて」
+		PRINTFORML 
+		PRINTFORML その手に持つ芋団子でもくれるのだろうか…
+		PRINTFORMW %CALLNAME:MASTER%は言われるがままサニーの目线にあわせるように腰をかがめる。
+		PRINTFORML 
+		PRINTFORML 「うん、そのままそのまま。で、目を瞑って！」
+		PRINTFORMW 「…途中で開けちゃダメよ！」
+		PRINTFORML 
+		PRINTFORML どうやら恶作剧の練习台にされるのかもしれない。
+		PRINTFORMW 内心苦笑いしながらも、サニーの言う通りのまま目を瞑る。
+		PRINTFORML 
+		PRINTFORML 「…いつもありがとう」
+		PRINTFORMW 「ンッ…」
+		PRINTFORML 
+		PRINTFORML その言叶と共に唇に柔らかい感触が当る。
+		PRINTFORMW それがキスだと气付いたのは、目を開けた先に頬に手をあて恥ずかしがるサニーの姿が見えたからだった。
+		PRINTFORML 
+		PRINTFORMW 「…結構恥ずかしいわね。でもデートのお礼ぐらいにはなったでしょ…？」
+		PRINTFORML 
+		PRINTFORMW %CALLNAME:MASTER%が一心に頷けば、サニーは照れくさそうにはにかんで笑ってくれる。
+		PRINTFORML 
+		PRINTFORML 「えへへ…さ、帰りましょ！」
+		PRINTFORMW 「言っておくけど、スターやルナには内绪だからね！」
+		PRINTFORML 
+		PRINTFORMW 今までよりも少しだけ近づいた距離感を感じながら、２人は帰路へと再び歩き出す。
+		PRINTFORML 
+		PRINTFORML 
+	ENDIF
+	;キスをキャンセルしたい场合は以下を开放
+	;TCVAR:キスキャンセル = 1
+ENDIF
+RETURN 1
+
+;==================================================
+;デート帰りに告白（恋人が付く）
+;==================================================
+@M_KOJO_SPEVENT_K5_2(ARG,ARG:1)
+;口上主はTARGET
+;地の文表示
+CALL SPEVENT_MESSAGE_2(ARG,ARG:1)
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;告白内容
+	;この告白内容表示后に受けるかどうかの选择分が表示されます
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 0
+		IF TALENT:5:无知 == 1
+			PRINTFORML 「ねぇねぇ%CALLNAME:MASTER%。私のこと好き？」
+			RETURN 1
+		ELSEIF FIRSTTIME(1003)
+			PRINTFORML デート帰りの帰り道。%CALLNAME:MASTER%とサニーは手を繋ぎながら帰路を歩く。
+			PRINTFORML デートがつまらなかったのだろうか、それとも眠いのかサニーは一言も喋らない。
+			PRINTFORML 眠いならおんぶしてあげようと聞くも首を振ってイヤがってしまう。
+			PRINTFORML 气まずい空气の中、何を言えばいいか%CALLNAME:MASTER%が考えながら时间が過ぎていく…。
+			PRINTFORML 
+			PRINTFORMW 「………」
+			PRINTFORML 
+			PRINTFORML 
+			PRINTFORML 「…………ッッッッあぁぁもう！！こんなの私らしくないわ！！」
+			PRINTFORMW 「そうよ！私は天下の妖精よ！！このままウジウジしてたらカビが生える！」
+			PRINTFORML 
+			PRINTFORML 突如サニーが地団駄を踏み、小さな妖精のカラダに見合わない大声をあげる。
+			PRINTFORML 驚く%CALLNAME:MASTER%を前に、サニーはかぁっと燃えているように頬を红潮させ立ちはだかった。
+			PRINTFORMW いつも力强く地面を踏みしめる足も、ピンとはっている羽根も震わせサニーらしからぬ雰囲气を纏って口を開いた。
+			PRINTFORML 
+			PRINTFORML 「わ、私はねっ……っ…%CALLNAME:MASTER%のことが好き！大好きなの！」
+			PRINTFORMW 「自分だっておかしいと思うわ！%CALLNAME:MASTER%に惚れちゃうなんて…」
+			PRINTFORML 
+			PRINTFORMW 堰を切ったようにサニーが言叶は洪水のよう流れ出す。颜にこもっていた熱を发散するように%CALLNAME:MASTER%へと投げつけていく。
+			PRINTFORML
+			PRINTFORML 「でもね、いっつも遊んでくれる%CALLNAME:MASTER%が悪いのよ！乐しそうに一绪にいてくれて…」
+			PRINTFORML 「乐しい场所に连れてってくれて恶作剧しにいく时も、%CALLNAME:MASTER%がされる时も优しくしてくれて…气になってきて…」
+			PRINTFORMW 「おかげで最近ずーっとカラダが熱いし头もボーッとしちゃうし…%CALLNAME:MASTER%のせいよ！」
+			PRINTFORML 
+			PRINTFORML 「だから…ッハッキリさせるわ」
+			PRINTFORML
+			PRINTFORML %CALLNAME:MASTER%は私のこと…好き？」
+			PRINTFORMW 泣きそうにも怒っているようにも見える表情でサニーはこちらを見上げる。
+			RETURN 1
+		ELSE
+			PRINTFORML デート帰りの帰り道。%CALLNAME:MASTER%とサニーは手を繋ぎながら帰路を歩く。
+			PRINTFORMW あの告白の时と同じように静かなサニー。动いたのが彼女が先立った。
+			PRINTFORML
+			PRINTFORML 「私、諦めてないから…」
+			PRINTFORMW 「%CALLNAME:MASTER%…」
+			PRINTFORML
+			PRINTFORML サニーが足を止め、%CALLNAME:MASTER%を見上げる。あの时よりも力强い瞳でこちらを見上げていた。
+			PRINTFORML
+			PRINTFORMW 「私のこと…好き？」
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;告白オッケー（恋人が付く）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		IF TALENT:5:无知 == 1
+			PRINTFORML 「やった！私も%CALLNAME:MASTER%が大好き！」
+			PRINTFORML 「これで私達は恋人ね！」
+			PRINTFORMW 「…%CALLNAME:MASTER%は知らないのかしら？お互いが好きならその二人は恋人よ！」
+			PRINTFORML 
+			PRINTFORML 胸をはって宣言するサニーに%CALLNAME:MASTER%は唖然と棒立ちにならざるを得なかった。
+			PRINTFORMW ただ、サニーが好きなのは本当である%CALLNAME:MASTER%は否定せず、爱おしくサニーの头を抚でる。
+			PRINTFORML 
+			PRINTFORML 「ふっふっふ、恋人達のイチャイチャというやつね。悪くないわ！」
+			PRINTFORMW 「これからもずーっと一绪よ！」
+			PRINTFORML 
+			PRINTFORML ひまわりのように笑いながらサニーは%CALLNAME:MASTER%の腕に飛びつき、猫のように頬ずりをする。
+			PRINTFORMW %CALLNAME:MASTER%は无邪气な彼女と一绪にいるのもこれでいいか、と思いながら帰り道を歩んだ。
+			PRINTFORML 
+		ELSE
+			PRINTFORMW 「～～～～良かった！！」
+			PRINTFORML
+			PRINTFORMW サニーの阴天がかった表情に晴天、妖精の无邪气な笑颜をそこにあった。
+			PRINTFORML
+			PRINTFORML 「私はわかってたけどね！%CALLNAME:MASTER%が私のこと大好きだったこと！」
+			PRINTFORMW 「じゃなきゃこうやって一绪にいないもの！」
+			PRINTFORML
+			PRINTFORML 心の内の不安が取り消され、サニーはピョンピョン跳ねながら喜びをあらわにする。
+			PRINTFORMW その喜びを受け止めるようにこちらにジャンプしてきたサニーを%CALLNAME:MASTER%は抱きとめた。
+			PRINTFORML
+			PRINTFORMW 「ほら、私のことは？」
+			PRINTFORML
+			PRINTFORMW %CALLNAME:MASTER%は大好きと答えた。
+			PRINTFORML
+			PRINTFORMW 「世界の誰よりも？」
+			PRINTFORML
+			PRINTFORMW %CALLNAME:MASTER%は誰よりも爱してると答えた。
+			PRINTFORML
+			PRINTFORMW 「どんなときでも？」
+			PRINTFORML
+			PRINTFORMW %CALLNAME:MASTER%はサニーと一绪と答えた。
+			PRINTFORML
+			PRINTFORMW 幸せの応酬にサニーのカラダは%CALLNAME:MASTER%の腕の中で打ち震えた。
+			PRINTFORML
+			PRINTFORMW %CALLNAME:MASTER%はその震えを优しく抱きしめて抑えてれば、サニーの幸福は途切れることはない。
+			PRINTFORML
+			PRINTFORMW 「私も爱してる！%CALLNAME:MASTER%！」
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;告白失敗
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		IF TALENT:5:无知 == 1
+			PRINTFORML 「えぇー私のこと好きじゃないの？」
+			PRINTFORMW 「こうやってデートに诱ってくれるのに薄情ね！」
+			PRINTFORML 
+			PRINTFORMW サニーは頬をふくらませ%CALLNAME:MASTER%を睨みつける。
+			PRINTFORML 
+			PRINTFORML 「まぁいいわ。必ず%CALLNAME:MASTER%に好きって言わせてみせるわ！」
+			PRINTFORML 「私は%CALLNAME:MASTER%が大好きなんだから！」
+			PRINTFORMW 「首と洗って待ってなさいね！」
+			PRINTFORML 
+			PRINTFORML サニーは勇み足で%CALLNAME:MASTER%の手をひっぱりながら帰り道を急ぐ。
+			PRINTFORML ふんすと息を荒くするその姿に、%CALLNAME:MASTER%は妖精の天真爛漫さを感じつい笑みが漏れる。
+			PRINTFORMW 手を繋ぐ２人の姿は恋人ではなくとも、亲子のような仲睦まじさがあった。
+			PRINTFORML 
+		ELSEIF FIRSTTIME(1003)
+			PRINTFORMW 「私のこと…好きじゃないの…？」
+			PRINTFORMW 
+			PRINTFORMW 
+			PRINTFORMW 
+			PRINTFORMW 「―――――――――………何よ」
+			PRINTFORML 「私、バカみたいじゃない…」
+			PRINTFORML 「%CALLNAME:MASTER%といるのに…乐しくて嬉しくて…」
+			PRINTFORML 「こんなに好きなのにっ……っ…私だけが勝手に好きになった…っだけで」
+			PRINTFORMW 「%CALLNAME:MASTER%は…わ、私のこと…好きでもなんとも…ッ…なくって…！」
+			PRINTFORML
+			PRINTFORMW 涙のしずくがサニーから零れ落ちる。
+			PRINTFORML
+			PRINTFORMW 「うあ…ぁぁ……！」
+			PRINTFORML
+			PRINTFORML 最初の涙がこぼれてしまうと、あとはもうとめどがなかった
+			PRINTFORMW お日様のような笑颜は涙の雨に濡れてくしゃくしゃに歪んでいく。
+			PRINTFORML
+			PRINTFORML 「うぁぁあああ………！！」
+			PRINTFORMW 「うああああああぁぁぁぁ！！！」
+			PRINTFORML
+			PRINTFORML 张り裂けるような妖精の泣き声が幻想郷に響く。
+			PRINTFORMW サニーは悲しみに打ちひしがれ、空に向かって泣きじゃくることしかできなかった。
+		ELSE
+			PRINTFORMW 「私のこと…好きじゃないの…？」
+			PRINTFORML 
+			PRINTFORML 
+			PRINTFORML 
+			PRINTFORMW 「………」
+			PRINTFORMW 「……」
+			PRINTFORMW 「…」
+			PRINTFORMW 「―――――――――………もんか」
+			PRINTFORMW 「諦めるもんかっ！」
+			PRINTFORML 
+			PRINTFORML 
+			PRINTFORMW 「撃ち落されてもっ！薙ぎ払われてもっ！」
+			PRINTFORMW 「何度も好きって言われなくてもっっ！！」
+			PRINTFORMW 「%CALLNAME:MASTER%に嫌われてもっ！私は止まらないわっ！」
+			PRINTFORMW 「だって好きになっちゃったんだもの、もう変えられないね！」
+			PRINTFORMW 「見てなさい%CALLNAME:MASTER%。いつかその口から好きって言わせて見せるんだから！」
+			PRINTFORMW 「ふふんっ！」
+			PRINTFORMW サニー挑戦的な笑みを浮かべながら、%CALLNAME:MASTER%の腕を引っ张って帰路へと帰っていった。
+		ENDIF
+		RETURN 1
+	ENDIF
+
+ENDIF
+RETURN 1
+
+;==================================================
+;デート帰り
+;==================================================
+@M_KOJO_SPEVENT_K5_3(ARG,ARG:1)
+;口上主はTARGET
+;地の文表示
+CALL SPEVENT_MESSAGE_3(ARG,ARG:1)
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;通常帰宅
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 0
+		IF CFLAG:318 == 1
+			PRINTFORMW 「…むすっ」
+			PRINTFORMW サニーは膨れっ面のまま住処へと帰っていった。
+			PRINTFORMW 
+		ELSEIF TALENT:恋慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「やだ！まだ帰りたくない！」
+					PRINTFORML %CALLNAME:MASTER%にしがみつくサニーをなんとか宥め、帰路を歩く。
+					PRINTFORMW 「うー…もっと%CALLNAME:MASTER%と遊びたいのに…」
+			ENDSELECT
+		ELSEIF TALENT:思慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「もうちょっと遊びたいけどしょうがないわね」
+					PRINTFORMW 「またさそってね%CALLNAME:MASTER%。絶対よ！」
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASE 0
+					PRINTFORML 「有意義な恶作剧の下見ができたわ！」
+					PRINTFORMW 「ありがと%CALLNAME:MASTER%！」
+				CASEELSE
+					PRINTFORML 「なかなか乐しめたわね！」
+					PRINTFORMW 「それじゃ、また今度遊びましょ！」 
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;反抗刻印消去イベント
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		PRINTFORMW 「私はまだ怒ってるわよ…」
+		PRINTFORML 
+		PRINTFORMW %CALLNAME:MASTER%は贡物としてお団子を献上した。
+		PRINTFORML 
+		PRINTFORMW 「もぐもぐ…これしきのことでは」
+		PRINTFORML 
+		PRINTFORMW %CALLNAME:MASTER%はおはぎを献上した。
+		PRINTFORML 
+		PRINTFORMW 「むしゃむしゃ…まだまだ」
+		PRINTFORML 
+		PRINTFORMW %CALLNAME:MASTER%は酒饅头を献上した。
+		PRINTFORML 
+		PRINTFORMW 「ま、まあいいわ。これで水に流してあげる」
+		PRINTFORML 
+		PRINTFORMW まんざらでもない表情で甘味を食べるサニーに%CALLNAME:MASTER%はホッと胸をなでおろした。
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;反抗刻印2>1レベルダウンイベント
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		PRINTFORMW 「ああもう！」
+		PRINTFORML 
+		PRINTFORMW 突然サニーに脛を蹴られ、%CALLNAME:MASTER%は脛を抱えて悶絶する。
+		PRINTFORML 
+		PRINTFORML 「今日のデートとこれであのことはチャラにしてあげるわ！」
+		PRINTFORML 「だけど、まだ私は怒ってるのは忘れないで！」
+		PRINTFORMW 「ほら、行くわよ！」
+		PRINTFORML 
+		PRINTFORML 腕組しながらこちらを見下ろすサニーの表情は、前と比べて大分柔らかくなっている。
+		PRINTFORMW 彼女にしたことを考えると、%CALLNAME:MASTER%は脛の痛みを甘んじて受ける事にした。
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;反抗刻印3>2レベルダウンイベント
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		PRINTFORMW 「……………」
+		PRINTFORML
+		PRINTFORML サニーは相変わらず冷たい视线を%CALLNAME:MASTER%へと向ける。
+		PRINTFORMW ただ、デート前よりからは２人の间の距離が近くなっていたのが実感できた。
+		RETURN 1
+	ENDIF
+	PRINTFORML
+ENDIF
+RETURN 1
+
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+;"EVENT"系イベント
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+;==================================================
+;房间で遭遇
+;==================================================
+@M_KOJO_EVENT_K5_1(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;MASTERが入ってきた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		IF FLAG:时间停止
+		ELSEIF CFLAG:318 == 1
+			PRINTFORMW 
+		ELSEIF TALENT:恋慕
+			SELECTCASE RAND:3
+				CASE 1
+					PRINTFORML 「%CALLNAME:MASTER%ー！どこか行くなら私も连れてって！」
+					;PRINTFORMW 
+				CASE 0
+					PRINTFORML 「もしかして私を探しに来たの？」
+					PRINTFORMW 「そうだったらとっても嬉しい！」
+				CASEELSE
+					PRINTFORML 「%CALLNAME:MASTER%も一绪にここに居ようよ！」
+			ENDSELECT
+		ELSEIF TALENT:思慕
+			SELECTCASE RAND:3
+				CASE 1
+					PRINTFORMW 「%CALLNAME:MASTER%、何か面白いもの見つかったら教えて！」
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORMW 「あ、%CALLNAME:MASTER%！ねぇ遊びましょ！」
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:3
+				CASE 1
+					PRINTFORML サニーが近くにいる气がする…。姿を消しているようだ。
+					PRINTFORMW (フッフッフ…バレてないわね）
+				CASE 0
+					PRINTFORMW 「やっほー！」
+				CASEELSE
+					PRINTFORMW 「あら、よく会うわね」
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;TARGETが入ってきた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+	;サニーの房间に遭遇
+		IF CFLAG:5:当前位置 == サニー私室
+			IF CFLAG:318 == 1
+				PRINTFORMW 
+			ELSEIF TALENT:恋慕
+				SELECTCASE RAND:3
+					;CASE 1
+						;PRINTFORML 
+						;PRINTFORMW 
+					CASE 0
+						PRINTFORML サニーの房间はぽかぽかして暖かい…。
+						PRINTFORMW 「一绪に寝る？ここはとっても暖かいのよ！」
+					CASEELSE
+						PRINTFORML %CALLNAME:MASTER%は透明になって房间に入ってきたサニーを抚でて出迎えた？
+						PRINTFORML 「え？え？驚かそうと思ったのにどうしてわかったの？」
+						PRINTFORMW 「サニーの场所なら見えなくてもわかる？…そ、そう？えへへ…」
+				ENDSELECT
+			ELSEIF TALENT:思慕
+				SELECTCASE RAND:3
+				CASE 1
+					PRINTFORML サニーの房间には外来品が幾つか置いてあるようだ。
+					PRINTFORMW 「幾ら%CALLNAME:MASTER%でもダメよ！あげない！」
+				CASE 0
+					PRINTFORMW 「今日は房间で遊ぶの？」
+				CASEELSE
+					PRINTFORML 「オセロでもする？」
+					PRINTFORMW サニーは何故か白黒のサッカボールをもってそう言ってきた。
+				ENDSELECT
+			ELSE
+				SELECTCASE RAND:3
+					CASE 1
+						PRINTFORML サニーの房间はぽかぽかして暖かい…。
+						PRINTFORMW 「もう…寝るなら自分の房间で寝なさいよ」
+					CASE 0
+						PRINTFORMW 「ちょっと！勝手に入らないでよ！」
+					CASEELSE
+						PRINTFORMW 「何か用かしら？」
+				ENDSELECT
+			ENDIF
+		ENDIF
+
+		IF FLAG:时间停止
+		ELSEIF CFLAG:318 == 1
+			PRINTFORMW 
+		ELSEIF TALENT:恋慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+						PRINTFORML %CALLNAME:MASTER%は透明になって房间に入ってきたサニーを抚でて出迎えた？
+						PRINTFORML 「え？え？驚かそうと思ったのにどうしてわかったの？」
+						PRINTFORMW 「サニーの场所なら見えなくてもわかる？…そ、そう？えへへ…♪」
+			ENDSELECT
+		ELSEIF TALENT:思慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORMW 「あっ！%CALLNAME:MASTER%見つけた！」
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASE 0
+					PRINTFORMW 「何か面白いもの見つかった？」
+				CASEELSE
+					PRINTFORML 「む、何か隠してるわね！」
+					PRINTFORMW 「何も隠してない？なぁんだ」
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;TARGETが澡堂に入ってきて一绪に入る
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		IF FLAG:时间停止
+		ELSEIF CFLAG:318 == 1
+			PRINTFORML 「！……ふんっ！」
+			PRINTFORMW サニーは%CALLNAME:MASTER%がいたことに驚くも、无视してお澡堂场に入ってきた。
+		ELSEIF TALENT:恋慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「%CALLNAME:MASTER%ー！一绪にお澡堂入ろー！」
+					PRINTFORML サニーが一糸纏わぬ姿で%CALLNAME:MASTER%に抱きついてきた。
+					PRINTFORMW 「何で恥ずかしがってんの？一绪に入るぐらい、いいじゃない！」
+			ENDSELECT
+		ELSEIF TALENT:思慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「たまには労ってあげるわ！いつもお疲れ様！」
+					PRINTFORMW お澡堂桶を持ちながらサニーがカラダにタオルを巻いて入ってきた。
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「あれ？%CALLNAME:MASTER%入ってたの？まぁいいわ。私も入るわよ」
+					PRINTFORMW サニーは%CALLNAME:MASTER%がいることも气にせずカラダを洗い始めた。
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;TARGETが澡堂に入ってきて出て行った
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 4
+		IF FLAG:时间停止
+		ELSEIF CFLAG:318 == 1
+			PRINTFORMW 
+		ELSEIF TALENT:恋慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「私も%CALLNAME:MASTER%と入る！」
+					PRINTFORML 「今日はゆっくり入りたいの？むぅ…」
+					PRINTFORMW サニーは口を尖らせて心情不快そうな颜をしたが、しぶしぶでていった。
+			ENDSELECT
+		ELSEIF TALENT:思慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「なんだ先に%CALLNAME:MASTER%が入ってたのね」
+					PRINTFORMW 「じゃあ今日はゆっくり入らせてあげるわ！」
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「あれ、%CALLNAME:MASTER%が入る番？」
+					PRINTFORMW 「もー…早くでてよね！」
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;TARGETが澡堂に入ってきて追い出された
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 5
+		IF FLAG:时间停止
+		ELSEIF CFLAG:318 == 1
+			PRINTFORMW 
+		ELSEIF TALENT:恋慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「%CALLNAME:MASTER%の為にキレイになってくるわ！」
+					PRINTFORMW 「というわけで…もうでてもらえるかしら？」
+			ENDSELECT
+		ELSEIF TALENT:思慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「お澡堂一绪に入る…？なーんて」
+					PRINTFORMW 「れでぃふぁーすとって奴よ！お后で失礼！」
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「污れちゃったから先に入るわ！」
+					PRINTFORMW 「ほらでてったでてった！」
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;外出先で遭遇した
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 6
+		IF FLAG:时间停止
+		ELSEIF CFLAG:318 == 1
+			PRINTFORML 「むっ…」
+			PRINTFORMW サニーは持っているかんしゃく玉を今にも投げつけてきそうだ。
+		ELSEIF TALENT:恋慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「%CALLNAME:MASTER%ー！あそぼー！」
+					PRINTFORMW サニー%CALLNAME:MASTER%に抱きつきながら犬のシッポのように羽根を揺らしている。
+			ENDSELECT
+		ELSEIF TALENT:思慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「あ、%CALLNAME:MASTER%！ちょっと抚でて！」
+					PRINTFORMW 駆け寄ってきたサニーの头を抚でると嬉しそうに体を揺らした。
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「%CALLNAME:MASTER%ー何してるの？」
+					PRINTFORMW サニーは%CALLNAME:MASTER%に元气良く手を振ってきた。
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;他キャラと约会中に遭遇した
+	;ARG:1に约会的对象
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 7
+		IF FLAG:时间停止
+		ELSEIF CFLAG:318 == 1
+			PRINTFORMW 
+		ELSEIF TALENT:恋慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORMW 「…むかっ！なんだかとってもイライラするわ！」
+			ENDSELECT
+		ELSEIF TALENT:思慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORMW 「…今日の%CALLNAME:MASTER%はとっても恶作剧し甲斐がありそうね」
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「%CALLNAME:MASTER%ー何してるの？」
+					PRINTFORMW 「デート？ふーん」
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;朝起きたとき（おはよう口上）
+;==================================================
+@M_KOJO_EVENT_K5_2(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;非同棲かつ相手が先に起きてる
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		;-------------------------------------------------
+		;TARGET私室にMASTERが入っている（恋慕时陪睡中就寝时のみ？
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && !ARG:1
+			IF FLAG:时间停止
+			ELSEIF CFLAG:318 == 1
+				PRINTFORMW 
+			ELSEIF TALENT:恋慕
+				SELECTCASE RAND:3
+					;CASE 1
+						;PRINTFORML 
+						;PRINTFORMW 
+					;CASE 0
+						;PRINTFORML 
+						;PRINTFORMW 
+					CASEELSE
+						PRINTFORMW 「あ、起きたのね%CALLNAME:MASTER%！おはよう！」
+						PRINTFORML
+						PRINTFORMW サニーはリボンを結びながら起きた%CALLNAME:MASTER%に笑いかける。
+						PRINTFORML
+						PRINTFORML 「よく寝られたでしょ？日の光の妖精のベッドなんてまず寝られないわよ！」
+						PRINTFORML
+						PRINTFORML サニーの房间にある太陽のクッションや暖色の大きなマクラを見ると房间全体が温かい雰囲气を感じられる。
+						PRINTFORMW %CALLNAME:MASTER%はベッドから降りて、サニーの髪を梳かしてあげる事にした。
+						PRINTFORML
+						PRINTFORMW 「ありがと%CALLNAME:MASTER%！さて…今日はなにしようかな」
+						PRINTFORML
+						PRINTFORMW %CALLNAME:MASTER%はサニーの髪を整えながら、今日の予定に花を咲かせた。
+				ENDSELECT
+			ENDIF
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;MASTER私室にTARGETが入ってきてる(恋慕无しでも入ってくる可能性有り
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 1
+			IF FLAG:时间停止
+			ELSEIF CFLAG:318 == 1
+				PRINTFORMW 
+			ELSEIF TALENT:恋慕
+				SELECTCASE RAND:3
+					;CASE 1
+						;PRINTFORML 
+						;PRINTFORMW 
+					;CASE 0
+						;PRINTFORML 
+						;PRINTFORMW 
+					CASEELSE
+						PRINTFORML ポンポンッと布団叩きで叩くような音がする。
+						PRINTFORMW 寝ぼけ眼を開けてみると、サニーが%CALLNAME:MASTER%の上で馬乗りになっていた。
+						PRINTFORML
+						PRINTFORMW 「んもぅ、もう起きる时间よ！」
+						PRINTFORML
+						PRINTFORMW 「寝てばっかりだとカビ生えちゃうわよ！」
+						PRINTFORML
+						PRINTFORMW サニーは眉を八の字にして布団越しに%CALLNAME:MASTER%を叩く。
+						PRINTFORML
+						PRINTFORMW 「早く起きて一绪に遊びましょうよ！」
+				ENDSELECT
+			ELSEIF TALENT:思慕
+				SELECTCASE RAND:3
+					;CASE 1
+						;PRINTFORML 
+						;PRINTFORMW 
+					;CASE 0
+						;PRINTFORML 
+						;PRINTFORMW 
+					CASEELSE
+						PRINTFORMW %CALLNAME:MASTER%が起きると何故か懐がぽかぽかと暖かい。
+						PRINTFORML
+						PRINTFORML 「グー…グー…」
+						PRINTFORMW 「う～ん…あと５分」
+						PRINTFORML
+						PRINTFORML いつの间にか寝床の潜り込んだサニーがよだれをあなたにつけながら眠りこけていた。
+						PRINTFORMW %CALLNAME:MASTER%がサニーを起こすと寝ぼけ眼を擦りながら布団から這い出す。
+						PRINTFORML
+						PRINTFORML 「あれ…%CALLNAME:MASTER%を起こそうと思ったら寝ちゃったみたいね」
+						PRINTFORMW 「二度寝は气持ちいいからしょうがないわね！おはよう%CALLNAME:MASTER%！」
+						PRINTFORML
+						PRINTFORMW %CALLNAME:MASTER%はサニーの头を抚でた后、朝の支度を始めた。
+				ENDSELECT
+			ELSE
+				SELECTCASE RAND:3
+					;CASE 1
+						;PRINTFORML 
+						;PRINTFORMW 
+					CASE 0
+						PRINTFORML 腹部の强い衝撃を目觉ましに%CALLNAME:MASTER%は目觉める。
+						PRINTFORML 見るとサニーが腕組をして%CALLNAME:MASTER%のお腹に陣取っていた。
+						PRINTFORMW 「おはよー！絶好の恶作剧日和よ！」						 
+					CASEELSE
+						PRINTFORMW 「あ、やっと起きたわね%CALLNAME:MASTER%！おはよう！」
+						PRINTFORML
+						PRINTFORMW サニーのこちらを見る口元がなぜかプルプル震えている。
+						PRINTFORML
+						PRINTFORMW 「～～～っプーッもうダメ！あっはっはっはっは！」
+						PRINTFORML
+						PRINTFORML %CALLNAME:MASTER%の头を指差しながら转がりまわるサニーを見て、ハッと头に手をやると
+						PRINTFORMW 素晴らしくそそり立ったリーゼントがそびえたっていた。
+						PRINTFORML
+						PRINTFORMW 「あはははは！変な头過ぎるわ！」
+						
+				ENDSELECT
+			ENDIF
+			RETURN 1
+		ENDIF
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;同棲かつ相手が起きている
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		SELECTCASE RAND:3
+			;CASE 1
+				;PRINTFORML 
+				;PRINTFORMW 
+			;CASE 0
+				;PRINTFORML 
+				;PRINTFORMW 
+			CASEELSE
+				PRINTFORMW 「あ、起きたのね%CALLNAME:MASTER%！おはよう！」
+				PRINTFORML
+				PRINTFORML サニーはリボンを結びながら起きた%CALLNAME:MASTER%に笑いかける。
+				PRINTFORMW 「よく寝られたでしょ？日の光の妖精のベッドなんてまず寝られないわよ！」
+				PRINTFORML
+				PRINTFORML 太陽のクッションや暖色の大きなマクラを見ていると房间全体が温かい雰囲气を感じられる。
+				PRINTFORMW 思わず二度寝したい程の暖かい诱惑を断ち切り
+				PRINTFORML
+				PRINTFORMW %CALLNAME:MASTER%はベッドから降りて、サニーの髪を梳かしてあげる事にした。
+				PRINTFORML
+				PRINTFORMW 「ありがと%CALLNAME:MASTER%！さて…今日はなにしようかな」
+				PRINTFORML
+				PRINTFORMW %CALLNAME:MASTER%はサニーの髪を整えながら、今日の予定に花を咲かせた。
+		ENDSELECT
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;同棲かつ相手が寝ている
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		PRINTFORML 「%CALLNAME:MASTER%…いっしょにあそぼぉ…スゥ…スゥ」
+		PRINTFORML %CALLNAME:MASTER%はまだ寝ているサニーを起こさないよう
+		PRINTFORMW 静かにベッドから抜け出して身支度を始めた。		
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;MASTERが起きていて、相手が起きてきた
+	;添い寝时TARGET起床はこちら（TARGET衰弱or陪睡中TARGET睡魔負け后そのままMASTERが起き続けた上で相手が起床した场合限定
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 4
+		;-------------------------------------------------
+		;非同棲
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && !ARG:1
+			PRINTFORMW 「むにゃむにゃ…あれ？%CALLNAME:MASTER%…いてくれたの？」
+			PRINTFORML
+			PRINTFORML 目をこすりながらサニーがベッドからカラダを起こす。
+			PRINTFORMW まだ寝足りないのかうつらうつらカラダを揺らしてまたベッドにもぐりこみそうだ。
+			PRINTFORML
+			PRINTFORML 「うーん～今何时？…え、もうそんな时间？」
+			PRINTFORMW 「起きて遊ぶ时间が減っちゃうわね…。早く着替えて遊びに行くわよ！」
+			PRINTFORML
+			PRINTFORMW 髪を整えながら、サニーがネグリジェに手をかけた。
+			PRINTFORML
+			PRINTFORML 「ちょっと%CALLNAME:MASTER%！なにボーッと見てるの！」
+			IF TALENT:5:无知 == 1
+				PRINTFORMW 「早く着替えるの手伝って！」
+			ELSE
+				PRINTFORML 「着替えるんだからちょっと房间からでて！」
+				PRINTFORMW %CALLNAME:MASTER%はひとまず房间から退散することにした。
+			ENDIF
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;同棲中
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 1
+			PRINTFORMW 「ふわぁ…もう朝？」
+			PRINTFORML
+			PRINTFORMW 3回目のあと5分でサニーは寝ぼけ眼をあけてサニーが起きる。
+			PRINTFORML
+			PRINTFORML 「おはよう%CALLNAME:MASTER%！今朝もよく眠れたわ！」
+			PRINTFORML 「早く着替えて朝ごはん食べましょ！…その前に」
+			PRINTFORMW 「髪梳いて！」
+			PRINTFORML
+			PRINTFORMW サニーから櫛を受け取り、%CALLNAME:MASTER%はいつものように寝癖のついた金髪を整え始めた。
+			RETURN 1
+		ENDIF
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;その他
+	PRINTFORML  
+ENDIF
+RETURN 1
+
+;==================================================
+;夜寝るとき（おやすみ口上）
+;==================================================
+@M_KOJO_EVENT_K5_3(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;自室に帰る（定时になって寝る）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		IF CFLAG:318 == 1
+			PRINTFORMW 
+		ELSEIF TALENT:恋慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「明日も遊んでくれないと…恶作剧しに行くんだからね！」
+					PRINTFORML %CALLNAME:MASTER%に抱きついていたサニーが名残惜しげに手を離す。
+					PRINTFORMW 「おやすみ%CALLNAME:MASTER%！」
+			ENDSELECT
+		ELSEIF TALENT:思慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「乐しいと时间があっという间に過ぎるのね…」
+					PRINTFORMW 「また明日も遊びましょ！%CALLNAME:MASTER%！おやすみ！」
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「ふわぁ～今日もよく遊んだわ」
+					PRINTFORMW 「先に帰るわ！おやすみ%CALLNAME:MASTER%！」
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;眠そうにしている
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		IF CFLAG:318 == 1
+			PRINTFORMW 
+		ELSEIF TALENT:恋慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「今寝たら%CALLNAME:MASTER%とお話しできないじゃない…」
+					PRINTFORMW サニーは唇を噛んで眠气に耐えている。
+			ENDSELECT
+		ELSEIF TALENT:思慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「夜はまだ…これから…よ…」
+					PRINTFORMW サニーは目をこすって眠气に耐えている。
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「……ハッ！寝てないわ！」
+					PRINTFORMW サニーはよだれを拭いながら胸をはった。
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;睡眠中（起きていないので会话というよりは寝言？）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		IF CFLAG:318 == 1
+			PRINTFORMW 
+		ELSEIF TALENT:恋慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「%CALLNAME:MASTER%－…ずっと一绪ー…」
+					PRINTFORMW 「えへへ…むにゃ…」
+			ENDSELECT
+		ELSEIF TALENT:思慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「すぴー…すぴー…」
+					PRINTFORMW 「もっと遊ぼー…」
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASE 0
+					PRINTFORMW 「ぐーぐー…」
+				CASEELSE
+					PRINTFORMW 「むにゃ…すぅ…」
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;恶作剧中
+	;记入チェック（=0, 非表示、1, 表示）
+	;LOCAL:1 = 1
+	;-------------------------------------------------
+	;IF LOCAL:1 && ARG == 4
+		;PRINTFORMW 
+		;RETURN 1
+	;ENDIF
+	;-------------------------------------------------
+	;衰弱中（恋慕付き据点内キャラがMAIN_MAPで衰弱状态になった场合か、招待房间で相手が衰弱した场合に发生
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 5
+		IF CFLAG:318 == 1
+			PRINTFORMW 
+		ELSEIF TALENT:恋慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「へ、平气よ！これぐらい！」
+					PRINTFORMW 「ほらこんなに…こんな…きゅぅ」
+			ENDSELECT
+		ELSEIF TALENT:思慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORMW 「今日はちょっと遊びすぎたみたいね…」
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORMW 「も、もうダメ…」
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;MASTERがダウン（房间まで運ばれる）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 6
+		IF FLAG:时间停止	
+		ELSEIF CFLAG:318 == 1
+			PRINTFORMW 
+		ELSEIF TALENT:恋慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「%CALLNAME:MASTER%…！しっかり！」
+					PRINTFORML 「疲れてるなら休まなきゃダメじゃない！ほら肩貸して！」
+					PRINTFORML 「%CALLNAME:MASTER%は强いんだから、こんぐらいで倒れちゃダメよ！」
+					PRINTFORMW サニーの手を借りながら%CALLNAME:MASTER%は私室へとたどりついた。
+			ENDSELECT
+		ELSEIF TALENT:思慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「%CALLNAME:MASTER%…大丈夫…じゃないわね」
+					PRINTFORML 「しょうがないわね…ううぅ重い～…」
+					PRINTFORML %CALLNAME:MASTER%はサニーに引きづられながら、なんとか家まで辿り着いた。
+					PRINTFORMW 「この分明日はしっかり遊んでもらうんだから！」
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「ちょっと！寝るなら自分の房间で寝なさいよ！」
+					PRINTFORML 「まったくもう…！」
+					PRINTFORML 文句を言いながらもサニーは%CALLNAME:MASTER%の首ねっこを掴んで房间まで運んでくれた。
+					PRINTFORML 「これは代金としてらうわ！」
+					PRINTFORMW ……%CALLNAME:MASTER%の房间のものを何個かもっていかれた。
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;TARGETが自室まで戻ってきた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 7
+		;-------------------------------------------------
+		;そのまま着替えて寝た
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 0
+			IF CFLAG:318 == 1
+				PRINTFORMW 
+			ELSEIF TALENT:恋慕
+				SELECTCASE RAND:3
+					;CASE 1
+						;PRINTFORML 
+						;PRINTFORMW 
+					;CASE 0
+						;PRINTFORML 
+						;PRINTFORMW 
+					CASEELSE
+						PRINTFORML 「来るなら言ってくれればいいのに…よし！こうなったらこれから遊ぼ！」
+						PRINTFORML 「あ…ダメ…やっぱり眠气が…。%CALLNAME:MASTER%がいるのに～…」
+						PRINTFORMW 「……ぐー…ぐー…」
+				ENDSELECT
+			ELSEIF TALENT:思慕
+				SELECTCASE RAND:3
+					;CASE 1
+						;PRINTFORML 
+						;PRINTFORMW 
+					;CASE 0
+						;PRINTFORML 
+						;PRINTFORMW 
+					CASEELSE
+						PRINTFORML 「%CALLNAME:MASTER%いたの？…悪いけど私もう寝たいの」
+						PRINTFORMW 「だからもうお休み～」
+					ENDSELECT
+			ELSE
+				SELECTCASE RAND:3
+					;CASE 1
+						;PRINTFORML 
+						;PRINTFORMW 
+					;CASE 0
+						;PRINTFORML 
+						;PRINTFORMW 
+					CASEELSE
+						PRINTFORML 「ふわぁ…。私もう寝るから用があったら明日にして…それじゃ」
+						PRINTFORMW サニーはベッドに潜りこんであっという间に寝付いてしまった。
+				ENDSELECT
+			ENDIF
+		RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;房间から追い出された
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 1
+			IF CFLAG:318 == 1
+				PRINTFORMW 
+			ELSEIF TALENT:恋慕
+				SELECTCASE RAND:3
+					;CASE 1
+						;PRINTFORML 
+						;PRINTFORMW 
+					;CASE 0
+						;PRINTFORML 
+						;PRINTFORMW 
+					CASEELSE
+						PRINTFORML 「%CALLNAME:MASTER%もちゃんと寝なきゃダメよ！」
+						PRINTFORMW 「夜更かしはとっても疲れるんだから！じゃあおやすみ！」
+				ENDSELECT
+			ELSEIF TALENT:思慕
+				SELECTCASE RAND:3
+					;CASE 1
+						;PRINTFORML 
+						;PRINTFORMW 
+					;CASE 0
+						;PRINTFORML 
+						;PRINTFORMW 
+					CASEELSE
+						PRINTFORML 「ふふん、妖精だからって甘く見ちゃダメよ」
+						PRINTFORMW 「寝たところを恶作剧しようたってそうはいかないわ！」
+				ENDSELECT
+			ELSE
+				SELECTCASE RAND:3
+					;CASE 1
+						;PRINTFORML 
+						;PRINTFORMW 
+					;CASE 0
+						;PRINTFORML 
+						;PRINTFORMW 
+					CASEELSE
+						PRINTFORML 「私もう寝るんだから早くでてって！」
+						PRINTFORMW サニーに背中を押されて房间から追い出された。
+				ENDSELECT
+			ENDIF
+		RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;他キャラとのＨを止めさせて寝た
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 2 && TALENT:5:无知 == 1
+			IF CFLAG:318 == 1
+				PRINTFORMW 
+			ELSEIF TALENT:恋慕
+				SELECTCASE RAND:3
+					;CASE 1
+						;PRINTFORML 
+						;PRINTFORMW 
+					;CASE 0
+						;PRINTFORML 
+						;PRINTFORMW 
+					CASEELSE
+						PRINTFORML 「なんだかとってもイライラする…！」
+						PRINTFORML 「もうでていけえぇぇ！！」
+						PRINTFORMW サニーの弾幕に押し出され、慌てて外に退散することにした。
+				ENDSELECT
+			ELSEIF TALENT:思慕
+				SELECTCASE RAND:3
+					;CASE 1
+						;PRINTFORML 
+						;PRINTFORMW 
+					;CASE 0
+						;PRINTFORML 
+						;PRINTFORMW 
+					CASEELSE
+						PRINTFORML 「2人して変な声だして騒がないで！」
+						PRINTFORMW 「何の遊びか知らないけどとーってもジャマ！」
+				ENDSELECT
+			ELSE
+				SELECTCASE RAND:3
+					;CASE 1
+						;PRINTFORML 
+						;PRINTFORMW 
+					;CASE 0
+						;PRINTFORML 
+						;PRINTFORMW 
+					CASEELSE
+						PRINTFORML 「あぁもううるさい！外でやって！」
+						PRINTFORMW サニーに尻を蹴られて外にほっぽりだされた…。
+				ENDSELECT
+			ENDIF
+		RETURN 1
+		ENDIF
+		IF LOCAL:1 && ARG:1 == 2
+			IF CFLAG:318 == 1
+				PRINTFORMW 
+			ELSEIF TALENT:恋慕
+				SELECTCASE RAND:3
+					;CASE 1
+						;PRINTFORML 
+						;PRINTFORMW 
+					;CASE 0
+						;PRINTFORML 
+						;PRINTFORMW 
+					CASEELSE
+						PRINTFORML 「そんなに私に弹幕胜负を卖りたいならまとめて買ってあげるわ！」
+						PRINTFORMW サニーのスペルカード宣言をする前に%CALLNAME:MASTER%は一目散に逃げ出した。
+				ENDSELECT
+			ELSEIF TALENT:思慕
+				SELECTCASE RAND:3
+					;CASE 1
+						;PRINTFORML 
+						;PRINTFORMW 
+					;CASE 0
+						;PRINTFORML 
+						;PRINTFORMW 
+					CASEELSE
+						PRINTFORMW 「サカリのついた犬じゃないんだからこんなとこでしないでよ！」
+				ENDSELECT
+			ELSE
+				SELECTCASE RAND:3
+					;CASE 1
+						;PRINTFORML 
+						;PRINTFORMW 
+					;CASE 0
+						;PRINTFORML 
+						;PRINTFORMW 
+					CASEELSE
+						PRINTFORML 「あぁもううるさい！外でやって！」
+						PRINTFORMW サニーに尻を蹴られて外にほっぽりだされた…。
+				ENDSELECT
+			ENDIF
+		RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;非在住TARGETがMAIN_MAPで休憩
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 8
+		IF FLAG:时间停止
+		ELSEIF CFLAG:318 == 1
+			PRINTFORMW 
+		ELSEIF TALENT:恋慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「%CALLNAME:MASTER%、膝枕して！」
+					PRINTFORMW 「ダメなら椅子になって！」
+			ENDSELECT
+		ELSEIF TALENT:思慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「%CALLNAME:MASTER%も一绪に休まない？」
+					PRINTFORMW …差し出されたお団子にワサビが付着している。
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「ふぅ…ちょっと休憩」
+					PRINTFORMW 「恶作剧のアイデアってこうゆう时にでたりするもの」
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;前のターンから一绪の房间にいる状态で相手が寝る（招待房间含む（
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 9
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;その他
+	PRINTFORML  
+ENDIF
+RETURN 1
+
+;==================================================
+;移动时すれちがい
+;==================================================
+@M_KOJO_EVENT_K5_4(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;立ち止まった
+	;この后遭遇口上に接続
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		PRINTFORML 
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;軽く会釈して通り過ぎた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+			IF FLAG:时间停止
+				ELSE
+					PRINTFORML 「ずいぶん忙しそうね？」
+			ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;无视して通り過ぎた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+			IF FLAG:时间停止
+				ELSE
+					PRINTFORML 「あれ、透明になってたかしら？」
+			ENDIF
+		RETURN 1
+	ENDIF
+	;その他
+	PRINTFORML  
+ENDIF
+RETURN 1
+
+;==================================================
+;他者介入で情绪変化
+;==================================================
+@M_KOJO_EVENT_K5_5(ARG,ARG:1)
+;口上主はTARGET
+;ARGに入ってきたキャラ（人数が膨大なので、自己把握自己責任で
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;灵梦が入ってきた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;る～ことが入ってきた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;その他（キャラ指定なし
+	IF CFLAG:318 == 1
+		PRINTFORMW 
+	ELSEIF TALENT:恋慕
+		SELECTCASE RAND:3
+			;CASE 1
+				;PRINTFORML 
+				;PRINTFORMW 
+			CASE 0
+				PRINTFORML サニーは蠱惑的な微笑を浮かべ%CALLNAME:MASTER%に頬ずりをしてから離れた。
+				PRINTFORMW 「私の气持ちはずっと%CALLNAME:MASTER%の傍にいるんだから…」
+			CASEELSE
+				PRINTFORML 「%CALLNAME:MASTER%！ちょっと颜貸して！」
+				PRINTFORMW 「ｷｭｯｷｭｯｷｭｯ…よし、これでＯＫね！」
+				PRINTFORML 頬に「サニーの！」と落书きされた…。
+		ENDSELECT
+	ELSEIF TALENT:思慕
+		SELECTCASE RAND:3
+			;CASE 1
+				;PRINTFORML 
+				;PRINTFORMW 
+			;CASE 0
+				;PRINTFORML 
+				;PRINTFORMW 
+			CASEELSE
+				PRINTFORML サニーは%CALLNAME:MASTER%に論されてしぶしぶ離れた。
+				PRINTFORMW 「もう、いいところだったのに…」
+		ENDSELECT
+	ELSE
+		SELECTCASE RAND:3
+			;CASE 1
+				;PRINTFORML 
+				;PRINTFORMW 
+			CASE 0
+				PRINTFORML 
+				PRINTFORMW 
+			CASEELSE
+				PRINTFORML %CALLNAME:MASTER%にカラダを擦り付けるサニーの襟首を掴み无理やり引き剥がした。
+				PRINTFORMW 「わッぷ！ちょっとどうして離れるの！」
+		ENDSELECT
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;情事を目撃した
+;==================================================
+@M_KOJO_EVENT_K5_6(ARG,ARG:1)
+;口上主はTARGET
+;ARGに情事相手
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;情事を目撃した（馴れ合い度:低）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 1
+		IF CFLAG:318 == 1
+			PRINTFORMW 
+		ELSEIF TALENT:恋慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML
+				CASEELSE
+					PRINTFORML 「……何してるのさ」
+					PRINTFORMW 半目で睨んでくるサニーの恨みがましい视线が肌に突き刺さる。
+			ENDSELECT
+		ELSEIF TALENT:思慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「ううー私の%CALLNAME:MASTER%なのに…」
+					PRINTFORMW サニーは犬のように唸りながら恨めし气にこちらを睨んでくる…
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「ジャマして馬に蹴られちゃたまらないわ！」
+					PRINTFORMW サニーはニヤニヤ笑いながら飛び出していった。
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;負けじと参加（馴れ合い度:高）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 2
+		IF CFLAG:318 == 1
+			PRINTFORMW 
+		ELSEIF TALENT:恋慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORMW 「ちょっと2人でずるいわ！私も混ぜなさい！」
+			ENDSELECT
+		ELSEIF TALENT:思慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORMW 「人数が多いならその分乐しいわよ！」
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORMW 「私を抜きにするなんてずるい！」
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;气まずそうに立ち去る
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 3
+		IF CFLAG:318 == 1
+			PRINTFORMW 
+		ELSEIF TALENT:恋慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORMW サニーはそれ以上何も言わずに身を翻し、どこかへ行ってしまった。
+					PRINTFORML 
+					PRINTFORML 
+					PRINTFORML ｺﾞｽｯ!
+					PRINTFORML …誰かに蹴られたかのような猛烈な痛みが%CALLNAME:MASTER%の小指を襲った。
+					PRINTFORMW 「ふんっだ！」
+			ENDSELECT
+		ELSEIF TALENT:思慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「……あっかんっっべーっだ！」
+					PRINTFORMW サニーはワザとらしく足音を立てながらその场を離れた。
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「あ、何してるの？私も混ぜ…！」
+					PRINTFORML 「…や、やっぱり今日はあっちで遊ぼうかしら！」
+					PRINTFORMW %CALLNAME:ARG%の气迫に押されたサニーは慌ててその场を離れた。
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;その他
+	PRINTFORML  
+ENDIF
+RETURN 1
+
+;==================================================
+;情事を見られた
+;==================================================
+@M_KOJO_EVENT_K5_7(ARG,ARG:1)
+;口上主はTARGET
+;ARGに目撃者
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;情事を見られた（目撃者の馴れ合い度:低）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 1
+		IF CFLAG:318 == 1
+			PRINTFORMW 
+		ELSEIF TALENT:恋慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML いつの间にかサニーが見当たらない。
+					PRINTFORML ……！？
+					PRINTFORML 透明になったサニーは%CALLNAME:MASTER%の股间を抚で回しているようだ。
+					PRINTFORMW 「ほら…%UNICODE(0x2665) *1%うまく误魔化さないとヘンタイに思われちゃうわよ…%UNICODE(0x2665) *1%」
+			ENDSELECT
+		ELSEIF TALENT:思慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORMW 「ほらっ、今は私の方に集中してよっ%UNICODE(0x2665) *1%」
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「ふぇ…？」
+					PRINTFORML 「ねぇ、手ぇとめちゃやだ…」
+					PRINTFORMW サニーは快感に打ち震えているのか誰か来た事に气付いてないようだ。
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;目撃者が負けじと参加（目撃者の馴れ合い度:高）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 2
+		IF CFLAG:318 == 1
+			PRINTFORMW 
+		ELSEIF TALENT:恋慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「私が一番%CALLNAME:MASTER%のことを好きなんだからね！」
+					PRINTFORMW サニーは%CALLNAME:MASTER%の首に抱きついて全身を擦り付けてきた。
+			ENDSELECT
+		ELSEIF TALENT:思慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「むむ、これは負けてられないわ！」
+					PRINTFORMW サニーは負けじと%CALLNAME:MASTER%の唇を强引に奪った。
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORMW 「人数がいればもっと乐しくなるわね！」
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;目撃者が立ち去る
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 3
+		IF CFLAG:318 == 1
+			PRINTFORMW 
+		ELSEIF TALENT:恋慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「これで私達が爱し合ってるのが知れ渡るわね！」
+					PRINTFORMW 「さ、続きしましょ%UNICODE(0x2665) *1%」
+			ENDSELECT
+		ELSEIF TALENT:思慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「今度から姿消しておこうかな？」
+					PRINTFORMW 「でも見られるとわかるとドキドキするのがいいのよね…」
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORMW 「ほら早く続きしよ？」
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;その他
+	PRINTFORML  
+ENDIF
+RETURN 1
+
+;==================================================
+;目撃した情事を問い詰める（現在无し
+;==================================================
+@M_KOJO_EVENT_K5_8(ARG,ARG:1)
+RETURN 1
+
+;==================================================
+;パンツ没収された
+;==================================================
+@M_KOJO_EVENT_K5_9(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 1
+		PRINTFORML 「%CALLNAME:MASTER%…何か隠してない？さては…」
+		PRINTFORML 「美味しい物をひとりじめするつもりね！私にも寄越しなさいよ！」
+		PRINTFORML %CALLNAME:MASTER%の懐にサニーがもぐりこむ。抵抗も空しく戦利品のパンツを引っ张り出された。
+		PRINTFORML 「これって…なあんだ。ただのパンツじゃない」
+		PRINTFORML 「でもこれ使って新しい恶作剧ができそうね。ちょっと借りるわ！」
+		PRINTFORMW 「大丈夫！死んだら返すわ！」
+		RETURN 1
+	ELSEIF LOCAL:1 && ARG:1 == 2
+		PRINTFORML 「%CALLNAME:MASTER%…それって女の子用の下着じゃない」
+		PRINTFORML 「………やるわね%CALLNAME:MASTER%！裙子めくりだけでは飽き足らずパンツを盗んで恶作剧するなんて」
+		PRINTFORML 「私も見习わないと！」
+		PRINTFORML サニーは尊敬したまなざしで%CALLNAME:MASTER%を見上げた。
+		PRINTFORMW …戦利品のパンツは参考資料として奪われた。
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;推倒た
+;==================================================
+@M_KOJO_EVENT_K5_10(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;诶嘿嘿==2（开始时）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		;-------------------------------------------------
+		;MASTERを推倒た（开始时）
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && !ARG:1
+			IF TALENT:5:无知 == 1
+				IF CFLAG:318 == 1
+					PRINTFORMW 
+				ELSEIF TALENT:恋慕
+					PRINTFORML サニーが何も言わずに%CALLNAME:MASTER%の胸へと飛び込んできた。
+					PRINTFORML どうしたのかと彼女へ手を伸ばそうとすると
+					PRINTFORML サニーは餌を求める小鸟のように、伸ばした%CALLNAME:MASTER%の手を唾液まみれにしながら啄ばみはじめた。
+					PRINTFORMW 「ふぅ……んちゅぅ、んぅぅ」
+					PRINTFORML 风邪を引いたのような赤い颜したサニーの姿は興奮した子犬のように%CALLNAME:MASTER%へと全身をこすりつける。
+					PRINTFORMW 「よくわからない…。カラダが熱い…今、%CALLNAME:MASTER%がとっての欲しいの」
+					PRINTFORML 「好き、%CALLNAME:MASTER%好き…好き…」
+					PRINTFORML 「%CALLNAME:MASTER%の何が欲しいの？私自身ぜんぜんわからない…。でも%CALLNAME:MASTER%ともっと触れたい…」
+					PRINTFORML 泣きそうなサニーは、性欲の发散がわからないようでひたすら%CALLNAME:MASTER%の肌をしゃぶり、濡れそぼった股间を%CALLNAME:MASTER%にこすりつける。
+					PRINTFORML 「あああ…私おかしくなっちゃった…？どうしよう、どうしよう%CALLNAME:MASTER%」
+					PRINTFORML いつもの元气いっぱいなサニーとは正反対に不安そうに涙を溜めて%CALLNAME:MASTER%を見上げるその姿に
+					PRINTFORMW %CALLNAME:MASTER%はサニーの头を优しく抚でながら彼女の求爱を受け入れた。
+				ELSEIF TALENT:思慕
+					PRINTFORML 「ふぁっ……あっ」
+					PRINTFORML %CALLNAME:MASTER%は聞こえてきた后ろの声に不思議そうに振り返る。
+					PRINTFORML そこには一匹の妖精が股间に手をあわせ、ひたすら指で弄んでいる姿があった。
+					PRINTFORML 「ふぇ？%CALLNAME:MASTER%…何？」
+					PRINTFORML %CALLNAME:MASTER%の视线に恥ずかしがる様子もなく、サニーは荒い吐息を漏らしながらぼんやりとした瞳でこちらを見てくる。
+					PRINTFORML 自らを慰めるその行为が意味を理解してないようで、そのいびつな无垢な姿に%CALLNAME:MASTER%は目を逸らす。
+					PRINTFORML その合间でも指は股间をまさぐることをやめず、幼い指は透明な液体を纏わせ始める。
+					PRINTFORMW 「これ、何かわからないけど气持ちいいのよね…。んん…」
+					PRINTFORML %CALLNAME:MASTER%はサニーの痴态に目をそらす。しばらくサニーの嬌声とクチュクチュと水音が響く异様な光景が広がった。
+					PRINTFORML 「はぁっ、ぁぁぁ…！」
+					PRINTFORML やがてサニーの指の动きが早まり、カラダがビクンと跳ね、%CALLNAME:MASTER%へとよろめきもたれかかる。绝顶に達したようだ。
+					PRINTFORML 「…………ダメ、もっとしたい…」
+					PRINTFORML 「…ねぇ%CALLNAME:MASTER%はこれって何なのか知ってるの…？」
+					PRINTFORML フラフラとサニーが%CALLNAME:MASTER%を見上げる。達したばかりのサニーの足はもれ出た爱液で濡れ、甘い香りとなって%CALLNAME:MASTER%の脳を揺らす。
+					PRINTFORML 「……教えて」
+					PRINTFORMW 切なげにこちらを見上げるサニーの懇願に、%CALLNAME:MASTER%は断りきれずサニーにその身体を押し倒された。
+				ELSE	
+					PRINTFORML 「ええい！」
+					PRINTFORML 突然サニーは%CALLNAME:MASTER%の腹へと飛び込み、全体重を使って押し倒す。
+					PRINTFORML いきなりの奇行に%CALLNAME:MASTER%がサニーを引っぺがそうとするも、妖精とは思えない力でサニーはその手を掴み取る。
+					PRINTFORML 「ちょっと暴れないで…！大人しくしてなさいよっ！…この…！」
+					PRINTFORML しばらくサニーと取っ組み合いをするも、力が尽きてきたのかサニーはへたりこみ%CALLNAME:MASTER%の胸に身体を預けてきた。
+					PRINTFORMW 「フーッ…フーッ…」
+					PRINTFORML 「よくわからないけど…。とにかくカラダを弄りたいっ！」
+					PRINTFORML お預けをくらった儿童のようにサニーの瞳が涙でうるむ。もしかしたら彼女自身が性欲という
+					PRINTFORML ものがわからず、暴力的に人の温もりを求めてるのかもしれない…。
+					PRINTFORML 「思う存分抚で回して、吸い付いて、カラダをひっつけたい！」
+					PRINTFORML サニーは赤く上气した頬を膨らませ、%CALLNAME:MASTER%へと头を擦り付ける。
+					PRINTFORMW 「とにかく…ちょっと气がすむまでカラダを貸しなさい%CALLNAME:MASTER%！」
+				ENDIF
+			ELSE
+				IF CFLAG:318 == 1
+					PRINTFORMW 
+				ELSEIF TALENT:恋慕
+					PRINTFORML 「ねぇ%CALLNAME:MASTER%」
+					PRINTFORML サニーが%CALLNAME:MASTER%の前に立ち見上げながら手を伸ばしてくる。
+					PRINTFORML 「えいっ！」
+					PRINTFORML 抱っこでもして欲しいのかと%CALLNAME:MASTER%が腰をかがめるとサニーが首元へと飛びついてきた。
+					PRINTFORML サニーを潰さないよう、抱きかかえながらその场に转がる。柔らかい太陽の香りが%CALLNAME:MASTER%鼻をくすぐる。
+					PRINTFORMW 「%CALLNAME:MASTER%のそうゆう优しいところ大好き！」
+					PRINTFORML 「それだから…もっと好きになりたくなっちゃうのよ…」
+					PRINTFORML サニーの声に熱が篭もる。%CALLNAME:MASTER%の腕の中のサニーは頬を染めはにかみながら笑った。
+					PRINTFORML 「…いっぱいいっぱい爱して…」
+					PRINTFORML サニーの求めるような熱っぽい声を受け、%CALLNAME:MASTER%はサニーの幼い肢体へ颜をうずめる。
+					PRINTFORMW 「%CALLNAME:MASTER%のおちんちん…ちょうだい%UNICODE(0x2665) *1%」
+				ELSEIF TALENT:思慕
+					PRINTFORML 「ねぇ%CALLNAME:MASTER%…エッチしよ%UNICODE(0x2665) *1%」
+					PRINTFORML 两肩に掴まってきたサニーが%CALLNAME:MASTER%の耳元でささやく。
+					PRINTFORMW 「もうガマンできないのよ…。%CALLNAME:MASTER%もキモチよくしてあげるから！」
+					PRINTFORML サニーが%CALLNAME:MASTER%の耳元にふぅと息を吹きかける。幼子ながらも香り立つ女の香りに深くにも%CALLNAME:MASTER%の股间が反応してしまう。
+					PRINTFORML 「にひ…。%CALLNAME:MASTER%ものり气じゃない」
+					PRINTFORML 「いっぱい乐しいことしましょ%UNICODE(0x2665) *1%」
+					PRINTFORMW 「ここも准备万端だものね…ほらこんなに………」
+				ELSE
+					PRINTFORML 「そーれどーん！」
+					PRINTFORMW %CALLNAME:MASTER%の腰に强い衝撃が走る。
+					PRINTFORML 何が起こったのかわからず起き上がろうとするカラダにのしかかる軽い感触。
+					PRINTFORML 「%CALLNAME:MASTER%っていいカラダしてるじゃない…」
+					PRINTFORML いつの间にか服をはだけさせたサニーが熱っぽい视线でこちらを見下している。
+					PRINTFORML それは无邪气な妖精ではない、一匹の雌の光悦とした表情で%CALLNAME:MASTER%の服に手をかけていた。
+					PRINTFORML 「妖精だって、こんなの見たら食べたくなっちゃうもの…」
+					PRINTFORMW 细い指で服越しにいやらしく%CALLNAME:MASTER%の股间をまさぐる。
+				ENDIF
+				SELECTCASE TALENT:MASTER:形状
+					CASE 1
+					;未成熟
+						PRINTFORML 
+						PRINTFORML 「ふふっ、かーわいい%UNICODE(0x2665) *1%」
+						PRINTFORML %CALLNAME:MASTER%の小さなペニスはサニーの手のひらにすっぽりとおさまってしまう。
+						PRINTFORML サニーは新しいおもちゃを見つけた儿童のような笑みで无遠慮に手を上下させ嬲り始めた。
+						PRINTFORMW 「じゃあ…いただきまーす%UNICODE(0x2665) *1%」
+					CASE 2
+					;粗チン
+						PRINTFORML 
+						PRINTFORML 「私達妖精ならこのぐらいがちょうどいいのよ」
+						PRINTFORML サニーが%CALLNAME:MASTER%の亀头を刺激すれば、快感に%CALLNAME:MASTER%はビクッとカラダを震わせた。
+						PRINTFORMW 「乐しませてね%CALLNAME:MASTER%%UNICODE(0x2665) *1%」
+					CASE 3
+					;普通
+						PRINTFORML 
+						PRINTFORML 「あは、ご立派…%UNICODE(0x2665) *1%」
+						PRINTFORML サニーは直立する%CALLNAME:MASTER%のペニスをうっとりとした表情で頬ずりをする。
+						PRINTFORML 柔らかなサニーの頬にペニスは情けなく痙攣し快感に震えてしまう。
+						PRINTFORMW 「早く遊ぼ%UNICODE(0x2665) *1%」
+					CASE 4
+					;发光
+						PRINTFORML 
+						IF FIRSTTIME("推倒",0)
+							PRINTFORML 「なにこれ！？」
+							PRINTFORML 发光する%CALLNAME:MASTER%の男根の光を受け、サニーのぽかんとした表情が照らされる。
+							PRINTFORMW 「すごいすごい！本当に光ってるわ！？光の反射とかじゃないのね！」
+						ENDIF
+						PRINTFORML 光の妖精の性質なのか、こちらの遠慮なしに%CALLNAME:MASTER%の发光ペニスをしごき、抓り、はたき蹂躙していく。
+						PRINTFORML 妖精の悪戯に震える%CALLNAME:MASTER%の颜を見て、サニーは慌てて手を離した。
+						PRINTFORML 「…おっと。无駄打ちさせるところだったわ！」
+						PRINTFORMW 「これからが本番だからね！すぐにへこたれないでよ！」
+					CASE 5
+					;イボつき
+						PRINTFORML
+						IF FIRSTTIME("推倒",0) 
+							PRINTFORML 「な、なにこれ…？」
+							PRINTFORML ごつごつとした%CALLNAME:MASTER%のペニスを見たサニーは僅かに震えている。
+							PRINTFORML 見たこともない形状にサニーは恐る恐るペニスに手をのばす。
+							PRINTFORMW 「熱いのに硬くて…弾力もあって…」
+						ENDIF
+						PRINTFORML 「…ゴク」
+						PRINTFORML 「ま、負けてたまるか！こっちは天下の妖精なんだから！」
+						PRINTFORMW 「さ、始めるわよ！」
+					CASE 6
+					;ゴンぶと
+						PRINTFORML
+						IF FIRSTTIME("推倒",0)  
+							PRINTFORML 「ひぃ！？」
+							PRINTFORML ボロンと%CALLNAME:MASTER%のペニスがまろびでる姿にサニーは悲鳴をあげて后退した。
+							PRINTFORML 「で、でかっ…！？何の妖怪よコレ！？」
+							PRINTFORML 下手すれば彼女のへそ以上に達しそうな凶器を前に、サニーは颜をひきつらせながら%CALLNAME:MASTER%から后ずさる。
+							PRINTFORMW 「こんな大きいの…どうやって…」
+						ENDIF	
+						PRINTFORML 「何とかほぐせば…いやでも…」
+						PRINTFORML 泣き出しそうなサニーだが、%CALLNAME:MASTER%が挑衅的な笑みを向けると一转してペニスにぐいと掴みかかった
+						PRINTFORML 「…舐めないでよ…！一回休みなんて怖くないわ！」
+						PRINTFORML 「よ、よーしヤるぞー！！」
+						PRINTFORMW そびえ立つ%CALLNAME:MASTER%の男根を前に、サニーは意を決して飛び掛った。
+					;馬并み
+					CASE 10
+						IF FIRSTTIME("推倒",0) 
+							PRINTFORML 
+							;PRINTFORML 「デカ……太……避……无理！！受け止める…？无事で！？出来る！？否……死……」
+							PRINTFORMW 「ひぇっ…」
+							PRINTFORML %CALLNAME:MASTER%の裤子から這い出したそれは、サニーと同等の长さを持つ巨大な男根だった。
+							PRINTFORML 天を仰ぐように直立するペニスを%CALLNAME:MASTER%がサニーの頬に擦り付ければ、小さな妖精は恐怖で弩でも弾かれたように飛び上った。
+							PRINTFORML 叩きつけられる男根の重さと質量に、サニーは声は出ず、膝はしきりに震えて立つことさえままならない。
+							PRINTFORML 「きょ、今日のところはこ、これぐらいにし、しといてあげ、あげるわ…！」
+							PRINTFORML 涙まみれの颜を精一杯の虚勢で笑みを浮かばせるサニー。だが%CALLNAME:MASTER%は逃がすつもりはない。
+							PRINTFORML 四つんばいで逃げ出そうとするサニーの背中を、興奮で滾る男根で抑え付ける。
+							PRINTFORML 「ムリムリムリ！！こんなのぜったいムリ！！」
+							PRINTFORML 「ごめんなさい！ごめんなさい！もうしないから！」
+							PRINTFORMW %CALLNAME:MASTER%は必死に懇願するサニーを前に嗜虐的な笑みを持って答えた。
+							PRINTFORML 
+							PRINTFORML 
+							PRINTFORML 
+							PRINTFORML 
+							PRINTFORMW 「い、いやああぁぁぁ！！！！！」
+						ELSE
+							PRINTFORML 「入る、入らないじゃない…插入れるのよ…！」
+							PRINTFORML サニーは目を瞑り深呼吸しながら、目の前の巨大なペニスに手をあて精神統一を图る。
+							PRINTFORMW 「乐しいことは真剣にやらなきゃ面白くないわ！まかせなさい%CALLNAME:MASTER%！」
+						ENDIF
+					CASEELSE
+						IF TALENT:MASTER:183 == 1
+					;なんと奇遇な
+							PRINTFORML 
+							IF FIRSTTIME("推倒",0)
+								PRINTFORML 「…！？に、2本！？」
+								PRINTFORML 「…どういう妖怪なのこれ！？」
+								PRINTFORML サニーは动揺しながらもいきり立つ2本の男根を
+								PRINTFORMW 抚でたり指でつついたりと興味津々のようだ。
+							ENDIF
+							PRINTFORML 「これ、どうなるのかしら…考えただけでワクワクしてきちゃう…」
+							PRINTFORMW サニーはうっとりとしながら2本のペニスをしごきはじめた。
+						ELSE
+							PRINTFORML 
+							IF FIRSTTIME("推倒",0)
+								PRINTFORMW 「え…何コレ…」
+							ENDIF
+							PRINTFORML サニーは%CALLNAME:MASTER%の名状し難い男性シンボルにあっけをとられている。
+							PRINTFORMW 「…と、とりあえずはじめるわよ！」
+						ENDIF
+					ENDSELECT
+				PRINTFORML 
+			ENDIF
+		RETURN 1
+		ENDIF
+	ENDIF
+		;-------------------------------------------------
+		;MASTERに抱きついた（开始时）
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 1
+		RETURN 1
+		ENDIF
+	;-------------------------------------------------
+	;なだめられた（終了时）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		;-------------------------------------------------
+		;抜け出した
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && !ARG:1
+			IF FLAG:时间停止
+			ELSEIF CFLAG:318 == 1
+				PRINTFORMW 
+			ELSEIF TALENT:恋慕
+				SELECTCASE RAND:3
+					;CASE 1
+						;PRINTFORML 
+						;PRINTFORMW 
+					;CASE 0
+						;PRINTFORML 
+						;PRINTFORMW 
+					CASEELSE
+						PRINTFORML 「こんな状态で終わりなんてぇ…」
+						PRINTFORML 「ねぇお願いだからもっと一绪にいてよ…」
+						PRINTFORMW %CALLNAME:MASTER%はしがみつくサニーを宥めながらなんとか抜け出した。
+				ENDSELECT
+			ELSEIF TALENT:思慕
+				SELECTCASE RAND:3
+					;CASE 1
+						;PRINTFORML 
+						;PRINTFORMW 
+					;CASE 0
+						;PRINTFORML 
+						;PRINTFORMW 
+					CASEELSE
+						PRINTFORML 「どうしてやめちゃうの？」
+						PRINTFORMW 「うー…こんなんじゃ足りないわよ！」
+				ENDSELECT
+			ELSE
+				SELECTCASE RAND:3
+					;CASE 1
+						;PRINTFORML 
+						;PRINTFORMW 
+					;CASE 0
+						;PRINTFORML 
+						;PRINTFORMW 
+					CASEELSE
+						PRINTFORML 「ちぇー…」
+						PRINTFORMW サニーは不満そうに%CALLNAME:MASTER%を見上げている。
+				ENDSELECT
+			ENDIF
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;抱き着きモード満足終了
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 1
+			PRINTFORML
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;抱き着きモード强制終了
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 2
+			PRINTFORML
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;抜け出す失敗
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		;-------------------------------------------------
+		;好きにして状态から抜け出せなかった
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 1
+			IF TALENT:5:无知 == 1
+				PRINTFORML 「んっ…ふぅ…」
+				PRINTFORML 「もっと、もっとくっつきたい…」
+				PRINTFORML サニーは%CALLNAME:MASTER%のカラダをいじる事に集中しているようだ。
+				PRINTFORML 「%CALLNAME:MASTER%、離れちゃダメっ！
+				PRINTFORMW 今も%CALLNAME:MASTER%の匂いを嗅ぎながら股间を%CALLNAME:MASTER%の足に擦り付けている。
+			ELSE
+				PRINTFORML 「ダメ、逃がさない！」
+				PRINTFORML サニーは起きようとする%CALLNAME:MASTER%を押し倒す。
+				PRINTFORML 「私の恶作剧はまだ終わってないんだから♪」
+				PRINTFORML 「最后までしっかり付き合ってもらうわ！」
+				PRINTFORMW サニーは无邪气な笑みで%CALLNAME:MASTER%のペニスをなぞる様に指を這わせた。
+			ENDIF
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;欲求不満が高くて抜け出せなかった
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 2
+			IF TALENT:5:无知 == 1
+				PRINTFORML 「フーッ…フーッ…」
+				PRINTFORML サニーは逃がすまいと%CALLNAME:MASTER%の肩にかじりつく。
+				PRINTFORML 「やら…はなふぁない…！」
+				PRINTFORML 目の端に涙を溜めてながら必死に未知の感觉に受けているようだ。
+				PRINTFORML 「んぅ…もっといっしょに…」
+				PRINTFORMW サニーの内に秘めた熱はまだ収まりそうにない。
+			ELSE
+				PRINTFORML 「もう終わりにしたいの？」
+				PRINTFORML 「ダメー♪私はまだぜんぜんマンゾクしてないもの！
+				PRINTFORML 「もっと气持ちいいことしよ%UNICODE(0x2665) *1%」
+				PRINTFORMW サニーは%CALLNAME:MASTER%の疲弊した表情を、恶作剧ッ娘のような嗜虐的な笑颜で見下ろした。
+			ENDIF
+			RETURN 1
+		ENDIF
+	ENDIF
+	;その他
+	PRINTFORML  
+ENDIF
+RETURN 1
+
+;==================================================
+;浴场で遭遇
+;==================================================
+@M_KOJO_EVENT_K5_11(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;追い出された
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		IF FLAG:时间停止
+		ELSEIF CFLAG:318 == 1
+			PRINTFORMW 
+		ELSEIF TALENT:恋慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「キャーエッチ♪」
+					PRINTFORMW カラダを嬉しそうに隠しながらサニーは悲鳴をあげた。
+			ENDSELECT
+		ELSEIF TALENT:思慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「ギャーエッチ！」
+					PRINTFORMW 目潰しの閃光を受けながら%CALLNAME:MASTER%は慌てて浴场から退散した。
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASE 0
+					PRINTFORML サニーの姿が謎の光线で見えない！
+					PRINTFORML 「光よ、いっけぇ！」
+					PRINTFORMW %CALLNAME:MASTER%はサニーの弾幕で浴场から追い出された。
+				CASEELSE
+					PRINTFORML 「悪いわね！このお澡堂は1人までよ！」
+					PRINTFORMW 「ほら、早くでてって！」
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;目が合った（追い出されない）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		IF FLAG:时间停止
+		ELSEIF CFLAG:318 == 1
+			PRINTFORMW 
+		ELSEIF TALENT:恋慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASE 0
+					PRINTFORML 「%CALLNAME:MASTER%も一绪に入る？」
+					PRINTFORMW 「じゃあ羽根洗って！1人だと洗いにくいのよ」
+				CASEELSE
+					
+					PRINTFORMW 「カラダ洗ってくれるの？」
+			ENDSELECT
+		ELSEIF TALENT:思慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASE 0
+					PRINTFORMW 「お澡堂场で遊びたいの？でもルナがうるさいのよね…」
+				CASEELSE
+					PRINTFORMW 「%CALLNAME:MASTER%お澡堂入りたいの？せっかちね！」」
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASE 0
+					PRINTFORMW 謎の光线によって都合よくサニーの裸体が見えない…！
+					;PRINTFORMW 「特典版だと光が外れるわ！」
+				CASEELSE
+					PRINTFORML 「なんだ%CALLNAME:MASTER%か」
+					PRINTFORML 「寒いから早くトビラ閉めて！」
+					PRINTFORMW サニーは特に气にせず湯に浸かっている。
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;その他
+	PRINTFORML  
+ENDIF
+RETURN 1
+
+;==================================================
+;寝床に忍び込み
+;==================================================
+@M_KOJO_EVENT_K5_12(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;追い出される（愤怒）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		IF FLAG:时间停止
+		ELSE
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORMW 「何寝ぼけてるの？ここは私のベッドよ！」
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;寝床に侵入
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 1
+		IF FLAG:时间停止
+		ELSE
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「%CALLNAME:MASTER%、どうしたの夜中に？」
+					PRINTFORMW 「私眠いんだから、何かあるなら早めにね。……スヤー」
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;寝床に侵入（相手が恋慕）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 2
+		IF FLAG:时间停止
+		ELSE
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「あれ…？%CALLNAME:MASTER%？」
+					PRINTFORML キョトンとした颜でサニーがまぶたを擦りながら起き上がる。
+					PRINTFORML 「もしかして眠れないからお喋りしたいの？」
+					PRINTFORML 「なら%CALLNAME:MASTER%が眠くなるまでお話しよ！……グゥ」
+					PRINTFORMW サニーは眠そうになりながらも%CALLNAME:MASTER%を房间に招いた。
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;寝床に侵入（相手が恋慕・衰弱）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 3
+		IF FLAG:时间停止
+		ELSE
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「あー…%CALLNAME:MASTER%だー…」
+					PRINTFORML 疲労を残した表情で起きようとするサニーの身体を%CALLNAME:MASTER%はそっとベッドに押し戻す。
+					PRINTFORMW 「うーせっかく来てくれたのに疲れて遊べないなんて妖精の名折れね…」
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;追い出される
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 4
+		IF FLAG:时间停止
+		ELSE
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「…ん～？%CALLNAME:MASTER%～？」
+					PRINTFORMW 「私眠いから…遊ぶなら明日ね…グーグー…」
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;追い出される（衰弱）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 5
+		IF FLAG:时间停止
+		ELSE
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「むぎゅう…」
+					PRINTFORML サニーは疲れきっているのかベッドでつぶれたカエルのように伸びている。
+					PRINTFORMW %CALLNAME:MASTER%は静かにその场を后にした。
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;その他
+	PRINTFORML  
+ENDIF
+RETURN 1
+
+;==================================================
+;お仕事中
+;==================================================
+@M_KOJO_EVENT_K5_13(ARG,ARG:1)
+;口上主はTARGET
+;ARG:1に残っている工作量
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;仕事开始（职场へ移动する）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		PRINTFORML 「今日は何しようかな？」
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;業務中
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		IF CFLAG:318 == 1
+			PRINTFORMW 
+		ELSEIF TALENT:恋慕
+			SELECTCASE RAND:3
+				CASE 1
+					PRINTFORML 「花かんむり完成ー！%CALLNAME:MASTER%にあげる！」
+				CASE 0
+					PRINTFORML サニーは%CALLNAME:MASTER%と遊びたいのかチラチラとこちらを見ている。
+				CASEELSE
+					PRINTFORML 「%CALLNAME:MASTER%！もっと遊ぼ！」
+			ENDSELECT
+		ELSEIF TALENT:思慕
+			SELECTCASE RAND:3
+				CASE 1
+					PRINTFORML 「１、２、３、ステッラ！」
+				CASE 0
+					PRINTFORML 「ちょっと休憩…日向ぼっこ气持ちいいー」
+				CASEELSE
+					PRINTFORML 「%CALLNAME:MASTER%ー抱っこして！」
+
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:3
+				CASE 1
+					PRINTFORML 「わーいわーい！」
+				CASE 0
+					PRINTFORML 「落とし穴は何メートル掘ろうかな…？」
+				CASEELSE
+					PRINTFORML 「头の上に落とすならタライとホースどっちがいいかしら？」
+			ENDSELECT
+		ENDIF
+
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;仕事終了
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		PRINTFORML 「あー今日も乐しかった！」
+		RETURN 1
+	ENDIF
+	;その他
+	PRINTFORML  
+ENDIF
+RETURN 1
+
+;==================================================
+;食事系
+;==================================================
+@M_KOJO_EVENT_K5_14(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;持っていた食物を食べられた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == -1
+		IF CFLAG:318 == 1
+			PRINTFORMW 
+		ELSEIF TALENT:恋慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「%CALLNAME:MASTER%のだから食べちゃダメ食べちゃダメ…」
+					PRINTFORML サニーはヨダレをたらしながら料理に熱い视线をぶつけている。
+					PRINTFORML ……観念してあげることにした。
+					PRINTFORMW 「やったー！%CALLNAME:MASTER%大好き！」
+			ENDSELECT
+		ELSEIF TALENT:思慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「むむっ、なにか危ないものを持ってるわね…」
+					PRINTFORML 「毒見してあげるわ！」
+					PRINTFORML 「モグモグ…うん、これは毒ね！」
+					PRINTFORMW 「ケプッ…もう安心していいわ%CALLNAME:MASTER%！」
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML %CALLNAME:MASTER%の手に持っていた料理が重く感じる…
+					PRINTFORML よく見るといつの间にか石ころと入れ替わっている！
+					PRINTFORML 「あはははは！っいえーい！」
+					PRINTFORMW サニーは勝ち誇ると%CALLNAME:MASTER%の手料理をペロりと平らげてしまった。
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;その他
+	PRINTFORML  
+ENDIF
+RETURN 1
+
+;==================================================
+;MASTERが推倒た
+;==================================================
+@M_KOJO_EVENT_K5_15(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;未实装（推倒コマンドに統合？
+	;MASTERが推倒た（ウフフ开始时）
+	;记入チェック（=0, 非表示、1, 表示）
+	;LOCAL:1 = 1
+	;-------------------------------------------------
+	;IF LOCAL:1 && ARG == 1
+		;PRINTFORML
+		;RETURN 1
+	;ENDIF
+	;-------------------------------------------------
+	;逢瀬終了（ウフフ終了时）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+			;サニーミルクがMASTERとの逢瀬で初めて绝顶を経験した场合
+			IF FIRSTTIME("MASTERが推倒た") && EXP:5:绝顶经验 > 0 &&  EXP:5:无自觉绝顶经验 == 0 && TALENT:5:无知 == 1
+				PRINTFORML 「あ……%UNICODE(0x2665) *1%う……%UNICODE(0x2665) *1%」
+				PRINTFORMW サニーはトロンと颜を緩ませ、初めてのオーガズムの余韻に浸っている。
+				PRINTFORML 未知の快感は身体に强かったのか时折幼いカラダがビクりと跳ねるたびワレメから蜜を滲ませた。
+				PRINTFORML 「何なのっ…これっ…お腹の奥がキューッてなって」
+				PRINTFORML 「目の前が何回も真っ白になって…何も考えられなくなっちゃった…」
+				PRINTFORML サニーはワレメへと手を這わせる。绝顶を体験した女阴はしっとりと爱液に濡れ、初々しい色气を酿し出していた。
+				PRINTFORML 「ん…あそこがムズムズするの治ってる」
+				PRINTFORML 「こんな遊びで解消できるなんて…知らなかったわ！ルナとスターにも教えてあげなきゃ！」
+				PRINTFORML 乱れた身体のまま向かおうとするサニーを、%CALLNAME:MASTER%は慌てて押し留めた。
+				PRINTFORML 悪戯がバレないよう、このオトナごっこという遊びは他人に教えると效果がなくなっちゃうよとサニーに口ぞえをしておく。
+				PRINTFORML 「へーそうなんだ。じゃあ私が独り占めってことね！」
+				PRINTFORML 「ねぇ%CALLNAME:MASTER%！またお腹がムズムズしたらオトナごっこ、してくれる…？」
+				PRINTFORML サニーのもの欲しそうな瞳に%CALLNAME:MASTER%は笑颜で头を縦にふった。
+				PRINTFORML 「やった！二人だけの約束ね！」
+				PRINTFORMW 无邪气に喜ぶサニーを前に、%CALLNAME:MASTER%は暗い背徳と优越が湧き上がるのをそっと押し留めた。
+			ELSEIF FIRSTTIME("MASTERが推倒た") && TALENT:5:无知 == 1
+				PRINTFORML 「…これで終わり？」
+				PRINTFORML サニーはカラダを起き上がらせ、不満げにお腹をなぞる。
+				PRINTFORMW 「…もっと、して欲しいのに」
+				;サニーはまだ发散できてない
+				IF CFLAG:TARGET:积攒度 > 400
+					PRINTFORML 「カラダが熱いのも治まらないし…ンッ…」
+					PRINTFORML サニーは物足りなそうに指をワレメに這わせ擦りつける。
+					PRINTFORMW 彼女の小さな膣穴からはネットリと蜜が糸をひき、寂しげに阴核をヒクつかせている。
+				ENDIF
+				;MASTERだけ射精した。
+				IF NOWEX:MASTER:射精
+					PRINTFORMW 「むー…%CALLNAME:MASTER%は气持ち良さそうに白いのだしてたけど、私は全然足りない！」
+				ENDIF
+				PRINTFORML 「まぁ…少しだけキモチよかったから悪くないと思うわ」
+				PRINTFORML 「…回数こなしたらもっとキモチよくなるの？それなら…またしてみようかな」
+				PRINTFORML 「次はしっかりお願いね！」
+			ELSEIF CFLAG:318 == 1
+				PRINTFORMW 
+			ELSEIF TALENT:5:无知 == 1
+				IF TALENT:恋慕
+					PRINTFORML 「ねぇ、もっとしよ！」
+					PRINTFORML サニーは乱れた服装のまま%CALLNAME:MASTER%に胸を擦りつける。
+					PRINTFORML 「してると%CALLNAME:MASTER%と一つになれるのがとっても乐しいの！」
+					PRINTFORML %CALLNAME:MASTER%が制止するにもかかわらずサニーはペニスに手をかけしごく。
+					PRINTFORML 小さな两手でゴシゴシと擦られ、%CALLNAME:MASTER%の男根はまた勃起を始めてしまう。
+					PRINTFORML 男根にしがみつくサニーをなんとか引き剥がすと、サニーは火照った頬を膨らませて抗議する。
+					PRINTFORML 「%CALLNAME:MASTER%だってキモチいいでしょ？ねぇもうちょっとでいいから！ね？」
+					PRINTFORMW 儿童のようなワガママを言うサニーのを嗜めながら、%CALLNAME:MASTER%はサニーに服を着せ始めた。
+					
+				ELSEIF TALENT:思慕
+					PRINTFORML 「最近ね…キモチよくなると胸の奥がキューッとなるの」
+					PRINTFORML 「苦しいわけじゃないんだけど、切なくなるというか…」
+					PRINTFORML サニーは胸を抑えて目を瞑る。
+					PRINTFORML 「このキモチいいことって悪い事じゃないわよね…？」
+					PRINTFORML 不安そうにこちらを見上げるサニーを、%CALLNAME:MASTER%は安心させるように头を編んでる。
+					PRINTFORML 「えへへ、そうよね。%CALLNAME:MASTER%が私にヒドいことするわけないもの」
+					PRINTFORML サニーは屈託のない笑みで%CALLNAME:MASTER%の胸に頬をすり寄せてくる。
+					PRINTFORMW %CALLNAME:MASTER%は胸の奥に小さな痛みがはしった。
+				ELSE
+					PRINTFORML 「ちょっと物足りないかな。でもいいわ！」
+					PRINTFORML サニーは下着を履きながら%CALLNAME:MASTER%の背中に寄りかかっている。
+					PRINTFORML 「こんなキモチいいことしてるのチルノに言ったらきっと羨ましがるわね！」
+					PRINTFORML 子を成す為の繁殖活动とは知らないサニーは、八重歯を見せながら无邪气に笑う。
+					PRINTFORML %CALLNAME:MASTER%は決して口外しないようにと念を押しながら、サニーに飴玉を渡した。
+					PRINTFORMW 「へーきへーき！甘いのまでくれるんだもの！他の妖精にバラさないから安心しなさい！」
+				ENDIF
+			ELSE
+				IF TALENT:恋慕
+					PRINTFORML 
+				ELSEIF TALENT:思慕
+					PRINTFORML 
+				ELSE
+					PRINTFORML 
+				ENDIF
+			ENDIF
+		RETURN 1
+	ENDIF
+	;その他
+	PRINTFORML  
+	;-------------------------------------------------
+	;事后描写
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		;-------------------------------------------------
+		;精液が垂れてきた
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 1
+			IF FLAG:时间停止
+			ELSEIF CFLAG:318 == 1
+				PRINTFORMW 
+			ELSEIF TALENT:5:无知 == 1
+				IF TALENT:恋慕
+					SELECTCASE RAND:3
+						;CASE 1
+							;PRINTFORML 
+							;PRINTFORMW 
+						;CASE 0
+							;PRINTFORML 
+							;PRINTFORMW 
+						CASEELSE
+							PRINTFORML 
+							PRINTFORML 
+					ENDSELECT
+				ELSEIF TALENT:思慕
+					SELECTCASE RAND:3
+						;CASE 1
+							;PRINTFORML 
+							;PRINTFORMW 
+						;CASE 0
+							;PRINTFORML 
+							;PRINTFORMW 
+						CASEELSE
+							PRINTFORML 
+							PRINTFORML 
+					ENDSELECT
+				ELSE
+					SELECTCASE RAND:3
+						;CASE 1
+							;PRINTFORML 
+							;PRINTFORMW 
+						;CASE 0
+							;PRINTFORML 
+							;PRINTFORMW 
+						CASEELSE
+							PRINTFORML 
+							PRINTFORML 
+					ENDSELECT
+				ENDIF
+			ELSE
+				IF TALENT:恋慕
+					SELECTCASE RAND:3
+						;CASE 1
+							;PRINTFORML 
+							;PRINTFORMW 
+						;CASE 0
+							;PRINTFORML 
+							;PRINTFORMW 
+						CASEELSE
+							PRINTFORML 
+							PRINTFORML 
+					ENDSELECT
+				ELSEIF TALENT:思慕
+					SELECTCASE RAND:3
+						;CASE 1
+							;PRINTFORML 
+							;PRINTFORMW 
+						;CASE 0
+							;PRINTFORML 
+							;PRINTFORMW 
+						CASEELSE
+							PRINTFORML 
+							PRINTFORML 
+					ENDSELECT
+				ELSE
+					SELECTCASE RAND:3
+						;CASE 1
+							;PRINTFORML 
+							;PRINTFORMW 
+						;CASE 0
+							;PRINTFORML 
+							;PRINTFORMW 
+						CASEELSE
+							PRINTFORML 
+							PRINTFORML 
+					ENDSELECT
+				ENDIF
+			ENDIF
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;爱液が垂れてきた
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 2
+			IF FLAG:时间停止
+			ELSEIF CFLAG:318 == 1
+				PRINTFORMW 
+			ELSEIF TALENT:5:无知 == 1
+				IF TALENT:恋慕
+					SELECTCASE RAND:3
+						;CASE 1
+							;PRINTFORML 
+							;PRINTFORMW 
+						;CASE 0
+							;PRINTFORML 
+							;PRINTFORMW 
+						CASEELSE
+							PRINTFORML 
+							PRINTFORML 
+					ENDSELECT
+				ELSEIF TALENT:思慕
+					SELECTCASE RAND:3
+						;CASE 1
+							;PRINTFORML 
+							;PRINTFORMW 
+						;CASE 0
+							;PRINTFORML 
+							;PRINTFORMW 
+						CASEELSE
+							PRINTFORML 
+							PRINTFORML 
+					ENDSELECT
+				ELSE
+					SELECTCASE RAND:3
+						;CASE 1
+							;PRINTFORML 
+							;PRINTFORMW 
+						;CASE 0
+							;PRINTFORML 
+							;PRINTFORMW 
+						CASEELSE
+							PRINTFORML 
+							PRINTFORML 
+					ENDSELECT
+				ENDIF
+			ELSE
+				IF TALENT:恋慕
+					SELECTCASE RAND:3
+						;CASE 1
+							;PRINTFORML 
+							;PRINTFORMW 
+						;CASE 0
+							;PRINTFORML 
+							;PRINTFORMW 
+						CASEELSE
+							PRINTFORML 
+							PRINTFORML 
+					ENDSELECT
+				ELSEIF TALENT:思慕
+					SELECTCASE RAND:3
+						;CASE 1
+							;PRINTFORML 
+							;PRINTFORMW 
+						;CASE 0
+							;PRINTFORML 
+							;PRINTFORMW 
+						CASEELSE
+							PRINTFORML 
+							PRINTFORML 
+					ENDSELECT
+				ELSE
+					SELECTCASE RAND:3
+						;CASE 1
+							;PRINTFORML 
+							;PRINTFORMW 
+						;CASE 0
+							;PRINTFORML 
+							;PRINTFORMW 
+						CASEELSE
+							PRINTFORML 
+							PRINTFORML 
+					ENDSELECT
+				ENDIF
+			ENDIF
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;事后の情绪
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 3
+			IF FLAG:时间停止
+			ELSEIF CFLAG:318 == 1
+				PRINTFORMW 
+			ELSEIF TALENT:5:无知 == 1
+				IF TALENT:恋慕
+					SELECTCASE RAND:3
+						;CASE 1
+							;PRINTFORML 
+							;PRINTFORMW 
+						;CASE 0
+							;PRINTFORML 
+							;PRINTFORMW 
+						CASEELSE
+							PRINTFORML 
+							PRINTFORML 
+					ENDSELECT
+				ELSEIF TALENT:思慕
+					SELECTCASE RAND:3
+						;CASE 1
+							;PRINTFORML 
+							;PRINTFORMW 
+						;CASE 0
+							;PRINTFORML 
+							;PRINTFORMW 
+						CASEELSE
+							PRINTFORML 
+							PRINTFORML 
+					ENDSELECT
+				ELSE
+					SELECTCASE RAND:3
+						;CASE 1
+							;PRINTFORML 
+							;PRINTFORMW 
+						;CASE 0
+							;PRINTFORML 
+							;PRINTFORMW 
+						CASEELSE
+							PRINTFORML 
+							PRINTFORML 
+					ENDSELECT
+				ENDIF
+			ELSE
+				IF TALENT:恋慕
+					SELECTCASE RAND:3
+						;CASE 1
+							;PRINTFORML 
+							;PRINTFORMW 
+						;CASE 0
+							;PRINTFORML 
+							;PRINTFORMW 
+						CASEELSE
+							PRINTFORML 
+							PRINTFORML
+					ENDSELECT
+				ELSEIF TALENT:思慕
+					SELECTCASE RAND:3
+						;CASE 1
+							;PRINTFORML 
+							;PRINTFORMW 
+						;CASE 0
+							;PRINTFORML 
+							;PRINTFORMW 
+						CASEELSE
+							PRINTFORML 
+							PRINTFORML 
+					ENDSELECT
+				ELSE
+					SELECTCASE RAND:3
+						;CASE 1
+							;PRINTFORML 
+							;PRINTFORMW 
+						;CASE 0
+							;PRINTFORML 
+							;PRINTFORMW 
+						CASEELSE
+							PRINTFORML 
+							PRINTFORML 
+					ENDSELECT
+				ENDIF
+			ENDIF
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;服を着る
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 4
+			IF FLAG:时间停止
+			ELSEIF CFLAG:318 == 1
+				PRINTFORMW 
+			ELSEIF TALENT:5:无知 == 1
+				IF TALENT:恋慕
+					SELECTCASE RAND:3
+						;CASE 1
+							;PRINTFORML 
+							;PRINTFORMW 
+						;CASE 0
+							;PRINTFORML 
+							;PRINTFORMW 
+						CASEELSE
+							PRINTFORML 
+							PRINTFORML 
+					ENDSELECT
+				ELSEIF TALENT:思慕
+					SELECTCASE RAND:3
+						;CASE 1
+							;PRINTFORML 
+							;PRINTFORMW 
+						;CASE 0
+							;PRINTFORML 
+							;PRINTFORMW 
+						CASEELSE
+							PRINTFORML 
+							PRINTFORML 
+					ENDSELECT
+				ELSE
+					SELECTCASE RAND:3
+						;CASE 1
+							;PRINTFORML 
+							;PRINTFORMW 
+						;CASE 0
+							;PRINTFORML 
+							;PRINTFORMW 
+						CASEELSE
+							PRINTFORML 
+							PRINTFORML 
+					ENDSELECT
+				ENDIF
+			ELSE
+				IF TALENT:恋慕
+					SELECTCASE RAND:3
+						;CASE 1
+							;PRINTFORML 
+							;PRINTFORMW 
+						;CASE 0
+							;PRINTFORML 
+							;PRINTFORMW 
+						CASEELSE
+							PRINTFORML 
+							PRINTFORML 
+					ENDSELECT
+				ELSEIF TALENT:思慕
+					SELECTCASE RAND:3
+						;CASE 1
+							;PRINTFORML 
+							;PRINTFORMW 
+						;CASE 0
+							;PRINTFORML 
+							;PRINTFORMW 
+						CASEELSE
+							PRINTFORML 
+							PRINTFORML 
+					ENDSELECT
+				ELSE
+					SELECTCASE RAND:3
+						;CASE 1
+							;PRINTFORML 
+							;PRINTFORMW 
+						;CASE 0
+							;PRINTFORML 
+							;PRINTFORMW 
+						CASEELSE
+							PRINTFORML 
+							PRINTFORML 
+					ENDSELECT
+				ENDIF
+			ENDIF
+			RETURN 1
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;添い寝する
+;==================================================
+@M_KOJO_EVENT_K5_16(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;添い寝を始めた（开始时）(存在せず
+	;记入チェック
+	;LOCAL:1 = 1
+	;-------------------------------------------------
+	;IF LOCAL:1 && ARG == 1
+		;PRINTFORML
+		;RETURN 1
+	;ENDIF
+	;-------------------------------------------------
+	;添い寝を終了した（終了时）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;その他
+	PRINTFORML  
+ENDIF
+RETURN 1
+;==================================================
+;时止め終了时
+;==================================================
+@M_KOJO_EVENT_K5_17(ARG,ARG:1)
+;口上主はTARGET
+;排他と明记されていないモノは状况によっては连続で表示されるので注意
+;ARGに射精状况
+;ARG:1に射精状态
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;ARG=1～3は排他
+	;謎の快感
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		IF TALENT:5:无知 == 1 
+			PRINTFORML 「ひゃっ―！？」
+			PRINTFORML サニーの身体がピクンと跳ね可爱らしい声が漏れる。
+			PRINTFORML 「な、なんなの今の…？」
+			PRINTFORML 感じたことのない刺激に目をシロクロさせ周囲を見回すが、原因となるものは見つからない。
+			PRINTFORML 「なんだか身体が触られた感觉がして、いきなり气持ちよくなって…」
+			PRINTFORML ドキドキとサニーの心臓が脈打ち、頬も红色を湛える。
+			PRINTFORML 「…また、起きないかな」
+			PRINTFORMW ぽつりと呟きながらサニーは今身に起きた快感が来るよう願った。
+		ELSE 
+			PRINTFORML 「んぅ…っ！？」
+			PRINTFORML 突然の謎の快感にサニーは颜を赤くさせ服越しに局部を押さえた。
+			PRINTFORML 「な、なんでイキナリ…？」
+			PRINTFORML 自らを慰める气持ちよさに似た感觉に戸惑うも、平常を保とうとサッと手を局部から離す。
+			PRINTFORML %CALLNAME:MASTER%が白々しく声をかけてもキッと颜をあげ平气そうな素振りを見せた。
+			PRINTFORML 「…べ、别になんでもないわ！」
+			PRINTFORMW サニーの隠れた局部からはトロリと甘い蜜が滲んでいた。
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;绝顶
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		IF TALENT:5:无知 == 1 && EXP:5:绝顶经验 == EXP:5:无自觉绝顶经验 && FIRSTTIME(17)
+			PRINTFORML 「――ぁ」
+			PRINTFORML サニーの目の前が真っ白に染まった。
+			PRINTFORML 今まで无垢な身体に受けたことのない快乐が激しい火花として身体中に弾ける。
+			PRINTFORML 「あっ、ああ…！？やぁ、やああぁっ！！」
+			PRINTFORML 身体中に駆け上がる绝顶という头の中が真っ白になり、その场に崩れ落ちた。
+			PRINTFORML 「なに…これっ…！いや、ふっ…うぅんっ…」
+			PRINTFORML 困惑するサニーとは裏腹に、幼い肢体は初めての绝顶に秘所から蜜を嬉々と分泌させてくる。
+			PRINTFORML 「うっ……、ふぁ……ふぁぁぁっ！！」
+			PRINTFORML サニーはただ悶えて嬌声を漏らすことしかできない。
+			PRINTFORML 「はっ…あぁ…はぁ――……」
+			PRINTFORML 数分后、鮮烈な快感に呑まれていたサニーの意识は除々に觉醒させていく。
+			PRINTFORMW やっと绝顶から解き放たれた妖精は、緩みきった蕩け颜を晒し、空を仰いだ。
+		ELSEIF TALENT:5:无知 == 1
+			PRINTFORML 「あっ――！」
+			PRINTFORML サニーは自らが绝顶する感觉にビクッと身体を震わせた。
+			PRINTFORML 「あっ、やぁっ%UNICODE(0x2665) *1%あっ、ああ%UNICODE(0x2665) *1%」
+			PRINTFORML 甘い痺れを身に受け、快乐に熱の篭もった吐息を吐き出す。
+			PRINTFORML 「はぁっ、あぁっ%UNICODE(0x2665) *1%」
+			PRINTFORML 性的な知识が皆无なサニーにとって、この绝顶という感觉に自然と身体が喜んでしまい、幼膣から蜜が滴り落ちていく。
+			PRINTFORML 「ぁ…んっ…」
+			PRINTFORML 绝顶の余韻に浸っていた时、サニーはとろけるような笑颜で座り込んでいた。
+			PRINTFORML 
+			PRINTFORML 「……んっ」
+			PRINTFORMW 「また、こないかな……%UNICODE(0x2665) *1%」
+		ELSE 
+			PRINTFORML 「ひぅっ！？」
+			PRINTFORML 时间停止が解除されると同时に静止していた快乐が一度にサニーに降りかかる。
+			PRINTFORML 予期できない快感にビクンと小さな身体が跳ね、太股から爱液が滴り落ちる。
+			PRINTFORML 「な、何…！？やっ、んっ…やぁっ！」
+			PRINTFORML 止める事のできない甘い痺れに身体を抱きながら必死に耐える。
+			PRINTFORML 「…ハァーッ…ハァーッ…」
+			PRINTFORMW やっと波が引いた时、サニーは全身を汗に濡らしその场に蹲っていた。
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;パンツ紛失
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		PRINTFORML 「あれ…？」
+		PRINTFORML サニーは下半身に纏った布の感触がないことに首を傾げる。
+		PRINTFORML 确认するように太股を摺り合わせるとあったのは肌同士が擦れスベスベした感触だけだった。
+		PRINTFORML 「こ、これはまさか…！」
+		PRINTFORML 「他の妖精の仕業ね！やられた！」
+		PRINTFORML サニーは颜を真っ赤にしてるのは、羞恥心ではく悔しさからだ。
+		PRINTFORML 「くそー气付きもしなかったなんて妖精の名折れじゃない！」
+		PRINTFORML 悔しそうに地団駄をふむ度に、裙子から白い太股が露になるが气にするそぶりもない。
+		PRINTFORMW 「どこの誰だか知らないけど、觉えてなさいよー！！」
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;【无自觉口内射精】
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 4
+		;精液中毒低精饮
+		IF ARG:1 == 1
+		;精液中毒低吐き出し
+		ELSEIF ARG:1 == 2
+		;精液中毒低手で覆う
+		ELSEIF ARG:1 == 3
+		;精液中毒高精饮
+		ELSEIF ARG:1 == 4
+		;濃厚精液＆精液中毒低吐き出し
+		ELSEIF ARG:1 == 5
+		;濃厚精液＆精液中毒高精饮
+		ELSEIF ARG:1 == 6
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;【无自觉颜面射精】
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 5
+		;无知持ち＆精液经验100未満
+		IF ARG:1 == 1
+			PRINTFORML 「ぎゃっ！？」
+			PRINTFORML 「な、何これ？气持ちわるーい！」
+			PRINTFORMW 「鸟のフンか何かかな？うえぇ…」
+		;通常ぬぐい取り
+		ELSEIF ARG:1 == 2
+			PRINTFORML 「っ！？」
+			PRINTFORML 「この臭いってまさか！ひええっ」
+			PRINTFORMW サニーは鸟肌に身体を震わせながら必死に付着した精液を拭い取った。
+		;颜射精液舐めとり
+		ELSEIF ARG:1 == 3
+			PRINTFORML 「これって…」
+			PRINTFORML 「んっちゅる…」
+			PRINTFORML サニーは无意识に颜に付着した精液を口に含んでいた。
+			PRINTFORML 本人が气付いた时には身体が高揚し、しっとり汗ばんでいた。
+			PRINTFORMW 「あれ？私いったい何をして…？」
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;【无自觉手淫射精】
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 6
+		;ぬぐい取り
+		IF ARG:1 == 1
+			PRINTFORML 「あれ？手がネバネバする…」
+			PRINTFORML 「…うわぁ、なんか腐った食べ物でも触っちゃったのかな」
+			PRINTFORML 「气持ち悪いなぁもう」
+			PRINTFORMW サニーはハンカチで不快そうに精液を拭い取った。
+		;舐めとり
+		ELSEIF ARG:1 == 2
+			PRINTFORML 「スンスン…」
+			PRINTFORML 「…誰も見てないわよね？」
+			PRINTFORMW 「…チュル、レロッ…」
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;【无自觉肛门射精】
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 7
+		;Ａ感觉2以下
+		IF ARG:1 == 1
+		;ソレ以外
+		ELSEIF ARG:1 == 2
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;【无自觉处女丧失】
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 8
+		PRINTFORML 「あ…がっ！？」
+		PRINTFORML サニーは突如襲い掛かる身体を引き裂かれた痛みに腹を押さえた。
+		PRINTFORML 「カハッ…ハーッ…ハーッ」
+		PRINTFORML 「な、何…お腹、裂けた…？」
+		PRINTFORML 身体がよろめき破瓜の激痛に前かがみになりなんとか痛みを堪えようと息を吐き出す。
+		PRINTFORML 膝を震わせ恐る恐る视线を向けると、破瓜の血が太股を伝いポタリと落ちていく。
+		PRINTFORML 流れ落ちる鮮血に、サニーの颜から血の气が引いていく。
+		PRINTFORML 「フーッ…フーッ…な、何よこれぐらい…！」
+		PRINTFORML 「妖精がこれしきの痛みで休んでたら、恶作剧なんかできないんだからっ！」
+		PRINTFORML 続く鈍痛に歯をギリリと軋ませると、蹈鞴を踏んで立ち上がった。
+		PRINTFORMW 强气な言叶とは裏腹に、丧失感に胸を締め付けられながら…。
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;【无自觉膣内射精】
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 9
+		;非处女膣内射精口服避孕药なし
+		IF ARG:1 == 1
+			IF TALENT:5:无知 == 1
+				PRINTFORML 「うえぇ…气持ち悪い」
+				PRINTFORML お腹に残る异物感と共に、股から垂れる精液にサニーは颜をしかめる。
+				PRINTFORML 決して乐ではない痛みに颜をしかめながらハンカチでそれを拭った。
+				PRINTFORML 「うぅ、拭いても拭いてもでてくる…一体なんなのよもう」
+				PRINTFORMW サニーは胸のざわめきにギュッと胸元に服のシワをつくりながら、精液を拭い取っていく。
+			ELSE
+				PRINTFORML 「んっ…？何か変なかんじ…」
+				PRINTFORML 「…！え、これって…！そ、そんな筈ない…！」
+				PRINTFORML どろりとした不快感と共に足元に垂れる白い液体。
+				PRINTFORML その正体を知っているサニーはざわつく胸元を押さえ乱暴にかぶりを振る。
+				PRINTFORML 「きっとお腹の調子が悪いのね。…きょ、今日は早く寝よっと！」
+				PRINTFORML いつもの調子を取り戻そうと明るい口吻で颜をあげる。
+				PRINTFORMW それでもサニーの不安は決してことはない。
+			ENDIF
+		;非处女膣内射精口服避孕药あり
+		ELSEIF ARG:1 == 2
+			IF TALENT:5:无知 == 1
+				PRINTFORML 「うえぇ…气持ち悪い」
+				PRINTFORML お腹に残る异物感と共に、股から垂れる精液にサニーは颜をしかめる。
+				PRINTFORML 決して乐ではない痛みに颜をしかめながらハンカチでそれを拭った。
+				PRINTFORML 「…！そういえばこうゆう时があったら飲んでおけってゆう药を持ってたような」
+				PRINTFORML サニーはふと颜をあげると、ポケットをまさぐり口服避孕药を取り出す。それをあっという间に飲み込んでしまった。
+				PRINTFORML 「何のために飲むかわからないしお腹も膨れないけど…」
+				PRINTFORMW サニーは知らず知らずのうちにホッと胸をなでおろしていた。
+			ELSE
+				PRINTFORML 「んっ…？何か変なかんじ…」
+				PRINTFORML 「…！え、これって…そんな筈ない…！」
+				PRINTFORML 「…でも、一応飲んで置いた方がいいかもしれないわね」
+				PRINTFORML サニーは口服避孕药を取り出すとゴクリと瞬く间に飲み込む。
+				PRINTFORML 「これでもし何かあっても大丈夫…」
+				PRINTFORMW 起きるべき最悪の出来事は免れたと思うと、サニーは胸のつっかえが取れたような气がした。
+			ENDIF
+		;处女膣内射精
+		ELSEIF ARG:1 == 3
+			IF TALENT:5:无知 == 1
+				PRINTFORML 「あぅ…何これ…」
+				PRINTFORML ドロリとした精液がサニーの幼い膣穴から溢れ零れ落ちる。
+				PRINTFORML それが何なのかサニーは知る由もなく、ただ恐怖が彼女の中を支配する。
+				PRINTFORML 妖精か女としての本能か、それを拒絶すべきものだと理解し彼女の心を揺らす。
+				PRINTFORML 「なんなの…一体何が起きてるのよ…」
+				PRINTFORMW 涙を瞳に溜めながらサニーは零れ落ちる白浊液をぎこちなくハンカチで拭った。
+			ELSE
+				PRINTFORML 「え…やだ、うそ…？」
+				PRINTFORML 地面に垂れ落ちた自らの体から出てきた赤い鮮血が混じった白い液体。
+				PRINTFORML サニーにはそれが何なのか理解できてしまった。
+				PRINTFORML 「な、なんで私の中から？だって、そんなこと一度も…」
+				PRINTFORMW おぞましく流れ出るそれを、サニーは痛みに耐えながら涙目で拭った。
+			ENDIF
+		RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;时间停止解除共通
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 0
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;ナマでやらせろ时
+;==================================================
+@M_KOJO_EVENT_K5_18(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;避孕要求台詞
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		IF CFLAG:318 == 1
+			PRINTFORMW 
+		ELSEIF TALENT:恋慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 
+					PRINTFORML 
+			ENDSELECT
+		ELSEIF TALENT:思慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORMW 「%CALLNAME:MASTER%って后で垂れてくるぐらい白いのいっぱい出すんだから、ちゃんとつけてよ」
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORMW 「アレつけてよアレ！フーセンみたいなの」
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;断った
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		IF CFLAG:318 == 1
+			PRINTFORMW 
+		ELSEIF TALENT:恋慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 
+					PRINTFORML
+			ENDSELECT
+		ELSEIF TALENT:思慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORMW 「えーやだ！拭いても拭いても染み出ちゃうし…パンツが污れちゃうんだから！」
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORMW 「もー！膣内に白いの出されると片付けるの大変なのよ！」
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;断ったのに粘られて切れた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		IF CFLAG:318 == 1
+			PRINTFORMW 
+		ELSEIF TALENT:恋慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「～～～ッッッそんなこと言う%CALLNAME:MASTER%なんてだいっきらい！」
+					PRINTFORML サニーは目の端に涙を抱えたままそっぽを向いてしまった。
+			ENDSELECT
+		ELSEIF TALENT:思慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「あーもうしつこい！！」
+					PRINTFORML 「もうやだ！今日は%CALLNAME:MASTER%と何もしたくない！」
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「そんなに白いの出したいならかけてあげるわ！」
+					PRINTFORML ベチャリ、と白い粘つくものが%CALLNAME:MASTER%の股间に投げつけられた。
+					PRINTFORML ……ヌルヌルした感触と共に湧き出る痒みが%CALLNAME:MASTER%を襲う！
+					PRINTFORML 「恶作剧用の山芋トリモチよ！痒くて痒くてたまらなくなるの！」
+					PRINTFORMW ニヤリと笑うサニーの足元で%CALLNAME:MASTER%は寝转がって痒みに悶絶するハメになった。
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;危険日以外許可
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 4
+			IF CFLAG:318 == 1
+			PRINTFORMW 
+		ELSEIF TALENT:恋慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「そんなにしたいの？しょうがないなー」
+					PRINTFORMW 「いっぱい出していっぱい爱してね%UNICODE(0x2665) *1%」
+			ENDSELECT
+		ELSEIF TALENT:思慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「私も%CALLNAME:MASTER%にいっぱい出されるの嫌いじゃないのよね%UNICODE(0x2665) *1%」
+					PRINTFORMW 「―というわけで出しても大丈夫ない日ならいいわよ！」
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORMW 「赤ちゃんできない日があるから、その日ならいいわよ」
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;危険日許可
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 5
+			IF CFLAG:318 == 1
+			PRINTFORMW 
+		ELSEIF TALENT:恋慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「私も%CALLNAME:MASTER%との赤ちゃん欲しい！」
+					PRINTFORMW 「赤ちゃんつくろ%UNICODE(0x2665) *1%」
+			ENDSELECT
+		ELSEIF TALENT:思慕
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「そんなに赤ちゃん欲しいの？しょうがないなー」
+					PRINTFORMW 「その代わりちゃんと子育て手伝いなさいよ？」
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:3
+				;CASE 1
+					;PRINTFORML 
+					;PRINTFORMW 
+				;CASE 0
+					;PRINTFORML 
+					;PRINTFORMW 
+				CASEELSE
+					PRINTFORML 「うーん中に射精されてもすぐにはできないしいいかな…」
+					PRINTFORMW 「その代わり今度お酒おごりなさい！」」
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;神社暮らしを承認して貰う
+;==================================================
+@M_KOJO_EVENT_K5K6(ARG,ARG:1)
+;口上主はARG
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;認められる
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		PRINTFORML 「やった！これでいつでも恶作剧し放題！」
+		PRINTFORML 「%CALLNAME:MASTER%とも近くにいれて一绪に遊べるし最高だわ！」
+		PRINTFORML 「でもやりすぎると%CALLNAME:MASTER%も追い出されちゃうから、ホドホドにしとかないといけないわね」
+		PRINTFORMW 「塩と砂糖を入れ替えるぐらいなら大丈夫よね？…ダメ？」
+		PRINTFORML 「これは恶作剧を厳选する必要がありそうだわ…むむむ」
+		PRINTFORML 「ルナとスターならどんな恶作剧が……あ」
+		PRINTFORML 「2人とも離れ離れになっちゃうんだ…。…！」
+		PRINTFORML 「中からルナとスターが住めるスペースをつくれば、后はかくれんぼの応用で…うん、いけるわね！」
+		PRINTFORMW 「よし全て問題解決！じゃあ早速引越しの准备しましょ！」
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;認められない
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		PRINTFORML 「うっ…やっぱりお見通しかぁ」
+		PRINTFORML 「恶作剧は少し控えないといけないみたいね…」
+		PRINTFORMW サニーは澡堂敷いっぱいの悪戯用小道具を前にタメ息をついた。
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;帰宅时
+;==================================================
+@M_KOJO_EVENT_K5_20(ARG,ARG:1)
+;口上主はLOCALS or RESULT
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;通常帰宅
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;约会中帰宅
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;玄関先でお見送り
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		PRINTFORML
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;陷落素質取得时
+;==================================================
+@M_KOJO_EVENT_K5_21(ARG,ARG:1)
+;口上主はARG
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;恋慕取得
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1 && TALENT:5:无知 == 1
+		SELECTCASE RAND:3
+			CASE 1
+				SETCOLOR C_CREAM
+				PRINTFORMW 「またサニーが%CALLNAME:MASTER%に恶作剧してるわ」
+				RESETCOLOR
+				PRINTFORML 
+				PRINTFORMW ＜花粉玉を喰らえー！
+				PRINTFORML 
+				SETCOLOR C_BLUE
+				PRINTFORMW 「前は一绪に恶作剧してたのにどういう风の吹き回しかしらね？」
+				RESETCOLOR
+				PRINTFORML 
+				PRINTFORMW ＜残念！そこは落とし穴よ！
+				PRINTFORML 
+				SETCOLOR C_CREAM
+				PRINTFORMW 「…サニーに聞いたら%CALLNAME:MASTER%に恶作剧すると、もっとかまってくれるから…らしいけど」
+				RESETCOLOR 
+				PRINTFORML 
+				PRINTFORMW ＜ワサビたっぷりまんじゅうを見事当てたわね！
+				PRINTFORML 
+				SETCOLOR C_BLUE
+				PRINTFORMW 「なんだ、そういうことなの。好きな女の子にちょっかいかける寺子屋の男の子ってことね。素直じゃないわねサニーって」
+				RESETCOLOR 
+				PRINTFORML 
+				PRINTFORMW ＜お茶じゃなくてただの水でしたー！
+				PRINTFORML 
+				SETCOLOR C_CREAM
+				PRINTFORMW 「それってつまりサニーは…」
+				RESETCOLOR
+				PRINTFORML 
+				PRINTFORMW ＜あっはっはー！捕まえられるなら捕まえてみなさい！
+				PRINTFORML 
+				SETCOLOR C_BLUE
+				PRINTFORMW 「人の恋路を邪魔すると馬に蹴られちゃうわ。暖かく見守ってあげましょ？」
+				RESETCOLOR
+				PRINTFORML 
+				PRINTFORMW ＜それは藁でできたダミーよ！
+				PRINTFORML 
+				SETCOLOR C_CREAM
+				PRINTFORMW 「面白がってるだけじゃないの、もう…」
+				RESETCOLOR
+				PRINTFORML 
+				PRINTFORML 
+				PRINTFORML 
+				PRINTFORMW ＜キャー、捕まっちゃった♪
+				PRINTFORML 
+					IF TALENT:6:恋慕
+						PRINTFORML 
+						SETCOLOR C_BLUE
+						PRINTFORMW 「ねぇルナ、そんなに强く握ったら読んでる本がシワになっちゃうわよ？」
+						RESETCOLOR
+						PRINTFORML
+					ELSEIF TALENT:7:恋慕
+						SETCOLOR C_CREAM
+						PRINTFORML 
+						PRINTFORMW 「ス、スター…。笑颜で空っぽの鍋をかき回すの怖いんだけど…」
+						RESETCOLOR
+						PRINTFORML
+					ELSE
+					ENDIF
+				RETURN 1
+			CASEELSE
+				PRINTFORML 「最近なんだかカラダが熱いような…変なキノコでも食べたかしら？」
+				PRINTFORML 「…そういえば%CALLNAME:MASTER%のこと考えるとなるような」
+				PRINTFORML 「まさか…」
+				PRINTFORMW 「%CALLNAME:MASTER%、何か私に盛ったわね！」
+				PRINTFORML 「无害なフリして私を最初に落とそうとするなんて…油断したわ」
+				PRINTFORML 「おのれ、どうしてくれよう。……でもいいか！」
+				PRINTFORML 「别にカゼみたいに不快じゃないし、カラダがぽっかぽかしていい气分だし」
+				PRINTFORMW 「許す！」
+		ENDSELECT
+	ELSEIF LOCAL:1 && ARG == 1 
+		PRINTFORML 「なんだか最近カラダが熱いわ…カゼでも引いたのかしら？」
+		PRINTFORML 「%CALLNAME:MASTER%にでもうつされたのかも…最近あいつとよく一绪にいるから」
+		PRINTFORML 「絶対そうだわ。寝ても觉めても%CALLNAME:MASTER%のこと考えると头がボンヤリするもの」
+		PRINTFORML 「ほら、今だって考えるだけで胸がドキドキして…」
+		PRINTFORMW 「…あぁー！！まさかこれって」
+		PRINTFORML 「………はぁー」
+		PRINTFORML 「うぅ～どうしよう…意识したら余計に熱くなってきた…」
+		PRINTFORML 「明日からどんな颜して会えばいいのよ…」
+		PRINTFORML 「…ダメダメ、こんなのらしくないわ」
+		PRINTFORMW 「寝て一旦忘れるのが一番！そうすればいつもどおりになれる筈！」
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;思慕取得
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		PRINTFORMW 「それで%CALLNAME:MASTER%がさー木に宙吊りになってー」
+		PRINTFORML 
+		SETCOLOR C_CREAM
+		PRINTFORMW 「……最近のサニーって%CALLNAME:MASTER%の話ばかりするわね」
+		RESETCOLOR
+		PRINTFORML 
+		SETCOLOR C_BLUE
+		PRINTFORMW 「本当ねぇ。それに最近は私達といるより%CALLNAME:MASTER%といる方が多い气がするもの」
+		RESETCOLOR
+		PRINTFORML 
+		PRINTFORMW 「だって乐しいじゃない！この前も里に连れてってくれたの！」
+		PRINTFORML 
+		SETCOLOR C_CREAM
+		PRINTFORMW 「ふぅん…まぁ私達妖精を撃ち落したりしないし恶作剧にも付き合ってくれるから、善人じゃないけど悪人じゃないとこは信赖できる人よね」
+		RESETCOLOR
+		PRINTFORML 
+		SETCOLOR C_BLUE
+		PRINTFORMW 「本人も恶作剧し甲斐あるし%CALLNAME:MASTER%は私達妖精と气があうのかもしれないわ」
+		RESETCOLOR
+		PRINTFORML 
+		PRINTFORMW 「でしょ！乐しみが増えるのに悪い事はない！」
+		PRINTFORML 
+		SETCOLOR C_CREAM
+		PRINTFORMW 「ただ%CALLNAME:MASTER%の話が多いのが食傷气味だけどね…。まぁいいかしら」
+		RESETCOLOR
+		PRINTFORML 
+		
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;爱欲取得
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;爱人取得
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 4
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;セフレ取得
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 5
+		PRINTFORML 「フッ…%UNICODE(0x2665) *1%…んッ…%UNICODE(0x2665) *1%」
+		PRINTFORML 房间で一匹の妖精が快感を求め自らを慰めている。		
+		PRINTFORML つたない性の知识を総动员し、腰を动かし未发達の阴部に刺激を与える。
+		PRINTFORMW やがて绝顶に達し小さなカラダがビクンと跳ね、爱液と汗の飛沫が床を污した。
+		PRINTFORML しかし全身に走る快感とは裏腹に、内心は物足りなさに再びワレメをベッドの角に擦りつけ始める。
+		PRINTFORML 「う～…もうこれじゃ物足りない…」
+		PRINTFORML サニーは空虚を感じる下腹部を押さえながら、自らに快感をくれる%CALLNAME:MASTER%の剛直を妄想し爱液を垂らす。
+		PRINTFORMW 「%CALLNAME:MASTER%じゃなきゃダメ…おさまらないよぉ…」
+
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;调教終了时に自慰
+;==================================================
+@M_KOJO_EVENT_K5_22(ARG,ARG:1)
+;口上主はARG
+;ARG:0に自慰状况
+;ARG:1に自慰种类
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	;-------------------------------------------------
+	;通常自慰
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		PRINTFORML  
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;同室时自慰
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		PRINTFORML  
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;中だし精液自慰
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		PRINTFORML  
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;无知持ち（自慰经验(调教自慰经验は差し引き)による分岐あり
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 4
+		LOCAL:2 = EXP:自慰经验 - EXP:调教自慰经验
+		;无知消去イベントあり（表示は一度だけ
+		IF LOCAL:1 >= 25
+			PRINTFORML 「……わかっちゃった。これ…%UNICODE(0x2665) *1%」
+		;地の文分岐。书きたい场合は[SKIPSTART][SKIPEND]を削除してください
+		ELSEIF LOCAL:1 >= 20
+			PRINTFORML 「あっこれっ%UNICODE(0x2665) *1%强くこするとっ%UNICODE(0x2665) *1%きもちっ%UNICODE(0x2665) *1%」
+		ELSEIF LOCAL:1 >= 15
+			PRINTFORML 「なんでこんな…んっ%UNICODE(0x2665) *1%きもちよくなるのっ…？あっ%UNICODE(0x2665) *1%」
+		ELSEIF LOCAL:1 >= 10
+			PRINTFORML 「やっ…これっきもちいい%UNICODE(0x2665) *1%ぽわぽわする%UNICODE(0x2665) *1%」
+		ELSEIF LOCAL:1 >= 5
+			PRINTFORML 「あれ？ここ触るとビクッとする。…んっ%UNICODE(0x2665) *1%」
+		ELSE
+		ENDIF
+		PRINTFORML  
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;陷落素質あり自慰中毒高め
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 5
+		;-------------------------------------------------
+		;Ｃ敏感orＣ感觉10以上
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 1
+			PRINTFORML  
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;Ｖ敏感orＶ感觉10以上
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 2
+			PRINTFORML  
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;Ａ敏感orＡ感觉10以上
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 3
+			PRINTFORML  
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;Ｂ敏感orＢ感觉10以上
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 4
+			PRINTFORML  
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;部位指定无し
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 5
+			PRINTFORML  
+			RETURN 1
+		ENDIF
+		;その他
+		;上の分岐を一切书かずに、ここに书くことで陷落素質あり自慰中毒高め自慰の共通口上を表示することが出来ます
+		PRINTFORML  
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;自慰中毒高め
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 6
+		;-------------------------------------------------
+		;尻穴膣腔同时
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 1
+			PRINTFORML  
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;膣腔のみ
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 2
+			PRINTFORML  
+			RETURN 1
+		ENDIF
+		;その他
+		;上の分岐を一切书かずに、ここに书くことで自慰中毒高め自慰の共通口上を表示することが出来ます
+		PRINTFORML  
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;我慢
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 7
+		PRINTFORML 
+		RETURN 1
+	ENDIF
+	;その他
+	;上の分岐を一切书かずに、ここに书くことで自慰の共通口上を表示することが出来ます
+	PRINTFORML  
+	RETURN 1
+ENDIF
+RETURN 1
+;==================================================
+;浴场连れだし
+;==================================================
+@M_KOJO_EVENT_K5_23(ARG,ARG:1)
+;口上主はLOCAL
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;断られた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;一绪に入ってくれた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		RETURN 1
+	ENDIF
+	;その他
+	PRINTFORML  
+ENDIF
+RETURN 1
+;==================================================
+;懐妊
+;==================================================
+@M_KOJO_EVENT_K5_24(ARG,ARG:1)
+;口上主はLOCAL
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;恋慕
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1 && TALENT:5:无知 == 1
+		PRINTFORMW 「%CALLNAME:MASTER%！私の赤ちゃんできたって！」
+		PRINTFORML 
+		PRINTFORMW サニーはウキウキしながら%CALLNAME:MASTER%に報告してきた。
+		PRINTFORML 
+		PRINTFORML 「でも赤ちゃんってどこにできたのかしら？」
+		PRINTFORMW 「キャベツ畑？それともコウノトリ？」
+		PRINTFORML 
+		PRINTFORML ……サニーは不思議そうに首を傾げている。
+		PRINTFORML 
+		PRINTFORMW 「考えても埒があかないわ！まずはキャベツ畑を掘り返してらコウノトリを捕まえに行くわよ！」
+		PRINTFORML 
+		PRINTFORMW 何も知らないままサニーに出産させるのは危険すぎる…。%CALLNAME:MASTER%はサニーに性教育を教える事にした。
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORMW 少女勉强中…
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORMW %CALLNAME:MASTER%の説明をサニーは何度も頷きながら熱心に聞き入れている。頬がほんのり赤いのは芽生えた羞恥心のせいだろうか。
+		PRINTFORML 
+		PRINTFORML 「%CALLNAME:MASTER%が私の中に出してた白いのが赤ちゃんの素だったのね」
+		PRINTFORMW 「もう、そんなことなら早く説明しなさいよ…。知ってたらもっと注いでもらったのに…」
+		PRINTFORML 
+		PRINTFORMW サニーはふてくされながらも、その口元は子を成せた悦び緩んでいた。
+		PRINTFORML 
+		PRINTFORMW 「まあいいわ。こうやって%CALLNAME:MASTER%の赤ちゃんを産めるんだから…」
+		PRINTFORML 
+		PRINTFORMW %CALLNAME:MASTER%の胸にそっとカラダを預けるサニーを、%CALLNAME:MASTER%は优しく抱きとめる。
+		PRINTFORML 
+		PRINTFORMW 「これからも末长くよろしくね！%CALLNAME:MASTER%%UNICODE(0x2665) *1%」
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORML サニーは性教育について勉强しました。
+		PRINTFORMW サニーから无知が消失しました。
+		TALENT:5:无知 = 0
+		RETURN 1
+	ELSEIF LOCAL:1 && ARG == 1
+		PRINTFORML 「%CALLNAME:MASTER%！赤ちゃんできた！褒めて！」
+		PRINTFORML
+		PRINTFORML 誇らしげに胸を张るサニーミルクを、%CALLNAME:MASTER%は抱き寄せてワシワシと头を抚でる。
+		PRINTFORMW 强い欢喜の表情が感情の光のように沸き、サニーの全身を包んでいるようだ。
+		PRINTFORML
+		PRINTFORMW 「えっへん！私がんばったんだからね！もっと抚でて！」
+		PRINTFORML
+		PRINTFORMW 見えないシッポを振りながらサニーは%CALLNAME:MASTER%の胸に颜をうずめる。
+		PRINTFORML
+		PRINTFORML 「もう今から乐しみで仕方ないわ！」
+		PRINTFORML 「色々な恶作剧を教えて誰にも負けない最强の妖精にしてあげるの！」
+		PRINTFORML 「身高も大きく育ててあげないと！毎日牛乳をあげればでいだらぼっちぐらいに大きくなってくれるかしら？」
+		PRINTFORML 「皆で旅行にも行って見たいわ！妖怪の山頂で一绪にピクニック！」
+		PRINTFORMW 「もちろんルナとスターも一绪よ！みんなで一绪に宴会しましょ！」
+		PRINTFORML 「弾幕ごっこも私が直々に教えるのよ。見てなさいチルノ！幻想郷最强妖精は我が子の物！」
+		PRINTFORML 「%CALLNAME:MASTER%との子なんだからきっと弾幕ごっこも强くなってくれるわ！」
+		PRINTFORML 「あ、でも弾幕ごっことか嫌いだったら一绪に新聞読んだり探検しにいくのもいいわね…」
+		PRINTFORMW 「……でも一番は」
+		PRINTFORML 
+		PRINTFORMW 「私達みたいに元气に育って欲しいわ！」
+		PRINTFORML 
+		PRINTFORML サニーは八重歯を見せながら、新しい命が宿った自分のお腹に手を合わせる。
+		PRINTFORML
+		PRINTFORMW 「これからよろしくね…%CALLNAME:MASTER%%UNICODE(0x2665) *1%」
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;思慕
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2 && TALENT:5:无知 == 1
+		PRINTFORMW 「はー、今日も儲けがくたびれただけ…」
+		PRINTFORML
+		PRINTFORML %CALLNAME:MASTER%の房间に来たサニーは、疲れた表情でテーブルに膝をついていた。
+		PRINTFORMW 最近何かを探しにでかけてたのか夜遅くまで色々な场所を回っているらしい。
+		PRINTFORML
+		PRINTFORML 「んー…？何を探してるのかって？」
+		PRINTFORML 「私の赤ちゃんができたらしいんだけど、どこにもいないのよね」
+		PRINTFORML 「天界も探したし旧地狱の桥の下も探したけどいなかったわ。桥姫がすっごいこっち睨んできて怖かったー…」
+		PRINTFORMW 「明日%CALLNAME:MASTER%も手伝ってよ。みんなで一气に探せば見つからない筈がない作戦だわ！」
+		PRINTFORML
+		PRINTFORMW このままだとサニーは身重のまま动き回りそうだ…。%CALLNAME:MASTER%はサニーに性教育を教える事にした。
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORMW 少女勉强中…
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORMW 「じゃ、じゃあ%CALLNAME:MASTER%の出してた白いのって…」
+		PRINTFORML
+		PRINTFORMW サニーはテーブルに突っ伏して震えている。行为の意味を理解したのが、耳元までゆでタコのように真っ赤になっていた。
+		PRINTFORML
+		PRINTFORMW 「私のお腹の中に赤ちゃんがいて…それが%CALLNAME:MASTER%との赤ちゃんなのね……」
+		PRINTFORML
+		PRINTFORMW サニーは喜ぶべきか怒るべきかわからず複雑な表情で自らのお腹を抚でる。
+		PRINTFORML
+		PRINTFORML 「别にイヤじゃないわ。仲间が増えるのは私も嬉しいしね」
+		PRINTFORML 「よーし！この子を恥じない立派な妖精に育ててみせるわ！」
+		PRINTFORMW 「がんばるぞー！%CALLNAME:MASTER%も手伝ってよね！」
+		PRINTFORML
+		PRINTFORMW %CALLNAME:MASTER%とサニーはエイエイオー！とかけ声をあげる。こうして2人の子育てが始まる事となった。		
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORML サニーは性教育について勉强しました。
+		PRINTFORMW サニーから无知が消失しました。
+		TALENT:5:无知 = 0
+		RETURN 1
+	ELSEIF LOCAL:1 && ARG == 2
+		PRINTFORML 「大変だ大変だ大変だ！」
+		PRINTFORML 「%CALLNAME:MASTER%との赤ちゃんができたみたいなのよ！」
+		PRINTFORML 「うーんこんなカンタンに赤ちゃんができるなんて…」
+		PRINTFORMW 「これからは恶作剧のしすぎは厳禁ね。赤ちゃんが恶作剧ノイローゼになっちゃうかも」
+		PRINTFORML 「お酒も少なくしないといけないわね。生まれる前から育儿ノイローゼになりそうだわ」
+		PRINTFORML 「けどこれもちゃんと赤ちゃんに元气で生まれて欲しいからしょうがないわね」
+		PRINTFORML 「%CALLNAME:MASTER%にも色々と赖むわよ！せっかくお父さんになったんだから」
+		PRINTFORMW 「手始めに里でお菓子買ってきて！あと貸し本屋で漫画借りてきてちょうだい！大至急よ！」
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;陷落素質无し
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3 && TALENT:5:无知 == 1
+		RETURN 1
+		PRINTFORML 「%CALLNAME:MASTER%いる！？いるわね！」
+		PRINTFORMW %CALLNAME:MASTER%の房间にサニーが雪崩れ込んでくる。
+		PRINTFORML 
+		;PRINTFORML 「サニーパンチ！！」
+		PRINTFORMW 「ふんっ！」
+		PRINTFORML 
+		PRINTFORMW 房间に入るなりサニーの腰を入れた强烈な右ストレートが%CALLNAME:MASTER%の股间を强打する。
+		PRINTFORML 
+		;PRINTFORML 「サニーナックル！！！」
+		PRINTFORMW 「もう一发！」
+		PRINTFORML 
+		PRINTFORML さらに地面に倒れふそうとする%CALLNAME:MASTER%の腹部を襲う强烈なボディブロー。
+		PRINTFORMW 妖精とは思えないサニーの重い拳の前にあっけなく%CALLNAME:MASTER%はノックアウトされた。
+		PRINTFORML 
+		PRINTFORMW 「私が何も知らないからってよくもドバドバ膣内に出してくれたわね！」
+		PRINTFORML 
+		PRINTFORML 八重歯を見せながら歯を食いしばるサニーの颜は愤怒で真っ赤に燃えているようだった。
+		PRINTFORMW 震えるサニーの左手には、「よい子の保健体育」と书かれた本を持っており、%CALLNAME:MASTER%は全てを察して颜を青くする。
+		PRINTFORML 
+		PRINTFORML 「今までやったあんなこともこんなことも人が无知なのをいいことにやらせて…」
+		PRINTFORMW 「うがー！腹立つし恥ずかしい！」
+		PRINTFORML 
+		PRINTFORMW 头を抑えてサニーが吠えながら足を踏み鳴らす。その度に踏み台になった%CALLNAME:MASTER%から変な声が漏れる。
+		PRINTFORML 
+		PRINTFORML 「言っておくけど赤ちゃんできたのは别にいいの。私みたいな妖精が増えるのは大欢迎だわ！」
+		PRINTFORML 「でもそれ以外のことは絶対に許さないんだから！わかった！？」
+		PRINTFORMW 「あと責任とりなさい%CALLNAME:MASTER%！幽灵になっても足でつかってやるんだから！」
+		PRINTFORML 
+		PRINTFORMW グリグリとサニーに头を踏まれながら%CALLNAME:MASTER%は頷いた。
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORML サニーは性教育について勉强しました。
+		PRINTFORMW サニーから无知が消失しました、…畜生。
+		TALENT:5:无知 = 0
+	ELSEIF LOCAL:1 && ARG == 3
+		PRINTFORML 
+		PRINTFORML 「うーん最近カラダが重いと思ったら赤ちゃんができてたなんて」
+		PRINTFORMW 「この前人间の赤ちゃんが笑うの見ちゃったからかしら」
+		PRINTFORML 
+		PRINTFORML %CALLNAME:MASTER%の房间でサニーはコーヒーを飲みながらタメ息をつく。
+		PRINTFORMW 重大な懐妊宣言とは反対に深く悩んでいる様子はなく、まるで他人事のようだ。
+		PRINTFORML 
+		PRINTFORML 「まあできちゃったもんはしょうがないわね。妖精だってヤればできるもの」
+		PRINTFORMW 「ちゃんと責任とりなさいよ%CALLNAME:MASTER%！逃がさないんだからね！」
+		PRINTFORML 
+		PRINTFORMW 胸をはってふんぞりかえるサニーの前に%CALLNAME:MASTER%は头があげられなかった」
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;无自觉
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 4
+		PRINTFORML 「ルナ！梅干しもらうわよ！」
+		PRINTFORMW 「んん～すっぱい！」
+		PRINTFORML 
+		PRINTFORML サニーは壷から取り出した梅干をあっという间に口に放り込む。
+		PRINTFORMW 酸味と塩味が口に広がり、文字通り良い塩梅の酸っぱさにサニーは身を震わせた。
+		PRINTFORML 
+		SETCOLOR C_CREAM
+		PRINTFORMW 「ちょっとサニー、最近食べすぎじゃない？」
+		RESETCOLOR
+		PRINTFORML 
+		PRINTFORMW 新聞を広げながらルナは自家制漬け梅干の減りの多さに眉をひそめる。
+		PRINTFORML 
+		SETCOLOR C_BLUE
+		PRINTFORML 「いいじゃない。この前まで气持ち悪いってベッドでうなってるサニーより、元气があるサニーの方がいいわ」
+		PRINTFORMW 「はい、ご希望のレモンのハチミツがけ」
+		RESETCOLOR
+		PRINTFORML 
+		PRINTFORMW 「待ってました！」
+		PRINTFORML 
+		PRINTFORML スターがレモンにハチミツをかけた料理をテーブルに置けば、サニーは目を輝かせてレモンにパクつく。
+		PRINTFORMW まるでカラダが酸っぱいものを欲しているかのようだ。
+		PRINTFORML 
+		SETCOLOR C_CREAM
+		PRINTFORMW 「それでいいのかしら？せめて一夜漬けにしなさいよ…」
+		RESETCOLOR
+		PRINTFORML 
+		PRINTFORMW 「これぐらいのすっぱさが丁度欲しいの！スターの料理はやっぱり美味しいわね！」
+		PRINTFORML 
+		SETCOLOR C_BLUE
+		PRINTFORMW 「お粗末サマ。でもこれ以上太って飛べなくなっても私は知らないけど」 
+		RESETCOLOR
+		PRINTFORMW スターの视线の先にあるのは、ぽっこりと膨らんたサニーのお腹。レモンを食べ終えればサニーは満足げにお腹を抚でる。
+		PRINTFORML 
+		SETCOLOR C_CREAM
+		PRINTFORMW 「…………まさか、ね」
+		PRINTFORML  
+		RESETCOLOR
+		PRINTFORMW いつもどおりの元气を取り戻したサニーの様子に、ルナは新聞に掲載された育儿相談の見出しから视线を逸らした。
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORML 
+		SETCOLOR C_BLUE
+		PRINTFORMW 「………」 
+		RESETCOLOR
+		
+		RETURN 1
+	ENDIF
+	;その他
+	PRINTFORML  
+ENDIF
+RETURN 1
+;==================================================
+;出産
+;==================================================
+@M_KOJO_EVENT_K5_25(ARG,ARG:1)
+;口上主はLOCAL
+;ARG:1	何人目の儿童か
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;恋慕
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		PRINTFORMW 「ヒッヒッフウウゥ…！！ヒッヒッ…できない…わよっ！こん…なの！！」
+		PRINTFORML 
+		PRINTFORML 颜を涙でビショビショにしながらサニーは赤子を産もうと脂汗をにじませ力む。
+		PRINTFORMW 心配そうに見守る%CALLNAME:MASTER%へとサニーの震える手が伸ばされる。
+		PRINTFORML 
+		PRINTFORMW 「%CALLNAME:MASTER%！！て、手ぇ握って！手」
+		PRINTFORML 
+		PRINTFORMW %CALLNAME:MASTER%は苦しそうに歯を食いしばるサニーの手を握った。最爱の人の温かさにサニーの颜に少し安堵が戻る。
+		PRINTFORML 
+		PRINTFORMW 「ありが…とおっ！！…ヒッヒッ…！！フウウッ！フゥッ！」
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORMW 「……や、やっと生まれてくれたぁ～」
+		PRINTFORML 
+		PRINTFORMW ついに産まれた我が子を横に寝ている。その寝颜を見ていると自然とサニーは笑颜が戻る。
+		PRINTFORML 
+		PRINTFORMW 「ごめん%CALLNAME:MASTER%。手、痛かったでしょ？」
+		PRINTFORML 
+		PRINTFORML くいこんだサニーの指が手から離れる。%CALLNAME:MASTER%の手にうっすら血が滲んでるが、サニーの負担を思えば軽いものだ。
+		PRINTFORMW %CALLNAME:MASTER%はサニーをいたわるように乱れた颜を手ぬぐいで拭いてあげる。
+		PRINTFORML 
+		PRINTFORML 「ん…ありがとう。…えへへ、カワイイね赤ちゃん」
+		PRINTFORML 「私そっくりだと思ったけど、寝てるところは%CALLNAME:MASTER%に似てるわね」
+		PRINTFORMW 「…これからがんばって育てていくわよ！よろしくね%CALLNAME:MASTER%！」
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;思慕
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		PRINTFORMW 「%CALLNAME:MASTER%～♪」
+		PRINTFORML 
+		PRINTFORMW 嬉しそうにサニーが近寄ってくる。何か嬉しいことを隠しているのか背中に手を回しながらこちらを見上げていた。
+		PRINTFORML 
+		PRINTFORMW 「フッフッフッ、ビックリするのみせてあげるわ！」
+		PRINTFORML 
+		PRINTFORMW 自信満々のサニーの颜に、どうせヘビの抜け殻とかだろうと思いながら%CALLNAME:MASTER%は苦笑いを返す。
+		PRINTFORML 
+		PRINTFORMW 「生まれた！」
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORML 
+		PRINTFORMW ――――――――………おくるみに包まれた赤ちゃんを見せ付けられた。
+		PRINTFORML 
+		PRINTFORMW 「私に似てカワイイでしょー？よしよし、この人がお父さんだよー」
+		PRINTFORML 「こうやって小さい頃から驚かす方法を教えるわ。じょうそう教育ってやつね」
+		PRINTFORMW 「…ちょっと聞いてるの%CALLNAME:MASTER%？…白目向いて寝るには日は高いわよ%CALLNAME:MASTER%－」
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;陷落素質无し
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		PRINTFORMW 「ふんっ！」
+		PRINTFORML 
+		PRINTFORMW 出会いがしらサニーに股间を蹴られ%CALLNAME:MASTER%は地べたに這い蹲る。
+		PRINTFORML 
+		PRINTFORML 「痛いでしょ？私も痛かったんだからそれぐらいガマンすればいいじゃない」
+		PRINTFORMW 「しっかり見なさい我が子。これが甲斐性なし、种馬、ケダモノ、テクニシャン、%CALLNAME:MASTER%よ」
+		PRINTFORML 
+		PRINTFORMW サニーの腕の中では生まれたばかりの赤ん坊がスヤスヤと寝息を立て、サニーの言叶を聞き流している。
+		PRINTFORML 
+		PRINTFORML 「この子は立派な妖精にするんだから、ちゃんと手伝ってよね」
+		PRINTFORMW 「%CALLNAME:MASTER%を立派な反面教師にしてこの子を育ててみせるんだから」
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;无自觉
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 4
+		PRINTFORMW 「うう～ん…」
+		PRINTFORML 
+		PRINTFORML 
+		SETCOLOR C_CREAM
+		PRINTFORMW 「はぁ…まさか私達が助産婦ごっこするハメになるなんて」
+		RESETCOLOR
+		PRINTFORML 
+		PRINTFORML 産湯を片付けながらルナが複雑そうな表情で、サニーの颜を覗き込む。
+		PRINTFORMW 出産が終わった后で青い颜をしているが、産みきったサニーは眠っていながらも誇らしげにしている。
+		PRINTFORML 
+		SETCOLOR C_BLUE
+		PRINTFORMW 「まさか赤ちゃんがああやって生まれるなんて！サニーには感謝しないといけないわ」
+		PRINTFORML 
+		RESETCOLOR
+		PRINTFORMW 赤ん坊はスターに頬を突つかれてむず痒そうに颜をしかめる。その反応が乐しいのかスターは赤ん坊にずっと寄り添ったままだ。
+		PRINTFORML 
+		SETCOLOR C_CREAM
+		PRINTFORMW 「ちょっとやめてあげなさいよ…。せっかく寝付いてるのにカワイソウよ」
+		PRINTFORML 
+		RESETCOLOR
+		SETCOLOR C_BLUE
+		PRINTFORMW 「はいはい、でもこれからが大変ね。赤ちゃん育てるのってまず何すればいいのかしら？」
+		PRINTFORML 
+		RESETCOLOR
+		PRINTFORMW 2匹の妖精が首を傾げてサニーの胸を覗き込む。ふくよかな膨らみは乳が张って母乳を与える准备が整っていた。
+		PRINTFORML 
+		SETCOLOR C_CREAM
+		PRINTFORMW 「ゴハンは大丈夫みたいだけど、オシメとか服とか色々用意するものが沢山ね。みんなでがんばらないと…！」
+		PRINTFORML 
+		SETCOLOR C_BLUE
+		PRINTFORMW 「ついでに%CALLNAME:MASTER%にも手伝わせましょ。暇そうだし天狗の新聞よりは役に立つ筈だわ」
+		PRINTFORML 
+		RESETCOLOR
+		SETCOLOR C_CREAM
+		PRINTFORML 「おおー！！」
+		SETCOLOR C_BLUE
+		PRINTFORML 「おおー！！」
+		RESETCOLOR
+		PRINTFORMW 「おおー…」
+		RETURN 1
+	ENDIF
+	;その他
+	PRINTFORML  
+ENDIF
+RETURN 1
+;==================================================
+;自慰暴露
+;==================================================
+@M_KOJO_EVENT_K5_26(ARG,ARG:1)
+
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	SELECTCASE ARG
+		;-------------------------------------------------
+		CASE 0
+		;見られた瞬间
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1
+			IF CFLAG:318 == 1
+				PRINTFORMW 
+			ELSEIF TALENT:恋慕
+				SELECTCASE RAND:3
+					;CASE 1
+						;PRINTFORML 
+						;PRINTFORMW 
+					;CASE 0
+						;PRINTFORML 
+						;PRINTFORMW 
+					CASEELSE
+						PRINTFORML 
+						PRINTFORML 
+				ENDSELECT
+			ELSEIF TALENT:思慕
+				SELECTCASE RAND:3
+					;CASE 1
+						;PRINTFORML 
+						;PRINTFORMW 
+					;CASE 0
+						;PRINTFORML 
+						;PRINTFORMW 
+					CASEELSE
+						PRINTFORML 
+						PRINTFORML 
+				ENDSELECT
+			ELSE
+				SELECTCASE RAND:3
+					;CASE 1
+						;PRINTFORML 
+						;PRINTFORMW 
+					;CASE 0
+						;PRINTFORML 
+						;PRINTFORMW 
+					CASEELSE
+						PRINTFORML 「…%CALLNAME:MASTER%？」
+						PRINTFORML サニーは乱れた衣服のまま%CALLNAME:MASTER%へと颜を向ける
+						PRINTFORMW 行为の后の快感に浸っているのか、うっとりと目を细めながら熱い吐息を吐いた。
+				ENDSELECT
+			ENDIF
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		CASE 1
+		;何もしない
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1
+			IF CFLAG:318 == 1
+				PRINTFORMW 
+			ELSEIF TALENT:恋慕
+				SELECTCASE RAND:3
+					;CASE 1
+						;PRINTFORML 
+						;PRINTFORMW 
+					;CASE 0
+						;PRINTFORML 
+						;PRINTFORMW 
+					CASEELSE
+						PRINTFORML 
+						PRINTFORML 
+				ENDSELECT
+			ELSEIF TALENT:思慕
+				SELECTCASE RAND:3
+					;CASE 1
+						;PRINTFORML 
+						;PRINTFORMW 
+					;CASE 0
+						;PRINTFORML 
+						;PRINTFORMW 
+					CASEELSE
+						PRINTFORML 
+						PRINTFORML 
+				ENDSELECT
+			ELSE
+				SELECTCASE RAND:3
+					;CASE 1
+						;PRINTFORML 
+						;PRINTFORMW 
+					;CASE 0
+						;PRINTFORML 
+						;PRINTFORMW 
+					CASEELSE
+						PRINTFORML 
+						PRINTFORML 
+				ENDSELECT
+			ENDIF
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		CASE 2
+		;そのまま続行
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1
+			IF CFLAG:318 == 1
+				PRINTFORMW 
+			ELSEIF TALENT:恋慕
+				SELECTCASE RAND:3
+					;CASE 1
+						;PRINTFORML 
+						;PRINTFORMW 
+					;CASE 0
+						;PRINTFORML 
+						;PRINTFORMW 
+					CASEELSE
+						PRINTFORML 
+						PRINTFORML 
+				ENDSELECT
+			ELSEIF TALENT:思慕
+				SELECTCASE RAND:3
+					;CASE 1
+						;PRINTFORML 
+						;PRINTFORMW 
+					;CASE 0
+						;PRINTFORML 
+						;PRINTFORMW 
+					CASEELSE
+						PRINTFORML 
+						PRINTFORML 
+				ENDSELECT
+			ELSE
+				SELECTCASE RAND:3
+					;CASE 1
+						;PRINTFORML 
+						;PRINTFORMW 
+					;CASE 0
+						;PRINTFORML 
+						;PRINTFORMW 
+					CASEELSE
+						IF TALENT:5:无知 == 1
+						PRINTFORML 「こうやってね…オマタを角で擦ると…ンッ…キモチいいの%UNICODE(0x2665) *1%」
+						PRINTFORMW サニーは行为の意味も知らず、ただ本能のままワレメをベッドの角に擦りつけ目觉めたばかりの快乐に浸る。
+						ENDIF
+				ENDSELECT
+			ENDIF
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		CASE 3
+		;追い出し
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1
+			IF CFLAG:318 == 1
+				PRINTFORMW 
+			ELSEIF TALENT:恋慕
+				SELECTCASE RAND:3
+					;CASE 1
+						;PRINTFORML 
+						;PRINTFORMW 
+					;CASE 0
+						;PRINTFORML 
+						;PRINTFORMW 
+					CASEELSE
+						PRINTFORML 
+						PRINTFORML 
+				ENDSELECT
+			ELSEIF TALENT:思慕
+				SELECTCASE RAND:3
+					;CASE 1
+						;PRINTFORML 
+						;PRINTFORMW 
+					;CASE 0
+						;PRINTFORML 
+						;PRINTFORMW 
+					CASEELSE
+						PRINTFORML 
+						PRINTFORML 
+				ENDSELECT
+			ELSE
+				SELECTCASE RAND:3
+					;CASE 1
+						;PRINTFORML 
+						;PRINTFORMW 
+					;CASE 0
+						;PRINTFORML 
+						;PRINTFORMW 
+					CASEELSE
+						PRINTFORML 
+						PRINTFORML 
+				ENDSELECT
+			ENDIF
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		CASE 4
+		;やっちゃう
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1
+			IF CFLAG:318 == 1
+				PRINTFORMW 
+			ELSEIF TALENT:恋慕
+				SELECTCASE RAND:3
+					;CASE 1
+						;PRINTFORML 
+						;PRINTFORMW 
+					;CASE 0
+						;PRINTFORML 
+						;PRINTFORMW 
+					CASEELSE
+						PRINTFORML 
+						PRINTFORML 
+				ENDSELECT
+			ELSEIF TALENT:思慕
+				SELECTCASE RAND:3
+					;CASE 1
+						;PRINTFORML 
+						;PRINTFORMW 
+					;CASE 0
+						;PRINTFORML 
+						;PRINTFORMW 
+					CASEELSE
+						PRINTFORML 
+						PRINTFORML 
+				ENDSELECT
+			ELSE
+				SELECTCASE RAND:3
+					;CASE 1
+						;PRINTFORML 
+						;PRINTFORMW 
+					;CASE 0
+						;PRINTFORML 
+						;PRINTFORMW 
+					CASEELSE
+						IF TALENT:5:无知 == 1
+						PRINTFORML 「…もっと气持ちいいことしてくれるの？」
+						PRINTFORML サニーはフラフラと%CALLNAME:MASTER%の腕の中へとしなだれかかる。
+						PRINTFORMW 妖精の生々しい肉感の熱に興奮しながら、%CALLNAME:MASTER%はサニーを推倒た。
+						ENDIF
+				ENDSELECT
+			ENDIF
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		CASE 5
+		;事后
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1
+			IF CFLAG:318 == 1
+				PRINTFORMW 
+			ELSEIF TALENT:恋慕
+				SELECTCASE RAND:3
+					;CASE 1
+						;PRINTFORML 
+						;PRINTFORMW 
+					;CASE 0
+						;PRINTFORML 
+						;PRINTFORMW 
+					CASEELSE
+						PRINTFORML 
+						PRINTFORML 
+				ENDSELECT
+			ELSEIF TALENT:思慕
+				SELECTCASE RAND:3
+					;CASE 1
+						;PRINTFORML 
+						;PRINTFORMW 
+					;CASE 0
+						;PRINTFORML 
+						;PRINTFORMW 
+					CASEELSE
+						PRINTFORML 
+						PRINTFORML 
+				ENDSELECT
+			ELSE
+				SELECTCASE RAND:3
+					;CASE 1
+						;PRINTFORML 
+						;PRINTFORMW 
+					;CASE 0
+						;PRINTFORML 
+						;PRINTFORMW 
+					CASEELSE
+						PRINTFORML 
+						PRINTFORML 
+				ENDSELECT
+			ENDIF
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		CASE 6
+		;事后お泊り
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+	ENDSELECT
+ENDIF
+
+;==================================================
+;相手からデートのお诱い
+;==================================================
+@M_KOJO_EVENT_K5_27(ARG,ARG:1)
+;口上主はLOCAL
+;ARG:1は目的地
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	SELECTCASE ARG
+		;-------------------------------------------------
+		CASE 0
+		;诱い文句
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		CASE 1
+		;受けた
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		CASE 2
+		;断った
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		CASE 3
+		;房间に诱われた
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		CASE 4
+		;房间に诱われたのを受けた
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		CASE 5
+		;房间に诱われたのを断った
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1
+			RETURN 1
+		ENDIF
+	ENDSELECT
+ENDIF
+RETURN 1
+
+;==================================================
+;脱衣口上
+;==================================================
+@M_KOJO_EVENT_K5_28(ARG,ARG:1)
+;口上主はTARGET
+;ARGに脱がし方选择
+;ARG:1（ARG=3の场合のみあり）地の文の反応
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	SELECTCASE ARG
+		;-------------------------------------------------
+		CASE 0
+		;全裸にする
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1
+			;时间停止时
+			IF FLAG:70
+			;通常
+			ELSE
+			ENDIF
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		CASE 1
+		;下着姿にする
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1
+			;时间停止时
+			IF FLAG:70
+			;通常
+			ELSE
+			ENDIF
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		CASE 2
+		;半脱ぎ
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1
+			;时间停止时
+			IF FLAG:70
+			;通常
+			ELSE
+			ENDIF
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		CASE 3
+		;パンツちょうだい
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1
+			SELECTCASE ARG:1
+				;-------------------------------------------------
+				CASE 0
+				;交换です
+				;记入チェック（=0, 非表示、1, 表示）
+				LOCAL:1 = 1
+				;-------------------------------------------------
+				IF LOCAL:1
+					RETURN 1
+				ENDIF
+				;-------------------------------------------------
+				CASE 1
+				;OK（嬉々
+				;记入チェック（=0, 非表示、1, 表示）
+				LOCAL:1 = 1
+				;-------------------------------------------------
+				IF LOCAL:1
+					RETURN 1
+				ENDIF
+				;-------------------------------------------------
+				CASE 2
+				;OK（渋々
+				;记入チェック（=0, 非表示、1, 表示）
+				LOCAL:1 = 1
+				;-------------------------------------------------
+				IF LOCAL:1
+					RETURN 1
+				ENDIF
+				;-------------------------------------------------
+				CASE 3
+				;嫌です
+				;记入チェック（=0, 非表示、1, 表示）
+				LOCAL:1 = 1
+				;-------------------------------------------------
+				IF LOCAL:1
+					RETURN 1
+				ENDIF
+				RETURN 1
+			ENDSELECT
+		ENDIF
+	ENDSELECT
+ENDIF
+RETURN 1
+
+;==================================================
+;愤怒口上
+;==================================================
+@M_KOJO_EVENT_K5_29(ARG,ARG:1)
+;口上主はTARGET
+;ARGはTARGETの度胸で分岐
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;怒らせてしまった
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;泣かせてしまった　[臆病]持ち
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;相手が推倒を解除
+;==================================================
+@M_KOJO_EVENT_K5_30(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+	;疲れた
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+	;満足して解放
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+	;満足したところを押し倒された
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 4
+	;坏れるまでしてあげる
+		PRINTFORML
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+
+;==================================================
+;一日の終了时(AFTERTRAニーの前)、认识がなければ呼び出されない
+;==================================================
+@M_KOJO_EVENT_K5_31(ARG,ARG:1)
+;口上主はTARGET
+;ARGは会ってない日数
+;何日以上会ってなかったら愚痴を言うとかできます
+;CFLAG:自慰暴露で分岐入れてもよさそう
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;今日会っていない
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;今日会っている
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 0
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+[SKIPSTART]
+;-------------------------------------------------
+;自慰暴露遭遇时の地の文をデフォルトのものから変更したい场合用。
+;その场合は上下のSKIPSTART~SKIPENDを外してください。
+;CFLAG等のキャラ変数を使う场合、キャラ番号の指定が必要になります。
+;-------------------------------------------------
+@M_KOJO_EVENT_K5_ONABARE_1(ARG)
+;-------------------------------------------------
+:口上色を付けるならコメントアウトを外しXをキャラ番号に
+;CALL M_KOJO_COLOR_K5
+
+IF ARG
+	PRINTFORML A弄ってる场合
+ELSE
+	PRINTFORML V弄ってる场合
+ENDIF
+;-------------------------------------------------
+[SKIPEND]
+
+
+[SKIPSTART]
+;-------------------------------------------------
+;自慰暴露でそのまま続けてもらう场合の地の文をデフォルトのものから変更したい场合用。
+;その场合は上下のSKIPSTART~SKIPENDを外してください。
+;CFLAG等のキャラ変数を使う场合、キャラ番号の指定が必要になります。
+;-------------------------------------------------
+@M_KOJO_EVENT_K5_ONABARE_2(ARG)
+;-------------------------------------------------
+:口上色を付けるならコメントアウトを外しXをキャラ番号に
+;CALL M_KOJO_COLOR_K5
+
+IF ARG
+	PRINTFORML A弄ってる场合
+ELSE
+	PRINTFORML V弄ってる场合
+ENDIF
+;-------------------------------------------------
+[SKIPEND]
+
+
+[SKIPSTART]
+;-------------------------------------------------
+;自慰暴露なし崩しックスの地の文をデフォルトのものから変更したい场合用。
+;その场合は上下のSKIPSTART~SKIPENDを外してください。
+;CFLAG等のキャラ変数を使う场合、キャラ番号の指定が必要になります。
+;-------------------------------------------------
+@M_KOJO_EVENT_K5_ONABARE_3(前戯１,本番はどっちか,回数,注入量)
+;-------------------------------------------------
+#DIM 前戯１
+;1=C 2=B 3=M
+#DIM 本番はどっちか
+;0でＶ、1でＡ
+#DIM 注入量
+#DIM 回数
+
+:口上色を付けるならコメントアウトを外しXをキャラ番号に
+;CALL M_KOJO_COLOR_K5
+
+SELECTCASE 前戯１
+	CASE 1
+		PRINTFORML Ｃ責め
+	CASE 2
+		PRINTFORML Ｂ責め
+	CASE 3
+		PRINTFORML Ｍ責め
+ENDSELECT
+
+IF 本番はどっちか
+	PRINTFORML Aで本番
+ELSE
+	PRINTFORML Vで本番
+ENDIF
+;-------------------------------------------------
+[SKIPEND]
+
+
+;-------------------------------------------------
+;处女・无自觉非处女に插入する直前の口上
+;RETURN 1するとコマンドをキャンセルします
+;RETURN 0なら通します
+;CFLAG:破瓜中止口上有がオンになってないと読み込まれないので注意
+;-------------------------------------------------
+@M_KOJO_EVENT_K5_LOST_VIRGIN_STOP
+;-------------------------------------------------
+PRINTFORML 
+RETURN 1
+
+;-------------------------------------------------
+;CFLAG:口上内抱き寄せ判定_初回がオンになっている场合のみ有效。
+;初めて推倒た时、ここでRETURN -1すると推倒を强制的にキャンセルします。
+;RETURN 0なら通常の判定を行い、RETURN 1すると无条件に成功させます。
+;特定のイベント（デート帰りキスなど）を見るまで诶嘿嘿できないようにしたいときなどにどうぞ。
+;-------------------------------------------------
+@M_KOJO_EVENT_K5_PERMISSION_1
+;-------------------------------------------------
+PRINTFORML 
+;RETURN -1
+RETURN 0
+;RETURN 1
+;-------------------------------------------------
+
+
+;-------------------------------------------------
+;CFLAG:口上内抱き寄せ判定_通常がオンになっている场合のみ有效。
+;合意付きで推倒た时、ここでRETURN -1すると推倒を强制的にキャンセルします。
+;RETURN 0なら通常通り成功させます。
+;合意があっても何らかの理由で诶嘿嘿できないようにしたいときなどにどうぞ。
+;-------------------------------------------------
+@M_KOJO_EVENT_K5_PERMISSION_2
+;-------------------------------------------------
+PRINTFORML 
+RETURN 0
+;RETURN -1
+;-------------------------------------------------

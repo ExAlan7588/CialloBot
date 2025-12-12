@@ -1,0 +1,64 @@
+﻿;-------------------------------------------------
+;下药
+;日常系指令、レベル1
+;-------------------------------------------------
+@COM425
+PRINTL 要混入什么药呢？
+$LOOP
+SIF ITEM:41
+	PRINTFORML [{41}] %ITEMNAME:41%
+SIF ITEM:42
+	PRINTFORML [{42}] %ITEMNAME:42%
+SIF ITEM:47
+	PRINTFORML [{47}] %ITEMNAME:47%	
+SIF ITEM:250
+	PRINTFORML [{250}] %ITEMNAME:250%
+SIF ITEM:252
+	PRINTFORML [{252}] %ITEMNAME:252%
+PRINTL [999] 算了
+INPUT
+
+SIF RESULT == 999
+	RETURN 0
+IF RESULT != 41 && RESULT != 42 && RESULT != 47 && RESULT != 250 && RESULT != 252
+	GOTO LOOP
+ELSEIF ITEM:RESULT
+	TFLAG:131 = RESULT
+	PRINTFORML 在茶中混入了%ITEMNAME:RESULT%
+	ITEM:RESULT -= 1
+IF FLAG:70
+	BASE:MASTER:TSP -= 30
+ELSE
+	TIME += 10
+ENDIF
+	RETURN 1
+ELSE
+	RETURN 0
+ENDIF
+
+;-------------------------------------------------
+;实行判定
+;-------------------------------------------------
+;下药
+@COM_ABLE425
+;目击者がいると駄目
+SIF TARGET > 0 && !FLAG:70
+	RETURN 0
+SIF !TFLAG:100
+	RETURN 0
+;批量管理
+SIF GLOBAL_COMABLE(425)
+	RETURN RESULT
+;厨房・妖精の厨房・遗迹の调理室・长屋街
+SIF !KITCHEN(CFLAG:MASTER:当前位置) &&  CFLAG:MASTER:当前位置 != 29 &&  CFLAG:MASTER:当前位置 != 42 &&  CFLAG:MASTER:当前位置 != 长屋街
+	RETURN 0
+;气力0
+SIF BASE:MASTER:气力 <= 0
+	RETURN 0
+SIF CFLAG:诶嘿嘿 == 2
+	RETURN 0
+SIF TFLAG:131
+	RETURN 0
+RETURN 1
+
+

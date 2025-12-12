@@ -1,0 +1,37 @@
+﻿
+;陷阱セット日记录变量
+#DIM SAVEDATA TRAP_SETUPDATA, 4
+
+;陷阱セット场所记录变量
+#DIM SAVEDATA TRAP_POINT, 4
+
+;陷阱セット种类记录变量
+#DIM SAVEDATA TRAP_TYPE, 4
+
+;陷阱警戒度记录变量
+#DIM SAVEDATA TRAP_ALERTNESS, 4
+
+;陷阱耐久度记录变量
+#DIM SAVEDATA TRAP_DURABILITY, 4
+
+;陷阱设置点の兽の气息
+#DIM SAVEDATA TRAP_DENSITY, 4
+
+;陷阱捕猎物记录变量
+#DIM SAVEDATA TRAP_CAPTURE, 4
+
+;陷阱捕获日记录变量
+#DIM SAVEDATA TRAP_CAPTUREDATA, 4
+
+;诱捕捕获头数记录变量
+#DIM SAVEDATA CAPTURE_RECORD, 61
+
+;兽に关する各种变量名
+#DIMS CritterName
+#DIM CritterMeat
+#DIM CritterMeat_Value
+#DIM CritterEffort
+#DIMS CritterIntro
+#DIMS CritterHint
+#DIMS CritterTribe
+

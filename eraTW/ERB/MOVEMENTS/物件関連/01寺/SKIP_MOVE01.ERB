@@ -1,0 +1,162 @@
+﻿;-----------------------------------------------------------
+;远距离移动の设定
+;ARG     目的地
+;ARG:1   现在地
+;RETURN  次の目的地
+;-----------------------------------------------------------
+@SKIP_MOVE_1(ARG, ARG:1)
+#DIM 现在的位置
+;当前位置取得
+IF ARG:1
+	现在的位置 = ARG:1
+ELSE
+	现在的位置 = CFLAG:MASTER:当前位置
+ENDIF
+
+;目的地に直接移动できる场合そこに移动
+SIF CAN_MOVE(现在的位置, ARG) & 1
+	RETURN ARG
+
+;袋小路から行ける场所は固定なので、そこを目指す
+SELECTCASE 现在的位置
+	CASE P103本堂
+		RETURN P104讲堂
+	CASE P105经藏, P119别馆, P122梵钟楼, P137猯藏的小屋
+		RETURN P102境内
+	CASE P111厨房
+		RETURN P108起居室
+	CASE P112澡堂
+		RETURN P107土间
+	CASE P120库房
+		RETURN P106后院
+	CASE P125屠自古私室, P127布都私室, P128神子私室, P132调药室
+		RETURN P130走廊
+	CASE P133浴室, P134藏, P138钟楼, P139邪仙楼
+		RETURN P124灵庙广场
+ENDSELECT
+
+;直接移动できない场合、1つ近い位置を暂定目的地に设定し直してループ
+;基本的に最短で行けるコースを设定する
+;现在地によってコースが变わることも考虑して对応する
+SELECTCASE ARG
+	CASE P101山门
+		SELECTCASE 现在的位置
+		CASE P123灵庙大门 TO P134藏, P138钟楼, P139邪仙楼
+			RETURN P140地藏小路
+		CASEELSE
+			RETURN P102境内
+		ENDSELECT
+	CASE P102境内
+		SELECTCASE 现在的位置
+		CASE P123灵庙大门 TO P134藏, P138钟楼, P139邪仙楼, P140地藏小路
+			RETURN P101山门
+		CASE P106后院, P110走廊, P120库房
+			RETURN P121墓地
+		CASEELSE
+			RETURN P107土间
+		ENDSELECT
+	CASE P103本堂
+		RETURN P104讲堂
+	CASE P104讲堂, P105经藏, P119别馆, P122梵钟楼, P137猯藏的小屋
+		RETURN P102境内
+	CASE P106后院
+		SELECTCASE 现在的位置
+		CASE P108起居室 TO P111厨房, P113纳兹琳私室 TO P118白莲私室, P135走廊, P136响子私室
+			RETURN P110走廊
+		CASEELSE
+			RETURN P121墓地
+		ENDSELECT
+	CASE P107土间
+		SELECTCASE 现在的位置
+		CASE P106后院, P109女苑私室 TO P118白莲私室, P120库房, P135走廊, P136响子私室
+			RETURN P108起居室
+		CASEELSE
+			RETURN P102境内
+		ENDSELECT
+	CASE P108起居室
+		SELECTCASE 现在的位置
+		CASE P106后院, P110走廊, P113纳兹琳私室 TO P118白莲私室, P120库房, P136响子私室
+			RETURN P135走廊
+		CASEELSE
+			RETURN P107土间
+		ENDSELECT
+	CASE P109女苑私室
+		SELECTCASE 现在的位置
+		CASE P106后院, P110走廊, P113纳兹琳私室 TO P118白莲私室, P120库房, P136响子私室
+			RETURN P135走廊
+		CASEELSE
+			RETURN P108起居室
+		ENDSELECT
+	CASE P110走廊
+		SELECTCASE 现在的位置
+		CASE P107土间 TO P118白莲私室, P136响子私室
+			RETURN P135走廊
+		CASEELSE
+			RETURN P106后院
+		ENDSELECT
+	CASE P111厨房
+		RETURN P108起居室
+	CASE P112澡堂
+		RETURN P107土间
+	CASE P113纳兹琳私室, P115星私室
+		SELECTCASE 现在的位置
+		CASE P109女苑私室 TO P118白莲私室, P136响子私室
+			RETURN P135走廊
+		CASEELSE
+			RETURN P110走廊
+		ENDSELECT
+	CASE P114村纱私室, P116一轮私室, P117鵺私室, P118白莲私室, P136响子私室
+		RETURN P135走廊
+	CASE P120库房
+		RETURN P106后院
+	CASE P121墓地
+		SELECTCASE 现在的位置
+		CASE P109女苑私室, P110走廊, P113纳兹琳私室 TO P118白莲私室, P120库房, P135走廊, P136响子私室
+			RETURN P106后院
+		CASEELSE
+			RETURN P102境内
+		ENDSELECT
+
+	CASE P123灵庙大门
+		SELECTCASE 现在的位置
+		CASE P125屠自古私室 TO P132调药室
+			RETURN P124灵庙广场
+		CASEELSE
+			RETURN P140地藏小路
+		ENDSELECT
+	CASE P124灵庙广场
+		SELECTCASE 现在的位置
+		CASE P125屠自古私室 TO P132调药室
+			RETURN P126道场
+		CASEELSE
+			RETURN P123灵庙大门
+		ENDSELECT
+	CASE P125屠自古私室, P127布都私室, P128神子私室, P132调药室, P129客房, P131枯山水
+		RETURN P130走廊
+	CASE P126道场
+		SELECTCASE 现在的位置
+		CASE P125屠自古私室 TO P132调药室
+			RETURN P130走廊
+		CASEELSE
+			RETURN P124灵庙广场
+		ENDSELECT
+	CASE P130走廊
+		RETURN P126道场
+	CASE P133浴室, P134藏, P138钟楼, P139邪仙楼
+		RETURN P124灵庙广场
+
+	CASE P135走廊
+		SELECTCASE 现在的位置
+		CASE P106后院, P110走廊, P120库房, P121墓地
+			RETURN P110走廊
+		CASEELSE
+			RETURN P108起居室
+		ENDSELECT
+	CASE P140地藏小路
+		SELECTCASE 现在的位置
+		CASE P123灵庙大门 TO P134藏, P138钟楼, P139邪仙楼
+			RETURN P123灵庙大门
+		CASEELSE
+			RETURN P101山门
+		ENDSELECT
+ENDSELECT

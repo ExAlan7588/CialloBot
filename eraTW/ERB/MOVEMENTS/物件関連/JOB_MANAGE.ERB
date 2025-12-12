@@ -1,0 +1,29 @@
+﻿;-----------------------------------------
+;仕事・宴会关联
+;-----------------------------------------
+@ENKAI_MAP_SETTING(ARG)
+SELECTCASE ARG
+
+
+
+ENDSELECT
+;-----------------------------------------
+;职场、宴会会场の场所IDを返す函数
+;ARGS,"宴会"or"仕事"
+;TCHARA,ARGS=="仕事"の场合の働く角色ID
+;出力,职场、宴会会场の场所ID
+;-----------------------------------------
+@GET_JOBPLACE(ARGS,TCHARA = 0)
+#FUNCTION
+#DIM 对象ID
+#DIM 对象Map
+#DIM TCHARA
+#DIM OUTID
+IF ARGS == "宴会"
+	对象ID = FLAG:32
+ELSEIF ARGS == "仕事" && TCHARA != 0
+	对象ID = CFLAG:TCHARA:职场
+ELSE
+	RETURNF 0
+ENDIF
+RETURNF GET_MAP_REPLACEMENT(对象ID)

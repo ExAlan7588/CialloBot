@@ -1,0 +1,65 @@
+﻿[SKIPSTART]
+;删去SKIPSTART～SKIPEND之后、将XX换成新的数值
+@EXIST_FreeActXX
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+;オブジェクト本体
+@FreeActXX(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+#DIM 经过时间
+经过时间 = Activity_Duration:TARGET
+SELECTCASE O_DATA
+;陪同行动指令の名称
+CASE "名称"
+	CALLF MAKE_STR(V_NAME, "")
+CASE "CHAIN"
+;他角色に连锁しない场合コメントアウトすること
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "经过时间"
+;陪同行动指令での经过时间
+;0だと30分か残り时间全部の小さい方
+	CALLF MAKE_INT(V_NAME, 0)
+ENDSELECT
+
+@自由行动内容_XX(CHARA, ARGS, 时间系数, CHAIN)
+#DIM CHARA
+#DIM CHAIN
+#DIM 现在地
+#DIM メッセージ表示
+#DIM 时间系数
+#DIM 经过时间
+现在地 = CFLAG:CHARA:当前位置
+メッセージ表示 = 现在地 == CFLAG:MASTER:当前位置 ? 1 # 0
+SELECTCASE ARGS
+	CASE "发生"
+		;发生条件、ここでRETURN 0すると发生しない
+		;CHAINは连锁元角色に相当
+		SIF メッセージ表示
+			PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", CHARA)%\@ CHAIN ? 帮助%NAME_OUTPUT_TRANSLATION("CALLNAME", CHAIN)%开始了活动。# 开始了活动。\@
+		;自由行动にかける时间をRETURNする
+		RETURN 60 + RAND:30
+	CASE "行动中"
+		;行动中の处理、地の文もここで
+		IF メッセージ表示
+			PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", CHARA)%%TEXTR("在呼吸/在闪烁/在做鬼脸")%。
+		ENDIF
+	CASE "完了"
+		;行动时间を使い切ったときの处理、地の文もここで
+		SIF メッセージ表示
+			PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", CHARA)%的活动结束了。
+	CASE "中断"
+		;中断したときの处理、地の文もここで
+	CASE "交手"
+		;自由行动に付き合ったとき用メッセージ
+		PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", PLAYER)%加入了%NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%的活动
+	CASE "ソース"
+		;交手指令选择时の入手ソース、时间系数は付き合った时间の1/10
+			;SOURCE:欢乐 = (50 + ((ABL:亲密 + 好感度系数) * 25)) * 时间系数
+			;SOURCE:被动 = (30 + ((ABL:顺从 + 好感度系数) * 15)) * 时间系数
+ENDSELECT
+[SKIPEND]

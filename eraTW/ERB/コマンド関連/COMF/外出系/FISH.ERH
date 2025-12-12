@@ -1,0 +1,14 @@
+﻿
+;钓った鱼尺寸の记录变量
+#DIM SAVEDATA FISHSIZE_RECORD, 60
+
+;钓った鱼の数の记录变量
+#DIM SAVEDATA FISH_EXP, 60
+
+;木材商に卖った木材数の记录变量改め、各制材の所有数を记录する变量
+#DIM SAVEDATA LOG_SALES, 50
+
+#DIM WoodValue_Log, 50
+#DIM WoodValue_Plank, 50
+#DIM WoodEffort, 50
+#DIMS WoodName, 50

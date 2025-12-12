@@ -1,0 +1,115 @@
+﻿@自由行动处理(ARG)
+;自由行动条件を满たしていない场合は发生せず、中断される
+IF !自由行动条件(ARG)
+	SIF Activity_Duration:ARG
+		TRYCALLFORM 自由行动内容_{Activity_Type:ARG}(ARG, "中断")
+	Activity_Duration:ARG = 0
+	Activity_Type:ARG = 0
+	RETURN
+ENDIF
+;自由行动中の处理
+IF Activity_Duration:ARG
+	;经过时间分减っていく
+	Activity_Duration:ARG = MAX(Activity_Duration:ARG - TIME_PROGRESS(TIME:1), 0)
+	;0になったら完了
+	IF !Activity_Duration:ARG
+		;CALL 自由行动内容(ARG, Activity_Type:ARG, "完了")
+		TRYCALLFORM 自由行动内容_{Activity_Type:ARG}(ARG, "完了")
+		;自由行动中口上,X-1,完了时
+		SIF CFLAG:ARG:当前位置 == CFLAG:MASTER:当前位置
+			CALL KOJO_MESSAGE_SEND("EVENT", 32, ARG, Activity_Type:ARG, 1)
+	;まだ行动中
+	ELSE
+		TRYCALLFORM 自由行动内容_{Activity_Type:ARG}(ARG, "行动中")
+		;自由行动中口上,X-0,行动中
+		SIF CFLAG:ARG:当前位置 == CFLAG:MASTER:当前位置
+			CALL KOJO_MESSAGE_SEND("EVENT", 32, ARG, Activity_Type:ARG, 0)
+		;连锁しない行动は除く（考え事,读书）
+		IF FreeAct_Chain(ARG)
+			FOR LOCAL, 1, CHARANUM
+				;LOCALが连锁对象でARGが连锁主
+				IF !Activity_Duration:LOCAL && CFLAG:LOCAL:当前位置 == CFLAG:ARG:当前位置 && RELATION:LOCAL:ARG > 100 && LOCAL != ARG && 自由行动条件(LOCAL)
+					;参数を付けて发生
+					TRYCALLFORM 自由行动内容_{Activity_Type:ARG}(LOCAL, "发生", 0, ARG)
+					IF RESULT
+						;连锁主の行动をトレースする
+						Activity_Duration:LOCAL = Activity_Duration:ARG
+						Activity_Type:LOCAL = Activity_Type:ARG
+						TCVAR:LOCAL:保持不动 = 1
+					ENDIF
+				ENDIF
+			NEXT
+		ENDIF
+	ENDIF
+	;保持不动ようにする
+	TCVAR:ARG:保持不动 = 1
+	RETURN
+ENDIF
+
+;自由行动发生处理
+
+;基本发生率,移动率の15を参考
+;最初は判定值がRAND1000だったけど800にしてみる
+SIF 5 * TIME_PROGRESS(TIME:1) < RAND:800
+	RETURN
+CALL KOJO_ACTIVE_INFO(ARG)
+LOCAL:1 = RESULT
+LOCALS '= RESULTS
+;とりあえず20个分回す
+;22/12/16 口上侧からの自由行动制御追加
+CALL FISHER_YATES_SHAFFLE(20)
+FOR LOCAL, 0, 20
+	IF LOCAL:1
+	RESULT = 0
+		TRYCALLFORM M_KOJO%LOCALS%_自由行动判定_K{ARG}(SHAFFLE_ARRAY:LOCAL)
+		SIF RESULT < 0
+			CONTINUE
+	ENDIF
+	RESULT = 0
+	TRYCALLFORM 自由行动内容_{SHAFFLE_ARRAY:LOCAL}(ARG, "发生")
+	IF RESULT
+		;RESULT=行动时间
+		Activity_Duration:ARG = RESULT
+		Activity_Type:ARG = SHAFFLE_ARRAY:LOCAL
+		TCVAR:ARG:保持不动 = 1
+		BREAK
+	ENDIF
+NEXT
+
+@自由行动条件(ARG)
+#FUNCTION
+;据点にいない
+SIF !AT_HOME(ARG)
+	RETURNF 0
+;正常な状态ではない
+SIF !SHIRAHU(ARG)
+	RETURNF 0
+;诶嘿嘿中
+SIF CFLAG:ARG:诶嘿嘿
+	RETURNF 0
+;仕事中（行动中）
+SIF CFLAG:ARG:行动
+	RETURNF 0
+;延迟中
+SIF CFLAG:ARG:延迟
+	RETURNF 0
+;同行中
+SIF CFLAG:ARG:同行
+	RETURNF 0
+;移动している
+SIF CFLAG:ARG:当前位置 != CFLAG:ARG:前一次的位置
+	RETURNF 0
+;天候ダメージがある
+SIF 天候造成的影响(ARG, CFLAG:ARG:当前位置) < 0
+	RETURNF 0
+;妊娠中
+SIF CFLAG:ARG:妊娠自觉状态 == 1
+	RETURNF 0
+RETURNF 1
+
+@自由行动吃饭(CHARA)
+#DIM CHARA
+;2时间分の吃饭,あまり频发すると你が食べさせられなくなってしまうので少なめ
+TCVAR:CHARA:空腹时刻 = 1440 * DAY + TIME + 120
+CALL RECOVER(CHARA, 3 * TIME_PROGRESS(TIME:1), "体力", "因为饮食而产生的恢复")
+CALL RECOVER(CHARA, 3 * TIME_PROGRESS(TIME:1), "气力", "因为饮食而产生的恢复")

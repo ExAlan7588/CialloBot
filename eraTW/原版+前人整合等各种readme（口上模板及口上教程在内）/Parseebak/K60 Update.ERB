@@ -1,0 +1,476 @@
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+;settings
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+
+;TODO
+;Option for Parsee seeing you as Yuugi even if you aren't playing as her
+;Option for Parsee going full yandere if you NTR her
+
+@K60_CONFIGURE
+#DIM nLineCnt_Head
+;FOR LOCAL, 0, 100
+;PRINTL
+;NEXT
+LOADGLOBAL
+;set character update version
+nCharaSaveUp:60:0:21 = VAR_OR_DEFAULT("K60EN_VER")
+nLineCnt_Head = LINECOUNT
+REDRAW 0
+	SIF LINECOUNT - nLineCnt_Head > 0
+		CLEARLINE LINECOUNT - nLineCnt_Head
+
+;config menu
+{
+CALL KOJO_CONFIGURE(
+	[[パルスィ]],
+	"MENTAL/PHYSICAL/YURI/PURITY",
+	"",
+	@"「友達は全员ヒマがない。(あるいは私を避けてる。こっちの方がありそうね)...」\n「お酒は切れて、买い足す手持ちもないけど寝る气にもなれない。」\n「なにか描こうかしら。」",60
+	)
+}
+;「All my friends are busy (or deliberately avoiding me, more likely)...」
+;「I'm out of alcohol, I can't afford to buy any more, and I'm not tired enough to sleep.」
+;「I might as well paint something.」
+
+@K60_SETTING_MENTAL
+IF !nCharaSaveUp:60:0:20
+	{
+		CALL KOJO_SETTING(
+			[[パルスィ]], 0, "Abilities",
+			@"%CALLNAME:60%は桥を描きはじめた。その木材は古び、风雨に晒されており...", -1,
+			@"しかし绮丽で、修理した迹がある [口上に合わせて%CALLNAME:60%の能力を变更する]",
+			@"修理する必要がある [%CALLNAME:60%の能力を变更しない]"
+			)
+	}
+	;@"%CALLNAME:60% begins by painting the bridge. Its wood is old and weather-beaten, and...",
+	;@"It's clean and shows signs of repair [Change %CALLNAME:60%'s abilities to match the dialogue]",
+	;@"It's clean, but needs repairs [Leave %CALLNAME:60%'s abilities alone]"
+
+		;Todo: tweak her likes and dislikes (can you even do this from a dialogue?)
+
+	{
+		CALL KOJO_SETTING(
+			[[パルスィ]], 1, "Affinities",
+			@"续いて桥の上に人物を描く。まず描き加えたのは...", -1,
+			@"%NAME:37% [口上に合わせて%CALLNAME:60%の相性を变更する]",
+			@"%NAME:64% [变更しない]"
+			)
+	}
+	;@"Next %HE_SHE(60)% paints some people on the bridge. First, %HE_SHE(60)% adds...", -1,
+	;@"%NAME:37% [change %CALLNAME:60%'s affinities to match the dialogue]",
+	;@"%NAME:64% [leave %CALLNAME:60%'s affinities alone]"
+
+
+	{
+		CALL KOJO_SETTING(
+			[[パルスィ]], 2, "Jealousy",
+			@"それから桥を渡るカップルを描く。\n%CALLNAME:[[パルスィ]]%はカップルを凝视する。その表情は…:", -1,
+			@"普通 [他の子と面前でデートされた场合も、%CALLNAME:60%は反応しません]",
+			@"愤怒 [他の子と面前でデートされた场合、%CALLNAME:60%は愤怒状态になり好感度が下がります]",
+			@"愤怒 [他の子と面前でデートされた场合、%CALLNAME:60%は反抗刻印を获得し、愤怒状态になり好感度が下がります]",
+			@"错乱 [他の子と面前でデートされた场合、%CALLNAME:60%は反抗刻印を获得し、愤怒状态になり好感度が下がり、ヤンデレ值が上がります(未实装)]"
+			)
+	}
+	;@"After that, %HE_SHE(60)% paints a couple crossing the bridge. \n%CALLNAME:[[パルスィ]]% is staring at the couple, and %HIS_HER([[パルスィ]])% expression is:", -1,
+	;@"Neutral [%CALLNAME:60% will not react to you dating other people in front of %HIM_HER([[パルスィ]])%]",
+	;@"Angry [%CALLNAME:60% will get angry and lose Favor if you date other people in front of %HIM_HER([[パルスィ]])%]",
+	;@"Furious [%CALLNAME:60% will get Hate Marks, get angry, and lose Favor if you date other people in front of %HIM_HER([[パルスィ]])%]",
+	;@"Unhinged [%CALLNAME:60% will get Hate Marks, get angry, lose Favor, and gain yandere points (Not yet implemented)]"
+
+	{
+		CALL KOJO_SETTING(
+			[[パルスィ]], 3, "Talents",
+			@"最后に、%CALLNAME:60%が手に持たせたのは…", -1,
+			@"酒瓶 [口上に合わせて素質を变更します]",
+			@"木槌 [素質を变更しません]"
+			)
+	}
+	;Finally, %CALLNAME:60% adds something in one of %HIS_HER([[パルスィ]])% hands. It's a...
+ENDIF
+
+@K60_SETTING_PHYSICAL
+IF !nCharaSaveUp:60:0:20
+
+	{
+		CALL KOJO_SETTING_SEX(
+			[[パルスィ]], 5,
+			@"%CALLNAME:[[パルスィ]]%は最后に描き终えた绘にサインを入れ、乾かす。 \nそして新しいカンバスをイーゼルに据え、新作に取り挂かる。 \n\n自画像だ。 \n绘の中のパルスィは...", -1
+			)
+	}
+	;%CALLNAME:[[パルスィ]]% adds %HIS_HER([[パルスィ]])% signature to %HIS_HER([[パルスィ]])% finished painting and sets it aside to dry.
+	;Then %HE_SHE([[パルスィ]])% places a new blank canvas on %HIS_HER([[パルスィ]])% easel and begins work on another painting.
+	;
+	;%CALLNAME:60% starts by painting %HIMSELF_HERSELF(60)%.
+	;%HE_SHE([[パルスィ]],1)% is a...
+
+	{
+		CALL KOJO_SETTING_SIZE(
+			[[パルスィ]], 6,
+			@"パルスィは...", -1,
+			"小人サイズ",
+			"儿童并み",
+			"小柄",
+			"平均 [default]",
+			"长身",
+			"巨躯",
+			"巨人レベル",
+			@"いつも通り [%CALLNAME:[[パルスィ]]%のサイズを变更しません]"
+			)
+	}
+	;@"Also, %HE_SHE([[パルスィ]])% is...", -1,
+	;"Inchling-sized",
+	;"Child-sized",
+	;"Short",
+	;"Of average height [default]",
+	;"Tall",
+	;"Extremely tall",
+	;"Giant-sized",
+	;@"The same height %HE_SHE([[パルスィ]])% always is [do not change %CALLNAME:[[パルスィ]]%'s size]"
+
+	{
+		CALL KOJO_SETTING(
+			[[パルスィ]], 7, "Pubic Hair",
+			@"次に%CALLNAME:[[パルスィ]]%は衣服を描く。\n裙子を持ち上げ、下着の上部を引っ张ると…:", -1,
+			@"阴毛が见える[阴毛描写を有效化]",
+			"すべすべだ [阴毛描写を无效化]"
+			)
+	}
+	;@"Next, %CALLNAME:[[パルスィ]]% starts painting %HIS_HER([[パルスィ]])% clothes. \n%HES_SHES(TARGET,1)% lifting %HIS_HER([[パルスィ]])% skirt and tugging down the front of %HIS_HER([[パルスィ]])% underwear, revealing:", -1,
+	;@"Some pubic hair [Enables description of %CALLNAME:60%'s pubic hair]",
+	;"Smooth skin [Disable pubic hair related content]"
+
+	{
+		CALL KOJO_SETTING_BREASTS(
+			[[パルスィ]], 8, @"续いて上半身に移る。 \nいつもの上着と黑インナー。 \nその胸は...", -1,
+			"平坦",
+			"とても小さい",
+			"小さい",
+			"平均的 (default)",
+			"丰满",
+			@"两方とも颜より大きい"
+			)
+	}
+	;[[パルスィ]], 8, @"Then %HE_SHE([[パルスィ]])% moves onto %HIS_HER([[パルスィ]])% top. \n%HES_SHES([[パルスィ]],1)% wearing %HIS_HER([[パルスィ]])% usual jacket and bodysuit. \nAnd %HIS_HER([[パルスィ]])% chest is...", -1,
+	;"Flat",
+	;"Very small",
+	;"Small",
+	;"Of average size (default)",
+	;"Well-endowed",
+	;@"Bigger than %HIS_HER([[パルスィ]])% head, each"
+
+		; {
+	; 	CALL KOJO_SETTING_BREASTS(
+	; 		[[パルスィ]], 8, @"Then %HE_SHE([[パルスィ]])% moves onto %HIS_HER([[パルスィ]])% top. \n%HES_SHES([[パルスィ]],1)% wearing %HIS_HER([[パルスィ]])% usual jacket and bodysuit. \nAnd %HIS_HER([[パルスィ]])% chest is...", -1,
+	; 		"Flat",
+	; 		"Very small",
+	; 		"Small",
+	; 		"Of average size (default)",
+	; 		"Well-endowed",
+	; 		@"Bigger than %HIS_HER([[パルスィ]])% head, each",
+	; 		@"More than twice as big as %HIS_HER([[パルスィ]])% head, each"
+	; 		@"Big enough to touch the ground even when %HE_SHE([[パルスィ]])%'s standing"
+	; 		)
+	; }
+
+	{
+		CALL KOJO_SETTING(
+			[[パルスィ]], 9, "Lactation",
+			@"パルスィが空いた片手で乳房を絞ると... ", -1,
+			@"わずかに母乳が滴る [Ｂ经验とＢ绝顶により、%CALLNAME:[[パルスィ]]%は[母乳体质]と[Ｂ敏感]を习得します]",
+			"たわむだけで何も出ない",
+			)
+	}
+	;@"%HES_SHES([[パルスィ]],1)% squeezing one of %HIS_HER([[パルスィ]])% breasts with %HIS_HER([[パルスィ]])% free hand, and... ", -1,
+	;@"A little milk is dribbling out [When %CALLNAME:[[パルスィ]]% has enough B Exp and B Orgasms, %HE_SHE(TARGET)% will gain [Lactating] and [B Sensitive]]",
+	;"It squishes, but nothing comes out",
+
+	{
+		CALL KOJO_SETTING(
+			[[パルスィ]], 10, "Dominance",
+			@"自画像を描き终え、 足元に倒れ伏す%PRINT_MALE("man", MASTER)%を书き足す。\nパルスィはいやらしい笑みを浮かべてその男の股间を踏みつけている。 \nThe %PRINT_MALE("man", MASTER)% is saying: \n(Note:桥姫サービスのメニューから变更できます \nただし下の选择肢を选んだ场合でも、ツンデレ状态のときは常にサディスティックになります)", -1,
+			@"「调教してください」 [Reverseのような激しい責め、足舐めと优しいアフターケアはなし]",
+			@"「抱っこしてヨシヨシして...」 [优しい責め]"
+			)
+	}
+	;@"Now that %CALLNAME:[[パルスィ]]% is done painting %HIMSELF_HERSELF([[パルスィ]])%, %HE_SHE([[パルスィ]])% paints a %PRINT_MALE("man", MASTER)% lying down near %HIM_HER([[パルスィ]])%. \n%HES_SHES([[パルスィ]],1)%'s pressing %HIS_HER([[パルスィ]])% foot into %HIS_HER(MASTER)% groin with a lewd grin on %HIS_HER([[パルスィ]])% face. \nThe %PRINT_MALE("man", MASTER)% is saying: \n(Note: You can unlock the ability to change this in the Hashihime Services menu. \nHowever, even if you pick the bottom option, [[パルスィ]] will always be sadistic when in the Tsundere attitude.)", -1,
+	;@"「I want to be trained」 [rough dominance- like Reverse, but without the footlicking and with lovey-dovey aftercare]",
+	;@"「I want %PRINT_MALE("Daddy:Mommy",60)%, I want milk, I want to be held, I want to be comforted...」 [gentle \@ IS_MALE([[パルスィ]]) ? dominance # femdom\@]"
+
+ENDIF
+
+@K60_SETTING_YURI
+IF !nCharaSaveUp:60:0:20
+	{
+		CALL KOJO_SETTING(
+			[[パルスィ]], 11, "Fandom Shipping",
+			@"%CALLNAME:[[パルスィ]]%は绘を横にのけ、昨晩に仕上げた作品を手に取る。 \n 乾き终えたその作品を箪笥にしまい込む。. \n 他の绘同様、他人に见せる气はない。 \n パルスィと%CALLNAME:64%が...", -1,
+			@"キスしている绘だ [%CALLNAME:[[パルスィ]]%は%CALLNAME:64%に片思いしています。浮气イベントなどはなく、ただのフレーバーです]",
+			@"飲み交わしている绘だ[%CALLNAME:64%は%CALLNAME:[[パルスィ]]%の亲友です]",
+			)
+	}
+	;@"%CALLNAME:[[パルスィ]]% sets the painting aside and picks up a third painting %HE_SHE(TARGET)% worked on the night before. \nIt's dry, so %HE_SHE(TARGET)% places it in %HIS_HER(TARGET)% wardrobe for safe keeping. \nLike most of %HIS_HER(TARGET)% paintings, %HE_SHE(TARGET)% doesn't want to show it to anyone else. \nIt's a picture of %HIM_HER(TARGET)% and %CALLNAME:64%...", -1,
+	;@"Kissing [%CALLNAME:[[パルスィ]]% has a crush on %CALLNAME:64%. %HE_SHE(TARGET,1)% won't cheat on you or anything, it's just there for flavor]",
+	;@"Enjoying a drink together [%CALLNAME:64% is just %CALLNAME:[[パルスィ]]%'s best friend]",
+ENDIF
+
+@K60_SETTING_PURITY
+IF !nCharaSaveUp:60:0:20
+	{
+		CALL KOJO_SETTING_PURITY(
+			[[パルスィ]], 12,
+			@"自画像をしまい込むときに、别の绘がパルスィの目に留まる。 \nパルスィはそれを引っぺがして不快感も露にかまどに放り込んだ。 \nその绘の中では...", -1,
+			@"%CALLNAME:[[パルスィ]]%が酒场でぶっ倒れている",
+			@"%CALLNAME:[[パルスィ]]%が\@ !nCharaUpdate:[[パルスィ]]:0:11 ? %CALLNAME:64% # a %PRINT_MALE("男", MASTER)%に侍奉させている\@",
+			@"%CALLNAME:[[パルスィ]]%が桥の上でオナっている",
+			@"%CALLNAME:[[パルスィ]]%が乱交している",
+			@"%CALLNAME:[[パルスィ]]%が自室でオナっている"
+			)
+	}
+	;@"While stashing %HIS_HER([[パルスィ]])% painting of %HIM_HER([[パルスィ]])% and %CALLNAME:64%, another painting catches %HIS_HER([[パルスィ]])% eye. \n%HE_SHE([[パルスィ]],1)% yanks it out with a look of disgust and tosses it in %HIS_HER([[パルスィ]])% fireplace. \nIt was a painting of...", -1,
+	;@"%CALLNAME:[[パルスィ]]% passed out drunk at a bar",
+	;@"%CALLNAME:[[パルスィ]]% getting \@ HAS_PENIS([[パルスィ]]) ? a blowjob from # eaten out by \@ \@ !nCharaUpdate:[[パルスィ]]:0:11 ? %CALLNAME:64% # a %PRINT_MALE("man", MASTER)%\@",
+	;@"%CALLNAME:[[パルスィ]]% masturbating on %HIS_HER([[パルスィ]])% bridge",
+	;@"%CALLNAME:[[パルスィ]]% in the middle of an orgy",
+	;@"%CALLNAME:[[パルスィ]]% masturbating in %HIS_HER([[パルスィ]])% room"
+
+	{
+		CALL KOJO_SETTING(
+			[[パルスィ]], 13, "Clonecest",
+			@"その绘の里には...", -1,
+			@"%CALLNAME:[[パルスィ]]%が分身に口で侍奉させている绘があった[オナニー描写で、%CALLNAME:[[パルスィ]]%は分身を呼び出して侍奉させることがあります。分身に自我はなく、単なる本体の延长です]",
+			@"何もなかった [分身オナニー非表示]",
+			)
+	}
+	;@"On the back of the painting, there's...", -1,
+	;@"A doodle of %CALLNAME:[[パルスィ]]% getting \@ HAS_PENIS([[パルスィ]]) ? sucked off # eaten out\@ by %HIS_HER(TARGET)% clone [%CALLNAME:[[パルスィ]]% will summon a clone and receive oral sex from it in one of %HIS_HER(TARGET)% masturbation scenes. The clone has no will of its own, it's just an extension of %CALLNAME:[[パルスィ]]%]",
+	;@"Nothing [The clonecest masturbation scene is disabled]",
+ENDIF
+
+@K60_Defaults
+#FUNCTION
+#DIM C_ID
+#DIM D_ID
+REGEXPMATCH  GETDOINGFUNCTION(), @"K(\\d+)_", RESULT, RESULTS
+C_ID = TOINT(RESULTS:1)
+D_ID = CFLAG:C_ID:口上セレクタ
+
+nCharaUpdate:C_ID:D_ID:0 = 0
+nCharaUpdate:C_ID:D_ID:1 = 0
+nCharaUpdate:C_ID:D_ID:2 = 2
+nCharaUpdate:C_ID:D_ID:3 = 0
+nCharaUpdate:C_ID:D_ID:4 = 7
+nCharaUpdate:C_ID:D_ID:5 = 1
+nCharaUpdate:C_ID:D_ID:6 = 3
+nCharaUpdate:C_ID:D_ID:7 = 0
+nCharaUpdate:C_ID:D_ID:8 = 3
+nCharaUpdate:C_ID:D_ID:9 = 0
+nCharaUpdate:C_ID:D_ID:10 = 1
+nCharaUpdate:C_ID:D_ID:11 = 0
+nCharaUpdate:C_ID:D_ID:12 = 0
+nCharaUpdate:C_ID:D_ID:13 = 0
+
+@K60_SETTING_SUBMIT
+
+
+SELECTCASE nCharaUpdate:[[パルスィ]]:0:0
+	CASE 0
+		;PRINTFORMDW %CALLNAME:[[パルスィ]]%'s abilities will be changed.
+		PRINTFORMDW 能力を变更します
+		CALL K60_SET_ABILITIES(1)
+	CASE 1
+		;PRINTFORMDW %CALLNAME:[[パルスィ]]% will keep the default abilities in %HIS_HER([[パルスィ]])% CSV.
+		PRINTFORMDW CSV同様の能力を維持します
+ENDSELECT
+
+PRINTFORMDL 
+
+SELECTCASE nCharaUpdate:[[パルスィ]]:0:1
+	CASE 0
+		;PRINTFORMDW %CALLNAME:[[パルスィ]]%'s affinities will be changed.
+		PRINTFORMDW 相性を变更します
+		CALL K60_SET_AFFINITIES(1)
+	CASE 1
+		;PRINTFORMDW Parsee will keep the default affinities in %HIS_HER([[パルスィ]])% CSV.
+		PRINTFORMDW CSV同様の相性を維持します
+ENDSELECT
+
+PRINTFORMDL 
+
+SELECTCASE nCharaUpdate:[[パルスィ]]:0:2
+	CASE 0
+		;PRINTFORMDW Really? A hashihime handling %HIS_HER([[パルスィ]])% emotions in a healthy way? You might as well ask a fairy to do calculus.
+		;PRINTFORMDW But if you insist... %CALLNAME:[[パルスィ]]% will not get upset if %HE_SHE([[パルスィ]])% sees you on a date.
+		PRINTFORMDW マジですか？桥姫に情绪を安定させるって妖精に数学やらせるようなものでは？
+		PRINTFORMDW ですが、どうしてもと言うなら... %CALLNAME:[[パルスィ]]%はデート现场を目撃しても愤怒ません
+		CFLAG:K60ENC_SETTING_JEALOUSY_PENALTY = 2
+	CASE 1
+		;PRINTFORMDW %CALLNAME:[[パルスィ]]% will get angry and lose Favor if %HE_SHE([[パルスィ]])% sees you on a date.
+		;PRINTFORMDW You might not want to bring dates to the Underworld.
+		PRINTFORMDW デート现场を目撃すると、%CALLNAME:[[パルスィ]]%は怒って好感度が下がります
+		PRINTFORMDW 地底でデートはしない方がいいかもしれませんね
+		CFLAG:K60ENC_SETTING_JEALOUSY_PENALTY = 1
+	CASE 2
+		;PRINTFORMDW %CALLNAME:[[パルスィ]]% will get angry, lose Favor, and get Hate Marks if %HE_SHE([[パルスィ]])% sees you on a date.
+		;PRINTFORMDW I hope you like getting cursed!
+		PRINTFORMDW デート现场を目撃すると、%CALLNAME:[[パルスィ]]%は怒って好感度が下がり、反抗刻印がつきます
+		PRINTFORMDW 呪われても笑って許せる人でありますように！
+		CFLAG:K60ENC_SETTING_JEALOUSY_PENALTY = 0
+	CASE 3
+		;PRINTFORML So you enjoy the thrill of danger, then? Or are you looking for a challenge?
+		;CALL PRINT_STRL, @"「Or maybe you @ITALIC@want@ %CALLNAME:[[パルスィ]]% to snap...」"
+		;PRINTFORMW Well, I won't judge. After all: "Any choice you make will be accepted, that's the kind of world this is."
+		PRINTFORML さてはスリルがお好きですね？はたまた乘り越えるべき困难をお探しとか？
+		CALL PRINT_STRL, @"「あるいは%CALLNAME:[[パルスィ]]%を@ITALIC@坏したい@とか...」"
+		PRINTFORMW まあいいでしょう。: "汝のあらゆる选择は受け入れられよう、この世はかくの如し。"
+		CFLAG:K60ENC_SETTING_JEALOUSY_PENALTY = 3
+ENDSELECT
+
+PRINTFORMDL 
+
+SELECTCASE nCharaUpdate:[[パルスィ]]:0:3
+	CASE 0
+		;PRINTFORMDW %CALLNAME:[[パルスィ]]%'s talents will change.
+		PRINTFORMDW 素質を变更します
+		CALL K60_SET_TRAITS(1)
+	CASE 1
+		;PRINTFORMDW %CALLNAME:[[パルスィ]]% will keep the default talents in %HIS_HER([[パルスィ]])% CSV.
+		PRINTFORMDW CSV通りの素質を維持します
+ENDSELECT
+
+CALL KOJO_SUBMIT_SEX([[パルスィ]], 5)
+
+PRINTFORMDL 
+
+{
+	CALL KOJO_SUBMIT_SIZE(
+		[[パルスィ]], 6, -1,
+		@"%CALLNAME:[[パルスィ]]%は小人サイズになりました。普通の体格が妒ましい。",
+		@"%CALLNAME:[[パルスィ]]%は儿童サイズになりました。普通の体格が妒ましい。",
+		@"%CALLNAME:[[パルスィ]]%は小柄体型になりました。普通の体格が妒ましい。",
+		@"%CALLNAME:[[パルスィ]]%は普通の体格になりました。长身が妒ましい。",
+		@"%CALLNAME:[[パルスィ]]%は长身になりました。普通の体格が妒ましい。",
+		@"%CALLNAME:[[パルスィ]]%は巨躯になりました。普通の体格が妒ましい。",
+		@"%CALLNAME:[[パルスィ]]%は巨人になりました。酒场に身体が收まる奴らが妒ましい。",
+		@"%CALLNAME:[[パルスィ]]%の体格はそのままです。"
+	)
+}
+;@"%CALLNAME:[[パルスィ]]% is now inchling-sized. \n%HES_SHES([[パルスィ]],1)% jealous of people who are of normal height.",
+;@"%CALLNAME:[[パルスィ]]% is now child-sized. \n%HES_SHES([[パルスィ]],1)% jealous of people who are of normal height.",
+;@"%CALLNAME:[[パルスィ]]% is now short. \n%HES_SHES([[パルスィ]],1)% jealous of people who are of normal height.",
+;@"%CALLNAME:[[パルスィ]]% is now of average height. \n%HES_SHES([[パルスィ]],1)% jealous of people who are tall.",
+;@"%CALLNAME:[[パルスィ]]% is now tall. \n%HES_SHES([[パルスィ]],1)% jealous of people who are of normal height.",
+;@"%CALLNAME:[[パルスィ]]% is now extremely tall. \n%HES_SHES([[パルスィ]],1)% jealous of people who are of normal height.",
+;@"%CALLNAME:[[パルスィ]]% is now a %PRINT_MALE("giant:giantess", [[パルスィ]])%. \n%HES_SHES([[パルスィ]],1)% jealous of people who can fit their whole bodies into bars.",
+;@"%CALLNAME:[[パルスィ]]%'s height was left alone."
+
+PRINTFORMDL 
+
+SELECTCASE nCharaUpdate:[[パルスィ]]:0:7
+	CASE 0
+		;PRINTFORMDW %CALLNAME:[[パルスィ]]%'s pubic hair will be described. (As it should be.)
+		PRINTFORMDW 阴毛描写します
+	CASE 1
+		;PRINTFORMDW %CALLNAME:[[パルスィ]]%'s pubic hair will not be described.
+		PRINTFORMDW 阴毛描写しません
+		CFLAG:[[パルスィ]]:K60ENC_SETTING_PUBIC_HAIR = -1
+ENDSELECT
+
+PRINTFORMDL 
+
+{
+	CALL KOJO_SUBMIT_BREASTS(
+		[[パルスィ]], 8, -1,
+		@"%CALLNAME:[[パルスィ]]%はまな板になりました。\n 嫉妒の种が增えましたね。",
+		@"%CALLNAME:[[パルスィ]]%は [贫乳]になりました。\n 嫉妒の种が增えましたね。",
+		@"%CALLNAME:[[パルスィ]]%は [普乳]になりました。\n それでも自分より大きい相手に嫉妒するでしょう。たとえ同じサイズだったとしても。",
+		@"%CALLNAME:[[パルスィ]]%は [巨乳]になりました。\n 彼女はそれを上着で隐し、自分より小さい相手に嫉妒するでしょう…大きすぎると思って。",
+		@"%CALLNAME:[[パルスィ]]%は [爆乳]になりました。\n 彼女はそれを上着で隐し、自分より小さい相手に嫉妒するでしょう…大きすぎると思って。",
+	)
+}
+;@"%CALLNAME:[[パルスィ]]% is now flat as a board. \nAnother thing for %HIM_HER([[パルスィ]])% to be jealous about.",
+;@"%CALLNAME:[[パルスィ]]% has [Small Breasts]. \nAnother thing for %HIM_HER([[パルスィ]])% to be jealous about.",
+;@"%CALLNAME:[[パルスィ]]% has [Normal Breasts]. \n%HE_SHE([[パルスィ]],1)% will still get jealous of being flatter than other %PRINT_MALE("men", [[パルスィ]])%, even if their busts are the same size.",
+;@"%CALLNAME:[[パルスィ]]% has [Big Breasts]. \nI guess %HE_SHE([[パルスィ]])% was hiding them under that jacket of %HIS_HERS([[パルスィ]])%... \n%HE_SHE([[パルスィ]],1)% will get jealous of %PRINT_MALE("men", [[パルスィ]])% flatter than %HIM_HER([[パルスィ]])%, because %HE_SHE([[パルスィ]])% thinks %HIS_HER([[パルスィ]])% breasts are too big.",
+;@"%CALLNAME:[[パルスィ]]% has [Huge Breasts]. \nI guess %HE_SHE([[パルスィ]])% was hiding them under that jacket of %HIS_HERS([[パルスィ]])%... \n%HE_SHE([[パルスィ]],1)% will get jealous of %PRINT_MALE("men", [[パルスィ]])% flatter than %HIM_HER([[パルスィ]])%, because %HE_SHE([[パルスィ]])% thinks %HIS_HER([[パルスィ]])% breasts are too big.",
+
+; {
+; 	CALL KOJO_SUBMIT_BREASTS(
+; 		[[パルスィ]], 8, -1,
+; 		@"%CALLNAME:[[パルスィ]]% is now flat as a board. \nAnother thing for %HIM_HER([[パルスィ]])% to be jealous about.",
+; 		@"%CALLNAME:[[パルスィ]]% has [Tiny Breasts]. \nAnother thing for %HIM_HER([[パルスィ]])% to be jealous about.",
+; 		@"%CALLNAME:[[パルスィ]]% has [Small Breasts]. \nAnother thing for %HIM_HER([[パルスィ]])% to be jealous about.",
+; 		@"%CALLNAME:[[パルスィ]]% has [Normal Breasts]. \n%HE_SHE([[パルスィ]],1)% will still get jealous of being flatter than other %PRINT_MALE("men", [[パルスィ]])%, even if their busts are the same size.",
+; 		@"%CALLNAME:[[パルスィ]]% has [Big Breasts]. \nI guess %HE_SHE([[パルスィ]])% was hiding them under that jacket of %HIS_HERS([[パルスィ]])%... \n%HE_SHE([[パルスィ]],1)% will get jealous of %PRINT_MALE("men", [[パルスィ]])% flatter than %HIM_HER([[パルスィ]])%, because %HE_SHE([[パルスィ]])% thinks %HIS_HER([[パルスィ]])% breasts are too big.",
+; 		@"%CALLNAME:[[パルスィ]]% has [Huge Breasts]. \nI guess %HE_SHE([[パルスィ]])% was hiding them under that jacket of %HIS_HERS([[パルスィ]])%... \n%HE_SHE([[パルスィ]],1)% will get jealous of %PRINT_MALE("men", [[パルスィ]])% flatter than %HIM_HER([[パルスィ]])%, because %HE_SHE([[パルスィ]])% thinks %HIS_HER([[パルスィ]])% breasts are too big.",
+; 		@"%CALLNAME:[[パルスィ]]% has [Gigantic Breasts]. \nI guess %HE_SHE([[パルスィ]])% borrowed some spatial compression device from the kappa... \n%HE_SHE([[パルスィ]],1)% will get jealous of %PRINT_MALE("men", [[パルスィ]])% with normal-sized breasts, because %HIS_HER([[パルスィ]])% breasts are way too big.",
+; 		@"%CALLNAME:[[パルスィ]]% has [Mystifying Breasts]. \nI guess %HE_SHE([[パルスィ]])% borrowed some spatial compression device from the kappa... \n%HE_SHE([[パルスィ]],1)%'s jealous of people who don't have to use magic to get around.",
+; 		)
+; }
+
+PRINTFORMDL 
+
+SELECTCASE nCharaUpdate:[[パルスィ]]:0:9
+	CASE 0
+		CFLAG:[[パルスィ]]:K60ENC_SETTING_LACTATION = 1
+		;PRINTFORMW Added a potential for %CALLNAME:[[パルスィ]]% to develop lactation.
+		PRINTFORMW %CALLNAME:[[パルスィ]]%は母乳が出るようになる余地があります。
+	CASE 1
+		;PRINTFORMW %CALLNAME:[[パルスィ]]% will not start lactating from breast stimulation alone.
+		PRINTFORMW 胸への刺激だけでは母乳は出ません。
+ENDSELECT
+
+PRINTFORMDL 
+
+SELECTCASE nCharaUpdate:[[パルスィ]]:0:10
+	CASE 0
+		PRINTFORMDW Parsee will be a rough dom. Don't forget the safe word!
+		CFLAG:K60ENC_SETTING_DOMINANCE = 2
+	CASE 1
+		PRINTFORMDW Parsee will be a gentle dom. I see you're a %PRINT_MALE("man", MASTER)% of culture.
+		CFLAG:K60ENC_SETTING_DOMINANCE = 1
+		CFLAG:[[パルスィ]]:性格倾向 = 2
+ENDSELECT
+
+PRINTFORMDL 
+
+SELECTCASE nCharaUpdate:[[パルスィ]]:0:11
+	CASE 0
+		CFLAG:[[パルスィ]]:K60ENC_SETTING_YUUPARU_CRUSH = 1
+		;PRINTFORMDW Parsee has a crush on Yuugi. Bring on the fandom shipping!
+		PRINTFORMDW パルスィは勇仪に片思いしています。いざファンダムの道へ！
+	CASE 1
+		CFLAG:[[パルスィ]]:K60ENC_SETTING_YUUPARU_CRUSH = 2
+		;PRINTFORMW Parsee and Yuugi are just good friends. (Canonically we don't know if they've even met...)
+		PRINTFORMW パルスィと勇仪はいい友人です。（原作では认识があるかすら不明です…）
+ENDSELECT
+
+PRINTFORMDL 
+
+{
+	CALL KOJO_SUBMIT_PURITY(
+		[[パルスィ]], 12, -1,
+		@"%CALLNAME:[[パルスィ]]%の性经验を变更しません",
+		@"%CALLNAME:[[パルスィ]]%は経験済みですが、最后の行为は数百年前です",
+		@"%CALLNAME:[[パルスィ]]%は灭茶苦茶に性欲をこじらせた处女です \nムラムラを解消すべくしょっちゅうオナっています",
+		@"%CALLNAME:[[パルスィ]]%は文句なしのヤリマンです。どうやって桥姫とヤりたがるような手合いを见つけているのでしょう？",
+		@"%CALLNAME:[[パルスィ]]%は处女で、そのことをたいへん恥じています"
+		)
+}
+;@"%CALLNAME:[[パルスィ]]%'s sexual experience has been left alone.",
+;@"%CALLNAME:[[パルスィ]]% has had sex before, but it's been centuries since the last time %HE_SHE([[パルスィ]])% got laid.",
+;@"%CALLNAME:[[パルスィ]]% is a virgin with a sky-high libido. \n%HE_SHE([[パルスィ]],1)% frequently masturbates to deal with %HIS_HER([[パルスィ]])% sexual frustration.",
+;@"%CALLNAME:[[パルスィ]]% is a total slut. How did %HE_SHE([[パルスィ]])% manage to find so many people willing to fuck a hashihime?",
+;@"%CALLNAME:[[パルスィ]]% is a virgin, and very ashamed of it."
+
+PRINTFORMDL 
+
+SELECTCASE nCharaUpdate:[[パルスィ]]:0:13
+	CASE 0
+		CFLAG:[[パルスィ]]:K60ENC_SETTING_CLONECEST = 1
+		;PRINTFORMDW When %CALLNAME:[[パルスィ]]% gets horny, sometimes %HE_SHE(TARGET)%'ll summon a clone and have it suck %HIM_HER(TARGET)% off.
+		PRINTFORMDW ムラムラしたときは分身を呼び出してすることがあります。
+	CASE 1
+		CFLAG:[[パルスィ]]:K60ENC_SETTING_CLONECEST = 2
+		;PRINTFORMW %CALLNAME:[[パルスィ]]% will just use %HIS_HER([[パルスィ]])% fingers to masturbate like everyone else.
+		PRINTFORMW %CALLNAME:[[パルスィ]]%は普通に指でします。
+ENDSELECT

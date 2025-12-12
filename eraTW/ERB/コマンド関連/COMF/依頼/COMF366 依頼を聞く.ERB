@@ -1,0 +1,185 @@
+﻿;-------------------------------------------------
+;实行判定
+;-------------------------------------------------
+@COM_ABLE366
+SIF !TFLAG:100
+	RETURN 0
+SIF TARGET <= 0
+	RETURN 0
+;时间停止/睡眠/添い寝/诶嘿嘿中は不可
+SIF SHIRAHU(TARGET) != 1
+	RETURN 0
+;批量管理
+SIF GLOBAL_COMABLE(366)
+	RETURN RESULT
+
+SELECTCASE IRAI_CHARA_TO_PROGRESS(TARGET)
+CASE "依赖未受托"
+;空きスロットが无いなら不可
+	SIF !SEARCH_IRAI_EMPTY()
+		RETURN 0
+;个々に指定された条件をみたさない时
+	SIF !INT_DATA_IRAI(CFLAG:TARGET:依赖内容, "依赖受托可能条件", TARGET)
+		RETURN 0
+CASE "依赖中"
+;依赖确认/破弃が可能
+CASE "依赖达成"
+;成功报告可能
+CASE "期限切れ", "报告忘れ", "依赖失败"
+;失败报告
+CASE "依赖结束（成功）", "依赖结束（期限切れ）", "依赖结束（报告忘れ）", "依赖结束（失败）"
+;ここは依赖フラグの消灭待ちなんで触らない
+		RETURN 0
+CASEELSE
+		RETURN 0
+ENDSELECT
+RETURN 1
+
+
+@COM366
+SELECTCASE IRAI_CHARA_TO_PROGRESS(TARGET)
+CASE "依赖未受托"
+	CALL IRAI_START(TARGET)
+	RETURN RESULT
+CASE "依赖中"
+	CALL IRAI_LOOK(TARGET)
+	RETURN RESULT
+CASE "依赖达成", "期限切れ", "报告忘れ", "依赖失败"
+	CALL IRAI_REPORT(TARGET)
+	RETURN 1
+ENDSELECT
+
+
+
+;-------------------------------------------------
+;依赖受托
+;21/08/25 受诺时に一部依赖内容を表示するように变更
+;-------------------------------------------------
+@IRAI_START(CHARA)
+#DIM CHARA
+#DIM 受诺		;受托依赖が入ったスロット番号
+#DIM 依赖ＩＤ	;依赖自体のID
+;依赖提示时
+PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", CHARA)%好像有事想要拜托%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%
+CALL SHOW_IRAI_MESSAGE(CHARA, CFLAG:CHARA:依赖内容, "依赖提示时")
+CALL SHOW_IRAI_DATA(CFLAG:CHARA:依赖内容, 0)
+CALL ASK_YN("接受委托", "拒绝")
+IF RESULT
+	PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%婉言拒绝了
+	CALL SHOW_IRAI_MESSAGE(CHARA, CFLAG:CHARA:依赖内容, "依赖非受托时")
+	PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", CHARA)%看起来很可惜的样子
+	RETURN -1
+ELSE
+	受诺 = SEARCH_IRAI_EMPTY()
+	CALL SET_IRAI_SLOT(CHARA)
+	依赖ＩＤ = (CFLAG:CHARA:依赖内容) % 1000
+	PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%接受了%NAME_OUTPUT_TRANSLATION("CALLNAME", CHARA)%的委托
+	SELECTCASE IRAI_SLOT_TO_TASKNAME(受诺)
+		CASE "传令（人物）"
+			;固有依赖は提示済なのでカット
+			SIF 依赖ＩＤ < 100
+				PRINTFORML 得到了一封写给%NAME_OUTPUT_TRANSLATION("CALLNAME", (IRAI_SLOT_TO_PERSON(受诺)))%的信
+		CASE "捜索（人物）"
+			IF 依赖ＩＤ == 9
+				PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", CHARA)%将失物递过来了
+				PRINTFORM 物品的特征：
+			ELSE
+				PRINTFORM 线索：
+			ENDIF
+			CALL SHOW_IRAI_HINT("捜索（人物）", IRAI_SLOT_TO_PERSON(受诺), IRAI_SUB:受诺)
+		CASE "捜索（场所）"
+			PRINTFORM 线索：
+			CALL SHOW_IRAI_HINT("捜索（场所）", IRAI_SLOT_TO_PLACE(受诺), IRAI_SUB:受诺)
+		CASE "讨伐"
+			PRINTFORML 弹幕胜负的对手是%NAME_OUTPUT_TRANSLATION("CALLNAME", (IRAI_SLOT_TO_PERSON(受诺)))%
+		CASE "其他"
+			IF 依赖ＩＤ == 17
+				DUMPRAND
+				RANDOMIZE IRAI_SUB:受诺
+				LOCALS:0 = %IRAI_一般17_味设定(CHARA)%
+				REPLACE LOCALS:0, "/", "、"
+				INITRAND
+				PRINTFORML 大概是一道有%RESULTS:0%味道的菜肴
+				VARSET LOCALS
+				RESULTS:0 =
+			ELSEIF 依赖ＩＤ == 18
+				CALL IRAI_CARRYOUT(CHARA, 依赖ＩＤ, "依赖条件表示")
+			ENDIF
+	ENDSELECT
+	WAIT
+	CALL SHOW_IRAI_MESSAGE(CHARA, CFLAG:CHARA:依赖内容, "依赖受托时")
+	RETURN 1
+ENDIF
+
+
+
+;-------------------------------------------------
+;依赖确认/破弃
+;-------------------------------------------------
+@IRAI_LOOK(CHARA)
+#DIM CHARA
+#DIM CHK_SLOT
+CHK_SLOT = SEARCH_IRAI_SLOT(CFLAG:CHARA:依赖内容)
+CALL SHOW_IRAI_MESSAGE(CHARA, CFLAG:CHARA:依赖内容, "依赖确认时")
+CALL SHOW_IRAI_DATA(CFLAG:CHARA:依赖内容, CHK_SLOT)
+CALL ASK_YN("确认", "破弃")
+SIF !RESULT
+	RETURN -1
+PRINTFORML 真的么？
+CALL ASK_YN
+SIF RESULT
+	RETURN -1
+CALL SHOW_IRAI_MESSAGE(CHARA, CFLAG:CHARA:依赖内容, "依赖破弃时")
+PRINTFORMW 放弃了委托。
+CALL CLEAR_IRAI_SLOT(CHARA, CHK_SLOT, "依赖结束（失败）")
+
+
+
+;-------------------------------------------------
+;依赖报告
+;-------------------------------------------------
+@IRAI_REPORT(CHARA)
+#DIM CHARA
+#DIM CHK_SLOT
+CHK_SLOT = SEARCH_IRAI_SLOT(CFLAG:CHARA:依赖内容)
+;依赖成功时
+;依赖失败时
+SELECTCASE IRAI_CHARA_TO_PROGRESS(CHARA)
+CASE "依赖达成"
+	CALL SHOW_IRAI_MESSAGE(CHARA, CFLAG:CHARA:依赖内容, "成功报告时")
+	CALL IRAI_CARRYOUT(CHARA, CFLAG:CHARA:依赖内容, "依赖成功时")
+CASE "期限切れ", "报告忘れ", "依赖失败"
+	CALL SHOW_IRAI_MESSAGE(CHARA, CFLAG:CHARA:依赖内容, "失败报告时")
+	CALL IRAI_CARRYOUT(CHARA, CFLAG:CHARA:依赖内容, "依赖失败时")
+ENDSELECT
+
+;乐谱入手处理
+SELECTCASE IRAI_CHARA_TO_PROGRESS(CHARA)
+CASE "依赖达成"
+	RESULT = 乐谱入手_特殊条件(乐谱入手方法：妖精依赖成功)
+	PRINTL
+	SELECTCASE CHARA
+	CASE 5,6,7,13,14
+		RESULT = 乐谱入手_特殊条件(乐谱入手方法：妖精依赖成功)
+	CASE 29
+		RESULT = 乐谱入手_特殊条件(乐谱入手方法：文依赖成功)
+	CASE 42
+		RESULT = 乐谱入手_特殊条件(乐谱入手方法：果依赖成功)
+	ENDSELECT
+CASE "依赖失败"
+	IF (RAND:(100) < 30)
+		PRINTL
+		RESULT = 乐谱入手_特殊条件(乐谱入手方法：依赖失败时)
+	ENDIF
+ENDSELECT
+
+SELECTCASE IRAI_CHARA_TO_PROGRESS(CHARA)
+CASE "依赖达成"
+	CALL CLEAR_IRAI_SLOT(CHARA, CHK_SLOT, "依赖结束（成功）")
+CASE "期限切れ"
+	CALL CLEAR_IRAI_SLOT(CHARA, CHK_SLOT, "依赖结束（期限切れ）")
+CASE "报告忘れ"
+	CALL CLEAR_IRAI_SLOT(CHARA, CHK_SLOT, "依赖结束（报告忘れ）")
+CASE "依赖失败"
+	CALL CLEAR_IRAI_SLOT(CHARA, CHK_SLOT, "依赖结束（失败）")
+ENDSELECT

@@ -1,0 +1,206 @@
+﻿;==================================================
+;自由行动中
+;ARG:1      0=行动中,1=完了时
+;技能系の行动は技能レベルが1以上なら发生
+;==================================================
+@M_KOJO_NK_EVENT_K38_32(ARG,ARG:1)
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	SELECTCASE ARG
+	CASE 0
+		;▼考え事,（～は考えに耽っている。）
+		IF !ARG:1
+			;行动中
+			PRINTFORML 
+		ELSE
+			;完了时
+			PRINTFORML 
+		ENDIF
+	CASE 1
+		;▼游ぶ,（～は走り回っている。）
+		;※[幼稚]持ちのみ
+		IF !ARG:1
+			;行动中
+			PRINTFORML 
+		ELSE
+			;完了时
+			PRINTFORML 
+		ENDIF
+	CASE 2
+		;▼食事,（～は食事を摂っている。）
+		IF !ARG:1
+			;行动中
+			PRINTFORML 
+		ELSE
+			;完了时
+			PRINTFORML 
+		ENDIF
+	CASE 3
+		;▼つまみ食い（～はこっそりつまみ食いをしている。）
+		;※[妖精]持ちとルーミア、こいし、幽々子、紫苑のみ
+		IF !ARG:1
+			;行动中
+			PRINTFORML 
+		ELSE
+			;完了时
+			PRINTFORML 
+		ENDIF
+	CASE 4
+		;▼扫除,（～はテキパキと房间の扫除をしている。）
+		;※[扫除系]持ちまたは污臭耐性-1以下のみ
+		IF !ARG:1
+			;行动中
+			PRINTFORML 
+		ELSE
+			;完了时
+			PRINTFORML 
+		ENDIF
+	CASE 5
+		;▼运动,（～は张り切って运动している。）
+		;※[音乐知识]持ちは除く（演奏になる）
+		IF !ARG:1
+			;行动中
+			PRINTFORML 
+		ELSE
+			;完了时
+			PRINTFORML 
+		ENDIF
+	CASE 6
+		;▼读书,（～は黙々と本を读んでいる。）
+		IF !ARG:1
+			;行动中
+			PRINTFORML 
+		ELSE
+			;完了时
+			PRINTFORML 
+		ENDIF
+	CASE 7
+		;▼料理,
+		IF !ARG:1
+			;行动中
+			IF Activity_Duration:TARGET > 30
+				;料理中（～は轻快に料理をしている。）
+				PRINTFORML 
+			ELSE
+				;食事中（～は作った料理を食べている。）
+				PRINTFORML 
+			ENDIF
+		ELSE
+			;完了时
+			PRINTFORML 
+		ENDIF
+	CASE 8
+		;▼演奏
+		;※[音乐知识]持ちのみ（TALENT:音乐知识で变化）
+		;1,～は小气味よく演奏している。
+		;2,～は气ままに歌っている。
+		;3,～は华丽に踊っている。
+		IF !ARG:1
+			;行动中
+			PRINTFORML 
+		ELSE
+			;完了时
+			PRINTFORML 
+		ENDIF
+	CASE 9
+		;▼采集,（～使える素材を探している。）
+		IF !ARG:1
+			;行动中
+			PRINTFORML 
+		ELSE
+			;完了时
+			PRINTFORML 
+		ENDIF
+	CASE 10
+		;▼钓り,（～はのんびり钓りをしている。）
+		IF !ARG:1
+			;行动中
+			PRINTFORML 
+		ELSE
+			;完了时
+			PRINTFORML 
+		ENDIF
+	CASE 11
+		;▼实验,（～は怪しい实验をしている。）
+		IF !ARG:1
+			;行动中
+			PRINTFORML 
+		ELSE
+			;完了时
+			PRINTFORML 
+		ENDIF
+	CASE 12
+		;▼のんびり,（～はのんびりしている。）
+		IF !ARG:1
+			;行动中
+			PRINTFORML 
+		ELSE
+			;完了时
+			PRINTFORML 
+		ENDIF
+	CASE 13
+		;▼晩酌,（～はまったりとお酒を饮んでいる。）
+		;※酒耐性0以上のみ
+		IF !ARG:1
+			;行动中
+			PRINTFORML 
+		ELSE
+			;完了时
+			PRINTFORML 
+		ENDIF
+	CASE 14
+		;▼买い物,（～は气ままに买い物している。）
+		IF !ARG:1
+			;行动中
+			PRINTFORML 
+		ELSE
+			;完了时
+			PRINTFORML 
+		ENDIF
+	CASE 15
+		;▼说教,（～はじっと闻いている…）
+		;※神灵・蓬莱人は除く
+		IF !ARG:1
+			;行动中
+			PRINTFORML 
+		ELSE
+			;完了时
+			PRINTFORML 
+		ENDIF
+	CASE 16
+		;▼落とし穴,（～は落とし穴を增やしている）
+		;※三月精・チルノ・クラウンピースのみ
+		;それ以外は落ちる侧
+		IF !ARG:1
+			;行动中
+			PRINTFORML 
+		ELSE
+			;完了时,
+			;（仕挂け人（失败时）,谁も引っかからないので～は饱きてしまったようだ…）
+			;（落ちた侧（战斗能力2～4）,～はすぐに穴から飞び出して周りをキョロキョロ见回している…）
+			PRINTFORML 
+		ENDIF
+	CASE 17
+		;▼雪だるま作り（～は雪を集めている）
+		IF !ARG:1
+			;行动中
+			PRINTFORML 
+		ELSE
+			;完了时
+			PRINTFORML 
+		ENDIF
+	CASE 18
+		;▼炬燵でのんびり（～は炬燵に入って温まっている）
+		IF !ARG:1
+			;行动中
+			PRINTFORML 
+		ELSE
+			;完了时
+			PRINTFORML 
+		ENDIF
+	ENDSELECT
+ENDIF
+RETURN 1

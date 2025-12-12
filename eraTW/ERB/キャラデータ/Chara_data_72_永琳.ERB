@@ -1,0 +1,159 @@
+﻿@CHARAMOVE_DATA_72(ARG, ARG:2)
+LOCAL = 72
+SELECTCASE ARG
+	;连动设定（RETURN=依存する角色, RESULT:1～3=对等に连动する角色）
+	CASE 1
+	;特殊生活时间设定（CFLAG:LOCAL:生活时间补正を设定する）
+	CASE 3
+	;移动倾向（±～10=行きやすい/行きにくい, -100=行かない）
+	CASE 4
+		SELECTCASE ARG:2
+			;梦幻馆には行かない
+			CASE P450玄关 TO P466庭
+				RETURN -100
+			;他人的家には入らない
+			CASE P432影狼的家, P437梅蒂欣的家, P439拉尔瓦的家, P443米斯蒂亚的家, P445妹红的家
+				RETURN -100
+			;来客用厕所,永琳私室,辉夜私室,后院はあんまり行かない
+			CASE P406来客用厕所, P410帝私室, P411铃仙私室, P422后院
+				RETURN -5
+			;诊察室,配药室,走廊,起居室によく居る
+			CASE P404诊察室, P405配药室, P409走廊, P416起居室
+				RETURN 5
+
+			;纯狐邸には行かない
+			CASE P1060纯狐邸・玄关 TO P1072赫卡提亚私室
+				RETURN -100
+			;哆来咪宅には行かない
+			CASE P1050哆来咪宅・起居室 TO P1055哆来咪宅・厕所
+				RETURN -100
+		ENDSELECT
+	;出现场所
+	CASE 7
+		SELECTCASE ARG:2
+			CASE 广场, 商业街, 吞屋小道, 长屋街
+				RETURN 1
+			CASE 竹林入口, 迷失的小道, 斜角的竹林, 永远亭, 永远亭的内院
+				RETURN 1
+		ENDSELECT
+	;引力设定（CFLAG:LOCAL:引力点を设定する）
+	CASE 8
+ENDSELECT
+
+@EXIST_キャラデータ72
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@キャラデータ72(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "称呼"
+	CALLF MAKE_STR(V_NAME, "永琳")
+;こっから衣装设定
+CASE "今天的睡衣"
+	CALLF MAKE_STR(V_NAME, "睡衣（襦袢）套")
+
+CASE "便装：帽子"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("帽子", "帽子"))
+CASE "便装：靴"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("靴", "靴"))
+CASE "便装：袜子"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("袜子", "袜子"))
+CASE "便装：裙子"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("裙子", "长裙"))
+CASE "便装：上身衣服２"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("上身衣服２", "女式衬衫"))
+CASE "便装：其他１"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("其他１", "蝴蝶结"))
+
+CASE "固有内衣形容词"
+	CALLF MAKE_STR(V_NAME, "浓浓的神秘气息")
+CASE "固有下半身内衣名"
+	CALLF MAKE_STR(V_NAME, "倭文布三角胖次")
+CASE "固有上半身内衣"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "固有上半身内衣名"
+	CALLF MAKE_STR(V_NAME, "倭文布胸罩")
+CASE "固有内衣着用条件"
+	SIF !RAND:3
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "固有内衣半透明(前)"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "固有内衣半透明(后)"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "固有内衣布料厚度"
+	CALLF MAKE_INT(V_NAME, 2)
+
+CASE "固有指令"
+	CALLF MAKE_STR(V_NAME, "贩卖生药")
+CASE "固有指令实行可能"
+	CALLF MAKE_INT(V_NAME, 1)
+
+;料理关联
+CASE "料理：喜欢的味道"
+	CALLF MAKE_STR(V_NAME, "米/蘑菇/中华/汁物/简易/健康/清淡/朴素/机能的/上品/扑鼻/月都风/科学的/赏月/咸/咸/酸/酸/")
+CASE "料理：讨厌的味道"
+	CALLF MAKE_STR(V_NAME, "洋食/丰盛/垃圾/甜/甜/香料/香料/香料/谜料理/谜料理/谜料理/谜料理/谜料理/")
+CASE "料理：助手效果"
+	CALLF MAKE_STR(V_NAME, "月都风/药效/")
+;赠り物关联
+CASE "感性：好き"
+	CALLF MAKE_STR(V_NAME, "银/秩序/美的/怀旧/知的/" + "毒/道具/" * 3 + "千年の/神代の/贤者の/药瓶/" * 5)
+CASE "感性：嫌い"
+	CALLF MAKE_STR(V_NAME, "混沌/活泼/洛丽塔/狂热/" + "护臂/" * 3)
+
+;农民关联
+;ホントに药？
+CASE "农民：说明"
+	CALLF MAKE_STR(V_NAME, "药草农家")
+CASE "农民：作物"
+	CALLF MAKE_STR(V_NAME, "药草")
+CASE "农民：田的种类"
+	CALLF MAKE_STR(V_NAME, "药草畑")
+CASE "农民：畑の所在地"
+	CALLF MAKE_STR(V_NAME, "迷途竹林")
+
+CASE "农民：MapID"
+	CALLF MAKE_INT(V_NAME, 4)
+CASE "农民：场所ID"
+	CALLF MAKE_INT(V_NAME, 436)
+CASE "农民：报酬"
+	CALLF MAKE_INT(V_NAME, 600)
+CASE "农民：金利"
+	CALLF MAKE_INT(V_NAME, 14)
+ENDSELECT
+
+;-------------------------------------------------
+;固有料理设定
+;DISH_NAME          料理名
+;RESULTS            料理の种类（轻食/主食/甜点）
+;CALL 材料设定("")  材料の指定。"泛用"を入れると自动で泛用食材になる
+;DISH_TASTE         味の设定
+;DISH_COMMENT       （任意）一行コメント
+;DISH_TIME          （任意）调理にかかる时间
+;DISH_MAXLIMIT      （任意）料理の持续时间
+;-------------------------------------------------
+@SPECIAL_MENU_72
+DISH_NAME = 超营养饮料
+RESULTS = 轻食
+CALL 材料设定("营养饮料", "高丽人参")
+DISH_TASTE = 饮用/简易/健康/机能的/机能的/机能的/药膳/
+DISH_COMMENT = 在营养饮料中加入了特殊的配方、是更加有效的液体食品。无味无臭。
+DISH_MAXLIMIT = 600
+RETURN 1
+;********************************************************************************************
+@IMAGE_EX_I72_PREリソースチェック(CHARA, 表示形式, 服装, 表情, 表情_マウスオーバー, 差分, 乳量)
+#DIM CHARA
+#DIMS 表示形式
+#DIMS 服装
+#DIMS 表情
+#DIMS 表情_マウスオーバー
+#DIMS 差分
+#DIMS 乳量
+
+SIF CFLAG:CHARA:应用差分替换 == 1
+	CALL COMPOSE_SPRITE_PRESET(CHARA)

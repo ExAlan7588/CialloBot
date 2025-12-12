@@ -1,0 +1,120 @@
+﻿;-------------------------------------------------
+;假寐
+;日常系指令、レベル1
+;-------------------------------------------------
+@COM417
+#DIM 恢复前体力,2
+#DIM 恢复前气力,2
+#DIM 恢复后体力,2
+#DIM 恢复后气力,2
+#DIM 恢复率_体力, 4
+#DIM 恢复率_气力, 4
+#DIM 恢复率_精力, 4
+
+恢复率_体力:0 = 200
+恢复率_气力:0 = 250
+恢复率_精力:0 = 100
+
+恢复率_体力:1 = 240
+恢复率_气力:1 = 300
+恢复率_精力:1 = 120
+
+恢复率_体力:2 = 280
+恢复率_气力:2 = 320
+恢复率_精力:2 = 140
+
+恢复率_体力:3 = 300
+恢复率_气力:3 = 360
+恢复率_精力:3 = 160
+
+恢复前体力:0 = BASE:MASTER:体力
+恢复前气力:0 = BASE:MASTER:气力
+IF TARGET > 0 && CFLAG:TARGET:6 > 0
+	恢复前体力:1 = BASE:TARGET:体力
+	恢复前气力:1 = BASE:TARGET:气力
+	CALL RECOVER_PERMIL(TARGET, 恢复率_体力:MIN(ITEM:桐木床,3), "体力", 1)
+	CALL RECOVER_PERMIL(TARGET, 恢复率_气力:MIN(ITEM:桐木床,3), "气力", 1)
+	CALL RECOVER_PERMIL(TARGET, 恢复率_精力:MIN(ITEM:桐木床,3), "精力", 1)
+	恢复后体力:1 = BASE:TARGET:体力
+	恢复后气力:1 = BASE:TARGET:气力
+		;ABL:亲密をみる
+		IF ABL:亲密 <= 1
+			SOURCE:情爱 += (ABL:亲密 * 30)
+		ELSEIF ABL:亲密 <= 3
+			SOURCE:欢乐 += 100 + (ABL:亲密 * 40)
+			SOURCE:情爱 += 200 + (ABL:亲密 * 30)
+		ELSEIF ABL:亲密 <= 5
+			SOURCE:欢乐 += 400 + (ABL:亲密 * 50)
+			SOURCE:情爱 += 300 + (ABL:亲密 * 30)
+		ELSEIF ABL:亲密 <= 8
+			SOURCE:欢乐 += 700 + (ABL:亲密 * 60)
+			SOURCE:情爱 += 400 + (ABL:亲密 * 40)
+		ELSEIF ABL:亲密 <= 11
+			SOURCE:欢乐 += 1200 + (ABL:亲密 * 80)
+			SOURCE:情爱 += 600 + (ABL:亲密 * 40)
+		ELSE
+			SOURCE:欢乐 += 2000 + (ABL:亲密 * 50)
+			SOURCE:情爱 += 1500 + (ABL:亲密 * 20)
+		ENDIF
+		;好感度をみる
+		IF CFLAG:2 <= 500
+			SOURCE:欢乐 += CFLAG:2
+		ELSEIF CFLAG:2 <= 5000
+			SOURCE:欢乐 += 500 + (CFLAG:2 - 500) / 3
+		ELSE
+			SOURCE:欢乐 += 2000 + (CFLAG:2 - 5000) / 5
+		ENDIF
+		SIF SOURCE:欢乐 < 0
+		SOURCE:欢乐 = 0
+		CFLAG:333 += 90
+		TFLAG:98 += 3
+	TFLAG:194 = 1
+	PRINTFORML 决定和%NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%一起\@ TIME > 660 && TIME < 900? 午睡# 假寐\@
+ELSE
+ 	PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%决定稍微\@ TIME > 660 && TIME < 900? 睡个午觉# 假寐一会\@
+ 	TFLAG:194 = 2
+ENDIF
+
+CALL RECOVER_PERMIL(MASTER, 恢复率_体力:MIN(ITEM:桐木床,3), "体力", 1)
+CALL RECOVER_PERMIL(MASTER, 恢复率_气力:MIN(ITEM:桐木床,3), "气力", 1)
+CALL RECOVER_PERMIL(MASTER, 恢复率_精力:MIN(ITEM:桐木床,3), "精力", 1)
+
+TIME += 90
+TFLAG:午睡 = 90
+恢复后体力:0 = BASE:MASTER:体力
+恢复后气力:0 = BASE:MASTER:气力
+;DRAWLINE
+;PRINTFORML 体力+{ABS(恢复后体力 - 恢复前体力)}（%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%）
+;PRINTFORML 气力+{ABS(恢复后气力 - 恢复前气力)}（%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%）
+IF TFLAG:194 == 1
+;	PRINTFORML 体力+{ABS(恢复后体力:1 - 恢复前体力:1)}（%NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%）
+;	PRINTFORML 气力+{ABS(恢复后气力:1 - 恢复前气力:1)}（%NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%）
+ENDIF
+RETURN 1
+
+;-------------------------------------------------
+;实行判定
+;-------------------------------------------------
+@COM_ABLE417
+;停止中は不可
+SIF FLAG:70 == 1
+	RETURN 0
+;移动实行判定
+SIF !TFLAG:100
+	RETURN 0
+;批量管理
+SIF GLOBAL_COMABLE(417)
+	RETURN RESULT
+;私室设定
+SIF CFLAG:MASTER:当前位置 != CFLAG:MASTER:311
+	RETURN 0
+SIF NEMUKE() < 180
+	RETURN 0
+SIF NEMUKE() > 720
+	RETURN 0
+SIF TFLAG:午睡 > 0
+	RETURN 0
+SIF CFLAG:诶嘿嘿 == 2
+	RETURN 0
+RETURN 1
+

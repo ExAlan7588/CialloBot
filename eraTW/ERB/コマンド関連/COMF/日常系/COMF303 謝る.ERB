@@ -1,0 +1,147 @@
+﻿;-------------------------------------------------
+;道歉
+;日常系指令　レベル1
+;-------------------------------------------------
+@COM303
+IF CFLAG:败犬 && MARK:反抗刻印 >= 3
+	PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%所做的事并不是道歉就能被饶恕的
+	RETURN -1
+ENDIF
+SELECTCASE TFLAG:192
+	;通常
+	CASE 0
+		LOCAL = RAND:100
+		LOCAL:1 = ABL:MASTER:话术技能 * 2 + ABL:亲密
+		;大成功
+		IF LOCAL < LOCAL:1
+			TFLAG:193 = 1
+			;信赖
+			TFLAG:98 = 1
+		;成功
+		ELSEIF LOCAL < LOCAL:1 + 30
+			TFLAG:193 = 0
+		;失败
+		ELSE
+			TFLAG:193 = -1
+		ENDIF
+	;强制成功or大成功
+	CASE 1
+		;大成功
+		IF RAND:100 < ABL:MASTER:话术技能 * 2 + ABL:亲密
+			TFLAG:193 = 1
+			;信赖
+			TFLAG:98 = 1
+		;成功
+		ELSE
+			TFLAG:193 = 0
+		ENDIF
+	;强制失败
+	CASE -1
+		TFLAG:193 = -1
+	;指令结束
+	CASE -2
+		TFLAG:102 = 0
+		TFLAG:193 = -1
+		RETURN 0
+ENDSELECT
+
+DOWNBASE:MASTER:体力 += 50
+DOWNBASE:MASTER:气力 += 200
+
+IF TARGET > 0 && CFLAG:勃然大怒 && !CFLAG:睡眠
+	;固定で获得するソース
+	SOURCE:征服 = 400
+	;ABL:顺从チェック
+	IF ABL:顺从 <= 1
+		SOURCE:征服 += 2000 - (ABL:顺从 * 30)
+	ELSEIF ABL:顺从 <= 3
+		SOURCE:征服 += 1000 - (ABL:顺从 * 30)
+	ELSEIF ABL:顺从 <= 5
+		SOURCE:征服 += 750 - (ABL:顺从 * 40)
+	ELSEIF ABL:顺从 <= 8
+		SOURCE:征服 += 500 - (ABL:顺从 * 20)
+	ELSEIF ABL:顺从 <= 11
+		SOURCE:征服 += 200 - (ABL:顺从 * 20)
+	ELSE
+		SOURCE:征服 += 100 - (ABL:顺从 * 10)
+	ENDIF
+	
+	;ABL:亲密チェック
+	IF ABL:亲密 <= 1
+		SOURCE:征服 -= (ABL:亲密 * 60)
+	ELSEIF ABL:亲密 <= 3
+		SOURCE:征服 -= (ABL:亲密 * 60)
+	ELSEIF ABL:亲密 <= 5
+		SOURCE:征服 -= (ABL:亲密 * 60)
+	ELSEIF ABL:亲密 <= 8
+		SOURCE:征服 -= (ABL:亲密 * 50)
+	ELSEIF ABL:亲密 <= 11
+		SOURCE:征服 -= (ABL:亲密 * 40)
+	ELSE
+		SOURCE:征服 -= (ABL:亲密 * 30)
+	ENDIF
+	
+	SIF SOURCE:征服 < 0
+		SOURCE:征服 = 0
+ENDIF
+;成功していたら愤怒状态解除
+IF TFLAG:193 == 0
+	CFLAG:勃然大怒 = 0
+	CFLAG:心情不快 = 0
+	BASE:愤怒 /= 2
+ELSEIF TFLAG:193 == 1
+	CFLAG:勃然大怒 = 0
+	CFLAG:心情不快 = 0
+	BASE:愤怒 = 0
+ELSE
+	;何も无し！残念っ！
+ENDIF
+SIF BASE:愤怒 < 0
+	BASE:愤怒 = 0
+IF ITEM:点心盒 && MARK:TARGET:反抗刻印 == 1
+	IF TFLAG:193 == -1
+		TFLAG:193 = -2
+	ELSE
+		MARK:TARGET:反抗刻印 = 0
+		TFLAG:193 = 2
+		ITEM:点心盒 --
+	ENDIF
+ENDIF
+
+IF !APLOGIZEDLC
+	;所要时间
+	IF ABL:顺从 <= 5
+		TIME += 90
+	ELSEIF ABL:顺从 <= 10
+		TIME += 60
+	ELSE
+		TIME += 45
+	ENDIF
+ENDIF
+
+RETURN 1
+
+;-------------------------------------------------
+;实行判定
+;-------------------------------------------------
+@COM_ABLE303
+;道歉实行判定
+SIF !TFLAG:100
+	RETURN 0
+;批量管理
+SIF GLOBAL_COMABLE(303)
+	RETURN RESULT
+;愤怒中でない
+SIF !CFLAG:勃然大怒 && !(ITEM:点心盒 && MARK:TARGET:反抗刻印 == 1)
+	RETURN 0
+;睡眠中
+SIF CFLAG:睡眠
+	RETURN 0
+;气力0
+SIF BASE:MASTER:气力 <= 0
+	RETURN 0
+;停止中は不可
+SIF FLAG:70
+	RETURN 0
+RETURN 1
+

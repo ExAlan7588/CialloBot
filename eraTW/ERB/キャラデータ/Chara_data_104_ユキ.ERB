@@ -1,0 +1,135 @@
+﻿@CHARAMOVE_DATA_104(ARG, ARG:2)
+LOCAL = 104
+SELECTCASE ARG
+	;连动设定（RETURN=依存する角色, RESULT:1～3=对等に连动する角色）
+	CASE 1
+		;たまに连动
+		IF FLAG:每日变更事件 % 10 == 0
+			RESULT:1 = [[雪]]
+			RESULT:2 = [[​舞​]]
+		ENDIF
+	;特殊生活时间设定（CFLAG:LOCAL:生活时间补正を设定する）
+	CASE 3
+	;移动倾向（±～10=行きやすい/行きにくい, -100=行かない）
+	CASE 4
+		SELECTCASE ARG:2
+			;雪​舞​的房间,广场
+			CASE P234雪的房间, P235​舞​的房间, P202中央广场
+				RETURN 5
+			;私室には行かない
+			CASE P221稗田邸, P224慧音宅, P222寺子屋, P226小铃私室, P229阿求私室
+				RETURN -100
+			CASE P208雷鼓的房间, P209八桥的房间, P210弁弁的房间
+				RETURN -100
+			CASE P231蛮奇的房间, P232莲子的房间, P233梅莉的房间, P239美宵的房间
+				RETURN -100
+		ENDSELECT
+	;出现场所
+	CASE 7
+		SELECTCASE ARG:2
+			CASE 广场, 商业街, 吞屋小道, 长屋街
+				RETURN 1
+			CASE 森林的入口, 古木的大树, 再思之道, 无缘冢
+				RETURN 1
+		ENDSELECT
+	;引力设定（CFLAG:LOCAL:引力点を设定する）
+	CASE 8
+ENDSELECT
+
+@EXIST_キャラデータ104
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@キャラデータ104(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "称呼"
+	CALLF MAKE_STR(V_NAME, "雪")
+;こっから衣装设定
+CASE "今天的睡衣"
+	CALLF MAKE_STR(V_NAME, "睡衣（裤子）套")
+
+CASE "便装：帽子"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("帽子", "帽子"))
+CASE "便装：靴"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("靴", "靴"))
+CASE "便装：袜子"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("袜子", "袜子"))
+CASE "便装：裙子"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("裙子", "长裙"))
+CASE "便装：上身衣服２"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("上身衣服２", "女式衬衫"))
+
+CASE "固有内衣形容词"
+	CALLF MAKE_STR(V_NAME, "魔界流行の")
+CASE "固有下半身内衣名"
+	CALLF MAKE_STR(V_NAME, "喇叭内裤")
+CASE "固有上半身内衣"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "固有上半身内衣名"
+	CALLF MAKE_STR(V_NAME, "乳罩")
+CASE "固有内衣着用条件"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "固有内衣半透明(前)"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "固有内衣半透明(后)"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "固有内衣布料厚度"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;料理关联
+CASE "料理：喜欢的味道"
+	CALLF MAKE_STR(V_NAME, "卵/香料/和食/油炸食品/简易/浓厚/机能的/新鲜/豪快/扑鼻/魔界风/辣/辣/酸/酸/")
+CASE "料理：讨厌的味道"
+	CALLF MAKE_STR(V_NAME, "清淡/野趣/咸/咸/" + "青蛙/虫肉/谜料理/" * 3)
+CASE "料理：助手效果"
+	CALLF MAKE_STR(V_NAME, "魔界风/")
+;赠り物关联
+CASE "感性：好き"
+	CALLF MAKE_STR(V_NAME, "赤/帅气的/活泼/洋风/夸张/充满力量/" + "魔法/" * 3 + "魔界の/真红の/禁断の/" * 5)
+CASE "感性：嫌い"
+	CALLF MAKE_STR(V_NAME, "别致/纤细/怀旧/和风/")
+ENDSELECT
+
+;-------------------------------------------------
+;固有料理设定
+;DISH_NAME          料理名
+;RESULTS            料理の种类（轻食/主食/甜点）
+;CALL 材料设定("")  材料の指定。"泛用"を入れると自动で泛用食材になる
+;DISH_TASTE         味の设定
+;DISH_COMMENT       （任意）一行コメント
+;DISH_TIME          （任意）调理にかかる时间
+;DISH_MAXLIMIT      （任意）料理の持续时间
+;-------------------------------------------------
+@SPECIAL_MENU_104
+DISH_NAME = 火锅・Esoteria
+RESULTS = 主食
+CALL 材料设定("野味")
+DISH_TASTE = 锅物/野味/野菜/香料/浓厚/新鲜/温暖/辣/辣/酸/酸/
+DISH_COMMENT = 模仿魔界某地方都市的气氛、用来售卖的辛味和酸味的火锅汤汁。
+RETURN 1
+
+@IMAGE_I104_特殊服装(CHARA)
+#DIM CHARA
+VARSET RESULTS
+IF CFLAG:CHARA:应用差分替换 == 1 && FLAG:立绘种类
+	IF IS_BUNNY(CHARA)
+		RESULTS = _バニー
+	ENDIF
+ENDIF
+;********************************************************************************************
+@IMAGE_EX_I104_PREリソースチェック(CHARA, 表示形式, 服装, 表情, 表情_マウスオーバー, 差分, 乳量)
+#DIM CHARA
+#DIMS 表示形式
+#DIMS 服装
+#DIMS 表情
+#DIMS 表情_マウスオーバー
+#DIMS 差分
+#DIMS 乳量
+
+SIF CFLAG:CHARA:应用差分替换 == 1
+		CALL COMPOSE_SPRITE_PRESET([[雪]],"别颜_裸_/别颜_服_/别颜_服_バニー_")

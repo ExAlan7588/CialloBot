@@ -1,0 +1,183 @@
+﻿;-----------------------------------------------------------
+;远距离移动の设定
+;ARG     目的地
+;ARG:1   现在地
+;RETURN  次の目的地
+;-----------------------------------------------------------
+@SKIP_MOVE_3(ARG, ARG:1)
+#DIM 现在的位置
+;当前位置取得
+IF ARG:1
+	现在的位置 = ARG:1
+ELSE
+	现在的位置 = CFLAG:MASTER:当前位置
+ENDIF
+
+;目的地に直接移动できる场合そこに移动
+SIF CAN_MOVE(现在的位置, ARG) & 1
+	RETURN ARG
+
+;袋小路から行ける场所は固定なので、そこを目指す
+SELECTCASE 现在的位置
+CASE P305仓库
+	RETURN P306后院
+CASE P311帕秋莉私室, P312小恶魔私室
+	RETURN P310图书馆
+CASE P316一层厕所
+	RETURN P309大厅
+CASE P320咲夜私室, P321空的房间, P322二层厕所, P323妖精女仆的值班室, P324大露台
+	RETURN P319二层走廊
+CASE P327小露台
+	RETURN P326蕾米莉亚私室
+CASE P329仓库, P330佣人间, P331地下室
+	RETURN P328地下走廊
+CASE P333大浴场
+	RETURN P332更衣间
+CASE P337废洋馆・厨房, P338废洋馆・澡堂
+	RETURN P335废洋馆・大厅
+CASE P340露娜萨私室, P341梅露兰私室, P342莉莉卡私室
+	RETURN P339废洋馆・二层走廊
+CASE P344蕾蒂的冰屋, P345琪露诺的冰屋, P346大妖精的小屋
+	RETURN P343湖畔
+CASE P348雾之湖・湖底
+	RETURN P347雾之湖
+ENDSELECT
+
+;直接移动できない场合、1つ近い位置を暂定目的地に设定し直してループ
+;基本的に最短で行けるコースを设定する
+;现在地によってコースが变わることも考虑して对応する
+SELECTCASE ARG
+	CASE P301正门
+		SELECTCASE 现在的位置
+		CASE P305仓库 TO P333大浴场
+			RETURN P302庭
+		CASEELSE
+			RETURN P343湖畔
+		ENDSELECT
+	CASE P302庭
+		SELECTCASE 现在的位置
+		CASE P310图书馆, P311帕秋莉私室, P312小恶魔私室
+			RETURN P307东阳台
+		CASE P315会客厅
+			RETURN P308西阳台
+		CASE P305仓库
+			RETURN P306后院
+		CASE P313厨房 TO P333大浴场
+			RETURN P309大厅
+		CASEELSE
+			RETURN P301正门
+		ENDSELECT
+	CASE P303守卫小屋, P304空的小屋
+		SELECTCASE 现在的位置
+		CASE P305仓库 TO P333大浴场
+			RETURN P302庭
+		CASEELSE
+			RETURN P301正门
+		ENDSELECT
+	CASE P305仓库
+		RETURN P306后院
+	CASE P306后院
+		SELECTCASE 现在的位置
+		CASE P314食堂
+			RETURN P313厨房
+		CASEELSE
+			RETURN P302庭
+		ENDSELECT
+	CASE P307东阳台
+		SELECTCASE 现在的位置
+		CASE P308西阳台, P315会客厅
+			RETURN P302庭
+		CASE P309大厅 TO P333大浴场
+			RETURN P310图书馆
+		CASEELSE
+			RETURN P302庭
+		ENDSELECT
+	CASE P308西阳台
+		SELECTCASE 现在的位置
+		CASE P307东阳台, P310图书馆 TO P312小恶魔私室
+			RETURN P302庭
+		CASE P309大厅 TO P333大浴场
+			RETURN P315会客厅
+		CASEELSE
+			RETURN P302庭
+		ENDSELECT
+	CASE P309大厅
+		SELECTCASE 现在的位置
+		CASE P307东阳台, P310图书馆 TO P312小恶魔私室
+			RETURN P310图书馆
+		CASE P308西阳台
+			RETURN P315会客厅
+		CASE P313厨房
+			RETURN P314食堂
+		CASE P329仓库 TO P333大浴场
+			RETURN P328地下走廊
+		CASE P320咲夜私室 TO P327小露台
+			RETURN P319二层走廊
+		CASEELSE
+			RETURN P302庭
+		ENDSELECT
+	CASE P310图书馆
+		RETURN P309大厅
+	CASE P311帕秋莉私室, P312小恶魔私室
+		RETURN P310图书馆
+	CASE P313厨房
+		SELECTCASE 现在的位置
+		CASE P309大厅 TO P333大浴场
+			RETURN P314食堂
+		CASEELSE
+			RETURN P306后院
+		ENDSELECT
+	CASE P314食堂
+		SELECTCASE 现在的位置
+		CASE P305仓库, P306后院
+			RETURN P306后院
+		CASEELSE
+			RETURN P309大厅
+		ENDSELECT
+	CASE P315会客厅
+		RETURN P309大厅
+	CASE P316一层厕所
+		RETURN P309大厅
+	CASE P319二层走廊
+		RETURN P309大厅
+	CASE P320咲夜私室 TO P326蕾米莉亚私室
+		RETURN P319二层走廊
+	CASE P327小露台
+		RETURN P326蕾米莉亚私室
+	CASE P328地下走廊
+		RETURN P309大厅
+	CASE P329仓库 TO P332更衣间
+		RETURN P328地下走廊
+	CASE P333大浴场
+		RETURN P332更衣间
+
+	CASE P334废洋馆・入口
+		SELECTCASE 现在的位置
+		CASE P337废洋馆・厨房 TO P342莉莉卡私室
+			RETURN P335废洋馆・大厅
+		CASEELSE
+			RETURN P343湖畔
+		ENDSELECT
+	CASE P335废洋馆・大厅
+		RETURN P334废洋馆・入口
+	CASE P337废洋馆・厨房 TO P339废洋馆・二层走廊
+		RETURN P335废洋馆・大厅
+	CASE P340露娜萨私室 TO P342莉莉卡私室
+		RETURN P339废洋馆・二层走廊
+
+	CASE P343湖畔
+		SELECTCASE 现在的位置
+		CASE P301正门 TO P333大浴场
+			RETURN P301正门
+		CASE P334废洋馆・入口 TO P342莉莉卡私室
+			RETURN P334废洋馆・入口
+		CASEELSE
+			RETURN P347雾之湖
+		ENDSELECT
+	CASE P344蕾蒂的冰屋, P345琪露诺的冰屋, P346大妖精的小屋
+		RETURN P343湖畔
+	CASE P347雾之湖
+		RETURN P343湖畔
+	CASE P348雾之湖・湖底
+		RETURN P347雾之湖
+ENDSELECT

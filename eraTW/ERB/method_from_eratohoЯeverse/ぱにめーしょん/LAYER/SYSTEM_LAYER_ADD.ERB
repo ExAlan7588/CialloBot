@@ -1,0 +1,25 @@
+﻿;-------------------------------------------------------------------------
+;LAYER关系函数群の个人的な原创要素追加分のまとめ
+;-------------------------------------------------------------------------
+;初期设定にボタン情报の初期化を追加した函数
+;-------------------------------------------------------------------------
+@INIT_LAYER, ARGS = "`"
+LAYER_BUTTON = %ARGS%
+CALL LAYER_INIT, ARGS
+RETURN RESULT
+;-------------------------------------------------------------------------
+;INPUT可能な文字列かどうか(ボタンとして表示されたかどうか)を取得する
+;ただし、HTML_ADDBUTTONを利用してない场合は无效
+;表示されてないものを入力する可能にする场合はADD_LAYER_BUTTONで直接记述すること
+;-------------------------------------------------------------------------
+@IS_ABLE_LAYER_INPUT, ARGS
+#FUNCTION
+RETURNF STRFIND(LAYER_BUTTON, NEST_SEPARATOR + ARGS + NEST_SEPARATOR) >= 0
+
+@ADD_LAYER_BUTTON, ARGS
+CALLF ADD_LAYER_BUTTONF, ARGS
+
+@ADD_LAYER_BUTTONF, ARGS
+#FUNCTION
+LAYER_BUTTON += ARGS
+LAYER_BUTTON += NEST_SEPARATOR

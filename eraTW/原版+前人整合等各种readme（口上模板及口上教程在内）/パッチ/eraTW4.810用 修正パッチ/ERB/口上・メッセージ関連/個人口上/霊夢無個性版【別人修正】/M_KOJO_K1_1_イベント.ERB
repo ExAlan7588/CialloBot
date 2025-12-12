@@ -1,0 +1,2773 @@
+﻿;-------------------------------------------------
+; eraTheWorld 4.740用 灵梦口上无個性版（キャラクターの名前を入れる、下にコンセプトなど一言あれば入れる）
+;-------------------------------------------------
+;他者による修正、加筆、改変については、同梱のライセンス条項に从ってください。
+
+;------ ｷﾘﾄﾘ ｶｲｼ -----------
+;eraTheWorld proto4.07パッチ取り込み用 Ver1.13
+;テンプレートの使い方
+;初めに置换コマンド等により K1 を K(キャラNo) に変更して下さい  
+;キャラNoはCSVフォルダのCharaファイルを参照　例(雾雨 魔理沙の场合)：K1 =置换=> K11
+;
+;------ ｷﾘﾄﾘ ｵﾜﾘ -----------
+
+;**** FlagManagement **********************************************************
+;本口上にて使用しているCFLAG・TCVAR等
+;
+;
+;
+;******************************************************************************
+
+;### 口上存在判定 ###################################
+@M_KOJO_K1_1(ARG)
+;别人口上判定ですX2を同キャラ口上の通し番号に置き换えてください（一つ目の别人口上なら1、二つ目の别人口上なら2
+;複数の同キャラ口上が同时表示されないために必要です、必ずXXXを変更してください
+RESULTS = _无個性
+;初期口上とは違う事を明示するため、口上选择时に表示されます、必ずＸＸＸを変更してください
+RESULTS:1 = あなた无個性版
+
+;ここでCFLAG等のキャラ変数を使う场合、キャラ番号の指定が必要になります
+
+;コメントアウトを外して眠奸口上有、时间停止口上有に1を入れると、それぞれ时间停止时、眠奸时、扮演时にコマンド口上が読み込まれるように
+;入れないと时间停止时、眠奸时、扮演时は一切喋りません
+
+;破瓜中止口上有に1を入れると、@M_KOJO_无個性_EVENT_K1_LOST_VIRGIN_STOPでキャンセルの成否を操作できます
+;口上内抱き寄せ判定_初回と口上内抱き寄せ判定_通常に1を入れるとM_KOJO_EVENT_K1_PERMISSIONで推倒の成否を操作できます
+
+;Xにはキャラ番号を入れてください
+
+;CFLAG:X:眠奸口上有 = 0
+CFLAG:1:时间停止口上有 = 1
+;CFLAG:X:扮演口上有 = 0
+;CFLAG:X:破瓜中止口上有 = 0
+;CFLAG:X:口上内抱き寄せ判定_初回 = 0
+;CFLAG:X:口上内抱き寄せ判定_通常 = 0
+
+;CFLAG:推倒禁止に1を入れると自分から推倒てこなくなります
+;以下は恋慕かセフレがつくまで推倒てこなくなる使用例
+;IF !TALENT:X:恋慕 && !TALENT:X:セフレ
+;	CFLAG:X:推倒禁止 = 1
+;ELSE
+;	CFLAG:X:推倒禁止 = 0
+;ENDIF
+
+;口上存在判定です、けしてコメントアウトしないでください
+RETURN 1
+;### 口上色判定 ###################################
+@M_KOJO_无個性_COLOR_K1
+SETCOLOR 0xff4500
+
+;ここでSETCOLORすることで口上に色を付けられます
+;例：SETCOLOR 0xC07070
+
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+;"UPDATE判定"
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+@M_KOJO_无個性_UPDATE_K1
+;口上独自のUPDATE用
+;ENCOUNTER専用に独自分岐フラグを仕込んだ场合等にどうぞ
+;UPDATE判定でCFLAG等のキャラ変数を使う场合、キャラ番号の指定が必要になります
+RETURN 1
+
+
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+;"ENCOUNTER"系イベント（エクストラ構文）
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+@M_KOJO_无個性_ENCOUNTER_K1
+;初対面、挨拶のタイミング
+;TALENTの変更はここでどうぞ。
+
+;なんか一週目と状况が違うけど气にしないでね
+IF GETBIT(CFLAG:31, 0) || GETBIT(CFLAG:31, 1)
+	PRINTFORML 
+	PRINTFORML 「――あら、おはよう」
+	PRINTFORML 灵梦が、无表情で言う。
+	PRINTFORML 「……どうかしたの？　%CALLNAME:MASTER%？」
+	PRINTFORML 何も言わないで突っ立っていると、灵梦はそう言った。
+	PRINTFORML 「……おはよう」
+	PRINTFORML 「……何でもないわ」
+	PRINTFORMW 
+	PRINTFORML 「……なんかもやもやするの」
+	PRINTFORML 「何でかしらね、変な感触」
+	PRINTFORML 「そんなに亲しい仲でもないのに」
+	PRINTFORML 「……ま、いいか」
+	PRINTFORMW 「さ、何かするの？」
+ELSE
+	PRINTL
+	PRINTFORMW 「――あら、見ない颜ね」
+	PRINTFORMW その少女は%CALLNAME:MASTER%に向かってそう言った。
+	PRINTFORMW 「……紫が言ってた外来人かしら？それとも……まあいいわ。よろしく赖むわね」
+	PRINTFORMW そう言って少女は手をこちらに差しだしてくる。
+	PRINTFORMW %CALLNAME:MASTER%はその手を取った。
+	PRINTFORMW 「私の名前は博丽灵梦。あなたは？」
+	PRINTFORMW %CALLNAME:MASTER%は自分の名前を灵梦に伝えた。
+	PRINTFORMW 「……ふーん、%CALLNAME:MASTER%……か、分かったわ」
+	PRINTFORMW 灵梦は少し间をおいてから、言った。
+	PRINTFORMW 「まぁ、とりあえず一绪に住むことになるけど……」
+	PRINTFORMW 「万に一、億に一、他の住民に手を出したりするなら――」
+	PRINTFORMW 灵梦は握手する%CALLNAME:MASTER%の手に强めの力を込めながら、无表情で言った。
+	PRINTFORMW 「――觉悟しておくのよ？」
+	PRINTW 
+	PRINTFORMW %CALLNAME:MASTER%はその言叶に、强い征服欲を觉えた。
+	PRINTFORMW なぜなら%CALLNAME:MASTER%は、幻想の少女たちでさえ屈服しうる能力を持っているのだから――
+	PRINTFORML 
+ENDIF
+RETURN 0
+
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+;"SP_EVENT"系イベント
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+;==================================================
+;デート帰りにファーストKISS（合意も付く）
+;==================================================
+@M_KOJO_无個性_SPEVENT_K1_1(ARG,ARG:1)
+;口上主はTARGET
+;地の文表示
+;CALL SPEVENT_MESSAGE_1(ARG,ARG:1)
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	PRINTFORMW 
+	PRINTFORMW 「ねえ」
+	PRINTFORMW 灵梦が后ろから、あなたを呼びとめる。
+	PRINTFORMW %CALLNAME:MASTER%は、灵梦の方に振り返った。
+	PRINTFORMW ――ちゅっ
+	PRINTFORMW 音を表すのであれば、そんなかわいらしい音になっただろう。
+	PRINTFORMW 一瞬何があったのかわからなかった%CALLNAME:MASTER%だが、すぐに状况を理解した。
+	PRINTFORMW 灵梦が自分に口付けた。
+	PRINTFORMW 口付けというより、唇を唇に押し当てただけのようなものだが。
+	PRINTFORMW 灵梦は颜を真っ赤にしながら唇を抑えている。
+	PRINTFORMW %CALLNAME:MASTER%は灵梦に声をかけようとしたが、それよりも速く灵梦は飛んで行ってしまった。
+	PRINTFORMW なんでいきなり、口付けなんて――
+	PRINTFORMW 灵梦は空を浮遊しながら、真っ赤な颜で考えていた。
+	;キスをキャンセルしたい场合は以下を开放
+	;TCVAR:キスキャンセル = 1
+ENDIF
+RETURN 0
+
+;==================================================
+;デート帰りに告白（恋人が付く）
+;==================================================
+@M_KOJO_无個性_SPEVENT_K1_2(ARG,ARG:1)
+;口上主はTARGET
+;地の文表示
+;CALL SPEVENT_MESSAGE_2(ARG,ARG:1)
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;告白内容
+	;この告白内容表示后に受けるかどうかの选择分が表示されます
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 0
+		PRINTFORMW %CALLNAME:MASTER%がデートを終えて帰ろうとすると、突然灵梦に呼び止められた
+		PRINTFORMW 振り返ってみると、灵梦は颜を俯かせて立っていたが
+		PRINTFORMW やがて意を決したように颜を上げると、まっすぐ%CALLNAME:MASTER%を見つめた
+		PRINTFORMW 「私……あなたのことが好きになったのかもしれないわ」
+		PRINTFORMW 「何か、あなたと一绪にいると落ち着くのよね。だから……」
+		PRINTFORMW 「これからも一绪にいて欲しいの……駄目？」
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;告白オッケー（恋人が付く）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		PRINTW
+		PRINTW
+		PRINTFORMW 不安そうに見つめてくる灵梦を、%CALLNAME:MASTER%はそっと抱きしめた
+		PRINTFORMW 灵梦も%CALLNAME:MASTER%の背に手を回し、静かに身を預けてきたのだった……
+		PRINTFORMW 「良かった……断られたらどうしようかって心配しちゃったわ」
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;告白失敗
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		PRINTW
+		PRINTW
+		PRINTFORMW 「――そう」
+		PRINTFORMW 「……いえ、分かってたわ」
+		PRINTFORMW 「……いや、いいの。大丈夫だから……」
+		PRINTFORMW 「……ん、ありがと……」
+		PRINTFORMW 「……ええ、大丈夫よ。悲しいけど……」
+		PRINTFORMW 「――私、あきらめないからね？」
+		PRINTW
+		RETURN 0
+	ENDIF
+
+ENDIF
+RETURN 0
+
+;==================================================
+;デート帰り
+;==================================================
+@M_KOJO_无個性_SPEVENT_K1_3(ARG,ARG:1)
+;口上主はTARGET
+;地の文表示
+CALL SPEVENT_MESSAGE_3(ARG,ARG:1)
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;通常帰宅
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 0
+		IF TALENT:恋人
+			PRINTW
+			PRINTFORML 「今日は乐しかったわ」
+			PRINTFORML 「また、行きましょう？」
+			PRINTFORMW と、灵梦が幸せそうに言った。
+			RETURN 0
+		ELSEIF TALENT:恋慕
+			PRINTW
+			PRINTFORML 「今日は、乐しかったわよ」
+			PRINTFORML 「その……今度また……」
+			PRINTFORML %CALLNAME:MASTER%が頷くと、
+			PRINTFORML 「本当？じゃあ、乐しみにしてるわね」
+			PRINTFORMW と、灵梦が笑颜で言った。
+		ELSEIF TALENT:思慕
+			PRINTW
+			PRINTFORML 「今日は……まあ乐しかったわよ」
+			PRINTFORML 「また气が向いたら、ついて行っても良いわ」
+			PRINTFORML 「……案外、直ぐに气が向くかもね」
+			PRINTFORML と、灵梦は小さく言った。
+			PRINTW
+		ELSE
+			PRINTW
+			PRINTFORML 「はあ……疲れた」
+			PRINTFORML 「やっぱり神社でゆっくりするのが一番よね～」
+		ENDIF
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;反抗刻印消去イベント
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		IF TALENT:恋人
+			PRINTFORML 「――はぁ、まぁ良いわ」
+			PRINTFORML 「分かった、許してあげる」
+			PRINTFORML 「でも、あんまり酷いことするとまた怒るわよ？」
+			PRINTFORMW 灵梦は颜に笑みを浮かべてそう言った。
+			RETURN 0
+		ELSE
+			PRINTFORML 「――はぁ、しょうがないわね」
+			PRINTFORML 「いいわよ、許してあげる」
+			PRINTFORML 「一応、信用はできるみたいだし、ね」
+			PRINTFORML 灵梦は颜をやわらかくして言った。
+			PRINTW
+		RETURN 0
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;反抗刻印2>1レベルダウンイベント
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 0
+		IF TALENT:恋人
+			PRINTFORML 「……まぁ、ちょっと許してあげるわ」
+			PRINTFORML 「いい？「ちょっと」よ？」
+			PRINTFORML 「まだ全部許したわけじゃないんだから」
+			PRINTFORMW 灵梦はまだ少し硬い颜で、そう言ってきた。
+			RETURN 0
+		ELSE
+			PRINTFORML 「･･･ちょっとだけ、許してあげるわ」
+			PRINTFORML 「でも、また調子に乗ったら、どうなるかは分かってるでしょ？」
+			PRINTFORML 灵梦は颜を硬くして言った。
+			PRINTW
+		ENDIF
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;反抗刻印3>2レベルダウンイベント
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 0
+		IF TALENT:恋人
+			PRINTFORML 「あんまりやりすぎると、身を滅ぼすわよ？」
+			PRINTFORML 「……でも、少しだけ許してあげる」
+			PRINTFORML 「感謝なさいな」
+			PRINTFORMW 灵梦は硬い表情のまま、%CALLNAME:MASTER%にそう言い放った。
+			RETURN 0
+		ELSE
+			PRINTFORML 「%CALLNAME:MASTER%、一つ聞きなさい」
+			PRINTFORML 「私のことを甘く見てるのなら、止めておいたほうが良いわよ」
+			PRINTFORML 「少しだけ、許してあげるわ」
+			PRINTFORML 「それからどうするかは、%CALLNAME:MASTER%、あなた次第よ」
+			PRINTW
+		ENDIF
+		RETURN 0
+	ENDIF
+	PRINTFORML
+ENDIF
+RETURN 0
+
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+;"EVENT"系イベント
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+;==================================================
+;房间で遭遇
+;==================================================
+@M_KOJO_无個性_EVENT_K1_1(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;MASTERが入ってきた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		IF TALENT:恋人
+			PRINTFORML 
+			PRINTFORML 「――あら、%CALLNAME:MASTER%」
+			PRINTFORML 灵梦はこちらを見とめると、声をかけてきた。
+			PRINTFORML 「ふふ、今日は何をするの？」
+			PRINTFORMW 灵梦はこちらに寄ってきた。
+		ELSEIF TALENT:恋慕
+			PRINTFORML 
+			PRINTFORML 「――あ、%CALLNAME:MASTER%」
+			PRINTFORML 灵梦は%CALLNAME:MASTER%に气づいた。
+			PRINTFORML 「い、いらっしゃい。お茶要る？」
+			PRINTFORMW 灵梦はどこか落ち着かない様子でそう言った。
+		ELSEIF TALENT:思慕
+			PRINTFORML 
+			PRINTFORML 「……あ、%CALLNAME:MASTER%じゃない」
+			PRINTFORML 灵梦は房间に入ってきた%CALLNAME:MASTER%に气づいたようだ。
+			PRINTFORML 「……なんか最近、変な感じね」
+			PRINTFORMW 灵梦は小さくつぶやきながら、こちらへと体を向けた。
+		ELSE
+			PRINTFORML 
+			PRINTFORML 「……あら、%CALLNAME:MASTER%」
+			PRINTFORML 灵梦は%CALLNAME:MASTER%に气づいたようだ。
+			PRINTFORML 「何をしにきたのかしら？」
+			PRINTFORMW 灵梦はぶっきらぼうに、そう言った。
+		ENDIF
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;TARGETが入ってきた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		IF TALENT:恋人
+			PRINTFORML 「ふふ、入るわよ、%CALLNAME:MASTER%」
+			PRINTFORMW 灵梦は、笑颜で房间に入ってきた。
+		ELSEIF TALENT:恋慕
+			PRINTFORML 「は、入るわよ、%CALLNAME:MASTER%」
+			PRINTFORMW 灵梦はどこかぎこちない様子で、房间に入ってきた。
+		ELSEIF TALENT:思慕
+			PRINTFORML 「%CALLNAME:MASTER%、入るわよ」
+			PRINTFORML そういって、灵梦は房间に入ってきた。
+			PRINTFORML 「……なによ」
+			PRINTFORMW 少し目が合うと、灵梦は颜を少し赤らめてから颜を背けた。
+		ELSE
+			PRINTFORML 「入るわよ」
+			PRINTFORMW 灵梦はそうとだけ言ってから、房间に入ってきた。
+		ENDIF
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;TARGETが澡堂に入ってきて一绪に入る
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		IF TALENT:恋人
+			PRINTFORML 「――あら、%CALLNAME:MASTER%。入ってたの」
+			PRINTFORML 灵梦が戸を開いて、澡堂へと入ってくる。
+			PRINTFORML 「私も入らせてもらうわね」
+			PRINTFORML 「隣、座るわよ」
+			PRINTFORMW 灵梦はわざと胸などを强調させて座っているように見える……。
+		ELSE
+			PRINTFORML 「――あれ、%CALLNAME:MASTER%」
+			PRINTFORML 「先に入ってたのね」
+			PRINTFORML 「私も、入らせてもらうわよ」
+			PRINTFORMW 灵梦は%CALLNAME:MASTER%の向かいに座っている……
+		ENDIF
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;TARGETが澡堂に入ってきて出て行った
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 4
+		PRINTFORML 「――――――」
+		PRINTFORMW 灵梦は%CALLNAME:MASTER%を見るが否や、出て行った。
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;TARGETが澡堂に入ってきて追い出された
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 5
+		PRINTFORML 「――――――」
+		PRINTFORML 灵梦はあなたが澡堂に入っているのを見て固まっている。
+		PRINTFORML 「――――――ッ！」
+		PRINTFORMW そしてまるで时が动き出したかのように、灵梦は素早く%CALLNAME:MASTER%を追い出した。
+		RETURN 0
+	ENDIF
+ENDIF
+RETURN 0
+
+;==================================================
+;朝起きたとき（おはよう口上）
+;==================================================
+@M_KOJO_无個性_EVENT_K1_2(ARG,ARG:1)
+CALL MESSAGE_GOODMONING(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;非同棲かつ相手が先に起きてる
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		;-------------------------------------------------
+		;TARGET私室にMASTERが入っている（恋慕时陪睡中就寝时のみ？
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 0
+		;-------------------------------------------------
+		IF LOCAL:1 && !ARG:1
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;MASTER私室にTARGETが入ってきてる(恋慕无しでも入ってくる可能性有り
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 0
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 1
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+		;共通
+		IF TALENT:恋人
+			PRINTFORML 「――あ、起きた？」
+			PRINTFORML %CALLNAME:MASTER%が起きると、目の前に灵梦の颜があった。
+			PRINTFORML 「ずいぶんよく寝てたわねぇ。いいは梦見れたかしら？」
+			PRINTFORML 灵梦はそう言いながら、%CALLNAME:MASTER%に抱きついてきた。
+			PRINTFORML 「ふふ、落ち着くわね。この体勢」
+			PRINTFORMW %CALLNAME:MASTER%と灵梦は、少しの间抱き合ったままで居た。
+		ELSEIF TALENT:恋慕
+			PRINTFORML 「――あ…」
+			PRINTFORML %CALLNAME:MASTER%が起きると、目の前に颜があった。
+			PRINTFORML 「ご、ごめんなさいっ！」
+			PRINTFORML 珍しく灵梦が敬語でしゃべった。
+			PRINTFORMW 灵梦は颜を真っ赤にして、ぺたんと叠に座っている…
+		ENDIF
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;同棲かつ相手が起きている
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		IF TALENT:恋人
+			PRINTFORML 「――あ、起きた？」
+			PRINTFORML %CALLNAME:MASTER%が起きると、目の前に灵梦の颜があった。
+			PRINTFORML 「ずいぶんよく寝てたわねぇ。いいは梦見れたかしら？」
+			PRINTFORML 灵梦はそう言いながら、%CALLNAME:MASTER%に抱きついてきた。
+			PRINTFORML 「ふふ、落ち着くわね。この体勢」
+			PRINTFORMW %CALLNAME:MASTER%と灵梦は、少しの间抱き合ったままで居た。
+		ELSEIF TALENT:恋慕
+			PRINTFORML 「――あ…」
+			PRINTFORML %CALLNAME:MASTER%が起きると、目の前に颜があった。
+			PRINTFORML 「ご、ごめんなさいっ！」
+			PRINTFORML 珍しく灵梦が敬語でしゃべった。
+			PRINTFORMW 灵梦は颜を真っ赤にして、ぺたんと叠に座っている…
+		ENDIF
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;同棲かつ相手が寝ている
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;MASTERが起きていて、相手が起きてきた
+	;添い寝时TARGET起床はこちら（TARGET衰弱or陪睡中TARGET睡魔負け后そのままMASTERが起き続けた上で相手が起床した场合限定
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 4
+		;-------------------------------------------------
+		;非同棲
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 0
+		;-------------------------------------------------
+		IF LOCAL:1 && !ARG:1
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;同棲中
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 0
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 1
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+		;共通
+		IF TALENT:恋人
+			PRINTFORML 「ん……おはよ、%CALLNAME:MASTER%」
+			PRINTFORML 灵梦は眠たそうに言った。
+			PRINTFORML 「ふあ……今日は何する？%CALLNAME:MASTER%…」
+			PRINTFORMW 灵梦は背伸びをしながら問いかけてきた。
+		ELSEIF TALENT:恋慕
+			PRINTFORML 「…んぁ……おはよ」
+			PRINTFORML 灵梦は目をこすりながらこちらを見ている。
+			PRINTFORML 「ん…ちょっと待ってて…」
+			PRINTFORML 灵梦は颜を洗いに行ったようだ。
+			PRINTFORMW 
+		ELSEIF TALENT:思慕
+			PRINTFORML 「んぅ…？あ、%CALLNAME:MASTER%…」
+			PRINTFORML 灵梦は寝ぼけながらこちらを見つめている。
+			PRINTFORML 「もう朝…？おはよ…」
+			PRINTFORML 灵梦は布団から這い出してきた。
+			PRINTFORMW 
+		ELSE
+			PRINTFORML 「あれ…？もう朝…」
+			PRINTFORML 灵梦は朝の日差しに目を细めている。
+			PRINTFORMW 
+		ENDIF
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;その他
+	PRINTFORML  
+ENDIF
+RETURN 1
+
+;==================================================
+;夜寝るとき（おやすみ口上）
+;==================================================
+@M_KOJO_无個性_EVENT_K1_3(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;自室に帰る（定时になって寝る）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		IF TALENT:恋人
+			PRINTFORML 「そろそろ、私は房间に戻るわね」 
+			PRINTFORML 「……え？まだ一绪に居たいって？」
+			PRINTFORML 「私だって名残惜しいわよ……でも、また明日に会えるから。おやすみ」
+			PRINTFORMW そう言って、灵梦は私室へと戻って行った。
+		ELSEIF TALENT:恋慕
+			PRINTFORML 「……そろそろ、私は房间に戻るわね……」
+			PRINTFORML 「……もうちょっとだけ、一绪に――」
+			PRINTFORML 灵梦のその言叶は、最后の方は聞き取れなかった。
+			PRINTFORML 「――ううん、何でもない。じゃあ、また明日ね。おやすみ」
+			PRINTFORMW そう言って、灵梦は少し悲しげにも見える颜を見せてから、私室へと戻って行った。
+		ELSEIF TALENT:思慕
+			PRINTFORML 「あ、もうこんな时间？帰らなきゃ」
+			PRINTFORML 「それにしても、%CALLNAME:MASTER%と居ると时间が早く過ぎる气がするわね。おやすみ」
+			PRINTFORMW そう言い残して、灵梦は私室へと戻って行った。
+		ELSE
+			PRINTFORML 「じゃあ、私はそろそろ帰るわね」
+			PRINTFORML 「%CALLNAME:MASTER%も、おやすみなさい」
+			PRINTFORMW そう言って、灵梦は私室へと戻って行った。
+		ENDIF
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;眠そうにしている
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		IF TALENT:恋人
+			PRINTFORML 「む……ああ、ごめん。聞いてなかったわ」
+			PRINTFORML 灵梦は明らかに眠そうだ。
+			PRINTFORML 「大丈夫……よ。寝たりは……しないわ」
+			PRINTFORMW そう言いつつも舟をこぎかけている。
+		ELSEIF TALENT:恋慕
+			PRINTFORML 「――んあ……うむぅ……」
+			PRINTFORML 灵梦の目は閉じかけている。
+			PRINTFORML %CALLNAME:MASTER%が眠いのか、と問うと、
+			PRINTFORML 「んぅ……ごめん、眠いわ……」
+			PRINTFORMW と、灵梦は本当に眠そうに言った。
+		ELSE
+			PRINTFORML 「あー……ねむー……」
+			PRINTFORMW 灵梦は小さく眠气を訴えている。
+		ENDIF
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;睡眠中（起きていないので会话というよりは寝言？）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		IF TALENT:恋人
+			SELECTCASE RAND:2
+				CASE 1
+					PRINTFORML 「ん……%CALLNAME:MASTER%……」
+					PRINTFORML 灵梦は寝ながらにも、%CALLNAME:MASTER%の名前を呼んでいる。
+					PRINTFORML 「んぅ……えへへ……」
+				CASE 0
+					PRINTFORML 「ん……%CALLNAME:MASTER%……」
+					PRINTFORML 灵梦は寝ながらにも、%CALLNAME:MASTER%の名前を呼んでいる。
+					PRINTFORML 「んやぁ……そこはらめぇ……」
+			ENDSELECT
+		ELSEIF TALENT:恋慕
+			SELECTCASE RAND:2
+				CASE 1
+					PRINTFORML 「んにゃ……」
+					PRINTFORML 「んぅ……やあ……」
+					PRINTFORML 灵梦は体をくねらせている。
+				CASE 0
+					PRINTFORML 「んにゃ……」
+					PRINTFORML 「にゃう……やん……」
+					PRINTFORML 灵梦は布団の中で丸まった。
+			ENDSELECT
+		ELSEIF TALENT:思慕
+			SELECTCASE RAND:3
+				CASE 2
+					PRINTFORML 「すう……ん……」
+					PRINTFORML 灵梦は静かに寝息を立てている。
+					PRINTFORML 「ぁ……―――」
+					PRINTFORML 灵梦は小さく寝言を发した。
+				CASE 1
+					PRINTFORML 「すう……んぁ……」
+					PRINTFORMW 灵梦は静かに寝息を立てている。
+				CASE 0
+					PRINTFORML 「すぅ……すぅ……」
+					PRINTFORMW 灵梦は穏やかな寝息を立てている。
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:2
+				CASE 1
+					PRINTFORML 「すぅ……すぅ……」
+					PRINTFORML 灵梦は穏やかな寝息を立てている。
+					PRINTFORML 「ん……すぅ……」
+					PRINTFORML 灵梦の整った颜立ちは、陶磁器のように美しく見える。
+				CASE 0
+					PRINTFORML 「すぅ……すぅ……」
+					PRINTFORML 灵梦は穏やかな寝息を立てている。
+					PRINTFORML 「ん……んぅ……」
+					PRINTFORMW 灵梦はとても落ち着いた颜で眠っている……
+			ENDSELECT
+		ENDIF
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;恶作剧中
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 4
+		IF TALENT:恋人
+			SELECTCASE RAND:3
+				CASE 2
+					PRINTFORMW 「んぅ……やぁ……」
+				CASE 1
+					PRINTFORMW 「んやぁ……あっ、んぅ……」
+				CASE 0
+					PRINTFORMW 「あ……らめぇ……」
+			ENDSELECT
+		ELSEIF TALENT:恋慕
+			SELECTCASE RAND:3
+				CASE 2
+					PRINTFORMW 「んっ……あっ……」
+				CASE 1
+					PRINTFORMW 「やぁ……んっ……」
+				CASE 0
+					PRINTFORMW 「あっ……にゃあ……」
+			ENDSELECT
+		ENDIF
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;衰弱中
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 5
+		IF TALENT:恋人
+			PRINTFORMW 「……疲れた……もうちょっと一绪に居たいのに……」
+		ELSEIF TALENT:恋慕
+			PRINTFORMW 「う……もう无理……疲れた……」
+		ELSE
+			PRINTFORMW 「つ……疲れたわ……」
+		ENDIF
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;MASTERがダウン（房间まで運ばれる）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 6
+		IF TALENT:恋人
+			PRINTFORMW 「――あら、大丈夫？」
+			PRINTFORMW %CALLNAME:MASTER%は疲労困憊で返事をすることもままならない。
+			PRINTFORMW 「大丈夫じゃなさそうね……」
+			PRINTFORMW そう言って、灵梦は%CALLNAME:MASTER%を背負う。
+			PRINTFORMW 「房间まで送ってあげるわ」
+			PRINTFORMW そう言いながら、灵梦は自身の体よりも大きい%CALLNAME:MASTER%をひょいと持ち上げた。
+		ELSEIF TALENT:恋慕
+			PRINTFORMW 「……だ、大丈夫？」
+			PRINTFORMW 倒れたあなたに、灵梦が声をかけてくる。
+			PRINTFORMW 「一応房间まで運んであげられるけど……」
+			PRINTFORMW 少し考え込んだ后、灵梦は%CALLNAME:MASTER%を背負って歩き出した。
+		ENDIF
+		RETURN 0
+	ENDIF
+	;その他
+	PRINTFORML 
+ENDIF
+RETURN 0
+
+;==================================================
+;移动时すれちがい
+;==================================================
+@M_KOJO_无個性_EVENT_K1_4(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;立ち止まった
+	;この后遭遇口上に接続
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		PRINTFORM 灵梦は%CALLNAME:MASTER%のことを
+			IF TALENT:恋人
+				PRINTFORM 柔らかな笑颜で
+			ELSEIF TALENT:恋慕
+				PRINTFORM 微笑みながら
+			ELSEIF GETBIT(CFLAG:1,0)
+				PRINTFORM じっと
+			ENDIF
+				PRINTFORMW 見ている。
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;軽く会釈して通り過ぎた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		IF TALENT:恋人
+			PRINTFORML 「あら、%CALLNAME:MASTER%。どこに行くの？」
+			PRINTFORML %CALLNAME:MASTER%が灵梦に行き先を告げると、
+			PRINTFORML 「そう、あまりほかの女に息吹っかけないでよ？」
+			PRINTFORML と、灵梦は微笑みながらそう言ってきた。
+			PRINTFORMW 重みのある言叶だ。
+		ELSEIF TALENT:恋慕
+			PRINTFORML 「……あ、%CALLNAME:MASTER%」
+			PRINTFORML 灵梦とすれ違った。
+			PRINTFORML 「えっと、その……いや、なんでもないわ」
+			PRINTFORMW そう言って、灵梦は足早にその场を過ぎ去った。
+		ELSEIF TALENT:思慕
+			PRINTFORML 「……あ、%CALLNAME:MASTER%」
+			PRINTFORML 灵梦とすれ違った。
+			PRINTFORML 「どこに行くのかしら？」
+			PRINTFORML %CALLNAME:MASTER%が行き先を告げると、
+			PRINTFORML 「そう、じゃあね」
+			PRINTFORMW と言って、灵梦はその场を過ぎ去っていった。
+		ELSE
+			PRINTFORML あなたは灵梦とすれ違い様に会釈をした。
+			PRINTFORMW 灵梦は无関心そうに、少し会釈をしてその场を過ぎ去った。
+		ENDIF
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;无视して通り過ぎた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		PRINTFORM 灵梦は%CALLNAME:MASTER%のことを
+			IF TALENT:恋人
+				PRINTFORM 柔らかな笑颜で
+			ELSEIF TALENT:恋慕
+				PRINTFORM 微笑みながら
+			ELSEIF GETBIT(CFLAG:1,0)
+				PRINTFORM じっと
+			ENDIF
+				PRINTFORMW 見ている。
+		RETURN 0
+	ENDIF
+	;その他
+	PRINTFORML 
+ENDIF
+RETURN 0
+
+;==================================================
+;他者介入で情绪変化
+;==================================================
+@M_KOJO_无個性_EVENT_K1_5(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入スイッチ
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;-------------------------------------------------
+	;文が入ってきた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 29
+		IF TALENT:29:恋人 && TALENT:恋慕
+			PRINTFORML 
+			PRINTFORML 『……おや、灵梦さん』
+			PRINTFORML 「……あら、文じゃない」
+			PRINTFORML 『こんにちは……さ、%CALLNAME:MASTER%さん……』
+			PRINTFORML 「……またべたべたして…………――――――……」
+			PRINTFORMW 灵梦は小さく恨み言を吐いている。
+		ELSEIF TALENT:恋慕 && TALENT:29:恋慕
+			PRINTFORML
+			PRINTFORML 『あやや、これはこれは灵梦さん』
+			PRINTFORML 「文じゃない……どうしたの？また%CALLNAME:MASTER%？」
+			PRINTFORML 『……そう言う灵梦さんも』
+			PRINTFORML 「……ま、良いじゃない……ね？　%CALLNAME:MASTER%」
+			PRINTFORMW 二人の间にばちばちと火花が散っているように見える。
+		ELSEIF TALENT:恋人 && TALENT:29:恋慕
+			PRINTFORML 
+			PRINTFORML 「……あら、文……どうしたの？　また取材？」
+			PRINTFORML 『違いますが……いえ、取材してもいいかもしれませんね』
+			PRINTFORML 「何をよ……特にねたなんて持ってないわよ？」
+			PRINTFORMW 『【博丽の巫女とその彼氏の恋爱事情！】とか？』
+			PRINTFORML 「本当に书いたら退治してやるから」
+			PRINTFORML 『分かってますよ…………はぁ……』
+			PRINTFORMW 灵梦はくす、と笑って%CALLNAME:MASTER%に抱きついた。
+		ELSEIF TALENT:29:恋人
+			PRINTFORML 
+			PRINTFORML 『……おや、灵梦さんですか』
+			PRINTFORML 「そうよ……文じゃない、また%CALLNAME:MASTER%に会いにきたの？」
+			PRINTFORML 『ええ、駄目なんですか？』
+			PRINTFORML 「駄目とは言っていないのだけれど……」
+			PRINTFORMW 文は%CALLNAME:MASTER%の傍によりながら灵梦と話している。
+		ELSEIF TALENT:29:恋慕
+			PRINTFORML 
+			PRINTFORML 『……おや、灵梦さん？』
+			PRINTFORML 「あら、文じゃない……珍しいわね」
+			PRINTFORML 「そんなことありませんよ……ねえ？　%CALLNAME:MASTER%さん」
+			PRINTFORML 「……ああ、そういうことね」
+			PRINTFORMW どこか納得した様子の灵梦に、%CALLNAME:MASTER%は首をかしげた。
+		ELSEIF TALENT:恋人
+			PRINTFORML 
+			PRINTFORML 『……おや、灵梦さん』
+			PRINTFORML 「あら、文じゃない……何か用？」
+			PRINTFORML 『いえ、とくに何もありませんが……』
+			PRINTFORML 「そ……ねえ、%CALLNAME:MASTER%……」
+			PRINTFORMW 文は灵梦と%CALLNAME:MASTER%の距離の近さに苦笑いしている。
+		ELSEIF TALENT:恋慕
+			PRINTFORML 
+			PRINTFORML 「あら、文じゃない」
+			PRINTFORML 『おや、これはこれは灵梦さん、どうも』
+			PRINTFORML 「……で、何しにきたのかしら？」
+			PRINTFORMW 灵梦は少し%CALLNAME:MASTER%の傍によってきた。
+		ELSE
+			PRINTFORML 
+			PRINTFORML 「……あやや、これはどうも、灵梦さん」
+			PRINTFORML 『……ん？ああ、文か……』
+			PRINTFORMW 文と灵梦は軽く会釈をした。
+		ENDIF
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;その他
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1
+		IF CFLAG:诶嘿嘿
+			PRINTFORML 
+			PRINTFORML 「あ……だれか来た……」
+			PRINTFORMW 灵梦と%CALLNAME:MASTER%は互いに絡み合った状态で誰かが来たことを觉った。
+		ELSEIF TALENT:恋人
+			PRINTFORML 「……あら、誰か来たわね」
+			PRINTFORMW そう言って、灵梦は%CALLNAME:MASTER%から少し距離を置いた。
+		ELSEIF TALENT:恋慕
+			PRINTFORML 「……あ、誰か来たわ」
+			PRINTFORMW そう言って、灵梦は少し座りなおした。
+		ELSEIF TALENT:思慕
+			PRINTFORML 「……あら、誰かしら」
+			PRINTFORMW そう言って、灵梦は立ち上がった。
+		ELSE
+			PRINTFORML 「……あら、誰か来たわね」
+			PRINTFORMW 灵梦はそう呟いて、足音の聞こえるほうへ向いた。
+		ENDIF
+		RETURN 0
+	ENDIF
+	;その他
+	PRINTFORML 
+ENDIF
+RETURN 0
+
+;==================================================
+;情事を目撃した
+;==================================================
+@M_KOJO_无個性_EVENT_K1_6(ARG,ARG:1)
+;口上主はTARGET
+;ARGに情事相手
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;情事を目撃した（馴れ合い度:低）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 1
+		IF TALENT:恋人
+			PRINTFORML 「――あら、お盛んなことね」
+			PRINTFORML 灵梦は微笑みながらこちらを見つめてくる。
+			PRINTFORML 「いいのよ、%CALLNAME:MASTER%。続けても」
+			PRINTFORMW しかし灵梦の目线に何か冷たいものを感じ、%CALLNAME:MASTER%は%CALLNAME:ARG%から離れた。
+		ELSEIF TALENT:恋慕
+			PRINTFORML 「――――――」
+			PRINTFORML 灵梦は絶句している。
+			PRINTFORML 「―――なんでこんなところでするの……？」
+			PRINTFORMW 灵梦は笑颜でそう言って、足早に歩き去った。
+		ELSE
+			PRINTFORML 「――――――」
+			PRINTFORML 灵梦は无関心のような、軽蔑するような、そんな目でこちらを見ている。
+			PRINTFORML その视线に冰のようなものを感じ、%CALLNAME:MASTER%と%CALLNAME:ARG%は離れた。
+			PRINTFORMW それから灵梦は何もなかったかのように歩き去った。
+		ENDIF
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;負けじと参加（馴れ合い度:高）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 2
+		IF TALENT:恋人
+			PRINTFORML 「……あらぁ、ずいぶんと盛んだこと」
+			PRINTFORML 灵梦はこちらを見つめている。
+			PRINTFORML 「……あぁ、なんだかその气になってきちゃった」
+			PRINTFORMW そう呟いて、灵梦はこちらに歩いてきた。
+		ELSEIF TALENT:恋慕
+			PRINTFORML 「……あら、お盛んにやってるわねぇ」
+			PRINTFORML 灵梦は少し颜に笑みを浮かべながらこちらを見ている。
+			PRINTFORML 「……混ぜてもらうわよ」
+			PRINTFORMW そう言って、灵梦は%CALLNAME:MASTER%に寄って来た。
+		ENDIF
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;气まずそうに立ち去る
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 3
+		IF TALENT:恋人
+			PRINTFORMW 「……あ……」
+			PRINTFORML 灵梦は气まずそうにしている。
+			PRINTFORML 「……あー、ほどほどにしておくのよ？」
+			PRINTFORML そう言ってから灵梦はこちらに寄ってきて、
+			PRINTFORML 「――あとで私も、同じくらい爱してくれるかしら？」
+			PRINTFORML と耳元で呟いた。
+			PRINTFORML 「じゃあ、ね」
+			PRINTFORMW そう言って灵梦は去っていった。
+		ELSEIF TALENT:恋慕
+			PRINTFORML 「……あ……」
+			PRINTFORML 灵梦は固まってこちらを見ている。
+			PRINTFORML 「……じゃ、邪魔したわね」
+			PRINTFORMW そう言って、灵梦はそそくさと去っていった。
+		ELSE
+			PRINTFORML 「――――――」
+			PRINTFORML 灵梦は何もしゃべらない。
+			PRINTFORML 「―――その、ごめんなさいね」
+			PRINTFORMW 灵梦はひきつった笑颜をみせながら去っていった。
+		ENDIF
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;MASTERに诱われて参加
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 4
+		IF TALENT:恋人
+			PRINTFORML 「――え？」
+			PRINTFORML 「いや……别にいいけど…」
+			PRINTFORML 灵梦は%CALLNAME:MASTER%の近くへと寄って来た。
+			PRINTFORML 「……私も同じくらい、爱してよ？」
+		ELSEIF TALENT:恋慕
+			PRINTFORML 「――は？」
+			PRINTFORML 灵梦は信じられないといった目でこちらを見てくる。
+			PRINTFORML 「混ざれ？ふざけてんの？」
+			PRINTFORMW そういいつつもこちらに向かってくるところ、満更でもなさそうだ。
+		ELSE
+			PRINTFORML 「……わかったわよ」
+			PRINTFORMW 灵梦は若干引いているような目线を%CALLNAME:MASTER%に向けながらも、こちらまで寄って来た。
+		ENDIF
+		RETURN 0
+	ENDIF
+	;その他
+	PRINTFORML 
+ENDIF
+RETURN 0
+
+;==================================================
+;情事を見られた
+;==================================================
+@M_KOJO_无個性_EVENT_K1_7(ARG,ARG:1)
+;口上主はTARGET
+;ARGに目撃者
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;情事を見られた（目撃者の馴れ合い度:低）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 1
+		IF TALENT:恋人
+			PRINTFORML 「――あ」
+			PRINTFORML %CALLNAME:ARG%は颜を红くしてこちらを見つめている。
+			PRINTFORML 「……こんなところでするのは不味かったかしら」
+			PRINTFORMW %CALLNAME:ARG%は红い颜のまま首を縦に振っている。
+		ELSEIF TALENT:恋慕
+			PRINTFORML 「――ぁ……」
+			PRINTFORML 灵梦と%CALLNAME:ARG%は颜を红くしている。
+			PRINTFORMW やがて灵梦は%CALLNAME:MASTER%の体から離れた。
+		ELSE
+			PRINTFORML 「――――――」
+			PRINTFORML 灵梦と%CALLNAME:ARG%は颜を真っ赤にしている。
+			PRINTFORMW それから少しの间、灵梦は絶句したまま动かなかった。
+		ENDIF
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;目撃者が負けじと参加（目撃者の馴れ合い度:高）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 2
+		IF TALENT:恋人
+			PRINTFORML 「――あら、見られちゃったわね」
+			PRINTFORMW 「何、别に混ざってくれてもいいのよ？」
+			PRINTFORML そう灵梦が言うと、%CALLNAME:ARG%は颜を红くしつつもこちらへ寄って来た。
+			PRINTFORMW 「……本当に混ざってくるとは思ってなかったわ」
+		ELSEIF TALENT:恋慕
+			PRINTFORML 「――――――っ」
+			PRINTFORML 灵梦は颜を真っ赤にして%CALLNAME:ARG%を見ている。
+			PRINTFORML 颜を真っ赤にしているのは%CALLNAME:ARG%も同じだった。
+			PRINTFORML やがて%CALLNAME:ARG%はこちらへと歩み寄ってきた。
+			PRINTFORML 「……へ……へ？え？」
+			PRINTFORML 「……混ざるの？」
+			PRINTFORML %CALLNAME:ARG%は頷いて、その瞳を情に濡らして%CALLNAME:MASTER%を見つめてきた。
+			PRINTFORMW 
+		ELSE
+			PRINTFORML 
+		ENDIF
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;目撃者が立ち去る
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 3
+		IF TALENT:恋人
+			PRINTFORML 「何、别に混ざってくれてもいいのよ？」
+			PRINTFORML そう灵梦が言うと、%CALLNAME:ARG%はそそくさと逃げて行った。
+			PRINTFORML 「……あらら、逃げちゃった」
+			PRINTFORML 「さ、続きをはじめましょう？」
+			PRINTFORML と、灵梦は何もなかったかのように情事の再開を勧めてきた。
+		ELSEIF TALENT:恋慕
+			PRINTFORML 
+			PRINTFORML 「――その、恥ずかしいのだけれど」
+			PRINTFORML 灵梦がそういうと、%CALLNAME:ARG%は何もなかったかのように去って行った。
+			PRINTFORML 「――あ、あー……」
+			PRINTFORML 「……もう一回、はじめましょうか……」
+			PRINTFORMW 灵梦はまだ少し红い颜で、そう言った。
+		ELSE
+			PRINTFORML 
+			PRINTFORML 「――ええと、その」
+			PRINTFORML 灵梦がしどろもどろになっているうちに、%CALLNAME:ARG%は去っていった。
+			PRINTFORMW それから少しもせずに、灵梦と%CALLNAME:MASTER%はどちらからともなく離れた。
+		ENDIF
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;MASTERに诱われて目撃者も参加
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 4
+		IF TALENT:恋人
+			PRINTFORML 「――え、一绪にするの？」
+			PRINTFORML 灵梦は困惑の颜を浮かべて疑問を投げかけてきた。
+			PRINTFORML 「いや、いいんだけど……」
+			PRINTFORML 灵梦は一呼吸おいてから、%CALLNAME:MASTER%に、
+			PRINTFORML 「私も%CALLNAME:ARG%も、同じくらい爱してくれるわよね？」
+			PRINTFORMW と、言ってきた。
+		ELSEIF TALENT:恋慕
+			PRINTFORML 「――はぁ？」
+			PRINTFORML 「いや、普通混ざれって、いや、えぇ……」
+			PRINTFORML 灵梦はぶつぶつ呟きながら思考している。
+			PRINTFORML 「こういう行为って、二人きりでする物……まぁいいわ」
+			PRINTFORMW 灵梦は諦めたかのように言った。
+		ELSE
+			PRINTFORML 「………………」
+			PRINTFORMW 灵梦は何もいわずに、冷たい目で此方を見ている。
+		ENDIF
+		RETURN 0
+	ENDIF
+	;その他
+	PRINTFORML 
+ENDIF
+RETURN 0
+
+;==================================================
+;目撃した情事を問い詰める
+;==================================================
+@M_KOJO_无個性_EVENT_K1_8(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;MASTERだけ問い詰め
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 1
+		IF TALENT:恋人
+			PRINTFORMW 「……で、どういうことかしら？」
+			PRINTFORMW 「なに、みなまで言わないでも分かるわ」
+			PRINTFORML 「ずばり、浮」
+			PRINTFORMW %CALLNAME:MASTER%は即座に否定した。
+			PRINTFORML 「即答。まあそれならうれしいけど」
+			PRINTFORML 灵梦は自らの颜を%CALLNAME:MASTER%に近づけ、
+			PRINTFORMW 「――浮气したら、泣くわよ？」
+			PRINTFORMW と、今にも泣き出しそうな颜で言ってきた。
+		ELSE
+			PRINTFORML 「………………」
+			PRINTFORML 灵梦は何も言わない。
+			PRINTFORML 「……别に、いいのよ」
+			PRINTFORML 灵梦は口を開いた。
+			PRINTFORMW 「唯、もしするなら人目のつかないところでしてね」
+		ENDIF
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;二人とも説教
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 2
+		IF TALENT:恋人
+			PRINTFORML 「――まぁ、别に事を致すのはいいのよ」
+			PRINTFORML 「でもね？人目のつくところで行うのは、よくないことだと思うのよ」
+			PRINTFORML 「だから、これからは气をつけるのよ？見たのが私だったからよかったけど」
+			PRINTFORML 「それと、今度は私も混ぜてくれるとうれしいわ」
+			PRINTFORMW 二人は、確りと説教を受けた。
+		ELSE
+			PRINTFORML 「――ひとつ言わせてもらうとね」
+			PRINTFORML 「人目のつくところでそういうことをするのはよくない……そう思うのよ」
+			PRINTFORML 「别にそういう行为を悪いことだとは思わないし、それに――」
+			PRINTFORMW 二人は正座したまま、ごもっともな御説教を灵梦からいただいた。
+		ENDIF
+		RETURN 0
+	ENDIF
+	;その他
+	PRINTFORML 
+ENDIF
+RETURN 0
+
+;==================================================
+;弱みを握った
+;==================================================
+@M_KOJO_无個性_EVENT_K1_9(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;同じ场所に居てパンツを回收された
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 1
+			PRINTFORML 「――――――」
+			PRINTFORML 灵梦は黙って、%CALLNAME:MASTER%の持っていた下着を眺めている。
+			PRINTFORML 「――何？%CALLNAME:MASTER%ってそういう趣味なの？」
+			PRINTFORML 「……ぱんつ、ねぇ。布切れの何が好いのやら。ま、没収しとくわね」
+			PRINTFORMW 灵梦は%CALLNAME:MASTER%の贵重なパンツを懐にしまった。
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;遠距離移动中にパンツを回收された
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 2
+		PRINTFORML 「――ちょっと待ちなさい」
+		PRINTFORMW 灵梦は%CALLNAME:MASTER%を呼び止める。
+		PRINTFORML ぴたり、と动きを止める%CALLNAME:MASTER%。
+		PRINTFORMW 「……怪しいわねぇ……」
+		PRINTFORML 灵梦はやがて、%CALLNAME:MASTER%の体のあちこちを探り始めた。
+		PRINTFORMW 「――あ」
+		PRINTFORML %CALLNAME:MASTER%の懐から、下着が出てきた。
+		PRINTFORML 「――！ちょっと、待ちなさい！」
+		PRINTFORMW %CALLNAME:MASTER%は灵梦から全速力で逃げた。
+		RETURN 0
+	ENDIF
+	PRINTFORML 
+ENDIF
+RETURN 0
+
+;==================================================
+;推倒た
+;==================================================
+@M_KOJO_无個性_EVENT_K1_10(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;MASTERを推倒た（开始时）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		IF TALENT:恋人
+			PRINTFORML 「――ねえ、%CALLNAME:MASTER%」
+			PRINTFORML 突然灵梦が呼ぶので、%CALLNAME:MASTER%は灵梦のほうに向く。
+			PRINTFORML 刹那、%CALLNAME:MASTER%は灵梦に押し倒された。
+			PRINTFORML 「诶嘿嘿、推倒てやったわ」
+			PRINTFORML %CALLNAME:MASTER%は身动きが取れない。
+			PRINTFORML 「さあ、何をするかはわかるでしょ？」
+			PRINTFORMW その質問に答える间もなく、灵梦は唇を押し付けてきた。
+		ELSEIF TALENT:恋慕
+			PRINTFORML 「――%CALLNAME:MASTER%」
+			PRINTFORML 灵梦が%CALLNAME:MASTER%の名を呼ぶ。
+			PRINTFORML 灵梦の方に振り返ると、
+			PRINTFORML 「――ふふっ」
+			PRINTFORML と笑って、灵梦は%CALLNAME:MASTER%を推倒てきた。
+			PRINTFORML 「……こんなに焦らして、我慢できなくなっちゃったわ……」
+			PRINTFORML そう言って、灵梦は唇を押し付けてきた。
+		ELSE
+			PRINTFORML 「――ねえ、%CALLNAME:MASTER%」
+			PRINTFORML 灵梦が%CALLNAME:MASTER%の名を呼ぶ。
+			PRINTFORML 「推倒ていい？」
+			PRINTFORML 唐突に、灵梦が聞いてくる。
+			PRINTFORML %CALLNAME:MASTER%が了承すると、
+			PRINTFORML 「本当？じゃあ……えいっ」
+			PRINTFORML と、灵梦が本当に推倒てきた。
+		ENDIF
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;なだめられた（終了时）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		IF TALENT:恋人
+			PRINTFORML 「――え……もう終わりなの？」
+			PRINTFORML %CALLNAME:MASTER%はなんとか灵梦をなだめた。
+			PRINTFORML 「むぅ……まだ足りないのだけれど」
+		ELSEIF TALENT:恋慕
+			PRINTFORMW 「――え……もう、終わり？」
+			PRINTFORML %CALLNAME:MASTER%は灵梦を諭した。
+			PRINTFORMW 「こんなんじゃ、治まらないわよ……」
+			PRINTFORML 「次はいっぱい爱してちょうだいね」
+		ELSE
+			PRINTFORMW 「終わるの？いや、别にいいけれど」
+			PRINTFORML 「不完全燃焼みたいな感じだなぁ、ってだけよ」
+			PRINTFORMW 灵梦は案外さぱっ、と折れてくれた。
+		ENDIF
+		RETURN 0
+	ENDIF
+	;その他
+	PRINTFORML 
+ENDIF
+RETURN 0
+
+;==================================================
+;浴场で遭遇
+;==================================================
+@M_KOJO_无個性_EVENT_K1_11(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;追い出された
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		IF TALENT:思慕
+			PRINTFORMW 「――――――」
+			PRINTFORML 灵梦は何も言わず、%CALLNAME:MASTER%を时が止まったかのように見つめている。
+			PRINTFORML 能力を发动した觉えはないが、と考える%CALLNAME:MASTER%。
+			PRINTFORML 数秒灵梦は固まったままでいたが、
+			PRINTFORMW 「――出て行って！」
+			PRINTFORMW と、时が动き出したかのように%CALLNAME:MASTER%を追い出した。
+		ELSE
+			PRINTFORMW 「………………」
+			PRINTFORML 灵梦は%CALLNAME:MASTER%を静かに見つめている。
+			PRINTFORML とても冷たい、冰のような目で。
+			PRINTFORMW 「………………」
+			PRINTFORMW %CALLNAME:MASTER%は灵梦の视线に何か感じ、自ら出て行った。
+			PRINTFORMW 灵梦の视线から感じた『何か』、それは、杀气のようだった气がする……
+		ENDIF
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;目が合った（追い出されない）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		IF TALENT:恋人
+			PRINTFORMW 「――何だ、%CALLNAME:MASTER%か」
+			PRINTFORML 灵梦はこちらを見て、ほっとした颜を見せた。
+			PRINTFORML 灵梦は裸体を隠しもせず、こちらを見つめている。
+			PRINTFORMW 「一绪に入るの？いいわよ」
+			PRINTFORML 灵梦は少し体を动かして、隣に%CALLNAME:MASTER%の座れるほどの空き场所を作った。
+			PRINTFORMW これは隣に座れということだろうか。
+		ELSEIF TALENT:恋慕
+			PRINTFORMW 「――あれ、%CALLNAME:MASTER%」
+			PRINTFORML 灵梦は少し赤い颜をこちらに向けながら、そう言った。
+			PRINTFORML 灵梦の颜は少し上气している。
+			PRINTFORMW 「――ええと、一绪に入るのはいいのだけれど……」
+			PRINTFORMW 「……その、あまり私の体を舐めるように見つめないでくれない？」
+			PRINTFORMW %CALLNAME:MASTER%は灵梦の体から目をそらした。
+		ELSE
+			PRINTFORMW 「……一绪に入るの？」
+			PRINTFORML 灵梦は半目で%CALLNAME:MASTER%を見ている。
+			PRINTFORMW 「别にいいけれど、変なことしたらどうなるかはわかってるわよね？」
+		ENDIF
+		RETURN 0
+	ENDIF
+	;その他
+	PRINTFORML 
+ENDIF
+RETURN 0
+
+;==================================================
+;寝床に忍び込み
+;==================================================
+@M_KOJO_无個性_EVENT_K1_12(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;寝床に侵入
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 1
+		PRINTFORML
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;寝床に侵入（相手が恋慕）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 2
+		IF TALENT:恋人
+			PRINTFORMW 「……んぁ……」
+			PRINTFORML 灵梦はこちらを寝ぼけ眼で見ている。
+			PRINTFORML 「……なんだ、%CALLNAME:MASTER%……」
+			PRINTFORMW 灵梦は侵入者が%CALLNAME:MASTER%だと气づくと、ほっとしたような颜になった。
+		ELSEIF TALENT:恋慕
+			PRINTFORMW 「……ん……」
+			PRINTFORML 灵梦はとても眠そうにしている。
+			PRINTFORML 「……なにか、用かしら……？」
+			PRINTFORMW 特に、と言うと、灵梦は力尽きたかのように目を閉じた。
+		ELSE
+			PRINTFORMW 「ん……眠いのだけれど……」
+			PRINTFORML 「……変なことしたら……どうなるかは……」
+			PRINTFORMW 分かってるわね、とも言えないほどに眠そうだ。
+		ENDIF
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;寝床に侵入（相手が恋慕・衰弱）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 3
+		IF TALENT:恋人
+			PRINTFORML 「……すぅ……」
+			PRINTFORML 灵梦はとても穏やかに寝息を立てている。
+			PRINTFORML %CALLNAME:MASTER%が灵梦の頬をつつくと、灵梦は起きてしまった。
+			PRINTFORML 「……ぁ……ちょっと……やめて……疲れてるの……」
+			PRINTFORMW %CALLNAME:MASTER%は灵梦から離れた。
+		ELSEIF TALENT:恋慕
+			PRINTFORML 「……%CALLNAME:MASTER%……」
+			PRINTFORML 灵梦は枕に颜を埋めたまま、少し颜を上げて%CALLNAME:MASTER%を見た。
+			PRINTFORMW 「……おやすみ……」
+		ELSE
+			PRINTFORML 「……すぅ……すぅ……」
+			PRINTFORMW 灵梦は全く%CALLNAME:MASTER%に气づかない。
+		ENDIF
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;追い出される
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 4
+			PRINTFORML
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;追い出される（衰弱）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 5
+		PRINTFORML
+		RETURN 0
+	ENDIF
+	;その他
+	PRINTFORML 
+ENDIF
+RETURN 0
+
+;==================================================
+;お仕事中
+;==================================================
+@M_KOJO_无個性_EVENT_K1_13(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;仕事开始（职场へ移动する）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		IF TALENT:恋人
+			PRINTFORML 「――あ、もうこんな时间ね」
+			PRINTFORML 「ちょっと出るわね」
+			PRINTFORML 「ちょっとした仕事よ。ごめんね」
+			PRINTFORMW そう言って灵梦は仕事へと出かけた。
+		ELSEIF TALENT:恋慕
+			PRINTFORML 「――あれ、もうこんな时间」
+			PRINTFORML 「%CALLNAME:MASTER%、ちょっと出ても良い……？」
+			PRINTFORMW 「あー、仕事よ、境内の扫除」
+		ELSE
+			PRINTFORML 「……あら、もうこんな时间」
+			PRINTFORML 「ちょっと仕事してくるわね」
+			PRINTFORMW そう言って、灵梦は境内へと向かっていった。
+		ENDIF
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;業務中
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		IF TALENT:恋人
+			PRINTFORML 「――あら、%CALLNAME:MASTER%」
+			PRINTFORML 「どうしたの？何か用？」
+			PRINTFORMW 「できれば手伝ってくれると、うれしいんだけど……」
+		ELSEIF TALENT:恋慕
+			PRINTFORML 「――あ、%CALLNAME:MASTER%」
+			PRINTFORML 「ちょっと今手が離せないの」
+			PRINTFORML 「ごめんね、ちょっと待ってて」
+			PRINTFORMW そう言って灵梦は、箒を持つ手を速めた。
+		ENDIF
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;仕事終了
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		IF TALENT:恋人
+			PRINTFORML 「――ふぅ、やっと終わった」
+			PRINTFORML 「これで、ようやく%CALLNAME:MASTER%と過ごせるわね」
+			PRINTFORMW 灵梦は笑みを浮かべて言った。
+		ELSEIF TALENT:恋慕
+			PRINTFORML 「――ふぅ、やっと終わったわね」
+			PRINTFORML 「それで……今日は、何する？」
+			PRINTFORMW 灵梦は何故か頬を少し红くして、そう聞いてきた。
+		ELSE
+			PRINTFORML 「――ふぅ、やっと終わったわ」
+			PRINTFORML 灵梦は息を吐いた。
+			PRINTFORML 「……で、何をするのかしら？」
+			PRINTFORMW 灵梦はぶっきらぼうに言った。
+		ENDIF
+		RETURN 0
+	ENDIF
+	;その他
+	PRINTFORML 
+ENDIF
+RETURN 0
+
+;==================================================
+;食事系
+;==================================================
+@M_KOJO_无個性_EVENT_K1_14(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;持っていた食物を食べられた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == -1
+		IF TALENT:恋人
+			PRINTFORML 「……なんだか良い匂いがするわね、%CALLNAME:MASTER%」
+			PRINTFORML 灵梦は鼻をすんすんと利かせながら、%CALLNAME:MASTER%にそう言ってくる。
+			PRINTFORML 「……なにか隠してるでしょ、%CALLNAME:MASTER%」
+			PRINTFORML 灵梦は%CALLNAME:MASTER%をじっと見つめている。
+			PRINTFORML 视线に負けて%CALLNAME:MASTER%は%DISHNAME%を差し出す。
+			PRINTFORML 「あらぁ、美味しそうね。頂きます」
+			PRINTFORML %CALLNAME:MASTER%が止める间もなく、灵梦は%DISHNAME%を平らげてしまった。
+			PRINTFORML 「ご馳走様、美味しかったわよ」
+			PRINTFORMW 満足げな灵梦に、%CALLNAME:MASTER%は何も言えなかった……
+		ELSEIF TALENT:恋慕
+			PRINTFORML 「――ねえ、%CALLNAME:MASTER%」
+			PRINTFORML 「あなたからとても良い匂いがするんだけれど……」
+			PRINTFORML 「ご饭か何か、持ってるの？」
+			PRINTFORML いかにも物欲しそうな颜をしていたので、%CALLNAME:MASTER%は灵梦に%DISHNAME%を差し出した。
+			PRINTFORML 「あ……良いの？もらっちゃって」
+			PRINTFORML 「じゃ、じゃあ、頂きます」
+			PRINTFORMW と言って、灵梦は嬉しそうな颜をしながら%DISHNAME%を頬张った。
+		ELSE
+			PRINTFORML 「――ねえ、%CALLNAME:MASTER%」
+			PRINTFORML 灵梦が唐突に%CALLNAME:MASTER%に声をかけてくる。
+			PRINTFORML 「そんな匂いを振りまいていたら、お腹が空くんだけど」
+			PRINTFORML 灵梦に半目で見つめられた%CALLNAME:MASTER%は、%DISHNAME%を差し出した。
+			PRINTFORML 「あら、くれるの？ならありがたく頂戴するわね」
+			PRINTFORML 灵梦はすぐに%DISHNAME%を平らげた。
+			PRINTFORML 「――まあまあ、ね。腹の足しにはなったわ」
+			PRINTFORMW 灵梦は笑颜で、料理の感想を述べてきた。
+		ENDIF
+		RETURN 0
+	ENDIF
+	;その他
+	PRINTFORML 
+ENDIF
+RETURN 0
+
+;==================================================
+;MASTERが推倒た
+;==================================================
+@M_KOJO_无個性_EVENT_K1_15(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;MASTERが推倒た（ウフフ开始时）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		IF TALENT:恋人
+			PRINTFORML 「――あの、%CALLNAME:MASTER%」
+			PRINTFORML 「その……ちょっと强引過ぎないかしら？」
+			PRINTFORML 「……いや、大丈夫よ。さ、始めましょう？」
+			PRINTFORMW そう言って灵梦は、全身の力を抜いた。
+		ELSEIF TALENT:恋慕
+			PRINTFORML 「――きゃっ！？」
+			PRINTFORML 灵梦はかわいらしい悲鳴を上げた。
+			PRINTFORML 「……もう……あまり乱暴にしないでね？」
+			PRINTFORMW %CALLNAME:MASTER%が頷くと、灵梦は体から力を抜いた。
+		ELSEIF TALENT:思慕
+			PRINTFORML 「――っ！？ちょっと！」
+			PRINTFORML 灵梦は突然の出来事に驚いている。
+			PRINTFORML 「……するの……？」
+			PRINTFORML 「……その、あの……私は、大丈夫……」
+			PRINTFORMW と、灵梦はだんだんと颜を红くしながら答えた。
+		ELSE
+			PRINTFORML 「――っ！？」
+			PRINTFORML 灵梦は突然の出来事に驚いている。
+			PRINTFORML 「――ちょっと、%CALLNAME:MASTER%」
+			PRINTFORML 灵梦は无表情でこちらを見ている。
+			PRINTFORML 「……何でもないわ……」
+			PRINTFORMW 灵梦は諦めたかのような、冷たい目をこちらに向けてきている。
+		ENDIF
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;逢瀬終了（ウフフ終了时）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		IF FLAG:时间停止
+			PRINTFORML 
+			PRINTFORML %CALLNAME:MASTER%は服装を整え、灵梦から離れた。
+			PRINTFORMW %CALLNAME:MASTER%はにや、と笑った。
+		ELSEIF PALAM:情欲 >= PALAMLV:15
+			PRINTFORML 
+			PRINTFORML 「はぁっ、はぁっ……もう……む、り……」
+			PRINTFORML 灵梦はぐったりと脱力して、荒く息を吐いている。
+			PRINTFORML その姿は何処か扇情的だ。
+			PRINTFORMW しかしこれほどに疲れている灵梦を襲うことはできず、%CALLNAME:MASTER%は灵梦を唯見つめているだけであった。
+		ELSEIF TALENT:恋人
+			IF PALAM:情欲 >= PALAMLV:10
+				PRINTFORML 
+				PRINTFORML 「はあっ、はあっ、や、やっと、終わるの？」
+				PRINTFORML 灵梦は肩で息をしながら訊ねてくる。
+				PRINTFORMW 「いやっ、もうだめ、腰、立たなくなるから、だめ」
+			ELSE
+				PRINTFORML 「――あ……もう、終わり？」
+				PRINTFORML 「いや、足りない訳じゃなくて」
+				PRINTFORMW 「それに、%CALLNAME:MASTER%が倒れても困るから」
+			ENDIF
+		ELSEIF TALENT:恋慕
+			IF PALAM:情欲 >= PALAMLV:10
+				PRINTFORML 
+				PRINTFORML 「はぁっ、はぁっ、はっ……お、終わり？」
+				PRINTFORML 灵梦は熱い吐息を吐きながら訊ねてくる。
+				PRINTFORML 「いやっ、だめ、だめだから、もう、疲れたわ」
+				PRINTFORMW と、灵梦は上气した颜でそう答えた。
+			ELSE
+				PRINTFORML 「――え、もう終わりなの？」
+				PRINTFORML 「い、いや、足りない訳じゃないのよ！？」
+				PRINTFORMW 灵梦は慌てた様子で取り繕った。
+			ENDIF
+		ELSEIF TALENT:思慕
+			IF PALAM:情欲 >= PALAMLV:10
+				PRINTFORML 
+				PRINTFORML 「はぁっ、はぁ、んっ、はぁっ……やっと、終わり？」
+				PRINTFORML 灵梦は息を荒くして尋ねてくる。
+				PRINTFORMW 「そ、そう、私も、疲れたわ」
+			ELSE
+				PRINTFORML 「――あら、もう、終わるの？」
+				PRINTFORML 「そう……疲れちゃったんじゃあしょうがないか」
+				PRINTFORMW 灵梦は諦めたかのように言った。
+			ENDIF
+		ELSE
+			IF PALAM:情欲 >= PALAMLV:10
+				PRINTFORML 
+				PRINTFORML 「はぁっ……はぁっ……ようやく、終わるの、ね？」
+				PRINTFORMW 灵梦は无表情で、だが頬を红くしてそう言った。
+			ELSE
+				PRINTFORML 「――やっと終わるの？」
+				PRINTFORMW 灵梦はぶっきらぼうに言った。
+			ENDIF
+		ENDIF
+		RETURN 0
+	ENDIF
+	;その他
+	PRINTFORML 
+ENDIF
+RETURN 0
+
+;==================================================
+;添い寝する
+;==================================================
+@M_KOJO_无個性_EVENT_K1_16(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;添い寝を始めた（开始时）(存在せず
+	;记入チェック
+	;LOCAL:1 = 0
+	;-------------------------------------------------
+	;IF LOCAL:1 && ARG == 1
+		;PRINTFORML
+		;RETURN 0
+	;ENDIF
+	;-------------------------------------------------
+	;添い寝を終了した（終了时）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		IF CFLAG:TARGET:衰弱
+			PRINTFORML 灵梦は一向に目を觉ます气配がない。
+			PRINTFORML %CALLNAME:MASTER%は灵梦の耳元でおやすみ、と呟いて立ち上がった。
+			PRINTFORMW 灵梦は笑みを浮かべて眠っている。
+		ENDIF
+		ELSE
+			IF TALENT:恋人
+				PRINTFORML 「ふぁ……そろそろ、起きようかしらね」
+				PRINTFORML そう言って、灵梦は上体を起こした。
+				PRINTFORML 「%CALLNAME:MASTER%も、起きましょう」
+				PRINTFORML 「诶嘿嘿、なんだか夫婦みたい」
+				PRINTFORMW 灵梦は幸せそうに、そう呟いた。
+			ELSEIF TALENT:恋慕
+				PRINTFORML 「――%CALLNAME:MASTER%、その、そろそろ……」
+				PRINTFORML %CALLNAME:MASTER%は上体を起こす。
+				PRINTFORML 「えっと、これから何をしましょうか？」
+				PRINTFORMW 灵梦と%CALLNAME:MASTER%は今日の予定を決めにかかった。
+			ELSE
+				PRINTFORML 
+			ENDIF
+		RETURN 0
+	ENDIF
+	;その他
+	PRINTFORML 
+ENDIF
+RETURN 0
+;==================================================
+;时止め終了时
+;==================================================
+@M_KOJO_无個性_EVENT_K1_17(ARG,ARG:1)
+;口上主はTARGET
+;排他と明记されていないモノは状况によっては连続で表示されるので注意
+;ARGに射精状况
+;ARG:1に射精状态
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;謎の快感
+	;ARG=1～3は排他
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		PRINTFORML 「――っ！？」
+		PRINTFORML 灵梦は突然体を襲った快感に颜をゆがめている。
+		PRINTFORML 「はぁっ……何よ、これ……」
+		PRINTFORML どうかしたか、と%CALLNAME:MASTER%が素知らぬ颜をして聞くと、
+		PRINTFORML 「っ、何でも、ないわ」
+		PRINTFORMW と、灵梦は艶っぽい声で答えた。
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;绝顶
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		PRINTFORML 「――――――っ！？」
+		PRINTFORML 灵梦は突然の绝顶に体を反らせた。
+		PRINTFORML 「――っく、はぁっ、はっ」
+		PRINTFORML 灵梦は艶かしい息を荒く吐いている。
+		PRINTFORML 具合でも悪いのか、と%CALLNAME:MASTER%が素知らぬ颜で聞くと、
+		PRINTFORML 「っ、な、何でも、ないわよ」
+		PRINTFORMW と、灵梦は取り繕うかのようにそう答えた。
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;パンツ紛失
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		PRINTFORML 「――！？」
+		PRINTFORML 灵梦は下半身が少し涼しくなったことに驚いている。
+		PRINTFORML %CALLNAME:MASTER%が素知らぬ颜で聞くと、
+		PRINTFORML 「――え、あ、いや、なんでもないわ」
+		PRINTFORMW 灵梦は、笑颜を作ってそう言った。
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;【无自觉口内射精】
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 4
+		;精液中毒低精饮
+		IF ARG:1 == 1
+			PRINTFORML 「――っ！？」
+			PRINTFORML 灵梦は突然の口内の不快感に颜をしかめている。
+			PRINTFORML 「ん、んくっ……こくっ」
+			PRINTFORML 灵梦は口内の精液を飲み込んだ。
+			PRINTFORML %CALLNAME:MASTER%がどうかしたか、と聞くと、
+			PRINTFORML 「……う、ぇっ……な、なんでも、ない……」
+			PRINTFORMW と、灵梦は苦い颜をして言った。
+		;精液中毒低吐き出し
+		ELSEIF ARG:1 == 2
+			IF TALENT:恋人
+				PRINTFORML 「――っ！？」
+				PRINTFORML 灵梦は突然の口内の不快感に颜をしかめている。
+				PRINTFORML 灵梦は口の中の精液を小さな手のひらに吐き出した。
+				PRINTFORML 「けほっ……なんで、精液が……」
+				PRINTFORMW 灵梦は困惑している。
+			ELSE
+				PRINTFORML 「――っ」
+				PRINTFORML 灵梦は突然の口内の不快感に颜をしかめている。
+				PRINTFORML 灵梦は耐え切れずに精液を小さな手のひらに吐き出した。
+				PRINTFORML 「えほっ、けほっ、うえっ」
+				PRINTFORMW 灵梦は涙目になってこちらを見ている……
+			ENDIF
+		;精液中毒低手で覆う
+		ELSEIF ARG:1 == 3
+			PRINTFORML 「――っ！？」
+			PRINTFORML 灵梦は突然口内に感じられたどろっとした感触に颜をゆがめた。
+			PRINTFORML 思わず灵梦は、口を手で覆った。
+			PRINTFORML 素知らぬ颜で%CALLNAME:MASTER%が聞くと、
+			PRINTFORML 「……っ、ちょっと、气分が、ね……」
+			PRINTFORML と、灵梦は小声で言った。
+			PRINTFORMW %CALLNAME:MASTER%は心中で笑みを浮かべた。
+		;精液中毒高精饮
+		ELSEIF ARG:1 == 4
+			PRINTFORML 
+			PRINTFORML 「――？……」
+			PRINTFORML 灵梦は突然口内に現れた精液の感触にも身じろぎしていない。
+			PRINTFORML 「ん、こく……ちゅる……」
+			PRINTFORML 灵梦はにおいを乐しむかのように、小さく音を立てて精液を飲み込んだ。
+			PRINTFORML 「……おいし……」
+			PRINTFORMW 灵梦は精液のにおいと味を堪能している。
+		ENDIF
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;【无自觉颜面射精】
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 5
+		;精液经验ありぬぐい取り
+		IF ARG:1 == 1
+			PRINTFORML 
+			PRINTFORML 「――っ！？」
+			PRINTFORML 灵梦は颜面に突然現れた精液の感触に驚愕している。
+			PRINTFORML 颜面についた精液を手で拭った灵梦は、手のひらを見てさらに驚愕した。
+			PRINTFORML 「……え、なんで、精液が……」
+			PRINTFORMW 灵梦は突然のことに困惑している……
+		;精液经验なしぬぐい取り
+		ELSEIF ARG:1 == 2
+			PRINTFORML 
+			PRINTFORML 「――！？何、何よ、何……」
+			PRINTFORML 灵梦は颜面に突然現れた精液の感触に驚いている。
+			PRINTFORML 灵梦は手で精液を拭い、手のひらを見つめた。
+			PRINTFORML 「……何、これ……どろっとしてて……」
+			PRINTFORML 灵梦は精液に鼻を近づけ、すんすん、とにおいを嗅いだ。
+			PRINTFORML 「うえっ、青臭っ……何よこれ……」
+			PRINTFORMW 灵梦は颜面に付着した未知の液体に困惑している……
+		;颜射精液舐めとり
+		ELSEIF ARG:1 == 3
+			PRINTFORML 
+			PRINTFORML 「――？……何で、突然……」
+			PRINTFORML 灵梦は突然颜面に付着した精液の感触に困惑している。
+			PRINTFORML 灵梦は手で精液を拭い、少しそれを見つめた。
+			PRINTFORML 少し見つめた后、灵梦は可爱らしい舌を伸ばして、舌先でぴちゃ、と精液を舐め取った。
+			PRINTFORML 「ぴちゃ、ぴちゅ……ちゅる……ん、こく……」
+			PRINTFORML 灵梦は手のひらに溜まった精液を少しずつ飲み干していった。
+			PRINTFORML 「……飲んじゃった……でも、なんで精液が……」
+			PRINTFORMW 灵梦は少し颜を红くしながら、突然精液が現れた理由を探している。
+		ENDIF
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;【无自觉手淫射精】
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 6
+		;ぬぐい取り
+		IF ARG:1 == 1
+			PRINTFORML 
+			PRINTFORML 「――っ、なんで……え？……え？」
+			PRINTFORML 灵梦は手や腕に付着した精液を見て困惑している。
+			PRINTFORML 「何で、精液が……うぇ、どろどろ……」
+			PRINTFORMW 灵梦は小さな手で一所懸命に精液を拭い取っている。
+		;舐めとり
+		ELSEIF ARG:1 == 2
+			PRINTFORML 
+			PRINTFORML 「――っ……精液……？」
+			PRINTFORML 灵梦は手や腕に付着した精液を眉をひそめながら見つめている。
+			PRINTFORML 灵梦は少し考えた后、%CALLNAME:MASTER%のほうを見やってから手の平をぺろ、と舐めた。
+			PRINTFORML %CALLNAME:MASTER%は見ていない振りをする。
+			PRINTFORML 「ぴちゃ……れろ、ぢゅる、ちゅぱ……」
+			PRINTFORML 腕に付着した精液にも、灵梦は淫靡に舌を這わせた。
+			PRINTFORML ちろちろと自らの体に付着した精液を舐めとっていく姿は、情欲をそそった。
+			PRINTFORML 「……ん、綺丽になった……不味くも、ない……」
+			PRINTFORMW 灵梦は少し頬を赤らめながらそう言った。
+		ENDIF
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;【无自觉肛门射精】
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 7
+		;Ａ感觉0
+		IF ARG:1 == 1
+			PRINTFORML 
+			PRINTFORML 「――！？っく……？なに、この、感觉……」
+			PRINTFORML 灵梦は小さく呟いた。
+			PRINTFORML 「……熱い……しかも、どろっ、て……何、これ……」
+			PRINTFORML 灵梦は肠内に感じた未知の感触に困惑している。
+			PRINTFORMW %CALLNAME:MASTER%は内心笑みながら、灵梦のその様を見つめている。
+		;ソレ以外
+		ELSEIF ARG:1 == 2
+			PRINTFORML 
+			PRINTFORML 「――っ、は……？何、この……？」
+			PRINTFORML 灵梦は肠内に現れた精液の感触に困惑している。
+			PRINTFORML 「气持ち、悪い……」
+			PRINTFORMW 灵梦は不快感を訴えている。 
+		ENDIF
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;【无自觉处女丧失】
+	;この鬼畜！と言われてもしょうがないね
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 8
+		PRINTFORML 
+		PRINTFORML 「――っ、つぅ……！？」
+		PRINTFORML 灵梦は謎の鈍痛に小さくうめいている。
+		PRINTFORML 「……ぐ、っ……何、この、痛み……」
+		PRINTFORML 灵梦は小さく呟いた。
+		PRINTFORML 「……痛ぁ……」
+		PRINTFORML 同时に灵梦は、謎の丧失感を感じているようだ。
+		PRINTFORMW %CALLNAME:MASTER%は素知らぬ颜で灵梦に話しかけた。
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;【无自觉膣内射精】
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 9
+		;非处女膣内射精口服避孕药なし
+		IF ARG:1 == 1
+			PRINTFORML 
+			PRINTFORML 「――っ……」
+			PRINTFORML 灵梦は突然膣内に出現した精液の感触に颜をしかめている。
+			PRINTFORML 「……まさか、精液……っ」
+			PRINTFORMW 灵梦は颜を蒼くしている。
+		;非处女膣内射精口服避孕药あり
+		ELSEIF ARG:1 == 2
+			PRINTFORML 
+			PRINTFORML 「――っ、何よ、この……何、何……？」
+			PRINTFORML 灵梦は突然膣内に感じたどろっとした感触に困惑している。
+			PRINTFORML 「……精液……でも、なんで……」
+			PRINTFORMW 灵梦は戸惑っている。
+		;处女膣内射精
+		ELSEIF ARG:1 == 3
+			PRINTFORML 
+			PRINTFORML 「――！？」
+			PRINTFORML 灵梦は突然膣内に現れた感触に驚いている。
+			PRINTFORML 「何、よ……何、この、感触……熱い……」
+			PRINTFORMW 灵梦は未知の感觉に戸惑っている。
+		ENDIF
+		RETURN 0
+	ENDIF
+ENDIF
+RETURN 0
+;==================================================
+;ナマでやらせろ时
+;==================================================
+@M_KOJO_无個性_EVENT_K1_18(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;避孕要求台詞
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		IF TALENT:恋人
+			PRINTFORML 「……ねぇ、%CALLNAME:MASTER%、今日は、その……」
+			PRINTFORML 「中に出すのは、やめて欲しいのだけれど……」
+			PRINTFORML 「だめかしら？」
+			PRINTFORMW 灵梦はこちらを润んだ瞳で見つめている。
+		ELSE
+			PRINTFORML 「その……%CALLNAME:MASTER%？今日は……」
+			PRINTFORML 「……中に出すのはやめて欲しいのだけれど……」
+			PRINTFORML 「その……だめ？」
+			PRINTFORMW 灵梦はこちらを润んだ瞳で見つめている。
+		ENDIF
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;断った
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		IF TALENT:恋人
+			PRINTFORML 「……やっぱり、だめ？」
+			PRINTFORML 「生じゃないと、満足できないかしら……」
+			PRINTFORML 「こ、儿童も、まだ早い……と思うし……」
+			PRINTFORMW 「本当に、だめかしら？」
+		ELSEIF TALENT:恋慕
+			PRINTFORML 「……だめ？」
+			PRINTFORML 「あの、その、儿童はまだ……早いと思うのだけれど」
+			PRINTFORMW 「本当に、だめ？」
+		ELSE
+			PRINTFORML 「……え？」
+			PRINTFORML 「だめなの？できちゃったらどうするの？」
+			PRINTFORML 「責任とってくれるのなら……いや、だめよ」
+			PRINTFORMW 「考え直してちょうだい」
+		ENDIF
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;断ったのに粘られて切れた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		IF TALENT:恋人
+			PRINTFORML 「――あのねぇ、私でも嫌なものは嫌なの」
+			PRINTFORML 「いくら恋人の%CALLNAME:MASTER%でも、だめよ」
+			PRINTFORMW 「これ以上粘ったら、怒るわよ」
+		ELSEIF TALENT:恋慕
+			PRINTFORML 「――あのねぇ、だめなものはだめよ」
+			PRINTFORMW 「怒っても、良いわよね」
+		ELSE
+			PRINTFORML 「――ふざけないで」
+			PRINTFORML 「私はあなたの玩具じゃないの」
+			PRINTFORML 「望まないのにできても、困るでしょう？」
+			PRINTFORMW 灵梦は颜に愤怒をあらわにして断った。
+		ENDIF
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;危険日以外許可
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 4
+		IF TALENT:恋人
+			PRINTFORMW 「……はぁ、しょうがないわねぇ」
+			PRINTFORMW 「わかったわよ、良いわ」
+			PRINTFORMW 「でも、危険日はだめよ？わかった？」
+			PRINTFORMW 灵梦が釘を刺すかのように、そう言った。
+		ELSEIF TALENT:恋慕
+			PRINTFORMW 「……はぁ、わかったわよ」
+			PRINTFORMW 「良いわ、中に出しても」
+			PRINTFORMW 「危険日じゃなければ、ね」
+			PRINTFORMW 灵梦は若干諦め气味に、そう言った。
+			PRINTFORMW 
+		ELSE
+			PRINTFORMW 「……わかったわ、良いわよ」
+			PRINTFORMW 「どうせだめって言っても粘るんだし」
+			PRINTFORMW 灵梦は諦めたかのように、そう言った。
+			PRINTFORMW 
+		ENDIF
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;危険日許可
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 5
+		IF TALENT:恋人
+			PRINTFORMW 「――わかったわ、そこまで言うのなら」
+			PRINTFORMW 「ええ、良いわよ、赤ちゃんつくりましょ」
+			PRINTFORMW 「%CALLNAME:MASTER%との儿童なら……その、嫌じゃないし」
+			PRINTFORMW 灵梦は%CALLNAME:MASTER%の懇願に、とうとう折れた。
+			PRINTFORMW 「さ、儿童は何人作るご予定で？」
+			PRINTFORMW 
+		ELSEIF TALENT:恋慕
+			PRINTFORMW 「――もう、しょうがないわね」
+			PRINTFORMW 「良いわ、そこまで言うのなら、良いわよ」
+			PRINTFORMW 「勿論、責任は取ってくれるだろうし、ね」
+			PRINTFORMW 灵梦は少し颜を赤らめながら、そう言った。
+			PRINTFORMW 
+		ELSE
+			PRINTFORMW 「――子作り……」
+			PRINTFORMW 灵梦は「子作り」という言叶の響きに、何故か颜を赤らめている。
+			PRINTFORMW 「……良いわ、中に出しても」
+			PRINTFORMW 「……%CALLNAME:MASTER%との儿童……」
+			PRINTFORMW 灵梦はどこか上の空である。
+		ENDIF
+			PRINTFORMW 
+		RETURN 0
+	ENDIF
+ENDIF
+RETURN 0
+;==================================================
+;神社暮らしを承認して貰う
+;==================================================
+@M_KOJO_无個性_EVENT_K1_19(ARG,ARG:1)
+;口上主はARG
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;認められる
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		PRINTFORML
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;認められない
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		PRINTFORML
+		RETURN 0
+	ENDIF
+ENDIF
+RETURN 0
+;==================================================
+;帰宅时
+;==================================================
+@M_KOJO_无個性_EVENT_K1_20(ARG,ARG:1)
+;口上主はLOCALS or RESULT
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;通常帰宅
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		PRINTFORML
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;约会中帰宅
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		PRINTFORML
+		RETURN 0
+	ENDIF
+ENDIF
+RETURN 0
+
+;==================================================
+;陷落素質取得时
+;==================================================
+@M_KOJO_无個性_EVENT_K1_21(ARG,ARG:1)
+;口上主はARG
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;恋慕取得
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		PRINTFORML 
+		PRINTFORMW ――灵梦私室にて。
+		PRINTFORMW 「……何かしら、この……」
+		PRINTFORMW 灵梦は自室で独り、胸に手を当てて呟いた。
+		PRINTFORMW 「……どきどきして、胸が、締め付けられて……」
+		PRINTFORMW 灵梦は切なそうな颜をしている。
+		PRINTFORMW 「……なんか、熱い……」
+		PRINTFORMW どくん、どくん、どくん。
+		PRINTFORMW 灵梦は早鐘を打つ心臓を押さえている。
+		PRINTFORMW 「……%CALLNAME:MASTER%……」
+		PRINTFORMW どくんっ。
+		PRINTFORMW そう呟くと心臓は大きく跳ね、灵梦の胸はさらに締め付けられた。
+		PRINTFORMW 「%CALLNAME:MASTER%、%CALLNAME:MASTER%……」
+		PRINTFORMW どくどくっ。
+		PRINTFORMW 灵梦は小さく、何度も%CALLNAME:MASTER%の名前を连呼している。
+		PRINTFORMW 「……%CALLNAME:MASTER%、か……」
+		PRINTFORMW 灵梦は颜を上げ、天井を見つめた。
+		PRINTFORMW 「……す、き……」
+		PRINTFORMW その颜は淡く上气している。
+		PRINTFORMW 「……好きって、こういうことなの……？」
+		PRINTFORMW 灵梦は体を抱きしめ、切なく呟いた。
+		PRINTFORMW 「…………好き…………好き…………」
+		PRINTFORMW 灵梦は何度もそう呟き、そのたび颜を红くしていった。
+		PRINTFORMW 「……こんな颜、誰にも見せられないわね」
+		PRINTFORMW その颜はにやにやと綻んでいて、いつもの无表情な灵梦とは思えない。
+		PRINTFORMW 「…………大好き……」
+		PRINTFORMW 灵梦は%CALLNAME:MASTER%に思いを馳せながら、寝床に就いた。
+		PRINTFORMW 
+		PRINTFORMW 
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;思慕取得
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		PRINTFORML 
+		PRINTFORMW 「……最近、変ね……」
+		PRINTFORMW 独り、私はそう呟く。
+		PRINTFORMW 「……毎日が乐しい……なぜかしら……」
+		PRINTFORMW 今までこんなことは无かった。
+		PRINTFORMW ……変わらない日々が、ずっと続いていた。
+		PRINTFORMW 异変はあっても、こんな平和な笑みを浮かべたことはそうそう无かった。
+		PRINTFORMW ……强いて言うなら、あの人间がこの神社に住み着いたことが変化か。
+		PRINTFORMW 「……%CALLNAME:MASTER%……」
+		PRINTFORMW そっと、その人间の名前を呟く。
+		PRINTFORMW とくん、と、少し胸が跳ねた。
+		PRINTFORMW 「……あいつが来てから、なんだか――」
+		PRINTFORMW 颜が少し熱い、胸が高鳴っている。
+		PRINTFORMW 「――なんだか、あいつのことばかり考えてる气がするわ……」
+		PRINTFORMW ……あの人间が居るから、乐しい？
+		PRINTFORMW 「……ふふ、まさか……」
+		PRINTFORMW 私は笑って布団に入った。
+		PRINTFORMW 「……まさか、ね……」
+		PRINTFORMW 私は目を瞑り、眠りに落ちた。
+		PRINTFORMW その胸は、とくんとくんと高鳴ったままだった。
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;爱欲取得
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		PRINTFORML 
+		PRINTFORMW 灵梦は自室で、壁にもたれかかっている。
+		PRINTFORMW 「……%CALLNAME:MASTER%……」
+		PRINTFORMW 天井をぼーっと見つめ、灵梦は呟いた。
+		PRINTFORMW 「……气持ちよかった……」
+		PRINTFORMW 灵梦は頬を红く染めている。
+		PRINTFORMW 「あんなに……あんなに……」
+		PRINTFORMW 灵梦は行为の时のことを鮮明に思い出した。
+		PRINTFORMW 
+		PRINTFORMW 髪の匂いをじっくり嗅がれる。
+		PRINTFORMW 耳を唇で挟まれ、爱抚される。
+		PRINTFORMW 頬に雨のように口付けられる。
+		PRINTFORMW 互いに舌を絡め熱く口付ける。
+		PRINTFORMW 涎を交换し、歯を数えられる。
+		PRINTFORMW 首をれろ、と舌で舐められる。
+		PRINTFORMW 腋も、舌で執拗になぞられる。
+		PRINTFORMW 舐った后には颜を埋められる。
+		PRINTFORMW じっくりと臭いを堪能される。
+		PRINTFORMW 肌を指でつう、となぞられる。
+		PRINTFORMW じっくりと阴部をなぞられる。
+		PRINTFORMW 阴核を意地悪にひっかかれる。
+		PRINTFORMW 会阴と膣口を舌で舐められる。
+		PRINTFORMW 舌を根元まで插し入れられる。
+		PRINTFORMW 胸をじっくり揉みしだかれる。
+		PRINTFORMW 指で乳头を转がされ潰される。
+		PRINTFORMW 舌で乳头を舐められ吸われる。
+		PRINTFORMW 腹も、お臍も、尻も、太腿も。
+		PRINTFORMW 体の隅々までを、味わわれる。
+		PRINTFORMW 情欲している様を视奸される。
+		PRINTFORMW 爱液が滴るほどに焦らされる。
+		PRINTFORMW 私が懇願するまで焦らされる。
+		PRINTFORMW 直立する一物で膣を貫かれる。
+		PRINTFORMW 幾度と无く激しく抽送される。
+		PRINTFORMW 私が達しても止まりはしない。
+		PRINTFORMW やがて、子宫内に射精される。
+		PRINTFORMW 大量に精液を送り込んでくる。
+		PRINTFORMW まるで、私を孕ませるように。
+		PRINTFORMW 气持ちが良くて、たまらない。
+		PRINTFORMW 气持ちよくてたまらないのだ。
+		PRINTFORMW 
+		PRINTFORMW 「はぁっ、んっ、くっ、は、んっ、あぁっ」
+		PRINTFORMW 房间に、小さな嬌声が響く。
+		PRINTFORMW いつの间にか、灵梦は阴部に手を伸ばしていた。
+		PRINTFORMW ぐちゅりぐちゅりと、水音を立てて手を动かしている。
+		PRINTFORMW 「はぁっ、はぁっ、んっ、はぁっ」
+		PRINTFORMW もう片方の手で、乳头をくりくりと弄る。
+		PRINTFORMW 「んっ、ぅ、あぁっ、は、んっ」
+		PRINTFORMW 体が疼きに疼いていたから、气持ち良い。
+		PRINTFORMW 气持ち良い、气持ち良いのに――
+		PRINTFORMW いくら激しく体を弄っても。
+		PRINTFORMW いくら激しく己を慰めても。
+		PRINTFORMW その强い体の渇きは抑えられなかった。
+		PRINTFORMW 「はぁっ、はぁっ、%CALLNAME:MASTER%、%CALLNAME:MASTER%……」
+		PRINTFORMW %CALLNAME:MASTER%に、体を触られたい。
+		PRINTFORMW %CALLNAME:MASTER%に、体を弄られたい。
+		PRINTFORMW %CALLNAME:MASTER%に、体を犯されたい。
+		PRINTFORMW ぐちゃぐちゃに、滅茶苦茶に――
+		PRINTFORMW そのことしか、灵梦の头の中には无かった。
+		PRINTFORMW 「は、ん、ぁ――――――っ……はぁっ……は、んっ、はぁっ……」
+		PRINTFORMW 灵梦は体を反らせて绝顶に達した。
+		PRINTFORMW 灵梦は颜を上气させて、肩で息をしながら脱力している。
+		PRINTFORMW そして灵梦は、就寝するために布団に入った。
+		PRINTFORMW 満たされない渇きを体の内に秘めたまま、灵梦は眠りに落ちる……
+		PRINTFORMW 
+		PRINTFORMW 眠りに落ちる寸前まで、灵梦の头は%CALLNAME:MASTER%との行为のことでいっぱいだった。
+		PRINTFORMW じゅん、と秘所が濡れ、太腿が无意识に擦り合う。
+		PRINTFORMW 完全に、溺れてしまっている。
+		PRINTFORMW 灵梦は、そのことに气が付いていた――
+		EXP:自慰经验 += 1
+		EXP:Ｃ经验 += 1
+		EXP:Ｂ经验 += 1
+		EXP:Ｃ绝顶经验 += 1
+		EXP:Ｂ绝顶经验 += 1
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;爱人取得
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 4
+		IF !TALENT:恋慕
+			PRINTFORML 
+			PRINTFORMW 「……今日も、气持ちよかった……」
+			PRINTFORMW 灵梦はそう呟いた。
+			PRINTFORMW 「……あんなに、强くして……」
+			PRINTFORMW 灵梦は行为の際のことを思い出しかけ、ぶんぶんと头を振った。
+			PRINTFORMW 「……だめよ、今思い出したら、独りでしちゃう……」
+			PRINTFORMW そう言い、灵梦は床に就いた。
+			PRINTFORMW しかし、灵梦の头の中には行为のことがぐるぐると回っている。
+			PRINTFORMW 興奮が冷めるまで、灵梦は少しの间寝つけなかった……
+			RETURN 0
+		ELSE
+			PRINTFORML 
+			PRINTFORMW 「……疲れたわ……」
+			PRINTFORMW 灵梦は自室で独り、呟いた。
+			PRINTFORMW 「……%CALLNAME:MASTER%ったら、あんなに激しくするんだから……」
+			PRINTFORMW 灵梦は頬を红く染めている。
+			PRINTFORMW 「……なんだか、胸が痛いというか……何だろう……」
+			PRINTFORMW 灵梦は胸を押さえている。
+			PRINTFORMW 「……もっと、これ以上……」
+			PRINTFORMW 「……これ以上の、关系に……」
+			PRINTFORMW 灵梦は切ない颜でそう言った。
+			PRINTFORMW 「……%CALLNAME:MASTER%……」
+			PRINTFORMW 灵梦は最后にそうとだけ呟いて、床に就いた。
+			PRINTFORMW 灵梦の心に、新たな气持ちが生まれた……
+		ENDIF
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;セフレ取得
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 5
+		PRINTFORML 
+		PRINTFORMW 「……今日は、气持ちよかったな……」
+		PRINTFORMW 灵梦は独り呟いた。
+		PRINTFORMW 「%CALLNAME:MASTER%、加減してくれないんだから……」
+		PRINTFORMW そんなことを考えていると、体の奥が疼いてくる。
+		PRINTFORMW 「……早く明日になって、また……」
+		PRINTFORMW 气持ちよくして欲しい、と言いかけて、灵梦はぐっと口をつぐんだ。
+		PRINTFORMW 「……私、何言ってるのかしら……」
+		PRINTFORMW そう呟いて、灵梦は布団に入る。
+		PRINTFORMW 体の奥の疼きは消えず、灵梦は眠れず悶々とした。
+		PRINTFORMW 「……气持ちよく……」
+		PRINTFORMW 秘所に手を伸ばしかけ、灵梦ははっと踏みとどまる。
+		PRINTFORMW もう灵梦は、%CALLNAME:MASTER%から与えられる快感を忘れられない。
+		PRINTFORMW そんな深いところまで侵されていると、灵梦は未だ气づかなかった。
+		RETURN 0
+	ENDIF
+ENDIF
+RETURN 0
+;==================================================
+;调教終了时に自慰
+;==================================================
+@M_KOJO_无個性_EVENT_K1_22(ARG,ARG:1)
+;口上主はARG
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	SELECTCASE RAND:6
+		CASE 5
+			IF TALENT:恋慕
+				PRINTFORML 
+				PRINTFORML 「ぅ、んぁっ、あ……っ、ん、はっ……ひゃ、ふ……」
+				PRINTFORML 灵梦は膣壁を指先でこすり乳头を弄びながら、自慰に耽っている。
+				PRINTFORML 「ぁ、あぁっ、%CALLNAME:MASTER%、ん、%CALLNAME:MASTER%……ぁっ！」
+				PRINTFORML 誰かに声を聞かれているかもしれない、そんな考え、灵梦は持っていなかった。
+				PRINTFORML ただ、恋い慕う人のことだけを考える。
+				PRINTFORML そうすることで、燻る想いを抑えようとしていた。
+			ELSE
+				PRINTFORML 
+				PRINTFORML 「ぅ、んぁっ、あ……っ、ん、はっ……ひゃ、ふ……」
+				PRINTFORML 灵梦は膣壁を指先でこすり乳头を弄びながら、自慰に耽っている。
+				PRINTFORML 「ぁ、あぁっ、ふ……ぁっ！　はぁっ、はぁ……っ」
+				PRINTFORML 誰かに声を聞かれているかもしれない、そんな考えが、灵梦を少しだけ昂ぶらせる。
+				PRINTFORML そんな自分に嫌になりつつも、灵梦は自慰行为を続けた。
+			ENDIF
+		CASE 4
+			IF TALENT:恋慕
+				PRINTFORML 
+				PRINTFORML 「はぁっ、はぁっ……%CALLNAME:MASTER%っ、%CALLNAME:MASTER%……」
+				PRINTFORML 灵梦は%CALLNAME:MASTER%の名前を呼びながら、秘所を指で弄っている。
+				PRINTFORML どうやら、%CALLNAME:MASTER%のことを想像しながら自慰行为に耽っているようだ。
+				PRINTFORMW 灵梦は小さく%CALLNAME:MASTER%の名を呼びながら、绝顶するまで自慰行为を続けた……
+			ELSE
+				PRINTFORML 
+				PRINTFORML 「はぁっ……はぁっ……」
+				PRINTFORML 灵梦は荒く息を吐きながら、秘所を抚でている。
+				PRINTFORML 「んっ、こんなの、こんなの……は、あぁっ……」
+				PRINTFORMW 灵梦は否定の言叶を吐きながらも、満足するまで秘所を抚で続けた……
+			ENDIF
+		CASE 3
+			PRINTFORML 
+			PRINTFORML 「はぁっ……はぁっ……」
+			PRINTFORML 灵梦は自室で独り、壁にもたれかかっている。
+			PRINTFORML その颜は上气していて、荒い息を吐きながら太腿を擦り合わせている。
+			PRINTFORML 耐えかねたのか、灵梦はとうとう下着の下に手を差し入れた。
+			PRINTFORML すこしびくり、と体を跳ねさせてから、灵梦は激しく手を动かし始めた。
+			PRINTFORMW 灵梦は数回達するまで、自慰行为を続けた……
+		CASE 2
+			PRINTFORML 
+			PRINTFORML 「んっ……くぅっ……は、あっ……」
+			PRINTFORML 灵梦は秘所に指を插し入れ、ゆっくりと抽送している。
+			PRINTFORML 頬は快乐に红く染まり、指の动きはどんどんと速くなっていった。
+			PRINTFORML 「っ……こんなの、はした、ない……んっ、く、あぁっ……」
+			PRINTFORMW そう呟きつつも、灵梦は绝顶するまで指を止めようとしようとはしなかった。
+		CASE 1
+			PRINTFORML 
+			PRINTFORML 「はっ、んぅ、あっ、くぅっ……ふぁ、はぁ、ん……」
+			PRINTFORML 灵梦は必死に声を押し杀しながら、激しく指を秘所に抽送している。
+			PRINTFORML 空いている手は胸に伸び、指先で乳头を小刻みにこりこりと弾いている。
+			PRINTFORMW 灵梦は快乐と背徳感に、だんだんと溺れていった……
+		CASE 0
+			IF TALENT:恋慕
+				PRINTFORML 
+				PRINTFORML 「んっ……く、ん……ふぁ、あ……」
+				PRINTFORML 灵梦は小さく喘ぎながら、秘所を弄っている。
+				PRINTFORML 「……は、は、ん、あ……く、ふぅ……」
+				PRINTFORML 灵梦は、%CALLNAME:MASTER%の手の感触を思い出している。
+				PRINTFORML 手を、舌を、体を悦ばせてくれる全てを。
+				PRINTFORMW 行为の快乐を想起しながら、灵梦は自慰行为に耽って行った……
+			ELSE
+				PRINTFORML 
+				PRINTFORML 「は、ん……く、っ、ふ……」
+				PRINTFORML 灵梦は小さく喘ぎながら秘所をぐちゅぐちゅとかき回している。
+				PRINTFORML 淫らな水音はさらに灵梦の羞耻をそそった。
+				PRINTFORML 时折敏感なところを弾くたび、灵梦の体は跳ねた。
+				PRINTFORML なるべく、%CALLNAME:MASTER%の动きを真似ようとしているのだろうか。
+				PRINTFORMW しかし、灵梦はいくら自分を慰めても、%CALLNAME:MASTER%に弄られるより満足はできなかった……
+			ENDIF
+	ENDSELECT
+ENDIF
+RETURN 0
+;==================================================
+;浴场连れだし
+;==================================================
+@M_KOJO_无個性_EVENT_K1_23(ARG,ARG:1)
+;口上主はLOCAL
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;断られた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		IF TALENT:思慕
+			PRINTFORML 
+			PRINTFORMW 「――え？お澡堂……一绪に？」
+			PRINTFORMW 灵梦は首を傾げて%CALLNAME:MASTER%に訊ね返してきた。
+			PRINTFORMW 「ううん……だめよ、だめ、さすがに、だめよ」
+			PRINTFORMW 灵梦は少し考えて、拒否してきた。
+			RETURN 0
+		ELSE
+			PRINTFORML 
+			PRINTFORMW 「――は？もう一回いってみて？」
+			PRINTFORMW 「……耳がおかしくなったかと思ったわ」
+			PRINTFORMW 灵梦はため息を吐いている。
+			PRINTFORMW 「……だめよ、そんな间柄でもないじゃない」
+			PRINTFORMW 灵梦はきっぱりと断った。
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;一绪に入ってくれた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		IF TALENT:恋慕
+			PRINTFORML 
+			PRINTFORML 「お澡堂、入るの？」
+			PRINTFORML 灵梦は首を傾げて訊ねてきた。
+			PRINTFORML %CALLNAME:MASTER%が頷くと、
+			PRINTFORMW 「そう……私も、一绪に入るわ」
+			PRINTFORML と、灵梦は言ってきた。
+			PRINTFORML 「ふふ、背中流してあげるわよ」
+			PRINTFORML そう言いながら、灵梦は遠慮なく服を脱いだ。
+			PRINTFORML さらにサラシも解き、美しい丸みを带びた胸が露になった。
+			PRINTFORMW 「……何よ、%CALLNAME:MASTER%のえっち……」
+			PRINTFORML 灵梦は%CALLNAME:MASTER%の视线に气づき、颜を红くしてぷい、と颜を背けた。
+			PRINTFORMW %CALLNAME:MASTER%も灵梦に习って服を全て脱ぎ、浴场に入った。
+		ELSE
+			PRINTFORML 
+			PRINTFORMW 「……え？」
+			PRINTFORMW 「……良いけど」
+			PRINTFORMW 「そんなに喜ぶことなの……？まあ良いわ、あっち向いてて」
+			PRINTFORML そう言って、灵梦は服を脱ぎ始める。
+			PRINTFORML しゅる、ぱさ。しゅるる、ぱさ、ぱさっ。
+			PRINTFORML 服を脱ぐ音が、妙に艶かしく聞こえた。
+			PRINTFORMW 「……はい、もう良いわよ」
+			PRINTFORML %CALLNAME:MASTER%が振り返ると、灵梦は片方の手で乳头を、もう片方の手で秘所を隠していた。
+			PRINTFORMW 「……そんなにじろじろ見てると、张り倒すわよ？」
+			PRINTFORMW 灵梦は頬を羞恥に赤らめてそう言ってきた。
+		ENDIF
+		RETURN 0
+	ENDIF
+	;その他
+	PRINTFORML 
+ENDIF
+RETURN 0
+;==================================================
+;懐妊
+;==================================================
+@M_KOJO_无個性_EVENT_K1_24(ARG,ARG:1)
+;口上主はLOCAL
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;恋慕
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		PRINTFORML 
+		PRINTFORML 「ふふ、幸せね……」
+		PRINTFORML 「……私が%CALLNAME:MASTER%の子を腹に宿してるだなんて」
+		PRINTFORML 「……大好きよ、%CALLNAME:MASTER%……」
+		PRINTFORML 灵梦は独り、誰にも聞かれず呟いた。
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;思慕
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		PRINTFORML 
+		PRINTFORML 「……%CALLNAME:MASTER%の子、か」
+		PRINTFORML 「别に、嫌なわけじゃないんだけどね……」
+		PRINTFORML 「……子に罪は无い、か」
+		PRINTFORML 灵梦は独り、誰にも聞かれること无く呟いた。
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;陷落素質无し
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		PRINTFORML 
+		PRINTFORML 「……%CALLNAME:MASTER%の子、ね……」
+		PRINTFORML 「别に、嫌なわけじゃないんだけどね……」
+		PRINTFORML 「……子に罪は无い、か」
+		PRINTFORML 灵梦は独り、誰にも聞かれること无く呟いた。
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;无自觉
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 4
+		RETURN 1
+	ENDIF
+	;その他
+	PRINTFORML  
+WAIT
+ENDIF
+RETURN 0
+;==================================================
+;出産
+;==================================================
+@M_KOJO_无個性_EVENT_K1_25(ARG,ARG:1)
+;口上主はLOCAL
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;恋慕
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		PRINTFORML 
+		PRINTFORML 「はぁっ、はぁっ……っ、はぁ……」
+		PRINTFORML 「……ん、%CALLNAME:MASTER%に似た、魅力的な子になるでしょう、ね……」
+		PRINTFORML 「……ふふ」
+		PRINTFORML 涙ぐんで、まだ残る腹の痛みに喘ぎながら、灵梦は微笑んだ。
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;思慕
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		PRINTFORML 
+		PRINTFORML 「はぁっ、はぁっ……っ、はぁ……」
+		PRINTFORML 「……ん……かわいい、わね……」
+		PRINTFORML 灵梦は赤ん坊の头をそっと抚でながら、母性あふれる笑みを浮かべている……。
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;陷落素質无し
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		PRINTFORML 
+		PRINTFORML 「はぁっ、はぁっ……っ、はぁ……」
+		PRINTFORML 「……ん……かわいい、わね……」
+		PRINTFORML 灵梦は赤ん坊の头をそっと抚でながら、母性あふれる笑みを浮かべている……。
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;无自觉
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 4
+		RETURN 1
+	ENDIF
+	;その他
+	PRINTFORML  
+ENDIF
+RETURN 0

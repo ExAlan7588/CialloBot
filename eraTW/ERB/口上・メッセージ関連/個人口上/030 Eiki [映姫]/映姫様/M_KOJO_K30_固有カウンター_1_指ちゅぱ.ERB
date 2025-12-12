@@ -1,0 +1,61 @@
+﻿;K30_固有Counter_1_指チュパ
+;パラメータ的には口爱抚
+
+;固有Counter可否
+@UNIQUE_COUNTER1_ABLE_K30
+	SIF !TALENT:30:恋慕
+		RETURN 0
+	SIF ABL:30:舌 < 2
+		RETURN 0
+	SIF TEQUIP:PLAYER:50 >= 0 || TEQUIP:PLAYER:51 >= 0
+		RETURN 0
+	SIF TEQUIP:30:50 != PLAYER && TEQUIP:30:51 != PLAYER
+		RETURN 0
+RETURN 1
+
+;固有Counterの种别と频度
+@UNIQUE_COUNTER1_FREQUENCY_K30
+;ソフト/ベリーソフト/コミュ/着衣/脱衣爱抚/脱衣强迫/抱き着き/性交/责め/おねだりの中なら选ぶべし
+;TYPEによって发生しない状况があるので注意→@COUNTER_TYPE内に发生状况の判定
+;よくわかんないので口交と同じカテゴリ
+RESULTS = 脱衣爱抚
+;发生率、基本值(10)にこの数值を足す
+;通常のCounterはプラ​舞​5以下なので、テストプレイ以外であんまり极端な数字を入れない方がいい
+;适当なパラメータ足して丸めとけば极端な数字も出ない、はず
+RETURN 10 + (CFLAG:30:积极性 + ABL:30:舌) / 2
+
+;文本
+@UNIQUE_COUNTER1_MESSAGE_K30
+PRINTFORML 映姬将%CALLNAME:MASTER%的手指拉到嘴边，像爱抚一样地开始吮吸
+PRINTFORML 和\@ TEQUIP:50 == PLAYER ? 小穴 # 肠内 \@一样，映姬的口中热而湿润，灵活运动的舌头挑逗着%CALLNAME:MASTER%的手指…
+
+;固有Counterのソース等
+@UNIQUE_COUNTER1_SOURCE_K30
+
+	;体势の变更
+	;=============================
+	CALL TOUCH_SET(SET_FROM_M, 3, 30)
+	TFLAG:MASTERの手使用中 ++
+
+	;ソース计算および内部处理系统、调整よくわかんないから口交の弱化版
+	;=============================
+
+	SOURCE:30:性行动 += 75
+	SOURCE:30:诱惑 += 300
+	SOURCE:30:挑衅 += 75
+	SOURCE:30:征服 += 25
+	SOURCE:30:侍奉 += 400
+	SOURCE:30:快Ｍ += 120
+
+	EXP:30:口淫经验 ++
+	;侍奉FLAG
+	TCVAR:30:108 = 1
+	
+	;マ斯塔Counter制御、よくわからんけどCCOM口交から引っ张ってきた
+	;(ビット立ちで不可 0=摸屁股 1=拥抱 2=接吻 3=胸爱抚 4=肛门爱抚 5=阴蒂爱抚 6=指插入れ 7=掀裙子)
+	;=============================
+	;CALL Counter插入され继续中处理(ARG)
+	SETBIT TCVAR:30:26 ,1
+	SETBIT TCVAR:30:26 ,2
+	
+

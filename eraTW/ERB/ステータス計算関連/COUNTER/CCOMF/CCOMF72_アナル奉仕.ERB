@@ -1,0 +1,87 @@
+﻿;*********************************************************************************************
+;Counter指令：肛门侍奉
+;ARG = 对象の角色番号
+;*********************************************************************************************
+@CCOMF72(ARG)
+
+	;体势の变更
+	;=============================
+	CALL TOUCH_SET(SET_FROM_A,4,ARG)
+	TFLAG:MASTERの口使用中 ++
+	
+	;ソース计算および内部处理系统
+	;=============================
+	IF BEDROOM(CFLAG:MASTER:当前位置)
+		SIF TEQUIP:ARG:0
+			CALL DATUI_BOTTOM_T(ARG,RAND:2)
+	ELSE
+		SIF TEQUIP:ARG:0 & 14
+			CALL DATUI_BOTTOM_T(ARG,1)
+	ENDIF
+	SOURCE:ARG:快Ａ = 100
+	SOURCE:ARG:性行动 += 300
+	SOURCE:ARG:征服 += 600
+	SOURCE:ARG:侮辱 += 300
+	SOURCE:ARG:挑衅 += 100
+	SOURCE:ARG:强迫 += 400
+	SOURCE:ARG:施虐 += 50
+	SOURCE:PLAYER:快Ｍ += 100
+	LOCALS = {ARG}/
+	CSTR:ARG:10 += LOCALS
+	TCVAR:ARG:2 = 9
+	;强度
+	TCVAR:ARG:4 += 200
+	STAIN:ARG:4 |= STAIN:PLAYER:0
+	STAIN:PLAYER:0 |= STAIN:ARG:4
+	EXP:PLAYER:口淫经验 ++
+	TCVAR:ARG:嗜虐フラグ = 1
+	CALL EVENT_COUNTER_POSE_69(ARG,2)
+
+	;マ斯塔Counter制御
+	;(ビット立ちで不可 0=摸屁股 1=拥抱 2=接吻 3=胸爱抚 4=肛门爱抚 5=阴蒂爱抚 6=指插入れ 7=掀裙子)
+	;=============================
+	;CALL Counter插入され继续中处理(ARG)
+	SETBIT TCVAR:ARG:26 ,1
+	SETBIT TCVAR:ARG:26 ,2
+	SETBIT TCVAR:ARG:26 ,7
+
+RETURN 1
+
+;*********************************************************************************************
+;Counter实行可否出力函数
+;ARG = 对象の角色番号
+;*********************************************************************************************
+@CCOM_ABLE72(ARG)
+
+	SIF TFLAG:60
+		RETURN 0
+	SIF TEQUIP:ARG:50 >= 0 || TEQUIP:ARG:51 >= 0
+		RETURN 0
+	SIF TEQUIP:MASTER:50 >= 0 || TEQUIP:MASTER:51 >= 0
+		RETURN 0
+
+RETURN 1
+
+;*********************************************************************************************
+;Counter实行判定值算出函数
+;ARG = 对象の角色番号
+;*********************************************************************************************
+@CCOM_ORDER72(指令番号, ARG, 基本值)
+#DIM 指令番号
+#DIM 基本值
+#DIMS Counterタイプ
+
+	;Counterタイプ设定
+	;=============================
+	Counterタイプ = 脱衣强迫
+
+	;实行判定值算出式
+	;=============================
+	LOCAL = (基本值 + ABL:ARG:Ａ感觉) * (EXP:ARG:Ａ绝顶经验 >= 10)
+
+	;Counterタイプ别计算处理 实质实行判定处理を含む
+	;=============================
+	LOCAL = MAX(LOCAL + COUNTER_SIKOU:ARG:指令番号, 1)
+	LOCAL *= COUNTER_TYPE(Counterタイプ, ARG)
+
+RETURN LOCAL

@@ -1,0 +1,59 @@
+﻿;-------------------------------------------------
+;实行判定
+;-------------------------------------------------
+@COM_ABLE367
+SIF !TFLAG:100
+	RETURN 0
+SIF !SEARCH_ACTIVE_IRAI_SLOT()
+	RETURN 0
+RETURN 1
+
+@COM367
+#DIM CHK_SLOT
+CHK_SLOT  = SEARCH_ACTIVE_IRAI_SLOT()
+CALL IRAI_APPLY(CHK_SLOT)
+RETURN RESULT
+
+
+;-------------------------------------------------
+;依赖实行处理をスロット指定にした
+;かならずCAN_IRAI_SLOT_DO(CHK_SLOT)を噛ませてから实行しないと素通しになります
+;@COM367はSEARCH_ACTIVE_IRAI_SLOT()で判定済みなのでよし
+;-------------------------------------------------
+@IRAI_APPLY(CHK_SLOT)
+#DIM CHK_SLOT
+#DIM IRAI_RESULT
+#DIM CLIENT_ID
+CLIENT_ID = IRAI_SLOT_TO_CLIENT(CHK_SLOT)
+CALL SHOW_IRAI_MESSAGE(TARGET, IRAI_SLOT:CHK_SLOT, "依赖实行直前")
+CALL IRAI_CARRYOUT(TARGET, IRAI_SLOT:CHK_SLOT, "依赖实行时")
+IRAI_RESULT = RESULT
+;ここで设定しないと实行直后のメッセージで成功失败の判别がつかないので仕方なく
+SELECTCASE IRAI_RESULT
+CASE IRAI_CONST_RESULT("中止")
+	;ここは-1が返る
+	;これ以外は实行处理が行われたはずなので全て1以上を返す
+	RETURN IRAI_RESULT
+CASE IRAI_CONST_RESULT("实行して成功")
+	CALL SET_IRAI_PROGRESS(CLIENT_ID, "依赖达成")
+CASE IRAI_CONST_RESULT("实行して失败")
+	CALL SET_IRAI_PROGRESS(CLIENT_ID, "依赖失败")
+CASE IRAI_CONST_RESULT("实行して未解决")
+ENDSELECT
+CALL SHOW_IRAI_MESSAGE(TARGET, IRAI_SLOT:CHK_SLOT, "依赖实行直后")
+
+;とりあえず时间经过
+SIF !FLAG:70
+	TIME += 5
+
+;成否が未解决ならスルー
+IF !GROUPMATCH(IRAI_RESULT, IRAI_CONST_RESULT("实行して成功"), IRAI_CONST_RESULT("实行して失败"))
+;成否が确定し、TARGETが依赖者である
+ELSEIF TARGET == CLIENT_ID
+	CALL COM366
+;成否が确定し、TARGETが依赖者でない
+ELSE
+	;依赖完了(报告しないと失败扱い)
+	PRINTFORMW 不要忘记报告%NAME_OUTPUT_TRANSLATION("CALLNAME", CLIENT_ID)%
+ENDIF
+RETURN 1

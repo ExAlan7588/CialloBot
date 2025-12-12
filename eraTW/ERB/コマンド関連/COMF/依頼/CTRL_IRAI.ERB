@@ -1,0 +1,819 @@
+﻿;----------------------------------------------------------------------------------------------------
+;依赖受托处理
+;----------------------------------------------------------------------------------------------------
+@SET_IRAI_SLOT(CHARA)
+#DIM CHARA
+#DIM IRAI_ID
+#DIM CHK_SLOT
+IRAI_ID = CFLAG:CHARA:依赖内容
+CHK_SLOT = SEARCH_IRAI_EMPTY()
+SIF !CHK_SLOT
+	RETURN
+IRAI_SLOT:CHK_SLOT     = IRAI_ID
+IRAI_DATA:CHK_SLOT     = INT_DATA_IRAI(IRAI_ID, "依赖内容",     CHARA)
+IRAI_SUB:CHK_SLOT      = INT_DATA_IRAI(IRAI_ID, "依赖サブ",     CHARA)
+IRAI_DEADLINE:CHK_SLOT = INT_DATA_IRAI(IRAI_ID, "依赖期限", CHARA) + DAY
+CALL SET_IRAI_PROGRESS(CHARA, "依赖中")
+
+
+
+;----------------------------------------------------------------------------------------------------
+;依赖结束处理
+;----------------------------------------------------------------------------------------------------
+@CLEAR_IRAI_SLOT(CHARA, CHK_SLOT, SCENE)
+#DIM  CHARA
+#DIM  IRAI_ID
+#DIM  CHK_SLOT
+#DIMS SCENE
+ARRAYREMOVE IRAI_SLOT,     CHK_SLOT, 1
+ARRAYREMOVE IRAI_DATA,     CHK_SLOT, 1
+ARRAYREMOVE IRAI_SUB,      CHK_SLOT, 1
+ARRAYREMOVE IRAI_EX,       CHK_SLOT, 1
+ARRAYREMOVE IRAI_DEADLINE, CHK_SLOT, 1
+CALL SET_IRAI_PROGRESS(CHARA, SCENE)
+
+
+
+;----------------------------------------------------------------------------------------------------
+;依赖发生处理
+;随意10角色见繕って依赖を作るよ
+;----------------------------------------------------------------------------------------------------
+@IRAI_HAPPEN
+#DIM CHARA_ID, 10
+#DIM CONST NEW_IRAI_NUM = 10
+[IF_DEBUG]
+	;#;PRINTFORMW 依赖生成处理（全角色实行、ログをデ背包ウインドウに表示）
+	;#;DEBUGCLEAR
+	FOR LOCAL:0, 1, 人物数量上限
+		SIF !CAN_MEET(LOCAL:0)
+			CONTINUE
+		SIF CFLAG:(LOCAL:0):依赖状况
+			CONTINUE
+		CALL SET_NEW_IRAI(LOCAL:0)
+	NEXT
+	;#;PRINTFORML 依赖生成完了、デ背包文を削除します
+	;#;FORCEWAIT
+	;#;DEBUGCLEAR
+	RETURN
+[ENDIF]
+CALL ARRAY_RAND(CHARA_ID, NEW_IRAI_NUM, 1, 人物数量上限)
+FOR LOCAL:0, 0, NEW_IRAI_NUM
+	SIF !CAN_MEET(CHARA_ID:(LOCAL:0))
+		CONTINUE
+	SIF CFLAG:(CHARA_ID:(LOCAL:0)):依赖状况
+		CONTINUE
+	CALL SET_NEW_IRAI(CHARA_ID:(LOCAL:0))
+NEXT
+
+
+
+;----------------------------------------------------------------------------------------------------
+;各角色の依赖发生处理
+;依赖无/一般依赖/固有依赖
+;----------------------------------------------------------------------------------------------------
+@SET_NEW_IRAI(CHARA)
+#DIM CHARA
+CALL IRAI_HIT(CHARA, "HAPPEN")
+SELECTCASE RESULT
+CASE IS <= 0
+	RETURN
+CASE 1
+	CALL IRAI_HIT(CHARA, "COMMON")
+	LOCAL = RESULT
+	SIF !LOCAL
+		RETURN
+CASE 2
+	CALL IRAI_HIT(CHARA, "UNIQUE")
+	LOCAL = RESULT
+	SIF LOCAL <= 100
+		RETURN
+ENDSELECT
+CALL SET_IRAI_PROGRESS(CHARA, "依赖发生直后")
+CFLAG:CHARA:依赖内容 = MAKE_IRAI_ID(CHARA, LOCAL)
+
+
+
+;----------------------------------------------------------------------------------------------------
+;依赖抽选处理はまとめてここに
+;----------------------------------------------------------------------------------------------------
+@IRAI_HIT(CHARA, TYPE)
+#DIM  CHARA
+#DIMS TYPE
+#DIM CONST LAST_COMMON = 99 ;一般依赖IDの末端
+#DIM       LAST_UNIQUE      ;その角色に实装されている固有依赖IDの末端
+#DIM       HIT_LIST, 100    ;抽选概率配列
+#DIM       ID_LIST,  100    ;抽选を对象依赖IDの一览
+#DIM       CNT_LIST         ;抽选对象となる依赖の数
+DEBUGPRINTFORML ＞IRAI_HIT{CHARA}　%TYPE%
+SELECTCASE TYPE
+CASE "HAPPEN"
+;依赖发生抽选
+	HIT_LIST:0 = GET_INT(0, "キャラデータ", CHARA, "没有依赖发生率")
+	HIT_LIST:1 = GET_INT(0, "キャラデータ", CHARA, "一般依赖发生率")
+	HIT_LIST:2 = GET_INT(0, "キャラデータ", CHARA, "固有依赖发生率")
+	SIF !SUMARRAY(HIT_LIST, 0, 3)
+		HIT_LIST = 7, 3, 0
+	DEBUGPRINTFORML ＞IRAI_HIT{CHARA}　{HIT_LIST:0}/{HIT_LIST:1}/{HIT_LIST:2}
+	RETURN ARRAY_HIT(HIT_LIST, 3)
+CASE "COMMON"
+;一般依赖の抽选
+	VARSET HIT_LIST
+	VARSET ID_LIST
+	VARSET CNT_LIST
+	FOR LOCAL:0, 1, LAST_COMMON + 1
+		SIF !INT_DATA_IRAI(MAKE_IRAI_ID(CHARA, LOCAL:0), "依赖发生条件", CHARA)
+			CONTINUE
+		CALL KOJO_CHECK(CHARA, "IRAI_BLOCKED",,LOCAL:0)
+		SIF RESULT
+			CONTINUE
+
+		ID_LIST:CNT_LIST  = LOCAL:0
+		HIT_LIST:CNT_LIST = INT_DATA_IRAI(MAKE_IRAI_ID(CHARA, LOCAL:0), "依赖发生率", CHARA)
+		CNT_LIST ++
+	NEXT
+	SIF !CNT_LIST
+		RETURN 0
+	RETURN ID_LIST:(ARRAY_HIT(HIT_LIST, CNT_LIST))
+CASE "UNIQUE"
+;固有依赖の抽选
+	VARSET HIT_LIST
+	VARSET ID_LIST
+	VARSET CNT_LIST
+	LAST_UNIQUE = GET_INT(0, "キャラデータ", CHARA, "固有依赖最终要素")
+	FOR LOCAL:0, 101, LAST_UNIQUE + 1
+		SIF !INT_DATA_IRAI(MAKE_IRAI_ID(CHARA, LOCAL:0), "依赖发生条件", CHARA)
+			CONTINUE
+		CALL KOJO_CHECK(CHARA, "IRAI_BLOCKED",,LOCAL:0)
+		SIF RESULT
+			CONTINUE
+		ID_LIST:CNT_LIST  = LOCAL:0
+		HIT_LIST:CNT_LIST = INT_DATA_IRAI(MAKE_IRAI_ID(CHARA, LOCAL:0), "依赖发生率", CHARA)
+		CNT_LIST ++
+	NEXT
+	SIF !CNT_LIST
+		RETURN 0
+	RETURN ID_LIST:(ARRAY_HIT(HIT_LIST, CNT_LIST))
+ENDSELECT
+
+
+
+;----------------------------------------------------------------------------------------------------
+;依赖消灭处理
+;全角色が对象となり大规模化した
+;----------------------------------------------------------------------------------------------------
+@IRAI_VANISH
+#DIM CHK_SLOT
+#DIM CHARA
+;#;PRINTFORMW 依赖経时处理（全角色实行、ログをデ背包ウインドウに表示）
+;#;DEBUGCLEAR
+;全角色对象、受托前の/既に报告の终わった依赖の处理
+FOR CHARA, 1, CHARANUM
+	SELECTCASE IRAI_CHARA_TO_PROGRESS(CHARA)
+	;これらはまだ委托接口に入っていない
+	CASE "依赖发生直后"
+		CALL SET_IRAI_PROGRESS(CHARA, "依赖未受托")
+		
+	CASE "依赖未受托"
+		SIF INT_DATA_IRAI(CFLAG:CHARA:依赖内容, "依赖消灭率", CHARA)
+			CALL SET_IRAI_PROGRESS(CHARA, "依赖消灭")
+	[SKIPSTART]
+	依赖中のケースは委托接口见たほうがはやい
+	CASE "依赖中"
+	
+	基本的にこの4段阶は未报告状态、依赖主のリアクション待ちです（报告必须）
+	CASE "依赖达成"
+	CASE "期限切れ"
+	CASE "报告忘れ"
+	CASE "依赖失败"
+	[SKIPEND]
+	CASE "依赖结束（成功）", "依赖结束（期限切れ）", "依赖结束（报告忘れ）", "依赖结束（失败）"
+	;依赖が结束し、依赖人に报告を行なったパターン（スロットに入ってない）
+		CALL SET_IRAI_PROGRESS(CHARA, "依赖消灭")
+	ENDSELECT
+NEXT
+;#;PRINTFORML 依赖経时处理完了、デ背包文を削除します
+;#;FORCEWAIT
+;#;DEBUGCLEAR
+
+SIF !COUNT_IRAI_SLOT()
+	RETURN
+
+;#;PRINTFORMW 依赖期限处理（全角色实行、ログをデ背包ウインドウに表示）
+;依赖の期限判定
+;スロットは空けないことにした（依赖主への报告を强制させる）
+;依赖报告不要时にスロットを空ける处理が必要になった
+;スロット1から见ていくと依赖のリセットによってIDズレが发生するので末尾からチェックする
+FOR CHK_SLOT, COUNT_IRAI_SLOT(), 0, -1
+	CHARA = IRAI_SLOT_TO_CLIENT(CHK_SLOT)
+	;期限による依赖の失败判定
+	;期限が残ってるならスルー
+	SIF IRAI_DEADLINE:CHK_SLOT && DAY <= IRAI_DEADLINE:CHK_SLOT
+		CONTINUE
+	SELECTCASE IRAI_CHARA_TO_PROGRESS(CHARA)
+	CASE "依赖中"
+		CALL SET_IRAI_PROGRESS(CHARA, "期限切れ")
+	CASE "依赖达成"
+		IF STRLENS(STR_DATA_IRAI(IRAI_SLOT:CHK_SLOT, "依赖报告不要", CHARA))
+			CALL IRAI_CARRYOUT(CHARA, IRAI_SLOT:CHK_SLOT, "依赖报告不要")
+			CALL SHOW_IRAI_MESSAGE(CHARA, IRAI_SLOT:CHK_SLOT, "依赖报告不要")
+			CALL CLEAR_IRAI_SLOT(CHARA, CHK_SLOT, "依赖消灭")
+		ELSE
+			CALL SET_IRAI_PROGRESS(CHARA, "报告忘れ")
+		ENDIF
+	ENDSELECT
+NEXT
+;#;PRINTFORML 依赖期限处理完了、デ背包文を削除します
+;#;FORCEWAIT
+;#;DEBUGCLEAR
+
+
+;----------------------------------------------------------------------------------------------------
+;依赖内容の实行处理
+;实行时のSOURCEの变化の他、报酬や失败による处理も含む
+;----------------------------------------------------------------------------------------------------
+@IRAI_CARRYOUT(CHARA, IRAI_ID, SCENE)
+#DIM  CHARA
+#DIM  IRAI_ID
+#DIMS SCENE
+RESULT = 0
+IF IS_COMMON_IRAI(IRAI_ID)
+	TRYCCALLFORM IRAI_一般{IRAI_ID % 1000}(CHARA, IRAI_ID, SCENE)
+	CATCH
+		PRINTFORML ＊エラー发生＊
+		PRINTFORML 　CHARA:{CHARA}　SCENE:%SCENE%　IRAI_ID:{IRAI_ID}
+		PRINTFORML 　指定の函数 @IRAI_一般{IRAI_ID % 1000}は存在しません
+		PRINTFORML 　エラーログをコピペして报告して下さい
+		PRINTFORML 
+		PRINTFORMW 　入力待机中
+	ENDCATCH
+ELSE
+	TRYCCALLFORM IRAI_固有{IRAI_ID_TO_CLIENT(IRAI_ID)}(CHARA, IRAI_ID, SCENE)
+	CATCH
+		PRINTFORML ＊エラー发生＊
+		PRINTFORML 　CHARA:{CHARA}　SCENE:%SCENE%　IRAI_ID:{IRAI_ID}
+		PRINTFORML 　指定の函数 @IRAI_固有{IRAI_ID_TO_CLIENT(IRAI_ID)}は存在しません
+		PRINTFORML 　エラーログをコピペして报告して下さい
+		PRINTFORML 
+		PRINTFORMW 　入力待机中
+	ENDCATCH
+ENDIF
+RETURN RESULT
+;RESULTと依赖实行判定结果の对応はIRAI_CONST_RESULT(TYPE)を参照のこと
+
+
+
+;----------------------------------------------------------------------------------------------------
+;受托済み依赖情报表示函数
+;----------------------------------------------------------------------------------------------------
+@SHOW_ALL_IRAI_SLOT
+#DIM CHK_SLOT
+#DIM IRAI_NUM
+IRAI_NUM = COUNT_IRAI_SLOT()
+FOR CHK_SLOT, 1, IRAI_NUM + 1
+	CALL SHOW_IRAI_DATA(IRAI_SLOT:CHK_SLOT, CHK_SLOT)
+	PRINTFORML 
+NEXT
+
+
+
+;----------------------------------------------------------------------------------------------------
+;依赖情报表示函数
+;依赖ID单体でも使用できるが受托済みの场合は简略化のためにSLOT番号を渡す
+;フルネーム表记なのはわざとです（そのほうがお硬い文面っぽく见えるので）
+;----------------------------------------------------------------------------------------------------
+@SHOW_IRAI_DATA(IRAI_ID, CHK_SLOT)
+#DIM IRAI_ID   ;对象の依赖ID（依赖人情报含む）
+#DIM CHK_SLOT  ;判定对象とする委托接口、未受托の状态では0で读んで下さい
+#DIM CLIENT_ID ;依赖人ID
+#DIM CHK_ID    ;依赖自体のID
+#DIM DEAD_LINE ;期限日数
+CLIENT_ID = IRAI_ID_TO_CLIENT(IRAI_ID)
+CHK_ID    = IRAI_ID % 1000
+DEAD_LINE = INT_DATA_IRAI(IRAI_ID, "依赖期限", CLIENT_ID)
+SIF CHK_SLOT
+	PRINTFORML 依赖%TOFULL(TOSTR(CHK_SLOT))%
+PRINTFORML 　＜%STR_DATA_IRAI(IRAI_ID, "依赖名", CLIENT_ID)%＞
+PRINTFORML 　　委托者：%NAME_OUTPUT_TRANSLATION("NAME", CLIENT_ID)%    -    %NAME_FROM_PLACE(CFLAG:CLIENT_ID:当前位置)%
+PRINTFORML 　委托内容：%STR_DATA_IRAI(IRAI_ID, "依赖内容表示", CLIENT_ID)%
+PRINTFORML 　　　报酬：%STR_DATA_IRAI(IRAI_ID, "依赖报酬表示", CLIENT_ID)%
+SIF STRLENS(STR_DATA_IRAI(IRAI_ID, "依赖报告不要", CLIENT_ID))
+	PRINTFORML 　　　报告：%STR_DATA_IRAI(IRAI_ID, "依赖报告不要", CLIENT_ID)%
+SIF STRLENS(STR_DATA_IRAI(IRAI_ID, "依赖备考表示", CLIENT_ID))
+	PRINTFORML 　　　备注：%STR_DATA_IRAI(IRAI_ID, "依赖备考表示", CLIENT_ID)%
+;#;PRINTFORML 　　依赖ID：{IRAI_ID}　CLIENT_ID{CLIENT_ID}
+
+;未受托の场合は期限のみ表示しておしまい
+IF !CHK_SLOT
+	IF !DEAD_LINE
+		PRINTFORML 　　　期限：今日内
+	ELSE
+		PRINTFORML 　　　期限：{DEAD_LINE}日以内
+	ENDIF
+	RETURN
+ELSE
+	PRINTFORML 　　　期限：还有{IRAI_DEADLINE:CHK_SLOT - DAY}日
+ENDIF
+
+;ここから受托済み、业种别の表示
+SELECTCASE IRAI_SLOT_TO_TASKNAME(CHK_SLOT)
+CASE "调达"
+	PRINTFORML 　　要求品：%ITEMNAME:(IRAI_SLOT_TO_ITEM(CHK_SLOT))%×{IRAI_SUB:CHK_SLOT}
+	SIF ITEMNAME:IRAI_SLOT_TO_ITEM(CHK_SLOT) == "好吃的鱼"
+		PRINTFORML 　　　　　（虹鳟・鲑鱼・西太公鱼・八目鳗・雷鱼）
+CASE "传令（人物）"
+	PRINTFORML 　目标人物：%NAME_OUTPUT_TRANSLATION("NAME", (IRAI_SLOT_TO_PERSON(CHK_SLOT)))%    -    %NAME_FROM_PLACE(CFLAG:(IRAI_SLOT_TO_PERSON(CHK_SLOT)):当前位置)%
+	;PRINTFORML 　当前位置：%NAME_FROM_PLACE(CFLAG:(IRAI_SLOT_TO_PERSON(CHK_SLOT)):当前位置)% 
+	PRINTFORML 　作息时间：{CFLAG:(IRAI_SLOT_TO_PERSON(CHK_SLOT)):就寝时间 / 60,2,RIGHT}～{CFLAG:(IRAI_SLOT_TO_PERSON(CHK_SLOT)):起床时间 / 60,2,RIGHT}时
+
+CASE "传令（场所）"
+	PRINTFORML 　　目的地：%GET_PLACENAME(IRAI_SLOT_TO_PLACE(CHK_SLOT))%
+;纳兹琳に闻いても忘れる你(わたし)へ
+CASE "捜索（人物）"
+	IF IRAI_EX:CHK_SLOT
+		PRINTFORML 　参考人物：%NAME_OUTPUT_TRANSLATION("CALLNAME", (IRAI_EX:CHK_SLOT))%    -    %NAME_FROM_PLACE(CFLAG:(IRAI_SLOT_TO_PERSON(CHK_SLOT)):当前位置)%
+		;PRINTFORML 　当前位置：%NAME_FROM_PLACE(CFLAG:(IRAI_EX:CHK_SLOT):当前位置)% 
+		PRINTFORML 　作息时间：{CFLAG:(IRAI_EX:CHK_SLOT):就寝时间 / 60,2,RIGHT}～{CFLAG:(IRAI_EX:CHK_SLOT):起床时间 / 60,2,RIGHT}时
+	ELSE
+		PRINTFORM 　线索：
+		CALL SHOW_IRAI_HINT("捜索（人物）", IRAI_SLOT_TO_PERSON(CHK_SLOT), IRAI_SUB:CHK_SLOT)
+	ENDIF
+CASE "捜索（场所）"
+	IF IRAI_EX:CHK_SLOT > 5000
+		PRINTFORML 　　推定地：%STR:(5000 + GET_MAPID(IRAI_EX:CHK_SLOT-5000))%
+	ELSEIF IRAI_EX:CHK_SLOT
+		PRINTFORML 　　推定地：%STR:(5000 + GET_MAPID(IRAI_EX:CHK_SLOT))%の%GET_PLACENAME(IRAI_EX:CHK_SLOT)%
+	ELSE
+		PRINTFORM 　线索：
+		CALL SHOW_IRAI_HINT("捜索（场所）", IRAI_SLOT_TO_PLACE(CHK_SLOT), IRAI_SUB:CHK_SLOT)
+	ENDIF
+CASE "讨伐"
+	PRINTFORML 　讨伐对象：%NAME_OUTPUT_TRANSLATION("NAME", (IRAI_SLOT_TO_PERSON(CHK_SLOT)))%    -    %NAME_FROM_PLACE(CFLAG:(IRAI_SLOT_TO_PERSON(CHK_SLOT)):当前位置)%
+	PRINTFORM 　战力指数：
+	CALL PRINT_RANK(ABL:IRAI_SLOT_TO_PERSON(CHK_SLOT):战斗能力, "MAX_6")
+	PRINTL
+	;PRINTFORML 　当前位置：%NAME_FROM_PLACE(CFLAG:(IRAI_SLOT_TO_PERSON(CHK_SLOT)):当前位置)% 
+	;PRINTFORML 　就寝时间：{CFLAG:(IRAI_SLOT_TO_PERSON(CHK_SLOT)):就寝时间 / 60,2,RIGHT}时 
+	PRINTFORML 　作息时间：{CFLAG:(IRAI_SLOT_TO_PERSON(CHK_SLOT)):就寝时间 / 60,2,RIGHT}～{CFLAG:(IRAI_SLOT_TO_PERSON(CHK_SLOT)):起床时间 / 60,2,RIGHT}时
+ENDSELECT
+CALL IRAI_CARRYOUT(CLIENT_ID, IRAI_ID, "依赖条件表示")
+
+;确定してる场合はその旨を表示しておしまい
+IF GROUPMATCH(IRAI_CHARA_TO_PROGRESS(CLIENT_ID), "期限切れ", "报告忘れ", "依赖失败")
+	PRINTFORML 　达成状况：失败
+	RETURN
+ELSEIF GROUPMATCH(IRAI_CHARA_TO_PROGRESS(CLIENT_ID), "依赖达成")
+	PRINTFORML 　达成状况：已达成（未报告）
+	RETURN
+ELSEIF !DEAD_LINE
+	PRINTFORML 　　　期限：今日内
+ELSEIF DAY > IRAI_DEADLINE:CHK_SLOT
+	PRINTFORML 　　　期限：还剩{IRAI_DEADLINE:CHK_SLOT - DAY}日
+ELSEIF DAY == IRAI_DEADLINE:CHK_SLOT
+	PRINTFORML 　　　期限：今日内
+ENDIF
+
+;----------------------------------------------------------------------------------------------------
+;依赖情报内のヒント表示
+;DYNAMIC部分はSHOW_TASTEを参考,助手效果のデータだけを抽出する
+;----------------------------------------------------------------------------------------------------
+@SHOW_IRAI_HINT(TASKNAME, ARG, パターン)
+#DIMS TASKNAME
+#DIM CHARA
+#DIM PLACE
+#DIM パターン
+#DIM 洞察力
+#DIMS DYNAMIC LIST, 100 ;列表
+#DIM  DYNAMIC CNT,  100 ;列表各要素の重复个数
+#DIM  DYNAMIC NUM       ;种类の总数
+;◆洞察力に关して
+;元々はEXP:依赖达成经验とABL:依赖こ无レベルを设定して、依赖をこなすほど洞察力(=依赖レベル)が增えるという风にしようと思っていた
+;が、わざわざ作らなくてもプレイヤー侧のリアル洞察力の方が必要なので冻结させました。
+LOCALS = 
+;持ち主を推定する,现状パターンは1～3,パターン0は场所の方へ
+IF TASKNAME == "捜索（人物）" && パターン > 0
+	CHARA = ARG
+	洞察力 = 100
+	CALL DISH_TASTE_FROM_CHARA(CHARA, "OUTPUT")
+	CALLF CNT_SPLIT(RESULTS, LIST, CNT, NUM)
+	FOR LOCAL, 0, NUM
+		SELECTCASE LIST:LOCAL
+		CASE "神力"
+				LOCALS += "蕴含着神力。"
+		CASE "妖力"
+				LOCALS += "飘散着淡淡的妖气。"
+		CASE "灵障"
+				LOCALS += "感受到灵的力量。"
+		CASE "魔力"
+				LOCALS += "蕴含着魔力。"
+		CASE "生命力"
+				LOCALS += "蕴藏着自然的力量。"
+		CASE "仙术", "秘术"
+				LOCALS += "感受到神秘的能量。"
+		CASE "鬼的魔力", "血の魔力"
+				LOCALS += "散放着暴力的魔力。"
+		CASE "女仆流"
+				LOCALS += "女仆的道具。"
+		CASE "天狗流"
+				LOCALS += "写着天狗文字。"
+		CASE "冥界风"
+				LOCALS += "是冥界使用的东西。"
+		CASE "天界风"
+				LOCALS += "天界的产物。"
+		CASE "地底风"
+				LOCALS += "在地底有类似的。"
+		CASE "地狱风"
+				LOCALS += "沾上了地狱的砂。"
+		CASE "畜生流"
+				LOCALS += "这是畜生界常见的道具。"
+		CASE "月都风"
+				LOCALS += "只有在月之都才有的东西。"
+		CASE "玉兔流"
+				LOCALS += "有兔子的印章。"
+		CASE "魔界风"
+				LOCALS += "使用魔界的石头。"
+		CASE "梦幻风"
+				LOCALS += "感受到梦幻世界的妖气。"
+		CASE "外界风"
+				LOCALS += "外面的世界的东西。"
+		CASE "化学的"
+				LOCALS += "精密的制作品。"
+		CASE "小人族秘传的味道"
+				LOCALS += "是小人的工具。"
+		CASE "稗田家秘传之味"
+				LOCALS += "有稗田家的纹章。"
+		CASE "母亲的味道"
+				LOCALS += "是家常的工具 。"
+;		CASE "プロの味"
+;				LOCALS += ""
+		;天候と时间によってきらきらしなくなったりもする
+		CASE "闪耀"
+				LOCALS += "闪闪发光。"
+		CASE "纯化的味道"
+				LOCALS += "一丝浑浊都没有。"
+		CASE "药效"
+				LOCALS += "似乎是医疗道具。"
+		CASE "魔性"
+				LOCALS += "被施加了强化魔法。"
+		CASE "奇迹", "幸运"
+				LOCALS += "有好事要发生的预感。"
+		CASE "加护", "丰穣"
+				LOCALS += "似乎很灵験的样子。"
+		CASE "嫉妒"
+				LOCALS += "感到了执念…。"
+		CASE "道具の共鸣"
+				LOCALS += "是付丧神的伙伴。"
+;		CASE "浓郁"
+;				LOCALS += ""
+;		CASE "薄味"
+;				LOCALS += ""
+;		CASE "隐し味"
+;				LOCALS += ""
+		CASE "心跳味"
+				LOCALS += "似乎有隐藏的装置机关。"
+		CASE "未知の味"
+				LOCALS += "不可思议的东西。"
+		CASE "冰结"
+				LOCALS += "寒冷。"
+		CASE "大火力"
+				LOCALS += "很温暖。"
+		CASE "彩り"
+				LOCALS += "有七彩色的光辉。"
+		CASE "绚烂"
+				LOCALS += "非常浮华。"
+		CASE "贫乏饭"
+				LOCALS += "破烂的。"
+		CASE "切れ味"
+				LOCALS += "像武器一样。"
+		CASE "美味的水"
+				LOCALS += "是防水的。"
+		CASE "刺激的"
+				LOCALS += "有一个骷髅标记…。"
+		ENDSELECT
+	NEXT
+	SELECTCASE パターン
+	CASE 1
+		IF TALENT:CHARA:擅长用针
+			LOCALS += "尖尖的。"
+		ELSEIF TALENT:CHARA:日光浴
+			LOCALS += "有太阳的标志。"
+		ELSEIF TALENT:CHARA:月光浴
+			LOCALS += "有月亮的标志。"
+		ELSEIF TALENT:CHARA:幼稚
+			LOCALS += "像玩具一样。"
+		ENDIF
+	CASE 2
+		IF ABL:CHARA:音乐技能 >= 2 && ABL:MASTER:音乐技能 >= 1
+			LOCALS += "关于乐器。"
+		ELSEIF TALENT:CHARA:钓鱼Lv >= 2 && TALENT:MASTER:钓鱼Lv >= 1
+			LOCALS += "是钓鱼的工具。"
+		ELSEIF ABL:CHARA:料理技能 >= 1 && ABL:MASTER:料理技能 >= 1
+			LOCALS += "做饭用的工具。"
+		ELSEIF ABL:CHARA:教养 >= 4 && ABL:MASTER:教养 >= 3
+			LOCALS += "很难理解的书。"
+		ENDIF
+	CASEELSE
+		SIF TALENT:CHARA:胆量 < 0
+			LOCALS += "像护身符一样。"
+		SIF TALENT:CHARA:开朗／阴郁 < 0
+			LOCALS += "暗色调。"
+		SIF TALENT:CHARA:开朗／阴郁 > 0
+			LOCALS += "明亮的色调。"
+		SIF TALENT:CHARA:喜欢引人注目
+			LOCALS += "自信。"
+		SIF TALENT:CHARA:污臭耐性 < 0
+			LOCALS += "被擦得很干净。"
+		SIF TALENT:CHARA:污臭耐性 > 0
+			LOCALS += "污垢明显。"
+		SIF TALENT:CHARA:狐 || TALENT:CHARA:妖狐
+			LOCALS += "带有动物毛。"
+		SIF TALENT:CHARA:吸血鬼
+			LOCALS += "有一个模仿蝙蝠的印章。"
+		SIF TALENT:CHARA:水栖
+			LOCALS += "湿漉的。"
+	ENDSELECT
+	;ある程度まで行くと断定できる
+	IF ABL:CHARA:亲密 >= 20 || TALENT:CHARA:恋人
+		LOCALS = 这是%NAME_OUTPUT_TRANSLATION("CALLNAME", CHARA)%的东西。
+	ELSEIF ABL:CHARA:亲密 >= 10
+		LOCALS += "就像那个孩子曾有的一样…。"
+	ELSEIF ABL:CHARA:亲密 >= 5
+		LOCALS += "我好像在某人那里看过…。"
+	ENDIF
+ELSEIF TASKNAME == "捜索（场所）" || (TASKNAME == "捜索（人物）" && !パターン)
+	;落とした场所を推定する,现状パターンは1～2
+	IF TASKNAME == "捜索（场所）"
+		PLACE = ARG
+	;落とし物の对象が人物になっているパターン0
+	;一応报酬で判别可能だがいきなり人物を推定するのはオカシイので人物の自宅位置＝落とした场所を推定する
+	ELSEIF TASKNAME == "捜索（人物）" && !パターン
+		IF CFLAG:ARG:自宅位置
+			PLACE = CFLAG:ARG:自宅位置
+		ELSE
+			PRINTFORML 找不到任何线索…。
+			RETURN
+		ENDIF
+	ENDIF
+	洞察力 = 100
+	SELECTCASE GET_MAPID(PLACE)
+	CASE 0
+		IF GET_MAPID(PLACE) == MAIN_MAP
+			LOCALS += "好像我在博丽神社附近丢了。"
+;		ELSEIF 洞察力>= 3
+;			LOCALS += "博丽神社に行った日に失くしたらしい。"
+		ELSEIF 洞察力 >= 1
+			IF パターン == 1
+				LOCALS += "我去参观的那天丢了。"
+			ELSE
+				LOCALS += "好像是宴会的那天丢了。"
+			ENDIF
+		ENDIF
+	CASE 1
+		IF GET_MAPID(PLACE) == MAIN_MAP
+			LOCALS += "好像我在命莲寺附近丢了。"
+;		ELSEIF 洞察力>= 3
+;			LOCALS += "命莲寺に行った日に失くしたらしい。"
+		ELSEIF 洞察力 >= 1
+			IF パターン == 1
+				LOCALS += "我去参观的那天丢了。"
+			ELSE
+				LOCALS += "好像在人群中丢了。"
+			ENDIF
+		ENDIF
+	CASE 2
+		IF GET_MAPID(PLACE) == MAIN_MAP
+			LOCALS += "好像我在人间之里附近丢了。"
+;		ELSEIF 洞察力>= 3
+;			LOCALS += "人里に行った日に失くしたらしい。"
+		ELSEIF 洞察力 >= 1
+			IF パターン == 1
+				LOCALS += "好像是宴会的那天丢了。"
+			ELSE
+				LOCALS += "好像在人群中丢了。"
+			ENDIF
+		ENDIF
+	CASE 3
+		IF GET_MAPID(PLACE) == MAIN_MAP
+			LOCALS += "好像在红魔馆附近丢了。"
+;		ELSEIF 洞察力>= 4
+;			LOCALS += "红魔馆に行った日に失くしたらしい。"
+		ELSEIF 洞察力 >= 2
+			IF パターン == 1
+				LOCALS += "好像是宴会的那天丢了。"
+			ELSE
+				LOCALS += "好像在去钓鱼的那天丢了。"
+			ENDIF
+		ENDIF
+	CASE 4
+		IF GET_MAPID(PLACE) == MAIN_MAP
+			LOCALS += "好像在永远亭附近丢了。"
+;		ELSEIF 洞察力>= 5
+;			LOCALS += "永远亭に行った日に失くしたらしい。"
+		ELSEIF 洞察力 >= 3
+			IF パターン == 1
+				LOCALS += "好象在黑暗中丢了。"
+			ELSE
+				LOCALS += "好象在迷路的时候丢了。"
+			ENDIF
+		ENDIF
+	CASE 5
+		IF GET_MAPID(PLACE) == MAIN_MAP
+			LOCALS += "好像在魔法之森丢了。"
+;		ELSEIF 洞察力>= 5
+;			LOCALS += "魔法之森に行った日に失くしたらしい。"
+		ELSEIF 洞察力 >= 3
+			IF パターン == 1
+				LOCALS += "好象在黑暗中丢了。"
+			ELSE
+				LOCALS += "好象在迷路的时候丢了。"
+			ENDIF
+		ENDIF
+	CASE 6
+		IF GET_MAPID(PLACE) == MAIN_MAP
+			LOCALS += "好像在冥界那里丢了。"
+;		ELSEIF 洞察力>= 6
+;			LOCALS += "冥界方面に行った日に失くしたらしい。"
+		ELSEIF 洞察力 >= 4
+			LOCALS += "意识到的时候好像已经丢了。"
+		ENDIF
+	CASE 7
+		IF GET_MAPID(PLACE) == MAIN_MAP
+			LOCALS += "好像在山麓那里丢了。"
+;		ELSEIF 洞察力>= 4
+;			LOCALS += "好像在山麓那里丢了。"
+		ELSEIF 洞察力 >= 2
+			IF パターン == 1
+				LOCALS += "好象在妖怪的山上丢了。"
+			ELSE
+				LOCALS += "好像在去钓鱼的那天丢了。"
+			ENDIF
+		ENDIF
+	CASE 8
+		IF GET_MAPID(PLACE) == MAIN_MAP
+			LOCALS += "好象在山顶附近丢了。"
+;		ELSEIF 洞察力>= 4
+;			LOCALS += "好象在山顶附近丢了。"
+		ELSEIF 洞察力 >= 2
+			IF パターン == 1
+				LOCALS += "好象在妖怪的山上丢了。"
+			ELSE
+				LOCALS += "我去参观的那天丢了。"
+			ENDIF
+		ENDIF
+	CASE 9
+		IF GET_MAPID(PLACE) == MAIN_MAP
+			LOCALS += "好像在地底那里丢了。"
+;		ELSEIF 洞察力>= 6
+;			LOCALS += "好像在地底那里丢了。"
+		ELSEIF 洞察力 >= 4
+			IF パターン == 1
+				LOCALS += "好象在黑暗中丢了。"
+			ELSE
+				LOCALS += "好像在去钓鱼的那天丢了。"
+			ENDIF
+		ENDIF
+	CASE 10
+		IF GET_MAPID(PLACE) == MAIN_MAP
+			LOCALS += "好象在月之都附近丢了。"
+;		ELSEIF 洞察力>= 6
+;			LOCALS += "月之都に行った日に失くしたらしい。"
+		ELSEIF 洞察力 >= 4
+			LOCALS += "意识到的时候好像已经丢了。"
+		ENDIF
+	ENDSELECT
+	SIF 洞察力 >= 2 && TASKNAME == "捜索（人物）" && !パターン
+		LOCALS += "因为是显眼的东西、很有可能已经被人捡到了。"
+ENDIF
+SIF LOCALS == ""
+	LOCALS = 找不到任何线索…。
+PRINTFORML %LOCALS%
+
+;----------------------------------------------------------------------------------------------------
+;依赖关联の口上呼び出し函数
+;----------------------------------------------------------------------------------------------------
+@SHOW_IRAI_MESSAGE(CHARA, IRAI_ID, SCENE)
+#DIM  CHARA
+#DIM  IRAI_ID
+#DIMS SCENE
+RESULTS =
+IF SCENE == "依赖报告不要"
+	CALL KOJO_MESSAGE_SEND("IRAI", CHARA, IRAI_ID, 0, 0, "NO_REPORT", SCENE)
+ELSEIF CHARA == IRAI_ID_TO_CLIENT(IRAI_ID)
+;对象が依赖者である
+	CALL KOJO_MESSAGE_SEND("IRAI", CHARA, IRAI_ID, 0, 0, "CLIENT", SCENE)
+ELSE
+;この场合はおおむねSCENEは"依赖实行时"になるが一応渡す
+	CALL KOJO_MESSAGE_SEND("IRAI", CHARA, IRAI_ID, 0, 0, "TARGET", SCENE)
+ENDIF
+RESETCOLOR
+
+
+;----------------------------------------------------------------------------------------------------
+;依赖リセット函数
+;依赖关联变量の全初期化
+;----------------------------------------------------------------------------------------------------
+@IRAI_RESET
+PRINTFORML 重置所有的委托。
+PRINTFORML 可以吗？
+CALL ASK_YN
+IF !RESULT
+	CVARSET CFLAG, 403
+	CVARSET CFLAG, 404
+	VARSET IRAI_SLOT
+	VARSET IRAI_DATA
+	VARSET IRAI_SUB
+	VARSET IRAI_DEADLINE
+	VARSET IRAI_CLIENT
+	VARSET IRAI_EX
+	PRINTFORMW 已经重置。
+ENDIF
+
+
+
+;----------------------------------------------------------------------------------------------------
+;依赖期限通知函数
+;每天早上の通知
+;----------------------------------------------------------------------------------------------------
+@MEMO_IRAI_DEADLINE
+#DIM CLIENT
+;受托済み依赖の期限の处理
+FOR LOCAL,1, 10
+	SIF !IRAI_SLOT:LOCAL
+		CONTINUE
+	CLIENT = IRAI_SLOT_TO_CLIENT(LOCAL)
+	SIF GROUPMATCH(IRAI_CHARA_TO_PROGRESS(CLIENT), "依赖中", "依赖达成", "依赖失败")
+		PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", CLIENT)%的委托的期限还有{IRAI_DEADLINE:LOCAL - DAY}天
+NEXT
+
+
+
+;----------------------------------------------------------------------------------------------------
+;「访问房间」での依赖关联のアクション
+;----------------------------------------------------------------------------------------------------
+@IRAI_VISIT_HOME(CHARA)
+#DIM PREV_TARGET     ;TARGET退避
+#DIM CHARA           ;对象きゃら
+#DIM IRAI_NUM        ;受托依赖数
+#DIM CHK_SLOT        ;判定对象スロット
+#DIM DYNAMIC CNT_DO  ;实行/报告した依赖数＝返回值
+PREV_TARGET = TARGET
+TARGET = CHARA
+IRAI_NUM = COUNT_IRAI_SLOT()
+FOR CHK_SLOT, 1, IRAI_NUM + 1
+	SIF !CAN_IRAI_VISIT_HOME_PERSON(CHARA, CHK_SLOT)
+		CONTINUE
+	PRINTFORML ＜%STR_DATA_IRAI(IRAI_SLOT:CHK_SLOT, "依赖名", CHARA)%＞
+	PRINTFORMW 　→[%IRAI_SLOT_TO_ACTNAME(CHK_SLOT)%]
+	CALL IRAI_APPLY(CHK_SLOT)
+	SIF RESULT > 0
+		CNT_DO ++
+NEXT
+
+IRAI_NUM = COUNT_IRAI_SLOT()
+FOR CHK_SLOT, IRAI_NUM, 0, -1
+	SIF !CAN_IRAI_VISIT_HOME_CLIENT(CHARA, CHK_SLOT)
+		CONTINUE
+	PRINTFORML ＜%STR_DATA_IRAI(IRAI_SLOT:CHK_SLOT, "依赖名", CHARA)%＞
+	PRINTFORMW 　→委托报告
+	CALL IRAI_REPORT(CHARA)
+	SIF RESULT > 0
+		CNT_DO ++
+NEXT
+TARGET = PREV_TARGET
+RETURN CNT_DO
+
+;一般依赖の抑制
+@BAN_COMMON_IRAI(C_ID, IRAI_ID)
+#DIM C_ID
+#DIM IRAI_ID
+SETBIT CFLAG:C_ID:一般依赖禁止, IRAI_ID
+
+;扫除を手传って（发生条件：TARGETがメインマップ在住）
+;SETBIT CFLAG:XX:一般依赖禁止, 1
+;お花に水をあげて（发生条件：TARGETがMASTER侵入可能の自宅住まいかつ、メインマップ在住かつ、亲密２以上）
+;SETBIT CFLAG:XX:一般依赖禁止, 2
+;いっしょにあそぼ（发生条件：TARGETがTALENT:幼稚持ち）
+;SETBIT CFLAG:XX:一般依赖禁止, 3
+;料理上手になりたい（发生条件：TARGETの料理技能がMASTER未满かつ、MASTERの料理技能が２以上かつ、亲密が３以上）
+;SETBIT CFLAG:XX:一般依赖禁止, 4
+;特训につきあって（发生条件：TARGETの战斗能力がMASTER以下かつ、亲密が２以上かつ人里以外）
+;SETBIT CFLAG:XX:一般依赖禁止, 5
+;谁か教えて！（发生条件：TARGETの教养がMASTER以下）
+;SETBIT CFLAG:XX:一般依赖禁止, 6
+;大扫除が终わらない（发生条件：TARGETがメインマップ在住かつ、冬の15日から31日までかつ、亲密が３以上）
+;SETBIT CFLAG:XX:一般依赖禁止, 7
+;手纸を届けて（发生条件：TARGETの信赖度が30以上かつ、TARGETに文通相手が设定されている（FUNC_IRAI.ERBの965目以降に存在）
+;SETBIT CFLAG:XX:一般依赖禁止, 8
+;谁かの落とし物（发生条件：TARGETの信赖度が30以上）
+;SETBIT CFLAG:XX:一般依赖禁止, 9
+;どうしてもみつからない(そのまま落ちてる)（发生条件：TARGETの信赖度が30以上）
+;SETBIT CFLAG:XX:一般依赖禁止, 10
+;どうしてもみつからない(谁かが拾ってる)（发生条件：TARGETの信赖度が30以上）
+;SETBIT CFLAG:XX:一般依赖禁止, 11
+;惩らしめて！（发生条件：TARGETのCSVに战斗能力が１以上ある场合）
+;SETBIT CFLAG:XX:一般依赖禁止, 12
+;うまい鱼が食べたいなぁ（发生条件：わかさぎ姫以外）
+;SETBIT CFLAG:XX:一般依赖禁止, 13
+;あなたに抱かれたい（发生条件：炮友or爱欲かつ积攒度700以上 or ヤリマン）
+;SETBIT CFLAG:XX:一般依赖禁止, 15
+;お恼み相谈（发生条件：MASTERの话术技能が１以上）
+;SETBIT CFLAG:XX:一般依赖禁止, 16

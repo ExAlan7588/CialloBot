@@ -1,0 +1,187 @@
+﻿@CHARAMOVE_DATA_99(ARG, ARG:2)
+LOCAL = 99
+SELECTCASE ARG
+	;连动设定（RETURN=依存する角色, RESULT:1～3=对等に连动する角色）
+	CASE 1
+	;特殊生活时间设定（CFLAG:LOCAL:生活时间补正を设定する）
+	CASE 3
+	;移动倾向（±～10=行きやすい/行きにくい, -100=行かない）
+	CASE 4
+		SELECTCASE ARG:2
+			;梦幻馆には行かない
+			CASE P450玄关 TO P466庭
+				RETURN -100
+			;他人的家には入らない
+			CASE P432影狼的家, P437梅蒂欣的家, P439拉尔瓦的家, P443米斯蒂亚的家, P445妹红的家
+				RETURN -100
+			;走廊,起居室によく居る
+			CASE P409走廊, P416起居室
+				RETURN 5
+
+			;宁静海の方へは行かない
+			CASE P1016入海口, P1060纯狐邸・玄关 TO P1072赫卡提亚私室
+				RETURN -100
+			;哆来咪宅には行かない
+			CASE P1050哆来咪宅・起居室 TO P1055哆来咪宅・厕所
+				RETURN -100
+			;值班室は行かない
+			CASE P1023门卫值班室 TO P1025玉兔值班室
+				RETURN -100
+			;书斋、食堂によく居る
+			CASE P1043书斋, P1026食堂
+				RETURN 5
+		ENDSELECT
+	;出现场所
+	CASE 7
+		SELECTCASE ARG:2
+			CASE 月之都, 绵月亭, 玉兔之街, 桃林～沙滩
+				RETURN 1
+		ENDSELECT
+	;引力设定（CFLAG:LOCAL:引力点を设定する）
+	CASE 8
+ENDSELECT
+
+@EXIST_キャラデータ99
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@キャラデータ99(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "称呼"
+	CALLF MAKE_STR(V_NAME, "丰姫")
+;こっから衣装设定
+CASE "今天的睡衣"
+	CALLF MAKE_STR(V_NAME, "睡衣（襦袢）套")
+
+CASE "便装：帽子"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("帽子", "帽子"))
+CASE "便装：靴"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("靴", "靴"))
+;CASE "便装：袜子"
+	;CALLF MAKE_INT(V_NAME, CLOTHES_ID("袜子", "袜子"))
+CASE "便装：裙子"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("裙子", "连体裙"))
+CASE "便装：上身衣服２"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("上身衣服２", "褶边女式衬衫"))
+CASE "便装：其他１"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("其他１", "网格吊带"))
+
+CASE "固有内衣形容词"
+	CALLF MAKE_STR(V_NAME, "永远不坏の")
+CASE "固有下半身内衣名"
+	CALLF MAKE_STR(V_NAME, "F纤维内裤")
+CASE "固有上半身内衣"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "固有上半身内衣名"
+	CALLF MAKE_STR(V_NAME, "F纤维胸罩")
+CASE "固有内衣着用条件"
+	SIF !RAND:3
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "固有内衣半透明(前)"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "固有内衣半透明(后)"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "固有内衣布料厚度"
+	CALLF MAKE_INT(V_NAME, 3)
+
+;料理关联
+CASE "料理：喜欢的味道"
+	CALLF MAKE_STR(V_NAME, "鱼料理/锅物/健康/清淡/上品/野趣/家庭的/扑鼻/月都风/赏月/美味的水/中华/中华/甜/甜/辣/辣/")
+CASE "料理：讨厌的味道"
+	CALLF MAKE_STR(V_NAME, "洋食/垃圾/酸/酸/" + "青蛙/虫肉/怪诞/" * 3 + "谜料理/生命力/" * 5)
+CASE "料理：助手效果"
+	CALLF MAKE_STR(V_NAME, "月都风/幸运/")
+;赠り物关联
+CASE "感性：好き"
+	CALLF MAKE_STR(V_NAME, "紫/秩序/美的/艺术的/大陆风/纤细/知的/" + "水/月/巫术/护符/扇/" * 3 + "费米纤维の/桃の/海神の/海の/无秽の/" * 5)
+CASE "感性：嫌い"
+	CALLF MAKE_STR(V_NAME, "混沌/奇妙/充满力量/洛丽塔/狂热/" + "土/暗/死生/生体品/护臂/" * 3 + "地上の/万魔殿な/" * 10)
+ENDSELECT
+
+;-------------------------------------------------
+;固有料理设定
+;DISH_NAME          料理名
+;RESULTS            料理の种类（轻食/主食/甜点）
+;CALL 材料设定("")  材料の指定。"泛用"を入れると自动で泛用食材になる
+;DISH_TASTE         味の设定
+;DISH_COMMENT       （任意）一行コメント
+;DISH_TIME          （任意）调理にかかる时间
+;DISH_MAXLIMIT      （任意）料理の持续时间
+;-------------------------------------------------
+@SPECIAL_MENU_99
+DISH_NAME = 海幸山幸
+RESULTS = 主食
+CALL 材料设定("高级食材")
+DISH_TASTE = 肉料理/鱼料理/清淡/豪华/上品/新鲜/彩り/美味的水/
+DISH_COMMENT = 用了很多山珍海味的奢侈料理。名字没有什么深意…应该。
+RETURN 1
+
+
+;IMAGE_I99_特殊服装(CHARA)-------------------------------------------------------------------
+;角色特有の服装表示条件
+;エフェクトを共有する服装差分はこちらで指定する
+;使用时注意点:
+;	RESULTSに特殊服装を格纳すること
+;	书式は %服装%%特殊服装% 适宜"_"等入れること
+;-------------------------------------------------------------------------------------------
+@IMAGE_I99_特殊服装(CHARA)
+#DIM CHARA
+VARSET RESULTS
+
+IF CFLAG:CHARA:应用差分替换
+	;替换用画像
+	IF CHECK_NUDE(CHARA)
+		;裸
+		IF FLAG:立绘种类
+			;颜绘
+		ELSE
+			;立绘
+		ENDIF
+	ELSE
+		;服
+		IF FLAG:立绘种类
+			;颜绘
+		ELSE
+			;立绘
+		ENDIF
+	ENDIF
+ELSE
+	;通常画像
+	IF CHECK_NUDE(CHARA)
+		;裸
+		IF FLAG:立绘种类
+			;颜绘
+		ELSE
+			;立绘
+		ENDIF
+	ELSE
+		;服
+		IF CFLAG:CHARA:衣物暂时更换 == 55 || (CFLAG:CHARA:基本服装SET == 55 && CFLAG:CHARA:衣物暂时更换==0)
+			IF FLAG:立绘种类
+				;颜绘
+				RESULTS = _バニー
+			ELSE
+				;立绘
+				RESULTS = _バニー
+			ENDIF
+		ENDIF
+	ENDIF
+ENDIF
+
+;********************************************************************************************
+@IMAGE_EX_I99_PREリソースチェック(CHARA, 表示形式, 服装, 表情, 表情_マウスオーバー, 差分, 乳量)
+#DIM CHARA
+#DIMS 表示形式
+#DIMS 服装
+#DIMS 表情
+#DIMS 表情_マウスオーバー
+#DIMS 差分
+#DIMS 乳量
+
+SIF CFLAG:CHARA:应用差分替换 == 1
+	CALL COMPOSE_SPRITE_PRESET(CHARA)

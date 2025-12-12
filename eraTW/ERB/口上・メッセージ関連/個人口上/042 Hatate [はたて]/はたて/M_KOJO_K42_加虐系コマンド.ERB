@@ -1,0 +1,465 @@
+﻿;※※※※※※※※※※※※※※※※※※※※※※※※※
+;施虐系指令
+;※※※※※※※※※※※※※※※※※※※※※※※※※
+;==================================================
+;100,打屁股
+;==================================================
+@M_KOJO_MESSAGE_COM_K42_100
+CALL M_KOJO_MESSAGE_COM_K42_100_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K42_100_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORML 啪！
+		IF TALENT:恋慕 || TALENT:恋人
+			PRINTFORML 「好痛！　%MASTERNAME:42%，你干什么呀～～」
+			PRINTW 
+			PRINTFORML 因为你的屁股很翘，所以我不小心…
+			PRINTFORML 「竟然打女孩子的屁股，%MASTERNAME:42%，真过分！」
+			PRINTW 
+		ELSE
+			PRINTFORML 「好痛！　你干什么呀！」
+			PRINTW 
+			PRINTFORML 因为你的屁股很翘，所以我不小心…
+			PRINTFORML 「什么不小心啊！　别开玩笑了！」
+			PRINTW 
+		ENDIF
+		RETURN 1
+	ENDIF
+	;基本セット
+	;时奸中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:恋慕
+		PRINTFORMW 
+		RETURN 1
+	ELSEIF TALENT:爱欲 || TALENT:炮友
+		IF TALENT:TARGET:受虐狂 == 1 || ABL:TARGET:受虐属性 >= 2
+			IF TEQUIP:Ｖ性交
+					PRINTFORML 「啊%UNICODE(0x2665) *1%　哈%UNICODE(0x2665) *1%　好棒%UNICODE(0x2665) *1%　还要%UNICODE(0x2665) *1%」
+					PRINTFORML 果沉醉于性交之中，无意识地揉捏着她的屁股
+					PRINTW 
+					PRINTFORML 多么舒适的触感啊。真是个好屁股……
+					PRINTFORML 几乎是无意识地，用手掌拍打果的屁股。啪的一声，清脆的声响回荡着
+					PRINTW 
+					PRINTFORML 「呜嗯%UNICODE(0x2665) *1%」
+					PRINTFORML 「啊…不、不是，刚才那个，是因为被插入的感觉太舒服了…」
+					PRINTW 
+					PRINTFORML 果这样辩解道，但很明显那喘息的时机和抽插并不一致
+					PRINTFORML 看来果是，喜欢被拍打的变态
+					PRINTW 
+			ELSEIF TEQUIP:Ａ性交
+			ELSE
+			ENDIF
+		ELSE
+			SELECTCASE RAND:2
+			CASE 0
+				PRINTFORML 啪
+				PRINTFORML 「好疼。我说，不要随便拍女孩子的屁股啦」
+				PRINTW 
+			CASE 1
+				PRINTFORML 啪！
+				PRINTFORML 「好痛！　你干什么呀！」
+				PRINTW 
+				PRINTFORML 啪啊！
+				PRINTFORML 「痛！　所以说，不要…」
+				PRINTW 
+				PRINTFORML 啪啪啊！
+				PRINTFORML 「呀！？　疼！？　你，适可而止一点…」
+				PRINTW 
+				PRINTFORML 啪啪啪啊！
+				PRINTFORML 「给我适可而止啊你这混蛋！！！！」
+				PRINTW 
+				PRINTFORML 啪叽！！！！
+				PRINTFORML 被果狠狠地反击了一下
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;101,鞭
+;==================================================
+@M_KOJO_MESSAGE_COM_K42_101
+CALL M_KOJO_MESSAGE_COM_K42_101_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K42_101_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;恋慕
+	IF TALENT:恋慕
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;102,蜡烛
+;==================================================
+@M_KOJO_MESSAGE_COM_K42_102
+CALL M_KOJO_MESSAGE_COM_K42_102_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K42_102_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;恋慕
+	IF TALENT:恋慕
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;103,针
+;==================================================
+@M_KOJO_MESSAGE_COM_K42_103
+CALL M_KOJO_MESSAGE_COM_K42_103_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K42_103_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;恋慕
+	IF TALENT:恋慕
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;104,眼罩
+;==================================================
+@M_KOJO_MESSAGE_COM_K42_104
+CALL M_KOJO_MESSAGE_COM_K42_104_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K42_104_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;装着
+	IF TEQUIP:眼罩
+		;时奸中
+		IF FLAG:70
+			PRINTFORMW 
+			RETURN 1
+		;恋慕
+		ELSEIF TALENT:恋慕
+			PRINTFORMW 
+			RETURN 1
+		;屈服3
+		ELSEIF MARK:屈服刻印 == 3
+			PRINTFORMW 
+			RETURN 1
+		;それ以外
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	;解除
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;105,绳
+;==================================================
+@M_KOJO_MESSAGE_COM_K42_105
+CALL M_KOJO_MESSAGE_COM_K42_105_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K42_105_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;装着
+	IF TEQUIP:绳
+		;时奸中
+		IF FLAG:70
+			PRINTFORMW 
+			RETURN 1
+		;恋慕
+		ELSEIF TALENT:恋慕
+			PRINTFORMW 
+			RETURN 1
+		;屈服3
+		ELSEIF MARK:屈服刻印 == 3
+			PRINTFORMW 
+			RETURN 1
+		;それ以外
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	;解除
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;106,口球
+;==================================================
+@M_KOJO_MESSAGE_COM_K42_106
+CALL M_KOJO_MESSAGE_COM_K42_106_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K42_106_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;装着
+	IF TEQUIP:口球
+		;恋慕
+		IF TALENT:恋慕
+			PRINTFORMW 
+			RETURN 1
+		;屈服3
+		ELSEIF MARK:屈服刻印 == 3
+			PRINTFORMW 
+			RETURN 1
+		;それ以外
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	;解除
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;107,拘束PLAY
+;==================================================
+@M_KOJO_MESSAGE_COM_K42_107
+CALL M_KOJO_MESSAGE_COM_K42_107_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K42_107_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;装着
+	IF TEQUIP:口球
+		;恋慕
+		IF TALENT:恋慕
+			PRINTFORMW 
+			RETURN 1
+		;屈服3
+		ELSEIF MARK:屈服刻印 == 3
+			PRINTFORMW 
+			RETURN 1
+		;それ以外
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	;解除
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;108,打胸部
+;==================================================
+@M_KOJO_MESSAGE_COM_K42_108
+CALL M_KOJO_MESSAGE_COM_K42_108_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K42_108_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;时奸中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:恋慕
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1

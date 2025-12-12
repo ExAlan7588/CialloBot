@@ -1,0 +1,89 @@
+﻿;FileName_MOVEMENT.ERB ----------------------------- Rev1.01
+;角色移动处理
+;CALL		USER
+;RETURN		VOID
+;COMMENT	
+;-----------------------------------------------------------
+@CHARA_MOVEMENT()
+LOCAL:99 = LINECOUNT
+PRINTL 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　（少女移动中…）
+
+
+;时间经过によるBASE等の自然变动、会话累积度、澡堂の处理
+CALL MOVEMENT共通处理(MASTER)
+
+;各角色ごとのその日の工作情报を更新
+FOR LOCAL, 1, CHARANUM
+	;出禁角色を隙间へ飞ばす
+	IF CFLAG:LOCAL:出禁
+		CFLAG:LOCAL:当前位置 = SUKIMA()
+	ELSE
+		CALL 仕事内容设定(LOCAL)
+	ENDIF
+NEXT
+
+;行动顺をシャッフル
+;CALL FISHER_YATES_SHAFFLE(CHARANUM)
+;MASTERを0番に移动
+;SWAP SHAFFLE_ARRAY:0 , SHAFFLE_ARRAY:(FINDELEMENT(SHAFFLE_ARRAY , 0))
+
+FOR LOCAL, 1, CHARANUM
+	;LOCAL = SHAFFLE_ARRAY:(LOCAL:100)
+
+	SIF MOVEMENTスキップ判定(LOCAL)
+		CONTINUE
+
+	CALL 被从寝室赶了出来(LOCAL)
+
+	;时间经过によるBASE等の自然变动、会话累积度、澡堂の处理
+	CALL MOVEMENT共通处理(LOCAL)
+
+	;不适当な位置にいる角色を别の场所へ移动させる
+	CALL 强制移动(LOCAL)
+NEXT
+
+CALL 宴会参加人数再计算
+
+FOR LOCAL, 1, CHARANUM
+	;LOCAL = SHAFFLE_ARRAY:(LOCAL:100)
+
+	SIF MOVEMENTスキップ判定(LOCAL)
+		CONTINUE
+
+	;时间に合わせて角色を起こす／寝かす
+	CALL 起床就寝处理(LOCAL)
+
+	;访问フラグが立っている角色を你の据点物件に移动させる
+	;角色を自分的家に返す／在宅中の处理を行う
+	CALL 访问回家处理(LOCAL)
+
+	;仕事がない角色を外出させる
+	CALL 休日移动处理(LOCAL)
+
+	;待客室にいる角色の处理
+	CALL 待客室处理(LOCAL)
+
+	;同行中の角色を你の移动に合わせて移动させる
+	CALL 同行处理(LOCAL)
+
+	;仕事や宴会の开始／经过／结束やメッセージの表示を行う
+	CALL 仕事宴会处理(LOCAL)
+
+	;你の据点物件にいる角色を移动させる
+	CALL 角色移动处理(LOCAL)
+
+	;烂醉になる／烂醉からの复活
+	CALL CHARA_ACTION_DRUNK(LOCAL)
+
+	;自由行动の发生／经过／结束やメッセージの表示
+	CALL 自由行动处理(LOCAL)
+
+	SIF CFLAG:LOCAL:当前位置 == 0
+		PRINTFORMW ### MOVEMENT LOCATION ERROR %NAME_OUTPUT_TRANSLATION("CALLNAME", LOCAL)% 的当前位置异常 ### CHARA_NO:{LOCAL}
+NEXT
+
+;CALL 宴会参加人数再计算
+CALL ENKAI_SINKOU()
+
+SIF LINECOUNT == LOCAL:99 + 1
+	CLEARLINE 1

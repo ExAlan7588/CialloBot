@@ -1,0 +1,98 @@
+﻿;-------------------------------------------------
+;给对方乳交
+;侍奉系指令、レベル3
+;-------------------------------------------------
+@COM96
+;-------------------------------------------------
+;COM别FLAGの设定
+;-------------------------------------------------
+;行为者
+TCVAR:116 = PLAYER
+;侍奉快乐
+TCVAR:PLAYER:108 = 1
+
+CSTR:TARGET:10 += @"{PLAYER}/"
+;TCVAR:2 射精部位フラグ（-1=避孕套 1=膣内 2=肛门 3=手淫 4=口淫 5=乳交 6=素股 7=足交 8=体表 9=肛门侍奉 10=道具 11=触手 12=Ａ调教 13=Ｖ调教）
+TCVAR:TARGET:2 = 5
+;射精快感强度
+TCVAR:TARGET:4 = 1200
+
+;-------------------------------------------------
+;ソース追加处理
+;-------------------------------------------------
+;消费体力、气力
+IF FLAG:70 == 1
+;	BASE:MASTER:TSP -= 50
+	BASE:MASTER:TSP -= 60
+	SOURCE:PLAYER:快Ｂ = 150
+	SOURCE:快Ｃ = 110
+ELSE
+
+	DOWNBASE:体力 += 30
+	DOWNBASE:气力 += 80
+	SOURCE:快Ｃ = 110
+	;性技补正
+	SOURCE:快Ｃ += MIN(ABL:PLAYER:胸 * 25,100)
+	
+	SOURCE:PLAYER:快Ｂ = 50
+	SOURCE:露出 = 20
+	SOURCE:偏离正轨 = 20
+	SOURCE:反感 = 20
+
+	;-------------------------------------------------
+	;特殊ソース处理
+	;-------------------------------------------------
+	;圧抑、抵抗持ちには、抑郁ソース追加
+	SIF TALENT:自己爱 < 0 || TALENT:抵抗
+		SOURCE:郁闷 += 30
+ENDIF
+;-------------------------------------------------
+;污れの处理
+;-------------------------------------------------
+;调教者のＢ⇔奴隷のＰ的污垢が移动
+STAIN:PLAYER:5 |= STAIN:2
+STAIN:2 |= STAIN:PLAYER:5
+;-------------------------------------------------
+;経験の处理
+;-------------------------------------------------
+
+;同性爱　レズなら返回值1ゲイなら返回值2
+IF FLAG:70 == 1 || CFLAG:恶作剧
+	IF HETEROSEX(TARGET,PLAYER)
+		EXP:PLAYER:(50 + HETEROSEX(TARGET,PLAYER)) += 3
+	ENDIF
+	EXP:PLAYER:乳交经验 += 1
+ELSE
+	IF HETEROSEX(TARGET,PLAYER)
+		EXP:(50 + HETEROSEX(TARGET,PLAYER)) += 3
+		EXP:PLAYER:(50 + HETEROSEX(TARGET,PLAYER)) += 3
+	ENDIF
+	EXP:PLAYER:乳交经验 += 2
+	;爱情经验
+	SIF TALENT:恋慕 == 1 && ASSIPLAY == 0
+		EXP:爱情经验 ++
+ENDIF
+RETURN 1
+
+;-------------------------------------------------
+;实行判定
+;-------------------------------------------------
+@COM_ABLE96
+;乳交实行判定
+SIF !TFLAG:100
+	RETURN 0
+SIF GLOBAL_COMABLE(96)
+	RETURN RESULT
+;男人か扶她じゃないとダメ
+SIF !(HAS_PENIS(TARGET))
+	RETURN 0
+;调教者が女性か扶她じゃないとダメ
+SIF !(TALENT:PLAYER:2 & 2)
+	RETURN 0
+SIF TEQUIP:继续接吻
+	RETURN 0
+;上半身着衣
+SIF TEQUIP:PLAYER:1 > 1 && TEQUIP:PLAYER:3 == 0
+	RETURN 0
+RETURN 1
+

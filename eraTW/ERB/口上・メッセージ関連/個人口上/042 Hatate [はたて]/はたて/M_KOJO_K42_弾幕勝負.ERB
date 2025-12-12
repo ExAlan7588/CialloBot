@@ -1,0 +1,593 @@
+;==================================================
+;弹幕胜负
+;==================================================
+;
+@M_KOJO_MESSAGE_COM_K42_DANMAKU(ARGS, 相手残机)
+#DIM 相手残机
+;全体の流れ
+;①【战斗前】→②骰子ロールとプレイヤー选择肢、ハンデをつけた场合は【ハンデ口上】→③对応スキルが发动した场合【スキル口上】→④被弹判定、角色が被弹したなら【被弹口上】→
+;どちらかの残机が0になっていなければ②に返回→⑤【战斗后口上】
+
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+SIF FLAG:口上色
+	TRYCALLFORM M_KOJO_COLOR_K{NO:TARGET}
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;判定值 -= (HANDICAP_FIXED + RAND:(HANDICAP_RAND))
+	;战斗前
+	IF ABL:MASTER:战斗能力 == 6
+		HANDICAP_FIXED = 150
+	ELSEIF ABL:MASTER:战斗能力 == 5
+		HANDICAP_FIXED = 100
+	ELSEIF ABL:MASTER:战斗能力 == 4
+		HANDICAP_FIXED = 50
+	ELSEIF ABL:MASTER:战斗能力 == 2
+		HANDICAP_FIXED = -50
+	ELSEIF ABL:MASTER:战斗能力 == 1
+		HANDICAP_FIXED = -100
+	ELSEIF ABL:MASTER:战斗能力 == 0
+		HANDICAP_FIXED = -200
+	ENDIF
+	HANDICAP_RAND = 0
+	;ハンデをつけることができ、数值が大きいほど你が不利になる　数值が负なら你が有利に
+	;角色の能力に关わらずクッソ强くしたり弱くしたりできる
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARGS == "战斗前"
+		PRINTFORML 「嗯哼、和我弹幕决斗吗」
+		PRINTFORML 「我，不像文或椛那样习惯于战斗哦」
+		PRINTFORML 「嘛，不过，作为弹幕取材的练习也许不错呢」
+		PRINTW 
+		PRINTFORML 「索—嘎—，只是单纯地战斗也太无聊了—」
+		PRINTFORML 「好，如果赢了我，就稍微给你点好处♪」
+		PRINTFORML 「反之—，如果我赢了，就听我一件事哦♪」
+		PRINTW 
+		IF ABL:MASTER:战斗能力 > 3
+			PRINTFORM 「稍微等等。普通地战斗的话，大概
+			IF TALENT:恋慕 || TALENT:恋人 || TALENT:思慕 || CFLAG:好感度 >= 500
+				PRINTFORM %MASTERNAME:42%
+			ELSE
+				PRINTFORM 你
+			ENDIF
+			PRINTFORML 会赢的哦」
+			PRINTFORML 「那样就没法打赌了呢—。因此，锵—！」
+			PRINTW 
+			PRINTFORML 果拿出了像拘束具一样的东西。藏在哪里了呢
+			PRINTFORML 「这个？　是从椛那里借来的，叫做『射击者矫正护具』的东西」
+			PRINTFORML 那个，是『射击者更生护具』？　嘛—随便啦」
+			PRINTW 
+			PRINTFORML 「穿上这个战斗的话，可以限制穿戴者的力量，从而可以弥补实力差距」
+			PRINTFORML 「所以，请你穿上这个来战斗吧」
+			PRINTW 
+			PRINTFORML 「啊，总之我和椛都穿过，所以没问题的没问题的」
+			PRINTFORML 「只是，被告知说如果过度旋转那边的旋钮的话会变得糟糕，要注意哦」
+			PRINTFORML 「刻度是…嗯，大概这样吧—。怎么样？　能动吗？　OK♪」
+			PRINTW 
+		ELSEIF ABL:MASTER:战斗能力 < 3
+			PRINTFORM 「稍微等等。普通地战斗的话，大概
+			IF TALENT:恋慕 || TALENT:恋人 || TALENT:思慕 || CFLAG:好感度 >= 500
+				PRINTFORM %MASTERNAME:42%
+			ELSE
+				PRINTFORM 你
+			ENDIF
+			PRINTFORML 会输掉的哦」
+			PRINTFORML 「那样就没法打赌了呢—。因此，锵—！」
+			PRINTW 
+			PRINTFORML 果拿出了像拘束具一样的东西。藏在哪里了呢
+			PRINTFORML 「这个？　是从椛那里借来的，叫做『射击者矫正护具』的东西」
+			PRINTFORML 那个，是『射击者更生护具』？　嘛—随便啦」
+			PRINTW 
+			PRINTFORML 「穿上这个战斗的话，可以限制穿戴者的力量，从而可以弥补实力差距」
+			PRINTFORML 「所以，我穿上这个一决胜负吧」
+			PRINTW 
+			PRINTFORML 「啊，总之我和椛都穿过，所以没问题的没问题的」
+			PRINTFORML 「只是，被告知说如果过度旋转那边的旋钮的话会变得糟糕，要注意哦」
+			PRINTFORML 「刻度是…嗯，大概这样吧—。好，开始吧♪」
+			PRINTW 
+		ENDIF
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;ハンデ
+	;运命の骰子ロール！部分
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARGS == "ハンデ"
+		;ハンデつけなかったら表示されないので无记入でよい
+		IF HANDICAP_FIXED > 0
+			PRINTFORML 不知道是什么原理，果所说的没错，这个护具似乎会限制穿戴者的能力
+			PRINTFORML 就像四肢带着重物一样，是那样的感觉
+			PRINTW 
+			PRINTFORML 也就是说，也不会施加到果完全无法动弹的限制
+			PRINTFORML 原来如此，她所说的是真的
+			PRINTW 
+		ELSEIF HANDICAP_FIXED < 0
+			PRINTFORML 平时用眼睛都无法捕捉到的果的动作，现在总算可以追踪到了
+			PRINTFORML 看来她所说的是真的
+			PRINTW 
+			PRINTFORML 但是，如果想的话，明明也可以撒谎欺骗的
+			PRINTFORML 意外地是热血汉TYPE吗。真的，她作为乌天狗来说真是个另类
+			PRINTW 
+		ENDIF
+		RETURN 0
+	ENDIF
+	;-------------------------------------------------
+	;战斗中TARGET被弹时口上
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARGS == "被弹" 
+		;别に一律で「やられたー」だけでもいいよ
+		SELECTCASE 相手残机
+			;残り残机3が表示されるのは【博览精思】持ちのみ
+			CASE 3
+			CASE 2
+				SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 「唔唔，挺能干的嘛。但还差得远呢！」
+					PRINTW 
+				CASE 1
+					PRINTFORML 「还差得远呢♪　这点程度可没法让我认输呢—」
+					PRINTW 
+				CASE 2
+					PRINTFORML 「哇哦，不错嘛。但我可不能输！」
+					PRINTW 
+				ENDSELECT
+			CASE 1
+				SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 「哇哇哇，这个是不是糟了？」
+					PRINTW 
+				CASE 1
+					PRINTFORML 「糟…糟糕的要命…」
+					PRINTFORML 从果的表情来看，已经没有余裕了。还差最后一把劲
+					PRINTW 
+				CASE 2
+					PRINTFORML 「已经—不行了！　不行茶泡饭！」
+					PRINTW 
+				ENDSELECT
+			CASE 0
+				SELECTCASE RAND:2
+				CASE 0
+					IF TALENT:恋慕 || TALENT:恋人 || TALENT:思慕
+						PRINTFORML 「嗯—，不愧是%MASTERNAME:42%呢♪　举手投降！」
+						PRINTFORML 果万岁一声，表示了投降的意愿
+						PRINTW 
+					ELSE
+						PRINTFORML 「骗人—！　你，很强嘛—」
+						PRINTFORML 果瞪大了眼睛
+						PRINTW 
+					ENDIF
+				CASE 1
+					PRINTFORML 「啊—，输掉了—」
+					PRINTFORML 果啪嗒一屁股坐在地上，垂下了肩膀
+					PRINTW 
+				ENDSELECT
+		ENDSELECT
+	ENDIF
+	;-------------------------------------------------
+	;战斗中
+	;TARGETの【残忍酷薄】发动时
+	;ARGはTARGETの残机
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARGS == "残忍酷薄"
+		
+	ENDIF
+	;-------------------------------------------------
+	;战斗中
+	;TARGETの【乾坤一掷】发动时
+	;ARGはTARGETの残机
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARGS == "乾坤一掷"
+		
+	ENDIF
+	;-------------------------------------------------
+	;战斗中
+	;TARGETの【怪力乱神】发动时
+	;ARGはTARGETの残机
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARGS == "怪力乱神"
+		
+	ENDIF
+	
+	;-------------------------------------------------
+	;战斗后
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARGS == "战斗后" 
+		PRINTFORML 
+		;残り残机4が表示されうるのは【博览精思】持ちのみ
+		;残机が1以上なら你の负け、0の场合は你の胜利
+		SELECTCASE 相手残机
+			CASE 4
+				PRINTFORML 
+			CASE 3
+				PRINTFORML 「残念♪　果酱的压倒性胜利—♪」
+				PRINTFORML 我大字型地躺在地上，得意洋洋的果从上面俯视着我
+				PRINTW 
+				PRINTFORML ……%PANTSNAME(EQUIP:TARGET:下半身内衣２, TARGET)%吗
+				PRINTFORML 我故意对从这边能看得一清二楚这件事保持沉默
+				PRINTW 
+				IF MONEY > 1000
+					PRINTFORML 「嘿嘿—，那么就在人类村落里请我吃好多好吃的吧！」
+					PRINTFORML 「也算是做了很好的运动，我会吃很多的哦—♪」
+					PRINTW 
+					PRINTFORML 之后，被狠狠地宰了一顿…
+					PRINTFORML 虽然钱包很痛，但看到了果幸福的表情，就当扯平了吧
+					PRINTW 
+					PRINTFORML 钱包里的钱减少了%金额表示(500)%…
+					MONEY -= 500
+				ELSE
+					PRINTFORML 「%MASTERNAME:42%你没钱了—…果然还是不好意思吧—」
+					PRINTFORML 「那么下次有钱的时候再请我吧。说定了♪」
+					PRINTW 
+				ENDIF
+			CASE 2
+				PRINTFORML 「这不是一场不错的比赛吗？」
+				PRINTW 
+				IF MONEY > 1000
+					PRINTFORML 「嘿嘿—，那么就在人类村落里请我吃好多好吃的吧！」
+					PRINTFORML 「也算是做了很好的运动，我会吃很多的哦—♪」
+					PRINTW 
+					PRINTFORML 之后，被狠狠地宰了一顿…
+					PRINTFORML 虽然钱包很痛，但看到了果幸福的表情，就当扯平了吧
+					PRINTW 
+					PRINTFORML 钱包里的钱减少了%金额表示(500)%…
+					MONEY -= 500
+				ELSE
+					PRINTFORML 「%MASTERNAME:42%你没钱了—…果然还是不好意思吧—」
+					PRINTFORML 「那么下次有钱的时候再请我吧。说定了♪」
+					PRINTW 
+				ENDIF
+			CASE 1
+				IF TALENT:恋慕 || TALENT:恋人 || TALENT:思慕
+					SELECTCASE RAND:2
+					CASE 0
+						PRINTFORML 「这次是我赢了。但下次就说不定了—」
+						PRINTW 
+					CASE 1
+						PRINTFORML 「%MASTERNAME:42%，真强啊—。不会轻易让我赢呢」
+						PRINTW 
+					ENDSELECT
+				ELSE
+					PRINTFORML 「好险好险—…比想象中能干嘛，你。我重新认识你了哦♪」
+					PRINTW 
+				ENDIF
+				
+					IF MONEY > 1000
+						PRINTFORML 「嘿嘿—，那么就在人类村落里请我吃好多好吃的吧！」
+						PRINTFORML 「也算是做了很好的运动，我会吃很多的哦—♪」
+						PRINTW 
+						PRINTFORML 之后，被狠狠地宰了一顿…
+						PRINTFORML 虽然钱包很痛，但看到了果幸福的表情，就当扯平了吧
+						PRINTW 
+						PRINTFORML 钱包里的钱减少了%金额表示(500)%…
+						MONEY -= 500
+					ELSE
+						PRINTFORML 「没钱了—…果然还是不好意思吧—」
+						PRINTFORML 「那么下次有钱的时候再请我吧。说定了♪」
+						PRINTW 
+					ENDIF
+				
+			CASE 0
+				PRINTFORML 「啊—，输掉了吗—」
+				PRINTFORML 果啪嗒一声坐在了地上
+				PRINTW 
+				PRINTFORML 「呜…说好了的嘛。我看起来不像，其实是会遵守约定的人」
+				PRINTFORML 「嘛，本来我也不会做没法遵守的约定啦」
+				PRINTW 
+				PRINTFORML 「那么就老实待着别动哦」
+				PRINTFORML 果靠近我，绕到旁边，轻轻地在脸颊上亲了一下
+				PRINTW 
+				PRINTFORML 「嘿嘿—。这是果酱给胜者的祝福之吻♪」
+				PRINTFORML 果的脸颊是红色的。意外地害羞了
+				PRINTW 
+				CALL ASK_M("不想只亲脸颊吗？", 1,"想要更好的东西" , 1,"诚意不是吻，而是金额" , 1)
+				SELECTCASE RESULT
+				CASE 0
+					IF TALENT:无接吻经验
+						IF TALENT:恋慕 || TALENT:恋人
+							PRINTFORML 「欸欸！？　啊，不、不是讨厌的意思，当然」
+							PRINTFORML 「总觉得，还没做好心理准备…或者说，从你那里夺走也可以…」
+							PRINTW 
+							PRINTFORML 「呜—…好害羞—…你、你别动哦？」
+							PRINTFORML 果的视线游移不定，但像是下定了决心，看着我
+							PRINTW 
+							PRINTFORML 「眼、眼睛闭上。就那样哦？　…………嗯」
+							PRINTFORML 我听从果的话闭上眼睛，嘴唇上传来柔软的触感
+							PRINTW 
+							CALL AddEXP("接吻经验", MASTER, 1)
+							CALL AddEXP("接吻经验", TARGET, 1)
+							IF TALENT:MASTER:无接吻经验
+								CALL SET_FIRSTKISS(MASTER, 42, 0)
+							ENDIF
+							IF TALENT:42:无接吻经验
+								CALL SET_FIRSTKISS(42, MASTER, 0)
+							ENDIF
+							PRINTFORML 睁开眼睛，看到果满脸通红，用一种困扰又生气，难以言喻的表情看着我
+							PRINTFORML 「……怎么样？　我的初吻」
+							PRINTW 
+							CALL ASK_YN("最喜欢果","因为不太明白所以再来一次")
+							IF !RESULT
+								PRINTFORML 「！　嘿嘿，我也最喜欢%MASTERNAME:42%了%UNICODE(0x2665) *1%」
+								PRINTFORML 果露出了满脸笑容
+								PRINTW 
+							ELSE
+								PRINTFORML 「欸、欸～～～～，什么意思嘛～～」
+								PRINTFORML 「……但、但是如果不明白的话，也没办法呢…」
+								PRINTW 
+								PRINTFORML 「只、只有再来一次哦？　这次要好好确认哦？」
+								PRINTFORML 果的脸再次靠近了…
+								PRINTW 
+								CALL AddEXP("接吻经验", MASTER, 1)
+								CALL AddEXP("接吻经验", TARGET, 1)
+							ENDIF
+						ELSEIF TALENT:思慕
+							PRINTFORML 「欸！？　接吻什么的…我，连脸颊接吻都是第一次啊！」
+							PRINTFORML 「而、而且我们又不是恋人关系…」
+							PRINTW 
+							PRINTFORML 虽然嘴上看起来像是在拒绝，但含糊不清的样子，看来也不是完全不愿意
+							PRINTFORML 看来果比我想象的更喜欢我
+							PRINTW 
+							IF BASE:42:情绪 == MAXBASE:42:情绪
+								PRINTFORML 「那、那么，至少，把眼睛闭上。因为会害羞…」
+								PRINTFORML 「不许睁开哦？　…………嗯」
+								PRINTW 
+								PRINTFORML 我听从果的话闭上眼睛，嘴唇上传来柔软的触感
+								PRINTFORML 过了一会儿睁开眼睛，看到果满脸通红，用一种困扰又生气，难以言喻的表情看着我
+								PRINTW 
+								PRINTFORML 「……要、要感到光荣哦。这可是我的第一次…」
+								PRINTFORML 我告诉她我不会忘记今天嘴唇的触感，果更加脸红，低下了头…
+								PRINTW 
+								PRINTFORML （明明不是恋人，却把我的初吻给了%MASTERNAME:42%…）
+								PRINTFORML （但是为什么呢，也不是很讨厌，也许…）
+								PRINTW 
+								CALL AddEXP("接吻经验", MASTER, 1)
+								CALL AddEXP("接吻经验", TARGET, 1)
+								IF TALENT:MASTER:无接吻经验
+									CALL SET_FIRSTKISS(MASTER, 42, 0)
+								ENDIF
+								IF TALENT:42:无接吻经验
+									CALL SET_FIRSTKISS(42, MASTER, 0)
+								ENDIF
+							ELSE
+								PRINTFORML 「～～～～～～，不行，果然不行！」
+								PRINTFORML 「我一生只有一次的东西，不要以这种形式失去」
+								PRINTW 
+								PRINTFORML 「如果非要，那就营造出更让人想接吻的氛围嘛」
+								PRINTFORML 「所以说，现在不给！」
+								PRINTW 
+							ENDIF
+						ELSE
+							PRINTFORML 「不行！　只有这个不行！　忍耐到脸颊为止！」
+							PRINTFORML 「那种事情，只有喜欢的人之间才能做…」
+							PRINTW 
+							PRINTFORML 看似轻浮，其实是很保守的性格
+							PRINTFORML 强迫导致关系恶化也很麻烦，还是先退一步吧
+							PRINTW 
+							PRINTFORML 「啊，那个，如果非要和我做那种事情的话」
+							PRINTFORML 「就多邀请我去约会，多告诉我关于你的事情…」
+							PRINTW 
+						ENDIF
+					ELSE
+						IF TALENT:恋慕 || TALENT:恋人
+							PRINTFORML 「欸？　难道我没有经常给你接吻吗…」
+							PRINTFORML 「那么，比起只亲一次，多亲几次更好吗…♪」
+							PRINTW 
+							PRINTFORML 「嗯…啾，啾…%UNICODE(0x2665) *1%　啾噜，啾…」
+							PRINTFORML 「哈%UNICODE(0x2665) *1%　呼%UNICODE(0x2665) *1%　呼%UNICODE(0x2665) *1%　哈，呼啊%UNICODE(0x2665) *1%」
+							PRINTFORML 「嗯～～%UNICODE(0x2665) *1%　啾，啾，啾～～～～%UNICODE(0x2665) *1%」
+							PRINTW 
+							PRINTFORML 一开始还是比较温柔的接吻，但途中像是打开了开关，果开始沉迷地啄吻我的嘴唇
+							PRINTFORML 不知不觉间，她将手指缠绕在我的两只手上，把舌头伸了进来
+							PRINTW 
+							PRINTFORML 「噜哦%UNICODE(0x2665) *1%　啾噜，啾噜…%UNICODE(0x2665) *1%　啾%UNICODE(0x2665) *1%　噜哦%UNICODE(0x2665) *1%」
+							PRINTFORML 「…哈啊，接吻，太沉迷了…%UNICODE(0x2665) *1%」
+							PRINTW 
+							PRINTFORML 嘴唇分开时，银色的丝线连接着两人
+							PRINTFORML 我轻轻抚摸她的脸颊，果将自己的手叠在我的手上，开心地蹭了蹭
+							PRINTW 
+							PRINTFORML 「明明是我输了，却好像我得到了奖励…%UNICODE(0x2665) *1%」
+							PRINTFORML 「%MASTERNAME:42%，接吻，舒服吗…？　…%UNICODE(0x2665) *1%　是吗，我们一样呢…%UNICODE(0x2665) *1%」
+							PRINTW 
+								CALL AddEXP("接吻经验", MASTER, 10)
+								CALL AddEXP("接吻经验", TARGET, 10)
+						ELSEIF TALENT:思慕
+							PRINTFORML 「欸，想接吻吗？」
+							PRINTFORML 「和顺其自然地接吻不同，这样特意地做，总觉得有点害羞呢」
+							PRINTW 
+							SELECTCASE RAND:2
+							CASE 0
+								PRINTFORML 「欸—多…那么…嗯%UNICODE(0x2665) *1%」
+								PRINTFORML 果闭上眼睛，嘟起嘴唇，把脸凑了过来
+								PRINTW 
+								PRINTFORML 虽然变成了我主动去亲，但这种形式也不错
+								PRINTFORML 我抓住果的肩膀，将嘴唇和她的叠在一起
+								PRINTW 
+								PRINTFORML 「…嘿嘿—，果然不管亲多少次都会害羞呢—」
+								PRINTFORML 「但是呢，和%MASTERNAME:42%的接吻，并不讨厌哦…？　不如说喜欢，也许…」
+								PRINTW 
+								PRINTFORML 「不要啦—！　你要我说什么啦—！　呀—///」
+								PRINTFORML 果害羞地啪啪啪地拍打着我的肩膀。好痛
+								PRINTW 
+								CALL AddEXP("接吻经验", MASTER, 1)
+								CALL AddEXP("接吻经验", TARGET, 1)
+							CASEELSE
+								PRINTFORML 「那么闭上眼睛哦………………嗯%UNICODE(0x2665) *1%」
+								PRINTFORML 「啊，吓了一跳的表情♪　嘿嘿—，舔了舔嘴唇♪」
+								PRINTW 
+								PRINTFORML 果装出开玩笑的样子，但她的脸却红透了
+								PRINTFORML 「欸多…讨厌，吗？　不讨厌？　这样啊，嘿嘿…///」
+								PRINTW 
+								CALL AddEXP("接吻经验", MASTER, 1)
+								CALL AddEXP("接吻经验", TARGET, 1)
+							ENDSELECT
+						ELSE
+							PRINTFORML 「呜～…一旦允许一次就会得寸进尺…」
+							PRINTFORML 「嗯…（咚）好了，这样可以了吧？　太随便而且很痛？　这样就好了啦」
+							PRINTW 
+						ENDIF
+					ENDIF
+				CASE 1
+					IF TALENT:恋慕 || TALENT:恋人
+					PRINTFORML 「想要什么好东西？　你想要什么？」
+					PRINTFORML 我悄悄地在果耳边低语，她的脸立刻变得通红
+						PRINTW 
+						IF EQUIP:TARGET:下半身内衣１ || EQUIP:TARGET:下半身内衣２
+						PRINTFORML 「%MASTERNAME:42%你非要这样的话…」
+						PRINTFORML 「那、那么，至少背对着我」
+						PRINTW 
+						PRINTFORML 我按照她说的那样背对着果，过了一会儿，听到了衣服摩擦的声音
+						PRINTFORML 不久，果叫我「可以转过来了」，所以我转过身
+						PRINTW 
+						PRINTFORML 「你、你想要这个吧…？」
+						PRINTFORML 果用手指挂着脱下来的内裤，展开给我看
+							PRINTW 
+							IF PALAM:润滑 >= PALAMLV:3
+							PRINTFORML 仔细一看，覆盖股间的部分湿漉漉的
+						ELSEIF PALAM:润滑 >= PALAMLV:1
+							PRINTFORML 仔细一看，覆盖股间的部分有些湿润
+						ELSE
+						ENDIF
+						PRINTFORML 「！？　不要、不要这样仔细看！？」
+						PRINTFORML 「呜呜—…那种东西，要怎么使用啦—…」
+							PRINTW 
+							IF EQUIP:TARGET:下半身内衣１
+							PRINTFORML %CALLNAME:MASTER%得到了果的%PANTSNAME(EQUIP:TARGET:下半身内衣１, TARGET)%
+						ELSEIF EQUIP:TARGET:下半身内衣２
+							PRINTFORML %CALLNAME:MASTER%得到了果的%PANTSNAME(EQUIP:TARGET:下半身内衣２, TARGET)%
+							ENDIF
+							CALL PANTS_GET(TARGET,"もらう")
+							PRINTW 
+						ELSE
+							PRINTFORML 「诶、诶——嗯，那个…现在，那个…」
+							PRINTFORML 果满脸通红，扭扭捏捏
+							PRINTW 
+							PRINTFORML 「之后…不行吗？」
+							PRINTFORML 「所、所以说，……没穿啦」
+							PRINTW 
+							PRINTFORML 听不太清楚…
+							PRINTFORML 「……没穿啦！」
+							PRINTW 
+							PRINTFORML 果然还是没听清楚，我把耳朵凑近果
+							PRINTFORML 「～～～～，所以说，我说现在没穿啦！！」
+							PRINTW 
+							PRINTFORML 「……………………」
+							PRINTFORML 一阵风，吹拂过两人之间
+							PRINTW 
+							IF EQUIP:TARGET:裙子
+								PRINTFORML 『啊』
+								PRINTFORML 就在那一瞬间，果的裙子飞了起来，露出了没穿内衣的下半身
+								PRINTW 
+								PRINTFORML 「不要啊～～～～～～！ 真是够了～～～～～～～～！」
+								PRINTFORML 果卷起的风把我吹飞了。真是岂有此理！
+								PRINTW 
+							ELSE
+								PRINTFORML 不知道果小姐的喜好，非常抱歉…
+								PRINTFORML 「等等、稍微！那样我不就变成变态了吗！ 不、不是那样的啦！」
+								PRINTW 
+							ENDIF
+						ENDIF
+					ELSEIF TALENT:思慕
+						PRINTFORML 「想要什么？ 你想要什么？」
+						PRINTFORML 我悄悄地在果耳边低语，她的脸迅速变得通红
+						PRINTW 
+						PRINTFORML 「不不不不。不行不行不行不行不行！」
+						PRINTFORML 「我、我穿的内、内、裤什么的…」
+						PRINTW 
+						;是てる
+						IF EQUIP:TARGET:下半身内衣１ || EQUIP:TARGET:下半身内衣２
+							PRINTFORML 「再说了，要是在这种地方脱了，我该怎么回家啊！」
+							PRINTFORML 「想看我害羞的样子吗…真是个骨灰级的变态呢」
+							PRINTW 
+							PRINTFORML 「嗯…那个…只、只是看看，的话…」
+							PRINTFORML 「才、才不是给谁都看的！ 话说回来给别人看什么的还是第一次！」
+							PRINTW 
+							PRINTFORML 「那、那么就给你看哦…只有一次哦」
+							PRINTFORML 果下定决心，捏住了裙子的下摆
+							PRINTW 
+							PRINTFORML 随着果的裙子被抬高，大腿也逐渐显露出来
+							PRINTFORML 眼泪汪汪的果说着「呜呜，别看…」成了风味剂，兴奋感也随之增加
+							PRINTW 
+							PRINTFORML 「啊啊，不要啊…\/\/\/」
+							PRINTFORML 最终，果的下半身暴露了出来
+							PRINTW 
+							PRINTFORML 「别、别靠那么近看啦…我会害羞的啦…\/\/\/」
+							IF PALAM:润滑 >= PALAMLV:1
+								PRINTFORML 仔细一看，股间的部分湿了
+								PRINTFORML 难道说，是在刚才的交流中情动了吗。或者说，是胜负之前就已经…
+								PRINTW 
+							ENDIF
+							PRINTFORML 「好、好了！ 结束！ 不可以再看了！」
+							PRINTFORML 果松开了裙子的手，按住前面，怒视着这边
+							PRINTW 
+							PRINTFORML 「呜～～，下次我不会输的啦…你给我等着！」
+							PRINTFORML 我下定决心，下次一定要赢
+							PRINTW 
+						;没穿
+						ELSE
+							PRINTFORML 「而且，现在…没、没什么！」
+							PRINTFORML 「总之，不行就是不行！ 绝对不行哦！」
+							PRINTW 
+							IF FLAG:异常气象 == 7 && EQUIP:TARGET:裙子
+								PRINTFORML 果尖叫的下一瞬间，一阵风，吹拂过两人之间
+								PRINTW 
+								PRINTFORML 『啊』
+								PRINTFORML 就在那一瞬间，果的裙子飞了起来，露出了没穿内衣的下半身
+								PRINTW 
+								PRINTFORML 「不要啊～～～～～～！ 真是够了～～～～～～～～！」
+								PRINTFORML 果卷起的风把我吹飞了。真是岂有此理！
+								PRINTW 
+							ELSE
+								PRINTFORML 我歪着头，心想她到底在拼命什么呢…
+								PRINTW 
+							ENDIF
+						ENDIF
+					ELSE
+						PRINTFORML 「哈？ 好东西，是什么呀」
+						PRINTFORML 我悄悄地在果耳边低语，她的脸迅速变得通红
+						PRINTW 
+						PRINTFORML 「哈啊！？ 内、内裤…你为什么想要那种东西啊！」
+						PRINTFORML 「这还用说吗，肯定不行啊！ 别太得意忘形了！」
+						PRINTW 
+						PRINTFORML 我惹果生气了。 看来我稍微有点得意忘形了
+						PRINTW 
+					ENDIF
+				CASE 2
+					IF TALENT:恋慕 || TALENT:恋人
+						PRINTFORML 「%MASTERNAME:42%，你这个月生活很困难吗？」
+						PRINTFORML 「如果是那样的话，就算不是胜负，和我说一声就好了嘛…」
+						PRINTW 
+						PRINTFORML 「…虽、虽说如此，我毕竟是妖怪，没多少人类的钱呢」
+						PRINTFORML 「这些可以吗？ 不要太浪费哦？」
+						PRINTW 
+					ELSE
+						PRINTFORML 「哇啊ー。 没想到竟然会被勒索钱财ー」
+						PRINTFORML 「…虽、虽说如此，我毕竟是妖怪，没多少人类的钱哦？」
+						PRINTW 
+						PRINTFORML 「那么，这些怎么样？ 唉ー，本来还想在人类的村子里吃点甜食的呢…」
+						PRINTW 
+					ENDIF
+					PRINTFORML 从果那里弄到了 %金额表示(500)%
+					MONEY += 500
+				ENDSELECT
+		ENDSELECT
+	ENDIF
+RESETCOLOR
+ENDIF
+RETURN 1
+

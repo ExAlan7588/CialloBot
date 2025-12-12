@@ -1,0 +1,440 @@
+﻿[SKIPSTART]
+・F函数系にTRYCALLがねぇのがキツイっす（存在しなくてもエラー吐かないようにはならんもんか？）
+→存否を事前に变量として保持して存在しないなら先にそこで弹く、これでおｋ
+・F函数系は一つの函数につき返回值がSTRもしくはINTに限定されてめんどくさい
+→@TEMP_STOCKを経由したやりくりで解决
+→FUNCTIONSならSTR型でTOSTR(INT)を返せる、INT变量を用意しておけば保持自体は余裕
+・整数型・文字列型变量を组み合わせて参照したい
+→ぜんぶ参数のかたちで渡してやればいい
+・函数间での变量の柔软な受け渡し（一文字变量地狱はイヤ）
+→CALLFの活用によって拟似的に变量を定义してやれば函数をまたいだ变量のやりとりが可能
+→变量名を每回自前で定义できるから一文字变量と违って上书きの心配がないよ！
+
+欠点
+・变量管理の手间が烦杂になる
+・メモ莉莉クのおそれがある
+・变量をスタックさせすぎるとエラー
+・变量名による误消去のおそれ
+
+・とりあえずGET_INT/GET_STRして使用分にはあまり气にしなくていい
+
+2017/02/22
+・デ背包文を仕込みすぎてデ背包モードがクソ重かったのでコメントアウト
+
+[SKIPEND]
+
+;デ背包用、一时变量の列挙
+;例のREF变量の有效活用例
+@TEST_TEMPLIST(VAR_NAME, VAR_STR, VAR_INT, VAR_CNT)
+#FUNCTIONS
+#DIMS REF VAR_NAME ;变量名の保持
+#DIMS REF VAR_STR  ;变量情报（STR）の保持
+#DIM  REF VAR_INT  ;变量情报（INT）の保持
+#DIM  REF VAR_CNT  ;变量の保持数
+#DIM  VAR_ID
+;DEBUGPRINTFORM TEMPLIST VAR_NAME：%VAR_NAME:VAR_CNT%　
+;DEBUGPRINTFORML VAR_CNT：{VAR_CNT}
+;DEBUGPRINTFORM 　
+FOR VAR_ID, 1, VAR_TEMP_MAX + 1
+	SIF !STRLENS(VAR_NAME:VAR_ID)
+		BREAK
+	DEBUGPRINTFORM VAR_ID：{VAR_ID}　
+	DEBUGPRINTFORM VAR_NAME：%VAR_NAME:VAR_ID%　
+	DEBUGPRINTFORM VAR_STR：%VAR_STR:VAR_ID%　
+	DEBUGPRINTFORM VAR_INT：%VAR_STR:VAR_ID%
+NEXT
+DEBUGPRINTFORML
+
+;-----------------------------------------------
+;ここから本体
+;-----------------------------------------------
+;一时变量保持函数本体
+;この函数は直接呼ばない、参照や操作は后述の函数を介して行うこと
+;-----------------------------------------------
+;变量の保持函数
+;とりあえず1～99までの99个を使用可能
+;0を使ってないのはID0を返した时の挙动がややこしくなるため
+;やたらTHROWが多いのは念のため
+@TEMP_STOCK(COMMAND, ARGS:0, ARGS:1, ARG:0, ARG:1)
+#FUNCTIONS
+#DIMS COMMAND                       ;变量に对する实行指令
+#DIMS VAR_NAME,  (VAR_TEMP_MAX + 1) ;变量名の保持
+#DIMS VAR_STR,   (VAR_TEMP_MAX + 1) ;变量情报（STR）の保持
+#DIM  VAR_INT,   (VAR_TEMP_MAX + 1) ;变量情报（INT）の保持
+#DIM  VAR_CNT                       ;变量の保持数
+#DIM LCOUNT
+#DIM TEMP_ID
+#DIM TEMP_CNT
+;DEBUGPRINTFORML TEMP_STOCK_%COMMAND%, %ARGS:0%, %ARGS:1%, {ARG:0}, {ARG:1}
+
+SELECTCASE COMMAND
+;各种の取得指令、返り值に意味がある
+;保持している变量の总数を返す
+CASE "GET_TOTAL"
+	;DEBUGPRINTFORML TEMP_STOCK VAR_CNT：{VAR_CNT}
+	RETURNF TOSTR(VAR_CNT)
+
+;变量名から内容を参照
+CASE "GET_VALUE_BY_NAME"
+	SIF !STRLENS(ARGS:0)
+		THROW 变量名を设定して下さい
+	TEMP_ID = FINDELEMENT(VAR_NAME, ESCAPE(ARGS:0), 1, , 1)
+	SIF TEMP_ID <= 0
+		THROW 存在しない变量を参照しました%ARGS:0%
+	IF STRLENS(VAR_STR:TEMP_ID)
+		;DEBUGPRINTFORML TEMP_STOCK VAR_STR:TEMP_ID：%VAR_STR:TEMP_ID%
+		RETURNF VAR_STR:TEMP_ID
+	ELSE
+		;DEBUGPRINTFORML TEMP_STOCK VAR_INT:TEMP_ID：{VAR_INT:TEMP_ID}
+		RETURNF TOSTR(VAR_INT:TEMP_ID)
+	ENDIF
+
+;IDから内容を参照
+CASE "GET_VALUE_BY_ID"
+	SIF !ARG:0
+		THROW IDを设定して下さい
+	SIF !INRANGE(ARG:0, 1, VAR_CNT)
+		THROW 存在しない变量を参照しました{ARG:0}
+	IF STRLENS(VAR_STR:TEMP_ID)
+		;DEBUGPRINTFORML TEMP_STOCK VAR_STR:TEMP_ID：%VAR_STR:TEMP_ID%
+		RETURNF VAR_STR:TEMP_ID
+	ELSE
+		;DEBUGPRINTFORML TEMP_STOCK VAR_INT:TEMP_ID：{VAR_INT:TEMP_ID}
+		RETURNF TOSTR(VAR_INT:TEMP_ID)
+	ENDIF
+
+;变量名から变量のIDを返す
+;存在しない时は0
+CASE "GET_ID"
+	SIF !STRLENS(ARGS:0)
+		THROW 变量名を设定して下さい
+	TEMP_ID = FINDELEMENT(VAR_NAME, ESCAPE(ARGS:0), 1, , 1)
+	SIF TEMP_ID <= 0
+		TEMP_ID = 0
+	;DEBUGPRINTFORML TEMP_STOCK TEMP_ID：{TEMP_ID}
+	RETURNF TOSTR(TEMP_ID)
+
+
+;ARGS:0の含まれる变量名の数を返す
+CASE "GET_CNT_NAME"
+	TEMP_CNT = 0
+	FOR TEMP_ID, 1, VAR_CNT + 1
+		SIF STRCOUNT(VAR_NAME:TEMP_ID, ARGS:0)
+			TEMP_CNT ++
+	NEXT
+	;DEBUGPRINTFORML TEMP_STOCK TEMP_CNT：{TEMP_CNT}
+	RETURNF TOSTR(TEMP_CNT)
+
+;变量の位置から变量名を返す
+;存在しない时は空の文字列を返す
+CASE "GET_NAME"
+	TEMP_ID = ARG:0
+	SIF !INRANGE(ARG:0, 1, VAR_TEMP_MAX)
+		TEMP_ID = 0
+	;DEBUGPRINTFORML TEMP_STOCK TEMP_ID：{TEMP_ID}
+	RETURNF VAR_NAME:TEMP_ID
+
+;ここから命令系、CALLFで各函数を介して使用のこと
+;变量の作成
+CASE "VARMAKE"
+	SIF !STRLENS(ARGS:0)
+		THROW 变量名を设定して下さい
+	SIF VAR_CNT >= VAR_TEMP_MAX
+		THROW 保持变量が上限に达しているため新たな变量を定义できません
+	SIF ISNUMERIC(ARGS:0)
+		THROW 数字のみからなる文字列を变量名に设定することは出来ません%ARGS:0%
+	SIF FINDELEMENT(VAR_NAME, ESCAPE(ARGS:0), 1, , 1) > 0
+		THROW その变量名はすでに存在します%ARGS:0%
+	VAR_CNT ++ 
+	VAR_NAME:VAR_CNT = %ARGS:0%
+	VAR_INT:VAR_CNT  = ARG:0
+	VAR_STR:VAR_CNT  = %ARGS:1%
+	;#; CALLF TEST_TEMPLIST(VAR_NAME, VAR_STR, VAR_INT, VAR_CNT)
+
+;代入处理
+;IDで变量を指定して代入
+CASE "VARSET_BY_ID"
+	SIF !INRANGE(ARG:0, 1, VAR_CNT)
+		THROW 存在しない变量を参照しました{ARG:0}
+	VAR_INT:TEMP_ID  = ARG:1
+	VAR_STR:TEMP_ID  = %ARGS:0%
+;名前で变量を指定して代入
+CASE "VARSET_BY_NAME"
+	SIF !STRLENS(ARGS:0)
+		THROW 变量名を设定して下さい
+	TEMP_ID = FINDELEMENT(VAR_NAME, ESCAPE(ARGS:0), 1, , 1)
+	SIF !INRANGE(TEMP_ID, 1, VAR_CNT)
+		THROW 存在しない变量を参照しました%ARGS:0%
+	VAR_INT:TEMP_ID  = ARG:0
+	VAR_STR:TEMP_ID  = %ARGS:1%
+
+;一つの变量を初期化
+;ARGSが数值の场合にはINDEXと解釈する
+;それ以外なら一致する变量名の位置を検索する
+;存在しない时はエラー
+
+;ID指定で变量を除去
+CASE "VARCLEAR_BY_ID"
+	SIF !INRANGE(ARG:0, 1, VAR_CNT)
+		THROW 存在しない变量を参照しました{ARG:0}
+	;CALLF TEST_TEMPLIST(VAR_NAME, VAR_STR, VAR_INT, VAR_CNT)
+	ARRAYREMOVE VAR_NAME, ARG:0, 1
+	ARRAYREMOVE VAR_INT , ARG:0, 1
+	ARRAYREMOVE VAR_STR , ARG:0, 1
+	VAR_CNT --
+	;#; CALLF TEST_TEMPLIST(VAR_NAME, VAR_STR, VAR_INT, VAR_CNT)
+;变量名指定で变量を除去
+CASE "VARCLEAR_BY_NAME"
+	TEMP_ID = FINDELEMENT(VAR_NAME, ESCAPE(ARGS:0), 1, , 1)
+	SIF TEMP_ID <= 0
+		THROW 存在しない变量を参照しました%ARGS:0%
+	;CALLF TEST_TEMPLIST(VAR_NAME, VAR_STR, VAR_INT, VAR_CNT)
+	ARRAYREMOVE VAR_NAME, TEMP_ID, 1
+	ARRAYREMOVE VAR_INT , TEMP_ID, 1
+	ARRAYREMOVE VAR_STR , TEMP_ID, 1
+	VAR_CNT --
+	;CALLF TEST_TEMPLIST(VAR_NAME, VAR_STR, VAR_INT, VAR_CNT)
+;变量名を部分一致検索して初期化
+;卷き添え注意
+CASE "VARCLEAR_BY_KEYWORD"
+	SIF !STRLENS(ARGS:0)
+		THROW 検索语句を设定して下さい
+	TEMP_ID = FINDELEMENT(VAR_NAME, ESCAPE(ARGS:0), 1, , 0)
+	WHILE LOCAL > 0
+		ARRAYREMOVE VAR_NAME, TEMP_ID, 1
+		ARRAYREMOVE VAR_INT , TEMP_ID, 1
+		ARRAYREMOVE VAR_STR , TEMP_ID, 1
+		VAR_CNT --
+		SIF !VAR_CNT
+			BREAK
+		TEMP_ID = FINDELEMENT(VAR_NAME, ESCAPE(ARGS:0), 1, , 0)
+	WEND
+;变量を全て初期化
+CASE "ALLCLEAR"
+	VARSET VAR_NAME
+	VARSET VAR_INT
+	VARSET VAR_STR
+	VARSET VAR_CNT
+;算术系は变量の位置の判定が共通なのでまとめて先に
+;ARGSが数值の场合にはINDEXと解釈する
+;それ以外なら一致する变量名の位置を検索する
+CASE "ADD_BY_ID", "TIMES_BY_ID", "PERCENT_BY_ID", "PPM_BY_ID",
+	SIF !INRANGE(ARG:0, 1, VAR_CNT)
+		THROW 存在しない变量を参照しました{ARG:0}
+	
+	SELECTCASE COMMAND
+	;加算、もちろん负数も可能
+	CASE "ADD_BY_ID"
+		VAR_INT:(ARG:0) += ARG:1
+	;乘算、小数值は渡せないので注意
+	CASE "TIMES_BY_ID"
+		VAR_INT:(ARG:0) *= ARG:1
+	;指定变量をARGパーセントにする
+	CASE "PERCENT_BY_ID"
+		VAR_INT:(ARG:0) *= ARG:1
+		VAR_INT:(ARG:0) /= 100
+	;PPM＝百万分率
+	CASE "PPM_BY_ID"
+		VAR_INT:(ARG:0) *= ARG:1
+		VAR_INT:(ARG:0) /= 1000000
+	CASEELSE
+		THROW 未设定の命令%COMMAND%
+	ENDSELECT
+CASE "ADD_BY_NAME", "TIMES_BY_NAME", "PERCENT_BY_NAME", "PPM_BY_NAME"
+	SIF !STRLENS(ARGS:0)
+		THROW 变量名を设定して下さい
+	TEMP_ID = FINDELEMENT(VAR_NAME, ESCAPE(ARGS:0), 1, , 1)
+	SIF TEMP_ID <= 0
+		THROW 存在しない变量を参照しました%ARGS:0%
+	
+	SELECTCASE COMMAND
+	;加算、もちろん负数も可能
+	CASE "ADD_BY_NAME"
+		VAR_INT:TEMP_ID += ARG:0
+	;乘算、小数值は渡せないので注意
+	CASE "TIMES_NAME"
+		VAR_INT:TEMP_ID *= ARG:0
+	;指定变量をARGパーセントにする
+	CASE "PERCENT_NAME"
+		VAR_INT:TEMP_ID *= ARG:0
+		VAR_INT:TEMP_ID /= 100
+	;PPM＝百万分率
+	CASE "PPM_NAME"
+		VAR_INT:TEMP_ID *= ARG:0
+		VAR_INT:TEMP_ID /= 1000000
+	CASEELSE
+		THROW 未设定の命令%COMMAND%
+	ENDSELECT
+CASEELSE
+	THROW 未设定の命令%COMMAND%
+ENDSELECT
+RETURNF
+
+
+
+;-----------------------------------------------
+;一时变量取得函数
+;-----------------------------------------------
+;式中函数
+;IDを渡す时でも"3"など文字列で渡さないとエラーを吐く
+;INT/STRは「变量の中身」でも「第一参数の型」でもないことに注意
+;これは「返回值の型」である（つまりTOINT()の省略がしたかった）
+;返回值がSTRとなるのはGET_NAMEとGET_VALUEの中身がSTRの时だけ
+@TEMP_INT(COMMAND, ARGS:0)
+#FUNCTION
+#DIMS COMMAND
+RETURNF TOINT(TEMP_GET(COMMAND, ARGS:0))
+
+@TEMP_STR(COMMAND, ARGS:0)
+#FUNCTIONS
+#DIMS COMMAND
+RETURNF TEMP_GET(COMMAND, ARGS:0)
+
+@TEMP_GET(COMMAND = "GET_VALUE", ARGS:0)
+#FUNCTIONS
+#DIMS COMMAND
+SELECTCASE COMMAND
+CASE "GET_TOTAL"
+	RETURNF TEMP_STOCK("GET_TOTAL")
+CASE "GET_VALUE"
+	;数字っぽければIDとみなす
+	IF ISNUMERIC(ARGS:0)
+		RETURNF TEMP_STOCK("GET_VALUE_BY_ID", , , TOINT(ARGS:0))
+	ELSE
+		RETURNF TEMP_STOCK("GET_VALUE_BY_NAME", ARGS:0)
+	ENDIF
+;变量名から变量のIDを返す
+;存在しない时は0
+CASE "GET_ID"
+	RETURNF TEMP_STOCK("GET_ID", ARGS:0)
+;ARGS:0の含まれる变量名の数を返す
+CASE "GET_CNT_NAME"
+	RETURNF TEMP_STOCK("GET_CNT_NAME", ARGS:0)
+;变量の位置から变量名を返す
+;存在しない时は空の文字列を返す
+CASE "GET_NAME"
+	RETURNF TEMP_STOCK("GET_NAME", , , TOINT(ARGS:0))
+CASEELSE
+	THROW 不明な指令%COMMAND%
+ENDSELECT
+
+
+;-----------------------------------------------
+;RETURN系函数
+;-----------------------------------------------
+;式中函数
+;变量名もしくはIDを参照してその变量の中身（INTorSTR）を取得する函数
+;F函数でRETURN系というのもちとおかしいが命名センスが死んでるだけなので气にするな
+;この函数の特征は取得后に参照元の变量を消去する点、つかう机会は多いはず
+;变量作る一方じゃすぐいっぱいになっちゃうからね
+;他の情报で取得直后に消すという处理が必要と思えないのでVALUE専用
+
+@TEMP_RE_INT(ARGS)
+#FUNCTION
+LOCAL = TEMP_INT("GET_VALUE", ARGS)
+CALLF TEMP_VARCLEAR(ARGS)
+RETURNF LOCAL
+
+@TEMP_RE_STR(ARGS)
+#FUNCTIONS
+LOCALS = %TEMP_STR("GET_VALUE", ARGS)%
+CALLF TEMP_VARCLEAR(ARGS)
+RETURNF LOCALS
+
+;-----------------------------------------------
+;代入・初期化系函数
+;-----------------------------------------------
+;CALLFで使用
+;一时变量作成函数
+;これがなけりゃはじまらない
+;变量作成と初期值の设定
+;すでに存在するとエラー
+;MAKE_INTでINT变量、MAKE_STRでSTR变量を作成する
+@MAKE_INT(V_NAME, V_INT)
+#FUNCTIONS
+#DIMS V_NAME
+#DIM  V_INT
+RETURNF TEMP_VARMAKE(V_NAME, , V_INT)
+
+@MAKE_STR(V_NAME, V_STR)
+#FUNCTIONS
+#DIMS V_NAME
+#DIMS V_STR
+RETURNF TEMP_VARMAKE(V_NAME, V_STR)
+
+@TEMP_VARMAKE(V_NAME, V_STR, V_INT)
+#FUNCTIONS
+#DIMS V_NAME
+#DIMS V_STR
+#DIM  V_INT
+RETURNF TEMP_STOCK("VARMAKE", V_NAME, V_STR, V_INT)
+
+
+;代入函数
+;CALLFで使用
+;变量が存在しないとエラー
+;STRとINTの两方のVALUEに情报が入ってる时はSTRが返ってくる
+;
+;代入函数使いたい时は
+;	CALLF SET_INT/STR
+;で使って下さい
+@SET_INT(V_NAME, V_INT)
+#FUNCTION
+#DIMS V_NAME
+#DIM  V_INT
+RETURNF TOINT(TEMP_VARSET(V_NAME, , V_INT))
+
+@SET_STR(V_NAME, V_STR)
+#FUNCTIONS
+#DIMS V_NAME
+#DIMS V_STR
+RETURNF TEMP_VARSET(V_NAME, V_STR)
+
+@TEMP_VARSET(V_NAME, V_STR, V_INT)
+#FUNCTIONS
+#DIMS V_NAME
+#DIMS V_STR
+#DIM  V_INT
+;数字っぽければIDとみなす
+IF ISNUMERIC(V_NAME)
+	RETURNF TEMP_STOCK("VARSET_BY_ID", , V_STR, TOINT(V_NAME), V_INT)
+ELSE
+	RETURNF TEMP_STOCK("VARSET_BY_NAME", V_NAME, V_STR, V_INT)
+ENDIF
+
+;变量の初期化函数
+@TEMP_VARCLEAR(ARGS:0, OP = "NORMAL")
+#FUNCTIONS
+#DIMS OP
+SELECTCASE OP
+;通常は变量名、もしくはIDに一致する变量のみを消去
+CASE "NORMAL"
+	IF ISNUMERIC(ARGS:0)
+		RETURNF TEMP_STOCK("VARCLEAR_BY_ID", , , TOINT(ARGS:0))
+	ELSE
+		RETURNF TEMP_STOCK("VARCLEAR_BY_NAME", ARGS:0)
+	ENDIF
+;变量名にキーワードを含むものを消去、卷き込み注意
+CASE "KEY"
+		RETURNF TEMP_STOCK("VARCLEAR_BY_KEYWORD", ARGS:0)
+;全消去、强力すぎてあまり多用はできない
+CASE "ALL"
+		RETURNF TEMP_STOCK("ALLCLEAR")
+ENDSELECT
+
+;-----------------------------------------------
+;算术系函数
+;-----------------------------------------------
+;正直、存在意义が微妙な气がするが一応つくっておくよ
+;CALLFで使用
+;COMMANDはADD, TIMES, PERCENT, PPM
+;PPM是くらでも增やせるよって例で冗谈で作った
+@TEMP_METH(V_NAME, COMMAND, ARG:0)
+#FUNCTIONS
+#DIMS V_NAME
+#DIMS COMMAND
+IF ISNUMERIC(V_NAME)
+	RETURNF TEMP_STOCK(@"%COMMAND%_BY_ID", , , TOINT(V_NAME), ARG:0)
+ELSE
+	RETURNF TEMP_STOCK(@"%COMMAND%_BY_NAME", V_NAME, , ARG:0)
+ENDIF

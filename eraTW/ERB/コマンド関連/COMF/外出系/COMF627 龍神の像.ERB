@@ -1,0 +1,51 @@
+﻿@COM627
+#DIMS 低气圧位置
+
+低气圧位置 = %GET_LOCATION_LOW()%
+
+DRAWLINE
+PRINTW 看着龙神像
+PRINTL
+PRINTL ……
+
+IF (IS_COLD_LOW && 低气圧位置 != "寒冷涡通过" && DAY:2 != 2) || IS_LINER_RAINBAND:0 == 1 || (IS_SoJ_LOW == 2 && 低气圧位置 != "二つ玉低气圧通过") || CAN_CUMULUS:0 == 5 || CAN_CUMULUS:2 == 2 || CONTINUOUS_RAINFALL >= 20 || POSSIBLITY_AVALANCHE >= 1
+	;PRINTFORMW 目の色が赤色だ\@ ABL:MASTER:教养 >= 2? ！！异常气象が迫っている…# \@
+	PRINTFORMW 眼睛的颜色是红色的\@ ABL:MASTER:教养 >= 2? ！！异常气象临近…# \@
+ELSEIF GET_LOCATION_AREA_TYPHOON() || 低气圧位置 == "台风势力圏" || (低气圧位置 == "台风远方" && TIME_ENTER_TERRITORY_TYPHOON:1 == DAY:3)
+	;PRINTFORMW 目の色が紫色だ\@ ABL:MASTER:教养 >= 2? …野分が近づいている# \@
+	PRINTFORMW 眼睛的颜色是紫色的\@ ABL:MASTER:教养 >= 2? …台风临近了# \@
+ELSEIF (IS_SoJ_LOW == 1 && 低气圧位置 != "日本海低气圧通过") || (IS_SOUTHERN_LOW && 低气圧位置 != "南岸低气圧通过") || IS_RAINY_SEASON1 || IS_RAINY_SEASON2 || 低气圧位置 == "温暖前线接近" || 低气圧位置 == "暖域" || 低气圧位置 == "寒冷前线通过"
+	;PRINTFORMW 目の色が青色だ\@ ABL:MASTER:教养 >= 2? …雨が近い# \@
+	PRINTFORMW 眼睛的颜色是蓝色的\@ ABL:MASTER:教养 >= 2? …快下雨了# \@
+ELSE
+	PRINTW 眼睛颜色没有变化
+ENDIF
+PRINTL
+SIF !FLAG:70
+	TIME += 1
+TFLAG:102 = 0
+RETURN 0
+
+;-------------------------------------------------
+;实行可能判定
+;-------------------------------------------------
+;龙神像
+@COM_ABLE627
+;批量管理
+SIF GLOBAL_COMABLE(627)
+	RETURN RESULT
+;龙神像ではない场所
+SIF !RYUJIN_STATUE(CFLAG:MASTER:当前位置)
+	RETURN 0
+;睡眠中
+SIF CFLAG:睡眠
+	RETURN 0
+RETURN 1
+
+;龙神像を判定する函数
+@RYUJIN_STATUE(ARG)
+#FUNCTION
+;龙神像
+SIF ARG == GET_MAP_REPLACEMENT(207)
+	RETURNF 1
+RETURNF 0

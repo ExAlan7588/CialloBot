@@ -1,0 +1,1610 @@
+﻿;※※※※※※※※※※※※※※※※※※※※※※※※※
+;性交系指令
+;※※※※※※※※※※※※※※※※※※※※※※※※※
+;==================================================
+;60,正常位
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_60
+CALL M_KOJO_MESSAGE_COM_K25_60_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_60_1
+
+;-------------------------------------------------
+;对面立位
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL && TFLAG:193
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;处女
+		IF TCVAR:破瓜 == 1
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;插入继续
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:100 == PLAYER
+		;今射精した
+		IF NOWEX:PLAYER:11
+			;时奸中
+			IF FLAG:70
+				SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 强抱着毫无反应的蓝、激烈的抽插的下体
+					PRINTFORML 与毫无动静的表情相反、花唇噗滋噗滋的挤压出被塞满的精液
+				CASE 1
+					PRINTFORML 蠢蠢欲动的肉棒被蜜壶吞入、跟平时一样冷冰冰的表情更让%CALLNAME:MASTER%感到兴奋
+					PRINTFORML 被膣腔肉壁搔弄着的肉棒瞬间将白浊的精液射进深处
+				CASE 2
+					PRINTFORML 就这样持续的抽插后往子宫内留下礼物
+					PRINTFORML %CALLNAME:MASTER%顺着色欲、用力的朝腰注入力量
+				ENDSELECT
+				RETURN 1
+			ELSE
+				SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 一点余韵的时间都没有、%CALLNAME:MASTER%的肉棒享受着在肉壁中胡闹的快感
+					PRINTFORML 爱液混杂着精液顺着肉棒流了出来
+				CASE 1
+					PRINTFORML 抓住屁股两侧、用力将腰向前一送向蓝注入精液
+					PRINTFORML 「啊、好厉害、感觉到精液在里面敲动……」
+				CASE 2
+					PRINTFORML 射完精后、蓝的名器肉壶紧紧的勒住花唇
+					PRINTFORML 被挤压着的肉棒连残留在尿道的精液都不放过
+				ENDSELECT
+				RETURN 1
+			ENDIF
+		ELSE
+		;他の体位→对面立位で射精しなかった场合だけ表示？ 继续といっても同じ体位2回だと派生に移行するため、中々见れないと思われる
+			;时奸中
+			IF FLAG:70
+				PRINTFORML 如果这时候时间停止的话自己就不需要移动
+				PRINTFORML 贯穿蓝股间的的肉棒转了转、重新开始突刺
+				RETURN 1
+			ELSE
+				PRINTFORML 抱着蓝的腰转向正面、从下往上顶着
+				PRINTFORML 在视野上硕大的乳房在摇动着
+				RETURN 1
+			ENDIF
+		ENDIF
+	ENDIF
+	;时奸中 
+	IF FLAG:70
+		SELECTCASE RAND:4
+		CASE 0
+			PRINTFORML 如果能熟练运用这能力的话、即使对方漂浮在空中也能做到
+			PRINTFORML 微开双腿、将高度固定住后把肉棒深深埋在蜜壶内
+		CASE 1
+			PRINTFORML 硬是从蓝紧闭的双腿将龟头塞进秘裂里
+			PRINTFORML 原本就狭窄的蜜壶、一插入就得紧实的插入感
+		CASE 2
+			PRINTFORML 在单脚固定的状态下、从横着的角度深深插入蓝的蜜穴
+			PRINTFORML 光滑的大腿内侧被每次抽插动作摇摆的睾丸撞击着
+		CASE 3
+			PRINTFORML 双手包着蓝的屁股、以火车便当的姿势深深的插入
+			PRINTFORML 即使被强奸也完全没有改变的表情带来背德的愉悦感
+		ENDSELECT
+		RETURN 1
+	ELSEIF TALENT:恋慕 || MARK:屈服刻印 == 3
+		SELECTCASE RAND:5
+		CASE 0
+			PRINTFORML 在那个场合、互相将彼此的凹凸深深的连结在一起
+			PRINTFORML 互相的微笑着前后摇摆着腰
+		CASE 1
+			PRINTFORML 「嘿咻」
+			PRINTFORML 蓝将两腿缠绕在腰上。这是人称火车便当的姿势、不过她用术式将体重变的很轻
+			PRINTFORML 蓝瞄准着肉茎的位置一点一点的埋入蜜壶内
+		CASE 2
+			PRINTFORML 蓝平衡的将长腿笔直的伸出摆出Ｙ字
+			PRINTFORML 跟着微微露出的大阴唇、%CALLNAME:MASTER%将龟头碰触摩擦着
+		CASE 3
+			PRINTFORML 「啊、好、好……棒！」
+			PRINTFORML 蓝享受着直立的激烈性交
+		CASE 4
+			PRINTFORML 淫荡地微笑的蓝将手环绕在背后
+			PRINTFORML 「对……身体浮起来往那、就是那里……！」
+		ENDSELECT
+		RETURN 1
+	ELSE
+		PRINTFORML 从身旁瞄准目标、将微笑地蓝紧贴着彼此
+		PRINTFORML 被冲击着敏感柔嫩的部位、表情也渐渐的崩坏、娇喘起来
+		RETURN 1
+	ENDIF
+	PRINTW 
+ENDIF
+;-------------------------------------------------
+;正常位
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;处女
+		IF TCVAR:破瓜 == 1
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;插入继续
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:100 == PLAYER
+		;今射精した
+		IF NOWEX:PLAYER:11
+			;时奸中
+			IF FLAG:70
+				SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 大量的精液朝着蜜壶内尽情的倾泄
+					PRINTFORML 白浊的精液在阴部跟肉棒的结合处被挤压溢出
+				CASE 1
+					PRINTFORML 把刚注入的精液当成润滑剂、继续反复的抽插
+					PRINTFORML 再长时间品尝着蓝黏糊的蜜壶皱褶
+				CASE 2
+					PRINTFORML 龟头四处磨蹭着、将新鲜的精子涂抹在蜜壶的各个角落
+					PRINTFORML 感到心情愉快的朝着蓝紧缩地蜜壶享受一阵活塞冲刺
+				ENDSELECT
+				RETURN 1
+			ELSE
+				SELECTCASE RAND:5
+				CASE 0
+					PRINTFORML 耻骨相互摩擦结合的更深、朝着深处一发长时间的射精
+					PRINTFORML 每当舒适的拔出肉棒时、被中出完毕的女狐蜜壶、就会噗滋的发出水声
+				CASE 1
+					PRINTFORML 一发强烈射精！ 噗滋 噗滋 噗滋……
+					PRINTFORML 「啊啊、好厉害……。好烫、受不了……」
+					PRINTFORML 想到自己的蜜壶内都是灼热的精液、蓝的表情越来越淫荡
+				CASE 2
+					PRINTFORML 射精时受到蓝的膣腔肉壁紧缩攻击、快感从肉棒延伸到脑上
+					PRINTFORML 「想要更多。你的种子……」
+				CASE 3
+					PRINTFORML 抱住蓝的双膝、插入的肉棒朝蜜壶射出黏糊湖的精液后仍紧紧地压迫
+					PRINTFORML 一点空闲都不给%CALLNAME:MASTER%扭着腰继续抽插
+				CASE 4
+					PRINTFORML 扑ーー滋 扑ーー滋 扑ーー滋……
+					PRINTFORML 射精的快感让全身颤抖、身体依然紧抱着彼此不分离
+				ENDSELECT
+				RETURN 1
+			ENDIF
+		ELSE
+			;时奸中
+			IF FLAG:70
+				PRINTFORML 以高潮为目标激烈地将肉棒来回的抽插
+				PRINTFORML 耳边响起噗滋噗滋的声音提高了心中的凌辱感
+				RETURN 1
+			ELSE
+				PRINTFORML 被蜜壶的皱褶所魅惑、以强烈的气势摇动着腰
+				PRINTFORML 蓝的喘息也越来越大声
+				RETURN 1
+			ENDIF
+		ENDIF
+	ENDIF
+	;时奸中
+	IF FLAG:70
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 抓住脚踝往左右掰开、瞄准毫无遮掩的雌穴后肉棒用力往前突刺
+			PRINTFORML 蜜壶像惧怕侵入者般的战栗着阴肉被粗暴的胡乱撞击
+		CASE 1
+			PRINTFORML 抓住纤细的腰、牢牢固定住接着插进阴部
+			PRINTFORML 肉棒在蓝的名器小穴里随意的活赛运动着
+		CASE 2
+			PRINTFORML 在时间停止的世界、那冰山般的八云蓝也只是一个性处理的小穴
+			PRINTFORML 将脸埋入双乳间、像个猴子般的扭动着腰撞击湿润的秘裂
+		ENDSELECT
+		RETURN 1
+	ELSEIF TALENT:恋慕 || MARK:屈服刻印 == 3
+		SELECTCASE RAND:6
+		CASE 0
+			PRINTFORML 湿润的雌穴完全吞进肉棒、紧紧贴贴毫无缝隙
+			PRINTFORML 互相拥抱、被包覆住的肉棒、有种融合为一体的错觉
+			PRINTFORML 「就这样永远……」
+		CASE 1
+			PRINTFORML 「哈、唔、那、那里……！」
+			PRINTFORML 蓝的身体跟着腰摆动、雌穴被突刺的疯狂浪叫着
+		CASE 2
+			PRINTFORML 腰每次向前撞击那对巨乳就会跟着晃动
+			PRINTFORML 出神盯着看的话蓝就会偷偷的笑出来
+		CASE 3
+			PRINTFORML 「啊、啊、唔、那里、唔！」
+			PRINTFORML 双腿被大大分开的蓝、毫无防备的小穴被来回的肉棒猛烈撞击
+			PRINTFORML 紧缩挤压肉棒的肉壶微微发热、享受着快感的蓝连眼泪都流出来了
+		CASE 4
+			PRINTFORML %CALLNAME:MASTER%对平时冷艳的的蓝毫不手软的插着蜜壶
+			PRINTFORML 噗滋噗滋抽插的结合部泄漏爱液、被激烈地侵犯微微颤抖的身体也是产生快感的证据
+			PRINTFORML 看着完全变成柔弱女人的脸、更让肉棒变的立挺
+		CASE 5
+			PRINTFORML 额头互相贴着对望、一边注视着彼此一边扭动着腰
+			PRINTFORML 瞳孔摇曳着、盯着彼此的脸、相互握着彼此的手感受着温热
+		ENDSELECT
+		RETURN 1
+	ELSE
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 「唔、随便你」
+			PRINTFORML 朝蓝张开的股间用龟头摩擦着、慢慢地塞入进去
+		CASE 1
+			PRINTFORML 「好吧、我也想要」
+			PRINTFORML 被微微笑着的蓝吸引、扑了上去拉开双腿
+		CASE 2
+			PRINTFORML 将脸埋进蓝丰满的乳房、将肉棒埋入温热的蜜壶
+			PRINTFORML 水弹嫩滑的肌肤、沉醉在温暖香甜的魅肉软床中
+		ENDSELECT
+		RETURN 1
+	ENDIF
+	PRINTW 
+ENDIF
+RETURN 1
+
+;==================================================
+;61,后背位
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_61
+CALL M_KOJO_MESSAGE_COM_K25_61_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_61_1
+;-------------------------------------------------
+;背面立位
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL && TFLAG:193
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;处女
+		IF TCVAR:破瓜 == 1
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;插入继续
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:100 == PLAYER
+		;今射精した
+		IF NOWEX:PLAYER:11
+			;时奸中
+			IF FLAG:70
+				SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 摆成奇怪的带着气势摇晃着腰
+					PRINTFORML 花唇满是泄漏出来的黏液强烈的快感让脚都快站不住
+				CASE 1
+					PRINTFORML 从背后朝着蓝黏糊糊的小穴灌着精液
+					PRINTFORML 即使毫无意识但蓝的小穴已经完全习惯被插入迎合着、这肉体越来越淫荡了
+				CASE 2
+					PRINTFORML 响起啪啪啪撞击臀部的声音
+					PRINTFORML 每次撞击就从穴口里溅出爱液沿着修长的大腿流下
+				ENDSELECT
+				RETURN 1
+			ELSE
+				SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 一边扭捏着安产型的大屁股、一边狠很的塞进去！ 朝最深处种出精液
+					PRINTFORML 「唔……像是要让我怀孕似的、心情舒畅了吗……？」
+				CASE 1
+					PRINTFORML 噗滋 噗滋 噗滋……
+					PRINTFORML %CALLNAME:MASTER%不管蓝的意志、固执的长时间从睾丸输送着精液到子宫里
+				CASE 2
+					PRINTFORML 流散着娇喘的声音、蓝迎合着肉棒自己摆动着腰
+					PRINTFORML 即使刚注入精液到这发情的雌性淫荡女狐、但依然止不住勃起插入的欲望
+				ENDSELECT
+				RETURN 1
+			ENDIF
+		ELSE
+			;时奸中
+			IF FLAG:70
+				PRINTFORML 完全不考虑蓝的负担、全力朝着蓝的蜜壶进行活塞运动
+				PRINTFORML 每一次龟头摩擦到蜜壶壁射精的欲望就越强烈
+				RETURN 1
+			ELSE
+				PRINTFORML 扭捏着丰满的臀肉一遍又一遍的撞击进去
+				RETURN 1
+			ENDIF
+		ENDIF
+	ENDIF
+	;时奸中
+	IF FLAG:70
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 从背后抱住、将腰轻轻弯曲成く字
+			PRINTFORML 调整成容易插入的角度一口气的从裂缝中贯穿到深处
+		CASE 1
+			PRINTFORML 将蓝调整成前倾的姿势、抓着腰插入女阴
+			PRINTFORML 像在使用性爱玩具般的扭着腰朝着臀部狠很的冲撞
+		CASE 2
+			PRINTFORML 将臀肉紧紧抓着、锁定目标后突刺进去
+			PRINTFORML 像是为了男人而特化般的蜜壶紧紧吸住肉棒
+		ENDSELECT
+		RETURN 1
+	ELSEIF TALENT:恋慕 || MARK:屈服刻印 == 3
+		SELECTCASE RAND:5
+		CASE 0
+			PRINTFORML 将一只腿抬高、用单腿不稳定的姿势朝着肉壶狠很的戳着
+			PRINTFORML 蓝一边承受蜜壶传来的快感一边努力的保持着平衡、这样更让人想激起欲望
+		CASE 1
+			PRINTFORML 「唔、啊、啊、啊　哈……」
+			PRINTFORML 朝直立站着的肉体从后面无情的激烈抽插着、蓝的娇喘声渐渐带有野性的感觉
+		CASE 2
+			PRINTFORML 蓝顺从的翘着屁股、在活塞运动时恶趣味的朝着屁股拍打
+		CASE 0
+			PRINTFORML 缓缓的插入到深处、拔出的时候被紧紧纠缠着不愿放离
+			PRINTFORML 蓝的蜜穴里巧妙的蠕动着、让人忘我的停止抽插
+		CASE 1
+			PRINTFORML 「啊、啊、啊、啊……！」
+			PRINTFORML 每当腰撞击屁股时就会漏出声音、让%CALLNAME:MASTER%的兽欲燃起
+		ENDSELECT
+		RETURN 1
+	ELSE
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 站着跟蓝结合在一起、肉棒跟蜜壶恰好的紧贴在一起泄漏出被挤压的空气声
+			PRINTFORML 不愧是名器这下不爆发一波强烈的活塞攻击可不行
+		CASE 1
+			PRINTFORML 「唔、插进了」
+			PRINTFORML 屁股朝向这的蓝、一点心理准备都不给就插到最深处里翻搅
+		CASE 2
+			PRINTFORML 还不太习惯似的、花唇抵抗着肉棒朝肉壶突入
+			PRINTFORML 听了蓝紧张小声的娇喘、更让人感到兴奋
+		ENDSELECT
+		RETURN 1
+	ENDIF
+	PRINTW 
+ENDIF
+;-------------------------------------------------
+;后背位
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;处女
+		IF TCVAR:破瓜 == 1
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;插入继续
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:100 == PLAYER
+		;今射精した
+		IF NOWEX:PLAYER:11
+			;时奸中
+			IF FLAG:70
+				SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 即使射精了也兴奋的冷却不下来、持续的用野兽般交尾的姿势将肉棒撞进去
+					PRINTFORML 毫无抗拒的蜜壶遵从着本能不断重复蠕动吸吮着精液
+				CASE 1
+					PRINTFORML %CALLNAME:MASTER%忽然想到、用来挑战像狗一样的交尾姿势
+					PRINTFORML 将插入中的肉体半回转、总算以趴着的姿势方式成功
+					PRINTFORML 抬起腰想杂技般的结合朝蓝的子宫口突刺
+				CASE 2
+					PRINTFORML 时间停止的世界中、蓝趴着的屁股响着啪啪啪的撞击声
+					PRINTFORML 似乎很享受般、每次拉出她的雌穴口不断喷溅出数量惊人的爱液
+				ENDSELECT
+				RETURN 1
+			ELSE
+				SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 朝小腹射出滚烫精液、从后面抓住丰满的屁股持续不断的侵犯
+					PRINTFORML 「唔、啊、啊、啊、啊……！」
+					PRINTFORML 蓝四肢趴着忍受着蜜壶传来的快感、一边享受征服的快感冲撞到蜜壶最底部
+				CASE 1
+					PRINTFORML 噗滋 噗滋 噗滋 噗滋……
+					PRINTFORML 一旦要抽出肉棒、一直被欺负的女阴就像不愿放离似的紧紧吸着
+					PRINTFORML 用力拔出后、浑身无力的蓝四肢趴着、从花唇不断的漏出白浊的精液
+				CASE 2
+					PRINTFORML 即时在射精中的%CALLNAME:MASTER%、腰也不停下来
+					PRINTFORML 朝着安产屁股拍打的同时、正下方垂着的巨乳疯狂的甩动着
+				ENDSELECT
+				RETURN 1
+			ENDIF
+		ELSE
+			;时奸中
+			IF FLAG:70
+				PRINTFORML 改变姿势、让微微发热的小穴更好吞下肉棒
+				RETURN 1
+			ELSE
+				PRINTFORML 腰贪婪激烈的前后摇动
+				PRINTFORML 发热的名器女阴喷溅着爱液打湿了腹部
+				RETURN 1
+			ENDIF
+		ENDIF
+	ENDIF
+	;时奸中
+	IF FLAG:70
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 紧抱住丰满的屁股以快速的节奏撞击着
+			PRINTFORML 蓝自己都不知道膣腔肉壁开始会痉挛取悦着肉棒
+		CASE 1
+			PRINTFORML 想要睡眠般的姿势朝蓝背后插入、抱着眼前的九尾摆动
+			PRINTFORML 视野里都是金色的尾巴同时也传来屁股被击打传来的声音
+		CASE 2
+			PRINTFORML 抬起丰满的屁股、观察着狭窄的肛门及下面被抽插着的小穴
+			PRINTFORML 细心的数着皱褶的数量一边说出来、蓝要是知道大概会羞愧的想死
+		ENDSELECT
+		RETURN 1
+	ELSEIF TALENT:恋慕 || MARK:屈服刻印 == 3
+		SELECTCASE RAND:5
+		CASE 0
+			PRINTFORML 举起一只脚、像小狗尿尿的样子抽插着
+			PRINTFORML 蓝感到非常羞耻似、每次撞击就会颤抖流出爱液
+		CASE 1
+			PRINTFORML 趴在蓝的背上、抓着蓝的双乳将肉茎击打着花心
+			PRINTFORML 每次向前撞击后蓝的腰都会配合的返回、乖巧的配合活塞运动
+		CASE 2
+			PRINTFORML 「从后面吗。我也喜欢这样」
+			PRINTFORML 蓝四肢趴着翘起屁股、用单手展开阴唇
+			PRINTFORML %CALLNAME:MASTER%将龟头贴在樱色的裂缝中、猛一发力插进去
+		CASE 3
+			PRINTFORML 「抓到诀窍就简单了。喂、深吸口气。唔、嗯……」
+			PRINTFORML 顺着蓝的提案、蓝四肢趴着自己则是趴在她的背上结合着
+			PRINTFORML 像是狗在交配般的、晃动着腰所求着快感
+		CASE 4
+			PRINTFORML 「啊 唔、啊、真是、真是坏！」
+			PRINTFORML 每三次就换个角度、龟头顺时针的向蓝的蜜壶内壁刮动着
+			PRINTFORML 最后找到最脆弱的地方、焦急的蓝发出可爱的娇声出来
+		ENDSELECT
+		RETURN 1
+	ELSE
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 将肉棒插入进去、蓝的屁股承受着无数的撞击
+			PRINTFORML 沉醉再插入名器女阴的包覆感
+		CASE 1
+			PRINTFORML 「唔、唔、啊、等」
+			PRINTFORML 从后面插入蜜壶、上上下下寻找着蓝的弱点部位
+		CASE 2
+			PRINTFORML 「尾巴、不会干扰吗？」
+			PRINTFORML 摇了摇头、%CALLNAME:MASTER%将脸埋在蓬松松的金色尾巴里腰也不停抽插着
+		ENDSELECT
+		RETURN 1
+	ENDIF
+	PRINTW 
+ENDIF
+RETURN 1
+
+;==================================================
+;62,正常位肛交
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_62
+CALL M_KOJO_MESSAGE_COM_K25_62_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_62_1
+;-------------------------------------------------
+;肛门对面立位
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL && TFLAG:193
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;肛门处女
+		IF TCVAR:Ａ破瓜
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;插入继续
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:101 == PLAYER
+		;前回射精した
+		IF TCVAR:104
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 
+				PRINTFORML 
+			CASE 1
+				PRINTFORML 
+				PRINTFORML 
+			CASE 2
+				PRINTFORML 
+				PRINTFORML 
+			ENDSELECT
+			RETURN 1
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 
+				PRINTFORML 
+			CASE 1
+				PRINTFORML 
+				PRINTFORML 
+			CASE 2
+				PRINTFORML 
+				PRINTFORML 
+			ENDSELECT
+			RETURN 1
+		ENDIF
+	ENDIF
+	;时奸中
+	IF FLAG:70
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 
+			PRINTFORML 
+		CASE 1
+			PRINTFORML 
+			PRINTFORML 
+		CASE 2
+			PRINTFORML 
+			PRINTFORML 
+		ENDSELECT
+		RETURN 1
+	ELSEIF TALENT:恋慕 || MARK:屈服刻印 == 3
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 
+			PRINTFORML 
+		CASE 1
+			PRINTFORML 
+			PRINTFORML 
+		CASE 2
+			PRINTFORML 
+			PRINTFORML 
+		ENDSELECT
+		RETURN 1
+	ELSE
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 
+			PRINTFORML 
+		CASE 1
+			PRINTFORML 
+			PRINTFORML 
+		CASE 2
+			PRINTFORML 
+			PRINTFORML 
+		ENDSELECT
+		RETURN 1
+	ENDIF
+	PRINTW 
+ENDIF
+;-------------------------------------------------
+;肛门正常位
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;肛门处女
+		IF TCVAR:Ａ破瓜
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;插入继续
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:101 == PLAYER
+		;前回射精した
+		IF TCVAR:104
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 
+				PRINTFORML 
+			CASE 1
+				PRINTFORML 
+				PRINTFORML 
+			CASE 2
+				PRINTFORML 
+				PRINTFORML 
+			ENDSELECT
+			RETURN 1
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 
+				PRINTFORML 
+			CASE 1
+				PRINTFORML 
+				PRINTFORML 
+			CASE 2
+				PRINTFORML 
+				PRINTFORML 
+			ENDSELECT
+			RETURN 1
+		ENDIF
+	ENDIF
+	;时奸中
+	IF FLAG:70
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 
+			PRINTFORML 
+		CASE 1
+			PRINTFORML 
+			PRINTFORML 
+		CASE 2
+			PRINTFORML 
+			PRINTFORML 
+		ENDSELECT
+		RETURN 1
+	ELSEIF TALENT:恋慕 || MARK:屈服刻印 == 3
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 
+			PRINTFORML 
+		CASE 1
+			PRINTFORML 
+			PRINTFORML 
+		CASE 2
+			PRINTFORML 
+			PRINTFORML 
+		ENDSELECT
+		RETURN 1
+	ELSE
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 
+			PRINTFORML 
+		CASE 1
+			PRINTFORML 
+			PRINTFORML 
+		CASE 2
+			PRINTFORML 
+			PRINTFORML 
+		ENDSELECT
+		RETURN 1
+	ENDIF
+	PRINTW 
+ENDIF
+RETURN 1
+
+;==================================================
+;63,后背位肛交
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_63
+CALL M_KOJO_MESSAGE_COM_K25_63_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_63_1
+;-------------------------------------------------
+;肛门背面立位
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL && TFLAG:193
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;肛门处女
+		IF TCVAR:Ａ破瓜
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;插入继续
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:101 == PLAYER
+		;前回射精した
+		IF TCVAR:104
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 
+				PRINTFORML 
+			CASE 1
+				PRINTFORML 
+				PRINTFORML 
+			CASE 2
+				PRINTFORML 
+				PRINTFORML 
+			ENDSELECT
+			RETURN 1
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 
+				PRINTFORML 
+			CASE 1
+				PRINTFORML 
+				PRINTFORML 
+			CASE 2
+				PRINTFORML 
+				PRINTFORML 
+			ENDSELECT
+			RETURN 1
+		ENDIF
+	ENDIF
+	;时奸中
+	IF FLAG:70
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 
+			PRINTFORML 
+		CASE 1
+			PRINTFORML 
+			PRINTFORML 
+		CASE 2
+			PRINTFORML 
+			PRINTFORML 
+		ENDSELECT
+		RETURN 1
+	ELSEIF TALENT:恋慕 || MARK:屈服刻印 == 3
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 
+			PRINTFORML 
+		CASE 1
+			PRINTFORML 
+			PRINTFORML 
+		CASE 2
+			PRINTFORML 
+			PRINTFORML 
+		ENDSELECT
+		RETURN 1
+	ELSE
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 
+			PRINTFORML 
+		CASE 1
+			PRINTFORML 
+			PRINTFORML 
+		CASE 2
+			PRINTFORML 
+			PRINTFORML 
+		ENDSELECT
+		RETURN 1
+	ENDIF
+	PRINTW 
+ENDIF
+;-------------------------------------------------
+;肛门后背位
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;肛门处女
+		IF TCVAR:Ａ破瓜
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;插入继续
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:101 == PLAYER
+		;前回射精した
+		IF TCVAR:104
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 
+				PRINTFORML 
+			CASE 1
+				PRINTFORML 
+				PRINTFORML 
+			CASE 2
+				PRINTFORML 
+				PRINTFORML 
+			ENDSELECT
+			RETURN 1
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 
+				PRINTFORML 
+			CASE 1
+				PRINTFORML 
+				PRINTFORML 
+			CASE 2
+				PRINTFORML 
+				PRINTFORML 
+			ENDSELECT
+			RETURN 1
+		ENDIF
+	ENDIF
+	;时奸中
+	IF FLAG:70
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 
+			PRINTFORML 
+		CASE 1
+			PRINTFORML 
+			PRINTFORML 
+		CASE 2
+			PRINTFORML 
+			PRINTFORML 
+		ENDSELECT
+		RETURN 1
+	ELSEIF TALENT:恋慕 || MARK:屈服刻印 == 3
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 
+			PRINTFORML 
+		CASE 1
+			PRINTFORML 
+			PRINTFORML 
+		CASE 2
+			PRINTFORML 
+			PRINTFORML 
+		ENDSELECT
+		RETURN 1
+	ELSE
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 
+			PRINTFORML 
+		CASE 1
+			PRINTFORML 
+			PRINTFORML 
+		CASE 2
+			PRINTFORML 
+			PRINTFORML 
+		ENDSELECT
+		RETURN 1
+	ENDIF
+	PRINTW 
+ENDIF
+RETURN 1
+
+;==================================================
+;64,逆强奸
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_64
+CALL M_KOJO_MESSAGE_COM_K25_64_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_64_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;调教者が处女
+		IF TCVAR:PLAYER:破瓜 == 1
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;插入继续
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:PLAYER:100 == TARGET
+		;前回射精した
+		IF TCVAR:PLAYER:102
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;基本セット
+	;恋慕
+	IF TALENT:恋慕
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;65,骑乘位
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_65
+CALL M_KOJO_MESSAGE_COM_K25_65_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_65_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;处女
+		IF TCVAR:破瓜 == 1
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;插入继续
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:100 == PLAYER
+		;今射精した
+		IF NOWEX:PLAYER:11
+			;时奸中
+			IF FLAG:70
+				SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 背面骑乘的姿势用双手扶着蓝的臀部、配合着活塞上下移动
+					PRINTFORML 最后用力挺起腰、插到底处!! 白浊的精液朝着子宫攻去
+				CASE 1
+					PRINTFORML 调整蓝的身体让她以骑乘方式让%CALLNAME:MASTER%插入蜜壶
+					PRINTFORML 由下而上的一次一次撞击蓝的深处、将精液朝着子宫内播种
+				CASE 2
+					PRINTFORML 毫无缝隙的紧贴蓝的膣腔肉壁蠕动着索取肉棒
+					PRINTFORML 尽情的射精也不停止抽插、将贪婪的雌穴灌的满满的
+				ENDSELECT
+				RETURN 1
+			ELSE
+				SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 娇喘着的蓝细腰被双手抓住、安产型的屁股向下摇摆特别带劲
+					PRINTFORML 肉棒被引导在蓝的深处、%CALLNAME:MASTER%全力朝着正上方放出精液弹幕
+				CASE 1
+					PRINTFORML 「唔、哈 哈、这、这样……！」
+					PRINTFORML 抓着蓝的腰激烈的来回向上撞击
+					PRINTFORML 望着蓝摇动的巨乳、%CALLNAME:MASTER%射出大量浓厚的精液
+				CASE 2
+					PRINTFORML 「你、真是。拿你没办法」
+					PRINTFORML 蓝露出牙齿笑着、像是只为了榨出精液一样努力摇晃着腰
+					PRINTFORML 就是在挤牛奶般、%CALLNAME:MASTER%朝着蜜壶内咕啾咕啾的射出精液
+				ENDSELECT
+				RETURN 1
+			ENDIF
+		ELSE
+			;时奸中
+			IF FLAG:70
+				PRINTFORML %CALLNAME:MASTER%毫无休息打算、用猛烈的气势活塞运动着
+				PRINTFORML 激烈的抽插让爱液溅的下半身都是、蓝的表情却一点都没变
+				RETURN 1
+			ELSE
+				PRINTFORML %CALLNAME:MASTER%毫无休息打算、用猛烈的气势活塞运动着
+				PRINTFORML 巨乳四处摇动的样子、更激起嗜虐心
+				RETURN 1
+			ENDIF
+		ENDIF
+	ENDIF
+	;时奸中
+	IF FLAG:70
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 在时间停止的空间里朝着蓝的深处猛地往上顶
+			PRINTFORML 像是感到苦闷般紧缩着蜜壶、慢慢地肉棒感到有爱液顺着渗出
+		CASE 1
+			PRINTFORML 在时间停止的世界里女人只是个不会说话的性玩具
+			PRINTFORML %CALLNAME:MASTER%扶着腰固定住蓝的雌穴、强而有力地在深处到处转动着
+		CASE 2
+			PRINTFORML 蓝大大张开的股间密唇微微露出裂缝、将肉棒伸入到底部
+			PRINTFORML 桃色的美肉吞着浅黑的肉棒。带来的冲击感、更激起欲望
+		ENDSELECT
+		RETURN 1
+	ELSEIF TALENT:恋慕 || MARK:屈服刻印 == 3
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 「呵呵、这可是珍宝。好好享受时间吧」
+			PRINTFORML 上方跨着的蓝、用手指了指下腹部
+		CASE 1
+			PRINTFORML %CALLNAME:MASTER%手揉着胸、蓝淫荡的摆动着腰
+			PRINTFORML 感受强烈蠕动吸吮感的名器女壶、听着蓝娇喘的声音
+		CASE 2
+			PRINTFORML 「唔、唔、啊啊」
+			PRINTFORML 闭上眼的脸、像在作梦似的见蓝在侍奉着肉棒额头有些细微的汗粒
+			PRINTFORML 这空间只剩下互相用性器安慰着彼此的野兽
+		ENDSELECT
+		RETURN 1
+	ELSE
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 「哈……我腰扭的还可以吗？」
+			PRINTFORML 从上往下俯瞰着的蓝微微笑着
+			PRINTFORML 灵巧的扭着腰连蜜壶内紧紧压缩缠绕着让%CALLNAME:MASTER%忍不住发出声音
+		CASE 1
+			PRINTFORML 蓝扭着腰、蜜穴像不放开肉棒似的吸着
+			PRINTFORML 「马上就要去了吗？」
+		CASE 2
+			PRINTFORML %CALLNAME:MASTER%将腰顶上去蓝就会配合的咚地坐回来
+			PRINTFORML 伴随着尾巴的重量、肉棒完全被蓝的阴部吞到根部去
+		ENDSELECT
+		RETURN 1
+	ENDIF
+	PRINTW 
+ENDIF
+RETURN 1
+
+;==================================================
+;66,骑乘位肛交
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_66
+CALL M_KOJO_MESSAGE_COM_K25_66_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_66_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;肛门处女
+		IF TCVAR:Ａ破瓜
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;插入继续
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:101 == PLAYER
+		;前回射精した
+		IF TCVAR:104
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 
+				PRINTFORML 
+			CASE 1
+				PRINTFORML 
+				PRINTFORML 
+			CASE 2
+				PRINTFORML 
+				PRINTFORML 
+			ENDSELECT
+			RETURN 1
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 
+				PRINTFORML 
+			CASE 1
+				PRINTFORML 
+				PRINTFORML 
+			CASE 2
+				PRINTFORML 
+				PRINTFORML 
+			ENDSELECT
+			RETURN 1
+		ENDIF
+	ENDIF
+	;时奸中
+	IF FLAG:70
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 
+			PRINTFORML 
+		CASE 1
+			PRINTFORML 
+			PRINTFORML 
+		CASE 2
+			PRINTFORML 
+			PRINTFORML 
+		ENDSELECT
+		RETURN 1
+	ELSEIF TALENT:恋慕 || MARK:屈服刻印 == 3
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 
+			PRINTFORML 
+		CASE 1
+			PRINTFORML 
+			PRINTFORML 
+		CASE 2
+			PRINTFORML 
+			PRINTFORML 
+		ENDSELECT
+		RETURN 1
+	ELSE
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 
+			PRINTFORML 
+		CASE 1
+			PRINTFORML 
+			PRINTFORML 
+		CASE 2
+			PRINTFORML 
+			PRINTFORML 
+		ENDSELECT
+		RETURN 1
+	ENDIF
+	PRINTW 
+ENDIF
+RETURN 1
+
+;==================================================
+;67,对面座位
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_67
+CALL M_KOJO_MESSAGE_COM_K25_67_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_67_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;处女
+		IF TCVAR:破瓜 == 1
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;插入继续
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:100 == PLAYER
+		;今射精した
+		IF NOWEX:PLAYER:11
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 
+				PRINTFORML 
+			CASE 1
+				PRINTFORML 
+				PRINTFORML 
+			CASE 2
+				PRINTFORML 
+				PRINTFORML 
+			ENDSELECT
+			RETURN 1
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 
+				PRINTFORML 
+			CASE 1
+				PRINTFORML 
+				PRINTFORML 
+			CASE 2
+				PRINTFORML 
+				PRINTFORML 
+			ENDSELECT
+			RETURN 1
+		ENDIF
+	ENDIF
+	;基本セット
+	;恋慕
+	IF TALENT:恋慕
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;68,背面座位
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_68
+CALL M_KOJO_MESSAGE_COM_K25_68_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_68_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;处女
+		IF TCVAR:破瓜 == 1
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;插入继续
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:100 == PLAYER
+		;今射精した
+		IF NOWEX:PLAYER:11
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 
+				PRINTFORML 
+			CASE 1
+				PRINTFORML 
+				PRINTFORML 
+			CASE 2
+				PRINTFORML 
+				PRINTFORML 
+			ENDSELECT
+			RETURN 1
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 
+				PRINTFORML 
+			CASE 1
+				PRINTFORML 
+				PRINTFORML 
+			CASE 2
+				PRINTFORML 
+				PRINTFORML 
+			ENDSELECT
+			RETURN 1
+		ENDIF
+	ENDIF
+	;基本セット
+	;恋慕
+	IF TALENT:恋慕
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;69,对面座位肛交
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_69
+CALL M_KOJO_MESSAGE_COM_K25_69_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_69_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;肛门处女
+		IF TCVAR:Ａ破瓜
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;插入继续
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:101 == PLAYER
+		;前回射精した
+		IF TCVAR:104
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 
+				PRINTFORML 
+			CASE 1
+				PRINTFORML 
+				PRINTFORML 
+			CASE 2
+				PRINTFORML 
+				PRINTFORML 
+			ENDSELECT
+			RETURN 1
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 
+				PRINTFORML 
+			CASE 1
+				PRINTFORML 
+				PRINTFORML 
+			CASE 2
+				PRINTFORML 
+				PRINTFORML 
+			ENDSELECT
+			RETURN 1
+		ENDIF
+	ENDIF
+	;基本セット
+	;恋慕
+	IF TALENT:恋慕
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;70,背面座位肛交
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_70
+CALL M_KOJO_MESSAGE_COM_K25_70_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_70_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;肛门处女
+		IF TCVAR:Ａ破瓜
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;插入继续
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:101 == PLAYER
+		;前回射精した
+		IF TCVAR:104
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 
+				PRINTFORML 
+			CASE 1
+				PRINTFORML 
+				PRINTFORML 
+			CASE 2
+				PRINTFORML 
+				PRINTFORML 
+			ENDSELECT
+			RETURN 1
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 
+				PRINTFORML 
+			CASE 1
+				PRINTFORML 
+				PRINTFORML 
+			CASE 2
+				PRINTFORML 
+				PRINTFORML 
+			ENDSELECT
+			RETURN 1
+		ENDIF
+	ENDIF
+	;基本セット
+	;恋慕
+	IF TALENT:恋慕
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;71,二穴插入
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_71
+CALL M_KOJO_MESSAGE_COM_K25_71_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_71_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;考えうる分岐が多すぎるので地の文の大まかな分岐だけ
+	;连续
+	IF PREVCOM == SELECTCOM
+		PRINTFORMW 
+		RETURN 1
+	;主人V插入→助手A插入
+	ELSEIF TCVAR:100 == MASTER
+		PRINTFORMW 
+		RETURN 1
+	;主人A插入→助手V插入
+	ELSEIF TCVAR:101 == MASTER
+		PRINTFORMW 
+		RETURN 1
+	;助手V插入→主人A插入
+	ELSEIF TCVAR:100 == ASSI
+		PRINTFORMW 
+		RETURN 1
+	;助手A插入→主人V插入
+	ELSEIF TCVAR:101 == ASSI
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+

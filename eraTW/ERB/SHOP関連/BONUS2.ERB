@@ -1,0 +1,1711 @@
+﻿@BONUS
+#DIM PAGE
+#DIM CONST MAXPAGE = 6
+;PAGE 0=认识 1=好感度 2=胖次 3=陷落 4=孕ませ 5=技能 6=弹幕胜负
+
+CALL 实绩フラグ移行
+CALL BOUNS素質判定
+
+TRYCALLFORM PRINT_BONUS_{PAGE}
+
+DRAWLINE
+PRINTFORML 
+PRINTFORMC [998] 察看前一页
+PRINTFORMC 页 {PAGE + 1} / {MAXPAGE + 1}
+PRINTFORMC [999] 察看后一页
+PRINTL 
+PRINTC  
+PRINTFORMC [0] 返回 [1000] 实绩取得状况保存
+INPUT
+SELECTCASE RESULT
+	CASE 0
+		RETURN
+	CASE 998
+		PAGE --
+	CASE 999
+		PAGE ++
+	CASE 1000
+		PRINTFORMW 现在的实绩取得状况已保存到全局存档中。
+		FOR LOCAL, 3, 10
+			GLOBAL_BONUS:LOCAL = FLAG:(LOCAL + 700)
+			SAVEGLOBAL
+		NEXT
+	CASEELSE
+		TRYCALLFORM REWARD_BONUS_{PAGE}(RESULT)
+ENDSELECT
+SIF PAGE >= MAXPAGE + 1
+	PAGE = 0
+SIF PAGE < 0
+	PAGE = MAXPAGE
+RESTART
+
+@BOUNS素質判定(ARG)
+;认识2,所在地察觉
+IF GETBIT(FLAG:认识BOUNS取得状况, 2)
+	SETBIT TALENT:MASTER:所在地察觉, 0
+ELSE
+	CLEARBIT TALENT:MASTER:所在地察觉, 0
+ENDIF
+
+;认识3,集合
+TALENT:MASTER:集合 = GETBIT(FLAG:认识BOUNS取得状况, 3)
+
+;认识4,所在地察觉Ⅱ
+IF GETBIT(FLAG:认识BOUNS取得状况, 4)
+	SETBIT TALENT:MASTER:所在地察觉, 1
+ELSE
+	CLEARBIT TALENT:MASTER:所在地察觉, 1
+ENDIF
+
+;认识5,千客万来
+TALENT:MASTER:千客万来 = GETBIT(FLAG:认识BOUNS取得状况, 5)
+
+;好感度5,脏房间察觉
+TALENT:MASTER:脏房间察觉 = GETBIT(FLAG:好感度BOUNS取得状况, 5)
+
+;好感度6,内裤走私者
+TALENT:MASTER:内裤走私者 = GETBIT(FLAG:好感度BOUNS取得状况, 6)
+
+;好感度8,左拥右抱
+TALENT:MASTER:左拥右抱 = GETBIT(FLAG:好感度BOUNS取得状况, 8)
+
+;胖次2,色欲察觉
+IF GETBIT(FLAG:胖次BOUNS取得状况, 2)
+	SETBIT TALENT:MASTER:色欲察觉, 0
+ELSE
+	CLEARBIT TALENT:MASTER:色欲察觉, 0
+ENDIF
+
+;胖次5,色欲察觉Ⅱ
+IF GETBIT(FLAG:胖次BOUNS取得状况, 5)
+	SETBIT TALENT:MASTER:色欲察觉, 1
+ELSE
+	CLEARBIT TALENT:MASTER:色欲察觉, 1
+ENDIF
+
+;陷落3,谜之魅力
+TALENT:MASTER:谜之魅力 = GETBIT(FLAG:陷落BOUNS取得状况, 3)
+
+;陷落4,恢复快
+TALENT:MASTER:恢复速度 = GETBIT(FLAG:陷落BOUNS取得状况, 4)
+
+;陷落5,生理周期可视化
+FLAG:1007 = GETBIT(FLAG:陷落BOUNS取得状况, 5)
+
+;陷落7,魅力
+TALENT:MASTER:魅力 = GETBIT(FLAG:陷落BOUNS取得状况, 8)
+
+;LOOP使ってまとめた方がいいかもしれないが、调整したり改变したりしやすいのでこのままに
+;孕ませ1,万能
+TALENT:MASTER:万能孕 = GETBIT(FLAG:使受孕BOUNS取得状况, 1)
+
+;孕ませ2,巫女
+TALENT:MASTER:让巫女怀孕 = GETBIT(FLAG:使受孕BOUNS取得状况, 2)
+
+;孕ませ3,妖精
+TALENT:MASTER:让妖精怀孕 = GETBIT(FLAG:使受孕BOUNS取得状况, 3)
+
+;孕ませ4,神灵
+TALENT:MASTER:让神灵怀孕 = GETBIT(FLAG:使受孕BOUNS取得状况, 4)
+
+;孕ませ5,付丧神
+TALENT:MASTER:让付丧神怀孕 = GETBIT(FLAG:使受孕BOUNS取得状况, 5)
+
+;孕ませ6,鬼
+TALENT:MASTER:让鬼怀孕 = GETBIT(FLAG:使受孕BOUNS取得状况, 6)
+
+;孕ませ7,天狗
+TALENT:MASTER:让天狗怀孕 = GETBIT(FLAG:使受孕BOUNS取得状况, 7)
+
+;孕ませ8,蓬莱
+TALENT:MASTER:让蓬莱怀孕 = GETBIT(FLAG:使受孕BOUNS取得状况, 8)
+
+;孕ませ9,妖怪
+TALENT:MASTER:让妖怪怀孕 = GETBIT(FLAG:使受孕BOUNS取得状况, 9)
+
+;;孕ませ10,禁断的知识
+;TALENT:MASTER:禁断的知识 = GETBIT(FLAG:使受孕BOUNS取得状况, 10)
+
+;孕ませ11,幽灵
+TALENT:MASTER:让幽灵怀孕 = GETBIT(FLAG:使受孕BOUNS取得状况, 11)
+
+;孕ませ12,人形
+TALENT:MASTER:让人偶怀孕 = GETBIT(FLAG:使受孕BOUNS取得状况, 12)
+
+;技能1,Ｃ钝感无视
+TALENT:MASTER:Ｃ钝感无视 = GETBIT(FLAG:技能BOUNS取得状况, 1)
+
+;技能2,Ｂ钝感无视
+TALENT:MASTER:Ｂ钝感无视 = GETBIT(FLAG:技能BOUNS取得状况, 2)
+
+;技能3,Ｖ钝感无视
+TALENT:MASTER:Ｖ钝感无视 = GETBIT(FLAG:技能BOUNS取得状况, 3)
+
+;技能4,Ａ钝感无视
+TALENT:MASTER:Ａ钝感无视 = GETBIT(FLAG:技能BOUNS取得状况, 4)
+
+;技能5,魅惑
+TALENT:MASTER:魅惑 = GETBIT(FLAG:技能BOUNS取得状况, 5)
+
+;弹幕胜负2,熟悉擦弹
+TALENT:MASTER:熟悉擦弹 = GETBIT(FLAG:弹幕胜负BOUNS取得状况, 2)
+
+;弹幕胜负4,灵力充填
+TALENT:MASTER:灵力充填 = GETBIT(FLAG:弹幕胜负BOUNS取得状况, 3)
+
+;弹幕胜负5,Extend
+TALENT:MASTER:Extend = GETBIT(FLAG:弹幕胜负BOUNS取得状况, 4)
+
+;弹幕胜负6,大角虫
+TALENT:MASTER:大角虫 = GETBIT(FLAG:弹幕胜负BOUNS取得状况, 5)
+
+;弹幕胜负EX,百载无穷
+;TALENT:MASTER:百载无穷 = GETBIT(FLAG:弹幕胜负BOUNS取得状况, 6)
+SIF GETBIT(FLAG:弹幕胜负BOUNS取得状况, 6)
+	CFLAG:MASTER:弹幕特能 = 1023
+@BONUS_CAUTION
+CALL COLORMESSAGE(@"现在如果取消该实绩的话是不能再取得的", C_ORANGE, 1)
+CALL COLORMESSAGE(@"真的要取消吗？", C_ORANGE, 1)
+CALL ASK_YN
+RETURN RESULT
+
+;----------------------------------------
+;认识BOUNS
+;----------------------------------------
+@PRINT_BONUS_0
+#DIMS BONUSTEXT
+PRINTFORML ★现在的认识人数：{认识カウント(), 4}人
+FOR LOCAL,1,6
+	BONUSTEXT '= @"认识{CONDITION_认识BOUNS(LOCAL)}人BOUNS %BONUS_NAME_0(LOCAL)%"
+	IF !GETBIT (FLAG:认识BOUNS取得状况, LOCAL) && !CONDITION_认识BOUNS(LOCAL, 1)
+		PRINTPLAINFORM [{LOCAL}] - 解放条件：认识{CONDITION_认识BOUNS(LOCAL)}人以上 %BONUS_NAME_0(LOCAL)%
+	ELSE
+		IF GETBIT (FLAG:认识BOUNS取得状况, LOCAL)
+			IF !REMOVABLE_BONUS_0(LOCAL)
+				SETCOLOR 100, 100, 100
+				PRINTPLAINFORM [{LOCAL}] - %BONUSTEXT%【済】
+			ELSE
+				IF !CONDITION_认识BOUNS(LOCAL, 1)
+					SETCOLOR C_ORANGE
+				ELSE
+					SETCOLOR C_P_BLUE
+				ENDIF
+				PRINTFORM [{LOCAL}] - %BONUSTEXT%【済】
+			ENDIF
+		ELSE
+			SETCOLOR C_AQUA
+			PRINTFORM [{LOCAL}] - %BONUSTEXT%
+		ENDIF
+		RESETCOLOR
+	ENDIF
+	PRINTL 
+NEXT
+
+@CONDITION_认识BOUNS(ARG, ARG:1)
+;ARG:1が真ならBOUNS取れるか返す
+#FUNCTION
+#DIM 必要数
+#DIM BONUSX2
+
+IF BONUSX > 49 && BONUSX < 100
+	BONUSX2 = BONUSX
+ELSE
+	BONUSX2 = 100
+ENDIF
+
+SELECTCASE ARG
+	CASE 1
+		必要数 = 10 * BONUSX2 / 100
+	CASE 2
+		必要数 = 30 * BONUSX2 / 100
+	CASE 3
+		必要数 = 50 * BONUSX2 / 100
+	CASE 4
+		必要数 = 80 * BONUSX2 / 100
+	CASE 5
+		必要数 = 120 * BONUSX2 / 100
+ENDSELECT
+
+IF ARG:1
+	IF 认识カウント() >= 必要数 || GETBIT (GLOBAL_BONUS:4, ARG)
+		RETURNF 1
+	ELSE
+		RETURNF 0
+	ENDIF
+ELSE
+	RETURNF 必要数
+ENDIF
+
+@REWARD_BONUS_0(ARG)
+SIF GETBIT (FLAG:认识BOUNS取得状况, ARG) && !REMOVABLE_BONUS_0(ARG)
+	RETURN
+IF !CONDITION_认识BOUNS(ARG, 1)
+	;周回后、满たしていないが取得している状态
+	IF GETBIT (FLAG:认识BOUNS取得状况, ARG)
+		CALL BONUS_CAUTION
+		SIF RESULT
+			RETURN
+	ELSE
+		RETURN
+	ENDIF
+ENDIF
+INVERTBIT FLAG:认识BOUNS取得状况, ARG
+SIF !GETBIT (FLAG:认识BOUNS取得状况, ARG)
+	RETURN
+SELECTCASE ARG
+	CASE 1
+		PRINTFORMW 获得了%金额表示(5000)%。
+		MONEY += 5000
+	CASE 2
+		;好感度から移动
+		PRINTW 获得【察觉少女所在位置程度的能力】。
+	CASE 3
+		PRINTW 可以使用集合指令了。
+	CASE 4
+		PRINTW 获得了【察觉少女来访程度的能力】。
+	CASE 5
+		;胖次8から移行
+		PRINTW 获得【千客万来】。
+	CASEELSE
+		RETURN
+ENDSELECT
+
+@BONUS_NAME_0(ARG)
+#FUNCTIONS
+SELECTCASE ARG
+	CASE 1
+		RETURNF @"%金额表示(5000)%"
+	CASE 2
+		RETURNF "【察觉少女所在位置程度的能力】"
+	CASE 3
+		RETURNF "集合指令"
+	CASE 4
+		RETURNF "【察觉少女来访程度的能力】"
+	CASE 5
+		RETURNF "【千客万来】"
+ENDSELECT
+
+@REMOVABLE_BONUS_0(ARG)
+#FUNCTION
+SELECTCASE ARG
+	CASE 2, 3, 4, 5
+		RETURNF 1
+	CASEELSE
+		RETURNF 0
+ENDSELECT
+
+@认识カウント
+#FUNCTION
+#DIM 认识カウント
+认识カウント = 0
+FOR LOCAL,1,CHARANUM
+	SIF CFLAG:LOCAL:认识
+		认识カウント ++
+NEXT
+RETURNF 认识カウント
+;----------------------------------------
+;好感度BOUNS
+;----------------------------------------
+
+@PRINT_BONUS_1
+#DIMS BONUSTEXT
+VARSET RESULT
+
+PRINTFORML ★现在的最大好感度：{最大好感度(), 7}\@ RESULT:1 ? （%NAME_OUTPUT_TRANSLATION("CALLNAME", (RESULT:1))%） # \@
+FOR LOCAL,1,9
+	BONUSTEXT '= @"好感度{CONDITION_好感度BOUNS(LOCAL)}突破 %BONUS_NAME_1(LOCAL)%"
+	IF !GETBIT (FLAG:好感度BOUNS取得状况, LOCAL) && !CONDITION_好感度BOUNS(LOCAL, 1)
+		PRINTPLAINFORM [{LOCAL}] - 解放条件：%BONUSTEXT%
+	ELSE
+		IF GETBIT (FLAG:好感度BOUNS取得状况, LOCAL)
+			IF !REMOVABLE_BONUS_1(LOCAL)
+				SETCOLOR 100, 100, 100
+				PRINTPLAINFORM [{LOCAL}] - %BONUSTEXT% 【済】
+			ELSE
+				IF !CONDITION_好感度BOUNS(LOCAL, 1)
+					SETCOLOR C_ORANGE
+				ELSE
+					SETCOLOR C_P_BLUE
+				ENDIF
+				PRINTFORM [{LOCAL}] - %BONUSTEXT% 【済】
+			ENDIF
+		ELSE
+			SETCOLOR C_AQUA
+			PRINTFORM [{LOCAL}] - %BONUSTEXT%
+		ENDIF
+		RESETCOLOR
+	ENDIF
+	PRINTFORML 
+NEXT
+
+@CONDITION_好感度BOUNS(ARG, ARG:1)
+;ARG:1が真なら好感度BOUNS取れるか返す
+#FUNCTION
+#DIM 必要好感度
+#DIM BONUSX2
+
+IF BONUSX > 49 && BONUSX < 100
+	BONUSX2 = BONUSX
+ELSE
+	BONUSX2 = 100
+ENDIF
+SELECTCASE ARG
+	CASE 1
+		必要好感度 = 100 * BONUSX2 / 100
+	CASE 2
+		必要好感度 = 500 * BONUSX2 / 100
+	CASE 3
+		必要好感度 = 1000 * BONUSX2 / 100
+	CASE 4
+		必要好感度 = 10000 * BONUSX2 / 100
+	CASE 5
+		必要好感度 = 30000 * BONUSX2 / 100
+	CASE 6
+		必要好感度 = 50000 * BONUSX2 / 100
+	CASE 7
+		必要好感度 = 100000 * BONUSX2 / 100
+	CASE 8
+		必要好感度 = 300000 * BONUSX2 / 100
+ENDSELECT
+
+IF ARG:1
+	IF 最大好感度() >= 必要好感度 || GETBIT (GLOBAL_BONUS:3, ARG)
+		RETURNF 1
+	ELSE
+		RETURNF 0
+	ENDIF
+ELSE
+	RETURNF 必要好感度
+ENDIF
+
+@REWARD_BONUS_1(ARG)
+SIF GETBIT (FLAG:好感度BOUNS取得状况, ARG) && !REMOVABLE_BONUS_1(ARG)
+	RETURN
+IF !CONDITION_好感度BOUNS(ARG, 1)
+	;周回后、满たしていないが取得している状态
+	IF GETBIT (FLAG:好感度BOUNS取得状况, ARG)
+		CALL BONUS_CAUTION
+		SIF RESULT
+			RETURN
+	ELSE
+		RETURN
+	ENDIF
+ENDIF
+INVERTBIT FLAG:好感度BOUNS取得状况, ARG
+SIF !GETBIT (FLAG:好感度BOUNS取得状况, ARG)
+	RETURN
+SELECTCASE ARG
+	CASE 1
+		;PRINTW 获得了\5000。
+		;MONEY += 5000
+		;修改内容
+		PRINTW 获得了清酒·高级食材 *10。
+		ITEM:清酒 += 10
+		ITEM:高级食材 += 10
+		;修改结束
+	CASE 2
+		;PRINTW 获得了100筹码。
+		;MONEY:2 += 100
+		;修改内容
+		PRINTW 获得了吉他。
+		ITEM:吉他 += 1
+		;修改结束
+	CASE 3
+		;PRINTW 体力的上限提升了。
+		;MAXBASE:MASTER:体力 += 100
+		;修改内容
+		PRINTW 体力·气力·精力的上限提升了。
+		MAXBASE:MASTER:体力 += 100
+		MAXBASE:MASTER:精力 += 100
+		MAXBASE:MASTER:气力 += 100
+		;修改结束
+	CASE 4
+		;4.620proto现在ない？
+		;PRINTW 对不起、从下个月开始（译注：原句如此）。
+		;认识に移动
+		;PRINTW 获得【察觉少女所在位置程度的能力】。
+		;TALENT:MASTER:所在地察觉 = 1
+		;修改内容
+		PRINTFORMW 体力·气力·精力上限增加了。
+		MAXBASE:MASTER:体力 += 200
+		MAXBASE:MASTER:精力 += 200
+		MAXBASE:MASTER:气力 += 200
+		;修改结束
+	CASE 5
+		PRINTW 获得【察觉脏脏房间的程度的能力】。
+	CASE 6
+		PRINTW 获得【内裤走私者】。变得容易回避搜身。
+	CASE 7
+		;PRINTFORMW 精力上限增加了。
+		;MAXBASE:MASTER:精力 += 100
+		;修改内容
+		PRINTFORMW 体力·气力·精力上限增加了。
+		MAXBASE:MASTER:体力 += 300
+		MAXBASE:MASTER:精力 += 300
+		MAXBASE:MASTER:气力 += 300
+		;修改结束
+	CASE 8
+		;PRINTW 获得【左拥右抱】。可以获得两个恋人（未实装）。
+		;修改内容
+		PRINTFORMW 恭喜达成百万好感。
+		PRINTFORML 那么请根据你内心的想法选择...
+		CALL ASK_M("想要左拥右抱",1 , "想要和大家都搞好关系",1 , "返回",1)
+		SELECTCASE RESULT
+			CASE 0
+				PRINTFORMW 那么你可以再向一人告白。
+				FLAG:追加恋人栏 += 1
+			CASE 1
+				PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%真是个温柔的人（？）
+				FLAG:追加恋人栏 += 143
+			CASE 2
+				PRINTFORMW 那么，暂且不修改。
+				PRINTFORMW 如果改变想法了，那么请点击深蓝色的成就将其重置。
+		ENDSELECT
+		;修改结束
+	CASEELSE
+		RETURN
+ENDSELECT
+
+@BONUS_NAME_1(ARG)
+#FUNCTIONS
+SELECTCASE ARG
+	CASE 1
+		;RETURNF "\\5000"
+		;修改内容
+		RETURNF "清酒·食材 * 10"
+		;修改结束
+	CASE 2
+		;RETURNF "100筹码"
+		;修改内容
+		RETURNF "乐器 * 1"
+		;修改结束
+	CASE 3
+		RETURNF "最大体力·气力·精力+100"
+	CASE 4
+		;RETURNF "煮込み杂烩粥"
+		;修改内容
+		RETURNF "最大体力·气力·精力+200"
+		;修改结束
+	CASE 5
+		RETURNF "【察觉脏脏房间的程度的能力】"
+	CASE 6
+		RETURNF "【内裤走私者】"
+	CASE 7
+		RETURNF "最大体力·气力·精力+300"
+	CASE 8
+		RETURNF "【左拥右抱】 ※未实装※"
+ENDSELECT
+
+@REMOVABLE_BONUS_1(ARG)
+#FUNCTION
+SELECTCASE ARG
+	CASE 5, 6, 8
+		RETURNF 1
+	CASEELSE
+		RETURNF 0
+ENDSELECT
+
+@最大好感度
+#FUNCTION
+#DIM 最大好感度
+FOR LOCAL,1,CHARANUM - 1
+	IF CFLAG:LOCAL:好感度 > 最大好感度
+		最大好感度 = CFLAG:LOCAL:好感度
+		RESULT:1 = LOCAL
+	ENDIF
+NEXT
+RETURNF 最大好感度
+;----------------------------------------
+;胖次BOUNS
+;----------------------------------------
+
+@CONDITION_胖次BOUNS(ARG, ARG:1)
+;ARG:1が真ならBOUNS取れるか返す
+#FUNCTION
+#DIM 必要种数
+#DIM BONUSX2
+
+IF BONUSX > 49 && BONUSX < 100
+	BONUSX2 = BONUSX
+ELSE
+	BONUSX2 = 100
+ENDIF
+SELECTCASE ARG
+	CASE 1
+		必要种数 = 10 * BONUSX2 / 100
+	CASE 2
+		必要种数 = 30 * BONUSX2 / 100
+	CASE 3
+		必要种数 = 100 * BONUSX2 / 100
+	CASE 4
+		必要种数 = 300 * BONUSX2 / 100
+	CASE 5
+		必要种数 = 500 * BONUSX2 / 100
+	CASE 6
+		必要种数 = 750 * BONUSX2 / 100
+	CASE 7
+		必要种数 = 1000 * BONUSX2 / 100
+	CASE 8
+		必要种数 = 2000 * BONUSX2 / 100
+	CASEELSE
+		必要种数 = 9999 * BONUSX2 / 100
+ENDSELECT
+
+IF ARG:1
+	IF FLAG:获得胖次种数 >= 必要种数 || GETBIT (GLOBAL_BONUS:5, ARG)
+		RETURNF 1
+	ELSE
+		RETURNF 0
+	ENDIF
+ELSE
+	RETURNF 必要种数
+ENDIF
+
+@PRINT_BONUS_2
+#DIMS BONUSTEXT
+PRINTFORML ★现在的获得胖次种类数：{FLAG:获得胖次种数, 3}种
+FOR LOCAL,1,9
+	BONUSTEXT '= @"胖次{CONDITION_胖次BOUNS(LOCAL)}种收集 %BONUS_NAME_2(LOCAL)%"
+	IF !GETBIT (FLAG:胖次BOUNS取得状况, LOCAL) && !CONDITION_胖次BOUNS(LOCAL, 1)
+		PRINTPLAINFORM [{LOCAL}] - 解放条件：%BONUSTEXT%
+	ELSE
+		IF GETBIT (FLAG:胖次BOUNS取得状况, LOCAL)
+			IF !REMOVABLE_BONUS_2(LOCAL)
+				SETCOLOR 100, 100, 100
+				PRINTPLAINFORM [{LOCAL}] - %BONUSTEXT% 【済】
+			ELSE
+				IF !CONDITION_胖次BOUNS(LOCAL, 1)
+					SETCOLOR C_ORANGE
+				ELSE
+					SETCOLOR C_P_BLUE
+				ENDIF
+				PRINTFORM [{LOCAL}] - %BONUSTEXT%【済】
+			ENDIF
+		ELSE
+			SETCOLOR C_AQUA
+			PRINTFORM [{LOCAL}] - %BONUSTEXT%
+		ENDIF
+		RESETCOLOR
+	ENDIF
+	PRINTL 
+NEXT
+
+@REWARD_BONUS_2(ARG)
+SIF GETBIT (FLAG:胖次BOUNS取得状况, ARG) && !REMOVABLE_BONUS_2(ARG)
+	RETURN
+IF !CONDITION_胖次BOUNS(ARG, 1)
+	;周回后、满たしていないが取得している状态（胖次は引き继がれるので现在は关系ない）
+	IF GETBIT (FLAG:胖次BOUNS取得状况, ARG)
+		CALL BONUS_CAUTION
+		SIF RESULT
+			RETURN
+	ELSE
+		RETURN
+	ENDIF
+ENDIF
+INVERTBIT FLAG:胖次BOUNS取得状况, ARG
+SIF !GETBIT (FLAG:胖次BOUNS取得状况, ARG)
+	RETURN
+SELECTCASE ARG
+	CASE 1
+		;CALL AddEXP("清扫经验", MASTER, 30)
+		;修改开始
+		PRINTFORMW 获得了%金额表示(10000)%·筹码200。
+		MONEY += 10000
+		MONEY:2 += 200
+		;修改结束
+	CASE 2
+		PRINTFORML 因为收集了许多胖次、神给与了%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%奇迹般的能力
+		PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%获得了可以看穿欲求不满的少女程度的能力
+	CASE 3
+		;PRINTW 体力的上限提升了。
+		;MAXBASE:MASTER:体力 += 300
+		;修改开始
+		PRINTL 为了更好的收集胖次而被赐予祭坛。
+		PRINTFORMW 可以在自室祈愿和聆听天之声了。
+		ITEM:祭坛 = 1
+		;修改结束
+	CASE 4
+		;PRINTL 为了更好的收集胖次而被赐予祭坛。
+		;PRINTFORMW 可以在自室祈祷和听天之声了。
+		;ITEM:祭坛 = 1
+		;修改开始
+		PRINTFORML 因为收集了大量的胖次、所以神让%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%的能力变强了
+		PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%获得了可以找出欲求不满的少女程度的能力
+		;修改结束
+	CASE 5
+		;PRINTFORML 因为收集了大量的胖次、所以神让%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%的能力变强了
+		;PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%获得了可以找出欲求不满的少女程度的能力
+		;修改开始
+		PRINTW 气力的上限提升了。
+		MAXBASE:MASTER:气力 += 500
+		;修改结束
+	CASE 6
+	;上升量500だったのを200にして300を2000种BOUNSに
+		PRINTW 体力的上限提升了。
+		;MAXBASE:MASTER:体力 += 200
+		;修改开始
+		MAXBASE:MASTER:体力 += 500
+		;修改结束
+	CASE 7
+		;恢复快は恋人に移行,代わりに新たに精力UP
+		PRINTW 精力的上限提升了。
+		;MAXBASE:MASTER:精力 += 100
+		;修改开始
+		MAXBASE:MASTER:精力 += 500
+		;修改结束
+	CASE 8
+		;千客万来は面式5に移行
+		;PRINTW 体力的上限提升了。
+		;MAXBASE:MASTER:体力 += 300
+		;修改开始
+		; IF MAXBASE:MASTER:TSP == 4000
+		; 	PRINTW TSP上限增加了。
+		; 	MAXBASE:MASTER:TSP += 500
+		; ELSEIF MAXBASE:MASTER:TSP == 4800
+		; 	PRINTW TSP上限增加了。
+		; 	MAXBASE:MASTER:TSP += 500
+		; ELSE
+		; 	PRINTW 因为使用不熟练的时停能力收集到了超乎想象数量的胖次
+		; 	PRINTFORMW 神让%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%的时间停止能力能够超越原本的极限！
+		; 	MAXBASE:MASTER:TSP = 4500
+		; ENDIF
+		PRINTW TSP上限增加了。
+		MAXBASE:MASTER:TSP += 500
+		SETBIT EXTRA_TSP_EXPANDING, 0
+		SETBIT EXTRA_TSP_EXPANDING, 1
+		;修改结束
+ENDSELECT
+
+@BONUS_NAME_2(ARG)
+#FUNCTIONS
+SELECTCASE ARG
+	CASE 1
+		;RETURNF "清扫经验+30"
+		;修改开始
+		RETURNF @"%金额表示(5000)%·筹码200"
+		;修改结束
+	CASE 2
+		RETURNF "【看穿欲求不满的少女程度的能力】"
+	CASE 3
+		;RETURNF "最大体力+300"
+		;修改开始
+		RETURNF "祭坛"
+		;修改结束
+	CASE 4
+		;RETURNF "祭坛"
+		;修改开始
+		RETURNF "【找出欲求不满的少女程度的能力】"
+		;修改结束
+	CASE 5
+		;RETURNF "【找出欲求不满的少女程度的能力】"
+		;修改开始
+		RETURNF "最大气力+500"
+		;修改结束
+	CASE 6
+		;RETURNF "最大体力+200"
+		;修改开始
+		RETURNF "最大体力+500"
+		;修改结束
+	CASE 7
+		;RETURNF "最大精力+100"
+		;修改开始
+		RETURNF "最大精力+500"
+		;修改结束	
+	CASE 8
+		;RETURNF "最大体力+300"
+		;修改开始
+		RETURNF "最大TSP+500"
+		;修改结束			
+ENDSELECT
+
+@REMOVABLE_BONUS_2(ARG)
+#FUNCTION
+SELECTCASE ARG
+	CASE 2, 4
+		RETURNF 1
+	CASEELSE
+		RETURNF 0
+ENDSELECT
+
+;----------------------------------------
+;陷落BOUNS
+;----------------------------------------
+@PRINT_BONUS_3
+
+#DIM 恋慕カウント
+#DIM 炮友カウント
+#DIM 危险日生ハメ
+#DIM 纯爱派
+#DIM 合意无
+#DIM 合意ゲット
+
+恋慕カウント = 0
+炮友カウント = 0
+危险日生ハメ = 0
+纯爱派 = 0
+合意ゲット = 0
+VARSET BONUS_3_ABLE
+
+FOR LOCAL,1,CHARANUM
+	SIF TALENT:LOCAL:路人
+		CONTINUE
+	SIF TALENT:LOCAL:恋慕
+		恋慕カウント ++
+	SIF TALENT:LOCAL:炮友
+		炮友カウント ++
+	SIF CFLAG:LOCAL:允许无套 >= 2
+		危险日生ハメ ++
+	SIF CFLAG:LOCAL:纯洁的交往
+		纯爱派 ++
+	SIF CFLAG:LOCAL:ヤラせちゃった
+		合意无 ++
+	SIF CFLAG:LOCAL:既成事实 & 合意_诶嘿嘿
+		合意ゲット ++
+NEXT
+
+BONUS_3_DESCRIPTION:1 = 恋慕取得
+SIF 恋慕カウント >= 1
+	BONUS_3_ABLE:1 = 1
+
+BONUS_3_DESCRIPTION:2 = 恋慕3人
+SIF 恋慕カウント >= 3
+	BONUS_3_ABLE:2 = 1
+
+BONUS_3_DESCRIPTION:3 = 恋慕5人
+SIF 恋慕カウント >= 5
+	BONUS_3_ABLE:3 = 1
+
+BONUS_3_DESCRIPTION:4 = 恋人取得
+SIF TALENT:MASTER:恋人
+	BONUS_3_ABLE:4 = 1
+
+BONUS_3_DESCRIPTION:5 = 危险日内射许可取得
+SIF 危险日生ハメ
+	BONUS_3_ABLE:5 = 1
+
+BONUS_3_DESCRIPTION:6 = 炮友取得
+SIF 炮友カウント >= 1
+	BONUS_3_ABLE:6 = 1
+
+BONUS_3_DESCRIPTION:7 = 炮友3人
+SIF 炮友カウント >= 3
+	BONUS_3_ABLE:7 = 1
+
+BONUS_3_DESCRIPTION:8 = 炮友5人
+SIF 炮友カウント >= 5
+	BONUS_3_ABLE:8 = 1
+
+BONUS_3_DESCRIPTION:9 = 无时奸下恋慕取得
+SIF 纯爱派
+	BONUS_3_ABLE:9 = 1
+
+BONUS_3_DESCRIPTION:10 = 做爱许可取得
+SIF 合意ゲット
+	BONUS_3_ABLE:10 = 1
+
+BONUS_3_DESCRIPTION:11 = 无合意下与有意识的对象做爱
+SIF 合意无
+	BONUS_3_ABLE:11 = 1
+
+FOR LOCAL,1, 12
+	SIF GETBIT (GLOBAL_BONUS:6, LOCAL)
+		BONUS_3_ABLE:LOCAL = 1
+NEXT
+
+PRINTFORML ★现在的恋慕：{恋慕カウント, 3}人／炮友：{炮友カウント, 3}人
+FOR LOCAL,1,12
+	IF !BONUS_3_ABLE:LOCAL && !GETBIT (FLAG:陷落BOUNS取得状况, LOCAL)
+		PRINTPLAINFORM [{LOCAL}] - 解放条件：%BONUS_3_DESCRIPTION:LOCAL% %BONUS_NAME_3(LOCAL)%
+	ELSE
+		IF GETBIT (FLAG:陷落BOUNS取得状况, LOCAL)
+			IF !REMOVABLE_BONUS_3(LOCAL)
+				SETCOLOR 100, 100, 100
+				PRINTPLAINFORM [{LOCAL}] - %BONUS_3_DESCRIPTION:LOCAL%BOUNS【済】%BONUS_NAME_3(LOCAL)%
+			ELSE
+				IF !BONUS_3_ABLE:LOCAL
+					SETCOLOR C_ORANGE
+				ELSE
+					SETCOLOR C_P_BLUE
+				ENDIF
+				PRINTFORM [{LOCAL}] - %BONUS_3_DESCRIPTION:LOCAL%BOUNS【済】%BONUS_NAME_3(LOCAL)%
+			ENDIF
+		ELSE
+			SETCOLOR C_AQUA
+			PRINTFORM [{LOCAL}] - %BONUS_3_DESCRIPTION:LOCAL%BOUNS
+		ENDIF
+		RESETCOLOR
+	ENDIF
+	PRINTL 
+NEXT
+
+@REWARD_BONUS_3(ARG)
+SIF GETBIT (FLAG:陷落BOUNS取得状况, ARG) && !REMOVABLE_BONUS_3(ARG)
+	RETURN
+IF !BONUS_3_ABLE:ARG
+	;周回后、满たしていないが取得している状态
+	IF GETBIT (FLAG:陷落BOUNS取得状况, ARG)
+		CALL BONUS_CAUTION
+		SIF RESULT
+			RETURN
+	ELSE
+		RETURN
+	ENDIF
+ENDIF
+INVERTBIT FLAG:陷落BOUNS取得状况, ARG
+SIF !GETBIT (FLAG:陷落BOUNS取得状况, ARG)
+	RETURN
+SELECTCASE ARG
+	CASE 1
+		PRINTW 气力的上限提升了。
+		MAXBASE:MASTER:气力 += 100
+	CASE 2
+		;生理周期は允许无套へ移行
+		;恋慕BOUNS3つ目だったのを2つ目に移行
+		PRINTW 气力的上限提升了。
+		MAXBASE:MASTER:气力 += 300
+	CASE 3
+		;4つ目から谜之魅力を移行
+		;气力UPは2つ目に移行
+		PRINTW 获得【谜之魅力】。
+	CASE 4
+		;胖次BOUNSから移行
+		PRINTW 获得【恢复快】。
+	CASE 5
+		PRINTW 变得能知道生理周期的样子。
+	CASE 6
+		;时奸经验100から移行
+		PRINTW 精力的上限提升了。
+		MAXBASE:MASTER:精力 += 100
+	CASE 7
+		;新规
+		;PRINTW 获得【魅力】。
+		;修改开始
+		PRINTW 精力的上限提升了。
+		MAXBASE:MASTER:精力 += 300
+		;修改结束
+	CASE 8
+		;新规
+		;PRINTW 精力的上限提升了。
+		;MAXBASE:MASTER:精力 += 100
+		;修改开始
+		PRINTW 获得【魅力】。
+		;修改结束
+	CASE 9
+		;新规
+		PRINTW 气力的上限提升了。
+		MAXBASE:MASTER:气力 += 300
+	CASE 10
+		PRINTFORMW 获得了100筹码。
+		MONEY:2 += 100
+	CASE 11
+		ITEM:奇迹之石 = 1
+		PRINTFORMW 获得了稀有道具——占有爱欲的奇迹之石。
+ENDSELECT
+
+@BONUS_NAME_3(ARG)
+#FUNCTIONS
+SELECTCASE ARG
+	CASE 1
+		RETURNF "最大气力+100"
+	CASE 2
+		RETURNF "最大气力+300"
+	CASE 3
+		RETURNF "【谜之魅力】"
+	CASE 4
+		RETURNF "【恢复快】"
+	CASE 5
+		RETURNF "生理周期可视化"
+	CASE 6
+		RETURNF "最大精力+100"
+	CASE 7
+		;RETURNF "【魅力】"
+		;修改开始
+		RETURNF "最大精力+300"
+		;修改结束
+	CASE 8
+		;RETURNF "最大精力+100"
+		;修改开始
+		RETURNF "【魅力】"
+		;修改结束
+	CASE 9
+		RETURNF "最大气力+300"
+	CASE 10
+		RETURNF "已经拿到了~"
+ENDSELECT
+
+@REMOVABLE_BONUS_3(ARG)
+#FUNCTION
+SELECTCASE ARG
+	CASE 3, 4, 5, 8
+		RETURNF 1
+	CASEELSE
+		RETURNF 0
+ENDSELECT
+
+;----------------------------------------
+;使受孕BOUNS
+;----------------------------------------
+
+@PRINT_BONUS_4
+#DIM 孕ませた种族数
+VARSET BONUS_4_ABLE
+FOR LOCAL,1,CHARANUM
+	;妊娠してるか分娩经验あり
+	;追加种族の关系で1角色で2种类获得できる场合もある（人形＋女仆的留琴）
+	IF CFLAG:LOCAL:妊娠经过日数 || CFLAG:LOCAL:儿童人数
+		SIF CHECK_CHARA(LOCAL, "巫女")
+			BONUS_4_ABLE:2 = 1
+		SIF CHECK_CHARA(LOCAL, "妖精")
+			BONUS_4_ABLE:3 = 1
+		SIF CHECK_CHARA(LOCAL, "神灵")
+			BONUS_4_ABLE:4 = 1
+		SIF CHECK_CHARA(LOCAL, "付丧神")
+			BONUS_4_ABLE:5 = 1
+		SIF CHECK_CHARA(LOCAL, "鬼")
+			BONUS_4_ABLE:6 = 1
+		SIF CHECK_CHARA(LOCAL, "天狗")
+			BONUS_4_ABLE:7 = 1
+		SIF CHECK_CHARA(LOCAL, "蓬莱人")
+			BONUS_4_ABLE:8 = 1
+		;鬼と天狗は别途
+		SIF CHECK_CHARA(LOCAL, "妖怪") && !CHECK_CHARA(LOCAL, "鬼") && !CHECK_CHARA(LOCAL, "天狗")
+			BONUS_4_ABLE:9 = 1
+		SIF CHECK_CHARA(LOCAL, "魔法使")
+			BONUS_4_ABLE:10 = 1
+		SIF CHECK_CHARA(LOCAL, "幽灵")
+			BONUS_4_ABLE:11 = 1
+		SIF CHECK_CHARA(LOCAL, "人形")
+			BONUS_4_ABLE:12 = 1
+		SIF CHECK_CHARA(LOCAL, "女仆")
+			BONUS_4_ABLE:14 = 1
+	ENDIF
+NEXT
+;BONUS_4_ABLE:2～12、14の合计
+孕ませた种族数 = SUMARRAY(BONUS_4_ABLE, 2, 13) + BONUS_4_ABLE:14
+SIF (孕ませた种族数) >= 5
+	BONUS_4_ABLE:1 = 1
+
+BONUS_4_DESCRIPTION:1 = 5种族以上
+BONUS_4_DESCRIPTION:2 = 巫女
+BONUS_4_DESCRIPTION:3 = 妖精
+BONUS_4_DESCRIPTION:4 = 神灵
+BONUS_4_DESCRIPTION:5 = 付丧神
+BONUS_4_DESCRIPTION:6 = 鬼
+BONUS_4_DESCRIPTION:7 = 天狗
+BONUS_4_DESCRIPTION:8 = 蓬莱人
+BONUS_4_DESCRIPTION:9 = 妖怪
+BONUS_4_DESCRIPTION:10 = 魔法使
+BONUS_4_DESCRIPTION:11 = 幽灵
+BONUS_4_DESCRIPTION:12 = 人形
+
+BONUS_4_DESCRIPTION:13 = 邂逅的路人
+BONUS_4_DESCRIPTION:14 = 女仆
+
+SIF FLAG:路人受孕数
+	BONUS_4_ABLE:13 = 1
+
+FOR LOCAL,1, 15
+	SIF GETBIT (GLOBAL_BONUS:7, LOCAL)
+		BONUS_4_ABLE:LOCAL = 1
+NEXT
+
+PRINTFORML ★现在已经怀孕的种族数：{孕ませた种族数, 2}种
+FOR LOCAL,1,15
+	SIF BONUS_4_DESCRIPTION:LOCAL == ""
+		CONTINUE
+	IF !BONUS_4_ABLE:LOCAL && !GETBIT (FLAG:使受孕BOUNS取得状况, LOCAL)
+		PRINTPLAINFORM [{LOCAL}] - 解放条件：让%BONUS_4_DESCRIPTION:LOCAL%怀孕
+	ELSE
+		IF GETBIT (FLAG:使受孕BOUNS取得状况, LOCAL)
+			IF !REMOVABLE_BONUS_4(LOCAL)
+				SETCOLOR 100, 100, 100
+				PRINTPLAINFORM [{LOCAL}] - %BONUS_4_DESCRIPTION:LOCAL%使受孕BOUNS【済】%BONUS_NAME_4(LOCAL)%
+			ELSE
+				IF !BONUS_4_ABLE:LOCAL
+					SETCOLOR C_ORANGE
+				ELSE
+					SETCOLOR C_P_BLUE
+				ENDIF
+				PRINTFORM [{LOCAL}] - %BONUS_4_DESCRIPTION:LOCAL%使受孕BOUNS【済】%BONUS_NAME_4(LOCAL)%
+			ENDIF
+		ELSE
+			SETCOLOR C_AQUA
+			PRINTFORM [{LOCAL}] - 让%BONUS_4_DESCRIPTION:LOCAL%怀孕
+		ENDIF
+		RESETCOLOR
+	ENDIF
+	PRINTL 
+NEXT
+
+@REWARD_BONUS_4(ARG)
+SIF GETBIT (FLAG:使受孕BOUNS取得状况, ARG) && !REMOVABLE_BONUS_4(ARG)
+	RETURN
+IF !BONUS_4_ABLE:ARG
+	;周回后、满たしていないが取得している状态
+	IF GETBIT (FLAG:使受孕BOUNS取得状况, ARG)
+		CALL BONUS_CAUTION
+		SIF RESULT
+			RETURN
+	ELSE
+		RETURN
+	ENDIF
+ENDIF
+INVERTBIT FLAG:使受孕BOUNS取得状况, ARG
+SIF !GETBIT (FLAG:使受孕BOUNS取得状况, ARG)
+	RETURN
+SELECTCASE ARG
+	CASE 1
+		PRINTW 获得了【万能孕】。
+	CASE 2
+		PRINTW 获得了【让巫女怀孕】。
+	CASE 3
+		PRINTW 获得了【让妖精怀孕】。
+	CASE 4
+		PRINTW 获得了【让神灵怀孕】。
+	CASE 5
+		PRINTW 获得了【让付丧神怀孕】。
+	CASE 6
+		PRINTW 获得了【让鬼怀孕】。
+	CASE 7
+		PRINTW 获得了【让天狗怀孕】。
+	CASE 8
+		PRINTW 获得了【让蓬莱怀孕】。
+	CASE 9
+		PRINTW 获得了【让妖怪怀孕】。
+	CASE 10
+		;PRINTW 获得了【禁断的知识】。
+		;TALENT:MASTER:禁断的知识 = 1
+		;修改开始
+		; IF MAXBASE:MASTER:TSP >= 4000
+		; 	PRINTW 获得了【魔女秘药】 TSP上限增加了。
+		; 	MAXBASE:MASTER:TSP += 800
+		; ELSEIF MAXBASE:MASTER:TSP >= 4500
+		; 	PRINTW 获得了【魔女秘药】 TSP上限增加了。
+		; 	MAXBASE:MASTER:TSP += 800
+		; ELSE
+		; 	PRINTW 魔女给你灌下了乱七八糟的药水，你的时间停止能力进化并超越了极限！
+		; 	MAXBASE:MASTER:TSP += 800
+		; ENDIF
+		PRINTW 获得了不知道从哪来的【魔女秘药】 TSP上限增加了。
+		MAXBASE:MASTER:TSP += 800
+		SETBIT EXTRA_TSP_EXPANDING, 2
+		SETBIT EXTRA_TSP_EXPANDING, 3
+		;修改结束
+	CASE 11
+		PRINTW 获得了【让幽灵怀孕】。
+	CASE 12
+		PRINTW 获得了【让人偶怀孕】。
+	CASE 13
+		;新规
+		;PRINTW 气力的上限提升了。
+		;MAXBASE:MASTER:气力 += 300
+		;修改开始
+		PRINTFORMW 体力·气力·精力上限增加了。
+		MAXBASE:MASTER:体力 += 300
+		MAXBASE:MASTER:精力 += 300
+		MAXBASE:MASTER:气力 += 300
+		;修改结束
+	CASE 14
+		;新规
+		;PRINTW 获得了料理经验。
+		;EXP:MASTER:料理经验 += 150
+		;修改开始
+		IF  (CFLAG:2:妊娠经过日数 || CFLAG:2:儿童人数) && (CFLAG:15:妊娠经过日数 || CFLAG:15:儿童人数) && (CFLAG:103:妊娠经过日数 || CFLAG:103:儿童人数)
+		;【OOC警告】
+			SETCOLOR 0xA0FF00
+			PRINTFORML "......"
+			SETCOLOR 0xFF1177
+			PRINTFORML "......"
+			SETCOLOR 0xa0d8ef
+			PRINTFORMW "......"
+			PRINTFORML
+			SETCOLOR 0xFF1177
+			PRINTFORMW "女仆控啊！"  女仆拍了拍桌子。
+			SETCOLOR 0xa0d8ef
+			PRINTFORMW "女仆控呢。"  女仆点了点头。
+			SETCOLOR 0xA0FF00
+			PRINTFORMW "哈哈..."    女仆露出了苦笑。
+			PRINTFORML
+			SETCOLOR 0xFF1177
+			PRINTFORML "咱们这里不是一两个，而是三个人哦？"
+			PRINTFORMW "这个家伙可是钓了整整三个女仆，才到这里来诶！"
+			SETCOLOR 0xa0d8ef
+			PRINTFORMW "正如那句俗话：喜欢一个可能是真爱，喜欢三个绝对是变态。"
+			SETCOLOR 0xA0FF00
+			PRINTFORMW "我觉得应该没有这句俗语吧..."
+			SETCOLOR 0xFF1177
+			PRINTFORMW "而且这家伙，搞不好连某个梦境世界的女仆都不放过啊？"
+			SETCOLOR 0xA0FF00
+			PRINTFORMW "那个不是女仆吧..."
+			SETCOLOR 0xa0d8ef
+			PRINTFORMW "那个是恶魔哦。"
+			SETCOLOR 0xFF1177
+			PRINTFORMW "那个不是重点！"
+			PRINTFORMW "话说回来，你们为什么会喜欢上这家伙啊，他哪里好啊？！"
+			SETCOLOR 0xa0d8ef
+			PRINTFORMW "好使唤，去人间之里买东西很方便。"
+			SETCOLOR 0xA0FF00
+			PRINTFORMW "一直在帮我做料理。"
+			SETCOLOR 0xa0d8ef
+			PRINTFORMW "演奏不错，宴会的时候很有用处。"
+			SETCOLOR 0xA0FF00
+			PRINTFORMW "和我一起把神社打扫得干干净净"
+			SETCOLOR 0xa0d8ef
+			PRINTFORMW "战斗力达标，可以收拾湖边的笨蛋妖精，还能帮美铃站岗。"
+			SETCOLOR 0xA0FF00
+			PRINTFORMW "还带我去了各种各样的地方，送了我很多礼物，很开心呢"
+			SETCOLOR 0xa0d8ef
+			PRINTFORMW "嗯...还有就...活好？"
+			SETCOLOR 0xFF1177
+			PRINTFORMW "活？！你在说什么呢！"
+			SETCOLOR 0xa0d8ef
+			PRINTFORMW "害羞什么嘛，大家处境都一样的"
+			PRINTFORMW "话说回来，你又是为什么喜欢这家伙呢，嗯？"
+			SETCOLOR 0xFF1177
+			PRINTFORMW "很温柔...之类的"
+			PRINTFORML
+			SETCOLOR 0xa0d8ef
+			PRINTFORML "那个早就不流行啦。"
+			SETCOLOR 0xA0FF00
+			PRINTFORML "那个早就不流行啦。"
+			PRINTFORMW
+			SETCOLOR 0xFF1177
+			PRINTFORML "你管我！而且你们俩为什么只针对我啊"
+			PRINTFORMW "现在我们审判的对象不是那家伙吗！"
+			SETCOLOR 0xa0d8ef
+			PRINTFORMW "我倒是没有什么不满啦，不过，确实"
+			PRINTFORML "虽然能力有一定的出众之处"
+			PRINTFORMW "但是欠缺的东西还有很多呢"
+			PRINTFORMW "打扮之类的"
+			PRINTFORMW "礼仪之类的"
+			PRINTFORMW "技术之类的"
+			SETCOLOR 0xA0FF00
+			PRINTFORML "提升喜欢的人的修养也是女仆的职责呢"
+			PRINTFORML "所以"
+			SETCOLOR 0xa0d8ef
+			PRINTFORML "所以"
+			SETCOLOR 0xFF1177
+			PRINTFORMW "喂你们怎么自说自话就结束了，不要无视我呀！"
+			SETCOLOR 0xFFFFFF
+			PRINTFORML ...
+			PRINTFORML ...
+			PRINTFORMW 总而言之，总而言之
+			PRINTFORMW 在深爱的女仆们的严格训练之下
+			PRINTFORMW 被女仆深爱着的%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%
+			PRINTFORMW 一定可以
+			PRINTFORMW 成为一个优秀的
+			PRINTFORMW 女仆
+			PRINTFORMW 吧？
+			EXP:MASTER:异常清扫经验 += 300
+			EXP:MASTER:料理经验 += 299
+			EXP:MASTER:清扫经验 += 299
+			EXP:MASTER:会话经验 += 299
+			EXP:MASTER:摄影经验 += 299
+			EXP:MASTER:被拍照经验 += 299
+			EXP:MASTER:战斗经验 += 299
+			EXP:MASTER:学习经验 += 299
+			EXP:MASTER:约会经验 += 299
+			EXP:MASTER:演奏经验 += 299
+			EXP:MASTER:歌唱经验 += 299
+			EXP:MASTER:钓鱼经验 += 299
+			EXP:MASTER:舞蹈经验 += 299
+			EXP:MASTER:采集经验 += 299
+			EXP:MASTER:调合经验 += 299
+			EXP:MASTER:采伐经验 += 299
+		ELSEIF CFLAG:2:妊娠经过日数 || CFLAG:2:儿童人数
+			PRINTFORMW 留琴给%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%传授了一点料理...以及其他的经验。
+			EXP:MASTER:料理经验 += 149
+		ELSEIF CFLAG:103:妊娠经过日数 || CFLAG:103:儿童人数
+			PRINTFORMW 梦子给%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%传授了一点战斗...以及其他的经验。
+			EXP:MASTER:战斗经验 += 149
+		ELSEIF CFLAG:15:妊娠经过日数 || CFLAG:15:儿童人数
+			PRINTFORMW 咲夜给%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%传授了一点打扫...以及其他的经验。
+			EXP:MASTER:异常清扫经验 += 150
+			EXP:MASTER:清扫经验 += 149
+		ENDIF
+			EXP:MASTER:料理经验 += 1
+			EXP:MASTER:清扫经验 += 1
+			EXP:MASTER:会话经验 += 1
+			EXP:MASTER:摄影经验 += 1
+			EXP:MASTER:被拍照经验 += 1
+			EXP:MASTER:战斗经验 += 1
+			EXP:MASTER:学习经验 += 1
+			EXP:MASTER:约会经验 += 1
+			EXP:MASTER:演奏经验 += 1
+			EXP:MASTER:歌唱经验 += 1
+			EXP:MASTER:钓鱼经验 += 1
+			EXP:MASTER:舞蹈经验 += 1
+			EXP:MASTER:采集经验 += 1
+			EXP:MASTER:调合经验 += 1
+			EXP:MASTER:采伐经验 += 1
+		;修改结束
+ENDSELECT
+
+@BONUS_NAME_4(ARG)
+#FUNCTIONS
+SELECTCASE ARG
+	CASE 1
+		RETURNF "【万能孕】"
+	CASE 2
+		RETURNF "【让巫女怀孕】"
+	CASE 3
+		RETURNF "【让妖精怀孕】"
+	CASE 4
+		RETURNF "【让神灵怀孕】"
+	CASE 5
+		RETURNF "【让付丧神怀孕】"
+	CASE 6
+		RETURNF "【让鬼怀孕】"
+	CASE 7
+		RETURNF "【让天狗怀孕】"
+	CASE 8
+		RETURNF "【让蓬莱怀孕】"
+	CASE 9
+		RETURNF "【让妖怪怀孕】"
+	CASE 10
+		;RETURNF "【禁断的知识】"
+		;修改开始
+		RETURNF "最大TSP+800"
+		;修改结束
+	CASE 11
+		RETURNF "【让幽灵怀孕】"
+	CASE 12
+		RETURNF "【让人偶怀孕】"
+	CASE 13
+		;RETURNF "最大气力+300"
+		;修改开始
+		RETURNF "最大体力·气力·精力+300"
+		;修改结束
+	CASE 14
+		;RETURNF "料理经验+150"
+		;修改开始
+		RETURNF "女仆（们？）给你传授了一点人生的经验。"
+		;修改结束
+ENDSELECT
+
+@REMOVABLE_BONUS_4(ARG)
+#FUNCTION
+SELECTCASE ARG
+	;ほぼ全て1なのでELSEが他とは逆
+	CASE 10, 13, 14
+		RETURNF 0
+	CASEELSE
+		RETURNF 1
+ENDSELECT
+
+;----------------------------------------
+;技能BOUNS
+;----------------------------------------
+
+@PRINT_BONUS_5
+
+#DIM 淫乳人数
+#DIM 淫壶人数
+#DIM 尻穴狂人数
+#DIM 接吻魔人数
+#DIM 自慰狂人数
+淫乳人数 = 0
+淫壶人数 = 0
+尻穴狂人数 = 0
+接吻魔人数 = 0
+自慰狂人数 = 0
+
+VARSET BONUS_5_ABLE
+
+FOR LOCAL,1,CHARANUM
+	SIF TALENT:LOCAL:淫乳 || GETBIT (CFLAG:LOCAL:继承, 5)
+		淫乳人数 ++
+	SIF TALENT:LOCAL:淫壶 || GETBIT (CFLAG:LOCAL:继承, 3)
+		淫壶人数 ++
+	SIF TALENT:LOCAL:尻穴狂 || GETBIT (CFLAG:LOCAL:继承, 4)
+		尻穴狂人数 ++
+	SIF TALENT:LOCAL:接吻魔 || GETBIT (CFLAG:LOCAL:继承, 6)
+		接吻魔人数 ++
+	SIF TALENT:LOCAL:自慰狂
+		自慰狂人数 ++
+NEXT
+
+BONUS_5_DESCRIPTION:1 = 自慰狂3人
+SIF 自慰狂人数 >= 3
+	BONUS_5_ABLE:1 = 1
+
+BONUS_5_DESCRIPTION:2 = 淫乳3人
+SIF 淫乳人数 >= 3
+	BONUS_5_ABLE:2 = 1
+
+BONUS_5_DESCRIPTION:3 = 淫壶3人
+SIF 淫壶人数 >= 3
+	BONUS_5_ABLE:3 = 1
+
+BONUS_5_DESCRIPTION:4 = 尻穴狂3人
+SIF 尻穴狂人数 >= 3
+	BONUS_5_ABLE:4 = 1
+
+BONUS_5_DESCRIPTION:5 = 接吻魔3人
+SIF 接吻魔人数 >= 3
+	BONUS_5_ABLE:5 = 1
+
+FOR LOCAL,1, 6
+	SIF GETBIT (GLOBAL_BONUS:8, LOCAL)
+		BONUS_5_ABLE:LOCAL = 1
+NEXT
+
+PRINTFORML ★现在的自慰狂：{自慰狂人数, 3}人／淫乳：{淫乳人数, 3}人／淫壶：{淫壶人数, 3}人／尻穴狂：{尻穴狂人数, 3}人／接吻魔：{接吻魔人数, 3}人
+SIF FLAG:周回数
+	PRINTFORML 　（除自慰狂以外、过去取得了该素质的角色也包含在内）
+FOR LOCAL,1,6
+	;隙间がないので
+;	SIF BONUS_5_DESCRIPTION:LOCAL == ""
+;		CONTINUE
+	IF !BONUS_5_ABLE:LOCAL && !GETBIT (FLAG:技能BOUNS取得状况, LOCAL)
+		PRINTPLAINFORM [{LOCAL}] - 解放条件：%BONUS_5_DESCRIPTION:LOCAL%
+	ELSE
+		IF GETBIT (FLAG:技能BOUNS取得状况, LOCAL)
+			IF !REMOVABLE_BONUS_5(LOCAL)
+				SETCOLOR 100, 100, 100
+				PRINTPLAINFORM [{LOCAL}] - %BONUS_5_DESCRIPTION:LOCAL%BOUNS【済】%BONUS_NAME_5(LOCAL)%
+			ELSE
+				IF !BONUS_5_ABLE:LOCAL
+					SETCOLOR C_ORANGE
+				ELSE
+					SETCOLOR C_P_BLUE
+				ENDIF
+				PRINTFORM [{LOCAL}] - %BONUS_5_DESCRIPTION:LOCAL%BOUNS【済】%BONUS_NAME_5(LOCAL)%
+			ENDIF
+		ELSE
+			SETCOLOR C_AQUA
+			PRINTFORM [{LOCAL}] - %BONUS_5_DESCRIPTION:LOCAL%
+		ENDIF
+		RESETCOLOR
+	ENDIF
+	PRINTL 
+NEXT
+
+@REWARD_BONUS_5(ARG)
+SIF GETBIT (FLAG:技能BOUNS取得状况, ARG) && !REMOVABLE_BONUS_5(ARG)
+	RETURN
+IF !BONUS_5_ABLE:ARG
+	;周回后、满たしていないが取得している状态
+	IF GETBIT (FLAG:技能BOUNS取得状况, ARG)
+		CALL BONUS_CAUTION
+		SIF RESULT
+			RETURN
+	ELSE
+		RETURN
+	ENDIF
+ENDIF
+INVERTBIT FLAG:技能BOUNS取得状况, ARG
+SIF !GETBIT (FLAG:技能BOUNS取得状况, ARG)
+	RETURN
+SELECTCASE ARG
+	CASE 1
+		PRINTW 获得了【Ｃ钝感无视】。
+	CASE 2
+		PRINTW 获得了【Ｂ钝感无视】。
+	CASE 3
+		PRINTW 获得了【Ｖ钝感无视】。
+	CASE 4
+		PRINTW 获得了【Ａ钝感无视】。
+	CASE 5
+		PRINTW 获得了【魅惑】。
+ENDSELECT
+
+@BONUS_NAME_5(ARG)
+#FUNCTIONS
+SELECTCASE ARG
+	CASE 1
+		RETURNF "【Ｃ钝感无视】"
+	CASE 2
+		RETURNF "【Ｂ钝感无视】"
+	CASE 3
+		RETURNF "【Ｖ钝感无视】"
+	CASE 4
+		RETURNF "【Ａ钝感无视】"
+	CASE 5
+		RETURNF "【魅惑】"
+ENDSELECT
+
+@REMOVABLE_BONUS_5(ARG)
+#FUNCTION
+;全て1
+RETURNF 1
+
+SELECTCASE ARG
+	CASE 0
+		RETURNF 0
+	CASEELSE
+ENDSELECT
+
+;----------------------------------------
+;弹幕胜负BOUNS
+;----------------------------------------
+@PRINT_BONUS_6
+PRINTFORML ★现在的弹幕胜负胜利人数：{弹幕胜负胜利カウント(), 4}人
+FOR LOCAL,1,7
+	IF !GETBIT (FLAG:弹幕胜负BOUNS取得状况, LOCAL) && !CONDITION_弹幕胜负BOUNS(LOCAL, 1)
+		IF LOCAL != 6
+			PRINTPLAINFORM [{LOCAL}] - 解放条件：弹幕胜负胜利{CONDITION_弹幕胜负BOUNS(LOCAL)}人以上 %BONUS_NAME_6(LOCAL)%
+		ELSE
+			PRINTPLAINFORM [{LOCAL}] - 解放条件：弹幕游戏战胜依姫和赫卡提亚
+		ENDIF
+	ELSE
+		IF GETBIT (FLAG:弹幕胜负BOUNS取得状况, LOCAL)
+			IF !REMOVABLE_BONUS_6(LOCAL)
+				SETCOLOR 100, 100, 100
+				PRINTPLAINFORM [{LOCAL}] - 弹幕胜负胜利{CONDITION_弹幕胜负BOUNS(LOCAL)}人BOUNS【済】%BONUS_NAME_6(LOCAL)%
+			ELSE
+				IF !CONDITION_弹幕胜负BOUNS(LOCAL, 1)
+					SETCOLOR C_ORANGE
+				ELSE
+					SETCOLOR C_P_BLUE
+				ENDIF
+				IF LOCAL != 6
+					PRINTFORM [{LOCAL}] - 弹幕胜负胜利{CONDITION_弹幕胜负BOUNS(LOCAL)}人BOUNS【済】%BONUS_NAME_6(LOCAL)%
+				ELSE
+					PRINTFORM [{LOCAL}] - 依弹幕游戏战胜依姫和赫卡提亚BOUNS【済】%BONUS_NAME_6(LOCAL)%
+				ENDIF
+			ENDIF
+		ELSE
+			SETCOLOR C_AQUA
+			IF LOCAL != 6
+				PRINTFORM [{LOCAL}] - 弹幕胜负胜利{CONDITION_弹幕胜负BOUNS(LOCAL)}人BOUNS
+			ELSE
+				PRINTFORM [{LOCAL}] - 弹幕游戏战胜依姫和赫卡提亚BOUNS
+			ENDIF
+		ENDIF
+		RESETCOLOR
+	ENDIF
+	PRINTL 
+NEXT
+
+@CONDITION_弹幕胜负BOUNS(ARG, ARG:1)
+;ARG:1が真ならBOUNS取れるか返す
+#FUNCTION
+#DIM 必要数
+#DIM BONUSX2
+
+IF BONUSX > 49 && BONUSX < 100
+	BONUSX2 = BONUSX
+ELSE
+	BONUSX2 = 100
+ENDIF
+
+SELECTCASE ARG
+	CASE 1
+		必要数 = 10 * BONUSX2 / 100
+	CASE 2
+		必要数 = 25 * BONUSX2 / 100
+	CASE 3
+		必要数 = 50 * BONUSX2 / 100
+	CASE 4
+		必要数 = 75 * BONUSX2 / 100
+	CASE 5
+		必要数 = 100 * BONUSX2 / 100
+ENDSELECT
+
+IF ARG:1
+	IF GETBIT (GLOBAL_BONUS:9, ARG)
+		RETURNF 1
+	ELSEIF 弹幕胜负胜利カウント() >= 必要数 && ARG < 6
+		RETURNF 1
+	ELSEIF CFLAG:98:弹幕胜负胜利 && CFLAG:113:弹幕胜负胜利 && ARG == 6
+		RETURNF 1
+	ELSE
+		RETURNF 0
+	ENDIF
+ELSE
+	RETURNF 必要数
+ENDIF
+
+@REWARD_BONUS_6(ARG)
+SIF GETBIT (FLAG:弹幕胜负BOUNS取得状况, ARG)
+	RETURN
+IF !CONDITION_弹幕胜负BOUNS(ARG, 1)
+	;周回后、满たしていないが取得している状态
+	IF GETBIT (FLAG:弹幕胜负BOUNS取得状况, ARG)
+		CALL BONUS_CAUTION
+		SIF RESULT
+			RETURN
+	ELSE
+		RETURN
+	ENDIF
+ENDIF
+INVERTBIT FLAG:弹幕胜负BOUNS取得状况, ARG
+SIF !GETBIT (FLAG:弹幕胜负BOUNS取得状况, ARG)
+	RETURN
+SELECTCASE ARG
+	CASE 1
+		;PRINTW 获得了战斗经验。
+		;EXP:MASTER:战斗经验 += 30
+		;修改开始
+		PRINTFORMW 体力·气力上限增加了。
+		MAXBASE:MASTER:体力 += 300
+		MAXBASE:MASTER:气力 += 300
+		;修改结束
+	CASE 2
+		PRINTL 获得了【熟悉擦弹】。
+		PRINTW 在弹幕胜负中选择『专心回避』时受到的伤害减少。
+	CASE 3
+		;PRINTW 体力的上限提升了。
+		;MAXBASE:MASTER:体力 += 300
+		;修改开始
+		PRINTL 获得了【灵力充填】。
+		PRINTW 弹幕胜负中选择『专心回避』后主人公的骰子值会上升。
+		;修改结束
+	CASE 4
+		;PRINTL 获得了【灵力充填】。
+		;PRINTW 弹幕胜负中选择『专心回避』后主人公的骰子值会上升。
+		;修改开始
+		PRINTL 获得了【Extend】。
+		PRINTW 弹幕胜负开始残机数+1。
+		;修改结束
+	CASE 5
+		;PRINTL 获得了【Extend】。
+		;PRINTW 弹幕胜负开始残机数+1。
+		;修改开始
+		PRINTL 获得了【大角虫】。
+		PRINTW 弹幕胜负所持B数+1、提升B的效果。
+		;修改结束
+	CASE 6
+		;RINTL 获得了【大角虫】。
+		;PRINTW 弹幕胜负所持B数+1、提升B的效果。
+		;修改开始
+		PRINTL 获得了【百载无穷】。
+		PRINTW 你知道的。
+		;PRINTW （并没有实际效果）。
+		;现在有了
+		;修改结束
+	CASEELSE
+		RETURN
+ENDSELECT
+
+@BONUS_NAME_6(ARG)
+#FUNCTIONS
+SELECTCASE ARG
+	CASE 1
+		;RETURNF "战斗经验+30"
+		;修改开始
+
+		;修改结束
+	CASE 2
+		RETURNF "【熟悉擦弹】"
+	CASE 3
+		;RETURNF "最大体力+300"
+		;修改开始
+		RETURNF "【灵力充填】"
+		;修改结束
+	CASE 4
+		;RETURNF "【灵力充填】"
+		;修改开始
+		RETURNF "【Extend】"
+		;修改结束
+	CASE 5
+		;RETURNF "【Extend】"
+		;修改开始
+		RETURNF "【大角虫】"
+		;修改结束
+	CASE 6
+		;RETURNF "【大角虫】"
+		;修改开始
+		RETURNF "【百载无穷】"
+		;修改结束
+ENDSELECT
+
+@REMOVABLE_BONUS_6(ARG)
+#FUNCTION
+;全て1
+RETURNF 1
+
+SELECTCASE ARG
+	CASE 0
+		RETURNF 0
+	CASEELSE
+ENDSELECT
+
+@弹幕胜负胜利カウント
+#FUNCTION
+#DIM 弹幕胜负胜利カウント
+弹幕胜负胜利カウント = 0
+FOR LOCAL,1,CHARANUM
+	SIF CFLAG:LOCAL:弹幕胜负胜利
+		弹幕胜负胜利カウント ++
+NEXT
+RETURNF 弹幕胜负胜利カウント
+
+;----------------------------------------
+
+@实绩フラグ移行
+SIF GETBIT (FLAG:701,0)
+	SETBIT FLAG:好感度BOUNS取得状况,1
+SIF GETBIT (FLAG:701,12)
+	SETBIT FLAG:好感度BOUNS取得状况,2
+SIF GETBIT (FLAG:701,2)
+	SETBIT FLAG:好感度BOUNS取得状况,3
+;好感度BOUNSの所在地察觉は认识30人に移动
+;SIF GETBIT (FLAG:701,3)
+;	SETBIT FLAG:好感度BOUNS取得状况,4
+SIF GETBIT (FLAG:701,5)
+	SETBIT FLAG:好感度BOUNS取得状况,5
+SIF GETBIT (FLAG:701,9)
+	SETBIT FLAG:好感度BOUNS取得状况,6
+
+;所在地察觉
+SIF GETBIT (FLAG:701,3)
+	SETBIT FLAG:认识BOUNS取得状况,2
+;集合
+SIF GETBIT (FLAG:701,10)
+	SETBIT FLAG:认识BOUNS取得状况,3
+
+;千客万来は认识へ
+SIF GETBIT (FLAG:701,8)
+	SETBIT FLAG:认识BOUNS取得状况,5
+
+SIF GETBIT (FLAG:701,1)
+	SETBIT FLAG:胖次BOUNS取得状况,1
+SIF GETBIT (FLAG:701,16)
+	SETBIT FLAG:胖次BOUNS取得状况,2
+SIF GETBIT (FLAG:701,4)
+	SETBIT FLAG:胖次BOUNS取得状况,3
+SIF GETBIT (FLAG:701,13)
+	SETBIT FLAG:胖次BOUNS取得状况,4
+SIF GETBIT (FLAG:701,15)
+	SETBIT FLAG:胖次BOUNS取得状况,5
+IF GETBIT (FLAG:701,7)
+	SETBIT FLAG:胖次BOUNS取得状况,6
+	SETBIT FLAG:胖次BOUNS取得状况,8
+ENDIF
+;恢复快は恋人に
+SIF GETBIT (FLAG:701,6)
+	SETBIT FLAG:陷落BOUNS取得状况,4
+;恋慕5人の可视化は允许无套へ
+SIF GETBIT (FLAG:702,10)
+	SETBIT FLAG:陷落BOUNS取得状况,5
+
+;时奸经验100から炮友に
+SIF GETBIT (FLAG:702,8)
+	SETBIT FLAG:陷落BOUNS取得状况,6
+
+;指舌３
+SIF GETBIT (FLAG:702,0)
+	SETBIT FLAG:技能BOUNS取得状况,1
+;淫乳5
+SIF GETBIT (FLAG:702,1)
+	SETBIT FLAG:技能BOUNS取得状况,2
+;淫壶5人
+SIF GETBIT (FLAG:702,2)
+	SETBIT FLAG:技能BOUNS取得状况,3
+;尻穴狂5人
+SIF GETBIT (FLAG:702,3)
+	SETBIT FLAG:技能BOUNS取得状况,4
+;接吻魔５
+SIF GETBIT (FLAG:702,4)
+	SETBIT FLAG:技能BOUNS取得状况,5
+
+SIF GETBIT (FLAG:702,5)
+	SETBIT FLAG:陷落BOUNS取得状况,1
+;可视化は保存してないので2はスキップ
+SIF GETBIT (FLAG:702,6)
+	SETBIT FLAG:陷落BOUNS取得状况,3
+SIF GETBIT (FLAG:702,7)
+	SETBIT FLAG:陷落BOUNS取得状况,4

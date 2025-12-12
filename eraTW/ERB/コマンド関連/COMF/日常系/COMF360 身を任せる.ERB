@@ -1,0 +1,48 @@
+﻿;-------------------------------------------------
+;任凭摆布
+;日常系指令、レベル3
+;-------------------------------------------------
+@COM360
+TIME += 5
+;气力ゼロのときは变动しない（任凭摆布しかできないため）
+SIF BASE:MASTER:气力 <= 0
+	RETURN 1
+;通常はプラス,施虐狂だと反转
+IF TALENT:TARGET:施虐狂
+	LOCAL = -1
+ELSE
+	LOCAL = 1
+ENDIF
+;指向が反转中は3倍
+IF COUNTER_SIKOU:TARGET:(TCVAR:TARGET:Counter行动) > 0 && TALENT:TARGET:施虐狂
+	LOCAL *= 3
+ELSEIF COUNTER_SIKOU:TARGET:(TCVAR:TARGET:Counter行动) < 0
+	LOCAL *= 3
+ENDIF
+;［坦率］［学习快］は2倍
+SIF TALENT:TARGET:态度 < 0 || TALENT:TARGET:习得速度 > 0
+	LOCAL *= 2
+;最大影响度10
+COUNTER_SIKOU:TARGET:(TCVAR:TARGET:Counter行动) = LIMIT(COUNTER_SIKOU:TARGET:(TCVAR:TARGET:Counter行动) + LOCAL, -10, 10)
+RETURN 1
+
+;-------------------------------------------------
+;实行判定
+;-------------------------------------------------
+
+@COM_ABLE360
+;停止中は不可
+SIF FLAG:70
+	RETURN 0
+;なすがまま实行判定
+SIF !TFLAG:100
+	RETURN 0
+;批量管理
+SIF GLOBAL_COMABLE(360)
+	RETURN RESULT
+SIF CFLAG:诶嘿嘿 != 2
+	RETURN 0
+;おねだり中は不可
+SIF INRANGE(TCVAR:Counter行动, 40, 49)
+	RETURN 0
+RETURN 1

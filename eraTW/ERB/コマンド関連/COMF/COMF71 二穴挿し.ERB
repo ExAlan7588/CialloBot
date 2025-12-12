@@ -1,0 +1,346 @@
+﻿;-------------------------------------------------
+;二穴插入
+;性交系派生指令
+;-------------------------------------------------
+@COM71
+VARSET LOCAL
+
+LOCAL:1 = MASTER_POSE(SET_V,SET_P,1)
+LOCAL:2 = MASTER_POSE(SET_A,SET_P,1)
+IF LOCAL:1
+	LOCAL = LOCAL:1
+ELSEIF LOCAL:2
+	LOCAL = LOCAL:2
+ENDIF
+;LOCAL 二穴插入される人
+;-------------------------------------------------
+;COM别FLAGの设定
+;-------------------------------------------------
+;行为者（これ设定するのは无理、暂定的にやったけど
+TCVAR:116 = LOCAL
+TCVAR:LOCAL:116 = PLAYER
+;-------------------------------------------------
+;插入部位管理
+;-------------------------------------------------
+;PLAYERがA,TARGETがV插入
+IF LOCAL == LOCAL:2
+	CSTR:10 += @"{LOCAL}/"
+	;TCVAR:2 射精部位フラグ（-1=避孕套 1=膣内 2=肛门 3=手淫 4=口淫 5=乳交 6=素股 7=足交 8=体表 9=肛门侍奉 10=道具 11=触手 12=Ａ调教 13=Ｖ调教）
+	TCVAR:2 = 1
+	;强度
+	TCVAR:4 = 1500
+
+	CSTR:PLAYER:10 += @"{LOCAL}/"
+	;TCVAR:2 射精部位フラグ（-1=避孕套 1=膣内 2=肛门 3=手淫 4=口淫 5=乳交 6=素股 7=足交 8=体表 9=肛门侍奉 10=道具 11=触手 12=Ａ调教 13=Ｖ调教）
+	TCVAR:PLAYER:2 = 2
+	;既にＡに插入中だからこれひつようなくない？
+	TCVAR:PLAYER:童贞丧失 = 1
+	TCVAR:Ａ丧失发生 = 1
+	;强度
+	TCVAR:PLAYER:4 = 2500
+;PLAYERがV,TARGETがA插入
+ELSE
+	CSTR:PLAYER:10 += @"{LOCAL}/"
+	;TCVAR:2 射精部位フラグ（-1=避孕套 1=膣内 2=肛门 3=手淫 4=口淫 5=乳交 6=素股 7=足交 8=体表 9=肛门侍奉 10=道具 11=触手 12=Ａ调教 13=Ｖ调教）
+	TCVAR:PLAYER:2 = 1
+	;强度
+	TCVAR:PLAYER:4 = 1500
+
+	CSTR:10 += @"{LOCAL}/"
+	;TCVAR:2 射精部位フラグ（-1=避孕套 1=膣内 2=肛门 3=手淫 4=口淫 5=乳交 6=素股 7=足交 8=体表 9=肛门侍奉 10=道具 11=触手 12=Ａ调教 13=Ｖ调教）
+	TCVAR:2 = 2
+	TCVAR:TARGET:童贞丧失 = 1
+	TCVAR:LOCAL:Ａ丧失发生 = 1
+	;强度
+	TCVAR:4 = 2500
+ENDIF
+;-------------------------------------------------
+;ソース追加处理
+;-------------------------------------------------
+;消费体力、气力
+IF FLAG:70 == 1
+	BASE:MASTER:TSP -= 220
+	SOURCE:PLAYER:快Ｃ = 400
+	SOURCE:快Ｃ = 400
+	SOURCE:LOCAL:快Ｖ = 400
+	SOURCE:LOCAL:快Ａ = 400
+	SOURCE:LOCAL:苦痛 = 650
+
+	;处女だった场合は、苦痛のソースと反抗のソースを追加する
+	IF TALENT:LOCAL:处女 == 1
+		SOURCE:LOCAL:苦痛 += 2750
+	ENDIF
+
+	;再生处女だった场合は、苦痛のソースと反抗のソースを追加する
+	IF TALENT:LOCAL:处女 == 2
+		SOURCE:LOCAL:苦痛 += 1750
+	ENDIF
+
+	EXP:PLAYER:时奸经验 += 1
+
+ELSE
+
+	DOWNBASE:体力 += 40
+	DOWNBASE:气力 += 220
+	SOURCE:PLAYER:快Ｃ = 400
+
+	SOURCE:快Ｃ = 400
+	SOURCE:性行动 = 500
+	SOURCE:屈从 = 1000
+	SOURCE:偏离正轨 = 500
+	SOURCE:反感 = 500
+
+	DOWNBASE:LOCAL:体力 += 160
+	DOWNBASE:LOCAL:气力 += 350
+
+	SOURCE:LOCAL:快Ｖ = 400
+	SOURCE:LOCAL:快Ａ = 400
+	SOURCE:LOCAL:情爱 = 300
+	SOURCE:LOCAL:性行动 = 300
+	SOURCE:LOCAL:苦痛 = 1300
+	SOURCE:LOCAL:屈从 = 500
+	SOURCE:LOCAL:偏离正轨 = 500
+	SOURCE:LOCAL:反感 = 500
+
+	;-------------------------------------------------
+	;特殊ソース处理
+	;-------------------------------------------------
+	;圧抑、抵抗持ちには、抑郁ソース追加
+	SIF TALENT:自己爱 < 0 || TALENT:抵抗
+		SOURCE:郁闷 += 500
+	SIF TALENT:LOCAL:自己爱 < 0 || TALENT:LOCAL:抵抗
+		SOURCE:LOCAL:郁闷 += 500
+
+	;贞操重视持ちで恋慕、亲爱持ち以外には常に反抗のソースを追加する（性交系のみ）
+	SIF TALENT:LOCAL:贞操 && !TALENT:LOCAL:恋慕
+		SOURCE:LOCAL:反感 += 1000
+
+	;处女だった场合は、苦痛のソースと反抗のソースを追加する
+	IF TALENT:LOCAL:处女 == 1
+		SOURCE:LOCAL:苦痛 += 5500
+		SOURCE:LOCAL:反感 += 3000
+	ENDIF
+
+	;再生处女だった场合は、苦痛のソースと反抗のソースを追加する
+	IF TALENT:LOCAL:处女 == 2
+		SOURCE:LOCAL:苦痛 += 3500
+		SOURCE:LOCAL:反感 += 1000
+	ENDIF
+ENDIF
+;Vへの苦痛は先に处理しておく
+CALL PAIN_CHECK_V(LOCAL)
+;Aへの苦痛は先に处理しておく
+CALL PAIN_CHECK_A(LOCAL)
+
+;-------------------------------------------------
+;污れの处理
+;-------------------------------------------------
+;PLAYERがV,TARGETがA插入
+IF LOCAL == LOCAL:1
+	;膣内に破瓜之血的污垢を付加
+	SIF TALENT:LOCAL:处女 && TALENT:处女 != -1
+		STAIN:LOCAL:6 |= 64
+	;LOCALの膣内⇔主人のＰ的污垢が移动
+	IF TALENT:PLAYER:2 & 2
+		STAIN:PLAYER:2 |= STAIN:LOCAL:6
+		STAIN:PLAYER:2 |= STAIN:LOCAL:3
+		STAIN:LOCAL:6 |= STAIN:PLAYER:2
+		STAIN:LOCAL:3 |= STAIN:PLAYER:2
+	ENDIF
+	;LOCALのＡ⇔TARGETのＰ的污垢が移动
+	IF HAS_PENIS(TARGET)
+		STAIN:2 |= STAIN:LOCAL:7
+		STAIN:2 |= STAIN:LOCAL:4
+		STAIN:LOCAL:7 |= STAIN:2
+		STAIN:LOCAL:4 |= STAIN:2
+	ENDIF
+ELSE
+	;膣内に破瓜之血的污垢を付加
+	SIF TALENT:LOCAL:处女 && TALENT:处女 != -1
+		STAIN:LOCAL:6 |= 64
+	;LOCALの膣内⇔TARGETのＰ的污垢が移动
+	IF TALENT:PLAYER:2 & 2
+		STAIN:2 |= STAIN:LOCAL:6
+		STAIN:2 |= STAIN:LOCAL:3
+		STAIN:LOCAL:6 |= STAIN:2
+		STAIN:LOCAL:3 |= STAIN:2
+	ENDIF
+	;LOCALのＡ⇔PLAYERのＰ的污垢が移动
+	IF HAS_PENIS(TARGET)
+		STAIN:PLAYER:2 |= STAIN:LOCAL:7
+		STAIN:PLAYER:2 |= STAIN:LOCAL:4
+		STAIN:LOCAL:7 |= STAIN:PLAYER:2
+		STAIN:LOCAL:4 |= STAIN:PLAYER:2
+	ENDIF
+ENDIF
+;-------------------------------------------------
+;経験の处理
+;-------------------------------------------------
+EXP:PLAYER:插入经验 ++
+
+;EXP:LOCAL:Ａ经验 ++
+EXP:LOCAL:Ｖ性交经验 ++
+EXP:LOCAL:Ａ性交经验 ++
+
+EXP:插入经验 ++
+
+
+;异常经验
+IF TALENT:LOCAL:处女  && TALENT:处女 != -1 && !GETBIT(CFLAG:3,9)
+	EXP:LOCAL:异常经验 += 2
+	SETBIT CFLAG:LOCAL:3,9
+ENDIF
+
+IF LOCAL == TARGET
+	IF FLAG:70 == 1
+		IF HETEROSEX(LOCAL,PLAYER)
+			EXP:PLAYER:(50 + HETEROSEX(TARGET,PLAYER)) += 3
+		ENDIF
+		EXP:PLAYER:时奸经验 += 1
+	ELSE
+		;同性爱　レズなら返回值1ゲイなら返回值2
+		IF HETEROSEX(LOCAL,PLAYER)
+			EXP:PLAYER:(50 + HETEROSEX(TARGET,PLAYER)) += 3
+			EXP:LOCAL:(50 + HETEROSEX(TARGET,PLAYER)) += 3
+		ENDIF
+	ENDIF
+ELSE
+	;同性爱　レズなら返回值1ゲイなら返回值2
+	IF FLAG:70 == 1
+		IF HETEROSEX(TARGET,PLAYER)
+			EXP:PLAYER:(50 + HETEROSEX(TARGET,PLAYER)) += 3
+		ENDIF
+		IF HETEROSEX(LOCAL,PLAYER)
+			EXP:PLAYER:(50 + HETEROSEX(TARGET,PLAYER)) += 3
+		ENDIF
+		EXP:PLAYER:时奸经验 += 1
+	ELSE
+		IF HETEROSEX(TARGET,PLAYER)
+			EXP:(50 + HETEROSEX(TARGET,PLAYER)) += 3
+			EXP:PLAYER:(50 + HETEROSEX(TARGET,PLAYER)) += 3
+		ENDIF
+		;同性爱　レズなら返回值1ゲイなら返回值2
+		IF HETEROSEX(LOCAL,PLAYER)
+			EXP:PLAYER:(50 + HETEROSEX(TARGET,PLAYER)) += 3
+			EXP:LOCAL:(50 + HETEROSEX(TARGET,PLAYER)) += 3
+		ENDIF
+		IF HETEROSEX(TARGET,LOCAL)
+			EXP:(50 + HETEROSEX(TARGET,LOCAL)) += 3
+			EXP:LOCAL:(50 + HETEROSEX(TARGET,LOCAL)) += 3
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+
+;-------------------------------------------------
+;实行判定
+;-------------------------------------------------
+@COM_ABLE71
+;二穴插入实行判定
+VARSET LOCAL
+LOCAL = MASTER_POSE(SET_V,SET_P,1)
+LOCAL:1 = MASTER_POSE(SET_A,SET_P,1)
+IF LOCAL
+	LOCAL:2 = LOCAL
+ELSEIF LOCAL:1
+	LOCAL:2 = LOCAL:1
+ENDIF
+SIF !TFLAG:100
+	RETURN 0
+SIF GLOBAL_COMABLE(71)
+	RETURN RESULT
+[SKIPSTART]
+;振动棒插入中はダメ
+SIF TEQUIP:13
+	RETURN 0
+;肛用振动棒插入中はダメ
+SIF TEQUIP:14
+	RETURN 0
+;后庭拉珠使用中は不可
+SIF TEQUIP:15
+	RETURN 0
+;普通の浣肠使用中は不可
+SIF TEQUIP:21
+	RETURN 0
+;バルーン使用中は不可
+SIF TEQUIP:22
+	RETURN 0
+;电极使用中は不可
+SIF TEQUIP:23
+	RETURN 0
+[SKIPEND]
+;双枪持ちならひとりで可能
+IF TALENT:PLAYER:双枪 == 1
+	SIF BASE:PLAYER:勃起 < 1000
+	RETURN 0
+	;自分が插入してないとダメ
+	SIF !LOCAL:2
+		RETURN 0
+	RETURN 1
+ELSE
+	;TARGETが男人、扶她の场合はある程度勃起てないとダメ
+	SIF (HAS_PENIS(TARGET)) && BASE:勃起 < 1000
+		RETURN 0
+	;TARGET以外の谁かに插入してないとダメ
+	SIF !LOCAL:2 || LOCAL:2 == TARGET
+		RETURN 0
+	;相手が处女で、顺从4以下・百合属性4以下の场合はできない（施虐狂ならＯＫ）
+	IF LOCAL:2 && TALENT:(LOCAL:2):处女
+		SIF (ABL:顺从 <= 4 || ABL:百合属性 <= 4) && TALENT:施虐狂 == 0
+			RETURN 0
+	ENDIF
+	;润滑不足で、顺从3以下・百合属性3以下のASSIの场合はできない（施虐狂ならＯＫ）
+	IF LOCAL:2 && PALAM:(LOCAL:2):润滑 < PALAMLV:2
+		SIF (ABL:顺从 <= 3 || ABL:百合属性 <= 3) && TALENT:施虐狂 == 0
+			RETURN 0
+	ENDIF
+ENDIF
+;毒人形だと性器がついてないのでダメ
+SIF TALENT:196 == 99
+	RETURN 0
+;男人だとダメ
+SIF LOCAL:2 && !(TALENT:(LOCAL:2):2 & 1)
+	RETURN 0
+;阴茎がないとだめ
+SIF !(HAS_PENIS(TARGET)) && ITEM:PBAND == 0
+	RETURN 0
+;振动棒装着中はダメ
+SIF TEQUIP:(LOCAL:2):13
+	RETURN 0
+;肛用振动棒使用中は不可
+SIF TEQUIP:(LOCAL:2):14
+	RETURN 0
+;后庭拉珠使用中は不可
+SIF TEQUIP:(LOCAL:2):15
+	RETURN 0
+;普通の浣肠使用中は不可
+SIF TEQUIP:(LOCAL:2):21
+	RETURN 0
+;バルーン使用中は不可
+SIF TEQUIP:(LOCAL:2):22
+	RETURN 0
+;电极使用中は不可
+SIF TEQUIP:(LOCAL:2):23
+	RETURN 0
+;新妻PLAY中はダメ
+SIF TEQUIP:(LOCAL:2):33 || TEQUIP:33
+	RETURN 0
+;体格差がある场合は経験がないとダメ
+SIF 插入不可(TARGET) == 1 && EXP:Ａ经验 < 50 && !TALENT:PLAYER:禁断的知识
+	RETURN 0
+;さらに体格差があると禁断的知识が必要
+SIF 插入不可(TARGET) == 2 && (!TALENT:PLAYER:禁断的知识 || EXP:Ａ经验 < 50)
+	RETURN 0
+SIF 插入不可(TARGET) == 3
+	RETURN 0
+;时间停止中はスキップ
+IF FLAG:70 != 1
+	;一定のＡ经验が必要
+	SIF EXP:(LOCAL:2):2 < EXPLV:3
+		RETURN 0
+ENDIF
+;下半身着衣
+SIF TEQUIP:(LOCAL:2):0 > 1
+	RETURN 0
+RETURN 1
+

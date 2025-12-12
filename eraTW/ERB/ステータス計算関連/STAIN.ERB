@@ -1,0 +1,20 @@
+﻿@STAIN_膣内Ｐ插入
+	;膣内に破瓜之血的污垢を付加
+SIF TALENT:处女 == 1 || TALENT:处女 == 2
+	STAIN:6 |= 64
+IF !TEQUIP:PLAYER:避孕套
+	;奴隷の膣内⇔调教者のＰ的污垢が移动
+	STAIN:PLAYER:2 |= STAIN:3
+	STAIN:PLAYER:2 |= STAIN:6
+	STAIN:3 |= STAIN:PLAYER:2
+	STAIN:6 |= STAIN:PLAYER:2
+ENDIF
+
+@STAIN_肛门Ｐ插入
+IF !TEQUIP:PLAYER:避孕套
+	;奴隷のＡ⇔调教者のＰ的污垢が移动
+	STAIN:PLAYER:2 |= STAIN:4
+	STAIN:PLAYER:2 |= STAIN:7
+	STAIN:4 |= STAIN:PLAYER:2
+	STAIN:7 |= STAIN:PLAYER:2
+ENDIF

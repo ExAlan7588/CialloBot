@@ -1,0 +1,96 @@
+﻿;-------------------------------------------------
+;胸爱抚
+;爱抚系指令、レベル2
+;-------------------------------------------------
+@COM6
+;-------------------------------------------------
+;COM别FLAGの设定
+;-------------------------------------------------
+;行为者
+TCVAR:116 = PLAYER
+;侍奉快乐
+TCVAR:PLAYER:108 = 1
+
+;-------------------------------------------------
+;ソース追加处理
+;-------------------------------------------------
+;消费体力、气力
+IF FLAG:70 == 1
+	BASE:MASTER:TSP -= 20
+	SOURCE:快Ｂ = 100
+	IF ABL:PLAYER:指 >= 4
+		SOURCE:快Ｂ += 70
+	ELSE
+		SOURCE:快Ｂ += ABL:PLAYER:指 * 15
+	ENDIF
+ELSE
+
+	DOWNBASE:体力 += 5
+	DOWNBASE:气力 += 50
+
+	SOURCE:快Ｂ = 100
+	SOURCE:情爱 = 50
+	SOURCE:性行动 = 60
+	SOURCE:露出 = 10
+	SOURCE:不洁 = 20
+	SOURCE:反感 = 20
+	;-------------------------------------------------
+	;特殊ソース处理
+	;-------------------------------------------------
+	IF ABL:PLAYER:指 >= 4
+		SOURCE:快Ｂ += 70
+	ELSE
+		SOURCE:快Ｂ += ABL:PLAYER:指 * 15
+	ENDIF
+	;圧抑、抵抗持ちには、抑郁ソース追加
+	SIF TALENT:自己爱 < 0 || TALENT:抵抗
+		SOURCE:郁闷 += 20
+	;-------------------------------------------------
+	;污れの处理
+	;-------------------------------------------------
+	;奴隷の胸的污垢がなければ口をつかう（爱液と母乳よごれはＯＫ、污臭无视か助手调教时は没问题）
+	IF STAIN:5 < 2 || STAIN:5 == 16 || STAIN:5 == 17 || ASSIPLAY == 1 || TALENT:PLAYER:污臭耐性 == 2
+		;调教者のTALENT:舌头灵活をみる
+		TIMES SOURCE:不洁 , 1.40
+		SIF TALENT:PLAYER:舌头灵活
+			TIMES SOURCE:快Ｂ , 1.40
+		SOURCE:郁闷 += SOURCE:不洁 / 20
+		;奴隷のＢ⇔调教者の口的污垢が移动
+		STAIN:5 |= STAIN:PLAYER:0
+		STAIN:PLAYER:0 |= STAIN:5
+		EXP:PLAYER:口淫经验 ++
+	ENDIF
+ENDIF
+;奴隷のＢ⇔调教者の指的污垢が移动
+STAIN:5 |= STAIN:PLAYER:1
+STAIN:PLAYER:1 |= STAIN:5
+
+;-------------------------------------------------
+;経験の处理
+;-------------------------------------------------
+;同性爱　レズなら返回值1ゲイなら返回值2
+IF FLAG:70 == 1
+	IF HETEROSEX(TARGET,PLAYER)
+		EXP:PLAYER:(50 + HETEROSEX(TARGET,PLAYER)) += 5
+	ENDIF
+ELSE
+	IF HETEROSEX(TARGET,PLAYER)
+		EXP:(50 + HETEROSEX(TARGET,PLAYER)) += 5
+		EXP:PLAYER:(50 + HETEROSEX(TARGET,PLAYER)) += 5
+	ENDIF
+ENDIF
+EXP:PLAYER:手淫经验 ++
+RETURN 1
+
+;-------------------------------------------------
+;实行判定
+;-------------------------------------------------
+@COM_ABLE6
+;胸爱抚实行判定
+SIF !TFLAG:100
+	RETURN 0
+;批量管理
+SIF GLOBAL_COMABLE(6)
+	RETURN RESULT
+RETURN 1
+

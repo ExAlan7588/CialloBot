@@ -61,17 +61,22 @@ class OsuBot(commands.Bot):
 
         # 同步應用程式命令（Slash Commands）
         try:
-            # 全域同步（所有伺服器）
-            synced = await self.tree.sync()
-            logger.info("✅ 已全域同步 {count} 個應用程式命令", count=len(synced))
+            # 檢查是否為測試模式
+            env_mode = getattr(config, "ENV_MODE", "").lower()
 
-            # 可選：為特定測試伺服器立即同步（開發用）
-            # 取消下面的註釋並填入你的測試伺服器 ID
-            # TEST_GUILD_ID = 123456789012345678  # 替換為你的伺服器 ID
-            # guild = discord.Object(id=TEST_GUILD_ID)
-            # self.tree.copy_global_to(guild=guild)
-            # synced_guild = await self.tree.sync(guild=guild)
-            # logger.info(f"✅ 已為測試伺服器同步 {len(synced_guild)} 個命令（立即生效）")
+            if env_mode == "test":
+                # 測試模式：只同步到測試伺服器
+                TEST_GUILD_ID = 1449019047822889012
+                guild = discord.Object(id=TEST_GUILD_ID)
+                self.tree.copy_global_to(guild=guild)
+                synced = await self.tree.sync(guild=guild)
+                logger.info(
+                    "✅ [測試模式] 已同步 {count} 個應用程式命令到測試伺服器", count=len(synced)
+                )
+            else:
+                # 正式模式：全域同步（所有伺服器）
+                synced = await self.tree.sync()
+                logger.info("✅ 已全域同步 {count} 個應用程式命令", count=len(synced))
 
         except Exception as e:
             logger.error(f"❌ 同步應用程式命令失敗: {e}", exc_info=True)

@@ -1,0 +1,723 @@
+﻿@CHARAMOVE_DATA_62(ARG, ARG:2)
+LOCAL = 62
+SELECTCASE ARG
+	;连动设定（RETURN=依存する角色, RESULT:1～3=对等に连动する角色）
+	CASE 1
+	;特殊生活时间设定（CFLAG:LOCAL:生活时间补正を设定する）
+	CASE 3
+	;移动倾向（±～10=行きやすい/行きにくい, -100=行かない）
+	CASE 4
+		SELECTCASE ARG:2
+			;梦幻馆には行かない
+			CASE P450玄关 TO P466庭
+				RETURN -100
+			;他人的家には入らない
+			CASE P432影狼的家, P437梅蒂欣的家, P439拉尔瓦的家, P443米斯蒂亚的家, P445妹红的家
+				RETURN -100
+			;来客用厕所は行かない
+			CASE P406来客用厕所
+				RETURN -100
+			;诊察室,配药室,帝私室,铃仙私室,后院,二阶はあんまり行かない
+			CASE P404诊察室, P405配药室, P410帝私室, P411铃仙私室, P422后院, P426二层走廊, P427仓库, P428二层空的房间
+				RETURN -5
+			;走廊,辉夜私室,起居室,庭によく居る
+			CASE P409走廊, P414辉夜私室, P416起居室, P421庭
+				RETURN 5
+
+			;绵月亭には行かない
+			CASE P1020绵月亭・门 TO P1044会客厅
+				RETURN -100
+			;他人的家には行かない
+			CASE P1005探女宅・起居室, P1006探女宅・寝室, P1008铃瑚宅, P1009清兰宅
+				RETURN -100
+			;月之都には行かない
+			CASE P1002月之都
+				RETURN -100
+		ENDSELECT
+	;出现场所
+	CASE 7
+		SELECTCASE ARG:2
+			CASE 广场, 商业街, 吞屋小道
+				RETURN 1
+			CASE 竹林入口, 迷失的小道, 斜角的竹林, 永远亭, 永远亭的内院
+				RETURN 1
+		ENDSELECT
+	;引力设定（CFLAG:LOCAL:引力点を设定する）
+	CASE 8
+ENDSELECT
+
+@EXIST_キャラデータ62
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@キャラデータ62(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "称呼"
+	CALLF MAKE_STR(V_NAME, "辉夜")
+;こっから衣装设定
+CASE "今天的睡衣"
+	CALLF MAKE_STR(V_NAME, "睡衣（襦袢）套")
+
+CASE "便装：靴"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("靴", "靴"))
+CASE "便装：袜子"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("袜子", "袜子"))
+CASE "便装：裙子"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("裙子", "长裙"))
+CASE "便装：上身衣服２"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("上身衣服２", "女式衬衫"))
+CASE "便装：上身衣服１"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("上身衣服１", "外套"))
+
+;神样が织った布の胖次とか月じゃ普通だと思う
+CASE "固有内衣形容词"
+	CALLF MAKE_STR(V_NAME, "星星的光辉交织在一起的")
+CASE "固有下半身内衣名"
+	CALLF MAKE_STR(V_NAME, "文布の三角胖次")
+CASE "固有上半身内衣"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "固有上半身内衣名"
+	CALLF MAKE_STR(V_NAME, "文布の胸罩")
+CASE "固有内衣着用条件"
+	SIF !RAND:(3 - (2 * 胜负内衣判定([[辉夜]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "固有内衣半透明(前)"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "固有内衣半透明(后)"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "固有内衣布料厚度"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;料理关联
+CASE "料理：喜欢的味道"
+	CALLF MAKE_STR(V_NAME, "米/豆沙/果物/和食/锅物/简易/清淡/艺术的/上品/新鲜/软糯的/月都风/赏月/甜/甜/咸/咸/")
+CASE "料理：讨厌的味道"
+	CALLF MAKE_STR(V_NAME, "野趣/酸/酸/" + "朴素/外界风/" * 3 + "青蛙/虫肉/谜料理/" * 5)
+CASE "料理：助手效果"
+	CALLF MAKE_STR(V_NAME, "月都风/彩り/上品/")
+;赠り物关联
+CASE "感性：好き"
+	CALLF MAKE_STR(V_NAME, "虹/高级/秩序/美的/艺术的/不思议/威严/" + "月/宝石/遗物/" * 3 + "蓬莱の/永远の/须臾の/" * 5)
+CASE "感性：嫌い"
+	CALLF MAKE_STR(V_NAME, "混沌/朴素/活泼/" + "火/安物/死生/生体品/护臂/" * 3 + "凤凰の/" * 10)
+ENDSELECT
+
+;-------------------------------------------------
+;固有料理设定
+;DISH_NAME          料理名
+;RESULTS            料理の种类（轻食/主食/甜点）
+;CALL 材料设定("")  材料の指定。"泛用"を入れると自动で泛用食材になる
+;DISH_TASTE         味の设定
+;DISH_COMMENT       （任意）一行コメント
+;DISH_TIME          （任意）调理にかかる时间
+;DISH_MAXLIMIT      （任意）料理の持续时间
+;-------------------------------------------------
+@SPECIAL_MENU_62
+DISH_NAME = 蓬莱冰棒玉枝
+RESULTS = 甜点
+CALL 材料设定("仙桃")
+DISH_TASTE = 冰淇淋/甜/甜/冷/豪华/艺术的/新鲜/月都风/彩り/
+DISH_COMMENT = 树枝状的棍子上插着五颜六色的圆形冰淇淋。很甜。
+RETURN 1
+
+;IMAGE_I62_特殊服装(CHARA)-------------------------------------------------------------------
+;角色特有の服装表示条件
+;エフェクトを共有する服装差分はこちらで指定する
+;使用时注意点:
+;	RESULTSに特殊服装を格纳すること
+;	书式は %服装%%特殊服装% 适宜"_"等入れること
+;-------------------------------------------------------------------------------------------
+@IMAGE_I62_特殊服装(CHARA)
+#DIM CHARA
+VARSET RESULTS
+
+IF CFLAG:CHARA:应用差分替换
+	;替换用画像
+	IF CHECK_NUDE(CHARA)
+		;裸
+		IF FLAG:立绘种类
+			;颜绘
+		ELSE
+			;立绘
+		ENDIF
+	ELSE
+		;服
+		IF FLAG:立绘种类
+			;颜绘
+		ELSE
+			;立绘
+			CALL IMAGE_I62_别立ち判定_服装
+		ENDIF
+	ENDIF
+ELSE
+	;通常画像
+	IF CHECK_NUDE(CHARA)
+		;裸
+		IF FLAG:立绘种类
+			;颜绘
+			IF TCVAR:CHARA:媚药 || CFLAG:CHARA:积攒度 > 850
+				RESULTS = _情欲
+			ENDIF
+		ELSE
+			;立绘
+		ENDIF
+	ELSE
+		;夏服を置き换え
+			IF TCVAR:CHARA:媚药 || CFLAG:CHARA:积攒度 > 850
+				RESULTS = _夏服
+			ENDIF
+	ENDIF
+ENDIF
+
+;IMAGE_I62_体形(CHARA)-----------------------------------------------------------------------
+;角色特有の体形表示条件
+;エフェクトを共有する体形差分はこちら
+;服装を指定しても自动で表示されるので注意
+;使用时注意点:
+;	RESULTSに体形を格纳すること
+;	书式は %体形%%服装% 适宜"_"等入れること
+;	"巨乳"は本编で实装済み %体形%巨乳%服装% で追记可能
+;-------------------------------------------------------------------------------------------
+@IMAGE_I62_体形(CHARA)
+#DIM CHARA
+VARSET RESULTS
+
+IF CFLAG:CHARA:应用差分替换
+	;替换用画像
+	IF FLAG:立绘种类
+		;颜绘
+	ELSE
+		;立绘
+		CALL IMAGE_I62_别立ち判定_体形
+	ENDIF
+ELSE
+	;通常画像
+	IF FLAG:立绘种类
+		;颜绘
+	ELSE
+		;立绘
+	ENDIF
+ENDIF
+
+;IMAGE_I62_特殊表情(CHARA)--------------------------------------------------------------------
+;角色特有の表情表示条件
+;时间停止中でも维持する表情はこちら
+;使用时注意点:
+;	RESULTS:0に表情を格纳
+;	RESULTS:1にマウスオーバー时の表情を格纳すること
+;	"通常","笑颜","愤怒","发情","睡眠"は本编で实装済み
+;-------------------------------------------------------------------------------------------
+@IMAGE_I62_特殊表情(CHARA)
+#DIM CHARA
+
+IF CFLAG:CHARA:应用差分替换
+	;替换用画像
+	IF FLAG:立绘种类
+		;颜绘, 别立ち1没有颜绘
+		CALL IMAGE_I62_通常颜绘特殊表情
+	ELSE
+		;立绘
+		CALL IMAGE_I62_别立ち判定_表情
+	ENDIF
+ELSE
+	;通常画像
+	IF FLAG:立绘种类
+		;颜绘
+		CALL IMAGE_I62_通常颜绘特殊表情
+	ELSE
+		;立绘
+	ENDIF
+ENDIF
+
+;IMAGE_I62_特殊表情COM(CHARA, 指令)-------------------------------------------------------
+;直前の指令で变化する角色特有の表情表示条件
+;时间停止中は变化しない表情はこちら
+;使用时注意点:
+;	RESULTS:0に表情を格纳
+;	RESULTS:1にマウスオーバー时の表情を格纳すること
+;	"自慰","爱抚","性交"は本编で实装済み
+;-------------------------------------------------------------------------------------------
+@IMAGE_I62_特殊表情COM(CHARA, 指令)
+#DIM CHARA
+#DIM 指令
+
+IF CFLAG:CHARA:应用差分替换
+	;替换用画像
+	IF FLAG:立绘种类
+		;颜绘
+	ELSE
+		;立绘
+	ENDIF
+ELSE
+	;通常画像
+	IF FLAG:立绘种类
+		;颜绘
+	ELSE
+		;立绘
+	ENDIF
+ENDIF
+
+;IMAGE_I62_差分(CHARA)-----------------------------------------------------------------------
+;角色特有の差分表示条件
+;裸やエフェクトを共有しない画像はこちら
+;使用时注意点:
+;	RESULTSに差分を格纳すること
+;	书式は {CHARA}%差分% 适宜"_"等入れること
+;-------------------------------------------------------------------------------------------
+@IMAGE_I62_差分(CHARA)
+#DIM CHARA
+VARSET RESULTS
+
+IF CFLAG:CHARA:应用差分替换
+	;替换用画像
+	IF FLAG:立绘种类
+		;颜绘
+	ELSE
+		;立绘
+	ENDIF
+ELSE
+	;通常画像
+	IF FLAG:立绘种类
+		;颜绘
+	ELSE
+		;立绘
+	ENDIF
+ENDIF
+
+;IMAGE_I62_特殊照れ(CHARA)--------------------------------------------------------------------
+;角色特有の照れエフェクト表示条件
+;使用时注意点:
+;	RESULTSに特殊照れを格纳すること
+;	书式は %特殊照れ%照れ
+;	"裸"は本编で实装済み %特殊照れ%裸照れ で追记可能
+;-------------------------------------------------------------------------------------------
+@IMAGE_I62_特殊照れ(CHARA)
+#DIM CHARA
+VARSET RESULTS
+
+IF CFLAG:CHARA:应用差分替换
+	;替换用画像
+	IF FLAG:立绘种类
+		;颜绘
+	ELSE
+		;立绘
+	ENDIF
+ELSE
+	;通常画像
+	IF FLAG:立绘种类
+		;颜绘
+	ELSE
+		;立绘
+	ENDIF
+ENDIF
+
+;IMAGE_I62_特殊吐息(CHARA)--------------------------------------------------------------------
+;角色特有の吐息エフェクト表示条件
+;使用时注意点:
+;	RESULTSに特殊吐息を格纳すること
+;	书式は %特殊吐息%吐息
+;	"裸"は本编で实装済み %特殊吐息%裸吐息 で追记可能
+;-------------------------------------------------------------------------------------------
+@IMAGE_I62_特殊吐息(CHARA)
+#DIM CHARA
+VARSET RESULTS
+
+IF CFLAG:CHARA:应用差分替换
+	;替换用画像
+	IF FLAG:立绘种类
+		;颜绘
+	ELSE
+		;立绘
+	ENDIF
+ELSE
+	;通常画像
+	IF FLAG:立绘种类
+		;颜绘
+	ELSE
+		;立绘
+	ENDIF
+ENDIF
+
+;IMAGE_I62_特殊汗(CHARA)--------------------------------------------------------------------
+;角色特有の汗エフェクト表示条件
+;使用时注意点:
+;	RESULTSに特殊汗を格纳すること
+;	书式は %特殊汗%汗
+;	"裸"は本编で实装済み %特殊汗%裸汗 で追记可能
+;-------------------------------------------------------------------------------------------
+@IMAGE_I62_特殊汗(CHARA)
+#DIM CHARA
+VARSET RESULTS
+
+IF CFLAG:CHARA:应用差分替换
+	;替换用画像
+	IF FLAG:立绘种类
+		;颜绘
+	ELSE
+		;立绘
+	ENDIF
+ELSE
+	;通常画像
+	IF FLAG:立绘种类
+		;颜绘
+	ELSE
+		;立绘
+	ENDIF
+ENDIF
+
+;IMAGE_I62_特殊エフェクトチェック(CHAR, エフェクト)--------------------------------------------
+;角色特有のエフェクト判定  特殊エフェクトを直接指定したい场合に参照
+;参数 "エフェクト" に固有のエフェクトが含まれるかを判定する
+;例の街道、STRFINDを使用してください
+;-------------------------------------------------------------------------------------------
+@IMAGE_I62_特殊エフェクトチェック(CHARA, エフェクト)
+#DIM CHARA
+#DIMS エフェクト
+
+IF CFLAG:CHARA:应用差分替换
+	;替换用画像
+ELSE
+	;通常画像
+	;SIF STRFIND(エフェクト, "母乳") != -1
+	;	RETURN 1
+ENDIF
+
+RETURN 0
+
+;IMAGE_I62_特殊エフェクト(CHARA)--------------------------------------------------------------------
+;角色特有のエフェクト表示条件
+;使用时注意点:
+;	RESULTS配列に特殊エフェクトを格纳
+;	RETURNで追加するエフェクト数を返还すること
+;-------------------------------------------------------------------------------------------
+@IMAGE_I62_特殊エフェクト(CHARA)
+#DIM CHARA
+#DIM DYNAMIC エフェクト数 = 0
+VARSET RESULTS
+
+IF CFLAG:CHARA:应用差分替换
+	;替换用画像
+	IF FLAG:立绘种类
+		;颜绘
+	ELSE
+		;立绘
+		CALL IMAGE_I62_别立ち判定_エフェクト
+		エフェクト数 = RESULT
+	ENDIF
+ELSE
+	;通常画像
+	IF FLAG:立绘种类
+		;颜绘
+	ELSE
+		;立绘
+	ENDIF
+ENDIF
+
+RETURN エフェクト数
+
+;IMAGE_I62_自慰エフェクト(CHARA)--------------------------------------------------------------------
+;角色特有の自慰エフェクト表示条件
+@IMAGE_I62_自慰エフェクト(CHARA)
+#DIM CHARA
+#DIM DYNAMIC エフェクト数 = 0
+VARSET RESULTS
+
+IF CFLAG:CHARA:应用差分替换
+	;替换用画像
+	IF FLAG:立绘种类
+		;颜绘
+	ELSE
+		;立绘
+	ENDIF
+ELSE
+	;通常画像
+	IF FLAG:立绘种类
+		;颜绘
+	ELSE
+		;立绘
+	ENDIF
+ENDIF
+
+RETURN エフェクト数
+
+
+;********************************************************************************************
+
+@IMAGE_I62_通常颜绘特殊表情
+IF !FLAG:巨乳差分表示 || TALENT:62:胸围 == CSVTALENT(62, GETNUM(TALENT, "胸围")) ;no big breast support
+	IF !CHECK_NUDE(62)
+		;服
+		LOCALS '= RESULTS:0
+		IF RESULTS:0 == "笑颜"
+			IF (TALENT:62:恋慕 || TALENT:62:爱欲) && RAND:2 ;non-smug
+				RESULTS:0 = Smile
+			ELSEIF TALENT:62:思慕 || TALENT:62:炮友
+				RESULTS:1 = Wink
+			ENDIF
+		ENDIF
+		IF RESULTS:0 == "发情" || TCVAR:62:媚药 || CFLAG:62:积攒度 > 850
+			;return back in case smile overrode it
+			RESULTS:0 '= LOCALS
+			IF !(TALENT:62:恋慕 || TALENT:62:爱欲) && RAND:2
+				RESULTS:1 = Hmph
+			ELSE
+				RESULTS:1 = Uehh
+			ENDIF
+		ENDIF
+	ELSE
+		;裸
+		SIF RESULTS:0 == "发情" || TCVAR:62:媚药 || CFLAG:62:积攒度 > 850
+			RESULTS:1 = Ufufu
+	ENDIF
+ENDIF
+
+;********************************************************************************************
+
+@IMAGE_I62_别立ち判定_futa()
+#FUNCTION
+RETURNF (TALENT:62:性别==3 && NUDITYCHECK(62) <= 3)
+
+@IMAGE_I62_别立ち判定_腹精液()
+#FUNCTION
+RETURNF (EX:62:膣内精液 + EX:62:子宫内精液*2)
+
+@IMAGE_I62_别立ち判定_服装
+LOCAL = NUDITYCHECK(62)
+IF LOCAL == 2
+	RESULTS = _胸罩
+ELSEIF INRANGE(LOCAL,1,3)
+	RESULTS = _内衣
+ELSE
+	RESULTS = 
+ENDIF
+
+
+@IMAGE_I62_别立ち判定_体形
+RESULTS = 
+IF CFLAG:62:妊娠经过日数 >= 40
+	RESULTS = 妊娠%RESULTS%
+ELSEIF 充填率(62,3) >= 100
+	RESULTS = 妊娠%RESULTS%
+ENDIF
+
+IF IMAGE_I62_别立ち判定_futa()
+	RESULTS = 扶她%RESULTS% 
+ENDIF
+
+
+@IMAGE_I62_别立ち判定_表情
+
+IF NOWEX:62:Ｃ绝顶 || NOWEX:62:Ｂ绝顶 || NOWEX:62:Ｖ绝顶 || NOWEX:62:Ａ绝顶 || NOWEX:62:Ｍ绝顶
+	IF EX:62:TotalEX >= 5
+		RESULTS:0 = 快感急
+		RESULTS:1 = 快感急
+	ELSE
+		RESULTS:0 = 快感缓
+		RESULTS:1 = 快感急
+	ENDIF
+	RETURN
+ENDIF
+	
+IF CFLAG:62:睡眠
+	LOCAL = EX:62:无自觉Ｃ绝顶 + EX:62:无自觉Ｖ绝顶 + EX:62:无自觉Ａ绝顶 + EX:62:无自觉Ｂ绝顶 + EX:62:无自觉Ｍ绝顶
+	IF LOCAL >= 5
+		RESULTS:0 = 眯笑
+		RESULTS:1 = 眯笑
+	ELSE
+		RESULTS:0 = 睡眠
+		RESULTS:1 = 睡眠
+	ENDIF
+	RETURN
+ENDIF
+
+IF CFLAG:62:勃然大怒
+	RESULTS:0 = 怒{RAND:4+1}
+	RESULTS:1 = 怒{RAND:4+1}
+	RETURN
+ELSEIF BASE:62:愤怒 > 600 || TALENT:62:心情 < 0 || CFLAG:62:心情不快 == 1
+	RESULTS:0 = 不悦
+	RETURN
+ENDIF
+
+IF TALENT:62:恋人
+	IF BASE:62:情绪 >= 100
+		RESULTS:0 = 笑颜
+		RESULTS:1 = 眯笑
+	ELSE
+		RESULTS:0 = 通常
+	ENDIF
+ELSEIF TALENT:62:恋慕 || TALENT:62:爱欲
+	IF BASE:62:情绪 >= 300
+		RESULTS:0 = 笑颜
+		RESULTS:1 = 眯笑
+	ELSE
+		RESULTS:0 = 通常
+	ENDIF
+ELSEIF TALENT:62:思慕 || TALENT:62:炮友
+	IF BASE:62:情绪 >= 600
+		RESULTS:0 = 笑颜
+		RESULTS:1 = 眯笑
+	ELSE
+		RESULTS:0 = 通常
+	ENDIF
+ELSE
+	IF BASE:62:情绪 >= 1200
+		RESULTS:0 = 笑颜
+	ELSE
+		RESULTS:0 = 通常
+	ENDIF
+ENDIF
+
+IF RESULTS:0 == "通常"
+	IF MARK:62:反抗刻印 <= 0
+		RESULTS:1 = 微开口
+	ENDIF
+ELSEIF RESULTS:0 == "笑颜"
+	IF PALAM:62:情欲 >= PALAMLV:10 || TCVAR:62:发情 || CFLAG:62:积攒度 >= 900
+		RESULTS:1 = 开口
+	ELSEIF MARK:62:反抗刻印 <= 0 && (TFLAG:103==109 || TARGET==109)
+		RESULTS:1 = 貘笑
+	ENDIF
+ENDIF
+
+RETURN
+
+
+@IMAGE_I62_别立ち判定_エフェクト
+#DIMS 气泡名 = "愉悦", "沉默", "羞涩", "疑惑", "不悦", "愤怒", "欲求", "睡眠"
+#DIM 气泡概率, 8
+#DIM DYNAMIC エフェクト数 = 0
+
+;表情
+IF PALAM:62:情欲 >= PALAMLV:10 || TCVAR:62:发情 || CFLAG:62:积攒度 >= 900
+	CALL IMAGE_I62_别立ち判定_表情
+	IF RESULTS:0 != "快感急" && RESULTS:0 != "快感缓" && RESULTS:0 != "眯笑" && RESULTS:0 != "睡眠" && RESULTS:1 != "快感急" && RESULTS:1 != "快感缓" && RESULTS:1 != "眯笑" && RESULTS:1 != "睡眠"
+		RESULTS:エフェクト数 = 眼中爱心
+		エフェクト数++
+	ENDIF
+ENDIF
+IF BASE:62:情绪 >= 800 || TCVAR:62:发情 || TCVAR:62:媚药
+	RESULTS:エフェクト数 = 鼻红晕
+	エフェクト数++
+	RESULTS:エフェクト数 = 腮红
+	エフェクト数++
+ENDIF
+IF PALAM:62:优越 >= PALAMLV:3
+	RESULTS:エフェクト数 = 线状红晕
+	エフェクト数++
+ENDIF
+IF BASE:62:理性 <= 300 || TCVAR:62:发情 || TCVAR:62:媚药
+	RESULTS:エフェクト数 = 眼泪
+	エフェクト数++
+ENDIF
+;IF CFLAG:62:诶嘿嘿
+;	RESULTS:エフェクト数 = 吐息
+;	エフェクト数++
+;ENDIF
+
+;下体
+IF IMAGE_I62_别立ち判定_futa() && BASE:62:勃起 >= 900
+	RESULTS:エフェクト数 = 先走汁
+	エフェクト数++
+ENDIF
+IF CFLAG:62:膣内射精 == 1 || CFLAG:62:肛门射精
+	LOCAL = NUDITYCHECK(62)
+	IF LOCAL > 3
+		RESULTS:エフェクト数 = 精渍外衣
+	ELSEIF LOCAL==3 && IMAGE_I62_别立ち判定_futa()
+		RESULTS:エフェクト数 = 精渍扶她内衣
+	ELSEIF LOCAL==3
+		RESULTS:エフェクト数 = 精渍内衣
+	ELSE
+		RESULTS:エフェクト数 = 精渍裸
+	ENDIF
+	エフェクト数++
+ENDIF
+
+; only show 断面图 effect and 气泡 effect when current target or last target is 62
+SIF !(TFLAG:103==62 || TARGET==62)
+	RETURN エフェクト数
+
+;断面图
+IF (SELECTCOM == 306 && TFLAG:103==62) || (NOWEX:MASTER:射精 && TEQUIP:62:Ｖ性交 == MASTER && RAND:3==0)
+	IF CFLAG:62:妊娠经过日数 >= 40 && IMAGE_I62_别立ち判定_腹精液() >= 800 && 充填率(62,3) >= 100
+			RESULTS:エフェクト数 = 断面图安定期储精罐
+			エフェクト数++
+	ELSEIF CFLAG:62:妊娠经过日数 >= 40
+			RESULTS:エフェクト数 = 断面图安定期
+			エフェクト数++
+	ELSEIF IMAGE_I62_别立ち判定_腹精液() >= 800 && 充填率(62,3) >= 100
+			RESULTS:エフェクト数 = 断面图储精罐
+			エフェクト数++
+	ELSEIF CFLAG:62:妊娠经过日数 && IMAGE_I62_别立ち判定_腹精液() >= 500
+			RESULTS:エフェクト数 = 断面图怀孕内射
+			エフェクト数++
+	ELSEIF CFLAG:62:妊娠经过日数
+			RESULTS:エフェクト数 = 断面图怀孕
+			エフェクト数++
+	ELSEIF IMAGE_I62_别立ち判定_腹精液() > 500
+			RESULTS:エフェクト数 = 断面图内射
+			エフェクト数++
+	ENDIF
+ENDIF
+
+;气泡
+气泡概率:0 = MAX(0, GETPALAMLV(PALAM:62:好意,10) -5 + BASE:62:情绪/200)
+气泡概率:1 = 5 - MAX(0, GETPALAMLV(PALAM:62:好意,10) -5)
+气泡概率:2 = MAX(0, GETPALAMLV(PALAM:62:羞耻,5))
+气泡概率:3 = MAX(0, GETPALAMLV(PALAM:62:不快,7))
+气泡概率:4 = MAX(0, GETPALAMLV(PALAM:62:抑郁,5)+ GETPALAMLV(PALAM:62:反感,5))
+气泡概率:5 = BASE:62:愤怒/100
+气泡概率:6 = TCVAR:62:发情*5
+SIF (CFLAG:62:既成事实 & 合意_诶嘿嘿)
+	气泡概率:6 += MAX(0, CFLAG:62:积攒度/100 - 5)
+气泡概率:7 = 0
+
+IF CFLAG:62:勃然大怒
+	VARSET 气泡概率
+	气泡概率:1 = 1
+	气泡概率:5 = 8
+	气泡概率:4 = 2
+ENDIF
+
+IF TALENT:62:心情 < 0 || CFLAG:62:心情不快 == 1
+	气泡概率:3 += 2
+	气泡概率:4 += 4
+ENDIF
+
+SIF CFLAG:睡眠
+	气泡概率:7 += 5 + TCVAR:62:睡眠深度/500
+
+LOCAL:1 = 气泡概率:0 + 气泡概率:1 + 气泡概率:2 + 气泡概率:3 + 气泡概率:4 + 气泡概率:5 + 气泡概率:6 + 气泡概率:7 + 5
+SIF LOCAL:1 == 气泡概率:1 + 5
+	气泡概率:1 = 0
+IF LOCAL:1 > 0
+	LOCAL:1 = RAND:(LOCAL:1)
+	FOR LOCAL, 0, 8
+		LOCAL:1 -= 气泡概率:LOCAL
+		IF LOCAL:1 < 0
+			RESULTS:エフェクト数 = 气泡%气泡名:LOCAL%
+			エフェクト数++
+			BREAK
+		ENDIF
+	NEXT
+ENDIF
+
+RETURN エフェクト数
+;********************************************************************************************
+@IMAGE_EX_I62_PREリソースチェック(CHARA, 表示形式, 服装, 表情, 表情_マウスオーバー, 差分, 乳量)
+#DIM CHARA
+#DIMS 表示形式
+#DIMS 服装
+#DIMS 表情
+#DIMS 表情_マウスオーバー
+#DIMS 差分
+#DIMS 乳量
+
+SIF CFLAG:CHARA:应用差分替换 == 1
+	CALL COMPOSE_SPRITE_62

@@ -1,0 +1,113 @@
+﻿@CHARAMOVE_DATA_56(ARG, ARG:2)
+LOCAL = 56
+SELECTCASE ARG
+	;连动设定（RETURN=依存する角色, RESULT:1～3=对等に连动する角色）
+	CASE 1
+	;特殊生活时间设定（CFLAG:LOCAL:生活时间补正を设定する）
+	CASE 3
+	;移动倾向（±～10=行きやすい/行きにくい, -100=行かない）
+	CASE 4
+		SELECTCASE ARG:2
+			;神灵庙メンバーの私室はあんまり入らない
+			CASE P125屠自古私室, P127布都私室, P139邪仙楼
+				RETURN -5
+			;命莲寺内部
+			CASE P103本堂 TO P120库房
+				RETURN -100
+			;道场によく居る
+			CASE P126道场
+				RETURN 5
+		ENDSELECT
+	;出现场所
+	CASE 7
+		SELECTCASE ARG:2
+			CASE 樱花道的鸟居, 神社境内, 神社走廊
+				RETURN 1
+			CASE 地藏小路, 倒垂的柳树下, 命莲寺境内, 神灵庙广场, 神灵庙道场
+				RETURN 1
+			CASE 广场, 商业街, 吞屋小道, 长屋街
+				RETURN 1
+		ENDSELECT
+	;引力设定（CFLAG:LOCAL:引力点を设定する）
+	CASE 8
+ENDSELECT
+
+@EXIST_キャラデータ56
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@キャラデータ56(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "称呼"
+	CALLF MAKE_STR(V_NAME, "神子")
+;こっから衣装设定
+CASE "今天的睡衣"
+	CALLF MAKE_STR(V_NAME, "睡衣（襦袢）套")
+
+CASE "便装：帽子"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("帽子", "头戴式耳机"))
+CASE "便装：靴"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("靴", "靴"))
+CASE "便装：袜子"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("袜子", "袜子"))
+CASE "便装：裙子"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("裙子", "裙子"))
+CASE "便装：上身衣服１"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("上身衣服１", "无袖外套"))
+CASE "便装：其他１"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("其他１", "手链"))
+
+CASE "固有内衣形容词"
+	CALLF MAKE_STR(V_NAME, "定制的")
+CASE "固有下半身内衣名"
+	CALLF MAKE_STR(V_NAME, "真丝蕾丝内裤")
+CASE "固有上半身内衣"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "固有上半身内衣名"
+	CALLF MAKE_STR(V_NAME, "真丝蕾丝胸罩")
+CASE "固有内衣着用条件"
+	SIF !RAND:(3 - (2 * 胜负内衣判定([[神子]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "固有内衣半透明(前)"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "固有内衣半透明(后)"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "固有内衣布料厚度"
+	CALLF MAKE_INT(V_NAME, 1)
+
+;料理关联
+CASE "料理：喜欢的味道"
+	CALLF MAKE_STR(V_NAME, "米/鱼料理/煮物/简易/健康/清淡/豪华/上品/新鲜/松脆/仙术/月都风/天界风/外界风/" + "和食/甜/酸/" * 2)
+CASE "料理：讨厌的味道"
+	CALLF MAKE_STR(V_NAME, "洋食/朴素/辣/辣/" + "青蛙/虫肉/浓厚/谜料理/冥界风/地狱风/" * 3)
+CASE "料理：助手效果"
+	CALLF MAKE_STR(V_NAME, "绚烂/")
+;赠り物关联
+CASE "感性：好き"
+	CALLF MAKE_STR(V_NAME, "紫/金/高级/秩序/美的/时尚/和风/夸张/知的/威严/" + "光/日/宝石/巫术/枭の/斗篷/" * 3 + "黄金の/神灵の/仙人の/七星の/威严の/救世の/宝剑/" * 5)
+CASE "感性：嫌い"
+	CALLF MAKE_STR(V_NAME, "黑/混沌/朴素/别致/纤细/洛丽塔/" + "安物/暗/死生/生体品/" * 3)
+ENDSELECT
+
+;-------------------------------------------------
+;固有料理设定
+;DISH_NAME          料理名
+;RESULTS            料理の种类（轻食/主食/甜点）
+;CALL 材料设定("")  材料の指定。"泛用"を入れると自动で泛用食材になる
+;DISH_TASTE         味の设定
+;DISH_COMMENT       （任意）一行コメント
+;DISH_TIME          （任意）调理にかかる时间
+;DISH_MAXLIMIT      （任意）料理の持续时间
+;-------------------------------------------------
+@SPECIAL_MENU_56
+DISH_NAME = 酥酪
+RESULTS = 轻食
+CALL 材料设定("泛用")
+DISH_TASTE = 和食/牛奶/乳酪/甜/上品/浓厚/豪华/
+DISH_COMMENT = 将牛奶熬制而成的类似乳酪的料理。似乎深受古代贵族的喜爱。
+RETURN 1

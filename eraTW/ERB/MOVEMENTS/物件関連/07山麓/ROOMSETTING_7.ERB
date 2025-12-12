@@ -1,0 +1,227 @@
+﻿;＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+;地点の属性设定
+;场所_ワンルーム   家主が不在のとき键がかかる,被窝・屋内・厨房・勉强・休憩・饮食・プライベートが自动で付与
+;场所_被窝         休憩が自动で付与
+;场所_洋室         屋内だけど靴を履いたまま,屋内が自动で付与
+;场所_屋内         
+;场所_屋根         屋外だけど屋根がある场所,屋内でも屋根でも无い场合は野外判定（旧露天）
+;场所_广阔         
+;场所_赏月         屋内や屋根があっても月が见える场所
+;场所_休憩         
+;场所_澡堂         
+;场所_厕所       
+;场所_厨房         つまみ食いが自动で付与
+;场所_训练         
+;场所_学习         
+;场所_天之声       
+;场所_菜园         
+;场所_打水       
+;场所_身体测定     
+;场所_物干し       风景描写用
+;场所_饮食         自由行动用
+;场所_つまみ食い   自由行动用
+;场所_留まらない   あまり角色が留まらない（移动しやすい）
+;场所_过疎         あまり角色が立ち入らない（移动されにくい）
+;场所_プライベート 节度のある角色は入ってこない,主に私室と澡堂・厕所
+;场所_炬燵         自由行动用
+;场所_公共の场     推倒てこない
+;＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+@ROOMSETTING_7
+#DIM ROOM
+VARSET ROOMDATA
+MAXROOM = 742
+ENTRANCE = P701树海道入口
+避难处 = P712间歇泉地下中枢
+SIF GET_MAPID(据点_酒虫) != MAIN_MAP
+	据点_酒虫 = P734小屋
+MAP_PAGES = 4
+MAPNAME:1 = 妖怪之山・山麓
+MAPNAME:2 = 秋姊妹的家
+MAPNAME:3 = 仙人的宅邸　1-2F
+MAPNAME:4 = 仙人的宅邸　2-3F
+
+;山顶と月の住民は山顶侧から来る
+FOR LOCAL, 1, CHARANUM
+	SIF GROUPMATCH(GET_MAPID(CFLAG:LOCAL:自宅位置), 8, 10)
+		CFLAG:LOCAL:(450 + MAIN_MAP) = P732通向山顶的路
+NEXT
+
+FOR LOCAL, MINROOM(), MAXROOM
+	ROOM = LOCAL % 100
+	SELECTCASE LOCAL
+	;被窝・屋内・厨房・勉强・休憩・饮食・プライベートが自动で付与
+	CASE P704河童的宣传站, P706厄神的家, P709莉莉们的家, P733正邪的藏身处, P736山姥之家, P737招财猫的家, P740山童的宣传站, P741美天的栖息处
+		ROOMDATA:ROOM |= 场所_ワンルーム
+	;自室になると被窝,勉强,プライベートが付与
+	CASE P734小屋
+		ROOMDATA:ROOM |= 场所_屋内
+		ROOMDATA:ROOM |= 场所_厨房
+		ROOMDATA:ROOM |= 场所_休憩
+		ROOMDATA:ROOM |= 场所_饮食
+
+	CASE P701树海道入口
+		ROOMDATA:ROOM |= 场所_广阔
+		ROOMDATA:ROOM |= 场所_留まらない
+	CASE P702山道・通往沼泽之道, P705山道・中腹, P707山道・分岐点, P732通向山顶的路
+		ROOMDATA:ROOM |= 场所_广阔
+	CASE P703玄武之泽
+		ROOMDATA:ROOM |= 场所_广阔
+		ROOMDATA:ROOM |= 场所_训练
+		ROOMDATA:ROOM |= 场所_打水
+	CASE P708大蛤蟆之池
+		ROOMDATA:ROOM |= 场所_打水
+		ROOMDATA:ROOM |= 场所_过疎
+	CASE P710猫之里
+	CASE P731帚木
+	CASE P711休憩所
+		ROOMDATA:ROOM |= 场所_屋根
+		ROOMDATA:ROOM |= 场所_休憩
+		ROOMDATA:ROOM |= 场所_饮食
+		ROOMDATA:ROOM |= 场所_公共の场
+	CASE P712间歇泉地下中枢
+		ROOMDATA:ROOM |= 场所_屋根
+		ROOMDATA:ROOM |= 场所_过疎
+	CASE P738森林深处
+		ROOMDATA:ROOM |= 场所_广阔
+		ROOMDATA:ROOM |= 场所_训练
+	CASE P739秘天崖
+		ROOMDATA:ROOM |= 场所_过疎
+	CASE P735游泳场
+		ROOMDATA:ROOM |= 场所_打水
+		ROOMDATA:ROOM |= 场所_澡堂
+
+	CASE P715秋姊妹的家・旱田
+		ROOMDATA:ROOM |= 场所_菜园
+		ROOMDATA:ROOM |= 场所_つまみ食い
+	CASE P716秋姊妹的家・土间
+		ROOMDATA:ROOM |= 场所_屋内
+		ROOMDATA:ROOM |= 场所_厨房
+	CASE P717秋姊妹的家・寝室
+		ROOMDATA:ROOM |= 场所_屋内
+		ROOMDATA:ROOM |= 场所_被窝
+		ROOMDATA:ROOM |= 场所_プライベート
+	CASE P718秋姊妹的家・起居室
+		ROOMDATA:ROOM |= 场所_屋内
+		ROOMDATA:ROOM |= 场所_学习
+		ROOMDATA:ROOM |= 场所_饮食
+		ROOMDATA:ROOM |= 场所_炬燵
+	CASE P719秋姊妹的家・会客室
+		ROOMDATA:ROOM |= 场所_屋内
+		ROOMDATA:ROOM |= 场所_饮食
+		ROOMDATA:ROOM |= 场所_赏月
+		ROOMDATA:ROOM |= 场所_物干し
+
+	CASE P720仙人的宅邸・厨房
+		ROOMDATA:ROOM |= 场所_屋内
+		ROOMDATA:ROOM |= 场所_厨房
+	CASE P721仙人的宅邸・澡堂
+		ROOMDATA:ROOM |= 场所_屋内
+		ROOMDATA:ROOM |= 场所_澡堂
+		ROOMDATA:ROOM |= 场所_身体测定
+		ROOMDATA:ROOM |= 场所_プライベート
+	CASE P722仙人的宅邸・道场
+		ROOMDATA:ROOM |= 场所_屋内
+		ROOMDATA:ROOM |= 场所_训练
+	CASE P723仙人的宅邸・二层客房, P726仙人的宅邸・起居室
+		ROOMDATA:ROOM |= 场所_屋内
+		ROOMDATA:ROOM |= 场所_休憩
+		ROOMDATA:ROOM |= 场所_饮食
+		ROOMDATA:ROOM |= 场所_炬燵
+	CASE P724仙人的宅邸・书斋
+		ROOMDATA:ROOM |= 场所_屋内
+		ROOMDATA:ROOM |= 场所_学习
+	CASE P725仙人的宅邸・大鹫的房间
+		ROOMDATA:ROOM |= 场所_屋内
+		ROOMDATA:ROOM |= 场所_过疎
+		ROOMDATA:ROOM |= 场所_赏月
+	CASE P727仙人的宅邸・华扇私室, 
+		ROOMDATA:ROOM |= 场所_屋内
+		ROOMDATA:ROOM |= 场所_被窝
+		ROOMDATA:ROOM |= 场所_学习
+		ROOMDATA:ROOM |= 场所_プライベート
+	;自室になると勉强,プライベートが付与
+	CASE P728仙人的宅邸・空的房间
+		ROOMDATA:ROOM |= 场所_屋内
+		ROOMDATA:ROOM |= 场所_被窝
+	CASE P729仙人的宅邸・玄关
+		ROOMDATA:ROOM |= 场所_屋内
+		ROOMDATA:ROOM |= 场所_留まらない
+	CASE P730仙人的宅邸・庭
+		ROOMDATA:ROOM |= 场所_训练
+		ROOMDATA:ROOM |= 场所_菜园
+		ROOMDATA:ROOM |= 场所_打水
+		ROOMDATA:ROOM |= 场所_物干し
+	ENDSELECT
+NEXT
+
+;-----------------------------------------
+;默认の初始位置と大家の设定
+;-----------------------------------------
+@DEFAULT_OWNER_7
+默认初始位置 = P734小屋
+据点_家主 = [[华扇]]
+
+;-----------------------------------------
+;お出かけMapの设定
+;ARG   对象の地点
+;ARGS  判定文字典数
+;-----------------------------------------
+@ODEKAKEMAP_SETTING_7(ARG, ARGS)
+#FUNCTION
+;＼1 2 3 4 5 6 7 8 9 
+;01　　　　　　　　　
+;02　　　　　　　　　
+;03　　　　　　　　　
+;04５　　　　　　　　
+;05　　　　６　　　　
+;06　３　　　　　　　
+;07　　　　４　　　　
+;08　　　２　　７　　
+;09　１　　　　　　　
+;＼1 2 3 4 5 6 7 8 9 
+;01　　　　　　　　　
+;02　　　　　　　　　
+;03　　５　　　６　　
+;04　　　　　　　　　
+;05　　　　３　　　　
+;06　　　　　　　　　
+;07　　　４　　　　　
+;08　　　　２　　　７
+;09　　１　　　　　　
+SELECTCASE ARG
+CASE 山麓树海
+	SIF ARGS == "座标"
+		RETURNF 39
+	SIF GROUPMATCH(ARGS, "广阔")
+		RETURNF 1
+CASE 玄武之泽
+	SIF ARGS == "座标"
+		RETURNF 58
+	SIF GROUPMATCH(ARGS, "广阔", "训练", "便当")
+		RETURNF 1
+CASE 大蛤蟆之池
+	SIF ARGS == "座标"
+		RETURNF 55
+	SIF GROUPMATCH(ARGS, "便当")
+		RETURNF 1
+CASE 正邪的藏身处前
+	SIF ARGS == "座标"
+		RETURNF 47
+	SIF GROUPMATCH(ARGS, "屋根")
+		RETURNF 1
+CASE 仙人的宅邸
+	SIF ARGS == "座标"
+		RETURNF 33
+	SIF GROUPMATCH(ARGS, "屋内", "勉强")
+		RETURNF 1
+CASE 间歇泉地下中枢
+	SIF ARGS == "座标"
+		RETURNF 73
+	SIF GROUPMATCH(ARGS, "屋根")
+		RETURNF 1
+CASE 森林深处
+	SIF ARGS == "座标"
+		RETURNF 98
+	SIF GROUPMATCH(ARGS, "广阔")
+		RETURNF 1
+ENDSELECT

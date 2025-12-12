@@ -1,0 +1,3075 @@
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+;"COUNTER"系口上
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+;-------------------------------------------------
+;コミュニケーション
+;-------------------------------------------------
+;==================================================
+;距离が近い
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_1
+CALL M_KOJO_MESSAGE_COUNTER_K139_1_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_1_1
+	IF TALENT:恋慕 || TALENT:恋人
+		IF TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行
+			PRINTFORML 「来吧、再更贴近姐姐一点吧%UNICODE(0x2665) *1%」
+		ELSE
+			PRINTFORML 「因为、我一刻也不想离开%CALLNAME:MASTER%大人的身边呢%UNICODE(0x2665) *1%」
+		ENDIF
+	ELSE
+		IF TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行
+			PRINTFORML 「真是的、只是让你靠近一点点就害羞了、%CALLNAME:MASTER%大人还真是纯真呢♪」
+		ELSE
+			PRINTFORML 「为什么呢？　因为我想更加了解你嘛…♪」
+		ENDIF
+	ENDIF
+RETURN 1
+
+;==================================================
+;チラ见
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_2
+CALL M_KOJO_MESSAGE_COUNTER_K139_2_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_2_1
+IF TALENT:恋慕 || TALENT:恋人
+	PRINTFORML （呵呵…\@ TALENT:恋人 == 1 ? 我的 #  \@%CALLNAME:MASTER%大人今天也很迷人呢…%UNICODE(0x2665) *1%）
+ELSE
+	IF (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行)
+		PRINTFORML （%CALLNAME:MASTER%大人…今天也很可爱呢…%UNICODE(0x2665) *1%）
+		IF TCVAR:发情
+			SETCOLOR 0xFF69B4
+			CALL HPH_PRINT,@"「现在就想把你推倒…HPH」","L"
+			RESETCOLOR
+		ENDIF
+	ELSE
+		PRINTFORML （今天要怎么和%CALLNAME:MASTER%大人玩呢～♪）
+	ENDIF
+	PRINTL 
+ENDIF
+RETURN 1
+
+;==================================================
+;おはなし
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_3
+CALL M_KOJO_MESSAGE_COUNTER_K139_3_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_3_1
+RETURN 1
+
+;==================================================
+;いい匂い
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_4
+CALL M_KOJO_MESSAGE_COUNTER_K139_4_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_4_1
+	IF TCVAR:发情
+		PRINTFORML 用「体臭」来形容有些太甜蜜了、但用「香水味」来形容又有些过于沉闷、
+		PRINTFORML 虽不算令人讨厌、但典发出的气味让%CALLNAME: MASTER%有些困扰…
+		PRINTL 
+		SETCOLOR 0xFF69B4
+		SELECTCASE RAND:3
+		CASE 0
+			CALL HPH_PRINT,@"「呵呵、有什么问题吗…HPH」","L"
+		CASE 1
+			CALL HPH_PRINT,@"「被这样嗅到味道…我都有点害羞了HPH」","L"
+		CASE 2
+			CALL HPH_PRINT,@"「不该随便闻女性的气味哦…HPH」","L"
+		ENDSELECT
+		RESETCOLOR
+		PRINTL 
+	ELSE
+		IF (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行)
+			SELECTCASE RAND:2
+			CASE 0
+				PRINTFORML 「嗯、怎么了？」
+				PRINTFORML 「啊ー、难道你、偷偷闻了姐姐的气味吗？」
+				PRINTL 
+				PRINTFORML 「%CALLNAME:MASTER%大人、真好色…%UNICODE(0x2665) *1%」
+				PRINTL 
+			CASE 1
+				PRINTFORML 「欸、闻到好香的味道？」
+				PRINTFORML 「真是的、偷闻姐姐的气味什么的、%CALLNAME:MASTER%大人真是好色…%UNICODE(0x2665) *1%」
+				SELECTCASE RAND:2
+				CASE 0
+					PRINTFORML 典把后头发向后梳起来、露出了后颈
+					PRINTFORML 「如果这样的话、会不会变得更好闻呢…？%UNICODE(0x2665) *1%」
+				CASE 1
+					PRINTFORML 典温柔地将%CALLNAME:MASTER%抱住、把脸往胸部埋去
+					PRINTFORML 「来吧、这样的话就能闻得更仔细了吧…%UNICODE(0x2665) *1%」
+					PRINTFORML 「呀啊～嗯、害羞了呢、真是太可爱了%UNICODE(0x2665) *1%」
+				ENDSELECT
+				PRINTL 
+			ENDSELECT
+		ELSE
+			IF TALENT:恋慕 || TALENT:恋人
+				SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 「咦、注意到了吗？　我试着喷了一些些香水呢…」
+					PRINTFORML 「不愧是%CALLNAME:MASTER%大人呢%UNICODE(0x2665) *1%　这点我很喜欢呢%UNICODE(0x2665) *1%」
+					PRINTL 
+				CASE 1
+					PRINTFORML 「啊、是吗、是这样吗ー…咿呀～、哈哈哈…」
+					PRINTFORML 「被挚爱说闻起来好香时、真是让人格外的害羞呢…%UNICODE(0x2665) *1%」
+					PRINTL 
+				CASE 2
+					PRINTFORML 「呵呵、这是这样、这是这样♪」
+					PRINTFORML 「典、为了%CALLNAME:MASTER%大人、都在晝夜不停地提高着女性气质的♪」
+					PRINTL 
+				ENDSELECT
+			ELSE
+				SELECTCASE RAND:2
+				CASE 0
+					PRINTFORML 「对人类做这样的事情、那可是犯罪的哦…%UNICODE(0x2665) *1%」
+					PRINTFORML 「典是妖怪真是太好了呢♪」
+					PRINTL 
+				CASE 1
+					PRINTFORML 「%CALLNAME:MASTER%大人就是所谓的…[气味控]吗？」
+					PRINTFORML 「虽然被说闻起来很香什么的并不讨厌…但被这么专注地闻着还是会感觉到羞耻的…%UNICODE(0x2665) *1%」
+					PRINTL 
+				ENDSELECT
+			ENDIF
+		ENDIF
+	ENDIF
+	
+RETURN 1
+
+;-------------------------------------------------
+;ベリーソフト
+;-------------------------------------------------
+;==================================================
+;近寄ってくる
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_11
+CALL M_KOJO_MESSAGE_COUNTER_K139_11_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_11_1
+IF TCVAR:发情
+	SETCOLOR 0xFF69B4
+	SELECTCASE RAND:3
+	CASE 0
+		CALL HPH_PRINT,@"「呜嘿嘿、%CALLNAME:MASTER%大人…HPH」","L"
+	CASE 1
+		CALL HPH_PRINT,@"「哦呀、为什么要与我保持距离呢…HPH」","L"
+	CASE 2
+		CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人、我可以走到你身边吗…你没有拒绝的权利哦HPH」","L"
+	ENDSELECT
+	RESETCOLOR
+	PRINTL 
+ELSE
+	IF TALENT:恋慕 || TALENT:恋人
+		SELECTCASE RAND:2
+		CASE 0
+			PRINTFORML 「%CALLNAME:MASTER%大人～♪」
+		CASE 1
+			PRINTFORML 「%CALLNAME:MASTER%大人♪　我可以走到你身边吗？」
+		ENDSELECT
+		PRINTL 
+	ELSE
+		SELECTCASE RAND:2
+		CASE 0
+			PRINTFORML 「等下、不要刻意拉出个微妙的距离啦！　这样我会微妙地受伤的！」
+		CASE 1
+			PRINTFORML 「呵～呵～呵、%CALLNAME:MASTER%大人、我有一些东西想悄悄跟你说…♪」
+		ENDSELECT
+		PRINTL 
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;笑颜を浮かべる
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_12
+CALL M_KOJO_MESSAGE_COUNTER_K139_12_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_12_1
+IF TCVAR:发情
+	SETCOLOR 0xFF69B4
+	SELECTCASE RAND:3
+	CASE 0
+		CALL HPH_PRINT,@"（%CALLNAME:MASTER%大人HPH、%CALLNAME:MASTER%大人HPH、%CALLNAME:MASTER%大人HPHHPH）","L"
+	CASE 1
+		CALL HPH_PRINT,@"（%CALLNAME:MASTER%大人…HPH　要在哪里推倒你好呢…HPH）","L"
+	CASE 2
+		CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人…HPH」","L"
+	ENDSELECT
+	RESETCOLOR
+	PRINTFORML 典虽微笑着、但未能掩盖住那浓稠的欲望...
+	PRINTL 
+ELSE
+	PRINTFORML 「怎么了吗？　%CALLNAME:MASTER%大人」
+	IF TALENT:恋慕 || TALENT:恋人
+		PRINTFORML 典带着柔和的笑容看着%CALLNAME:MASTER%
+	ELSE
+		PRINTFORML 典露出了恶作剧般的笑容
+	ENDIF
+	PRINTL 
+ENDIF
+RETURN 1
+
+;==================================================
+;构って欲しがる
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_13
+CALL M_KOJO_MESSAGE_COUNTER_K139_13_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_13_1
+	IF TALENT:恋慕 || TALENT:恋人
+		IF TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行
+			PRINTFORML 「%CALLNAME:MASTER%大人～、再多关心姐姐一下嘛～～！」
+		ELSE
+			PRINTFORML 「%CALLNAME:MASTER%大人～、再多关心典一下嘛～～！」
+		ENDIF
+	ELSE
+		IF TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行
+			PRINTFORML 「姐姐、想找%CALLNAME:MASTER%大人作伴呢」
+		ELSE
+			PRINTFORML 「%CALLNAME:MASTER%大人～、可以陪陪我一下吗～」
+		ENDIF
+	ENDIF
+RETURN 1
+
+;==================================================
+;身をすり寄せる
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_14
+CALL M_KOJO_MESSAGE_COUNTER_K139_14_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_14_1
+IF TCVAR:发情
+	IF (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行)
+		SETCOLOR 0xFF69B4
+		CALL HPH_PRINT,@"「姐姐、好想和%CALLNAME:MASTER%大人靠得紧紧的啊…HPH」","L"
+		RESETCOLOR
+	ELSE
+		SETCOLOR 0xFF69B4
+		CALL HPH_PRINT,@"「和%CALLNAME:MASTER%大人黏在一起时、就会感到安心呢…不可以吗？HPH」","L"
+		RESETCOLOR
+		PRINTFORML 典用撒娇般的眼神看向%CALLNAME:MASTER%
+	ENDIF
+	RESETCOLOR
+	PRINTL 
+ELSE
+	IF (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行)
+		PRINTFORML 「嘿嘿嘿、姐姐就在%CALLNAME:MASTER%大人的身边♪」
+		IF TALENT:恋慕 || TALENT:恋人
+			PRINTFORML （看似如往常一样、但脸稍微变红了呢…还是一如往常地可爱♪）
+		ELSE
+			PRINTFORML （呵呵、紧张到僵硬着身体真的好可爱呢♪）
+		ENDIF
+	ELSE
+		PRINTFORML 「怎么了吗？　身体都僵住了。所以说处男啊～♪」
+		SIF TALENT:MASTER:非童贞 == 0
+			PRINTFORML 「说『不知道会被对待成什么模样』什么的…说得好过分呢」
+	ENDIF
+	PRINTL 
+ENDIF
+RETURN 1
+
+;==================================================
+;见つめてくる
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_15
+CALL M_KOJO_MESSAGE_COUNTER_K139_15_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_15_1
+RETURN 1
+
+;==================================================
+;肩にあご乘せ
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_16
+CALL M_KOJO_MESSAGE_COUNTER_K139_16_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_16_1
+RETURN 1
+
+;-------------------------------------------------
+;ソフト
+;-------------------------------------------------
+;==================================================
+;色っぽい仕草
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_20
+CALL M_KOJO_MESSAGE_COUNTER_K139_20_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_20_1
+RETURN 1
+
+;==================================================
+;见つめる
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_21
+CALL M_KOJO_MESSAGE_COUNTER_K139_21_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_21_1
+RETURN 1
+
+;==================================================
+;体を摺り寄せる
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_22
+CALL M_KOJO_MESSAGE_COUNTER_K139_22_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_22_1
+RETURN 1
+
+;==================================================
+;裙子めくり
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_23
+CALL M_KOJO_MESSAGE_COUNTER_K139_23_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_23_1
+RETURN 1
+
+;==================================================
+;息を吹きかける
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_24
+CALL M_KOJO_MESSAGE_COUNTER_K139_24_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_24_1
+IF TCVAR:发情
+	IF (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行)
+		SETCOLOR 0xFF69B4
+		SELECTCASE RAND:3
+		CASE 0
+			CALL HPH_PRINT,@"「哦呀、不逃跑吗…HPH　还是说、身体动弹不得了呢…？HPH」","L"
+			PRINTFORML 典将自己的手叠在%CALLNAME:MASTER%的手上、贴近了脸…
+		CASE 1
+			CALL HPH_PRINT,@"「怎么了呢？　脸和耳朵都红通通的哦…HPH」","L"
+		CASE 2
+			CALL HPH_PRINT,@"「姐姐、因为太喜欢%CALLNAME:MASTER%大人了、就忍不住想捉弄一下呢…HPH」","L"
+			PRINTFORML 每当典在耳边低语时、热热的呼吸就会吹到耳朵上、身体就会不禁颤抖着…
+			PRINTL 
+		ENDSELECT
+		RESETCOLOR
+		PRINTL 
+	ELSE
+		SETCOLOR 0xFF69B4
+		SELECTCASE RAND:3
+		CASE 0
+			CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人、你能猜猜典现在是什么心情吗…HPH」","L"
+			RESETCOLOR
+			SELECTCASE RAND:2
+			CASE 0
+				PRINTFORML 典在%CALLNAME:MASTER%的手背上写下了个小字…
+			CASE 1
+				PRINTFORML 典用手指轻轻挠着%CALLNAME:MASTER%的下腹部…
+			ENDSELECT
+		CASE 1
+			CALL HPH_PRINT,@"「觉得心跳加速了吗？HPH　报复一下典也没关系的哦…HPH」","L"
+		CASE 2
+			CALL HPH_PRINT,@"「嘿欸、%CALLNAME:MASTER%大人、要不要来做…HPH」","L"
+			RESETCOLOR
+			PRINTFORML 每当典在耳边低语时、官能的震动就在全身流窜着...
+		ENDSELECT
+		RESETCOLOR
+		PRINTL 
+	ENDIF
+ELSE
+	IF (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行)
+		SELECTCASE RAND:2
+		CASE 0
+			PRINTFORML 「呜嘿嘿♪　好可爱♪」
+			PRINTFORML 「想报复姐姐吗？　呵呵…好啊、请吧♪」
+			PRINTL 
+		CASE 1
+			PRINTFORML 「呜嘿嘿♪　这种反应、真是纯朴的可爱呢♪」
+			PRINTL 
+		ENDSELECT
+	ELSE
+		PRINTFORML 「%CALLNAME:MASTER%大人、有些、事情想悄悄对你呢…」
+		PRINTFORML 「呼呼呼～～～～～～～%UNICODE(0x2665) *1%」
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 「耶～♪　你中计了呢♪　啊、好痛、痛痛痛痛、不要尻头啦～」
+			PRINTL 
+		CASE 1
+			PRINTFORML 「耶～♪　你中计了呢、嗯、啊、别拗耳朵、噫啊啊啊啊啊%UNICODE(0x2665) *1%」
+			PRINTL 
+		CASE 2
+			PRINTFORML 「怎么了呢？　脸红得像苹果一样哦♪」
+			PRINTL 
+		ENDSELECT
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;摸屁股
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_25
+CALL M_KOJO_MESSAGE_COUNTER_K139_25_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_25_1
+IF TCVAR:发情
+	IF (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行)
+		SETCOLOR 0xFF69B4
+		SELECTCASE RAND:3
+		CASE 0
+			CALL HPH_PRINT,@"「不能摸吗？　呵呵、只是稍微了摸一下屁股而已啦…HPH」","L"
+			CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人、你的呼吸好急促喔…HPH」","L"
+		CASE 1
+			CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人的屁股、从这个地方开始…HPH」","L"
+			CALL HPH_PRINT,@"「…到这里的曲线、姐姐、很喜欢的呢…HPH」","L"
+		CASE 2
+			CALL HPH_PRINT,@"「那里…是指哪里呢？　不好好告诉我的话、我可分不清楚的哦…HPH」","L"
+			CALL HPH_PRINT,@"「姐姐、只是在抚摸%CALLNAME:MASTER%大人而已哦…HPH」","L"
+		ENDSELECT
+		RESETCOLOR
+		PRINTL 
+	ELSE
+		SETCOLOR 0xFF69B4
+		SELECTCASE RAND:3
+		CASE 0
+			CALL HPH_PRINT,@"「呵呵、这手感、真是美妙呢…HPH」","L"
+		CASE 1
+			CALL HPH_PRINT,@"「正所谓想抚摸的屁股、就是这种感觉呢.…HPH」","L"
+		CASE 2
+			CALL HPH_PRINT,@"「呵呵、屁股的感觉也不错对吧…HPH」","L"
+			CALL HPH_PRINT,@"「还是说、抚摸其他地方更合您心意呢…？HPH」","L"
+		ENDSELECT
+		RESETCOLOR
+		PRINTL 
+	ENDIF
+ELSE
+	IF (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行)
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 「呵呵、软中带硬的感觉… 说是最棒的也不为过呢…%UNICODE(0x2665) *1%」
+		CASE 1
+			PRINTFORML 「啊啊～～、这手感、最棒了…♪」
+		CASE 2
+			PRINTFORML 「%CALLNAME:MASTER%大人、可以让姐姐摸摸屁股吗…%UNICODE(0x2665) *1%」
+			PRINTFORML 典一边抚摸着%CALLNAME:MASTER%的屁股一边开口请求着…
+		CASE 3
+			PRINTFORML 「这样不好吗%UNICODE(0x2665) *1%　以后也可以来摸姐姐的屁股哦%UNICODE(0x2665) *1%」
+		ENDSELECT
+		PRINTL 
+	ELSE
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 「%CALLNAME:MASTER%大人、你的屁股真是好看呢%UNICODE(0x2665) *1%」
+		CASE 1
+			PRINTFORML 「唔ー呣、这曲线、真是太棒了…♪」
+		CASE 2
+			PRINTFORML 「我在做什么？　摸你的屁股、需要什么理由吗？♪」
+		ENDSELECT
+		PRINTL 
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;腕抱き付き
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_26
+CALL M_KOJO_MESSAGE_COUNTER_K139_26_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_26_1
+IF (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行)
+	PRINTFORML 「%CALLNAME:MASTER%大人～%UNICODE(0x2665) *1%」
+	IF (TALENT:MASTER:回应 == 1 || TALENT:MASTER:态度 == 1)
+		PRINTFORML 这样靠太近了害自己很害羞而抗议着
+	ELSE
+		PRINTFORML 如果被谁给看见了会很羞耻而抗议着
+	ENDIF
+	PRINTFORML 「哦呀哦呀、难道害羞了吗？」
+	PRINTFORML 「啊哈～…%UNICODE(0x2665) *1%　姐姐就算被看到也一点都不在意哦？」
+	PRINTFORML 「那么、要不要去人少的地方呢…？」
+	PRINTW 
+ELSE
+	PRINTFORML 「%CALLNAME:MASTER%大人%UNICODE(0x2665) *1%」
+	IF K139_FIND_LOVER() == 2
+		PRINTFORML 「当然、这就是故意的哦？？」
+		PRINTFORML 典淡定地回答了
+		IF TALENT:恋慕
+			IF TALENT:140:恋人
+				PRINTFORM （饭纲丸大人、我可还没有、完全死心呢…）
+			ELSEIF TALENT:29:恋人
+				PRINTFORM （射命丸、要是掉以轻心的话、这位就会成为我的了哦…）
+			ELSEIF TALENT:42:恋人
+				PRINTFORM （姬海棠、我并不怨恨妳、但我也深爱着这个人…）
+			ELSEIF TALENT:65:恋人
+				PRINTFORM （犬走、妳会对我感到愤怒吗？　还是、会担心可能被夺走而感到不安呢？）
+			ELSE
+				PRINTFORM （您的恋人是谁…我可不知道呢。对妖怪来说、人类的伦理观什么的全都是屁话）
+			ENDIF
+			PRINTFORML 典望向看着自己的%CALLNAME:MASTER%的恋人、投去了意味深长的目光…
+			PRINTW 
+		ELSE
+			IF TALENT:140:恋人
+				IF TALENT:140:处女 == 1
+					PRINTFORML （看起来饭纲丸大人的进度缓慢呢…要不要刺激一下让他们多些进展呢）
+				ELSE
+					PRINTFORML （让饭纲丸大人吃醋一下、晚上就会想和他度过火热时光了吧♪）
+				ENDIF
+			ELSEIF TALENT:29:恋人
+				PRINTFORM 「射命丸大人也是
+			ELSEIF TALENT:42:恋人
+				PRINTFORM 「姫海棠大人也是
+			ELSEIF TALENT:65:恋人
+				PRINTFORM 「犬走大人也是
+			ELSE
+				PRINTFORM （%CALLNAME:MASTER%大人的恋人会有什么样的反应呢…得先好好观察一下呢）
+			ENDIF
+			PRINTW 
+		ENDIF
+	ELSEIF K139_FIND_LOVER() == 1
+		PRINTFORM 「不是挺好的吗…♪　现在
+		IF TALENT:140:恋人
+			PRINTFORM 「饭纲丸大人也
+		ELSEIF TALENT:29:恋人
+			PRINTFORM 「射命丸大人也
+		ELSEIF TALENT:42:恋人
+			PRINTFORM 「姫海棠大人也
+		ELSEIF TALENT:65:恋人
+			PRINTFORM 「犬走大人也
+		ELSE
+			PRINTFORM 「恋人小姐也
+		ENDIF
+			PRINTFORML 刚好不在这里呢…%UNICODE(0x2665) *1%」
+			PRINTW 
+	;典が恋人
+	ELSEIF K139_FIND_LOVER() == -1
+		PRINTFORML 
+		IF TALENT:140:恋慕 && K139_FIND_AROUND() == 140
+		ELSEIF TALENT:29:恋慕 && K139_FIND_AROUND() == 29
+			PRINTFORM 「射命丸大人、怎么了？　这位、是我珍爱的『恋人』哦…%UNICODE(0x2665) *1%」
+			PRINTFORML 特别强调了「恋人」这个词后、典加紧抱住%CALLNAME:MASTER%的手腕
+		ELSEIF TALENT:42:恋慕 && K139_FIND_AROUND() == 42
+			PRINTFORM 「姫海棠大人、也别闭门不出了、不如去试着找一位像我的恋人一样美妙的恋人吧？」
+			PRINTFORML 
+		ELSEIF TALENT:65:恋慕 && K139_FIND_AROUND() == 65
+			PRINTFORM 「犬走大人也
+		ENDIF
+	ELSE
+		PRINTFORML （一副色瞇瞇的样子…真是可爱♪）
+		PRINTW 
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;谷间を见せる
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_27
+CALL M_KOJO_MESSAGE_COUNTER_K139_27_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_27_1
+IF (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行)
+	IF TALENT:TARGET:胸围 > 0
+		IF TALENT:TARGET:胸围 > 1
+			PRINTFORML 「嘻嘻嘻、%CALLNAME:MASTER%大人、你总是在偷偷看姐姐的胸部、对吧…%UNICODE(0x2665) *1%」
+			PRINTFORML 「有着大胸部的女人、确实不太常见对吧♪」
+			PRINTFORML 「来吧来吧、你可以更近距离地看哦～%UNICODE(0x2665) *1%」
+			PRINTL 
+		ELSE
+			PRINTFORML 「呵呵、这是%CALLNAME:MASTER%大人最喜欢的胸部哦ー%UNICODE(0x2665) *1%」
+			PRINTFORML 「来吧来吧、你被这个乳沟迷住了、对吧？」
+			PRINTFORML 「你喜欢对吧、这・个・乳・沟%UNICODE(0x2665) *1%」
+			PRINTL 
+		ENDIF
+	ELSE
+		PRINTFORML 「呵呵、姐姐的胸部出奇地大、对吧%UNICODE(0x2665) *1%」
+		PRINTFORML 「这样靠拢在一起…看、乳沟就出现了%UNICODE(0x2665) *1%」
+		SELECTCASE RAND:2
+		CASE 0
+			CALL HPH_PRINT,@"（呵呵、我的胸部也不赖呢…HPH）","L"
+		CASE 1
+			CALL HPH_PRINT,@"（呵呵、你在透过眼睛的缝隙盯着看、这真的很明显哦…HPH　真是可爱呀…HPH）","L"
+		ENDSELECT
+		PRINTL 
+	ENDIF
+ELSE
+	IF TALENT:TARGET:胸围 > 0
+		IF TALENT:TARGET:胸围 > 1
+			SELECTCASE RAND:2
+			CASE 0
+				PRINTFORML 「呵呵…%UNICODE(0x2665) *1%　怎么样呢…%UNICODE(0x2665) *1%」
+				PRINTFORML 典在%CALLNAME:MASTER%的面前摇晃着饱满的胸部…
+				PRINTL 
+			CASE 1
+				PRINTFORML 「我都有注意到的哦♪　你总是对典的胸部、用着淫荡的眼光看着呢…%UNICODE(0x2665) *1%」
+				PRINTFORML 「你看、就连现在、你还是在死死盯着它们看呢…%UNICODE(0x2665) *1%」
+				PRINTL 
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 「来吧来吧♪　请看吧♪　这是%CALLNAME:MASTER%大人喜欢的乳沟哦～%UNICODE(0x2665) *1%」
+			CASE 1
+				PRINTFORML 「呵呵、这么的大、能夹点东西进去呢…%UNICODE(0x2665) *1%」
+				PRINTFORML 「比如营养饮料之类的呢♪　哦呀哦呀、你以为里面可以夹点什么呢～？%UNICODE(0x2665) *1%」
+				PRINTL 
+			CASE 2
+				PRINTFORML 「当它们长大到这么大时、我的肩膀就开始酸起来了呢…」
+				PRINTFORML 「%CALLNAME:MASTER%大人、能帮帮我支撑住它们吗～？%UNICODE(0x2665) *1%」
+				PRINTL 
+			ENDSELECT
+		ENDIF
+	ELSE
+		PRINTFORML 「当典把它们像这样凑在一起时、看啊…%UNICODE(0x2665) *1%」
+		PRINTFORML 「能将%CALLNAME:MASTER%大人迷得神魂颠倒的乳沟就完成了～%UNICODE(0x2665) *1%」
+		PRINTL 
+	ENDIF
+ENDIF
+RETURN 1
+
+;-------------------------------------------------
+;性骚扰
+;-------------------------------------------------
+;==================================================
+;キス
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_30
+CALL M_KOJO_MESSAGE_COUNTER_K139_30_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_30_1
+	IF (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行)
+		IF TALENT:MASTER:性别 == 2
+			IF FIRSTTIME("初吻")
+				IF EXP:MASTER:接吻经验 == 1
+					CALL SET_FIRSTKISS(MASTER, 139, 0)
+					CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人的初吻、被姐姐夺走了呢…HPH」","L"
+					CALL HPH_PRINT,@"「这样一来、就算%CALLNAME:MASTER%大人喜欢的人出现了、嘴唇也还都是姐姐的东西哦…HPH」","L"
+				ENDIF
+				
+				IF EXP:139:接吻经验 == 1
+					CALL SET_FIRSTKISS(139, MASTER, 0)
+					CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人、姐姐的初吻已经献给了您哦…HPH」","L"
+					CALL HPH_PRINT,@"「当然、你要负起责任的哦…HPH」","L"
+				ENDIF
+			ELSE
+			
+				IF TALENT:接吻魔
+					CALL HPH_PRINT,@"啾HPH　噗啾HPH　噗啾HPH　啾呜HPH","L"
+					CALL HPH_PRINT,@"「姐姐啊、很喜欢、%CALLNAME:MASTER%大人的吻哦…HPH」","L"
+					CALL HPH_PRINT,@"「所以呢HPH　再更多地、亲吻我吧…HPH」","L"
+				ELSE
+					CALL HPH_PRINT,@"咕啾HPH　啾HPH　啾HPH　啾噜HPH","L"
+					CALL HPH_PRINT,@"「啊嗯HPH　还不行哦、再继续、亲我吧HPH　舌头、伸出来…HPH」","L"
+				ENDIF
+
+				SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"「啊啊、胆怯的表情也好可爱…HPH　啾、啾…HPH」","L"
+					CALL HPH_PRINT,@"「没问题的哦、我可没有、打算将你捉去吃掉什么的哦…HPH」","L"
+					CALL HPH_PRINT,@"「只是会用另一张嘴巴、将%CALLNAME:MASTER%大人宝贵的东东吃掉而已哦…HPH」","L"
+				CASE 1
+					CALL HPH_PRINT,@"「来吧、让我们来个大人的亲吻吧…HPH　舔哩、啊噗、咕啾咕啾HPH」","L"
+					CALL HPH_PRINT,@"「哈啊…HPH　感觉怎样呢、大人的接吻…HPH　脑袋、都快融化了对吧？」","L"
+					CALL HPH_PRINT,@"「和姐姐一起、踏上成年人的阶梯吧…HPH　会好好、牵着你的手的…HPH」","L"
+				CASE 2
+					CALL HPH_PRINT,@"「来、把舌头伸出来…HPH　哩噜、哩噜…啾苏苏、咕啾咕啾…HPH」","L"
+					CALL HPH_PRINT,@"「接吻并不是什么肮脏的事情哦…HPH　这是相恋的人之间、非常重要的事情哦…HPH」","L"
+				ENDSELECT
+			ENDIF
+		ELSE
+			IF FIRSTTIME("初吻")
+				IF EXP:MASTER:接吻经验 == 1
+					CALL SET_FIRSTKISS(MASTER, 139, 0)
+					CALL HPH_PRINT,@"「啊啦啊啦、怎么了？　怎么哭了…HPH」","L"
+					CALL HPH_PRINT,@"「那是、妳的初吻呢…HPH　难道、是想要献给的男孩子的吗？」","L"
+					CALL HPH_PRINT,@"「不过、很遗憾…HPH　妳的初吻被姐姐给夺走已经是个不争的事实了哦…HPH」","L"
+				ENDIF
+				
+				IF EXP:139:接吻经验 == 1
+					CALL SET_FIRSTKISS(139, MASTER, 0)
+					CALL HPH_PRINT,@"「呵呵…刚刚的、可是姐姐的初吻哦…HPH」","L"
+					CALL HPH_PRINT,@"「这样看起来、有像是后悔的表情吗…？HPH」","L"
+					CALL HPH_PRINT,@"「姐姐呢、只要是喜欢的对象、不论是男是女都无所谓的哦…HPH」","L"
+				ENDIF
+			ELSE
+				SELECTCASE RAND:3
+				CASE 0
+					SELECTCASE TALENT:MASTER:性别嗜好
+					;两刀
+					CASE -1
+						CALL HPH_PRINT,@"「呵呵、只要能享受快乐、就不管是谁都可以吗…？HPH」","L"
+						CALL HPH_PRINT,@"「正因为如此、和姐姐的相性才会是最好的呢…HPH」","L"
+					;ノンケ
+					CASE 0
+						CALL HPH_PRINT,@"「呵呵、并不讨厌女同呢HPH　看来妳也有这样的素質呢…HPH」","L"
+						CALL HPH_PRINT,@"「大人的女性亲吻、让我们来学习一下吧…HPH」","L"
+					;男嫌い
+					CASE 1
+						CALL HPH_PRINT,@"「呵呵、从第一次见面的时候起、我就觉得女孩子比较合你的口味呢…HPH」","L"
+						CALL HPH_PRINT,@"「这么主动地将舌头缠绕上来…坏孩子HPH」","L"
+					;女嫌い
+					CASE 2
+						CALL HPH_PRINT,@"「呵呵、请不要露出那么讨厌的表情。这样姐姐会兴奋的…HPH」","L"
+						CALL HPH_PRINT,@"「如果那么讨厌的话、那么就请尝试摆脱我吧？HPH　如果、妳可以的话…HPH」","L"
+					ENDSELECT
+				CASE 1
+					CALL HPH_PRINT,@"「如果要和同性交换嘴唇、除了饭纲丸大人以外都无法想像呢…HPH」","L"
+					IF TALENT:恋慕 || TALENT:恋人
+						CALL HPH_PRINT,@"「但现在看来、除了%CALLNAME:MASTER%大人的嘴唇之外都无法想像了呢…HPH」","L"
+					ELSEIF TALENT:爱欲 || TALENT:炮友
+						CALL HPH_PRINT,@"「看来和您亲吻的相性也不错呢…HPH」","L"
+					ELSE
+						CALL HPH_PRINT,@"「这之际、只要能止住姐姐的疼痛的话、就算是%CALLNAME:MASTER%大人也无妨…HPH」","L"
+					ENDIF
+				CASE 2
+					CALL HPH_PRINT,@"「呵呵…我们亲吻的相性很不错、你不这么觉得吗？HPH」","L"
+					CALL HPH_PRINT,@"「因为、妳看…我们彼此都这么湿润了…HPH」","L"
+				ENDSELECT
+			ENDIF
+		ENDIF
+	;大人
+	ELSE
+		IF TALENT:MASTER:性别 == 2
+			IF FIRSTTIME("初吻")
+				IF EXP:MASTER:接吻经验 == 1
+					CALL SET_FIRSTKISS(MASTER, 139, 0)
+					CALL HPH_PRINT,@"「啊啦啊啦、怎么了呢？　怎么这么慌张呢…HPH」","L"
+					CALL HPH_PRINT,@"「那是、你的初吻啊…HPH　难道、是有想献给的女性吗？」","L"
+					CALL HPH_PRINT,@"「不过、很遗憾…HPH　之后每当你与最爱的人接吻时、典的脸孔就会浮现于你的脑海中了呢…HPH」","L"
+					CALL HPH_PRINT,@"「因为我的能力、已经将今天的记忆深深烙印在您的灵魂中了呢…HPH」","L"
+				ENDIF
+				
+				IF EXP:139:接吻经验 == 1
+					CALL SET_FIRSTKISS(139, MASTER, 0)
+					CALL HPH_PRINT,@"「嘿嘿…刚才的、是典的初吻哦…HPH」","L"
+					IF TALENT:恋慕 || TALENT:恋人
+						CALL HPH_PRINT,@"「虽然是这样的方式…但是献给了%CALLNAME:MASTER%大人、真是太好了…HPH」","L"
+					ELSEIF TALENT:爱欲 || TALENT:炮友
+						CALL HPH_PRINT,@"「明明都已经多次重叠过身体了、亲嘴居然还是第一次什么的还真是可笑挠、呵呵…HPH」","L"
+					ELSEIF TALENT:思慕
+						CALL HPH_PRINT,@"「嘛、有种如果是你的话也没什么大不了的感觉呢…HPH」","L"
+					ELSE
+						CALL HPH_PRINT,@"「并不是说你特别合我的口味…但味道还不错呢HPH」","L"
+					ENDIF
+				ENDIF
+			ELSE
+			
+				IF TALENT:接吻魔
+					CALL HPH_PRINT,@"咕啾HPH　啾HPH　啾HPH　啾噜HPH","L"
+					CALL HPH_PRINT,@"「哈啊…HPH　嗯、%CALLNAME:MASTER%大人、再多、亲亲…HPH」","L"
+				ELSE
+					CALL HPH_PRINT,@"啾HPH　啾噜HPH　「嗯…HPH　呼…HPH」啾HPH　啾咕HPH","L"
+					CALL HPH_PRINT,@"「呵呵、舌头、都要融化了呢…HPH」","L"
+				ENDIF
+				
+				SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"「咕啾、哩啰哩啰…HPH　来吧、再把舌头缠上来一点吧HPH」","L"
+					CALL HPH_PRINT,@"「HPH」","L"
+				CASE 1
+					CALL HPH_PRINT,@"「是你让典有这种心情的、请不要变得被动哦…HPH」","L"
+					CALL HPH_PRINT,@"「嗯HPH　嗯HPH　%CALLNAME:MASTER%大人、我很仰慕你…HPH」","L"
+				CASE 2
+					CALL HPH_PRINT,@"「哈啊HPH　啾、啾呜、啾啾、啾噜噜…HPH」","L"
+					CALL HPH_PRINT,@"「典现在、嘴巴有点寂寞呢…HPH　%CALLNAME:MASTER%大人、请用你的嘴唇来把它填满吧…HPH」","L"
+				ENDSELECT
+			ENDIF
+		;大人・女性
+		ELSE
+			IF FIRSTTIME("初吻")
+				IF EXP:MASTER:接吻经验 == 1
+					CALL SET_FIRSTKISS(MASTER, 139, 0)
+					CALL HPH_PRINT,@"「啊啦啊啦、怎么了呢？　怎么这么慌张呢…HPH」","L"
+					CALL HPH_PRINT,@"「那是、妳的第一次呢…HPH　难道、是有想献给的男士吗？」","L"
+					CALL HPH_PRINT,@"「但是、真遗憾…HPH　您的初吻被典给夺去已经是个难以改变的事实了哦…HPH」","L"
+				ENDIF
+				
+				IF EXP:139:接吻经验 == 1
+					CALL SET_FIRSTKISS(139, MASTER, 0)
+					CALL HPH_PRINT,@"「嘿嘿…刚才的、是典的初吻哦…HPH」","L"
+					CALL HPH_PRINT,@"「虽然我并不特别偏爱同性之爱…但滋味还不赖呢HPH」","L"
+				ENDIF
+			ELSE
+			
+				IF TALENT:接吻魔
+					CALL HPH_PRINT,@"咕啾HPH　啾HPH　啾HPH　啾噜HPH","L"
+					CALL HPH_PRINT,@"「哈啊…HPH　嗯、%CALLNAME:MASTER%大人、再多、亲亲…HPH」","L"
+				ELSE
+					CALL HPH_PRINT,@"啾HPH　啾噜HPH　「嗯…HPH　呼…HPH」啾HPH　啾咕HPH","L"
+					CALL HPH_PRINT,@"「呵呵、舌头、都要融化了呢…HPH」","L"
+				ENDIF
+			
+				SELECTCASE RAND:3
+				CASE 0
+					SELECTCASE TALENT:MASTER:性别嗜好
+					;两刀
+					CASE -1
+						CALL HPH_PRINT,@"「呵呵、只要能享受快乐、就不管是谁都可以吗…？HPH」","L"
+						CALL HPH_PRINT,@"「正因为如此、和典的亲和度才会是最棒的呢…HPH」","L"
+					;ノンケ
+					CASE 0
+						CALL HPH_PRINT,@"「呵呵、女性之间似乎也不排斥呢HPH　显然您也拥有这样的素質呢…HPH」","L"
+					;男嫌い
+					CASE 1
+						CALL HPH_PRINT,@"「呵呵、从第一次见面开始起、就感觉妳似乎更喜欢女性呢…HPH」","L"
+					;女嫌い
+					CASE 2
+						CALL HPH_PRINT,@"「呵呵、请不要露出那么讨厌的表情啦。会害典变得更加兴奋的…HPH」","L"
+						CALL HPH_PRINT,@"「如果妳那么不喜欢的话、为什么不试着自己摆脱开呢？HPH」","L"
+					ENDSELECT
+				CASE 1
+					CALL HPH_PRINT,@"「如果要和同性交换嘴唇、除了饭纲丸大人以外都无法想像呢…HPH」","L"
+					IF TALENT:恋慕 || TALENT:恋人
+						CALL HPH_PRINT,@"「但现在看来、除了%CALLNAME:MASTER%大人的嘴唇之外都无法想像了呢…HPH」","L"
+					ELSEIF TALENT:爱欲 || TALENT:炮友
+						CALL HPH_PRINT,@"「看来和您亲吻的相性也不错呢…HPH」","L"
+					ELSE
+						CALL HPH_PRINT,@"「事到如今，只要能止住典的骚痛，%CALLNAME:MASTER%大人也可以哦…HPH」","L"
+					ENDIF
+				CASE 2
+					CALL HPH_PRINT,@"「呵呵…我们亲吻的相性很不错、你不这么觉得吗？HPH」","L"
+					CALL HPH_PRINT,@"「因为、妳看…我们彼此都这么湿润了…HPH」","L"
+				ENDSELECT
+			ENDIF
+		ENDIF
+	ENDIF
+RETURN 1
+
+;==================================================
+;后ろから抱きつく
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_31
+CALL M_KOJO_MESSAGE_COUNTER_K139_31_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_31_1
+	IF (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行)
+		IF TALENT:TARGET:胸围 > 1
+			CALL HPH_PRINT,@"「呵呵、就算是在背后也能感觉到的吧？　姐姐的幻想乡第一大胸部正碰着呢…HPH」","L"
+		ELSEIF TALENT:TARGET:胸围 == 1
+			CALL HPH_PRINT,@"「怎么、很大对吧？HPH　姐姐的胸部、可比天狗姐姐们还大哦…HPH」","L"
+		ELSEIF TALENT:TARGET:胸围 == -1
+			CALL HPH_PRINT,@"「你看、这样挤挤的话…就能感受到柔软的触感了吧？HPH」","L"
+		ELSEIF TALENT:TARGET:胸围 == -2
+			CALL HPH_PRINT,@"「或许姐姐那微薄的胸部无法让你开心…但是让人开心的方法可是多得很呢…HPH」","L"
+		ELSE
+			CALL HPH_PRINT,@"「姐姐的胸部、能感受到对吧…HPH　有DOKIDOKI、的感觉吗…？」","L"
+		ENDIF
+		PRINTL
+		PRINTL 
+		
+		IF TALENT:MASTER:性别 == 2 || TALENT:MASTER:性别 == 3
+			SELECTCASE RAND:3
+			CASE 0
+				CALL HPH_PRINT,@"「哦呀哦呀？　以为能从姐姐这里逃走吗？HPH」","L"
+				CALL HPH_PRINT,@"「不ー行HPH　直到姐姐满意为止、%CALLNAME:MASTER%大人都得陪伴着喔HPH」","L"
+			CASE 1
+				CALL HPH_PRINT,@"「呵呵、怎么样？HPH　这样对乳头咔哧咔哧、咔哧咔哧…HPH　很迷人的哭声呢哦HPH」","L"
+				CALL HPH_PRINT,@"「让姐姐听到更可爱的哭声吧HPH」","L"
+				CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人的哭声、让典的女性的部分口水一直流个不停呢…HPH」","L"
+			CASE 2
+				CALL HPH_PRINT,@"「呵呵、这样如何呢、同时对乳头和小鸡鸡咯哧、咯哧、嘻～咯嘻咯HPH」","L"
+				CALL HPH_PRINT,@"「啊啊、好可爱的声音…HPH　姐姐、还想要听更多更多…HPH」","L"
+			CASE 3
+				CALL HPH_PRINT,@"「不行哦、要是逃跑什么的就不好了HPH」","L"
+				CALL HPH_PRINT,@"「这样子、是不会给你撸小鸡鸡的哦…HPH」","L"
+			ENDSELECT
+		;女の子
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				CALL HPH_PRINT,@"「哦呀哦呀？　以为能从姐姐这里逃走吗？HPH」","L"
+				CALL HPH_PRINT,@"「不ー行HPH　直到姐姐满意为止、%CALLNAME:MASTER%大人都得陪伴着喔HPH」","L"
+			CASE 1
+				CALL HPH_PRINT,@"「呵呵、怎么样？HPH　这样对乳头咔哧咔哧、咔哧咔哧…HPH　很迷人的哭声呢哦HPH」","L"
+				CALL HPH_PRINT,@"「让姐姐听到更可爱的哭声吧HPH」","L"
+			CASE 2
+				CALL HPH_PRINT,@"「呵呵、这样如何呢、同时对乳头和小豆豆咯哧、咯哧、嘻～咯嘻咯HPH」","L"
+				CALL HPH_PRINT,@"「啊啊、好可爱的声音…HPH　姐姐、还想要听更多更多…HPH」","L"
+			ENDSELECT
+		ENDIF
+		PRINTL 
+	ELSE
+		IF TALENT:TARGET:胸围 > 1
+			CALL HPH_PRINT,@"「呵呵、就算是在背后也能感觉到的吧？　典的幻想乡第一大胸部正碰着呢…HPH」","L"
+		ELSEIF TALENT:TARGET:胸围 == 1
+			CALL HPH_PRINT,@"「怎样，很大吧？HPH 是不输给天狗和河童们，典引以为傲的胸部哦…HPH」","L"
+		ELSEIF TALENT:TARGET:胸围 == -1
+			CALL HPH_PRINT,@"「尺寸虽然不算大…但能感受到软软的感觉对吧？HPH　瞧、就连乳头也是这样的…HPH」","L"
+		ELSEIF TALENT:TARGET:胸围 == -2
+			CALL HPH_PRINT,@"「虽然胸部有些贫瘠…但是让人开心的方法可是多得很哦…HPH」","L"
+		ELSE
+			CALL HPH_PRINT,@"「感受到典的胸部、压在身上了吗…？HPH　这样的感觉、应该很喜欢吧…HPH」","L"
+		ENDIF
+		PRINTL
+		PRINTL 
+		
+		IF TALENT:MASTER:性别 == 2 || TALENT:MASTER:性别 == 3
+			SELECTCASE RAND:5
+			CASE 0
+				CALL HPH_PRINT,@"「呵呵、只是被抚摸乳头而已、就发出了相当可爱的声音呢…HPH」","L"
+				CALL HPH_PRINT,@"「如果光是对这点程度就这么激动、最后可能会被快感烧得头脑一片空白呢…HPH」","L"
+			CASE 1
+				CALL HPH_PRINT,@"「呵呵、感受到乳头的愉悦、不仅仅是女孩才能有的哦HPH」","L"
+				CALL HPH_PRINT,@"「如果像这样轻轻抚弄…瞧、就像这样…HPH」","L"
+				IF TALENT:Ｂ感度 == 1
+					CALL HPH_PRINT,@"「乳头的悸动宛如雌性一般…HPH　这放荡的表情、要不要用镜子照给你看看呢？HPH」","L"
+					CALL HPH_PRINT,@"「来吧、在典的面前用乳头高潮看看吧HPH　高潮吧HPH」","L"
+				ELSEIF TALENT:Ｂ感度 == -1
+					CALL HPH_PRINT,@"「还不发出声音吗…真是个顽固的人呢HPH」","L"
+				ENDIF
+			CASE 2
+				CALL HPH_PRINT,@"「啊啦啊啦、哎呀哎呀HPH　肉棒大人看起来有些不舒服呢…HPH」","L"
+				CALL HPH_PRINT,@"「必须要由典的手来安慰一下呢…HPH　乖乖、乖乖HPH」","L"
+			CASE 3
+				CALL HPH_PRINT,@"「为什么要忍住声音呢？　来、老老实实地发出来吧HPH」","L"
+				CALL HPH_PRINT,@"「乳头和肉棒都已经硬成这个样子了、真是缺乏说服力呢…HPH」","L"
+			CASE 4
+				CALL HPH_PRINT,@"「呵呵、可爱的你…HPH　在被耳边低语的同时被撸着肉棒大人的感受、难受吗…？HPH」","L"
+				CALL HPH_PRINT,@"「现在就顺从、把一切都交给典就可以了…HPH」","L"
+			ENDSELECT
+		;女
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				IF TALENT:TARGET:胸围 > 1
+					CALL HPH_PRINT,@"「哎呀、就像牛一样悬挂着的低贱乳房…HPH」","L"
+					CALL HPH_PRINT,@"「这么地显眼、看来很适合成为男人们夜晚使用的配菜呢…HPH」","L"
+					CALL HPH_PRINT,@"「想必、会在妄想之中一边用无套肉棒抽插、一边随意地揉搓那双巨大的乳房吧…HPH」","L"
+				ELSEIF TALENT:TARGET:胸围 == 1
+					CALL HPH_PRINT,@"「从初次见面的时、我就一直觉得、妳的胸部真是过分地大呢…HPH」","L"
+					CALL HPH_PRINT,@"「妳知道吗？　山里的妖怪们、好像都很想要用妳的胸部夹住着阴茎猛干哦…HPH」","L"
+					CALL HPH_PRINT,@"「真的很符合男人口味的不检点的乳房…HPH　就好像是为了被侵犯而存在的呢…嘻嘻HPH」","L"
+				ELSEIF TALENT:TARGET:胸围 == -1
+					CALL HPH_PRINT,@"「呵呵、真是一对相当谦虚的胸部…HPH」","L"
+					CALL HPH_PRINT,@"「但是、这边可一点都也不谦虚呢…HPH　妳看、两边的顶点都在坚挺地展示着自己哦HPH」","L"
+				ELSEIF TALENT:TARGET:胸围 == -2
+					CALL HPH_PRINT,@"「哎呀、就像块砧板一样呢…HPH」","L"
+					IF TALENT:Ｂ感度 == 1
+						CALL HPH_PRINT,@"「不过呢、这边的话倒是像个雌性一样非常敏感呢HPH」","L"
+						CALL HPH_PRINT,@"「来吧、在典的面前用乳头高潮看看吧HPH　高潮吧HPH」","L"
+					ELSEIF TALENT:Ｂ感度 == -1
+						CALL HPH_PRINT,@"「而且就连敏感度也不怎么好呢…不过也可以说是很有开发的价值呢HPH」","L"
+					ENDIF
+				ELSE
+					CALL HPH_PRINT,@"「这双胸部的形状真的很漂亮呢…HPH　真让人忍不住嫉妒呢HPH」","L"
+					CALL HPH_PRINT,@"「典要不要来轻咬一下呢…开玩笑的啦、只是开玩笑HPH」","L"
+					CALL HPH_PRINT,@"「不过我确实会品尝一下呢…HPH　瞧、就像这样…HPH」","L"
+				ENDIF
+			CASE 1
+				CALL HPH_PRINT,@"「喔喔、阴蒂竟然能像变得像是小鸡鸡这么大…HPH」","L"
+				CALL HPH_PRINT,@"「如果不是平时都有在玩弄的话、应该是不会变到这么大的…真是淫荡的人呢HPH」","L"
+			CASE 2
+				CALL HPH_PRINT,@"「感觉很舒服对吧…？HPH　在这方面、我的经验还是挺丰富的呢…HPH」","L"
+				CALL HPH_PRINT,@"「就这样用手指夹起来嘻咯嘻咯…HPH　呵呵、身体在哆哆嗦嗦的呢…HPH」","L"
+			ENDSELECT
+		ENDIF
+		PRINTL 
+	ENDIF
+RETURN 1
+
+;==================================================
+;前から抱きつく
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_32
+CALL M_KOJO_MESSAGE_COUNTER_K139_32_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_32_1
+	IF (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行)
+		;ショタ・典の方が身体が大きい
+		IF TALENT:TARGET:体型 > TALENT:PLAYER:体型
+			CALL HPH_PRINT,@"「呵呵、毕竟姐姐的身材很高大、是没有可比性的呢HPH」","L"
+			IF TALENT:TARGET:胸围 > 0
+				CALL HPH_PRINT,@"「用姐姐柔软的胸部将你囚禁在其中…HPH」","L"
+			ELSEIF TALENT:TARGET:胸围 == -1
+				CALL HPH_PRINT,@"「体积虽小、但也应该是柔软的对吧？HPH　看姐姐的胸部攻击…HPH」","L"
+			ELSEIF TALENT:TARGET:胸围 == -2
+				CALL HPH_PRINT,@"「或许不是很柔软、但应该会让你心跳加速对吧…？HPH　 那就是、女孩子的气息哦…HPH」","L"
+			ELSE
+				CALL HPH_PRINT,@"「姐姐的胸部将你的脸压扁了呢…HPH」","L"
+			ENDIF
+			PRINTL 
+			CALL HPH_PRINT,@"「呵呵、还是一个很爱撒娇的孩子呢HPH」","L"
+			CALL HPH_PRINT,@"「没关系哦、在姐姐这里多多地撒娇吧HPH」","L"
+			PRINTL 
+			
+			IF TALENT:MASTER:性别 == 2 || TALENT:MASTER:性别 == 3
+				IF BASE:MASTER:勃起 >= 1500
+					CALL HPH_PRINT,@"「哎呀…？　姐姐的肚子、好像碰到了一个很硬～的东西呢？HPH」","L"
+					CALL HPH_PRINT,@"「小鸡鸡、生气勃勃的呢…HPH」","L"
+					CALL HPH_PRINT,@"「也许、是因为被姐姐的胸部碰到ˊ、而＂勃・起＂了呢？HPH」","L"
+				ELSEIF BASE:MASTER:勃起 >= 1000
+					CALL HPH_PRINT,@"「喔…？　姐姐的肚子、碰到了硬硬的东西耶？HPH」","L"
+					CALL HPH_PRINT,@"「小鸡鸡、硬的梆硬呢…HPH」","L"
+					CALL HPH_PRINT,@"「也许、是因为被姐姐的胸部碰到ˊ、而＂勃・起＂了呢？HPH」","L"
+				ELSEIF BASE:MASTER:勃起 >= 500
+					CALL HPH_PRINT,@"「哎呀…？　姐姐的肚子、碰到了什么东西呢？HPH」","L"
+					CALL HPH_PRINT,@"「也许、是因为被姐姐的胸部碰到、小鸡鸡就…＂勃・起＂了呢？HPH」","L"
+				ENDIF
+			ENDIF
+			PRINTL 
+		;ショタ・あなたと体格同じ、またはあなたのほうが大きい
+		ELSE
+			;あなたにおっぱいがある
+			IF TALENT:MASTER:性别 == 1 || TALENT:MASTER:性别 == 3
+				IF TALENT:MASTER:胸围 > 0
+					CALL HPH_PRINT,@"「呵呵、这么小的孩子居然有这么不成比例的胸部…HPH」","L"
+					IF TALENT:MASTER:胸围 > TALENT:TARGET:胸围
+						CALL HPH_PRINT,@"「同样女性的我、居然会嫉妒一个小孩呢…HPH」","L"
+						CALL HPH_PRINT,@"「有痛吗？　对不起。可是、这都是有着这样可口的胸部的%CALLNAME:MASTER%大人的错哦HPH」","L"
+						CALL HPH_PRINT,@"「姐姐要不要尝一口呢…HPH　像这样…舔、啾噜噜HPH」","L"
+					ELSE
+						CALL HPH_PRINT,@"「同年龄的男生、看到%CALLNAME:MASTER%大人后、小鸡鸡肯定会硬起来的哟HPH」","L"
+						CALL HPH_PRINT,@"「呵呵、非常柔软…HPH　但是不行哦HPH　这双乳房、可是姐姐的东西HPH」","L"
+					ENDIF
+				ELSEIF TALENT:MASTER:胸围 == -1
+					CALL HPH_PRINT,@"「呵呵、稚嫩的、发育中的胸部…HPH　真是可爱呢…HPH」","L"
+					IF TALENT:MASTER:胸围 < TALENT:TARGET:胸围
+						CALL HPH_PRINT,@"「想要变得像姐姐一样大吗？HPH」","L"
+						CALL HPH_PRINT,@"「那就把一切都托付给姐姐吧…HPH　从现在开始要做的事情、是大人的秘密哦…HPH」","L"
+					ELSE
+						CALL HPH_PRINT,@"「居然能够随心所欲地对这保持着硬度的胸部做任何喜欢的事情…啊啊、这真是多么美好的事情啊HPH」","L"
+					ENDIF
+				ELSEIF TALENT:MASTER:胸围 == -2
+					CALL HPH_PRINT,@"「嘻嘻、当然是平坦的呢…HPH　多么可爱啊…HPH」","L"
+					CALL HPH_PRINT,@"「但妳看、这里周围都是软绵绵的、这里却硬梆梆的哦…HPH」","L"
+				ELSE
+					CALL HPH_PRINT,@"「嘻嘻、真的长得挺饱满的呢HPH　一定经常受到和你同年的男孩子的注目吧HPH」","L"
+					CALL HPH_PRINT,@"「试着用这双胸部、欺骗那些孩子们看看吧HPH　这样一来、金钱、舒服的事情、都会按照妳的意愿来的喔…HPH」","L"
+				ENDIF
+			;オトコの子
+			ELSE
+				SELECTCASE RAND:4
+				CASE 0
+					IF TALENT:TARGET:胸围 > 0
+						CALL HPH_PRINT,@"「呵呵、碰到姐姐那大大的胸部、而心跳加速了呢HPH」","L"
+						IF BASE:MASTER:勃起 >= 1000
+							CALL HPH_PRINT,@"「不用隐藏也没关系的哦HPH　因为…」","L"
+							SELECTCASE RAND:2
+							CASE 0
+								CALL HPH_PRINT,@"「你看、这边…已经这么硬了呢…HPH」","L"
+							CASE 1
+								CALL HPH_PRINT,@"「小鸡鸡、已经勃起了呢…HPH」","L"
+							ENDSELECT
+							CALL HPH_PRINT,@"「不听话的小鸡鸡、姐姐得惩罚你一下才行呢…HPH」","L"
+							PRINTL 
+						ENDIF
+					ELSEIF TALENT:TARGET:胸围 > -2
+						CALL HPH_PRINT,@"「呵呵、碰到姐姐的胸部、心跳有些加速呢HPH」","L"
+						IF BASE:MASTER:勃起 >= 1000
+							CALL HPH_PRINT,@"「不用隐藏也没关系的哦HPH　因为…」","L"
+							SELECTCASE RAND:2
+							CASE 0
+								CALL HPH_PRINT,@"「你看、这边…已经这么硬了呢…HPH」","L"
+							CASE 1
+								CALL HPH_PRINT,@"「小鸡鸡、已经勃起了呢…HPH」","L"
+							ENDSELECT
+							CALL HPH_PRINT,@"「不听话的小鸡鸡、姐姐得惩罚你一下才行呢…HPH」","L"
+							PRINTL 
+						ENDIF
+					ELSE
+						CALL HPH_PRINT,@"「哎呀呀、只是被抱住就心跳加速了？　真是可爱…HPH」","L"
+						IF BASE:MASTER:勃起 >= 1000
+							CALL HPH_PRINT,@"「不用隐藏也没关系的哦HPH　因为…」","L"
+							SELECTCASE RAND:2
+							CASE 0
+								CALL HPH_PRINT,@"「你看、这边…已经这么硬了呢…HPH」","L"
+							CASE 1
+								CALL HPH_PRINT,@"「小鸡鸡、已经勃起了呢…HPH」","L"
+							ENDSELECT
+							CALL HPH_PRINT,@"「不听话的小鸡鸡、姐姐得惩罚你一下才行呢…HPH」","L"
+							PRINTL 
+						ENDIF
+					ENDIF
+				CASE 1
+					CALL HPH_PRINT,@"「呵呵、%CALLNAME:MASTER%大人虽然是个小孩、但抱起来真是有趣呢…HPH」","L"
+				CASE 2
+					CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人的温暖、姐姐还想要更多呢…HPH」","L"
+				CASE 3
+					CALL HPH_PRINT,@"「不知道接下来会被姐姐怎么对待、有点害怕吗…HPH」","L"
+					CALL HPH_PRINT,@"「没事的哦、因为接下来要做的事情、是非常舒服的事情呢…HPH」","L"
+					CALL HPH_PRINT,@"「会让你到没有姐姐就无法自拔、会让你完全沉醉于其中.…HPH」","L"
+				CASE 4
+					CALL HPH_PRINT,@"「本以为只是个小孩子…没想到心胸意外地开阔呢…HPH」","L"
+					CALL HPH_PRINT,@"「姐姐、想一直保持这样下去…HPH」","L"
+				ENDSELECT
+			ENDIF
+		ENDIF
+	;大人
+	ELSE
+		;典の方が身体が大きい
+		IF TALENT:TARGET:体型 > TALENT:PLAYER:体型
+			CALL HPH_PRINT,@"「呵呵、身形差异使得无法与典相匹敌呢HPH　再说、外表虽然看起来娇小、但典可是个化生呢HPH」","L"
+			IF TALENT:TARGET:胸围 > 0
+				CALL HPH_PRINT,@"「典会用自己引以为傲的柔软胸部把你困在里面的…HPH」","L"
+			ELSEIF TALENT:TARGET:胸围 == -1
+				CALL HPH_PRINT,@"「虽然小巧、但也很柔软对吧？HPH　女性的胸部可不仅仅是大就好哦HPH」","L"
+			ELSEIF TALENT:TARGET:胸围 == -2
+				CALL HPH_PRINT,@"「或许不太柔软、但应该会让你心跳加速吧…？HPH　女性的香气、请尽情享受吧…HPH」","L"
+			ELSE
+				CALL HPH_PRINT,@"「呵呵、要不要用我的胸部让你窒息死亡呢？HPH」","L"
+			ENDIF
+			PRINTL 
+			CALL HPH_PRINT,@"「爱撒娇的人啊…HPH」","L"
+			CALL HPH_PRINT,@"「在典的胸怀中安心入眠吧…HPH」","L"
+			PRINTL 
+			
+			IF TALENT:MASTER:性别 == 2 || TALENT:MASTER:性别 == 3
+				IF BASE:MASTER:勃起 >= 1500
+					CALL HPH_PRINT,@"「哦哟…？　典的肚子好像碰到硬硬的东西了呢…？HPH」","L"
+					CALL HPH_PRINT,@"「啊啦啊啦、肉棒竖得好挺啊…HPH」","L"
+					IF TALENT:MASTER:非童贞 == 0
+						CALL HPH_PRINT,@"「光是被拥抱就勃起了、真是典型的处男呢…HPH」","L"
+						CALL HPH_PRINT,@"「要不要让典教你悦乐呢…HPH　嘿嘿…HPH」","L"
+					ELSE
+						CALL HPH_PRINT,@"「像是处男一样弄得小弟弟勃起…要让典安慰你一下吗？HPH」","L"
+					ENDIF
+				ELSEIF BASE:MASTER:勃起 >= 1000
+					CALL HPH_PRINT,@"「喔…？　姐姐的肚子、碰到了硬硬的东西耶？HPH」","L"
+					CALL HPH_PRINT,@"「呵呵、肉棒、看起来很硬呢…HPH」","L"
+					CALL HPH_PRINT,@"「光是被胸部碰到就勃起了、真是个初心者呢.HPH」","L"
+				ELSEIF BASE:MASTER:勃起 >= 500
+					CALL HPH_PRINT,@"「哦呀…？　我的肚子碰到了什么东西呢…HPH」","L"
+					CALL HPH_PRINT,@"「呵呵、非常明显的哦HPH　肉棒硬了起来了对吧？HPH」","L"
+				ENDIF
+			ENDIF
+		;大人・あなたと体格同じ、またはあなたのほうが大きい
+		ELSE
+			;あなたにおっぱいがある
+			IF TALENT:MASTER:性别 == 1 || TALENT:MASTER:性别 == 3
+				IF TALENT:MASTER:胸围 > 0
+					CALL HPH_PRINT,@"「呵呵、胸部好大呢…HPH」","L"
+					IF TALENT:MASTER:胸围 > TALENT:TARGET:胸围
+						CALL HPH_PRINT,@"「同为女性、我真的有些嫉妒呢…HPH」","L"
+						CALL HPH_PRINT,@"「有点痛吗？　真是对不起。但是、这都是有这如此下流胸部的%CALLNAME:MASTER%大人的错哦HPH」","L"
+						CALL HPH_PRINT,@"「让那些男人品尝真是太浪费了…我来尝一口吧HPH　啵、啾噜噜HPH」","L"
+					ELSE
+						CALL HPH_PRINT,@"「呵呵、您也有受到那些男人下流的眼光直视的困扰吧？　我也一样、我也很了解哦…HPH」","L"
+						CALL HPH_PRINT,@"「呵呵、好柔软呢…HPH　典真想自己独占呢…HPH」","L"
+					ENDIF
+				ELSEIF TALENT:MASTER:胸围 == -1
+					CALL HPH_PRINT,@"「呵呵、没想到胸部居然这么贫瘠呢.…HPH」","L"
+					IF TALENT:MASTER:胸围 < TALENT:TARGET:胸围
+						CALL HPH_PRINT,@"「羡慕我的胸部吗？HPH　这对胸部、可是会让男人们疯狂的呢HPH」","L"
+						CALL HPH_PRINT,@"「那么、就让典来将妳胸部变大吧…用特别的方法HPH」","L"
+					ELSE
+						CALL HPH_PRINT,@"「没事的、女性的价值不仅仅取决于胸部的大小、我会在%CALLNAME:MASTER%大人的身体上证明这一点的…HPH」","L"
+					ENDIF
+				ELSEIF TALENT:MASTER:胸围 == -2
+					CALL HPH_PRINT,@"「呵呵、就像个男孩一样…HPH　妳为什么需要害羞呢？HPH」","L"
+					CALL HPH_PRINT,@"「但妳看、这里周围都是软绵绵的、这里却硬梆梆的哦…HPH」","L"
+					CALL HPH_PRINT,@"「相当漂亮的女性乳头呢…HPH　要不要再加点刺激呢HPH」","L"
+				ELSE
+					CALL HPH_PRINT,@"「呵呵、胸部的形状真漂亮呢HPH　好想一口吃掉呢…HPH」","L"
+				ENDIF
+				PRINTL 
+			;男性
+			ELSE
+				SELECTCASE RAND:5
+				CASE 0
+					IF TALENT:TARGET:胸围 > 0
+						CALL HPH_PRINT,@"「呵呵、看起来挺兴奋的样子呢…HPH」","L"
+						IF BASE:MASTER:勃起 >= 1000
+							CALL HPH_PRINT,@"「一看就知道了哦HPH　因为…」","L"
+							SELECTCASE RAND:2
+							CASE 0
+								CALL HPH_PRINT,@"「你看、这边…已经这么硬了呢…HPH」","L"
+							CASE 1
+								CALL HPH_PRINT,@"「肉・棒HPH　的・勃・起HPH　是正在进行中呢…HPH」","L"
+							ENDSELECT
+							CALL HPH_PRINT,@"「节操缺失的肉棒、典得收拾一下呢…HPH　不然天狗山的风纪就乱套了HPH」","L"
+							PRINTL 
+						ENDIF
+					ELSEIF TALENT:TARGET:胸围 > -2
+						CALL HPH_PRINT,@"「呵呵、是因为碰到典的胸部而让你兴奋了吗？HPH」","L"
+						IF BASE:MASTER:勃起 >= 1000
+							CALL HPH_PRINT,@"「不用隐藏也没关系的哦HPH　因为…」","L"
+							SELECTCASE RAND:2
+							CASE 0
+								CALL HPH_PRINT,@"「你看、这边…已经这么硬了呢…HPH」","L"
+							CASE 1
+								CALL HPH_PRINT,@"「肉棒、居然勃起了呢…HPH」","L"
+							ENDSELECT
+							CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人如果有那个心思、就不必客气了呢HPH　那么、要怎么让你明白呢…HPH」","L"
+							PRINTL 
+						ENDIF
+					ELSE
+						CALL HPH_PRINT,@"「哎呀呀、只是被抱住就心跳加速了？　真是可爱…HPH」","L"
+						IF BASE:MASTER:勃起 >= 1000
+							CALL HPH_PRINT,@"「不用隐藏也没关系的哦HPH　因为…」","L"
+							SELECTCASE RAND:2
+							CASE 0
+								CALL HPH_PRINT,@"「你看、这边…已经这么硬了呢…HPH」","L"
+							CASE 1
+								CALL HPH_PRINT,@"「肉棒都已经勃起了、再否认也没有说服力呢…HPH」","L"
+							ENDSELECT
+							CALL HPH_PRINT,@"「那么、接下来要怎么办呢…%CALLNAME:MASTER%大人的啼声、请让我听听吧HPH」","L"
+							PRINTL 
+						ENDIF
+					ENDIF
+				CASE 1
+					CALL HPH_PRINT,@"「呵呵、%CALLNAME:MASTER%大人的胸部真是结实呢…HPH」","L"
+				CASE 2
+					CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人的温暖、请给予典更多…HPH」","L"
+				CASE 3
+					CALL HPH_PRINT,@"「虽然不如九尾大人、但狐化身也很擅长让男士们心神不宁的术法哦…HPH」","L"
+					CALL HPH_PRINT,@"「如果认为是谎言的话、那要不要试试看呢…HPH」","L"
+				CASE 4
+					CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人、就这样、再停留一会儿吧…HPH」","L"
+				ENDSELECT
+				PRINTL 
+			ENDIF
+		ENDIF
+	ENDIF
+RETURN 1
+
+;==================================================
+;胸を揉ませる
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_33
+CALL M_KOJO_MESSAGE_COUNTER_K139_33_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_33_1
+IF (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行)
+	IF TALENT:母乳体质
+		SELECTCASE TALENT:TARGET:胸围
+		;爆乳
+		CASE 2
+			CALL HPH_PRINT,@"「来吧、摸摸看…HPH　姐姐的胸部、非常大对吧…HPH」","L"
+			CALL HPH_PRINT,@"「这样的大胸部、在幻想乡里也不容易找到的哦HPH」","L"
+			CALL HPH_PRINT,@"「嗯～、母乳流出来了…HPH　像是母牛一样吗？　呵呵HPH」","L"
+			CALL HPH_PRINT,@"「这样的话、%CALLNAME:MASTER%大人就得喝姐姐的奶、才能长高长大呢…HPH　来、啊～的把嘴巴张开吧…HPH」","L"
+		;巨乳
+		CASE 1
+			CALL HPH_PRINT,@"「来吧、摸摸看…HPH　姐姐的胸部、是不是很大呢…HPH」","L"
+			CALL HPH_PRINT,@"「啊嗯HPH　因为揉得太用力了、母乳就流出来了HPH」","L"
+			CALL HPH_PRINT,@"「想要喝吗？　来、啊～的把嘴巴张开…HPH」","L"
+		;美乳
+		CASE 0
+			CALL HPH_PRINT,@"「姐姐的胸部、一直很想摸一下对吧HPH」","L"
+			CALL HPH_PRINT,@"「啊啊、这么温柔地揉着…母乳都流出来了HPH」","L"
+			CALL HPH_PRINT,@"「不仅仅是揉ー揉ー、啾ー啾ー也是可以的哦…HPH」","L"
+		;贫乳
+		CASE -1
+			CALL HPH_PRINT,@"「呵呵、虽然小小的但很柔软对吧？HPH」","L"
+			CALL HPH_PRINT,@"「啊嗯HPH　我可没说你可以捏我的乳头哦HPH　真是喜欢恶作剧呢…HPH」","L"
+			CALL HPH_PRINT,@"「你看、都因为你这么做、害得我母乳都流出来了…HPH　要负起责任、好好地吸一下哦HPH」","L"
+		;绝壁
+		CASE -2
+			CALL HPH_PRINT,@"「没错、就这样抚摸、轻轻触摸…HPH　嗯嗯、很舒服呢HPH」","L"
+			CALL HPH_PRINT,@"「嗯啊HPH　乳头、这么用力拉扯什么的不行啊…HPH」","L"
+			CALL HPH_PRINT,@"「你看、都因为你这么做、害得我母乳都流出来了…HPH　要负起责任、好好地吸一下哦HPH」","L"
+		ENDSELECT
+	ELSE
+		SELECTCASE TALENT:TARGET:胸围
+		;爆乳
+		CASE 2
+			CALL HPH_PRINT,@"「来吧、摸摸看…HPH　姐姐的胸部、非常大对吧…HPH」","L"
+			CALL HPH_PRINT,@"「指头都深深地陷进去了呢HPH　软软的？　呵呵、那就太好了呢HPH」","L"
+			CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人按照自己的喜好、怎样揉怎样摸都可以哦HPH」","L"
+		;巨乳
+		CASE 1
+			CALL HPH_PRINT,@"「来吧、摸摸看…HPH　姐姐的胸部、是不是很大呢…HPH」","L"
+			CALL HPH_PRINT,@"「目光一直以来都追着这里看呢…HPH　可以随你喜欢触摸哦…HPH」","L"
+		;美乳
+		CASE 0
+			SELECTCASE RAND:2
+			CASE 0
+				CALL HPH_PRINT,@"「怎么样？　软绵绵的吗？　姐姐的胸部HPH」","L"
+				CALL HPH_PRINT,@"「呜嗯、如果用手掌滚动乳头、就会感觉到…HPH」","L"
+			CASE 1
+				CALL HPH_PRINT,@"「姐姐的胸部、一直很想摸一下对吧HPH」","L"
+				CALL HPH_PRINT,@"「来吧、只会让%CALLNAME:MASTER%大人触摸的HPH　再多、摸一些…对、做得很好哦HPH」","L"
+			ENDSELECT
+		;贫乳
+		CASE -1
+			CALL HPH_PRINT,@"「呵呵、虽然小小的但很柔软对吧？HPH」","L"
+			SELECTCASE RAND:2
+			CASE 0
+				CALL HPH_PRINT,@"「再多、请再多揉揉一些…HPH」","L"
+			CASE 1
+				CALL HPH_PRINT,@"「啊嗯HPH　我可没说你可以捏我的乳头哦HPH　真是喜欢恶作剧呢…HPH」","L"
+			ENDSELECT
+		;绝壁
+		CASE -2
+			SELECTCASE RAND:2
+			CASE 0
+				CALL HPH_PRINT,@"「啊啊、你的手法、真的很淫荡…HPH」","L"
+				CALL HPH_PRINT,@"「乳头、不可以太用力扭动啊HPH　啊啊～HPH」","L"
+			CASE 1
+				CALL HPH_PRINT,@"「就是这样、像是抚摸一样、触摸胸部…HPH」","L"
+				CALL HPH_PRINT,@"「嗯啊HPH　乳头、这么用力拉扯什么的不行啊…HPH」","L"
+			ENDSELECT
+		ENDSELECT
+	ENDIF
+ELSE
+	IF TALENT:母乳体质
+		SELECTCASE TALENT:TARGET:胸围
+		;爆乳
+		CASE 2
+			CALL HPH_PRINT,@"「啊嗯HPH　如果这样用力揉的话HPH」","L"
+			SELECTCASE RAND:3
+			CASE 0
+				CALL HPH_PRINT,@"「啊啊、乳汁流出来了…HPH　像母牛一样？　你有点失礼呢…HPH」","L"
+				CALL HPH_PRINT,@"「来、负责任地喝掉吧HPH　嘴巴张开…HPH　嗯唔HPH　两颗乳头被这样强力地吸～HPH　啊啊～～HPH」","L"
+			CASE 1
+				CALL HPH_PRINT,@"「啊啊、乳汁流出来了…HPH　真是有点可惜呢…嗯…HPH」","L"
+				CALL HPH_PRINT,@"「嘿嘿、胸部大的话、甚至可以像这样自己吸自己的奶哦…HPH」","L"
+				CALL HPH_PRINT,@"「想看更多？HPH　只要是%CALLNAME:MASTER%大人命令…HPH　嗯HPH　嗯嗯嗯HPH　嗯唔HPH」","L"
+			CASE 2
+				CALL HPH_PRINT,@"「啊啊、乳汁流出来了…HPH　真是有点可惜呢…HPH」","L"
+				CALL HPH_PRINT,@"「来、嘴巴张开吧HPH　要负起责任、全部喝下去哦HPH」","L"
+				CALL HPH_PRINT,@"「哈哈、弄得满脸都是乳汁呢…HPH　看起来很适合你哦、%CALLNAME:MASTER%大人HPH」","L"
+			ENDSELECT
+		;巨乳
+		CASE 1
+			CALL HPH_PRINT,@"「啊啊嗯HPH　如此、强力地…HPH　被这样用力地揉的话…HPH」","L"
+			SELECTCASE RAND:3
+			CASE 0
+				CALL HPH_PRINT,@"「啊啊、乳汁喷出来了…HPH」","L"
+				CALL HPH_PRINT,@"「呵呵、想要喝喝看吗…？HPH　嘴巴张开…来、喝吧HPH」","L"
+			CASE 1
+				CALL HPH_PRINT,@"「啊啊、乳汁流出来了…HPH　舔、呣啾…」","L"
+				CALL HPH_PRINT,@"「呵呵、胸部大的话、即使不用吸的、也能用舌头自己舐哦HPH」","L"
+				CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人请吸吧HPH　来吧、我会用你最喜欢的胸部将你压住的…HPH」","L"
+			CASE 2
+				CALL HPH_PRINT,@"「啊啊、乳汁流出来了…HPH　真是有点可惜呢…HPH」","L"
+				CALL HPH_PRINT,@"「既然你是做错事的人、那就得负起责任的将母乳全喝下呢…HPH」","L"
+				CALL HPH_PRINT,@"「来、嘴巴开开…HPH　哈哈、弄得满脸都是乳汁呢…HPH　看起来很适合你哦、%CALLNAME:MASTER%大人HPH」","L"
+			ENDSELECT
+		;美乳
+		CASE 0
+			CALL HPH_PRINT,@"「我的胸部、怎么样？　对于形状、我可是相当有自信的哦HPH」","L"
+			CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人的手、想怎么揉都可以哦…HPH」","L"
+			CALL HPH_PRINT,@"「啊啊、乳汁HPH　我的身体、也许渴望成为一位母亲呢…HPH」","L"
+			CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人、来、含住这里、尽情地吸吧…HPH」","L"
+		;贫乳
+		CASE -1
+			CALL HPH_PRINT,@"「虽然不算大、但对于敏感度和形状、我可是相当有自信的哦…HPH」","L"
+			CALL HPH_PRINT,@"「啊嗯HPH　如此、捏住乳头…HPH」","L"
+			CALL HPH_PRINT,@"「母乳喷射出来了呢…HPH　请负起责任、好好地吸一吸吧…HPH」","L"
+		;绝壁
+		CASE -2
+			CALL HPH_PRINT,@"「可惜不能享受柔软的触感呢…但乳头的话、可以玩弄一下吗HPH」","L"
+			CALL HPH_PRINT,@"「啊啊HPH　对对HPH　做得很棒哦HPH」","L"
+			CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人技巧太厉害了、连母乳都被引出来了…HPH　请你舔一下、可以吗…HPH」","L"
+		ENDSELECT
+	ELSE
+		SELECTCASE TALENT:TARGET:胸围
+		;爆乳
+		CASE 2
+			CALL HPH_PRINT,@"「呵呵、非常柔软对吧？HPH　典的胸部HPH」","L"
+			CALL HPH_PRINT,@"「在幻想乡也是一流的大小而为此自豪着呢…HPH」","L"
+		;巨乳
+		CASE 1
+			CALL HPH_PRINT,@"「呵呵、很大对吧？HPH」","L"
+			CALL HPH_PRINT,@"「来吧、这对胸部可以任你喜欢的玩弄哦HPH」","L"
+		;美乳
+		CASE 0
+			CALL HPH_PRINT,@"「我的胸部、怎么样？　对于形状、我可是相当有自信的哦HPH」","L"
+			CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人的手、想怎么揉都可以哦…HPH」","L"
+		;贫乳
+		CASE -1
+			CALL HPH_PRINT,@"「虽然不算大、但对于敏感度和形状、我可是相当有自信的哦…HPH」","L"
+			CALL HPH_PRINT,@"「啊嗯HPH　这样、捏住乳头…HPH　更多、请给我更多吧…HPH」","L"
+		;绝壁
+		CASE -2
+			CALL HPH_PRINT,@"「可惜不能享受柔软的触感呢…但乳头的话、可以玩弄一下吗HPH」","L"
+			CALL HPH_PRINT,@"「啊啊HPH　对对HPH　做得很棒哦HPH」","L"
+		ENDSELECT
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;股间をまさぐる
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_34
+CALL M_KOJO_MESSAGE_COUNTER_K139_34_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_34_1
+	IF (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行)
+		;あなたに生えている
+		IF TALENT:MASTER:性别 == 2 || TALENT:MASTER:性别 == 3
+			;勃起している
+			IF BASE:MASTER:勃起 >= 1000
+				;あなたが童贞
+				IF TALENT:MASTER:非童贞 == 0
+					SELECTCASE RAND:2
+					CASE 0
+						CALL HPH_PRINT,@"「喔喔…？　 这是怎么了啊？HPH」","L"
+						CALL HPH_PRINT,@"「小鸡鸡变得好大哦HPH　真是个坏小孩呢HPH」","L"
+						IF BASE:MASTER:射精 > 5000
+							SELECTCASE RAND:2
+							CASE 0
+								CALL HPH_PRINT,@"「你看、小鸡鸡前端、在渗出透明液体了呢？HPH」","L"
+								CALL HPH_PRINT,@"「现在将会很舒服的ーー、将白白的尿尿喷出来呢HPH」","L"
+							CASE 1
+								CALL HPH_PRINT,@"「姐姐的双手、都被%CALLNAME:MASTER%大人的液体弄得又滑又湿的了…HPH」","L"
+								CALL HPH_PRINT,@"「白色的液体好像也要噗～噗～地出来了呢…HPH」","L"
+							ENDSELECT
+						ENDIF
+					CASE 1
+						SELECTCASE RAND:2
+						CASE 0
+							CALL HPH_PRINT,@"「呵呵、明明只是个孩子、居然这么主张自己的存在呢HPH」","L"
+							CALL HPH_PRINT,@"「姐姐、超喜欢这个又硬又挺的小鸡鸡呢HPH」","L"
+							CALL HPH_PRINT,@"「要不要现在就吃掉啊、该怎么办啊…HPH」","L"
+						CASE 1
+							SELECTCASE TALENT:MASTER:形状
+							CASE 1,2;粗チン
+								CALL HPH_PRINT,@"「呵呵、小小的可爱的勃起小鸡鸡PH」","L"
+								CALL HPH_PRINT,@"「姐姐可以放进嘴巴里啃啃吗…HPH」","L"
+								CALL HPH_PRINT,@"「还是、想要在下面的嘴巴里嚼嚼呢…HPH」","L"
+							CASE 6,10;巨根、马并み
+								CALL HPH_PRINT,@"「啊啊嗯、明明只是个小孩子居然会有这么出色的肉棒…HPH」","L"
+								CALL HPH_PRINT,@"「姐姐、在想应该已经可以吃了啊…HPH　已经可以吃了吧…HPH」","L"
+							CASEELSE
+								CALL HPH_PRINT,@"「啊啊、这么硬又出色的童子鸡鸡…HPH」","L"
+								CALL HPH_PRINT,@"「可以让姐姐吃吗？　没事的、一点都不会痛的HPH」","L"
+								CALL HPH_PRINT,@"「反而可能会太舒服而变成一直说『再来一次、再来一次』的恳求呢…HPH」","L"
+							ENDSELECT
+						ENDSELECT
+					ENDSELECT
+				;あなた経験済み
+				ELSE
+					SELECTCASE RAND:4
+					CASE 0
+						CALL HPH_PRINT,@"「哦呀哦呀、你是不是在期待着什么呢？HPH」","L"
+						CALL HPH_PRINT,@"「我只是在抚摸而已哦？　再多的我可不会做的哦？HPH」","L"
+						PRINTL 
+						CALL HPH_PRINT,@"（如此拼命地摇晃着腰…这份可爱实在令人难以抗拒呢…HPH）","L"
+						CALL HPH_PRINT,@"（不过不行哦HPH　要再让你更加地更加地焦灼、让你宣示成为姐姐专用的小鸡鸡为止的HPH）","L"
+					CASE 1
+						CALL HPH_PRINT,@"「呵呵HPH　很赞的反应呢HPH　真有宠爱的价值呢HPH」","L"
+						CALL HPH_PRINT,@"「这里被触摸感觉如何呢？HPH　还有这里呢？　啊哈HPH　让我听到更可爱的声音吧HPH」","L"
+					CASE 2
+						CALL HPH_PRINT,@"「想要做更舒服的事情？HPH」","L"
+						CALL HPH_PRINT,@"「还不行哦ーHPH　再忍一下吧ーHPH」","L"
+						CALL HPH_PRINT,@"（呜呵呵、都流泪了呢…子宫附近在一阵一阵的刺痛呢…HPH）","L"
+					CASE 3
+						CALL HPH_PRINT,@"「想插入小鸡鸡？HPH　在哪里呢？　请好好告诉姐姐吧…HPH」","L"
+						CALL HPH_PRINT,@"「不说出来的话、就只能一～直～保持这样哦HPH」","L"
+					ENDSELECT
+				ENDIF
+			;勃起していない
+			ELSE
+				SELECTCASE RAND:2
+				CASE 0
+					CALL HPH_PRINT,@"「呵呵、还是软软的呢…HPH　是因为在紧张着呢？」","L"
+					CALL HPH_PRINT,@"「没问题的、交给姐姐吧…会让小鸡鸡、舒服起来的HPH」","L"
+				CASE 1
+					IF BASE:MASTER:勃起 >= 500
+						SELECTCASE RAND:3
+						CASE 0
+							CALL HPH_PRINT,@"「呵呵、稍微变大了一点呢…HPH」","L"
+						CASE 1
+							CALL HPH_PRINT,@"「哦呀哦呀、渐渐地变得臃肿了呢…HPH」","L"
+							CALL HPH_PRINT,@"「如果一直这样摸下去、会变成什么样子呢？HPH」","L"
+						CASE 2
+							CALL HPH_PRINT,@"「啊啊、这根、小鸡鸡开始变硬了呢…看来很喜欢被抚摸呢HPH」","L"
+							CALL HPH_PRINT,@"「将小鸡鸡的包皮慢慢地褪去、你看…龟头露出来了HPH」","L"
+						ENDSELECT
+					ELSE
+						SELECTCASE RAND:3
+						CASE 0
+							PRINTFORML 「哦呀？　还是小小的呢」
+							SELECTCASE TALENT:MASTER:形状
+							CASE 1,2;粗チン
+								CALL HPH_PRINT,@"「嘛、就算硬了、%CALLNAME:MASTER%大人的小鸡鸡还是一样可爱呢…HPH」","L"
+							CASE 6,10;巨根、马并み
+								CALL HPH_PRINT,@"「快啊、那个不适合这个身材的巨大小鸡鸡、快点给姐姐看看吧HPH」","L"
+							CASEELSE
+								CALL HPH_PRINT,@"「来吧、把那根壮硕而强壮的小鸡鸡、快点秀给姐姐看吧HPH」","L"
+							ENDSELECT
+						CASE 1
+							CALL HPH_PRINT,@"「喔？　是因为在紧张着吗？HPH」","L"
+							CALL HPH_PRINT,@"「不用硬起来哦…要硬起来的、是・这・里・哟HPH」","L"
+						CASE 2
+							CALL HPH_PRINT,@"「呵呵、如果要硬起来就硬这里吧HPH」","L"
+							CALL HPH_PRINT,@"「姐姐想看看、%CALLNAME:MASTER%大人的勃起鸡鸡啊…HPH」","L"
+						ENDSELECT
+					ENDIF
+				ENDSELECT
+			ENDIF
+		;あなたが女の子
+		ELSE
+			IF PALAM:润滑 >= PALAMLV:3
+				IF TALENT:MASTER:处女 == 1
+					SELECTCASE RAND:2
+					CASE 0
+						CALL HPH_PRINT,@"「喔喔…？　 这是怎么了啊？HPH」","L"
+						CALL HPH_PRINT,@"「看、明明只是轻轻碰几下、姐姐的手怎么就被弄得湿湿的了HPH」","L"
+						CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人、明明是个处女却老是想着色色的事情、真是不知羞耻的女孩子呢HPH」","L"
+					CASE 1
+						CALL HPH_PRINT,@"「哦呀哦呀…何等的下流啊…HPH」","L"
+						CALL HPH_PRINT,@"「被姐姐碰几下、阴部就变得湿漉漉的了呢…HPH」","L"
+						CALL HPH_PRINT,@"「还是处女就已经这样了、看来在这方面的天赋相当的高、将来一定很有前途呢HPH」","L"
+						CALL HPH_PRINT,@"「姐姐会好好教导、让妳成为一个出色的肉便器（淑女）的HPH」","L"
+					ENDSELECT
+				ELSE
+					SELECTCASE RAND:2
+					CASE 0
+						CALL HPH_PRINT,@"「呵呵、明明还这么年轻、就那么容易张开双腿呢…HPH」","L"
+						CALL HPH_PRINT,@"「看、明明只是轻轻碰几下、姐姐的手怎么就被弄得湿湿的了HPH」","L"
+						CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人、真是个淫荡的女孩呢HPH」","L"
+					CASE 1
+						CALL HPH_PRINT,@"「哦呀哦呀…何等的下流啊…HPH」","L"
+						CALL HPH_PRINT,@"「被姐姐碰几下、阴部就变得湿漉漉的了呢…HPH」","L"
+						CALL HPH_PRINT,@"「平时就一直在想着色色的事情对吧？　瞧、连丝都能拉出来了哦HPH」","L"
+					ENDSELECT
+				ENDIF
+			ELSE
+				SELECTCASE RAND:2
+				CASE 0
+					CALL HPH_PRINT,@"「这里、很舒服对吧？HPH」","L"
+					CALL HPH_PRINT,@"「没事的、女孩子会感到舒服也是很正常的HPH」","L"
+					CALL HPH_PRINT,@"「妳的男性朋友、像这样用手搓自己的小鸡鸡也是会感到舒服的…HPH」","L"
+				CASE 1
+					CALL HPH_PRINT,@"「呵呵、妳没有摸过自己吗？HPH」","L"
+					CALL HPH_PRINT,@"「这个地方、是迎接男人的小鸡鸡后、便会感到舒服的小洞洞哦HPH」","L"
+					CALL HPH_PRINT,@"「而这是一件非常美好的事情哦HPH」","L"
+				ENDSELECT
+			ENDIF
+		ENDIF
+	;あなたが大人
+	ELSE
+		;あなたに生えている
+		IF TALENT:MASTER:性别 == 2 || TALENT:MASTER:性别 == 3
+			;勃起している
+			IF BASE:MASTER:勃起 >= 1000
+				SELECTCASE RAND:2
+				CASE 0
+					CALL HPH_PRINT,@"「哦呀哦呀…？　这是、怎么了呢？HPH」","L"
+					CALL HPH_PRINT,@"「肉棒大人、正在变大哦HPH」","L"
+				CASE 1
+					CALL HPH_PRINT,@"「呵呵、好烫、好硬…HPH」","L"
+					CALL HPH_PRINT,@"「光是想像着它贯穿了典的阴道、就让典轻微的高潮了…HPH」","L"
+				ENDSELECT
+			ELSE
+				CALL HPH_PRINT,@"「呵呵、还是软软的呢…HPH　是因为在紧张着呢？」","L"
+				CALL HPH_PRINT,@"「没事的、请将一切都交给典吧…HPH」","L"
+			ENDIF
+		;あなたが女性
+		ELSE
+			IF PALAM:润滑 >= PALAMLV:3
+				IF TALENT:MASTER:处女 == 1
+					SELECTCASE RAND:2
+					CASE 0
+						CALL HPH_PRINT,@"「喔喔…？　 这是怎么了啊？HPH」","L"
+						CALL HPH_PRINT,@"「看、明明只是轻轻碰几下、典的手怎么就被弄得湿湿的了HPH」","L"
+						CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人、明明还是个处女、却总是在想些色色的事情、真是淫荡的人呢HPH」","L"
+					CASE 1
+						CALL HPH_PRINT,@"「哦呀哦呀…何等的下流啊…HPH」","L"
+						CALL HPH_PRINT,@"「只是被碰触到几下、阴部就变得湿漉漉的了呢…HPH」","L"
+						CALL HPH_PRINT,@"「还是处女就已经这样了、看来在这方面的天赋相当的高、将来一定很有前途呢HPH」","L"
+						CALL HPH_PRINT,@"「典会好好教导、让妳成为一个出色的肉便器（淑女）的HPH」","L"
+					ENDSELECT
+				ELSE
+					SELECTCASE RAND:2
+					CASE 0
+						CALL HPH_PRINT,@"「呵呵、一下子就把双腿张开了呢…HPH」","L"
+						CALL HPH_PRINT,@"「看、明明只是轻轻碰几下、典的手怎么就被弄得湿湿的了HPH」","L"
+						CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人、真是淫荡呢HPH」","L"
+					CASE 1
+						CALL HPH_PRINT,@"「哦呀哦呀…何等的下流啊…HPH」","L"
+						CALL HPH_PRINT,@"「被典碰触几下、阴部就变得湿漉漉的了呢…HPH」","L"
+						CALL HPH_PRINT,@"「平时就一直在想着色色的事情对吧？　瞧、连丝都能拉出来了哦HPH」","L"
+					ENDSELECT
+				ENDIF
+			ELSE
+				SELECTCASE RAND:2
+				CASE 0
+					CALL HPH_PRINT,@"「这里、很舒服对吧？HPH」","L"
+					CALL HPH_PRINT,@"「没事的、女孩子会感到舒服也是很正常的HPH」","L"
+					CALL HPH_PRINT,@"「沉浸于快乐的权利、不仅仅是男士们的特权…一起、坠落吧HPH　放松身体、来吧…HPH」","L"
+				CASE 1
+					CALL HPH_PRINT,@"「呵呵、妳没有摸过自己吗？HPH」","L"
+					CALL HPH_PRINT,@"「为了让之后变得更加舒服、必须花足够的时间来放松呢…HPH」","L"
+				ENDSELECT
+			ENDIF
+		ENDIF
+	ENDIF
+RETURN 1
+
+;==================================================
+;裙子の中を见せる
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_35
+CALL M_KOJO_MESSAGE_COUNTER_K139_35_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_35_1
+RETURN 1
+
+;==================================================
+;后ろから胸もみもみ
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_36
+CALL M_KOJO_MESSAGE_COUNTER_K139_36_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_36_1
+RETURN 1
+
+;==================================================
+;糖强夺
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_39
+CALL M_KOJO_MESSAGE_COUNTER_K139_39_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_39_1
+RETURN 1
+
+;-------------------------------------------------
+;おねだり
+;-------------------------------------------------
+;==================================================
+;正常位Ｖおねだり
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_41
+CALL M_KOJO_MESSAGE_COUNTER_K139_41_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_41_1
+IF TCVAR:发情
+	IF (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行)
+		SETCOLOR 0xFF69B4
+		SELECTCASE RAND:6
+		CASE 0
+			CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人HPH　快点HPH　快点HPH」","L"
+			CALL HPH_PRINT,@"「在姐姐的这里、用%CALLNAME:MASTER%大人的孩子鸡巴HPH　尽情地抽插吧HPH」","L"
+		CASE 1
+			CALL HPH_PRINT,@"「啊啊HPH　别再让姐姐焦急的等待了HPH」","L"
+			CALL HPH_PRINT,@"「来吧HPH　这里HPH　将小鸡鸡插入这个舒服的小洞洞里吧HPH」","L"
+		CASE 2
+			CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人的小鸡鸡HPH　请插入这里吧HPH」","L"
+			CALL HPH_PRINT,@"「在里面多次抽插、然后噗地ーーHPH　射出来HPH」","L"
+			SIF TALENT:恋人
+			CALL HPH_PRINT,@"「姐姐、想要心爱的%CALLNAME:MASTER%大人的小宝宝HPH　姐姐、想要成为一个妈妈HPH」","L"
+			SIF EXP:140:分娩经验 > 0
+			CALL HPH_PRINT,@"「就像饭纲丸大人一样、姐姐也想生下%CALLNAME:MASTER%大人的小宝宝HPH」","L"
+		CASE 3
+			CALL HPH_PRINT,@"「姐姐、非常非常想要%CALLNAME:MASTER%大人小鸡鸡HPH」","L"
+			CALL HPH_PRINT,@"「你看、这个舒服的小洞洞一直在一缩一缩地对吧HPH　在这里将小鸡鸡插入、再射出白白的尿尿就好了HPH」","L"
+			CALL HPH_PRINT,@"「快点HPH　快点来和姐姐做爱吧HPH」","L"
+		CASE 4
+			CALL HPH_PRINT,@"「你看、这个洞洞的深处、是姐姐的小宝宝的房间哦HPH」","L"
+			CALL HPH_PRINT,@"「请将那个硬硬的小鸡鸡、插入这个洞洞里猛烈地动来动去吧HPH」","L"
+			CALL HPH_PRINT,@"「当很舒服的时候、就将白白的尿尿喷洒在宝宝的小房间里吧HPH　%CALLNAME:MASTER%大人HPH」","L"
+		CASE 5
+			CALL HPH_PRINT,@"「要不要和姐姐、造个小宝宝呢？HPH」","L"
+			CALL HPH_PRINT,@"「如果是姐姐和%CALLNAME:MASTER%大人的宝宝、姐姐想生一大群啊…HPH」","L"
+			CALL HPH_PRINT,@"「只需要在这里插入小鸡鸡、然后舒服的将尿尿排出来就好了HPH　很简单对吧？」","L"
+			CALL HPH_PRINT,@"「那么、来开始造小孩吧…HPH」","L"
+		ENDSELECT
+		RESETCOLOR
+	ELSE
+		SETCOLOR 0xFF69B4
+		SELECTCASE RAND:3
+		CASE 0
+			CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人HPH　快点HPH　快点HPH」","L"
+			CALL HPH_PRINT,@"「典的这里、已经是准备万全的状态了HPH」","L"
+			CALL HPH_PRINT,@"「快用那\@ (TALENT:MASTER:形状 == 6 || TALENT:MASTER:形状 == 10) ? 粗大的肉棒 # 坚挺的东西 \@将典贯穿吧HPH」","L"
+		CASE 1
+			CALL HPH_PRINT,@"「来吧HPH　典的小穴已经准备完全、全部都湿漉漉的了HPH」","L"
+			CALL HPH_PRINT,@"「随着欲望将肉棒大人插入其中、并将浓厚的精子喷出来吧HPH」","L"
+		CASE 2
+			IF TALENT:MASTER:浓厚精液
+				CALL HPH_PRINT,@"「味道都能闻出来了哦HPH　这对蛋蛋里面、肯定蓄满了浓浓的精液吧HPH」","L"
+				CALL HPH_PRINT,@"「典的小穴、随你射个乱七八糟的也没关系哦HPH」","L"
+			ELSE
+				IF BASE:MASTER:精力 >= MAXBASE:MASTER:精力 / 2
+					CALL HPH_PRINT,@"「呵呵HPH　看来%CALLNAME:MASTER%大人的蛋蛋还在精力充沛地制造着精子呢HPH」","L"
+					CALL HPH_PRINT,@"「在蛋蛋中翻腾不安的精子HPH　请将它们全部都吐在典的小穴里吧HPH」","L"
+				ELSE
+					CALL HPH_PRINT,@"「不论你在哪与其他女人放纵、典都不会放在心上的…只要将剩下的精子都吐入典的里面就好HPH」","L"
+					IF TALENT:恋人
+						CALL HPH_PRINT,@"「这就是、恋人的职责所在HPH　来吧、快点HPH　快点HPHHPH」","L"
+					ELSEIF TALENT:恋慕
+						CALL HPH_PRINT,@"「典对你的心意HPH」","L"
+					ELSEIF TALENT:爱欲 || TALENT:炮友
+						CALL HPH_PRINT,@"「就像往常一样HPH　随时都可以在这个舒服的洞洞里射精哦HPH」","L"
+					ELSE
+						CALL HPH_PRINT,@"「如您所见、典的小穴已经准备好被插入了HPH　来吧HPH　来吧HPHHPH」","L"
+					ENDIF
+				ENDIF
+			ENDIF
+		ENDSELECT
+		RESETCOLOR
+	ENDIF
+ELSE
+	IF (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行)
+		IF TALENT:MASTER:非童贞 == 0
+			SELECTCASE RAND:3
+			CASE 0
+				CALL HPH_PRINT,@"「来吧、这是女孩子的、小・穴・哟HPH」","L"
+				CALL HPH_PRINT,@"「这是一个、用来将小鸡鸡放进去、让小鸡鸡舒服的洞洞哦…HPH」","L"
+				CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人、也长有小鸡鸡对吧HPH」","L"
+				CALL HPH_PRINT,@"「那么、接下来该怎么做呢、你知道对吧…HPH」","L"
+			CASE 1
+				CALL HPH_PRINT,@"「从现在开始起、姐姐将教你一堆～～女孩子的优点哦…HPH」","L"
+				CALL HPH_PRINT,@"「来吧、把你那根一跳一跳的小鸡鸡、放进这个小穴里试试吧…HPH」","L"
+			CASE 2
+				CALL HPH_PRINT,@"「那么、现在是色色学习时间哦…HPH」","L"
+				CALL HPH_PRINT,@"「姐姐的这里、你知道这里叫什么吗？HPH」","L"
+				PRINTL 
+				CALL HPH_PRINT,@"「尿尿的洞洞？　可惜了呢HPH　正确答案是、阴道哦HPH　阴HPH　道HPH　哦HPH」","L"
+				CALL HPH_PRINT,@"「那么、试试看把%CALLNAME:MASTER%大人的小鸡鸡放进这个阴道里、实验看看会发生什么吧…HPH」","L"
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:12
+			CASE 0
+				CALL HPH_PRINT,@"「聪明的%CALLNAME:MASTER%大人、应该知道、现在该做些什么了吧…HPH」","L"
+				CALL HPH_PRINT,@"「呵呵、就算不说出口、小鸡鸡似乎也已经明白了…HPH」","L"
+			CASE 1
+				CALL HPH_PRINT,@"「女孩子提出要求后、还拖延时间是不礼貌的哦…HPH」","L"
+				CALL HPH_PRINT,@"「快把那根硬硬的小鸡鸡、塞进我的阴道里吧…HPH　来吧、请进…HPH」","L"
+			CASE 2
+				CALL HPH_PRINT,@"「这是%CALLNAME:MASTER%大人的专属哦HPH」","L"
+				CALL HPH_PRINT,@"「姐姐%TEXTR("紧绷的/舒服的/淫荡的")%小穴、是%CALLNAME:MASTER%大人的所独占的…HPH」","L"
+			CASE 3
+				CALL HPH_PRINT,@"「姐姐、从刚才开始就一直想要与%CALLNAME:MASTER%大人联系在一起、身体都有些发热了呢…HPH」","L"
+				CALL HPH_PRINT,@"「能不能让姐姐舒服一下呢…HPH」","L"
+			CASE 4
+				CALL HPH_PRINT,@"「姐姐的身体、是完全属于%CALLNAME:MASTER%大人一个人的…HPH」","L"
+				CALL HPH_PRINT,@"「可以随心所欲地玩弄哦HPH　当然、这里也是…HPH」","L"
+			CASE 5
+				CALL HPH_PRINT,@"「姐姐、这里突然想要小鸡鸡了呢…HPH」","L"
+				CALL HPH_PRINT,@"「有没有人可以将小鸡鸡插进来、温柔地让我舒服起来呢…HPH」","L"
+			CASE 6
+				CALL HPH_PRINT,@"「要不要和姐姐、做个造孩子的练习呢…HPH」","L"
+			CASE 7
+				IF TALENT:怀孕愿望
+					CALL HPH_PRINT,@"「今天、也要一起造小孩吗…HPH」","L"
+				ELSE
+					CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人的精液、希望能充满在这里面啊…HPH」","L"
+				ENDIF
+			CASE 8
+				CALL HPH_PRINT,@"「来吧、今天也来和姐姐一起享受美好的性爱吧…HPH」","L"
+			CASE 9
+				CALL HPH_PRINT,@"「认为姐姐、是个放荡的女人吗…？HPH」","L"
+				CALL HPH_PRINT,@"「就算这么想也没关系…即使这样、姐姐、还是想要与%CALLNAME:MASTER%大人有更深的联系…HPH」","L"
+			CASE 10
+				CALL HPH_PRINT,@"「姐姐的小穴、有没有想要尝试一下呢…HPH」","L"
+				CALL HPH_PRINT,@"「现在限时大优惠、先来的第一位可以自由进出小鸡鸡哦…HPH」","L"
+			CASE 11
+				IF TALENT:140:恋人
+					CALL HPH_PRINT,@"「想要让龙姐姐舒服起来对吧？HPH」","L"
+					CALL HPH_PRINT,@"「那么、就在姐姐的小穴里、来预习和复习吧…HPH」","L"
+				ELSEIF TALENT:29:恋人
+					CALL HPH_PRINT,@"「文姐姐她、好像比较喜欢擅长性爱的人哦…HPH」","L"
+					CALL HPH_PRINT,@"「所以、就在姐姐的小穴里、来学习做色色的事情吧HPH」","L"
+				ELSEIF TALENT:42:恋人
+					CALL HPH_PRINT,@"「姬海棠姐姐、好像很喜欢小鸡鸡戳进小宝宝的房间里哦HPH」","L"
+					CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人、能否用小鸡鸡巧妙地敲开姐姐的小宝宝的房门呢？HPH」","L"
+				ELSEIF TALENT:65:恋人
+					CALL HPH_PRINT,@"「椛姐姐她、好像很喜欢激烈的中出性爱哦HPH」","L"
+					CALL HPH_PRINT,@"「要不要把姐姐当成椛姐姐、来做中出性爱的练习呢…HPH」","L"
+				ELSEIF TALENT:MASTER:恋人 && !TALENT:恋人
+					CALL HPH_PRINT,@"「为了让恋人之间的感情变得更加亲密、必须用绝赞的技巧来满足对方呢HPH」","L"
+					CALL HPH_PRINT,@"「所以、就把姐姐的身体来当作性爱的实习地吧…HPH」","L"
+				ELSE
+					CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人需要积累更多的性爱经验呢HPH」","L"
+					CALL HPH_PRINT,@"「来吧、今天也姐姐和一起学习做爱吧HPH」","L"
+				ENDIF
+			ENDSELECT
+		ENDIF
+	;大人
+	ELSE
+		SELECTCASE RAND:11
+		CASE 0
+			CALL HPH_PRINT,@"「请看…HPH　典的这里、已经准备好被插入了…HPH」","L"
+			CALL HPH_PRINT,@"「接下来、只剩下%CALLNAME:MASTER%大人的怜悯了…HPH」","L"
+		CASE 1
+			CALL HPH_PRINT,@"「呵呵、如此直挺挺着、你到底在想些什么是一目瞭然的哦HPH」","L"
+			IF TALENT:恋人
+				CALL HPH_PRINT,@"「是想要在与典相爱的同时、享受最棒的性爱对吧…HPH」","L"
+			ELSEIF TALENT:爱欲 || TALENT:炮友
+				CALL HPH_PRINT,@"「是想要在这淫乱雌狐的小穴中、射精到蛋蛋空空如也对吧…HPH」","L"
+			ELSE
+				CALL HPH_PRINT,@"「是想要将这傲慢雌狐的小穴当成自慰器、不负责任的中出对吧…HPH」","L"
+			ENDIF
+		CASE 2
+			CALL HPH_PRINT,@"「喂、要来试试看吗？　现在的典、是毫无抵抗的哦？」","L"
+			CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人有足够的胆识、不妨试着侵犯这只傲慢女狐的小穴吧？HPH」","L"
+		CASE 3
+			CALL HPH_PRINT,@"「这里、是典流淌着口水的小穴…而面前的是垂落着先走汁的%CALLNAME:MASTER%大人的勃起肉棒…能做的、只剩下一件事了呢…HPH」","L"
+		CASE 4
+			CALL HPH_PRINT,@"「光是想像被%CALLNAME:MASTER%大人的东西插入的幻想、这里就变成这样了HPH」","L"
+			CALL HPH_PRINT,@"「典饥渴的小穴、请%CALLNAME:MASTER%大人用您的肉棒来惩罚典吧…HPH」","L"
+		CASE 5
+			CALL HPH_PRINT,@"「你看、%CALLNAME:MASTER%大人的肉棒、竟然能深入到这里呢…HPH」","L"
+			CALL HPH_PRINT,@"「要不要来实际试试看、真的能否深入到这里呢…HPH」","L"
+		CASE 6
+			IF TALENT:MASTER:浓厚精液
+				CALL HPH_PRINT,@"「要是让这么浓郁的精液气味四散开来、应该是根本无法忍受的吧…HPH」","L"
+				CALL HPH_PRINT,@"「直到你的蛋蛋空空如也、将那些臭烘烘的精子全吐进典的阴道里吧…HPH」","L"
+				SIF TALENT:怀孕愿望
+				CALL HPH_PRINT,@"「然后、让典怀孕吧…HPH」","L"
+			ELSE
+				IF BASE:MASTER:精力 >= MAXBASE:MASTER:精力 / 2
+					CALL HPH_PRINT,@"「呵呵、精力依旧旺盛着呢…HPH」","L"
+					CALL HPH_PRINT,@"「要不要在典的这里、发泄一下呢…HPH」","L"
+				ELSE
+					CALL HPH_PRINT,@"「你好像到处都在享受呢、但也别忘了给典一些精液呀…HPH」","L"
+					CALL HPH_PRINT,@"「剩下的部分、就请全射入典的阴道里吧HPH」","L"
+				ENDIF
+			ENDIF
+		CASE 7
+			CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人HPH　典下面的嘴巴、有一些些寂寞呢…HPH」","L"
+			CALL HPH_PRINT,@"「那营养丰富、黏糊糊的东西、能否赐予典呢…HPH」","L"
+		CASE 8
+			CALL HPH_PRINT,@"「这样一来、要插进去的地方就一目瞭然了吧…HPH」","L"
+			CALL HPH_PRINT,@"「典的这里、已经是准备万全的状态了HPH」","L"
+		CASE 9
+			CALL HPH_PRINT,@"「请看…HPH　典的这里、正渴望着%CALLNAME:MASTER%大人的肉棒先生…HPH」","L"
+		CASE 10
+			CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人、请不要再让典难堪了HPH」","L"
+			CALL HPH_PRINT,@"「请把那根又热又挺的东西、放进这里…HPH」","L"
+		ENDSELECT
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;正常位Ｖおねだり２
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_43
+CALL M_KOJO_MESSAGE_COUNTER_K139_43_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_43_1
+IF TCVAR:发情
+	IF (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行)
+		SETCOLOR 0xFF69B4
+		SELECTCASE RAND:10
+		CASE 0
+			CALL HPH_PRINT,@"「来吧HPH　渴望怀上宝宝的姐姐的小穴就在这里哟HPH」","L"
+			CALL HPH_PRINT,@"「在这里把小鸡鸡督进去、然后舒服的射很多次精吧HPH」","L"
+		CASE 1
+			CALL HPH_PRINT,@"「了解了吗？HPH　姐姐的小穴、很想要很想要%CALLNAME:MASTER%大人哦HPH　想要到在哭泣呢HPH」","L"
+			CALL HPH_PRINT,@"「请%CALLNAME:MASTER%大人将小鸡鸡、突入到这里面的最深处吧HPH」","L"
+		CASE 2
+			CALL HPH_PRINT,@"「好色姐姐的发情小穴HPH　可以随便让%CALLNAME:MASTER%大人使用哦HPH」","L"
+			CALL HPH_PRINT,@"「HPH」","L"
+		CASE 3
+			CALL HPH_PRINT,@"「姐姐渴望怀孕的小穴HPH　请用%CALLNAME:MASTER%大人的肉棒大人插入其中吧HPH」","L"
+			CALL HPH_PRINT,@"「就算有了小宝宝也没关系啊HPH　快一点HPH　快一点HPH」","L"
+		CASE 4
+			CALL HPH_PRINT,@"「来吧HPH　姐姐的这个小穴、已经迫不及待%CALLNAME:MASTER%大人的侵犯了HPH」","L"
+			CALL HPH_PRINT,@"「从后面HPH　用力的猛撞吧HPH」","L"
+		CASE 5
+			CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人HPH　请从后面来吧HPH　让我们像野兽一样交配吧HPH」","L"
+		CASE 6
+			CALL HPH_PRINT,@"「作为狐妖怪的姐姐、也如同狗和猫一样、喜欢被从后面趴HPH趴HPH趴HPH哦HPH」","L"
+			CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人、能否像猫狗一样很会趴HPH趴HPH趴HPH呢？HPH」","L"
+		CASE 7
+			CALL HPH_PRINT,@"「好～HPH　这HPH就HPH是、姐姐的好舒服的小穴哦HPH」","L"
+			CALL HPH_PRINT,@"「把小鸡鸡前端插入、然后就什么都不用想的拼命地摆腰就好了哦HPH」","L"
+		CASE 8
+			CALL HPH_PRINT,@"「你看HPH　姐姐好色的发情小穴、在一缩一缩地呢…HPH」","L"
+			CALL HPH_PRINT,@"「它在恳求着%CALLNAME:MASTER%大人的小鸡鸡、恳求着被插入其中哦HPH」","L"
+		CASE 9
+			CALL HPH_PRINT,@"「呀啊～HPH　姐姐的小穴、要被%CALLNAME:MASTER%大人的小鸡鸡征服了呜～～HPH」","L"
+			CALL HPH_PRINT,@"「渴望着交尾并被播下精子、因为您而充分认识到自己是个雌性了～～HPH」","L"
+		ENDSELECT
+		RESETCOLOR
+	ELSE
+		SETCOLOR 0xFF69B4
+		SELECTCASE RAND:10
+		CASE 0
+			CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人HPH　请从后面猛烈地抽插吧HPH」","L"
+			CALL HPH_PRINT,@"「像野兽一样HPH　按照本能地侵犯典吧HPH　来吧HPH」","L"
+		CASE 1
+			CALL HPH_PRINT,@"「这是%CALLNAME:MASTER%大人专用的、让肉棒舒服的小洞洞HPH」","L"
+			CALL HPH_PRINT,@"「来吧HPH　把那根硬而弯曲的东西插进去HPH　将典侵犯得一团糟吧HPH」","L"
+		CASE 2
+			CALL HPH_PRINT,@"「嘿嘿、现在的典正处于毫无防备的姿势呢HPH」","L"
+			CALL HPH_PRINT,@"「如果被从后面强暴的话、似乎也难以抵抗只能被干到怀孕呢HPH」","L"
+			CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人只是看看就足够了吗？HPH　对此没有什么想法吗？HPH」","L"
+		CASE 3
+			CALL HPH_PRINT,@"「接下来要发生的不是性爱HPH　而是如野兽般的交尾HPH」","L"
+			CALL HPH_PRINT,@"「不用思考太多、只需在这个雌穴之中、自由地抽插肉棒就好HPH」","L"
+		CASE 4
+			CALL HPH_PRINT,@"「快吧～HPH　典在说些什么呢HPH　快从后面侵犯典啊～HPH」","L"
+			CALL HPH_PRINT,@"「真是迟钝的家伙呢HPH　如果觉得懊悔的话就赶快犯典吧HPH　快点HPH　快点HPH」","L"
+		CASE 5
+			CALL HPH_PRINT,@"「让女性做到这种地步、我想%CALLNAME:MASTER%大人绝不会像个懦夫一样拒绝、对吧HPH」","L"
+			CALL HPH_PRINT,@"「当然、对于%CALLNAME:MASTER%大人的肉棒能否充分教训典是个相当大的疑问呢HPH」","L"
+		CASE 6
+			CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人HPH　典已经到极限了HPH」","L"
+			CALL HPH_PRINT,@"「因为膣内已经完全湿润准备完全了…所以不需要前戏了、赶快插进来吧HPH」","L"
+		CASE 7
+			CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人HPH　请从后面猛烈地插进去HPH　撞到以至于要坏掉吧HPH」","L"
+		CASE 8
+			CALL HPH_PRINT,@"「你看HPH　如果典将屁股压下去的话、肉棒就会插进去了哦HPH」","L"
+			CALL HPH_PRINT,@"「要插进去了喔？HPH　要完全进去了喔？HPH」","L"
+		CASE 9
+			CALL HPH_PRINT,@"「我不行了…HPH　如果不迎接%CALLNAME:MASTER%大人的肉棒、这种疼痛就不会停止的…HPH」","L"
+			CALL HPH_PRINT,@"「来吧、现在就好好搅拌这个状况良好的雌穴吧HPH　快一点HPH　快一点HPH」","L"
+		ENDSELECT
+		RESETCOLOR
+	ENDIF
+;发情していない
+ELSE
+	IF (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行)
+		SELECTCASE RAND:10
+		CASE 0
+			CALL HPH_PRINT,@"「……HPH」","L"
+		CASE 1
+			CALL HPH_PRINT,@"「请从后面来…HPH」","L"
+		CASE 2
+			IF BASE:MASTER:射精 >= 8000
+				CALL HPH_PRINT,@"「已经要射了吗…HPH　那就……」","L"
+				CALL HPH_PRINT,@"「射出来吧……在・这・里・面HPH」","L"
+			ELSE
+				CALL HPH_PRINT,@"「…这里就是、插入小鸡鸡的洞洞哟…HPH」","L"
+			ENDIF
+		CASE 3
+			CALL HPH_PRINT,@"「姐姐、喜欢被从后面啪HPH　啪HPH　啪HPH哦…HPH」","L"
+			CALL HPH_PRINT,@"「所以嘛…HPH」","L"
+		CASE 4
+			CALL HPH_PRINT,@"「就在这里…HPH　在这个舒服的洞洞、将小鸡鸡、插进去…HPH」","L"
+		CASE 5
+			CALL HPH_PRINT,@"「让姐姐的阴道、被%CALLNAME:MASTER%大人的小鸡鸡和精子填满吧…HPH」","L"
+		CASE 6
+			CALL HPH_PRINT,@"「你知道\@ TALENT:MASTER:非童贞 == 0 ? 应该怎么做吗…？ # 应该怎么做吧… \@HPH」","L"
+			CALL HPH_PRINT,@"「用%CALLNAME:MASTER%大人的小鸡鸡、让姐姐舒服起来吧…HPH」","L"
+		CASE 7
+			IF TALENT:怀孕愿望
+				CALL HPH_PRINT,@"「姐姐、\@ EXP:分娩经验 > 0 ? 还 # \@想要一个与%CALLNAME:MASTER%大人的宝宝…HPH」","L"
+				CALL HPH_PRINT,@"「跟姐姐交尾一下吧…HPH　拜托你了…HPH」","L"
+			ELSE
+				IF CFLAG:139:生理周期 == 8
+					CALL HPH_PRINT,@"「姐姐、如果说今天是容易怀上小宝宝的日子的话、你会怎么做呢…？HPH」","L"
+					CALL HPH_PRINT,@"「就算可能会怀上小宝宝、却还是想做色色的事情吗…？HPH」","L"
+				ELSEIF CFLAG:139:生理周期 == 1 || CFLAG:139:生理周期 == 2
+					CALL HPH_PRINT,@"「今天、好像是我不能怀上小宝宝的日子呢…HPH」","L"
+					CALL HPH_PRINT,@"「尽情享受、生肉阴道的滋味吧…HPH」","L"
+				ELSE
+					CALL HPH_PRINT,@"「嘿嘿、如果今天插入生鸡鸡的话、可能会怀上小宝宝呢…HPH」","L"
+					CALL HPH_PRINT,@"「该怎么办呢…？HPH　无套、要做吗…？」","L"
+				ENDIF
+			ENDIF
+		CASE 8
+			IF TALENT:恋人
+				CALL HPH_PRINT,@"「来吧…HPH　和姐姐的恋人之间的性爱、让我们开始吧…HPH」","L"
+			ELSEIF TALENT:恋慕
+				CALL HPH_PRINT,@"「来吧…HPH　和姐姐如同恋人般卿卿我我的性爱、让我们开始吧…HPH」","L"
+			ELSEIF TALENT:爱欲 || TALENT:炮友
+				CALL HPH_PRINT,@"「来吧…HPH　今天也来用姐姐的小穴舒服的自慰一下吧…HPH」","L"
+			ELSE
+				CALL HPH_PRINT,@"「来吧…HPH　和姐姐的做爱、让我们开始吧…HPH」","L"
+			ENDIF
+		CASE 9
+			CALL HPH_PRINT,@"「这个姿势的话、应该比较容易摆动腰部吧…HPH」","L"
+			IF !TALENT:恋慕 && !TALENT:爱欲 && !TALENT:炮友
+				PRINTFORM 「请把典
+				IF TALENT:140:恋人 == 1
+					PRINTFORM 「当作饭纲丸大人
+				ELSEIF TALENT:29:恋人 == 1
+					PRINTFORM 「当作射命丸大人
+				ELSEIF TALENT:42:恋人 == 1
+					PRINTFORM 「当作姫海棠大人
+				ELSEIF TALENT:65:恋人 == 1
+					PRINTFORM 「当作犬走大人
+				ELSEIF TALENT:MASTER:恋人 == 1 && !TALENT:恋人
+					PRINTFORM 您的恋人
+				ENDIF
+				CALL HPH_PRINT,@"、好好地疼爱吧…HPH」","L"
+			ELSEIF TALENT:爱欲 || TALENT:炮友
+				IF TALENT:140:恋人 == 1
+					PRINTFORM 「那些饭纲丸大人
+				ELSEIF TALENT:29:恋人 == 1
+					PRINTFORM 「那些射命丸大人
+				ELSEIF TALENT:42:恋人 == 1
+					PRINTFORM 「那些姫海棠大人
+				ELSEIF TALENT:65:恋人 == 1
+					PRINTFORM 「那些犬走大人
+				ELSEIF TALENT:MASTER:恋人 == 1 && !TALENT:恋人
+					PRINTFORM 「那些恋人大人
+				ENDIF
+				CALL HPH_PRINT,@"无法做到的事、请用姐姐的身体试一试吧…HPH」","L"
+			ELSE
+				CALL HPH_PRINT,@"「请只想着姐姐、好好舒服起来吧…HPH」","L"
+			ENDIF
+		ENDSELECT
+	ELSE
+		SELECTCASE RAND:10
+		CASE 0
+			CALL HPH_PRINT,@"「……HPH」","L"
+		CASE 1
+			CALL HPH_PRINT,@"「请从后面来…HPH」","L"
+		CASE 2
+			IF BASE:MASTER:射精 >= 8000
+				CALL HPH_PRINT,@"「已经要射了吗…HPH　那就……」","L"
+				CALL HPH_PRINT,@"「射出来吧……在・这・里・面HPH」","L"
+			ELSE
+				CALL HPH_PRINT,@"「…就在这里哦HPH」","L"
+			ENDIF
+		CASE 3
+			CALL HPH_PRINT,@"「要做的话、请从后面…HPH」","L"
+		CASE 4
+			CALL HPH_PRINT,@"「这样的话、应该比较容易插入吧…HPH」","L"
+		CASE 5
+			CALL HPH_PRINT,@"「虽然也可以用嘴或手让你射出来…HPH」","L"
+			CALL HPH_PRINT,@"「但怎样都要射出来的话、就在这里吧…HPH」","L"
+		CASE 6
+			IF TALENT:怀孕愿望
+				SELECTCASE RAND:2
+				CASE 0
+					CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人…典、典…在渴望着交尾…HPH」","L"
+					CALL HPH_PRINT,@"「能否在典阴道最深处、将特浓的精子射入其中呢…HPH」","L"
+				CASE 1
+					CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人…现在、现在要做的不只是做爱、而是进行交配哦…HPH」","L"
+					CALL HPH_PRINT,@"「让典、怀孕吧…HPH」","L"
+				ENDSELECT
+			ELSE
+				IF CFLAG:139:生理周期 == 8
+					CALL HPH_PRINT,@"「呵呵、现在正好是排卵期呢…HPH」","L"
+					CALL HPH_PRINT,@"「要不要来试试看、会不会中奖呢…？HPH」","L"
+				ELSEIF CFLAG:139:生理周期 == 1 || CFLAG:139:生理周期 == 2
+					CALL HPH_PRINT,@"「今天、是安全期呢…HPH」","L"
+					CALL HPH_PRINT,@"「所以请尽情的在膣内…HPH」","L"
+				ELSE
+					CALL HPH_PRINT,@"「嘿嘿、如果今天无套做的话、有机会会中奖呢…HPH」","L"
+					CALL HPH_PRINT,@"「该怎么办呢…？HPH　无套、要做吗…？」","L"
+				ENDIF
+			ENDIF
+		CASE 7
+			CALL HPH_PRINT,@"「会全部榨出来的…HPH　请进入、这管狐的小穴中吧…HPH」","L"
+		CASE 8
+			IF TEQUIP:MASTER:避孕套
+				CALL HPH_PRINT,@"「已经如实使用保险套了…HPH」","L"
+			ELSEIF TCVAR:TARGET:口服避孕药 == 1
+				CALL HPH_PRINT,@"「已经如实吃过避孕药了…HPH」","L"
+			ELSE
+				CALL HPH_PRINT,@"「避孕什么的、并不重要呢…HPH」","L"
+			ENDIF
+			CALL HPH_PRINT,@"「来吧、来和典做爱吧…HPH　从后面、进来…HPH」","L"
+		CASE 9
+			CALL HPH_PRINT,@"「没事的哦…HPH　就把典的这里、当作一个用来舒服的洞洞就好了…HPH」","L"
+			CALL HPH_PRINT,@"「请好好享受地、沉溺于典的身体吧…HPH」","L"
+		ENDSELECT
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;后背位Ａおねだり
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_44
+CALL M_KOJO_MESSAGE_COUNTER_K139_44_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_44_1
+RETURN 1
+
+;-------------------------------------------------
+;爱抚
+;-------------------------------------------------
+;==================================================
+;手淫
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_50
+CALL M_KOJO_MESSAGE_COUNTER_K139_50_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_50_1
+RETURN 1
+
+;==================================================
+;口淫
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_51
+CALL M_KOJO_MESSAGE_COUNTER_K139_51_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_51_1
+RETURN 1
+
+;==================================================
+;素股
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_52
+CALL M_KOJO_MESSAGE_COUNTER_K139_52_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_52_1
+RETURN 1
+
+;==================================================
+;乳交
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_53
+CALL M_KOJO_MESSAGE_COUNTER_K139_53_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_53_1
+RETURN 1
+
+;==================================================
+;足コキ
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_54
+CALL M_KOJO_MESSAGE_COUNTER_K139_54_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_54_1
+RETURN 1
+
+;==================================================
+;肛门爱抚
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_55
+CALL M_KOJO_MESSAGE_COUNTER_K139_55_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_55_1
+CALL HPH_PRINT,@"「嘿嘿、忘记我的能力是什么了吗HPH」","L"
+CALL HPH_PRINT,@"「『抓住弱点乘虚而入程度的能力』、请好好品味一下吧HPH」","L"
+PRINTW 
+IF TALENT:MASTER:性别 == 2 || TALENT:MASTER:性别 == 3
+	CALL HPH_PRINT,@"「找到了、找到了HPH　就是这里呢HPH」","L"
+	PRINTFORML 当典在肠内探索着什么时、
+ELSE
+	PRINTFORM 感受到一种恰到好处的力量在屁眼上挖掘所带来的快感
+ENDIF
+PRINTFORML 在思考着『趁虚而入的不是灵魂吗』的瞬间、
+IF TALENT:MASTER:性别 == 2 || TALENT:MASTER:性别 == 3
+	PRINTFORM 从肠内被玩弄前列腺的快感
+ELSE
+	PRINTFORM 感受到一种恰到好处的力量在屁眼上挖掘所带来的快感
+ENDIF
+PRINTFORML 脑中被一片空白所淹没…
+PRINTW 
+IF TALENT:MASTER:性别 == 2 || TALENT:MASTER:性别 == 3
+	CALL HPH_PRINT,@"「你看、\@  (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行) ? 小鸡鸡 # 肉棒 \@变得硬梆梆的呢HPH」","L"
+ELSE
+	CALL HPH_PRINT,@"「妳看、阴蒂像小鸡鸡一样变得又大又硬的了哦…HPH」","L"
+ENDIF
+RETURN 1
+
+;==================================================
+;肛门舐め
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_56
+CALL M_KOJO_MESSAGE_COUNTER_K139_56_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_56_1
+RETURN 1
+
+;==================================================
+;指插入
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_57
+CALL M_KOJO_MESSAGE_COUNTER_K139_57_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_57_1
+RETURN 1
+
+;==================================================
+;胸爱抚
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_58
+CALL M_KOJO_MESSAGE_COUNTER_K139_58_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_58_1
+RETURN 1
+
+;==================================================
+;乳头吸い
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_59
+CALL M_KOJO_MESSAGE_COUNTER_K139_59_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_59_1
+IF TALENT:MASTER:性别 == 2
+	IF (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行)
+		CALL HPH_PRINT,@"「发出如同女孩子一般的声音…HPH」","L"
+		CALL HPH_PRINT,@"「没事的HPH　再用更可爱的声音娇喘吧HPH」","L"
+	ELSE
+		CALL HPH_PRINT,@"「呵呵、如此又硬又挺的…HPH」","L"
+		CALL HPH_PRINT,@"「明明是男士、乳头却是性感带呢HPH　你看、就像这样…HPH」","L"
+	ENDIF
+ELSE
+	IF (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行)
+		CALL HPH_PRINT,@"「呵呵、变得如此坚挺呢…有这么舒服吗？HPH」","L"
+		CALL HPH_PRINT,@"「不明白？　那么我会一直折磨你直到你明白为止的…HPH」","L"
+	ELSE
+		CALL HPH_PRINT,@"「呵呵、变得如此坚挺呢…就这么有感觉吗？HPH」","L"
+		CALL HPH_PRINT,@"「才没有？　既然如此、妳看、这里都湿成这样了是为什么呢HPH」","L"
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;ディープキス
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_60
+CALL M_KOJO_MESSAGE_COUNTER_K139_60_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_60_1
+RETURN 1
+
+
+;-------------------------------------------------
+;侍奉
+;-------------------------------------------------
+;==================================================
+;クンニ强制
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_70
+CALL M_KOJO_MESSAGE_COUNTER_K139_70_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_70_1
+CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人、可以舔一下这里吗？HPH」","L"
+IF TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行
+	CALL HPH_PRINT,@"「啊啊、啊啊HPH」","L"
+	CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人如此拼命地用舌头舔姐姐的那里…HPH」","L"
+	CALL HPH_PRINT,@"「姐姐我、光是这样就能高潮了HPHHPH」","L"
+ELSE
+	IF ABL:MASTER:舌 >= 2
+		CALL HPH_PRINT,@"「啊啊…HPH　好棒啊、%CALLNAME:MASTER%大人…HPH」","L"
+		CALL HPH_PRINT,@"「典很快就要高潮了HPHHPH」","L"
+	ELSE
+		CALL HPH_PRINT,@"「来、能再仔细地舔一下这里吗？HPH」","L"
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;フェラチオ强制
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_71
+CALL M_KOJO_MESSAGE_COUNTER_K139_71_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_71_1
+RETURN 1
+
+;==================================================
+;肛门侍奉
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_72
+CALL M_KOJO_MESSAGE_COUNTER_K139_72_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_72_1
+RETURN 1
+
+;==================================================
+;ぱふぱふ
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_73
+CALL M_KOJO_MESSAGE_COUNTER_K139_73_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_73_1
+RETURN 1
+
+;==================================================
+;乳合わせ
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_74
+CALL M_KOJO_MESSAGE_COUNTER_K139_74_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_74_1
+RETURN 1
+
+;==================================================
+;タワシ洗い
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_75
+CALL M_KOJO_MESSAGE_COUNTER_K139_75_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_75_1
+RETURN 1
+
+;==================================================
+;强制アソコ爱抚
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_76
+CALL M_KOJO_MESSAGE_COUNTER_K139_76_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_76_1
+RETURN 1
+
+;==================================================
+;乳を吸わせる
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_77
+CALL M_KOJO_MESSAGE_COUNTER_K139_77_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_77_1
+RETURN 1
+
+;-------------------------------------------------
+;性交
+;-------------------------------------------------
+;==================================================
+;插入される（MASTER受け）
+;相手主导正常位であなたがＶに插入される
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_80
+CALL M_KOJO_MESSAGE_COUNTER_K139_80_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_80_1
+RETURN 1
+
+;==================================================
+;Ｖ插入する（TARGET受け）
+;相手主导であなたがＶに插入させられる
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_85
+CALL M_KOJO_MESSAGE_COUNTER_K139_85_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_85_1
+;插入される（MASTER受け）初回
+CFLAG:1019 = 1
+IF CFLAG:1012 == 0
+	;あなたが龙に好意を持っているかもフラグ
+	IF CFLAG:1004
+		IF EXP:MASTER:插入经验 == 1
+			CALL HPH_PRINT,@"「哎呀、看这反应、%CALLNAME:MASTER%大人还是第一次吗？HPH」","L"
+			CALL HPH_PRINT,@"「没事的HPH　并不会痛哦HPH　反而、是非常～舒服哦HPH」","L"
+			PRINTFORML 典用嘴对嘴的将神秘的液体送入嘴中
+			PRINTFORML 身体好烫…！　有什么正在苏醒…！
+			CALL BUFF_BASE(MASTER, BASE_气力,1000, 1)
+			CALL BUFF_BASE(MASTER, BASE_体力,1000, 1)
+			CALL BUFF_BASE(MASTER, BASE_精力,1000, 1)
+			TCVAR:MASTER:发情 = 1
+			BASE:MASTER:勃起 = MAXBASE:MASTER:勃起
+			PRINTW 
+			CALL HPH_PRINT,@"「怎么样呢？HPH　典特制的药味道如何呢HPH」","L"
+			CALL HPH_PRINT,@"「这都是%CALLNAME:MASTER%大人的错哦。谁叫你一边思念着纲丸大人、一边勾引着典呢HPH」","L"
+			CALL HPH_PRINT,@"「请承担起责任、好好疼爱一下典吧HPH」","L"
+			PRINTW 
+			PRINTFORML 典将%CALLNAME:MASTER%的龟头摆在阴道口前、然后坐了下去
+			CALL HPH_PRINT,@"「好啦HPH　处男毕业了哟ーHPH　请好好看着吧HPHHPH」","L"
+			CALL HPH_PRINT,@"「跟饭纲丸大人以外的女人处男毕业的瞬间HPH」","L"
+			PRINTW 
+			CALL HPH_PRINT,@"「如果你不乐意的话可以逃开哦ーHPH」","W"
+			CALL HPH_PRINT,@"「来吧HPH　再不想快一点的话、小鸡鸡就要被完全吞进去了哦HPH　就变成出轨做爱了哦HPH」","W"
+			CALL HPH_PRINT,@"「五～、四～、三～HPH」","L"
+			PRINTFORMW 呣啾噗！
+			CALL HPH_PRINT,@"「插进去了啊HPHHPHHPHHPH　好舒服HPH　在阴道中膨胀开来了HPHHPHHPHHPH」","L"
+			CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人的处男、被典吃掉了啊HPHHPH」","L"
+			PRINTW 
+		;非童贞
+		ELSE
+			IF TALENT:140:处女 == 1
+				CALL HPH_PRINT,@"「我知道哦HPH　%CALLNAME:MASTER%人、还尚未将饭纲丸大人的处女给夺走、对吧？」","L"
+				CALL HPH_PRINT,@"「这就是所谓的纯爱吗HPH　饭纲丸大人要是知道你对她如此重视、肯定会很高兴的HPH」","L"
+				PRINTW 
+				CALL HPH_PRINT,@"「可另一方面、如果她得知了你把鸡鸡插进过其他女人的小穴里的话、不知道又会怎么想呢…HPH」","L"
+				CALL HPH_PRINT,@"「更别说是痴迷于自己的部下呢…啊～！HPH」","L"
+				PRINTW 
+				PRINTFORML 呣啾噗！
+				PRINTW 
+				CALL HPH_PRINT,@"「啊ー啊HPH　插进去了呢HPHHPH　可怜的饭纲丸大人啊HPH」","L"
+				CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人、您的小鸡鸡还真是没有节操呢HPH」","L"
+				CALL HPH_PRINT,@"「像这样坏坏的小鸡鸡、典会惩罚它再也不能勃起的HPH　像这样、嗯HPH」","L"
+				PRINTW 
+			ELSE
+				CALL HPH_PRINT,@"「啊哈HPH　插进去了…HPH」","L"
+				CALL HPH_PRINT,@"「啊嗯HPH　啊嗯HPH　啊嗯HPH」","L"
+				CALL HPH_PRINT,@"「您和饭纲丸大人多久会做一次爱的结合呢？　每天？　半个月？　还是…HPH」","L"
+				IF EXP:139:Ｖ性交经验 > (EXP:140:Ｖ性交经验 * 2)
+					SELECTCASE EXP:140:Ｖ性交经验
+					CASE IS > 100
+						CALL HPH_PRINT,@"「我知道哦HPH　您应该已经和饭纲丸大人恩恩爱爱了不知道多少次了吧HPH」","L"
+						CALL HPH_PRINT,@"「但实际上和\@ (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行) ? 姐姐 # 典 \@滚床单的次数与这相比是压倒性的更多呢HPH」","L"
+						PRINTW 
+						CALL HPH_PRINT,@"「只与心仪上人做还不够吗？　还是有什么不满呢？HPH」","L"
+						CALL HPH_PRINT,@"「毕竟饭纲丸大人不是那种会随随便便就张开双腿的人呢…HPH　那真是没办法呢♪」","L"
+					CASE IS < 10
+						CALL HPH_PRINT,@"「我知道哦HPH　您只和饭纲丸大人做过几次而已吧HPH」","L"
+						CALL HPH_PRINT,@"「是因为很喜欢而很爱惜吗？HPH　还是说、反应过于冷淡了而感到不满足呢？HPH」","L"
+					CASE 1
+						CALL HPH_PRINT,@"「我知道哦HPH　您和饭纲丸大人只做过一次对吧HPH」","L"
+						CALL HPH_PRINT,@"「饭纲丸大人也挺可怜的呢…女性的快乐还没有被开发出来到就被晾在一边了…HPH」","L"
+					CASEELSE
+						CALL HPH_PRINT,@"「我知道哦HPH　和饭纲丸大人相比、您和我做过爱的次数明显压倒性的多哦HPH」","L"
+						CALL HPH_PRINT,@"「饭纲丸大人还真是日理万机呢…连做爱的时间都排不出来呢…HPH」","L"
+					ENDSELECT
+						PRINTW 
+						CALL HPH_PRINT,@"「不过、典只要是%CALLNAME:MASTER%大人所望的话、就随时都可以当性爱的对象哦…HPH」","L"
+						CALL HPH_PRINT,@"「把我当作是可以随便睡的轻浮女也没关系…HPH　只要%CALLNAME:MASTER%大人、愿意疼爱我的话…HPH」","L"
+						CALL HPH_PRINT,@"「就算心里所想的是饭纲丸大人、典也会、一直爱着%CALLNAME:MASTER%大人的…HPH」","L"
+						PRINTW 
+				ELSEIF EXP:139:Ｖ性交经验 > EXP:140:Ｖ性交经验
+					SELECTCASE EXP:140:Ｖ性交经验
+					CASE IS > 100
+						CALL HPH_PRINT,@"「我知道哦HPH　您应该已经和饭纲丸大人恩恩爱爱了不知道多少次了吧HPH」","L"
+						CALL HPH_PRINT,@"「但实际上和\@ (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行) ? 姐姐 # 典 \@滚床单的次数与这相比是多得多呢HPH」","L"
+						PRINTW 
+						CALL HPH_PRINT,@"「只与心仪上人做还不够吗？　还是有什么不满呢？HPH」","L"
+						CALL HPH_PRINT,@"「毕竟饭纲丸大人不是那种会随随便便就张开双腿的人呢…HPH　那真是没办法呢♪」","L"
+						PRINTW 
+						CALL HPH_PRINT,@"「不过、典只要是%CALLNAME:MASTER%大人所愿的话、要做几次都可以哦…HPH」","L"
+					CASE IS < 10
+						CALL HPH_PRINT,@"「我知道哦HPH　您只和饭纲丸大人做过几次而已吧HPH」","L"
+						CALL HPH_PRINT,@"「是因为很喜欢而很爱惜吗？HPH　还是说、反应过于冷淡了而感到不满足呢？HPH」","L"
+					CASE 1
+						CALL HPH_PRINT,@"「我知道哦HPH　您和饭纲丸大人只做过一次对吧HPH」","L"
+						CALL HPH_PRINT,@"「饭纲丸大人也挺可怜的呢…女性的快乐还没有被开发出来到就被晾在一边了…HPH」","L"
+					CASEELSE
+						CALL HPH_PRINT,@"「我知道哦HPH　和饭纲丸大人相比、您和我做过爱的次数是显然的多得多哦HPH」","L"
+						CALL HPH_PRINT,@"「饭纲丸大人还真是日理万机呢…连做爱的时间都排不出来呢…HPH」","L"
+					ENDSELECT
+					PRINTW 
+					CALL HPH_PRINT,@"「不过、典只要是%CALLNAME:MASTER%大人所望的话、就随时都可以当性爱的对象哦…HPH」","L"
+					CALL HPH_PRINT,@"「把我当作是可以随便睡的轻浮女也没关系…HPH　只要%CALLNAME:MASTER%大人、愿意疼爱我的话…HPH」","L"
+					CALL HPH_PRINT,@"「就算心里所想的是饭纲丸大人、典也会、一直爱着%CALLNAME:MASTER%大人的…HPH」","L"
+					PRINTW 
+				ELSE
+					SELECTCASE EXP:140:Ｖ性交经验
+					CASE IS > 100
+						CALL HPH_PRINT,@"「嘛、居然如此的…HPH　如胶似漆的、真让人嫉妒呢…HPH」","L"
+						CALL HPH_PRINT,@"「那么、%CALLNAME:MASTER%大人要加油一点、争取和我做的次数能超过和饭纲丸大人做的次数呢…HPH」","L"
+						CALL HPH_PRINT,@"「现在就暂时将饭纲丸大人抛之脑后吧、专心想着如何好好舒服吧…HPH」","L"
+						PRINTW 
+						CALL HPH_PRINT,@"「啊啊HPH　就是这样HPH　更深一点HPH」","L"
+						CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人的肉棒、真棒啊.HPH」","L"
+					CASE IS > 50
+						CALL HPH_PRINT,@"「你看HPH　你看HPH　如何呢、这样在入口被紧紧吸住的感觉♪」","L"
+						CALL HPH_PRINT,@"「为了让饭纲丸大人能更加舒服、就请多多的和典练习一下吧HPH」","L"
+						CALL HPH_PRINT,@"「因为和典做得越多、就越能够让饭纲丸大人更加满足呢HPH　啊啊HPHHPH」","L"
+					CASEELSE
+						CALL HPH_PRINT,@"「啊嗯HPH」","L"
+						CALL HPH_PRINT,@"「啊啦、意外地少呢…HPH」","L"
+						CALL HPH_PRINT,@"「　　　　　　啊嗯HPH」","L"
+						PRINTW 
+						CALL HPH_PRINT,@"「啊HPH」","L"
+						CALL HPH_PRINT,@"「和饭纲丸大人不仅仅是肉体的关系、是这个意思吗？　嘿嘿…HPH」","L"
+						CALL HPH_PRINT,@"「　　　　这样呀HPH」","L"
+						PRINTW 
+						CALL HPH_PRINT,@"「哈啊HPH　哈啊HPH」","L"
+						CALL HPH_PRINT,@"「那么、和典就仅仅是肉体上的关系吗？HPH　嘿嘿、既便是如此我也好高兴呀…HPH」","L"
+						CALL HPH_PRINT,@"「　　　　　　　　　　　好激烈HPH　啊哦HPH」","L"
+						PRINTW 
+					ENDSELECT
+				ENDIF
+			ENDIF
+		ENDIF
+	ELSE
+		;龙が先に恋慕
+		IF CFLAG:139:1000
+			;あなたが童贞
+			IF EXP:MASTER:插入经验 == 1
+				;フラグがなくても明确に恋人
+				IF TALENT:140:恋人
+					CALL HPH_PRINT,@"「嘿嘿、饭纲丸大人、对不住了呢HPH」","L"
+					CALL HPH_PRINT,@"「大人您恋人的处男之身、就由典拿下了HPH」","L"
+					PRINTW 
+					CALL HPH_PRINT,@"「这样一来HPH　无论未来您与饭纲丸大人做过多少回HPH」","L"
+					CALL HPH_PRINT,@"「最先和您的肉棒结合在一起的人是典的这一事实是不可能改变得了了呢HPH」","L"
+					CALL HPH_PRINT,@"「第一次插入女人小穴里、感想如何呢？　舒服吗HPH」","L"
+					PRINTW 
+					IF EXP:MASTER:射精经验 == 0
+						CALL HPH_PRINT,@"「咦？　难道、连第一次射精都没有吗…HPH」","L"
+						CALL HPH_PRINT,@"「那么、第一次射精的事情、也交给\@  (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行) ? 姐姐 # 典 \@来做吧HPH」","L"
+						CALL HPH_PRINT,@"「一点也不可怕哦…HPH　射精、是一件非常舒服的事情哦…HPH　来多多地射出来吧…HPHHPH」","L"
+					ENDIF
+				ELSE
+					CALL HPH_PRINT,@"「嘿嘿HPH　饭纲丸大人的心上人的第一次、我就收下啦～HPH」","L"
+					CALL HPH_PRINT,@"「没问题的HPH　反正你们又不是情侣、所以并不算是出轨哦♪」","L"
+					PRINTW 
+					CALL HPH_PRINT,@"「第一次进入女性的阴道、感觉如何呢？　舒服吗？HPH」","L"
+					CALL HPH_PRINT,@"「不能马上射出来哦HPH　忍耐得越久、射精的感觉就会越舒服哦…HPH」","L"
+					PRINTW 
+				ENDIF
+			;非童贞
+			ELSE
+				IF TALENT:140:恋人
+					IF TALENT:140:处女 == 1
+						CALL HPH_PRINT,@"「啊ー啊HPH　在夺走饭纲丸大人的处女之前就先上了\@  (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行) ? 姐姐 # 典 \@了HPH」","L"
+						CALL HPH_PRINT,@"「这下小鸡鸡确实出轨了呢HPH　已经没有回头路了呢HPH」","L"
+						CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人就用亲吻过我小穴的小鸡鸡、去夺了饭纲丸大人的小穴的初吻吧HPH」","L"
+						PRINTW 
+						CALL HPH_PRINT,@"「不过、没事的啦…HPH　只要\@  (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行) ? 姐姐 # 典 \@保守住秘密就好了嘛…HPH」","L"
+						CALL HPH_PRINT,@"「所以、就来和\@  (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行) ? 姐姐 # 典 \@享受快乐的时光吧…HPH」","L"
+						PRINTW 
+					ELSE
+						CALL HPH_PRINT,@"「在那说什么停下来的、那为什么%CALLNAME:MASTER%大人的小鸡鸡会这么硬呢HPH」","L"
+						CALL HPH_PRINT,@"「在\@ (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行) ? 姐姐 # 典 \@的小穴里又硬又挺的呢HPH」","L"
+						PRINTW 
+						CALL HPH_PRINT,@"「事实是、好想要、好想要、做那个对吧HPH　出轨性爱HPH」","L"
+						CALL HPH_PRINT,@"「这么没有节操的肉棒、我可不能让它插进主子的小穴里呢HPH」","L"
+						CALL HPH_PRINT,@"「所以呢、对于这根如此不老实的小鸡鸡、典很有惩处之必要呢…HPH」","L"
+						PRINTW 
+					ENDIF
+				ELSE
+					CALL HPH_PRINT,@"「嘿嘿、进去了呢ー…HPH」","L"
+					CALL HPH_PRINT,@"「之前、有和饭纲丸大人做过这等事吗？HPH」","L"
+					CALL ASK_YN("为什么要打听这种事呢","有做过了")
+					IF !RESULT
+						PRINTL 「为什么呢…饭纲丸大人、真是可怜啊…」
+						PRINTL 「那位、可是一直在深爱着您哦」
+						PRINTW 
+						PRINTL 「哎呀、这可是个秘密呢♪」
+						PRINTFORML 「话虽如此、对于没有察觉到对方心意的%CALLNAME:MASTER%大人来说、这话可能不太相关呢…♪」
+						CALL HPH_PRINT,@"「好了、闲聊就到此为止、让我们开始享受吧…HPH」","L"
+						PRINTW 
+					ELSE
+						CALL HPH_PRINT,@"「哦呀哦呀、好羡慕呢HPH」","L"
+						CALL HPH_PRINT,@"「那么、之后每和饭纲丸大人做一次后、就也和典做一次吧…HPH」","W"
+						PRINTW 「问为什么呢？　因为…」
+						CALL HPH_PRINT,@"「我、深爱着您哦…HPH」","L"
+						PRINTW 
+					ENDIF
+				ENDIF
+			ENDIF
+		;典が先に恋慕
+		ELSEIF CFLAG:139:1001
+			;あなたが童贞
+			IF EXP:MASTER:插入经验 == 1
+				;フラグがなくても明确に恋人
+				IF TALENT:140:恋人
+					IF TALENT:140:处女 == 1
+						CALL HPH_PRINT,@"「啊ー啊HPH　在夺去饭纲丸大人的处女之前居然将\@ (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行) ? 姐姐 # 典 \@给上了HPH」","L"
+						CALL HPH_PRINT,@"（%CALLNAME:MASTER%大人的处男HPH　是我HPH　是我先夺走的了HPH）","W"
+						CALL HPH_PRINT,@"「这下小鸡鸡确实出轨了呢HPH　已经没有回头路了呢HPH」","L"
+						CALL HPH_PRINT,@"（本来就是我先爱上你的HPH　没错、这是我的正当权利HPHHPH）","W"
+						CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人就用亲吻过我小穴的小鸡鸡、去夺了饭纲丸大人的小穴的初吻吧HPH」","L"
+						PRINTW 
+						CALL HPH_PRINT,@"「不过、没事的啦…HPH　只要\@  (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行) ? 姐姐 # 典 \@保守住秘密就好了嘛…HPH」","L"
+						CALL HPH_PRINT,@"「所以、来和\@ (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行) ? 姐姐 # 典 \@享受舒服的时光吧…HPH」","L"
+						PRINTW 
+					ELSE
+						CALL HPH_PRINT,@"「好啦HPH　处男丧失啦、恭喜恭喜～HPHHPH」","L"
+						CALL HPH_PRINT,@"「在那说什么停下来的、那为什么%CALLNAME:MASTER%大人的小鸡鸡会这么硬呢HPH」","W"
+						CALL HPH_PRINT,@"「在\@ (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行) ? 姐姐 # 典 \@的小穴里又硬又挺的呢HPH」","L"
+						CALL HPH_PRINT,@"「您能理解吗HPH　您所插入的小穴、并不是饭纲丸大人的哦HPH」","L"
+						PRINTW 
+						PRINTFORML 典双手紧紧抓住%CALLNAME:MASTER%的脸庞、并夺去了嘴唇
+						CALL HPH_PRINT,@"「HPH　HPHHPH　HPH～　HPH～　嗯嗯～～～～HPHHPH　哈啊～…HPHHPH」","L"
+						EXP:MASTER:接吻经验 += 1
+						EXP:接吻经验 += 1
+							SIF EXP:MASTER:接吻经验 == 1
+								CALL HPH_PRINT,@"「呵呵、%CALLNAME:MASTER%大人的嘴唇也一并被我夺走了…HPH」","L"
+							SIF EXP:接吻经验 == 1
+								CALL HPH_PRINT,@"「我、刚才的其实是初吻哦…HPH」","L"
+						PRINTW 
+						CALL HPH_PRINT,@"「事实是、好想要、好想要、做那个对吧HPH　出轨性爱HPH」","L"
+						CALL HPH_PRINT,@"「这么没有节操的肉棒、我可不能让它插进主子的小穴里呢HPH」","L"
+						CALL HPH_PRINT,@"「所以呢、这根小鸡鸡、典就来把它回收了…HPH」","W"
+						CALL HPH_PRINT,@"（既然、心是属于饭纲丸大人的、那我就将身体全部夺走变成我的…无论、要用上什么手段…HPH）","L"
+						PRINTW 
+					ENDIF
+				ELSE
+					CALL HPH_PRINT,@"「嘿嘿、进去了呢ー…HPH」","L"
+					CALL HPH_PRINT,@"「好开心…HPH　%CALLNAME:MASTER%大人的第一次、是属于\@ (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行) ? 姐姐 # 典 \@的了…HPH」","L"
+					PRINTW 
+					CALL HPH_PRINT,@"「最近、经常看到饭纲丸大人和%CALLNAME:MASTER%大人相处得很好呢…HPH」","L"
+					CALL HPH_PRINT,@"「说实在的、有点焦虑呢…但是、及时赶上了、真是太好了…HPH」","L"
+					PRINTW 
+					CALL HPH_PRINT,@"「嘿嘿、其实你是想将处男献给饭纲丸大人的吧？HPH」","L"
+					CALL HPH_PRINT,@"「但真可惜、%CALLNAME:MASTER%大人再也不是处男了HPH　这小鸡鸡、再也无法正视饭纲丸大人的小穴了HPH」","L"
+					PRINTW 
+					CALL HPH_PRINT,@"「但没事的哟HPH　%CALLNAME:MASTER%大人的小鸡鸡、\@ (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行) ? 姐姐 # 典 \@会来做它的对手的HPH」","L"
+					CALL HPH_PRINT,@"「就算被饭纲丸大人所拒、\@ (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行) ? 姐姐 # 典 \@也会来好好宠爱你的HPH」","L"
+					CALL HPH_PRINT,@"「就算是想要内射、也会让你随便射的哦HPH　只需要思考如何在\@ (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行) ? 姐姐 # 典 \@的小穴中舒服起来就好了…HPH」","L"
+					PRINTW 
+					CALL HPH_PRINT,@"「所以、来做很多很多次爱吧…HPH」","L"
+					CALL HPH_PRINT,@"「做到身体没有\@ (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行) ? 姐姐 # 典 \@就没有办法生存、全身性的沉醉于我的身体上吧…HPH」","L"
+					CALL HPH_PRINT,@"（心灵什么的、只要身体堕落了就不重要了…HPH　因为、我可是打从心底的深爱着%CALLNAME:MASTER%的啊…HPH）","L"
+					CALL HPH_PRINT,@"（最喜欢你了哦、%CALLNAME:MASTER%大人HPH　永远都是…HPH）","L"
+					PRINTW 
+				ENDIF
+			;非童贞
+			ELSE
+				IF TALENT:140:恋人
+					CALL HPH_PRINT,@"「好～HPH　%CALLNAME:MASTER%大人的小鸡鸡、我就收下啦ーHPH」","L"
+					CALL HPH_PRINT,@"「非拔出来不可？　真的吗？　小鸡鸡好像不是这么说的呢…HPH」","L"
+					PRINTW 
+					CALL HPH_PRINT,@"「没事的哦HPH　不用忍耐HPH　来和典做色色的事情吧HPH」","W"
+					PRINTFORMW 「……一直以来、我都喜欢着%CALLNAME:MASTER%大人哦」
+					PRINTFORMW 「在%CALLNAME:MASTER%大人和饭纲丸大人交往之前、就一直喜欢着」
+					PRINTFORML 「%CALLNAME:MASTER%大人、难道很讨厌\@ (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行) ? 姐姐 # 典 \@的吗…？」
+					PRINTW 
+					CALL ASK_YN("向她表白对她的喜欢","因无法回答而表示歉意")
+					IF !RESULT
+						PRINTFORMW 「好开心…%UNICODE(0x2665) *1%　%CALLNAME:MASTER%大人、我爱你…%UNICODE(0x2665) *1%」
+						SETCOLOR 0xFF69B4
+						CALL HPH_PRINT,@"「那么、既然都是彼此喜欢的人、一直不停的做爱也没问题了吧HPH」","L"
+						RESETCOLOR
+						PRINTFORML 坐在%CALLNAME:MASTER%身上的典带着一丝狡黠的笑容
+						PRINTW 
+						CALL HPH_PRINT,@"「啊啊HPH　这样HPH　刺进去好深HPHHPH　好舒服HPHHPH」","L"
+						CALL HPH_PRINT,@"「这个HPH　这就是我一直渴望着的HPHHPH　啊啊HPHHPH」","L"
+						CALL HPH_PRINT,@"「饭纲丸大人HPH　对不起HPH　您恋人的肉棒、真是太棒了HPHHPH」","L"
+						PRINTW 
+						PRINTFORML 坐在%CALLNAME:MASTER%身上的典显得有些混乱
+						PRINTFORML 为了不让心爱的肉棒逃脱、膣襞紧紧地吸附着
+						PRINTW 
+						CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人HPH　喜欢HPH　好喜欢HPH　好爱你HPHHPH」","L"
+						CALL HPH_PRINT,@"「再深一点HPH　在往典的小穴中深入更多一些HPHHPH　哦哦嗯HPHHPH」","L"
+						PRINTW 
+					ELSE
+						PRINTFORML 「呵呵、我就知道%CALLNAME:MASTER%大人会这么说的…♪」
+						PRINTFORML 「%CALLNAME:MASTER%大人与饭纲丸大人的心、是紧密相连着的呢…」
+						PRINTW 
+						CALL HPH_PRINT,@"「什么的、你以为会以这样的好话做结尾吗HPH」","L"
+						PRINTFORML 典、突然地加快了摆腰的速度
+						PRINTW 
+						CALL HPH_PRINT,@"「啊哈HPH　突如袭来的抽送、感觉很舒服对吧？HPHHPH」","L"
+						CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人的小鸡鸡、在膣内跳动个不停哦HPH」","L"
+						PRINTW 
+						CALL HPH_PRINT,@"「无论您再怎么坚持与饭纲丸大人的羁绊、也请不要忘记肉棒正与我紧密连结着的这一个事实HPH」","L"
+						CALL HPH_PRINT,@"「没关系的哦HPH　无论是脚踏两条还是三条船、我都会一直爱着%CALLNAME:MASTER%大人的HPH」","L"
+						CALL HPH_PRINT,@"「所以请让小鸡鸡再变得更硬些吧HPH　多多地在\@ (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行) ? 姐姐 # 典 \@里头射出来吧HPHHPH」","L"
+						PRINTW 
+					ENDIF
+				;典が先に恋慕・饭纲丸恋人なし
+				ELSE
+					CALL HPH_PRINT,@"「嘿嘿、进去了呢ー…HPH」","L"
+					CALL HPH_PRINT,@"「一直以来…我都梦想着这样的时刻…HPH」","L"
+					PRINTW 
+					CALL HPH_PRINT,@"「之前、有和饭纲丸大人做过这等事吗？HPH」","L"
+					CALL ASK_YN("为什么要打听这种事呢","有做过了")
+					IF !RESULT
+						PRINTL 「为什么呢…饭纲丸大人、真是可怜啊…」
+						PRINTL 「那位、可是一直在深爱着您哦」
+						PRINTW 
+						PRINTL 「哎呀、这可是个秘密呢♪」
+						PRINTFORML 「话虽如此、对于没有察觉到对方心意的%CALLNAME:MASTER%大人来说、这话可能不太相关呢…♪」
+						PRINTW 
+						CALL HPH_PRINT,@"「但是呢、如果论深情的强度的话、\@ (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行) ? 姐姐 # 典 \@也不输给任何人的哦…HPH」","L"
+						CALL HPH_PRINT,@"「因为、最先喜欢上%CALLNAME:MASTER%大人的人、可是我先开始的哦…HPH」","L"
+						PRINTW 
+						CALL HPH_PRINT,@"「\@ (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行) ? 姐姐 # 典 \@的爱意、用小鸡鸡好好感受一下吧…HPH」","L"
+						CALL HPH_PRINT,@"「饭纲丸大人没有给你做的、我会为你做很多很多的…HPH」","L"
+					ELSE
+						CALL HPH_PRINT,@"「哦呀哦呀、好羡慕呢HPH」","L"
+						CALL HPH_PRINT,@"「那么、之后每和饭纲丸大人做一次后、就也和典做一次吧…HPH」","W"
+						PRINTW 「问为什么呢？　因为…」
+						CALL HPH_PRINT,@"「因为我、可是比饭纲丸大人在更早之前就深深爱上了你哦…HPH」","L"
+						PRINTW 
+						CALL HPH_PRINT,@"「\@ (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行) ? 姐姐 # 典 \@的爱意、用小鸡鸡好好感受一下吧…HPH」","L"
+						CALL HPH_PRINT,@"「饭纲丸大人没有给你做的、我会为你做很多很多的…HPH」","L"
+					ENDIF
+				ENDIF
+			ENDIF
+		ENDIF
+	ENDIF
+	CFLAG:1012 += 1
+;插入される（MASTER受け）2回目以降
+ELSE
+	IF TCVAR:发情
+		IF (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行)
+			SETCOLOR 0xFF69B4
+			SELECTCASE RAND:3
+			CASE 0
+				CALL HPH_PRINT,@"「啊哈HPH　进入姐姐的子宫了啊HPHHPH」","L"
+				CALL HPH_PRINT,@"「姐姐的小穴PH　会让%CALLNAME:MASTER%大人的小鸡鸡好好舒服舒服的HPH」","L"
+			CASE 1
+				CALL HPH_PRINT,@"「啊嗯～HPH啊嗯～HPH啊嗯～～HPHHPH　好硬的小孩肉棒啊HPH　这个、好舒服HPHHPH」","L"
+				CALL HPH_PRINT,@"「硬硬的HPH　翘翘的HPH　碰到姐姐舒服的地方了HPHHPH」","L"
+				PRINTW 
+				CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人的这根鸡鸡HPH　是姐姐独享的东西HPHHPH」","L"
+				CALL HPH_PRINT,@"「只要有这个小鸡鸡就什么都不重要了HPH　只要有%CALLNAME:MASTER%大人就够了HPHHPH」","L"
+			CASE 2
+				CALL HPH_PRINT,@"「小孩子的肉棒果然是最棒的了HPH　硬度一点毛病都没有HPH」","L"
+				CALL HPH_PRINT,@"「请帮助姐姐发泄一下性欲吧HPH　当然才一次或两次是不够的哟HPHHPH」","L"
+				IF CFLAG:TARGET:允许无套 == 2
+					CALL HPH_PRINT,@"「射到足以从子宫中逆流而出HPH　超大～量地内射HPH　请射进来吧HPHHPH」","L"
+				ELSE
+					CALL HPH_PRINT,@"「请招待姐姐超大～量的充满元气的精子吧HPHHPH」","L"
+				ENDIF
+			CASE 3
+				IF TEQUIP:MASTER:避孕套
+					SELECTCASE RAND:2
+					CASE 0
+						CALL HPH_PRINT,@"「毕竟是危险期呢…HPH　要做好避孕呢HPH」","L"
+						CALL HPH_PRINT,@"「不过作为交换HPH　请多多让姐姐舒服起来吧HPH」","L"
+						CALL HPH_PRINT,@"「在这一盒用完之前我可是不会放你离开的…HPH」","L"
+					CASE 1
+						CALL HPH_PRINT,@"「想要无套的感觉？HPH　想要和姐姐的无套小穴摩擦一下？HPH」","L"
+						CALL HPH_PRINT,@"「如果%CALLNAME:MASTER%大人不介意当爸爸的话、那就可以脱掉这个保险套哦HPH」","L"
+						CALL HPH_PRINT,@"「仅脱下一层薄膜就能享受到让人发疯的快感…你要怎么做？HPH」","L"
+					ENDSELECT
+				ELSE
+					CALL HPH_PRINT,@"「无套鸡鸡插进来了HPH　怎么样呢？　姐姐生肉小穴的触感如何HPH」","L"
+					CALL HPH_PRINT,@"「果然如果要跟小孩子做爱的话就得教一下无套的好处呢HPH」","L"
+					IF TCVAR:TARGET:口服避孕药 == 1
+						SELECTCASE RAND:2
+						CASE 0
+							CALL HPH_PRINT,@"「果然要射出来的话还是在阴道中内射会更好呢HPH」","L"
+							CALL HPH_PRINT,@"「姐姐、有吃过会让人无法怀上小宝宝的药了、所以无论在里面射多少次都没关系哦HPH」","L"
+							CALL HPH_PRINT,@"「来舒服的射很多次精吧HPH　将姐姐的小穴、用宝宝素填满吧HPH」","L"
+						CASE 1
+							CALL HPH_PRINT,@"「如果将姐姐吃下的药给女孩子吃、那么无论中出多少次她也不会怀孕哦HPH」","L"
+							CALL HPH_PRINT,@"「世界中的女孩子们、都可是渴望着%CALLNAME:MASTER%大人的内射渴望的无可奈何的哦HPH」","L"
+							CALL HPH_PRINT,@"「当她们假装不喜欢的时候、那是要求中出的暗示哦HPH　到时候就请给她们满满地中出吧HPH」","L"
+						ENDSELECT
+					ELSE
+						SELECTCASE RAND:2
+						CASE 0
+							CALL HPH_PRINT,@"「因为姐姐和%CALLNAME:MASTER%大人彼此相爱着、所以避孕什么的就不重要了呢HPH」","L"
+							CALL HPH_PRINT,@"「没事的哦HPH　即使产下孩子后、我也会给你做很多色色的事情的哦HPHHPH」","L"
+							CALL HPH_PRINT,@"「HPH」","L"
+						CASE 1
+							CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人没有带着套套、而姐姐也没有喝下防止怀上小宝宝的药呢HPH」","L"
+							CALL HPH_PRINT,@"「所以、这就意味着～～…HPH」","L"
+							CALL HPH_PRINT,@"「如果内射在里头的话、就会有小宝宝了呢HPH」","L"
+						ENDSELECT
+					ENDIF
+				ENDIF
+			ENDSELECT
+			RESETCOLOR
+			PRINTW 
+		;发情・若者以上
+		ELSE
+			SETCOLOR 0xFF69B4
+			SELECTCASE RAND:3
+			CASE 0
+				;あなたが射精
+				IF NOWEX:MASTER:11
+					IF TCVAR:MASTER:射精我慢
+						CALL HPH_PRINT,@"「呜嘿嘿HPH　在拼命忍耐着射精的%CALLNAME:MASTER%大人的脸庞、好可爱啊…HPH」","L"
+						CALL HPH_PRINT,@"「但是、已经～～到终点了呢HPH　真是遗憾呢HPHHPH」","L"
+						IF ABL:膣 >= 4
+							RESETCOLOR
+							PRINTFORML 典在保持连接着的状态下让膣壁蠢蠢欲动了起来、%CALLNAME:MASTER%的阴茎感受到了强烈的快感
+							PRINTL 
+							SETCOLOR 0xFF69B4
+							CALL HPH_PRINT,@"「在典的腔内、射・精・吧HHPHPHHPH」","L"
+							RESETCOLOR
+							PRINTFORML 最后、典的尾巴尖端进了%CALLNAME:MASTER%的肛门里、刺激着前列腺
+							PRINTFORML %CALLNAME:MASTER%的界线、一下就不费吹灰之力地崩溃了
+						ELSE
+							RESETCOLOR
+							PRINTFORML 典在保持连接着的状态下让膣壁吸附了上去、%CALLNAME:MASTER%的阴茎感受到快感
+							PRINTL 
+							SETCOLOR 0xFF69B4
+							CALL HPH_PRINT,@"「在典的腔内、射・精・吧HHPHPHHPH」","L"
+							RESETCOLOR
+							PRINTFORML 最后、典的尾巴尖端进了%CALLNAME:MASTER%的肛门里、刺激着前列腺
+							PRINTFORML %CALLNAME:MASTER%的界线、终于崩溃了
+						ENDIF
+					ELSE
+						CALL HPH_PRINT,@"「如果再稍微动一下的话、就会射精了呢…HPH」","L"
+						CALL HPH_PRINT,@"「先走汁早就一直在噗噗地HPH　流出来了呢…HPH」","L"
+						IF TEQUIP:体位 == 2
+							CALL HPH_PRINT,@"「那么…就这样～～～～～结束吧HPHHPH」","L"
+							PRINTL 
+							RESETCOLOR
+							CALL HPH_PRINT,@"啪啾嗯HPHHPHHPH","L"
+							PRINTFORML 当典举到要拔出来的屁股撞击到%CALLNAME:MASTER%的腰部的瞬间时、%CALLNAME:MASTER%的尿道瞬间迎来了决堤…
+						ELSE
+							SELECTCASE RAND:3
+							CASE 0
+								CALL HPH_PRINT,@"「射出来吧…HPH　怀上、小宝宝…HPHHPH」","L"
+							CASE 1
+								CALL HPH_PRINT,@"「射出来吧…HPH　让典、怀孕吧…HPHHPH」","L"
+							CASE 2
+								CALL HPH_PRINT,@"「射出来吧…HPH　内射、也可以…HPHHPH」","L"
+							ENDSELECT
+						ENDIF
+					ENDIF
+				ELSEIF BASE:MASTER:射精 >= 8000
+					IF TCVAR:MASTER:射精我慢
+					ELSE
+					ENDIF
+				ENDIF
+			CASE 1
+			CASE 2
+				CALL HPH_PRINT,@"「啊嗯～HPH啊嗯～HPH啊嗯～～HPHHPH　肉棒好硬啊HPH　这个、好舒服HPHHPH」","L"
+				CALL HPH_PRINT,@"「不仅硬硬的HPH　又弯曲着HPH　不停磨蹭着刺激着HPHHPH」","L"
+				CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人的肉棒HPH　再让我更加疯狂地高潮吧HPHHPH」","L"
+			ENDSELECT
+			RESETCOLOR
+		ENDIF
+	;发情していない
+	ELSE
+		IF (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行)
+			SELECTCASE RAND:5
+			CASE 0
+				CALL HPH_PRINT,@"「请记住这一点HPH　甚至是姐姐…甚至女人、有时候也会有性欲燃起的哦HPH」","L"
+				CALL HPH_PRINT,@"「所以就要这样子…用小鸡鸡来好好消解性欲呢HPHHPH」","L"
+				CALL HPH_PRINT,@"「我不会放跑你的哦HPH　请好好地让小鸡鸡保持勃起吧HPHHPH」","L"
+			CASE 1
+				CALL HPH_PRINT,@"「呵呵HPH　%CALLNAME:MASTER%大人是喜欢姐姐随着命令摆腰呢？HPH」","L"
+				CALL HPH_PRINT,@"「还是、更喜欢姐姐自己来、享受姐姐真心地摆腰呢…？HPH」","L"
+				CALL HPH_PRINT,@"「就像这样HPH　摆动HPH　摆动HPH　嗯HPHHPH」","L"
+			CASE 2
+				CALL HPH_PRINT,@"「嘿嘿HPH　害怕颤抖着的样子真可爱呢HPH」","L"
+				CALL HPH_PRINT,@"「再让我看看更可爱的表情吧HPH　让ˋ我看看可怜的表情吧HPH」","L"
+				SIF CFLAG:TARGET:允许无套 == 2 || TCVAR:TARGET:口服避孕药 == 1
+					CALL HPH_PRINT,@"「不用忍耐、射精的时候要全部都射进阴道里哦HPH」","L"
+			CASE 3
+				CALL HPH_PRINT,@"「对不起HPH　%CALLNAME:MASTER%大人～HPH　对不起啊HPHHPH」","L"
+				CALL HPH_PRINT,@"「姐姐、实在是太烦躁了HPHHPH　就自己开始摆腰了呢HPHHPH」","L"
+			CASE 4
+				CALL HPH_PRINT,@"「啪啪HPH　啪啪HPH　啪啪HPH　啪啪HPH」","L"
+				CALL HPH_PRINT,@"「做得很棒哦HPH　抽送的好厉害HPH　姐姐、就是想要这个呢HPH」","L"
+				CALL HPH_PRINT,@"「孩子肉棒～HPH　再更用力地撞击姐姐吧～HPHHPH」","L"
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人的%TEXTR("肉棒/肉棒大人/鸡巴")%在阴道中探索的触感…最～爽～了HPH」","L"
+				CALL HPH_PRINT,@"「什么都不必顾虑哦HPH　典现在、非常渴望着%CALLNAME:MASTER%大人的侵犯呢HPH」","L"
+			CASE 1
+				CALL HPH_PRINT,@"「不顾虑尽情地动吧HPH」","L"
+				CALL HPH_PRINT,@"「哦～！？HPH　哦哦呜～HPHHPH　好棒～HPH　就是这样～HPHHPH」","L"
+			CASE 2
+				CALL HPH_PRINT,@"「啊嗯HPH　啊嗯HPH　好舒服HPH」","L"
+				CALL HPH_PRINT,@"「再往里面更深点HPH　跟子宫口亲亲HPHHPH」","L"
+			ENDSELECT
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;だいしゅきホールド
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_86
+CALL M_KOJO_MESSAGE_COUNTER_K139_86_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_86_1
+;限界まで腰を下ろし、搾り取るからと笑って膣腔で%TINKO(PLAYER)%を缔めつけてきた
+IF TCVAR:发情
+	IF TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行
+		SETCOLOR 0xFF69B4
+		CALL HPH_PRINT,@"「啊啊HPH　这表情HPH　真让人受不了了HPH」","L"
+		CALL HPH_PRINT,@"「这种快射精还拚死忍耐着的表情HPH」","L"
+		CALL HPH_PRINT,@"「但很可惜HPH　%CALLNAME:MASTER%大人的射精可是由姐姐管理的哦HPH」","W"
+		PRINTL 
+		CALL HPH_PRINT,@"「忍耐HPH」","W"
+		PRINTL 
+		CALL HPH_PRINT,@"「是徒劳的HPH」","W"
+		PRINTL 
+		CALL HPH_PRINT,@"「马上射出来吧HPHHPH」","L"
+		PRINTL 
+		RESETCOLOR
+	ELSE
+		SETCOLOR 0xFF69B4
+		CALL HPH_PRINT,@"「啊啊HPH　这表情HPH　真让人受不了了HPH」","L"
+		CALL HPH_PRINT,@"「这种快射精还拚死忍耐着的表情HPH」","L"
+		CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人、真是好可爱呀HPHHPH」","L"
+		CALL HPH_PRINT,@"「可爱无比的%CALLNAME:MASTER%大人、已经可以射了哦HPH」","L"
+		PRINTL 
+		RESETCOLOR
+	ENDIF
+ELSE
+	IF TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行
+		CALL HPH_PRINT,@"「好、就这样在姐姐的腔内噗噗地射出来吧ーHPH」","L"
+		CALL HPH_PRINT,@"「不会让你逃开的哦ーHPH　发射前倒数、五～HPH」","W"
+		PRINTL 
+		CALL HPH_PRINT,@"「四HPH」","W"
+		PRINTL 
+		CALL HPH_PRINT,@"「三HPH」","W"
+		PRINTL 
+		CALL HPH_PRINT,@"「二～HPH」","W"
+		PRINTL 
+		CALL HPH_PRINT,@"「一～HPH」","W"
+		PRINTL 
+	ELSE
+		CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人HPH　舒服吗HPH」","L"
+		IF TEQUIP:MASTER:避孕套
+			CALL HPH_PRINT,@"「作为你让我舒服的奖励HPH　请在里面尽情喷发吧HPH」","L"
+		ELSE
+			CALL HPH_PRINT,@"「作为你让我舒服的奖励HPH　请在子宫里尽情喷发吧HHPH」","L"
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;Ａ插入する（TARGET受け）
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_87
+CALL M_KOJO_MESSAGE_COUNTER_K139_87_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_87_1
+RETURN 1
+
+;==================================================
+;Ｖ腰振り（MASTER受け）
+;あなたが相手にＶに插入させられる
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_88
+CALL M_KOJO_MESSAGE_COUNTER_K139_88_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_88_1
+CFLAG:1019 = 1
+IF TCVAR:发情
+	IF TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行
+		;体型が典より小さいならちんぐり返しをくらう
+		IF TALENT:MASTER:体型 < 0
+			PRINTFORML 典抓住%CALLNAME:MASTER%的双脚腕、使其摆成了屈体位的姿势后进行着逆强奸…
+			SETCOLOR 0xFF69B4
+			SELECTCASE RAND:2
+			CASE 0
+				CALL HPH_PRINT,@"「怎么样呢HPH　被弱小妖怪使用着肉棒的感觉HPH」","L"
+			CASE 1
+				CALL HPH_PRINT,@"「怎么样呢HPH　被剥夺身体自由HPH　被当做人形按摩棒的感觉如何HPH」","L"
+			ENDSELECT
+			CALL HPH_PRINT,@"「觉得羞耻吗？HPH　觉得懊悔吗？HPH　但是HPH　小鸡鸡却硬得像石头一样哦HPHHPH」L"
+			PRINTL 
+			IF NOWEX:PLAYER:11
+				CALL HPH_PRINT,@"「要射了吗？HPH　要被这样强迫到射精了吗？HPH」","L"
+				CALL HPH_PRINT,@"「就算无法战胜过姐姐也要射出来哦HPH　射出来吧HPHHPH」","L"
+				PRINTW 
+			ELSE
+				CALL HPH_PRINT,@"「呜嘿嘿HPH　这个忍住不射精的表情、太棒了哦HPHHPH」","L"
+				CALL HPH_PRINT,@"「你的忍耐只是徒劳无功的哦HPH　来噗噗地射吧HPH　噗噗地HPHHPH」","L"
+			ENDIF
+			PRINTL 
+			RESETCOLOR
+		ELSE
+			SETCOLOR 0xFF69B4
+			SELECTCASE RAND:3
+			CASE 0
+				CALL HPH_PRINT,@"「啊HPH　啊HPH　啊啊HPHHPH」","L"
+			CASE 1
+				CALL HPH_PRINT,@"「啊～～HPH　啊啊啊～～～～HPHHPH」","L"
+				CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人的鸡巴、好棒～HPH」","L"
+				SELECTCASE TALENT:MASTER:形状
+				CASE 6,10;巨根、马并み
+					CALL HPH_PRINT,@"「又硬又粗的～～～～HPHHPH」","L"
+				CASE 1,2;粗チン
+					CALL HPH_PRINT,@"「明明很小只、却如同烧红的铁块一样又热又硬的～～HPH」","L"
+				CASE 5;イボ付き
+					CALL HPH_PRINT,@"「疙瘩在阴道内咯哧咯哧的磨擦着HPHHPH」","L"
+				CASEELSE
+					CALL HPH_PRINT,@"「刚好顶到了非常舒服的地方呢HPHHPH」","L"
+				ENDSELECT
+			CASE 2
+				CALL HPH_PRINT,@"「怎么了呢HPH　腰浮起来了哦HPH」","L"
+			ENDSELECT
+			RESETCOLOR
+			PRINTW 
+		ENDIF
+	;儿童じゃない
+	ELSE
+		;体型が典より小さいならちんぐり返しをくらう
+		IF TALENT:MASTER:体型 < 0
+			PRINTFORML 典抓住%CALLNAME:MASTER%的双脚腕、使其摆成了屈体位的姿势后进行着逆强奸…
+			SETCOLOR 0xFF69B4
+			SELECTCASE RAND:2
+			CASE 0
+				CALL HPH_PRINT,@"「怎么样呢HPH　被弱小妖怪使用着肉棒的感觉HPH」","L"
+			CASE 1
+				CALL HPH_PRINT,@"「怎么样呢HPH　被剥夺身体自由HPH　被当做人形按摩棒的感觉如何HPH」","L"
+			ENDSELECT
+			CALL HPH_PRINT,@"「难为情了吗？HPH　感到懊恼了吗？HPH　不过HPH　鸡巴已经硬得不行了喔HPHHPH」L"
+			PRINTW 
+			IF NOWEX:PLAYER:11
+				CALL HPH_PRINT,@"「要射了吗？HPH　要被这样强迫到射精了吗？HPH」","L"
+				CALL HPH_PRINT,@"「就这样输给弱小妖怪、射精吧HPH　高潮吧HPHHPH」","L"
+				PRINTW 
+			ELSE
+				CALL HPH_PRINT,@"「为何还在做无用的挣扎呢？HPH」","L"
+				CALL HPH_PRINT,@"「射吧HPHHPH　只要这样硬着鸡鸡然后射精在里面就能当爸爸了哦HPHHPH」","L"
+			ENDIF
+			RESETCOLOR
+		ELSE
+			SETCOLOR 0xFF69B4
+			SELECTCASE RAND:3
+			CASE 0
+				CALL HPH_PRINT,@"「啊HPH　啊HPH　啊啊HPHHPH」","L"
+			CASE 1
+				CALL HPH_PRINT,@"「啊～～HPH　啊啊啊～～～～HPHHPH」","L"
+				CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人的鸡巴、好棒～HPH」","L"
+				SELECTCASE TALENT:MASTER:形状
+				CASE 6,10;巨根、马并み
+					CALL HPH_PRINT,@"「又硬又粗的～～～～HPHHPH」","L"
+				CASE 1,2;粗チン
+					CALL HPH_PRINT,@"「明明很小只、却如同烧红的铁块一样又热又硬的～～HPH」","L"
+				CASE 5;イボ付き
+					CALL HPH_PRINT,@"「疙瘩在阴道内咯哧咯哧的磨擦着HPHHPH」","L"
+				CASEELSE
+					CALL HPH_PRINT,@"「刚好顶到了非常舒服的地方呢HPHHPH」","L"
+				ENDSELECT
+			CASE 2
+				CALL HPH_PRINT,@"「怎么了呢HPH　腰浮起来了哦HPH」","L"
+			ENDSELECT
+			RESETCOLOR
+			PRINTW 
+		ENDIF
+	ENDIF
+;发情してない
+ELSE
+	IF TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行
+		IF TCVAR:MASTER:要去了 == 1
+			CALL HPH_PRINT,@"（好可爱…HPH　在努力忍住呢HPH）","L"
+			IF SOURCE:快Ｖ >= 7000
+				CALL HPH_PRINT,@"「再稍微、努力一点吧HPH　姐姐也、快要高潮了呢HPH」","L"
+			ELSE
+				SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"「来吧HPH　加油点吧HPH」","L"
+					CALL HPH_PRINT,@"「如此软弱的小鸡鸡、是没办法让姐姐高潮的哦HPHHPH」","L"
+				CASE 1
+					CALL HPH_PRINT,@"（紧咬着牙关拼命摆腰的%CALLNAME:MASTER%大人、好可爱…HPH）","L"
+					CALL HPH_PRINT,@"（来吧HPH　继续为了典而摆腰HPH　用%CALLNAME:MASTER%大人的肉棒让姐姐堕落吧HPHHPH）","L"
+				CASE 2
+					CALL HPH_PRINT,@"「还不可以射哦HPH　请再让姐姐更舒服些吧HPH」","L"
+					CALL HPH_PRINT,@"（啊啊HPH　泪眼婆娑的%CALLNAME:MASTER%大人HPH　好可爱、太可爱了HPHHPH　让人更想欺负你了HPHHPH）","L"
+				ENDSELECT
+				PRINTW 
+			ENDIF
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				CALL HPH_PRINT,@"「呵呵HPH　浪汪汪的、好可爱…HPH」","L"
+				PRINTFORML 典一边在%CALLNAME:MASTER%身上摆动着腰、一边用手指对乳头咔哧咔哧地玩弄…
+				IF TALENT:MASTER:性别 == 2
+					CALL HPH_PRINT,@"「就算是男性、也能透过乳头感受到快感的哦HPH　看吧、就像这样HPH」","L"
+					IF TALENT:MASTER:Ｂ感度 == 1
+						CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人也太过敏感了呢HPH　你看HPH　小鸡鸡又跳起来了HPHHPH」","L"
+					ENDIF
+				ENDIF
+				PRINTW 
+			CASE 1
+				CALL HPH_PRINT,@"「喜欢这样子、只有小鸡鸡的前端、被这样包裹着的感觉吗HPH」","L"
+				CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人的小鸡鸡、很舒服呢HPH」","L"
+			CASE 2
+				CALL HPH_PRINT,@"「进进出出的地方、能看见吗？HPH」","L"
+				CALL HPH_PRINT,@"「姐姐和%CALLNAME:MASTER%大人、正在做爱哦HPH」","L"
+			ENDSELECT
+		ENDIF
+	;儿童じゃない
+	ELSE
+		IF TCVAR:MASTER:要去了 == 1
+			CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人射精时的表情、好喜欢…HPH　实在是、太可爱了…HPH」","L"
+			IF SOURCE:快Ｖ >= 7000
+				CALL HPH_PRINT,@"「典也、快要高潮了HPH　一起、一起HPHHPH」","L"
+			ELSE
+				CALL HPH_PRINT,@"「啊啦啊啦、已经快射精了吗？HPH」","L"
+				CALL HPH_PRINT,@"「呵呵、%CALLNAME:MASTER%大人的小鸡鸡真是根没有什么忍耐力的杂鱼鸡巴呢HPH」","L"
+				CALL HPH_PRINT,@"「杂鱼HPH　杂鱼HPH　被区区管狐给难看的被弄到射精了呢HPHHPH」","L"
+			ENDIF
+		ELSE
+			CALL HPH_PRINT,@"「啊HPH　再更HPH　用力点顶进来吧HPHHPH」","L"
+			CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人的肉棒HPH　肉棒、好喜欢～HPHHPH」","L"
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;Ａ腰振り（MASTER受け）
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_89
+CALL M_KOJO_MESSAGE_COUNTER_K139_89_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_89_1
+RETURN 1
+
+;==================================================
+;Ａ插入される（MASTER受け）
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_90
+CALL M_KOJO_MESSAGE_COUNTER_K139_90_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_90_1
+RETURN 1
+
+;==================================================
+;被深喉（MASTER受け）
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_91
+CALL M_KOJO_MESSAGE_COUNTER_K139_91_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_91_1
+RETURN 1
+
+;==================================================
+;肛门开发许可を求める
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K139_92
+CALL M_KOJO_MESSAGE_COUNTER_K139_92_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K139_92_1
+RETURN 1
+
+;-------------------------------------------------
+;诶嘿嘿カウンター
+;-------------------------------------------------
+;まだ

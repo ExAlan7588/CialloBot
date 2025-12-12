@@ -1,0 +1,113 @@
+﻿@CHARAMOVE_DATA_132(ARG, ARG:2)
+LOCAL = 132
+SELECTCASE ARG
+	;连动设定（RETURN=依存する角色, RESULT:1～3=对等に连动する角色）
+	CASE 1
+	;特殊生活时间设定（CFLAG:LOCAL:生活时间补正を设定する）
+	CASE 3
+	;移动倾向（±～10=行きやすい/行きにくい, -100=行かない）
+	CASE 4
+		SELECTCASE ARG:2
+			;是非曲直厅、冥界、八云邸、地狱には行かない（入り口部分は出る时用）
+			CASE P612法庭 TO P639八云邸起居室, P605地狱
+				RETURN -100
+			;他人的家には入らない
+			CASE P608润美的家, P609璎花的家, P606日狭美的家, P607残无的家
+				RETURN -100
+			;组长宅には行かない
+			CASE P646八千慧宅的澡堂 TO P655尤魔宅的澡堂
+				RETURN -100
+		ENDSELECT
+	;出现场所
+	CASE 7
+		SELECTCASE ARG:2
+			CASE 樱花道的鸟居, 神社境内, 神社走廊, 梦幻遗迹
+				RETURN 1
+			CASE 广场, 商业街, 吞屋小道, 长屋街
+				RETURN 1
+			CASE 森林的入口, 香霖堂, 古木的大树, 雾雨魔法店, 人偶的洋馆, 再思之道, 无缘冢
+				RETURN 1
+			CASE 中有之道, 三途之川, 彼岸, 灵长园
+				RETURN 1
+		ENDSELECT
+	;引力设定（CFLAG:LOCAL:引力点を设定する）
+	CASE 8
+ENDSELECT
+
+@EXIST_キャラデータ132
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@キャラデータ132(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "称呼"
+	CALLF MAKE_STR(V_NAME, "袿姫")
+;こっから衣装设定
+CASE "今天的睡衣"
+	CALLF MAKE_STR(V_NAME, "睡衣（连衣裙）套")
+
+CASE "便装：帽子"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("帽子", "头巾"))
+CASE "便装：连衣裙"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("连衣裙", "连衣裙"))
+CASE "便装：外衣"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("外衣", "作业围裙"))
+CASE "便装：靴"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("靴", "凉鞋"))
+CASE "便装：饰品"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("饰品", "首饰"))
+
+CASE "固有内衣形容词"
+	CALLF MAKE_STR(V_NAME, "造形术で仕立てた")
+CASE "固有下半身内衣名"
+	CALLF MAKE_STR(V_NAME, "クリエイター三角胖次")
+CASE "固有上半身内衣"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "固有上半身内衣名"
+	CALLF MAKE_STR(V_NAME, "クリエイターブラ")
+CASE "固有内衣着用条件"
+	SIF !RAND:(3 - (2 * 胜负内衣判定([[袿姫]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "固有内衣半透明(前)"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "固有内衣半透明(后)"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "固有内衣布料厚度"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;料理关联
+CASE "料理：喜欢的味道"
+	CALLF MAKE_STR(V_NAME, "米/面包/汁物/蛋糕/简易/豪华/艺术的/上品/软绵绵/甜/甜/酸/酸/")
+CASE "料理：讨厌的味道"
+	CALLF MAKE_STR(V_NAME, "野趣/灵障/咸/咸/香料/香料/香料/畜生流/畜生流/畜生流/畜生流/畜生流/")
+CASE "料理：助手效果"
+	CALLF MAKE_STR(V_NAME, "彩り/隐し味/")
+;赠り物关联
+CASE "感性：好き"
+	CALLF MAKE_STR(V_NAME, "青/秩序/美的/艺术的/怀旧/威严/" + "土/付丧神/巫术/美术品/人形/几何学模样の/" * 3 + "鬼形の/埴轮の/造形术の/手办/雕刻/" * 5)
+CASE "感性：嫌い"
+	CALLF MAKE_STR(V_NAME, "混沌/朴素/" + "妖怪/生体品/" * 3 + "狼の/水獭の/鹫の/" * 10)
+ENDSELECT
+
+;-------------------------------------------------
+;固有料理设定
+;DISH_NAME          料理名
+;RESULTS            料理の种类（轻食/主食/甜点）
+;CALL 材料设定("")  材料の指定。"泛用"を入れると自动で泛用食材になる
+;DISH_TASTE         味の设定
+;DISH_COMMENT       （任意）一行コメント
+;DISH_TIME          （任意）调理にかかる时间
+;DISH_MAXLIMIT      （任意）料理の持续时间
+;-------------------------------------------------
+@SPECIAL_MENU_132
+DISH_NAME = 偶像制作的工艺点心
+RESULTS = 甜点
+CALL 材料设定("甜味料")
+DISH_TASTE = 甜/艺术的/艺术的/艺术的/松脆/神力/
+DISH_COMMENT = 有着艺术造型的工艺点心、完全不像是食物、简直是神来之笔。
+RETURN 1

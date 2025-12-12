@@ -1,0 +1,93 @@
+﻿@COM613
+;赚钱
+LOCAL = RAND:100
+LOCAL:1 = 90 + GET_SUCCESS_RATE() / 5
+SIF LOCAL:1 > 99
+	LOCAL:1 = 99
+IF LOCAL <= 9
+	;10％で大成功
+	TFLAG:193 = 1
+ELSEIF LOCAL >= LOCAL:1
+	;10～1％で失败
+	TFLAG:193 = -1
+ELSE
+	;残りは成功
+	TFLAG:193 = 0
+ENDIF
+
+DOWNBASE:MASTER:体力 += 50
+DOWNBASE:MASTER:气力 += 100
+
+;报酬计算
+TFLAG:200 = 0
+IF DATE_PARTTIME(CFLAG:MASTER:当前位置) > 99
+	TFLAG:200 = (ABL:MASTER:技巧 + 10) * (RAND:20 + 40) * 2
+ELSE
+	TFLAG:200 = (ABL:MASTER:技巧 + 10) * (RAND:20 + 30) * DATE_PARTTIME(CFLAG:MASTER:当前位置)
+ENDIF
+SIF TFLAG:200 > 0
+	MONEY += TFLAG:200
+
+IF TARGET > 0 && !CFLAG:睡眠
+	;固定で获得するソース
+	SOURCE:欢乐 = 100
+	SOURCE:反感 = 50
+	
+	;ABL:顺从をみる
+	IF ABL:顺从 <= 1
+
+	ELSEIF ABL:顺从 <= 3
+		SOURCE:欢乐 += 100 + (ABL:顺从 * 20)
+	ELSEIF ABL:顺从 <= 5
+		SOURCE:欢乐 += 300 + (ABL:顺从 * 30)
+	ELSEIF ABL:顺从 <= 8
+		SOURCE:欢乐 += 600 + (ABL:顺从 * 50)
+	ELSEIF ABL:顺从 <= 11
+		SOURCE:欢乐 += 1000 + (ABL:顺从 * 70)
+	ELSE
+		SOURCE:欢乐 += 2000 + (ABL:顺从 * 50)
+	ENDIF
+	
+	;好感度をみる
+	IF CFLAG:2 <= 500
+		SOURCE:欢乐 += CFLAG:2
+	ELSEIF CFLAG:2 <= 5000
+		SOURCE:欢乐 += 500 + (CFLAG:2 - 500) / 3
+	ELSE
+		SOURCE:欢乐 += 2000 + (CFLAG:2 - 5000) / 5
+	ENDIF
+	SIF SOURCE:欢乐 < 0
+		SOURCE:欢乐 = 0
+	
+	SOURCE:征服 = 300 + 100 * ABL:施虐属性
+	
+ENDIF
+TIME += 60
+
+RETURN 1
+
+;-------------------------------------------------
+;实行可能判定
+;-------------------------------------------------
+;赚钱
+@COM_ABLE613
+;批量管理
+SIF GLOBAL_COMABLE(613)
+	RETURN RESULT
+;约会中以外
+SIF !CHK_DATENOW(CFLAG:MASTER:约会中)
+	RETURN 0
+;约会道中
+SIF (CFLAG:MASTER:当前位置 % 100) % 10
+	RETURN 0
+;当前位置に金策元が无い
+SIF !DATE_PARTTIME(CFLAG:MASTER:当前位置)
+	RETURN 0
+;睡眠中
+SIF CFLAG:MASTER:睡眠
+	RETURN 0
+;时间停止中
+SIF FLAG:70
+	RETURN 0
+RETURN 0
+

@@ -1,0 +1,1819 @@
+﻿;※※※※※※※※※※※※※※※※※※※※※※※※※
+;性交系コマンド
+;※※※※※※※※※※※※※※※※※※※※※※※※※
+;==================================================
+;60,正常位
+;==================================================
+@M_KOJO_MESSAGE_COM_K47_60
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K47_60_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K47_60_1
+
+;-------------------------------------------------
+;立位
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL && TFLAG:193
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		IF TALENT:恋慕
+			;处女
+			IF TCVAR:破瓜 == 1
+				PRINTFORMW 「请、请小心一点……可能会很疼……」
+				PRINTFORMDW 战车娘似乎正在下定决心迎接初夜
+				RETURN 1
+			ELSE
+				PRINTFORMW 「请……请好好地看着我……」
+				PRINTFORMDW 一想到%CALLNAME:MASTER%会看着她的脸做这件事，里香就脸红了。
+				RETURN 1
+			ENDIF
+		ELSE
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;插入继续
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	;基本セット
+	;时奸中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:恋慕
+		IF RAND:3 == 0
+			PRINTFORMDL %CALLNAME:MASTER%在里香的身体里进进出出。
+			PRINTFORML 「哈啊……哈啊……我的脑袋一片空白……」
+			PRINTFORMDW 里香因为快感而流出一点口水。
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「啊嗯！ 我不知道……我是想要你更粗暴一点还是更温柔一点……」
+			PRINTFORMDW 里香似乎在快感中有些迷茫。
+		ELSE
+			PRINTFORML 「咿！」
+			PRINTFORMDL 当你为了更好的体位将里香稍微抬离地面时，她惊讶地叫了一声。
+			PRINTFORMDW 她的尖叫声很快变成了欣喜的呻吟。
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:爱欲
+		IF RAND:3 == 0
+			PRINTFORMDL 猛烈插入时，战车娘尽力抬起大腿，展示着淫靡的风景
+			PRINTFORMDL 肉棒激烈抽插着，她伸出了舌头。
+			PRINTFORMW 「是的……是的……这就是我需要的工具~」
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「是的！ 用那锤子，就是那么狠狠地撞击！」
+			PRINTFORMDW 当你像锤子一样撞击她时，里香喜悦地尖叫。
+		ELSE
+			PRINTFORMDL 你抱起战车娘，开始用手抱着她，让她面对着你，和她做爱。
+			PRINTFORMDW 里香无法停止因为原始的快感而呻吟，在你的掌控中颤抖和战栗，汁液流过你的双腿。
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:思慕
+		IF RAND:3 == 0
+			PRINTFORMDL 里香看着你的眼睛，试图掩饰她的快感，但失败了。
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「请……看着我……」
+			PRINTFORMDW 当你插入她时，里香紧张地说。
+		ELSE
+			PRINTFORML 「它……撞得好深……」
+			PRINTFORMDW 里香听起来有点不舒服，但也很高兴。
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:炮友
+		IF RAND:3 == 0
+			PRINTFORMDL 里香安静地呻吟着，试图抑制自己但失败了。
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「就像一个……又大……又硬的……棒子……」
+			PRINTFORMDW 当你冲进她体内时，里香倒吸一口气。
+		ELSE
+			PRINTFORML 「啊！ 我没想到这会感觉像这样！」
+			PRINTFORMDW 里香紧紧地抓住你以获得支撑，因为她屈服于快感。
+		ENDIF
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+;-------------------------------------------------
+;正常位
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		IF TALENT:恋慕
+			;处女
+			IF TCVAR:破瓜 == 1
+				PRINTFORMW 「已经期待很久了吧？」
+				PRINTFORMDW 准备夺走里香童贞的时候，她如此调侃道。
+				RETURN 1
+			ELSE
+				PRINTFORMW 「想要看到%CALLNAME:MASTER%的眼中充满快感……」
+				PRINTFORMDW 里香凝视着%CALLNAME:MASTER%。
+				RETURN 1
+			ENDIF
+		ELSE
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;插入继续
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	;基本セット
+	;时奸中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:恋慕
+		IF RAND:3 == 0
+			PRINTFORMDL 交合之时，里香与%CALLNAME:MASTER%十指相扣。
+			PRINTFORML 「抱紧我……狠狠地占有我……一起感受这美妙的滋味……」
+			PRINTFORMDW 里香发出充满诱惑的呻吟，催促着%CALLNAME:MASTER%继续。
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「只有%CALLNAME:MASTER%才能让我有这种感觉……」
+			PRINTFORMDW 里香的声音几乎像是要融化在快感之中。
+			ELSE
+			PRINTFORML 「是的……是的……太棒了……」
+			PRINTFORMDL 撞击着战车娘的子宫颈，她也配合着%CALLNAME:MASTER%的抽动有节奏地呻吟着。
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:爱欲
+		IF RAND:3 == 0
+			PRINTFORMDL 即使在这种体位下，里香仍然不停地扭动身体，想要让每一次冲撞都更加深入。
+			PRINTFORMDL 并且通过自己的动作稍微加快每次撞击的速度。
+			PRINTFORMW 「再多一点……再多一点……像钻头一样钻透我的身体吧！」
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「不要忍耐！ 用力干我！ 把引擎开到最大！」
+			PRINTFORMDW 里香催促着%CALLNAME:MASTER%无情地蹂躏她。
+		ELSE
+			PRINTFORMDL 当%CALLNAME:MASTER%冲击里香时，她娇小的身体因纯粹的快感而颤抖。
+			PRINTFORMDW 甚至可以清楚地看到，%CALLNAME:MASTER%撞击的地方，里香的腹部微微鼓起……
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:思慕
+		IF RAND:3 == 0
+			PRINTFORMDL 里香寻求四目对望，试图掩饰自己的快感，但失败了。
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「请……看着我……」
+			PRINTFORMDW 插入之时，里香有些紧张地说。
+		ELSE
+			PRINTFORML 「撞得……好深……」
+			PRINTFORMDW 里香听起来有些不舒服，但也很快乐。
+		ENDIF
+	ELSEIF TALENT:炮友
+		IF RAND:3 == 0
+			PRINTFORMDL 里香悄悄地呻吟着，试图压抑自己的快感，但失败了。
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「就像一根……又大……又硬的……棒子……」
+			PRINTFORMDW 当%CALLNAME:MASTER%在她体内耕耘时，里香倒吸一口气。
+		ELSE
+			PRINTFORML 「啊！ 我没想到这会感觉像这样！」
+			PRINTFORMDW 里香紧紧地抓住%CALLNAME:MASTER%以获得支撑，因为她屈服于快感。
+		ENDIF
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;61,后背位
+;==================================================
+@M_KOJO_MESSAGE_COM_K477_61
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K47_61_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K47_61_1
+;-------------------------------------------------
+;立位
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL && TFLAG:193
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		IF TALENT:恋慕
+			;处女
+			IF TCVAR:破瓜 == 1
+				PRINTFORML 「如果太疼的话……我、我不确定我还能站多久……」
+				PRINTFORMDW 里香似乎非常担心，但仍然愿意尝试。
+				RETURN 1
+			ELSE
+				PRINTFORML 「这样……做、做起来会不会有点别扭……等等！」
+				PRINTFORMDW %CALLNAME:MASTER%将里香稍微抬离地面，以弥补她身高的不足。
+				RETURN 1
+			ENDIF
+		ELSE
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;插入继续
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+		;基本セット
+	;时奸中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:恋慕
+		IF RAND:3 == 0
+			PRINTFORMDL 里香任由%CALLNAME:MASTER%将她稍微抬离地面。
+			PRINTFORML 「根本不需要我做任何事情嘛~」
+		ELSEIF RAND:2 == 0
+			PRINTFORMDL 里香踮起脚尖，尝试着动起来。
+			ELSE
+			PRINTFORML 「这个姿势确实不太容易……但还是挺好的……」
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:爱欲
+		IF RAND:3 == 0
+			PRINTFORML 「啊……重力让%CALLNAME:MASTER%冲击得更深了~」
+			PRINTFORMDL %CALLNAME:MASTER%抱起里香，几乎将她抬离地面，然后让她沿着%CALLNAME:MASTER%的肉棒滑落。
+		ELSEIF RAND:2 == 0
+			PRINTFORMW 「感觉就像有一个活塞在我体内抽动~」
+		ELSE
+			PRINTFORMDL 当%CALLNAME:MASTER%支撑着里香娇小的身躯时，她吐出了舌头。
+			PRINTFORMDW %CALLNAME:MASTER%毫不留情地将她上下抬动。
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:思慕
+		IF RAND:3 == 0
+			PRINTFORMDL 里香竭尽全力地保持静止，以便%CALLNAME:MASTER%可以移动她。
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「这样……不会太难吧……？」
+			PRINTFORMDW 当%CALLNAME:MASTER%抬起并放下她时，里香听起来有些担忧。
+		ELSE
+			PRINTFORML 「我觉得我可能可以稍微动一下……」
+			PRINTFORMDW 里香踮起脚尖，轻轻地摇晃着。
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:炮友
+		IF RAND:3 == 0
+			PRINTFORML 「如果%CALLNAME:MASTER%想的话……可以把我摇晃得更快一点……」
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「什么都不用做，就能感受到这样的快感……真是让人上瘾……」
+			PRINTFORMDW 当%CALLNAME:MASTER%一边干她一边抬起她时，里香呻吟着。
+		ELSE
+			PRINTFORML 「我有点希望自己能站在什么东西上面……」
+			PRINTFORMDW 里香踮起脚尖，用力地来回摇晃。
+		ENDIF
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;-------------------------------------------------
+;后背位
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		IF TALENT:恋慕
+			;处女
+			IF TCVAR:破瓜 == 1
+				PRINTFORML 「这样的话，%CALLNAME:MASTER%就看不到我被贯穿时的表情了……」
+				PRINTFORMDW 里香听起来有些紧张，但也有点如释重负。
+				RETURN 1
+			ELSE
+				PRINTFORML 「%CALLNAME:MASTER%想要像野兽一样做吗？ 我想我可以试试……」
+				PRINTFORMDW 里香弯下腰，摆出了舒服的姿势。
+				RETURN 1
+			ENDIF
+		ELSE
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;插入继续
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	;基本セット
+	;时奸中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:恋慕
+		IF RAND:3 == 0
+			PRINTFORMDL 每一次撞击，里香都发出轻轻的呻吟。
+			PRINTFORML 「感觉好像贯穿了我的整个身体……」
+			PRINTFORMDW 伴随着每一次充满爱意的动作，里香娇小的身躯都微微地扭动着。
+		ELSEIF RAND:2 == 0
+			PRINTFORMDL 交合之时，爱人回头，咬着嘴唇。
+			ELSE
+			PRINTFORML 「即使我不看着%CALLNAME:MASTER%，我也知道%CALLNAME:MASTER%会好好做的……」
+			PRINTFORMDW 里香肯定了%CALLNAME:MASTER%在床笫之事上的能力。
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:爱欲
+		IF RAND:3 == 0
+			PRINTFORML 「可以……抓住我的头发，代替我的腰……」
+			PRINTFORMDL %CALLNAME:MASTER%抓住里香的双马尾，没有像往常那样搂住她的腰，而是轻轻地拉扯着。
+			PRINTFORMW 「哦……是的……这样感觉更强烈了……」
+		ELSEIF RAND:2 == 0
+			PRINTFORMW 「呵呵……就像一把冲击钻在我体内钻孔一样~」
+		ELSE
+			PRINTFORMDL 当%CALLNAME:MASTER%深深地进入她体内时，战车娘发出了愉悦的尖叫。
+			PRINTFORMDW 可以感觉到她紧紧地收缩着，几乎想要把%CALLNAME:MASTER%拉得更深。
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:思慕
+		
+		IF RAND:3 == 0
+			PRINTFORMDL 当%CALLNAME:MASTER%特别深入时，里香试图压抑住那可爱的小小惊呼。
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「感觉好……粗俗……」
+			PRINTFORMDW 当%CALLNAME:MASTER%从背后撞击她时，里香呻吟着。
+		ELSE
+			PRINTFORML 「没想到会……这么强烈……」
+			PRINTFORMDW 当%CALLNAME:MASTER%像野兽一样冲撞她时，里香倒吸一口气。
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:炮友
+		IF RAND:3 == 0
+			PRINTFORMDL 为了追求快感，战车娘主动地来回扭动着。
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「进进出出……进进出出，这让我想起了什么……」
+			PRINTFORMDW 当%CALLNAME:MASTER%像活塞一样在她体内抽动时，里香喃喃自语。
+		ELSE
+			PRINTFORML 「呜……比我想象的……还要深……」
+			PRINTFORMDW 当%CALLNAME:MASTER%深深地进入她体内时，里香颤抖着。
+		ENDIF
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;62,正常位肛门
+;==================================================
+@M_KOJO_MESSAGE_COM_K47_62
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K47_62_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K47_62_1
+;-------------------------------------------------
+;立位
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		IF TALENT:恋慕
+			;处女
+			IF TCVAR:破瓜 == 1
+				PRINTFORML 「什么？！ 你觉得那种东西能塞进去吗？ 真的吗？」
+				PRINTFORMDW 里香似乎有些害怕，尽管她在努力掩饰。
+				RETURN 1
+			ELSE
+				PRINTFORML 「屁、屁股？ 真的要……嗯……」
+				PRINTFORMDW 里香听起来很不确定，但还是顺从了。
+				RETURN 1
+			ENDIF
+		ELSE
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;插入继续
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	;基本セット
+	;时奸中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:恋慕
+		IF RAND:2 == 0
+			PRINTFORMDL 里香咬着嘴唇，感受着快感和痛苦交织在一起的滋味。
+		ELSE
+			PRINTFORML 「感觉既不对劲，又很美妙……」
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:爱欲
+		IF RAND:2 == 0
+			PRINTFORMW 「……这就是螺母被拧紧的感觉吗……一颗螺丝被拧得这么紧……」
+		ELSE
+			PRINTFORMW 「我的身体内部都被搅乱了……呜啊啊！」
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:思慕
+		
+		IF RAND:2 == 0
+			PRINTFORML 「嗯……这感觉……好奇怪……」
+			PRINTFORMDW 里香的声音听起来既厌恶又愉悦。
+		ELSE
+			PRINTFORML 「请……看着我……」
+			PRINTFORMDW 里香注视着%CALLNAME:MASTER%，忍受着这种不寻常的感觉。
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:炮友
+		IF RAND:2 == 0
+			PRINTFORML 「我能感觉到我的身体正在逐渐适应这种感觉……」
+			PRINTFORMDW 战车娘偶尔会扭动身体，试图让自己更舒服一些。
+		ELSE
+			PRINTFORML 「没想到会……感觉会是这样……」
+			PRINTFORMDW 里香倒吸一口气，感受着快感和痛苦，紧紧地抓住%CALLNAME:MASTER%的手。
+		ENDIF
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;-------------------------------------------------
+;正常位
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		IF TALENT:恋慕
+			;处女
+			IF TCVAR:破瓜 == 1
+				PRINTFORML 「什么？！ 你觉得那种东西能塞进去吗？ 真的吗？」
+				PRINTFORMDW 里香似乎有些害怕，尽管她在努力掩饰。
+				RETURN 1
+			ELSE
+				PRINTFORML 「屁、屁股？ 真的要……嗯……」
+				PRINTFORMDW 里香听起来很不确定，但还是顺从了。
+				RETURN 1
+			ENDIF
+		ELSE
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;插入继续
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	;基本セット
+	;时奸中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:恋慕
+		IF RAND:2 == 0
+			PRINTFORMDL 里香咬着嘴唇，感受着快感和痛苦交织在一起的滋味。
+		ELSE
+			PRINTFORML 「感觉既不对劲，又很美妙……」
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:爱欲
+		IF RAND:2 == 0
+			PRINTFORMW 「……这就是螺母被拧紧的感觉吗……一颗螺丝被拧得这么紧……」
+		ELSE
+			PRINTFORMW 「我的身体内部都被搅乱了……呜啊啊！」
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:思慕		
+		IF RAND:2 == 0
+			PRINTFORML 「嗯……这感觉……好奇怪……」
+			PRINTFORMDW 里香的声音听起来既厌恶又愉悦。
+		ELSE
+			PRINTFORML 「请……看着我……」
+			PRINTFORMDW 里香注视着%CALLNAME:MASTER%，忍受着这种不寻常的感觉。
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:炮友
+		IF RAND:2 == 0
+			PRINTFORML 「我能感觉到我的身体正在逐渐适应这种感觉……」
+			PRINTFORMDW 战车娘偶尔会扭动身体，试图让自己更舒服一些。
+		ELSE
+			PRINTFORML 「没想到会……感觉会是这样……」
+			PRINTFORMDW 里香倒吸一口气，感受着快感和痛苦，紧紧地抓住%CALLNAME:MASTER%的手。
+		ENDIF
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;63,后背位肛门
+;==================================================
+@M_KOJO_MESSAGE_COM_K47_63
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K47_63_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K47_63_1
+;-------------------------------------------------
+;立位
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL && TFLAG:193
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		IF TALENT:恋慕
+			;处女
+			IF TCVAR:破瓜 == 1
+				PRINTFORML 「什么？！ 你觉得那种东西能塞进去吗？ 真的吗？」
+				PRINTFORMDW 里香似乎有些害怕，尽管她在努力掩饰。
+				RETURN 1
+			ELSE
+				PRINTFORML 「屁、屁股？ 真的要……嗯……」
+				PRINTFORMDW 里香听起来很不确定，但还是顺从了。
+				RETURN 1
+			ENDIF
+		ELSE
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;插入继续
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	;基本セット
+	;时奸中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:恋慕
+		IF RAND:2 == 0
+			PRINTFORMDL 里香咬着嘴唇，感受着快感和痛苦交织在一起的滋味。
+		ELSE
+			PRINTFORML 「感觉既不对劲，又很美妙……」
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:爱欲
+		IF RAND:2 == 0
+			PRINTFORMW 「啊啊……原来这就是螺母和螺栓结合在一起的感觉啊……」
+		ELSE
+			PRINTFORML 当%CALLNAME:MASTER%冲击她时，轻轻地拉扯着里香的双马尾。
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:思慕
+		IF RAND:2 == 0
+			PRINTFORML 「嗯……这感觉……好奇怪……」
+			PRINTFORMDW 里香的声音听起来既厌恶又愉悦。
+		ELSE
+			PRINTFORML 「我有点庆幸%CALLNAME:MASTER%看不到我现在的表情……」
+			PRINTFORMDW 里香听起来很害羞，但也很享受。
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:炮友
+		IF RAND:2 == 0
+			PRINTFORML 「我能感觉到我的身体正在逐渐适应这种感觉……」
+			PRINTFORMDW 战车娘偶尔会扭动身体，试图让自己更舒服一些。
+		ELSE
+			PRINTFORML 「没想到会……感觉会是这样……」
+			PRINTFORMDW 里香倒吸一口气，感受着快感和痛苦，紧紧地抓住%CALLNAME:MASTER%的手。
+		ENDIF
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;-------------------------------------------------
+;后背位
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;肛门处女
+		IF TCVAR:Ａ破瓜
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;插入继续
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:101 == PLAYER
+		;前回射精した
+		IF TCVAR:104
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;基本セット
+	;时奸中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:恋慕
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;64,逆レイプ
+;==================================================
+@M_KOJO_MESSAGE_COM_K47_64
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K47_64_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K47_64_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;调教者が处女
+		IF TCVAR:PLAYER:破瓜 == 1
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;插入继续
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:PLAYER:100 == TARGET
+		;前回射精した
+		IF TCVAR:PLAYER:102
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;基本セット
+	;恋慕
+	IF TALENT:恋慕
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;65,骑乘位
+;==================================================
+@M_KOJO_MESSAGE_COM_K47_65
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K47_65_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K47_65_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		IF TALENT:恋慕
+			;处女
+			IF TCVAR:破瓜 == 1
+				PRINTFORMW 「啊，我在上面。 这才是我的位置嘛~」
+				PRINTFORMDW 里香在跨坐上来紧张地蹲着，然后慢慢把自己的身体降下来。
+				RETURN 1
+			ELSE
+				PRINTFORMW 「哦？ %CALLNAME:MASTER%想让我骑在%CALLNAME:MASTER%身上？ 这通常是我的战车才有的特权哦！」
+				PRINTFORMDW 里香跨坐上来，调皮地一笑。
+				PRINTFORMW 「好吧，既然%CALLNAME:MASTER%想待在你应有的位置，我也不好拒绝呢……」
+				RETURN 1
+			ENDIF
+		ELSE
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;插入继续
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	;基本セット
+	;时奸中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:恋慕
+		IF RAND:3 == 0
+			PRINTFORMDL 里香双手撑在%CALLNAME:MASTER%的胸膛上，上下移动着。
+			PRINTFORML 「这次就躺好，让我来完成所有工作吧……」
+			
+		ELSEIF RAND:2 == 0
+			PRINTFORMDW 当里香在%CALLNAME:MASTER%的肉棒上上下起伏时，她的双马尾也随之摇摆。
+			ELSE
+			PRINTFORML 「抓紧它们……」
+			PRINTFORMDW 手牵着手，当战车娘骑在%CALLNAME:MASTER%身上时，她的臀部开始加速运动。
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:爱欲
+		IF RAND:3 == 0
+			PRINTFORML 「在我榨干%CALLNAME:MASTER%的燃料箱之前，我是不会停下来的哦~」
+			PRINTFORMDL 里香开始无情地在%CALLNAME:MASTER%的肉棒上研磨。
+			PRINTFORMW 「每一滴……都不能放过……」
+		ELSEIF RAND:2 == 0
+			PRINTFORMW 「活塞正在以最高的效率运作！」
+			PRINTFORMDL 当%CALLNAME:MASTER%深深地进入她体内时，战车娘露出了狂喜的表情。
+		ELSE
+			PRINTFORMW 「……也许我应该改造一下我的战车座椅，这样我就可以像这样骑在它们上面了……我会上瘾的~」
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:思慕
+		IF RAND:3 == 0
+			PRINTFORMDL 里香尝试着不同的速度，摸索着找到最适合自己的那个。
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「就该这样，我在%CALLNAME:MASTER%的上面~」
+			PRINTFORMDW 里香露出了优越的笑容。 %CALLNAME:MASTER%可以轻易地把她扔下去，但为什么要那样做呢？
+		ELSE
+			PRINTFORML 「嗯……这样动起来感觉真好……」
+			PRINTFORMDW 里香似乎已经找到了一个不错的节奏。
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:炮友
+		IF RAND:3 == 0
+			PRINTFORMDL 里香一开始很慢，但逐渐加快速度，直到她狠狠地撞击着%CALLNAME:MASTER%。
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「能在这个位置掌控这个东西，感觉真不错……」
+			PRINTFORMDW 里香舔了舔嘴唇。
+		ELSE
+			PRINTFORMDW 里香发出了一声沮丧的呻吟，因为她在运动时无法够到%CALLNAME:MASTER%的嘴唇亲吻。
+			PRINTFORML 「可恶，够不着……」
+			PRINTFORMDW 她转而舔舐%CALLNAME:MASTER%的乳头，同时继续在%CALLNAME:MASTER%身上耸动。
+		ENDIF
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+
+;==================================================
+;66,骑乘位肛门
+;==================================================
+@M_KOJO_MESSAGE_COM_K47_66
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K47_66_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K47_66_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		IF TALENT:恋慕
+			;处女
+			IF TCVAR:破瓜 == 1
+				PRINTFORMW 「啊，我在上面。 这才是我的位置嘛~」
+				PRINTFORMDW 里香在跨坐上来紧张地蹲着，然后慢慢把自己的身体降下来。
+				RETURN 1
+			ELSE
+				PRINTFORMW 「哦？ %CALLNAME:MASTER%想让我骑在%CALLNAME:MASTER%身上？ 这通常是我的战车才有的特权哦！」
+				PRINTFORMDW 里香跨坐上来，调皮地一笑。
+				PRINTFORMW 「好吧，既然%CALLNAME:MASTER%想待在你应有的位置，我也不好拒绝呢……」
+				RETURN 1
+			ENDIF
+		ELSE
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;插入继续
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	;基本セット
+	;时奸中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:恋慕
+		IF RAND:3 == 0
+			PRINTFORMDL 里香双手撑在%CALLNAME:MASTER%的胸膛上，上下移动着。
+			PRINTFORML 「这次就躺好，让我来完成所有工作吧……」
+			
+		ELSEIF RAND:2 == 0
+			PRINTFORMDW 当里香在%CALLNAME:MASTER%的肉棒上上下起伏时，她的双马尾也随之摇摆。
+			ELSE
+			PRINTFORML 「抓紧它们……」
+			PRINTFORMDW 手牵着手，当战车娘骑在%CALLNAME:MASTER%身上时，她的臀部开始加速运动。
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:爱欲
+		IF RAND:3 == 0
+			PRINTFORML 「在我榨干%CALLNAME:MASTER%的燃料箱之前，我是不会停下来的哦~」
+			PRINTFORMDL 里香开始无情地在%CALLNAME:MASTER%的肉棒上研磨。
+			PRINTFORMW 「每一滴……都不能放过……」
+		ELSEIF RAND:2 == 0
+			PRINTFORMW 「活塞正在以最高的效率运作！」
+			PRINTFORMDL 当%CALLNAME:MASTER%深深地进入她体内时，战车娘露出了狂喜的表情。
+		ELSE
+			PRINTFORMW 「……也许我应该改造一下我的战车座椅，这样我就可以像这样骑在它们上面了……我会上瘾的~」
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:思慕
+		IF RAND:3 == 0
+			PRINTFORMDL 里香尝试着不同的速度，摸索着找到最适合自己的那个。
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「就该这样，我在%CALLNAME:MASTER%的上面~」
+			PRINTFORMDW 里香露出了优越的笑容。 %CALLNAME:MASTER%可以轻易地把她扔下去，但为什么要那样做呢？
+		ELSE
+			PRINTFORML 「嗯……这样动起来感觉真好……」
+			PRINTFORMDW 里香似乎已经找到了一个不错的节奏。
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:炮友
+		IF RAND:3 == 0
+			PRINTFORMDL 里香一开始很慢，但逐渐加快速度，直到她狠狠地撞击着%CALLNAME:MASTER%。
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「能在这个位置掌控这个东西，感觉真不错……」
+			PRINTFORMDW 里香舔了舔嘴唇。
+		ELSE
+			PRINTFORMDW 里香发出了一声沮丧的呻吟，因为她在运动时无法够到%CALLNAME:MASTER%的嘴唇亲吻。
+			PRINTFORML 「可恶，够不着……」
+			PRINTFORMDW 她转而舔舐%CALLNAME:MASTER%的乳头，同时继续在%CALLNAME:MASTER%身上耸动。
+		ENDIF
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+
+;==================================================
+;67,对面座位
+;==================================================
+@M_KOJO_MESSAGE_COM_K47_67
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K47_67_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K47_67_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		IF TALENT:恋慕
+			;处女
+			IF TCVAR:破瓜 == 1
+				PRINTFORMW 「%CALLNAME:MASTER%想和我靠得这么近……在我们的第一次？」
+				PRINTFORMDW %CALLNAME:MASTER%点点头，并向里香解释了这样做的好处。
+				PRINTFORMW 「%CALLNAME:MASTER%想在我感觉痛的时候抱着我？ 我……我明白了。」
+
+				RETURN 1
+			ELSE
+				PRINTFORMW 「%CALLNAME:MASTER%知道，以我的体型，我可以和%CALLNAME:MASTER%非常……非常亲密哦……」
+				PRINTFORMDW 里香凑近%CALLNAME:MASTER%的耳朵，一边吐气一边调整姿势。
+				RETURN 1
+			ENDIF
+		ELSE
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;插入继续
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	;基本セット
+	;时奸中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:恋慕
+		IF RAND:3 == 0
+			PRINTFORMDL %CALLNAME:MASTER%拥抱着里香，同时轻轻地上下移动她。
+			PRINTFORML 「哈……啊……好亲密……」
+			
+		ELSEIF RAND:2 == 0
+			PRINTFORMDW 里香对着%CALLNAME:MASTER%的耳朵吹着热气，发出蒸汽般湿润的呻吟。
+			ELSE
+			PRINTFORML 「抱紧我，%CALLNAME:MASTER%……」
+			PRINTFORMDW 里香拥抱着%CALLNAME:MASTER%，同时双腿松松地缠绕着%CALLNAME:MASTER%。
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:爱欲
+		IF RAND:3 == 0
+			PRINTFORML 「能感觉到吗？ 在我们结合的时候，我的乳头蹭着%CALLNAME:MASTER%的乳头？」
+			PRINTFORMDL 里香上下弹动着，她那坚挺的乳头确实蹭着%CALLNAME:MASTER%的。
+			PRINTFORMW 「靠得这么近……感觉真好……」
+		ELSEIF RAND:2 == 0
+			PRINTFORMW 「这么近的距离，感觉我们就像焊接在一起一样……」
+		ELSE
+			PRINTFORMDW 即使%CALLNAME:MASTER%从下方进入她，里香也主动地加快速度。
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:思慕
+		IF RAND:3 == 0
+			PRINTFORMDL 里香拥抱着%CALLNAME:MASTER%，并以稳定的速度上下移动。
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「呼~」
+			PRINTFORMDW 当%CALLNAME:MASTER%和里香做爱时，她对着%CALLNAME:MASTER%的耳朵吹气，然后咯咯地笑着。
+		ELSE
+			PRINTFORML 「靠%CALLNAME:MASTER%这么近，感觉真亲密……」
+			PRINTFORMDW 里香亲吻了%CALLNAME:MASTER%的脸颊。
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:炮友
+		IF RAND:3 == 0
+			PRINTFORMDL 当战车娘骑在%CALLNAME:MASTER%身上时，她的手在%CALLNAME:MASTER%的背上探索着。
+		ELSEIF RAND:2 == 0
+			PRINTFORMDW 当里香的身体和%CALLNAME:MASTER%的身体摩擦时，她的表情因快乐而融化。
+		ELSE
+			PRINTFORMDW 里香紧紧地拥抱着%CALLNAME:MASTER%，同时扭动着她的臀部。
+			PRINTFORML 「这样感觉也很棒，我们不一定非要啪啪地做嘛~」
+		ENDIF
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+
+;==================================================
+;68,背面座位
+;==================================================
+@M_KOJO_MESSAGE_COM_K47_68
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K47_68_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K47_68_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		IF TALENT:恋慕
+			;处女
+			IF TCVAR:破瓜 == 1
+				PRINTFORMW 「靠得那么近可能会有点困难……也许吧？」
+				PRINTFORMDW %CALLNAME:MASTER%告诉里香，因为她的体型，这应该不难。
+				PRINTFORMW 「好吧，我想值得一试……」
+
+				RETURN 1
+			ELSE
+				PRINTFORMW 「%CALLNAME:MASTER%是想让我的屁股在做爱的时候蹭着%CALLNAME:MASTER%吗？」
+				PRINTFORMDW %CALLNAME:MASTER%告诉里香正是这个意思。
+				RETURN 1
+			ENDIF
+		ELSE
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;插入继续
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	;基本セット
+	;时奸中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:恋慕
+		IF RAND:3 == 0
+			PRINTFORMDL 当%CALLNAME:MASTER%进入她时，里香回头看着%CALLNAME:MASTER%。
+			PRINTFORML 「%CALLNAME:MASTER%的眼神说明您很享受……」
+			
+		ELSEIF RAND:2 == 0
+			PRINTFORMDW 当%CALLNAME:MASTER%用手臂环绕着她时，挑逗着里香的乳头。
+			ELSE
+			PRINTFORML 「啊……感受到%CALLNAME:MASTER%的温暖如此紧密地摩擦着我……点燃了我的火焰~」
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:爱欲
+		IF RAND:3 == 0
+			PRINTFORML 「我们之间几乎没有空隙，即使是我小小的屁股也蹭得这么近……」
+			PRINTFORMDL 里香露出了恶魔般的微笑。
+		ELSEIF RAND:2 == 0
+			PRINTFORMW 「别忘了稍微摆弄一下控制杆哦~」
+			PRINTFORMDW 里香引导%CALLNAME:MASTER%的手去抚摸她坚挺的乳头。
+		ELSE
+			PRINTFORMDL 战车娘把她的双马尾搭在%CALLNAME:MASTER%的肩膀上，并愉悦地向后仰着头。
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:思慕
+		IF RAND:3 == 0
+			PRINTFORMDL 里香无法抑制住她快乐的呻吟，也无法抑制住她身体的颤抖。
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「这样能感受到%CALLNAME:MASTER%的很多……好温暖……」
+		ELSE
+			PRINTFORML 「如果我失去平衡，%CALLNAME:MASTER%会扶住我的，对吧？」
+			PRINTFORMDW 里香犹豫地加快了一点速度。
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:炮友
+		IF RAND:3 == 0
+			PRINTFORMDL 这位坦克女郎把她的手放在%CALLNAME:MASTER%的腿上，以帮助她更有力地运动。
+		ELSEIF RAND:2 == 0
+			PRINTFORMDW 里香像活塞一样在%CALLNAME:MASTER%的 \@ HAS_PENIS(MASTER) ? %FSYN("阴茎")% # 束带阴茎 \@ 上上下移动。
+		ELSE
+			PRINTFORMDW 当里香愉悦地向后弓身时，头几乎撞到了%CALLNAME:MASTER%的头。
+			PRINTFORML 「哎呀，抱歉，只是感觉太棒了……」
+		ENDIF
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+
+;==================================================
+;69,对面座位肛门
+;==================================================
+@M_KOJO_MESSAGE_COM_K47_69
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K47_69_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K47_69_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		IF TALENT:恋慕
+			;处女
+			IF TCVAR:破瓜 == 1
+				PRINTFORMW 「%CALLNAME:MASTER%想和我靠得这么近……在我们的第一次？」
+				PRINTFORMDW %CALLNAME:MASTER%点点头，并向里香解释了这样做的好处。
+				PRINTFORMW 「%CALLNAME:MASTER%想在我感觉痛的时候抱着我？ 我……我明白了。」
+				RETURN 1
+			ELSE
+				PRINTFORMW 「%CALLNAME:MASTER%知道，以我的体型，我可以和%CALLNAME:MASTER%非常……非常亲密哦……」
+				PRINTFORMDW 里香凑近%CALLNAME:MASTER%的耳朵，一边吐气一边调整姿势。
+				RETURN 1
+			ENDIF
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;插入继续
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	;基本セット
+	;时奸中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:恋慕
+		IF RAND:3 == 0
+			PRINTFORMDL %CALLNAME:MASTER%拥抱着里香，同时轻轻地上下移动她。
+			PRINTFORML 「哈……啊……好亲密……」
+			
+		ELSEIF RAND:2 == 0
+			PRINTFORMDW 里香对着%CALLNAME:MASTER%的耳朵吹着热气，发出蒸汽般湿润的呻吟。
+			ELSE
+			PRINTFORML 「抱紧我，%CALLNAME:MASTER%……」
+			PRINTFORMDW 里香拥抱着%CALLNAME:MASTER%，同时双腿松松地缠绕着%CALLNAME:MASTER%。
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:爱欲
+		IF RAND:3 == 0
+			PRINTFORML 「能感觉到吗？ 在我们结合的时候，我的乳头蹭着%CALLNAME:MASTER%的乳头？」
+			PRINTFORMDL 里香上下弹动着，她那坚挺的乳头确实蹭着%CALLNAME:MASTER%的。
+			PRINTFORMW 「靠得这么近……感觉真好……」
+		ELSEIF RAND:2 == 0
+			PRINTFORMW 「这么近的距离，感觉我们就像焊接在一起一样……」
+		ELSE
+			PRINTFORMDW 即使%CALLNAME:MASTER%从下方进入她，里香也主动地加快速度。
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:思慕
+		IF RAND:3 == 0
+			PRINTFORMDL 里香拥抱着%CALLNAME:MASTER%，并以稳定的速度上下移动。
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「呼~」
+			PRINTFORMDW 当%CALLNAME:MASTER%和里香做爱时，她对着%CALLNAME:MASTER%的耳朵吹气，然后咯咯地笑着。
+		ELSE
+			PRINTFORML 「靠%CALLNAME:MASTER%这么近，感觉真亲密……」
+			PRINTFORMDW 里香亲吻了%CALLNAME:MASTER%的脸颊。
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:炮友
+		IF RAND:3 == 0
+			PRINTFORMDL 当战车娘骑在%CALLNAME:MASTER%身上时，她的手在%CALLNAME:MASTER%的背上探索着。
+		ELSEIF RAND:2 == 0
+			PRINTFORMDW 当里香的身体和%CALLNAME:MASTER%的身体摩擦时，她的表情因快乐而融化。
+		ELSE
+			PRINTFORMDW 里香紧紧地拥抱着%CALLNAME:MASTER%，同时扭动着她的臀部。
+			PRINTFORML 「这样感觉也很棒，我们不一定非要啪啪地做嘛~」
+		ENDIF
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+
+;==================================================
+;70,背面座位肛门
+;==================================================
+@M_KOJO_MESSAGE_COM_K47_70
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K47_70_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K47_70_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		IF TALENT:恋慕
+			;处女
+			IF TCVAR:破瓜 == 1
+				PRINTFORMW 「%CALLNAME:MASTER%想让我紧贴着%CALLNAME:MASTER%……那样的话我就什么都看不到了！」
+				PRINTFORMDW %CALLNAME:MASTER%告诉里香，乐趣就在于此。
+				PRINTFORMW 「如果%CALLNAME:MASTER%不小心吃到我后脑勺上的头发，可别怪我哦……」
+
+				RETURN 1
+			ELSE
+				PRINTFORMW 「“坐在%CALLNAME:MASTER%的腿上”？ 当我是小孩子吗？」
+				PRINTFORMDW %CALLNAME:MASTER%向里香保证，%CALLNAME:MASTER%不是在拿她的身材开玩笑，这样做会感觉很棒的。
+				RETURN 1
+			ENDIF
+		ELSE
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;插入继续
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	;基本セット
+	;时奸中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:恋慕
+		IF RAND:3 == 0
+			PRINTFORMDL 里香回头看着你，因为你正在进入她。
+			PRINTFORML 「你的眼神说明你很享受……」
+			
+		ELSEIF RAND:2 == 0
+			PRINTFORMDW 用手臂环绕着里香，挑逗着她的乳头。
+			ELSE
+			PRINTFORML 「啊……感觉你的温暖如此紧密地摩擦着我……点燃了我的火焰～」
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:爱欲
+		IF RAND:3 == 0
+			PRINTFORML 「我们之间几乎没有空隙，即使是我小小的屁股也蹭得这么近……」
+			PRINTFORMDL 里香露出了恶魔般的微笑。
+		ELSEIF RAND:2 == 0
+			PRINTFORMW 「别忘了稍微摆弄一下控制杆哦~」
+			PRINTFORMDW 里香引导你的手去抚摸她坚挺的乳头。
+		ELSE
+			PRINTFORMDL 战车娘把她的双马尾搭在你的肩膀上，并愉悦地向后仰着头。
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:思慕
+		IF RAND:3 == 0
+			PRINTFORMDL 里香无法抑制住她快乐的呻吟，也无法抑制住她身体的颤抖。
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「我感觉到了你很多……好温暖……」
+		ELSE
+			PRINTFORML 「如果我失去平衡，你会扶住我的，对吧？」
+			PRINTFORMDW 里香犹豫地加快了一点速度。
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:炮友
+		IF RAND:3 == 0
+			PRINTFORMDL 坦克少女用手扶住你的腿，帮助她更有力地行动。
+		ELSEIF RAND:2 == 0
+			PRINTFORMDW 里香像活塞一样上下移动，坐在你的阳具上。
+		ELSE
+			PRINTFORMDW 里香为了享乐，背脊弓起，差点撞到你的头。
+			PRINTFORML 「哎呀！不好意思，只是感觉太棒了...」
+		ENDIF
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+
+;==================================================
+;71,二穴插し
+;==================================================
+@M_KOJO_MESSAGE_COM_K47_71
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K47_71_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K47_71_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;考えうる分岐が多すぎるので地の文の大まかな分岐だけ
+	;连续
+	IF PREVCOM == SELECTCOM
+		PRINTFORMW 
+		RETURN 1
+	;MASTERV插入→助手A插入
+	ELSEIF TCVAR:100 == MASTER
+		PRINTFORMW 
+		RETURN 1
+	;MASTERA插入→助手V插入
+	ELSEIF TCVAR:101 == MASTER
+		PRINTFORMW 
+		RETURN 1
+	;助手V插入→MASTERA插入
+	ELSEIF TCVAR:100 == ASSI
+		PRINTFORMW 
+		RETURN 1
+	;助手A插入→MASTERV插入
+	ELSEIF TCVAR:101 == ASSI
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;★2023/08/21 72-76は「派生コマンド」に移管が必要
+;==================================================
+;72,插入Ｇスポット责め
+;==================================================
+@M_KOJO_MESSAGE_COM_K47_72
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K47_72_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K47_72_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		IF TALENT:恋慕
+			PRINTFORMW
+			PRINTFORMW
+		ELSE
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;插入继续
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	;基本セット
+	;时奸中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:恋慕
+		IF RAND:2 == 0
+			PRINTFORMDW 当你刺激她的G点时，工程师发出尖叫声。
+		ELSE
+			PRINTFORML 「嗯...那个位置真的很...啊...敏感！」
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:爱欲
+		IF RAND:2 == 0
+			PRINTFORML 「对，就是那里！ 那是点火开关！」
+			PRINTFORMDL 里香喜悦地喊道。
+		ELSE
+			PRINTFORMDW 当你击中她的敏感点时，里香身体僵硬了一下，发出了愉悦的声音。
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:思慕
+		IF RAND:2 == 0
+			PRINTFORML 「什么鬼……那是哪里……啊嗯！」
+			PRINTFORMDW 当你刺激她时，里香听起来几乎要崩溃了。
+		ELSE
+			PRINTFORML 「不要……不要那里……我……会失去理智的……」
+			PRINTFORMDW 里香喘着粗气，紧握着双手，试图忍受这种快乐。
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:炮友
+		IF RAND:2 == 0
+			PRINTFORMDW 当你击中里香的G点时，里香发出了一声快乐的叫声。
+		ELSE
+			PRINTFORMDW 里香的眼睛瞬间失去了焦点，然后变得更加专注。
+			PRINTFORML 「你刚才做了什么……再做多点……多点……」
+		ENDIF
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+
+;==================================================
+;73,插入子宫口责め
+;==================================================
+@M_KOJO_MESSAGE_COM_K47_73
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K47_73_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K47_73_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+	ENDIF
+	;-------------------------------------------------
+	;插入继续
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	;基本セット
+	;时奸中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:恋慕
+		IF RAND:2 == 0
+			PRINTFORMDW 里香不舒服地咬紧牙关，但同时看起来也很高兴。
+			ELSE
+			PRINTFORML 「再深一点可能会真的把我弄坏……就在那里……出来吧……」
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:爱欲
+		IF RAND:2 == 0
+			PRINTFORML 「你的燃料喷嘴正好对着我的油箱……填满它，填满它！」
+			PRINTFORMDL 里香欣喜若狂地乞求你的精液。
+		ELSE
+			PRINTFORMDW 里香的表情看起来像是醉酒后混合着快乐和痛苦。
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:思慕
+		IF RAND:2 == 0
+			PRINTFORML 「疼……你太深了！ 求你，不要再深了！ 你撞到了……啊！」
+			PRINTFORMDW 即使她抗议着，你也能听到她声音里带着一些快乐。
+		ELSE
+			PRINTFORML 「至少可以……温柔一点吗……？ 你会弄坏我的！」
+			PRINTFORMDW 里香听起来真的很担心，但仍然听起来有些高兴。
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:炮友
+		IF RAND:2 == 0
+			PRINTFORMDW 里香痛苦地叫了一声，在你稍微退出来一点后，那叫声融化成了一声小小的呻吟。
+		ELSE
+			PRINTFORMDW 即使里香因快乐而微笑，她的眼睛里也充满了痛苦的泪水。
+			PRINTFORML 「下次再做之前给我个警告，让我做好准备……」
+		ENDIF
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+
+;==================================================
+;74,Ｓ状结肠责め
+;==================================================
+@M_KOJO_MESSAGE_COM_K47_74
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K47_74_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K47_74_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+	ENDIF
+	;-------------------------------------------------
+	;插入继续
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+		;基本セット
+	;时奸中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:恋慕
+		IF RAND:2 == 0
+			PRINTFORMDW 当你的阴茎深深进入她体内时，战车娘的整个身体都绷紧了。
+			ELSE
+			PRINTFORML 「我……我想它没法……再进去了……」
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:爱欲
+		IF RAND:2 == 0
+			PRINTFORML 「排气管感觉完全满了……」
+			PRINTFORMDL 里香的语气听起来完全是变态的。
+		ELSE
+			PRINTFORMDW 当你尽可能深地在她体内捶打时，里香在痛苦和快乐中颤抖。
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:思慕
+		IF RAND:2 == 0
+			PRINTFORML 「呃……感觉……不对劲……」
+			PRINTFORMDW 尽管她抗议着，你也能听到里香的语气里带着一些快乐。
+		ELSE
+			PRINTFORML 「我感觉……好满……有点疼……」
+			PRINTFORMDW 里香喘着粗气，试图让自己镇定下来。
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:炮友
+		IF RAND:2 == 0
+			PRINTFORMDW 里香发出了一声听起来几乎厌恶的呻吟，但在你稍微退出来一点后，那呻吟变成了快乐的声音。
+		ELSE
+			PRINTFORMDW 里香紧紧地握住她的双手，紧紧抓住以承受这种奇怪的感觉。
+			PRINTFORML 「我不知道我是喜欢还是讨厌它……也许两者都有……」
+		ENDIF
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+
+;==================================================
+;75,膣里责め
+;==================================================
+@M_KOJO_MESSAGE_COM_K47_75
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K47_75_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K47_75_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+	ENDIF
+	;-------------------------------------------------
+	;插入继续
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	;基本セット
+	;时奸中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:恋慕
+		IF RAND:2 == 0
+			PRINTFORMDW 当你刺激战车娘的G点时，她发出了一声尖锐的呻吟。
+		ELSE
+			PRINTFORML 「唔……那个地方真的……啊……好敏感！」
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:爱欲
+		IF RAND:2 == 0
+			PRINTFORML 「对，就是那里！ 那是点火开关！」
+			PRINTFORMDL 里香喜悦地喊道。
+		ELSE
+			PRINTFORMDW 当你击中她的敏感点时，里香身体僵硬了一下，发出了愉悦的声音。
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:思慕
+		IF RAND:2 == 0
+			PRINTFORML 「什么鬼……那是哪里……啊嗯！」
+			PRINTFORMDW 当你刺激她时，里香听起来几乎要崩溃了。
+		ELSE
+			PRINTFORML 「不要……不要那里……我……会失去理智的……」
+			PRINTFORMDW 里香喘着粗气，紧握着双手，试图忍受这种快乐。
+		ENDIF
+		RETURN 1
+	ELSEIF TALENT:炮友
+		IF RAND:2 == 0
+			PRINTFORMDW 当你从背后击中里香的G点时，里香发出了一声快乐的叫声。
+		ELSE
+			PRINTFORMDW 里香的眼睛瞬间失去了焦点，然后变得更加专注。
+			PRINTFORML 「你刚才做了什么……再做多点……多点……」
+		ENDIF
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+
+;==================================================
+;77,小人オナホ(针妙丸用？
+;==================================================
+@M_KOJO_MESSAGE_COM_K47_77
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K47_77_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K47_77_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+	ENDIF
+	;-------------------------------------------------
+	;插入继续
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:101 == PLAYER
+		;前回射精した
+		IF TCVAR:104
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;基本セット
+	;恋慕
+	IF TALENT:恋慕
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1

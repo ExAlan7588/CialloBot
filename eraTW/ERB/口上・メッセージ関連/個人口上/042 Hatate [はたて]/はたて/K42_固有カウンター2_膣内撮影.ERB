@@ -1,0 +1,80 @@
+﻿;固有Counter可否
+@UNIQUE_COUNTER2_ABLE_K42
+SIF ABL:[[果]]:露出癖 < 5
+	RETURN 0
+SIF TEQUIP:[[果]]:50 == MASTER || TEQUIP:[[果]]:51 == MASTER
+	RETURN 1
+
+;固有Counterの种别と频度
+@UNIQUE_COUNTER2_FREQUENCY_K42
+;ソフト/ベリーソフト/コミュ/着衣/脱衣爱抚/脱衣强迫/抱き着き/性交/责め/おねだりの中なら选ぶべし
+;TYPEによって发生しない状况があるので注意
+RESULTS = 脱衣爱抚
+;发生率、基本值(10)にこの数值を足す
+;通常のCounterはプラ​舞​5以下なので、テストプレイ以外であんまり极端な数字を入れない方がいい
+RETURN 10 + MAX((ABL:[[果]]:露出癖 + ABL:[[果]]:欲望) / 2, 10)
+
+;文本
+@UNIQUE_COUNTER2_MESSAGE_K42
+
+	PRINTFORM %CALLNAME:TARGET%用念写能力将照相机的屏幕转向这边，屏幕上显示出%CALLNAME:MASTER%的%TEXTR("大鸡巴/肉棒/肉棒/男根")%
+		IF TEQUIP:[[果]]:50 == MASTER
+			PRINTFORML  展示着拨开%TEXTR("膣壁/媚肉/雌穴/小穴/肉壶")%的样子……
+			SELECTCASE RAND:5
+			CASE 0
+				IF TEQUIP:子宫
+					PRINTFORML 「看到了吗？ %MASTERNAME:42%的小鸡鸡，和果的子宫亲吻的地方…%UNICODE(0x2665) *1%」
+					IF TALENT:怀孕愿望 == 1
+						SELECTCASE RAND:2
+						CASE 0
+							PRINTFORML 「啊哈…果想要孩子的心情完全暴露了呢…%UNICODE(0x2665) *1%」
+							PRINTFORML 「因为，子宫的入口都打开这么大了嘛…%UNICODE(0x2665) *1%」
+						CASE 1
+							PRINTFORML 「入口也一张一合地打开着… 像是在撒娇说想要想要孩子的种子…%UNICODE(0x2665) *1%」
+						ENDSELECT
+					ENDIF
+				ELSE
+					PRINTFORML 「哇，好厉害…%UNICODE(0x2665) *1%　小鸡鸡，都进到这么里面来了…%UNICODE(0x2665) *1%」
+				ENDIF
+			CASE 1
+				PRINTFORML 「好厉害呢…%UNICODE(0x2665) *1%　这样进进出出的，是这种感觉啊…%UNICODE(0x2665) *1%」
+			CASE 2
+				PRINTFORML 「你看…%UNICODE(0x2665) *1%　果的里面，全都是%MASTERNAME:42%的东西…%UNICODE(0x2665) *1%」
+			CASE 3
+				PRINTFORML 「果最重要的部分，被%MASTERNAME:42%看到了呢…%UNICODE(0x2665) *1%　糟糕了…%UNICODE(0x2665) *1%」
+			CASE 4
+				PRINTFORML 「现在，我的肉壶，变成这种感觉了啊…%UNICODE(0x2665) *1%」
+			ENDSELECT
+			PRINTL 
+		ELSEIF TEQUIP:[[果]]:51 == MASTER
+			PRINTFORML 展示了%TEXTR("肠内/菊穴/尻穴/")%被咕波咕波搅动的样子…
+			SELECTCASE RAND:4
+			CASE 0
+				PRINTFORML 「展示肠腔什么的，真是太羞人了…只有%MASTERNAME:42%才能看到哦…%UNICODE(0x2665) *1%」
+			CASE 1
+				PRINTFORML 「小鸡鸡都插到菊穴这么里面了…不得了了%UNICODE(0x2665) *1%」
+			CASE 2
+				PRINTFORML 「为了能被看到，我有好好地清理干净哦…%UNICODE(0x2665) *1%」
+			CASE 3
+				PRINTFORML 「用屁股做爱的时候，里面是这种感觉啊…%UNICODE(0x2665) *1%　感觉好色情…%UNICODE(0x2665) *1%」
+			ENDSELECT
+			PRINTL 
+		ENDIF
+		PRINTW 
+
+;固有Counterのソース等
+@UNIQUE_COUNTER2_SOURCE_K42
+
+	;体势の变更
+	;=============================
+
+	;ソース计算および内部处理系统
+	;=============================
+	SOURCE:[[果]]:露出 += 1500	
+	SOURCE:[[果]]:偏离正轨 += 500
+	SOURCE:[[果]]:与快Ｃ += 50
+	SOURCE:[[果]]:性行动 += 150
+	SOURCE:[[果]]:诱惑 += 1000
+	SOURCE:[[果]]:侮辱 += 500
+	SOURCE:[[果]]:挑衅 += 1000
+

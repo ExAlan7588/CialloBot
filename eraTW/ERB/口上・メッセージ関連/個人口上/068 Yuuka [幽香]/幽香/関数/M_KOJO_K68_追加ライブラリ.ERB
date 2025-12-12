@@ -1,0 +1,180 @@
+﻿;
+;-------------------------------------------------
+;幽香口上に使用函数
+;-------------------------------------------------
+;
+;-------------------------------------------------
+;@UPDATE_RESET_K68()
+;初导入时に幽香の认识状况・好感度・信赖度・陷落状况・能力・経験をリセット
+;儿童关联と恋人は结构やばそう。要検证
+;-------------------------------------------------
+;
+@UPDATE_RESET_K68()
+	CLEARBIT CFLAG:68:既成事实 , 1
+	CFLAG:68:好感度 = 0
+	CFLAG:68:信赖度 = 0
+	CFLAG:68:掌握把柄 = 0
+	CFLAG:68:被掌握把柄 = 0
+	CFLAG:68:允许无套 = 0
+	CFLAG:68:认识 = 0
+	CFLAG:68:纯洁的交往 = 0
+	CFLAG:68:自慰暴露 = 0
+	CFLAG:68:勃然大怒 = 0
+	CFLAG:68:心情不快 = 0
+	CFLAG:68:眠奸发觉 = 0
+	;CFLAG:68:分娩经过日 = 0
+	CFLAG:68:育儿人数 = 0
+	CFLAG:68:儿童人数 = 0
+	IF TALENT:68:恋人 == 1 && TALENT:MASTER:恋人 == 1
+		TALENT:68:恋人 = 0
+		TALENT:MASTER:恋人 = 0
+	ENDIF
+	
+	;累计精液经验
+	CFLAG:68:累计膣内精液 = 0
+	CFLAG:68:累计肛门精液 = 0
+	CFLAG:68:累计精饮 = 0
+	CFLAG:68:累计精浴 = 0
+	
+	;初吻系 接吻经验无し、无接吻经验の素質が那个ば他は初期化しなくても问题ないっぽい？
+	TALENT:68:无接吻经验 = 1
+	
+	;陷落
+	TALENT:68:把柄 = 0
+	TALENT:68:恋慕 = 0
+	TALENT:68:思慕 = 0
+	TALENT:68:淫乱 = 0
+	TALENT:68:爱欲 = 0
+	TALENT:68:炮友 = 0
+	;TALENT:68:妊娠 = 0
+	;TALENT:68:育儿中 = 0
+	
+	;淫乱系
+	TALENT:68:受虐狂 = 0
+	TALENT:68:自慰狂 = 0
+	TALENT:68:淫壶 = 0
+	TALENT:68:尻穴狂 = 0
+	TALENT:68:淫乳 = 0
+	TALENT:68:接吻魔 = 0
+	TALENT:68:子宫口性感 = 0
+	
+	;キャンディ
+	TALENT:68:处女 = 0
+	TALENT:68:性别 = 1
+	TALENT:68:动物耳 = 0
+	
+	;刻印
+	MARK:68:时奸刻印 = 0
+	MARK:68:反抗刻印 = 0
+	MARK:68:苦痛刻印 = 0
+	MARK:68:快乐刻印 = 0
+	MARK:68:屈服刻印 = 0
+	
+	;ABL初期化
+	CALL INI_K68("ABL")
+	;初期能力
+	ABL:68:0 = 1
+	ABL:68:1 = 1
+	ABL:68:11 = 1
+	ABL:68:16 = 5
+	ABL:68:17 = 2
+	ABL:68:42 = 5
+	ABL:68:43 = 2
+	
+	;EXP初期化
+	CALL INI_K68("EXP")
+	;初期经验
+	EXP:68:1 = 50
+	EXP:68:10 = 35
+	EXP:68:22 = 25
+	EXP:68:51 = 75
+	EXP:68:74 = 30
+	
+	;宝珠
+	CALL INI_K68("JUEL")
+	
+RETURN 1
+;-------------------------------------------------
+;@INI_K68(ARGS)
+;ARGS = ABLでABL初期化、EXPでEXP初期化、JUELでJUEL初期化
+;存在しない场所まで初期化してるけど・・・
+;-------------------------------------------------
+;
+@INI_K68(ARGS)
+	IF ARGS == "ABL"
+		FOR LOCAL, 0, 56
+			ABL:68:LOCAL = 0
+		NEXT
+	ELSEIF ARGS == "EXP"
+		FOR LOCAL, 0, 111
+			EXP:68:LOCAL = 0
+		NEXT
+	ELSEIF ARGS == "JUEL"
+		FOR LOCAL, 0, 33
+			JUEL:68:LOCAL = 0
+		NEXT
+		JUEL:68:100 = 0
+	ENDIF
+RETURN 1
+;-------------------------------------------------
+;@HEARTCB_K68(ARG:1, ARG, ARGS)
+;ARG:1は表示するハートマークの色、ARGは表示する数、ARGSはフォント
+;触手宫のぱにめーしょんから一部お借りしました
+;なんでわざわざ函数作ったの？→单语登录してあったから
+;-------------------------------------------------
+;
+@HEARTCB_K68(ARG:1 = 0xC07070, ARG = 1, ARGS = "Verdana")
+#LOCALSIZE 2
+#LOCALSSIZE 1
+	LOCAL = GETCOLOR()
+	LOCALS = %GETFONT()%
+	
+	SETCOLOR ARG:1
+	SETFONT CHKFONT(ARGS) ? ARGS # LOCALS
+
+	IF GETFONT() == "Symbol"
+		FOR LOCAL:1, 0, ARG
+			PRINTS UNICODE(0xA9)
+		NEXT
+	ELSE
+		FOR LOCAL:1, 0, ARG
+			PRINTS UNICODE(0x2665)
+		NEXT
+	ENDIF
+	
+	SETFONT LOCALS
+	SETCOLOR LOCAL
+RETURN 1
+;-------------------------------------------------
+;@PLANTSELECT_K68()
+;植物苗のNo（151,152,153,161,162,163,171,172,173,181,182,183）から随机に选ぶ函数
+;-------------------------------------------------
+;
+@PLANTSELECT_K68()
+#FUNCTION
+SELECTCASE RAND:12
+	CASE 0
+		RETURNF 151
+	CASE 1
+		RETURNF 152
+	CASE 2
+		RETURNF 153
+	CASE 3
+		RETURNF 161
+	CASE 4
+		RETURNF 162
+	CASE 5
+		RETURNF 163
+	CASE 6
+		RETURNF 171
+	CASE 7
+		RETURNF 172
+	CASE 8
+		RETURNF 173
+	CASE 9
+		RETURNF 181
+	CASE 10
+		RETURNF 182
+	CASEELSE
+		RETURNF 183
+ENDSELECT

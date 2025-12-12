@@ -1,0 +1,149 @@
+﻿;==================================================
+;一日の结束时(AFTERTRAニーの前)、认识がなければ呼び出されない
+;==================================================
+@M_KOJO_NK_EVENT_K49_31(ARG,ARG:1)
+;口上主はTARGET
+;ARGは会ってない日数
+;何日以上会ってなかったら愚痴を言うとかできます
+;CFLAG:自慰暴露で分岐入れてもよさそう
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;今日会っていない
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;今日会っている
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 0
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;ハッピーニューイヤー
+;年越しの瞬间に同じ房间に居ると发生
+;==================================================
+@M_KOJO_NK_EVENT_K49_33(ARG,ARG:1)
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------
+IF LOCAL
+	PRINTFORML 
+ENDIF
+RETURN 1
+
+;==================================================
+;技能レベルアップ
+;各ABL值はレベルアップ后の值になってます
+;==================================================
+@M_KOJO_NK_EVENT_K49_34(ARG,ARG:1)
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------
+IF LOCAL
+	SELECTCASE ARG
+	CASE 1
+		;战斗技能
+		PRINTFORML 
+	CASE 2
+		;话术技能
+		PRINTFORML 
+	CASE 3
+		;清扫技能
+		PRINTFORML 
+	CASE 4
+		;教养
+		PRINTFORML 
+	CASE 5
+		;料理技能
+		PRINTFORML 
+	CASE 6
+		;采集Lv
+		PRINTFORML 
+	CASE 7
+		IF ARG:1 == 0
+			;音乐技能
+			PRINTFORML 
+		ELSEIF ARG:1 == 1
+			;【音乐知识】取得
+			PRINTFORML 
+		ELSEIF ARG:1 == 2
+			;【相对音感】取得
+			PRINTFORML 
+		ENDIF
+	CASE 8
+		;钓りLv
+		PRINTFORML 
+	CASE 9
+		IF ARG:1 == 0
+			;调合Lv
+			PRINTFORML 
+		ELSEIF ARG:1 == 1
+			;【调合知识】取得
+			PRINTFORML 
+		ENDIF
+	CASE 10
+		;采伐Lv
+		PRINTFORML 
+	CASE 11
+		IF ARG:1 == 0
+			;指
+			PRINTFORML 
+		ELSEIF ARG:1 == 1
+			;【器用な指】取得
+			PRINTFORML 
+		ENDIF
+	CASE 12
+		IF ARG:1 == 0
+			;舌
+			PRINTFORML 
+		ELSEIF ARG:1 == 1
+			;【舌使い】取得
+			PRINTFORML 
+		ENDIF
+	CASE 13
+		IF ARG:1 == 0
+			;胸
+			PRINTFORML 
+		ELSEIF ARG:1 == 1
+			;【淫乳】取得
+			PRINTFORML 
+		ENDIF
+	CASE 14
+		;腰
+		PRINTFORML 
+	CASE 15
+		IF ARG:1 == 0
+			;膣
+			PRINTFORML 
+		ELSEIF ARG:1 == 1
+			;【淫壶】取得
+			PRINTFORML 
+		ENDIF
+	CASE 16
+		IF ARG:1 == 0
+			;肛门
+			PRINTFORML 
+		ELSEIF ARG:1 == 1
+			;【尻穴狂】取得
+			PRINTFORML 
+		ENDIF
+	ENDSELECT
+	PRINTL 
+ENDIF
+RETURN 1

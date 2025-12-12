@@ -1,0 +1,202 @@
+﻿;吃饭（约会）
+@COM610
+#DIM 恢复前体力１
+#DIM 恢复前气力１
+#DIM 恢复后体力１
+#DIM 恢复后气力１
+#DIM 恢复前体力２
+#DIM 恢复前气力２
+#DIM 恢复后体力２
+#DIM 恢复后气力２
+
+恢复前体力１ = BASE:MASTER:体力
+恢复前气力１ = BASE:MASTER:气力
+恢复前体力２ = BASE:TARGET:体力
+恢复前气力２ = BASE:TARGET:气力
+LOCAL = RAND:100
+LOCAL:1 = 90 + GET_SUCCESS_RATE() / 5
+SIF LOCAL:1 > 99
+	LOCAL:1 = 99
+IF LOCAL <= 9
+	;10％で大成功
+	EXP:MASTER:会话经验 ++
+	EXP:MASTER:约会经验 ++
+	EXP:TARGET:约会经验 ++
+	TFLAG:193 = 1
+ELSEIF LOCAL >= LOCAL:1
+	;10～1％で失败
+	TFLAG:193 = -1
+ELSE
+	;残りは成功
+	TFLAG:193 = 0
+ENDIF
+	TFLAG:98 += 2
+
+DOWNBASE:气力 += 10
+
+;固定で获得するソース
+SOURCE:欢乐 = 800
+SOURCE:情爱 = 300
+
+;ABL:欲望をみる
+IF ABL:欲望 <= 1
+	SOURCE:欢乐 += (ABL:欲望 * 60)
+ELSEIF ABL:欲望 <= 3
+	SOURCE:欢乐 += 300 + (ABL:欲望 * 60)
+ELSEIF ABL:欲望 <= 5
+	SOURCE:欢乐 += 600 + (ABL:欲望 * 60)
+ELSEIF ABL:欲望 <= 8
+	SOURCE:欢乐 += 900 + (ABL:欲望 * 75)
+ELSEIF ABL:欲望 <= 11
+	SOURCE:欢乐 += 1500 + (ABL:欲望 * 75)
+ELSE
+	SOURCE:欢乐 += 2500 + (ABL:欲望 * 30)
+ENDIF
+
+;ABL:侍奉精神をみる
+IF ABL:侍奉精神 <= 1
+	SOURCE:情爱 += (ABL:侍奉精神 * 30)
+ELSEIF ABL:侍奉精神 <= 3
+	SOURCE:情爱 += 200 + (ABL:侍奉精神 * 30)
+ELSEIF ABL:侍奉精神 <= 5
+	SOURCE:情爱 += 500 + (ABL:侍奉精神 * 30)
+ELSEIF ABL:侍奉精神 <= 8
+	SOURCE:情爱 += 700 + (ABL:侍奉精神 * 45)
+ELSEIF ABL:侍奉精神 <= 11
+	SOURCE:情爱 += 1200 + (ABL:侍奉精神 * 45)
+ELSE
+	SOURCE:情爱 += 1800 + (ABL:侍奉精神 * 20)
+ENDIF
+
+;好感度をみる
+IF CFLAG:2 <= 500
+	SOURCE:欢乐 += CFLAG:2
+ELSEIF CFLAG:2 <= 5000
+	SOURCE:欢乐 += 750 + (CFLAG:2 - 500) / 3
+ELSE
+	SOURCE:欢乐 += 2000 + (CFLAG:2 - 5000) / 4
+ENDIF
+SIF SOURCE:欢乐 < 0
+	SOURCE:欢乐 = 0
+
+
+SOURCE:被动 = 200 + 100 * ABL:顺从
+SOURCE:征服 = 200 + 100 * ABL:施虐属性
+
+IF TFLAG:193 == -1
+	TIMES SOURCE:欢乐 , 0.10
+	TIMES SOURCE:情爱 , 0.10
+	TIMES SOURCE:征服 , 0.50
+	TIMES SOURCE:被动 , 0.50
+ELSEIF TFLAG:193 == 0
+	TIMES SOURCE:欢乐 , 1.00
+	TIMES SOURCE:情爱 , 1.00
+	TIMES SOURCE:征服 , 1.00
+	TIMES SOURCE:被动 , 1.00
+ELSE
+	TIMES SOURCE:欢乐 , 2.00
+	TIMES SOURCE:情爱 , 1.50
+	TIMES SOURCE:征服 , 2.00
+	TIMES SOURCE:被动 , 2.00
+ENDIF
+SIF TALENT:大胃王
+	TIMES SOURCE:欢乐 , 1.50
+
+
+CALL RECOVER_PERMIL_BOTH(TARGET, 150, "体力", 0, "因为饮食而产生的恢复")
+CALL RECOVER_PERMIL_BOTH(TARGET, 300, "气力", 0, "因为饮食而产生的恢复")
+CALL RECOVER_PERMIL_BOTH(TARGET, 100, "精力", 0, "因为饮食而产生的恢复")
+
+TIME += 60
+EXP:MASTER:约会经验 ++
+EXP:TARGET:约会经验 ++
+CALL 满腹度上升(TARGET,"主食")
+CALL 满腹度上升(MASTER,"主食")
+MONEY -= 3000
+恢复后体力１ = BASE:MASTER:体力
+恢复后气力１ = BASE:MASTER:气力
+恢复后体力２ = BASE:TARGET:体力
+恢复后气力２ = BASE:TARGET:气力
+;DRAWLINE
+;PRINTFORML 体力+{ABS(恢复后体力１ - 恢复前体力１)}（%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%）
+;PRINTFORML 气力+{ABS(恢复后气力１ - 恢复前气力１)}（%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%）
+;PRINTFORML 体力+{ABS(恢复后体力２ - 恢复前体力２)}（%NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%）
+;PRINTFORML 气力+{ABS(恢复后气力２ - 恢复前气力２)}（%NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%）
+RETURN 1
+
+;-------------------------------------------------
+;实行可能判定
+;-------------------------------------------------
+;请吃饭
+@COM_ABLE610
+;批量管理
+SIF GLOBAL_COMABLE(610)
+	RETURN RESULT
+;相手が居ない
+SIF !TARGET
+	RETURN 0
+;约会中以外
+SIF !CHK_DATENOW(CFLAG:12)
+	RETURN 0
+SIF !DATE_PARTY(CFLAG:MASTER:当前位置)
+	RETURN 0
+SIF CFLAG:行动 == 5
+	RETURN 0
+;食べたばかり
+SIF !TIME_PROGRESS(TCVAR:312)
+	RETURN 0
+SIF MONEY < 3000
+	RETURN 0
+;睡眠中
+SIF CFLAG:睡眠
+	RETURN 0
+;时间停止中
+SIF FLAG:70
+	RETURN 0
+RETURN 1
+
+;FileName_DATE_CMN.ERB ----------------------------- Rev1.00
+;约会先吃饭可否
+;CALL		USER
+;ARG		当前位置
+;RETURN		吃饭场所种类
+;COMMENT	
+;-----------------------------------------------------------
+@DATE_PARTY(ARG)
+#FUNCTION
+IF !IN_HOME(ARG)
+	SELECTCASE ARG
+		;特殊吃饭先
+	;	CASE 230,340,350
+	;		RETURNF ARG
+		;%约会地点%の宴会に～…
+	;	CASE 450,650,740,830
+	;		RETURNF 2
+		;%约会地点%で吃饭を～…
+		;CASE 商业街,竹林入口,永远亭,白玉楼,旧地狱街道
+		;白玉楼or永远亭で、约会中に吃饭って变じゃない？　ってことで、店があるところに胜手に变更
+		CASE 商业街,竹林入口,中有之道,旧地狱街道
+			IF (ARG == 竹林入口 && BASE:28:工作量 > 3000 && CFLAG:28:行动 == 5)
+				RETURNF 0
+			ELSE
+				RETURNF 1
+			ENDIF
+	ENDSELECT
+ELSE
+	;现在的ところは死に分岐
+	SELECTCASE ARG
+		;地底酒场＝旧地狱街道
+		CASE 933
+			RETURNF 1
+		;みすちー屋台＝竹林入口
+		;CASE 444
+		;	SIF BASE:28:工作量 <= 3000 && CFLAG:28:行动 == 5
+		;		RETURNF 1
+		;まだ无し＝中有之道
+
+		;人里小料理屋＝商业街
+		CASE 218
+			RETURNF 1
+	ENDSELECT
+ENDIF
+RETURNF 0

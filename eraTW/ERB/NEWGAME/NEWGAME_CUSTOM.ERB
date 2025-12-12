@@ -1,0 +1,574 @@
+﻿;-----------------------------------------------------------
+;角色カスタ​舞​ズ
+;-----------------------------------------------------------
+@CUSTOM_TERMINAL(ARG, HIKITSUGI)
+#DIM HIKITSUGI
+CALL CUSTOM_INIT(ARG)
+CLEARLINE 1000
+;名前ボタン表示
+DRAWLINE
+CALL CUSTOM_NAME_BUTTON(ARG)
+;基礎ボタン付き表示
+DRAWLINE
+CALL CUSTOM_BASE_BUTTON(ARG)
+;能力・性技表示
+CALL PRINT_STATE_ABL(ARG)
+PRINTL
+CALL COLORMESSAGE(@"　[2000] 能力编辑",0x70C070,1)
+;素質表示
+CALL PRINT_STATE_TALENT(ARG)
+SETCOLOR 0x70C070
+PRINTL 　[3000] 素质编辑
+RESETCOLOR
+;经验表示
+CALL PRINT_STATE_EXP(ARG)
+PRINTL
+CALL COLORMESSAGE(@"　[4000] 经验编辑",0x70C070,1)
+IF HIKITSUGI
+	CALL COLORMESSAGE(@"　[5000] 继承设置的保存",0x70C070,1)
+ENDIF
+RESETCOLOR
+DRAWLINE
+PRINTL 　[9999] 设定完毕
+PRINTL
+INPUT
+SELECTCASE RESULT
+	CASE 9999
+		PRINTL 这样真的可以吗？
+		CALL ASK_YN()
+		SIF !RESULT
+			RETURN 1
+	;NAME
+	CASE 0 TO 999
+		CALL CUSTOM_NAME(ARG, RESULT)
+	;BASE
+	CASE 1000 TO 1999
+		CALL CUSTOM_BASE(ARG, RESULT - 1000)
+	;ABL
+	CASE 2000
+		CALL CUSTOM_MENU("ABL", ARG)
+	;TALENT
+	CASE 3000
+		CALL CUSTOM_MENU("TALENT", ARG)
+	;EXP
+	CASE 4000
+		CALL CUSTOM_MENU("EXP", ARG)
+	CASE 5000
+		IF HIKITSUGI
+			CALL SAVE_CUSTOM_TALENT(ARG, "恋人")
+		ENDIF
+ENDSELECT
+RESTART
+;-----------------------------------------------------------
+;排他处理
+;-----------------------------------------------------------
+@CUSTOM_INIT(ARG)
+;ARGが女、扶她时の排他
+IF TALENT:ARG:性别 & 1
+	ABL:ARG:断袖属性 = 0
+	ABL:ARG:断袖中毒 = 0
+	EXP:ARG:断袖经验 = 0
+	IF !(TALENT:ARG:2 & 2)
+		EXP:ARG:射精经验 = 0
+		EXP:ARG:插入经验 = 0
+	ENDIF
+	SIF TALENT:ARG:性别 != 1
+		TALENT:ARG:具现 = 0
+;ARGが男时の排他
+ELSE
+	ABL:ARG:Ｖ感觉 = 0
+	ABL:ARG:百合属性 = 0
+	ABL:ARG:百合中毒 = 0
+	EXP:ARG:百合经验 = 0
+	EXP:ARG:喷乳经验 = 0
+	EXP:ARG:Ｖ经验 = 0
+	EXP:ARG:乳交经验 = 0
+	EXP:ARG:Ｖ性交经验 = 0
+	EXP:ARG:Ｖ扩张经验 = 0
+	EXP:ARG:子宫口开发经验 = 0
+	TALENT:ARG:Ｖ感度 = 0
+	TALENT:ARG:处女 = 0
+	TALENT:ARG:母乳体质 = 0
+	TALENT:ARG:胸围 = -2
+	TALENT:ARG:风骚 = 0
+	TALENT:ARG:初潮 = 0
+	TALENT:ARG:具现 = 0
+ENDIF
+;チ○コ
+IF TALENT:ARG:2 & 2
+	MAXBASE:ARG:精力 = 1000
+	BASE:ARG:精力 = 1000
+	MAXBASE:ARG:勃起 = 1500
+	;实绩BOUNS分
+	SIF ARG == MASTER && GETBIT(FLAG:702,8)
+		MAXBASE:MASTER:精力 += 100
+ELSE
+	TALENT:ARG:非童贞 = 0
+	MAXBASE:ARG:精力 = 0
+	BASE:ARG:精力 = 0
+	MAXBASE:ARG:勃起 = 0
+ENDIF
+;处女ならV系经验无し
+IF TALENT:ARG:处女 == 1
+	ABL:ARG:Ｖ感觉 = 0
+	EXP:ARG:Ｖ经验 = 0
+	EXP:ARG:Ｖ性交经验 = 0
+	EXP:ARG:Ｖ扩张经验 = 0
+	EXP:ARG:子宫口开发经验 = 0
+	CSTR:ARG:处女丧失履历 = 
+	CFLAG:ARG:处女丧失纪念日 = 0
+	CFLAG:ARG:处女丧失目标对象 = 0
+;非处女はV経験１
+ELSEIF TALENT:ARG:2 & 1 && EXP:ARG:Ｖ经验 == 0
+	EXP:ARG:Ｖ经验 = 1
+ENDIF
+
+;初吻
+IF !EXP:ARG:接吻经验
+	TALENT:ARG:无接吻经验 = 1
+ELSE
+	TALENT:ARG:无接吻经验 = 0
+ENDIF
+
+
+;-----------------------------------------------------------
+;名前变更ボタン
+;-----------------------------------------------------------
+@CUSTOM_NAME_BUTTON(ARG)
+#DIMS CONST colortext = "<font color='#70C070'>[变更]</font>"
+#DIMS html
+;名前
+html '= @"<button value='{0}'>" + HTML_SPACE(2) + @"名字：%NAME_OUTPUT_TRANSLATION("NAME", ARG)%"+ HTML_SPACE(2) + colortext + "</button>"
+html += HTML_SPACE(4)
+;呼び名
+html += @"<button value='{1}'>" + @"称呼：%NAME_OUTPUT_TRANSLATION("CALLNAME", ARG)%"+ HTML_SPACE(2) + colortext + "</button>"
+HTML_PRINT html + "<br><br>"
+
+@CUSTOM_NAME(ARG, ARG:1)
+SELECTCASE ARG:1
+	CASE 0
+		PRINTL
+		PRINTFORML 现在的名字是%NAME_OUTPUT_TRANSLATION("NAME", ARG)%。
+		PRINTFORML 想要变更的话请输入新的名字。(留空为取消)
+		PRINTL
+		INPUTS
+		IF RESULTS != ""
+			NAME:ARG '= RESULTS
+			PRINTFORMW 已变更。现在的名字是%NAME_OUTPUT_TRANSLATION("NAME", ARG)%。
+		ENDIF
+	CASE 1
+		PRINTL
+		PRINTFORML 现在的称呼是%NAME_OUTPUT_TRANSLATION("CALLNAME", ARG)%。
+		PRINTFORML 想要变更的话请输入新的称呼。(留空为取消)
+		PRINTL
+		INPUTS
+		IF RESULTS != ""
+			CALLNAME:ARG '= RESULTS
+			PRINTFORMW 已变更。现在的称呼是%NAME_OUTPUT_TRANSLATION("CALLNAME", ARG)%。
+		ENDIF
+ENDSELECT
+
+;-----------------------------------------------------------
+;基礎变更ボタン
+;-----------------------------------------------------------
+@CUSTOM_BASE_BUTTON(ARG)
+#DIM baseButtonVal = 1000
+PRINT  
+CALL BASE_BAR(ARG, "体力", 28, "绿")
+
+IF BASE:ARG:体力 > 1000
+	SETCOLOR 0x70C070
+	PRINTBUTTON "[－]", 0 + baseButtonVal
+ELSE
+	SETCOLOR 0x969696
+	PRINT [－]
+ENDIF
+IF BASE:ARG:体力 < 2500
+	SETCOLOR 0x70C070
+	PRINTBUTTON "[＋]", 1 + baseButtonVal
+ELSE
+	SETCOLOR 0x969696
+	PRINT [＋]
+ENDIF
+RESETCOLOR
+PRINTL
+PRINT  
+CALL BASE_BAR(ARG, "气力", 28, "青")
+IF BASE:ARG:气力 > 1000
+	SETCOLOR 0x70C070
+	PRINTBUTTON "[－]", 2 + baseButtonVal
+ELSE
+	SETCOLOR 0x969696
+	PRINT [－]
+ENDIF
+IF BASE:ARG:气力 < 2500
+	SETCOLOR 0x70C070
+	PRINTBUTTON "[＋]", 3 + baseButtonVal
+ELSE
+	SETCOLOR 0x969696
+	PRINT [＋]
+ENDIF
+RESETCOLOR
+PRINTL
+PRINTL
+
+;-----------------------------------------------------------
+;基礎变更
+;ARG:0 角色登录番号
+;ARG:1 0=体力减少, 1=体力增加, 2=气力减少, 3=气力增加
+;-----------------------------------------------------------
+@CUSTOM_BASE(ARG, ARG:1)
+SELECTCASE ARG:1
+	CASE 0
+		MAXBASE:ARG:体力 -= 100
+	CASE 1
+		MAXBASE:ARG:体力 += 100
+	CASE 2
+		MAXBASE:ARG:气力 -= 100
+	CASE 3
+		MAXBASE:ARG:气力 += 100
+	CASE 4
+ENDSELECT
+MAXBASE:ARG:体力 = LIMIT(MAXBASE:ARG:体力, 1000, 2500)
+BASE:ARG:体力 = MAXBASE:ARG:体力
+MAXBASE:ARG:气力 = LIMIT(MAXBASE:ARG:气力, 1000, 2500)
+BASE:ARG:气力 = MAXBASE:ARG:气力
+
+;-----------------------------------------------------------
+;メニュー呼び出し
+;-----------------------------------------------------------
+@CUSTOM_MENU(ARGS, ARG)
+PRINTL
+PRINTL
+CALLFORM CUSTOM_%ARGS%_MENU(ARG)
+RESETCOLOR
+PRINTL
+PRINTL
+PRINTL   [9999] 返回
+PRINTL
+INPUT
+SIF RESULT == 9999
+	RETURN
+CALLFORM CUSTOM_%ARGS%(RESULT, ARG)
+RESTART
+
+;-----------------------------------------------------------
+;能力变更
+;-----------------------------------------------------------
+@CUSTOM_ABL_MENU(ARG)
+LOCAL:1 = 0
+FOR LOCAL,0,50
+	SIF CUSTOM_选べない能力(LOCAL, ARG)
+		CONTINUE
+	PRINTFORM %ABLNAME:LOCAL,12%:{ABL:ARG:LOCAL,5,LEFT} 
+	IF ABL:ARG:LOCAL != 0
+		PRINTBUTTON "[－]", LOCAL * 2
+	ELSE
+		SETCOLOR 0x969696
+		PRINT [－]
+		RESETCOLOR
+	ENDIF
+	IF ABL:ARG:LOCAL != 2
+		PRINTBUTTON "[＋]", LOCAL * 2 + 1
+	ELSE
+		SETCOLOR 0x969696
+		PRINT [＋]
+		RESETCOLOR
+	ENDIF
+	LOCAL:1 ++
+	SIF LOCAL:1 % 3 == 0
+		PRINTL 
+NEXT
+
+;-----------------------------------------------------------
+;-----------------------------------------------------------
+@CUSTOM_ABL(ARG, ARG:1)
+	LOCAL = ARG / 2
+;例外处理
+SIF CUSTOM_选べない能力(LOCAL, ARG:1)
+	RETURN 0
+;增减と正常化
+;奇数(+)
+IF (ARG) % 2
+	ABL:(ARG:1):LOCAL ++
+;偶数(-)
+ELSE
+	ABL:(ARG:1):LOCAL --
+ENDIF
+ABL:(ARG:1):LOCAL = LIMIT(ABL:(ARG:1):LOCAL, 0, 2)
+RETURN 1
+
+;-----------------------------------------------------------
+;-----------------------------------------------------------
+@CUSTOM_选べない能力(argAbl, ARG)
+#DIM argAbl
+#FUNCTION
+;个别处理
+SELECTCASE ABLNAME:argAbl
+	;未使用
+	CASE ""
+		RETURNF 1
+	;时间停止
+	CASE "TSLv"
+		RETURNF 1
+	;同性爱关系
+	CASE "百合属性", "百合中毒"
+		SIF !(TALENT:ARG:2 & 1)
+			RETURNF 1
+	CASE "断袖属性", "断袖中毒"
+		SIF TALENT:ARG:2 & 1
+			RETURNF 1
+ENDSELECT
+;泛用处理
+SELECTCASE argAbl
+	;中毒关系
+	CASE 30 TO 39
+		RETURNF 1
+	;生活系
+	CASE 40 TO 49
+		RETURNF 1
+	;性技
+	CASE 50 TO 59
+		RETURNF 1
+ENDSELECT
+RETURNF 0
+
+;-----------------------------------------------------------
+;素質变更
+;-----------------------------------------------------------
+@CUSTOM_TALENT_MENU(ARG)
+VARSET LOCAL
+FOR LOCAL, 0, 157
+	IF CUSTOM_不能选的素質(LOCAL, ARG) == 1
+		CONTINUE
+	ELSEIF CUSTOM_不能选的素質(LOCAL, ARG) == 2
+		;表示はさせる
+		SETCOLOR 50, 50, 50
+		LOCALS = [{LOCAL,3}]%TALENTNAME:LOCAL%
+		GOTO SKIP
+	ENDIF
+	SETCOLOR 150, 150, 150
+	SELECTCASE TALENTNAME:LOCAL
+	;TALENT.CSVに登录されていない
+	CASE ""
+		CONTINUE
+	;オンオフ型の素質(TALENTNAMEと素質表示が一致)
+	CASE GET_TALENTNAME(LOCAL,1)
+		SIF TALENT:ARG:LOCAL
+			SETCOLOR C_AQUA
+		LOCALS = [{LOCAL,3}]%TALENTNAME:LOCAL%
+	CASE "非童贞"
+		SIF !TALENT:ARG:LOCAL
+			SETCOLOR C_AQUA
+		LOCALS = [{LOCAL,3}]童贞
+	CASE "无接吻经验"
+		SIF !TALENT:ARG:LOCAL
+			SETCOLOR C_AQUA
+		LOCALS = [{LOCAL,3}]%TALENTNAME:LOCAL%
+	;量的素質
+	CASEELSE
+		LOCALS =  [{LOCAL,3}]%TALENTNAME:LOCAL%
+		IF STRLENS(GET_TALENTNAME(LOCAL, TALENT:ARG:LOCAL))
+			LOCALS:1 = 【%GET_TALENTNAME(LOCAL, TALENT:ARG:LOCAL)%】
+			SETCOLOR C_AQUA
+		ELSEIF TALENTNAME:LOCAL == "性别"
+			LOCALS:1 = 【女性】
+			SETCOLOR C_AQUA
+		ELSE
+			LOCALS:1 = 【－】
+		ENDIF
+		LOCALS += LOCALS:1
+	ENDSELECT
+	$SKIP
+	IF LOCAL:1 % 3 == 0
+		PRINTL 
+		PRINT   
+	ENDIF
+	IF CUSTOM_不能选的素質(LOCAL, ARG) == 2
+		PRINTPLAINFORM %LOCALS, 30, LEFT%
+	ELSE
+		PRINTFORM %LOCALS, 30, LEFT%
+	ENDIF
+	LOCAL:1 ++
+NEXT
+
+;-----------------------------------------------------------
+@CUSTOM_TALENT(inputed, chara)
+#DIM inputed
+#DIM chara
+SIF inputed < 0|| inputed > 500
+	RETURN 0
+SIF TALENTNAME:inputed == ""
+	RETURN 0
+SIF CUSTOM_不能选的素質(inputed, chara)
+	RETURN 0
+SELECTCASE TALENTNAME:inputed
+	;先に例外处理
+	CASE "性别"
+		IF TALENT:chara:性别 == 3
+			TALENT:chara:性别 = 1
+		ELSE
+			TALENT:chara:性别 ++
+		ENDIF
+	CASE "性别嗜好"
+		IF TALENT:chara:inputed == 3
+			TALENT:chara:inputed = -1
+		ELSE
+			TALENT:chara:inputed ++
+		ENDIF
+	CASE "性别嗜好"
+		;体型が「小人(-5)」と「巨人(3)」の场合を独立处理
+		IF TALENT:chara:inputed == -5
+			TALENT:chara:inputed = -2
+		ELSEIF TALENT:chara:inputed == 5
+			TALENT:chara:inputed = -5
+		ELSEIF TALENT:chara:inputed == 2
+			TALENT:chara:inputed = 5
+		ELSE
+			TALENT:chara:inputed ++
+		ENDIF
+	CASE "非童贞", "无接吻经验"
+		TALENT:chara:inputed = !TALENT:chara:inputed
+	CASE "母乳体质"
+		TALENT:chara:母乳体质 = !TALENT:chara:母乳体质
+		IF TALENT:chara:母乳体质
+			MAXBASE:chara:母乳 = 2000
+		ELSE
+			MAXBASE:chara:母乳 = 0
+		ENDIF
+	;泛用处理
+	CASEELSE
+		;真伪型の素質は反转
+		IF TALENTNAME:inputed == GET_TALENTNAME(inputed,1)
+			TALENT:chara:inputed = !TALENT:chara:inputed
+		ELSE
+		;他は端まで行くと-1を挂ける
+			IF STRLENS(GET_TALENTNAME(inputed,TALENT:chara:inputed + 1)) || TALENT:chara:inputed == -1
+				TALENT:chara:inputed ++
+			ELSE
+				TALENT:chara:inputed *= -1
+			ENDIF
+		ENDIF
+ENDSELECT
+
+;-----------------------------------------------------------
+@CUSTOM_不能选的素質(ARG, CHARA)
+#FUNCTION
+#DIM CHARA
+;RETURNF 2は表示はさせるもの
+SELECTCASE ARG
+	;色欲察觉～,BOUNS素質および特殊陷落,种族,孕ませ系
+	CASE IS >=157
+		RETURNF 1
+	;你は选べない１
+	CASE GETNUM(TALENT, "习得速度") TO GETNUM(TALENT, "擅长用针"), GETNUM(TALENT, "药毒耐性"), GETNUM(TALENT, "容易高潮"), GETNUM(TALENT, "盲信"), GETNUM(TALENT, "小恶魔")
+		SIF CHARA == NO:MASTER
+			RETURNF 1
+	;你は选べない２
+	CASE GETNUM(TALENT, "魅力") TO GETNUM(TALENT, "谜之魅力"), GETNUM(TALENT, "恢复速度") TO GETNUM(TALENT, "不可思议的根"), GETNUM(TALENT, "狂气"), GETNUM(TALENT, "人气")
+		SIF CHARA == NO:MASTER
+			RETURNF 1
+	;你は选べず、女性器がないと选べない
+	CASE GETNUM(TALENT, "母乳体质"), GETNUM(TALENT, "怀孕愿望") 
+		SIF CHARA == NO:MASTER
+			RETURNF 1
+		SIF !GETBIT(TALENT:CHARA:性别, 0)
+			RETURNF 2
+	;女性器がないと选べない
+	CASE GETNUM(TALENT, "处女"), GETNUM(TALENT, "风骚"), GETNUM(TALENT, "Ｖ感度")
+		SIF !GETBIT(TALENT:CHARA:性别, 0)
+			RETURNF 2
+	;男性器がないと选べない
+	CASE GETNUM(TALENT, "非童贞")
+		SIF !GETBIT(TALENT:CHARA:性别, 1)
+			RETURNF 2
+	;男性器があると选べない
+	CASE GETNUM(TALENT, "具现")
+		SIF GETBIT(TALENT:CHARA:性别, 1)
+			RETURNF 2
+	;你以外は选べない
+	CASE GETNUM(TALENT, "年龄")
+		SIF CHARA != NO:MASTER
+			RETURNF 1
+	;全员选べないが表示はする
+	CASE GETNUM(TALENT, "无接吻经验")
+		RETURNF 2
+	;全员选べない１
+	CASE GETNUM(TALENT, "恋慕") TO GETNUM(TALENT, "思慕"), GETNUM(TALENT, "心情"), GETNUM(TALENT, "容姿"), GETNUM(TALENT, "把柄"), GETNUM(TALENT, "调合知识"), GETNUM(TALENT, "调合Lv"), GETNUM(TALENT, "采集Lv"), GETNUM(TALENT, "钓鱼Lv"), GETNUM(TALENT, "采伐Lv")
+		RETURNF 1
+	;全员选べない２
+	CASE GETNUM(TALENT, "自慰狂") TO GETNUM(TALENT, "子宫口性感"), GETNUM(TALENT, "迷信"), GETNUM(TALENT, "嫉妒"), GETNUM(TALENT, "浓厚精液"), GETNUM(TALENT, "精爱味觉"), GETNUM(TALENT, "禁断的知识"), GETNUM(TALENT, "精力超群") TO GETNUM(TALENT, "母性")
+		RETURNF 1
+	;女性器があって幼儿か幼稚がないと选べない
+	CASE GETNUM(TALENT, "初潮")
+		SIF !GETBIT(TALENT:CHARA:性别, 0)
+			RETURNF 2
+		SIF !TALENT:CHARA:幼儿／幼儿退行 && !TALENT:CHARA:幼稚
+			RETURNF 2
+ENDSELECT
+RETURNF 0
+
+;-----------------------------------------------------------
+;経験变更
+;-----------------------------------------------------------
+@CUSTOM_EXP_MENU(ARG)
+VARSET LOCAL
+FOR LOCAL,0,100
+	SIF CUSTOM_选べない経験(LOCAL, ARG)
+		CONTINUE
+	PRINTFORM   [{LOCAL,2}] - %EXPNAME:LOCAL,16%:{EXP:ARG:LOCAL,5,LEFT} 
+	LOCAL:1 ++
+	SIF LOCAL:1 % 3 == 0
+		PRINTL 
+NEXT
+
+;-----------------------------------------------------------
+@CUSTOM_EXP(argExp, argChara)
+#DIM argExp
+#DIM argChara
+SIF CUSTOM_选べない経験(argExp, argChara)
+	RETURN 0
+PRINTFORM 请输入%EXPNAME:argExp%    (0-30)
+	PRINTBUTTON "[中止]",-1
+	PRINTL   [ 0]  [ 1]  [ 5]  [10]  [20]  [30]
+	PRINTL
+INPUT
+SIF RESULT < 0
+	RETURN 0
+EXP:argChara:argExp = RESULT
+EXP:argChara:argExp = LIMIT(EXP:argChara:argExp, 0, 30)
+RETURN 1
+
+;-----------------------------------------------------------
+@CUSTOM_选べない経験(argExp, argChara)
+#FUNCTION
+#DIM argExp
+#DIM argChara
+SELECTCASE EXPNAME:argExp
+	CASE "", "肛射经验", "膣射经验"
+		RETURNF 1
+	;女性器无は不可
+	CASE "百合经验", "Ｖ经验", "Ｖ绝顶经验", "Ｖ性交经验", "Ｖ扩张经验", "子宫口开发经验", "喷乳经验", "乳交经验"
+		SIF !(TALENT:argChara:性别 & 1)
+			RETURNF 1
+	;女性器ありは不可
+	CASE "断袖经验"
+		SIF TALENT:argChara:性别 & 1
+			RETURNF 1
+	;男性器无は不可
+	CASE "插入经验", "射精经验"
+		SIF !HAS_PENIS(argChara)
+			RETURNF 1
+	;时间停止がらみは不可
+	CASE "时奸经验", "无自觉Ｃ经验", "无自觉Ｖ经验", "无自觉Ａ经验", "无自觉Ｂ经验", "无自觉Ｍ经验", "无自觉绝顶经验"
+		RETURNF 1
+ENDSELECT
+SELECTCASE argExp
+	;生活系
+	CASE 70 TO 89
+		RETURNF 1
+	;行为系はすり合わせが面倒
+	CASE 100 TO 109
+		RETURNF 1
+ENDSELECT
+RETURNF 0

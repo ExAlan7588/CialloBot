@@ -1,0 +1,156 @@
+﻿;-------------------------------------------------
+;胸爱抚
+;日常系指令　レベル3
+;-------------------------------------------------
+@COM313
+;-------------------------------------------------
+;COM别FLAGの设定
+;-------------------------------------------------
+;行为者
+TCVAR:116 = PLAYER
+TFLAG:理性削り = 1
+;-------------------------------------------------
+;ソース追加处理
+;-------------------------------------------------
+;消费体力、气力
+IF FLAG:70 == 1
+	BASE:MASTER:TSP -= 20
+	SOURCE:快Ｂ = 80
+	IF ABL:PLAYER:指 >= 4
+		SOURCE:快Ｂ += 50
+	ELSE
+		SOURCE:快Ｂ += ABL:PLAYER:指 * 10
+	ENDIF
+	;着衣补正
+	IF TEQUIP:1 > 1
+		TIMES SOURCE:快Ｂ , 0.80
+		TIMES SOURCE:情欲 , 0.80
+		TIMES SOURCE:露出 , 0.80
+	ENDIF
+ELSE
+	;口上による强制失败
+	IF TFLAG:192 == -1
+		RETURN -1
+	ENDIF
+	DOWNBASE:体力 += 5
+	DOWNBASE:气力 += 50
+	SOURCE:快Ｂ = 80
+	SOURCE:欢乐 = 100
+	SOURCE:情欲 = 50
+	SOURCE:露出 = 150
+	SOURCE:反感 = 700
+	SOURCE:被动 = 120 + 240 * ABL:顺从
+
+	;好感度をみる
+	SELECTCASE ABL:亲密
+		CASE IS < 5
+			SOURCE:反感 -= (ABL:亲密 * 10)
+		CASE IS < 10
+			SOURCE:情爱 += ABL:亲密 * 5
+			SOURCE:情欲 += ABL:亲密 * 10
+			SOURCE:反感 -= (ABL:亲密 * 20)
+		CASEELSE
+			SOURCE:情爱 += ABL:亲密 * 15
+			IF !TALENT:恋慕 && !TALENT:炮友
+				SOURCE:情爱 += ABL:亲密 * 5
+				SOURCE:情欲 += (ABL:亲密 * 20)
+				SOURCE:反感 -= (ABL:亲密 * 50)
+			ELSE
+				SOURCE:情欲 += (ABL:亲密 * 15)
+				SOURCE:反感 -= (ABL:亲密 * 30)
+			ENDIF
+	ENDSELECT
+	SIF SOURCE:反感 < 0
+		SOURCE:反感 = 0
+	SOURCE:情欲 = MIN(SOURCE:情欲,500)
+	SOURCE:情爱 = MIN(SOURCE:情爱,300)
+
+	IF ABL:PLAYER:指 >= 4
+		SOURCE:快Ｂ += 50
+	ELSE
+		SOURCE:快Ｂ += ABL:PLAYER:指 * 10
+	ENDIF
+	;着衣补正
+	IF TEQUIP:1 > 1
+		TIMES SOURCE:快Ｂ , 0.80
+		TIMES SOURCE:情欲 , 0.80
+		TIMES SOURCE:露出 , 0.80
+	ENDIF
+	IF HITOKE(1)
+		TIMES SOURCE:露出 , 2.00
+		TIMES SOURCE:反感 , 2.00
+	ENDIF
+	;信赖
+	TFLAG:98 = -5
+
+	;-------------------------------------------------
+	;特殊ソース处理
+	;-------------------------------------------------
+	;圧抑、抵抗持ちには、抑郁ソース追加
+	SIF TALENT:自己爱 < 0 || TALENT:抵抗
+		SOURCE:郁闷 += 20
+ENDIF
+;-------------------------------------------------
+;污れの处理
+;-------------------------------------------------
+;奴隷のＢ⇔调教者の指的污垢が移动
+STAIN:5 |= STAIN:PLAYER:1
+STAIN:PLAYER:1 |= STAIN:5
+;-------------------------------------------------
+;経験の处理
+;-------------------------------------------------
+IF FLAG:70 == 1
+	IF HETEROSEX(TARGET,PLAYER)
+		EXP:PLAYER:(50 + HETEROSEX(TARGET,PLAYER)) += 3
+	ENDIF
+ELSE
+	IF HETEROSEX(TARGET,PLAYER)
+		EXP:(50 + HETEROSEX(TARGET,PLAYER)) += 3
+		EXP:MASTER:百合经验 += 3
+	ENDIF
+	TIME += 5
+ENDIF
+	EXP:PLAYER:手淫经验 ++
+RETURN 1
+
+;-------------------------------------------------
+;实行判定
+;-------------------------------------------------
+@COM_ABLE313
+;胸爱抚实行判定
+SIF !TFLAG:100
+	RETURN 0
+;批量管理
+SIF GLOBAL_COMABLE(313)
+	RETURN RESULT
+;时间停止中はスキップ
+IF !FLAG:70
+	;亲热强度2
+	SIF (TCVAR:MASTER:亲热 < 2) && !CFLAG:睡眠
+		RETURN 0
+	;睡眠中
+	SIF CFLAG:睡眠 && !CFLAG:恶作剧
+		RETURN 0
+	;陪睡中
+	SIF CFLAG:陪睡中
+		RETURN 0
+	;仕事中
+	SIF CFLAG:行动 == 5 && !(TARGET == [[美宵]])
+		RETURN 0
+	;约会中
+	SIF CHK_DATENOW(CFLAG:约会中) && CFLAG:当前位置 != OMANEKIBEYA()
+		RETURN 0
+	;甲斐性无しにそんな度胸はない
+	SIF FLAG:甲斐性无 && !CFLAG:诶嘿嘿
+		RETURN 0
+ENDIF
+;气力0
+SIF BASE:MASTER:气力 <= 0
+	RETURN 0
+;腕使用中
+SIF TFLAG:61 && MASTER_POSE(SET_B,SET_YUBI) != TARGET
+	RETURN 0
+SIF GETBIT (TCVAR:26,3)
+	RETURN 0
+RETURN 1
+

@@ -1,0 +1,100 @@
+;-------------------------------------------
+;刻印取得
+;-------------------------------------------
+;==================================================
+;Optional: Determines if the standard description should be skipped.
+;Return 0 if description and KOJO should be shown, 1 if description should be hidden and KOJO shown, 2 if description should be shown and KOJO hidden, and 3 if both description and KOJO should be hidden.
+;==================================================
+@M_KOJO_MESSAGE_MARKCNG_MESSAGECHECK_K139
+RETURN 1
+
+@M_KOJO_MESSAGE_MARKCNG_K139
+;このままだと地の文が表示されません
+;地の文を表示したい方は、下记のコメントアウトを削除して下さい
+;苦痛刻印
+IF TFLAG:22 == 1
+	PRINTFORMW 
+ELSEIF TFLAG:22 == 2
+	PRINTFORMW 
+ELSEIF TFLAG:22 == 3
+	PRINTFORMW 
+ENDIF
+
+;时奸刻印
+IF TFLAG:时奸刻印取得 == 1
+	PRINTFORMW 
+ELSEIF TFLAG:时奸刻印取得 == 2
+	PRINTFORMW 
+ELSEIF TFLAG:时奸刻印取得 == 3
+	PRINTFORMW 
+ENDIF
+
+;快乐刻印
+IF TFLAG:23 == 1
+	PRINTFORMW 
+ELSEIF TFLAG:23 == 2
+	PRINTFORMW 
+ELSEIF TFLAG:23 == 3
+	PRINTFORMW 
+ENDIF
+
+;屈服刻印
+;快乐による刻印
+;LV1
+IF TFLAG:24 == 11
+	PRINTFORMW 
+;LV2
+ELSEIF TFLAG:24 == 12
+	PRINTFORMW 
+;LV3
+ELSEIF TFLAG:24 == 13
+	PRINTFORMW 
+;屈服、恭顺による刻印
+;LV1
+ELSEIF TFLAG:24 == 31
+	PRINTFORML 「典想要帮上%CALLNAME:MASTER%大人的忙」
+	PRINTFORML 「若有所需、请尽管吩咐」
+	PRINTFORML （唔呣、这个人或许是个值得信赖人呢）
+	PRINTW 
+;LV2
+ELSEIF TFLAG:24 == 32
+	PRINTFORML 「只要事%CALLNAME:MASTER%大人的话、无论上刀上还是下火海都任凭差遣」
+	PRINTFORML 「啊啊ー、不太信任我？　明明是说真的」
+	PRINTFORML （真是奇妙啊。居然有除了饭纲丸大人以外的人也会这么想呢）
+	PRINTW 
+;LV3
+ELSEIF TFLAG:24 == 33
+	PRINTFORML （虽说忠臣不事二君的……）
+	PRINTFORML （但待在这位身边、或许也能为饭纲丸大人带来益处呢）
+	PRINTW 
+	IF TALENT:140:恋慕 && (!TALENT:139:恋慕 && !TALENT:139:恋人)
+		PRINTFORML （再者、饭纲丸大人似乎对%CALLNAME:MASTER%大人相当在意的样子
+		PRINTFORML （协调彼此之间的关系、也是侍从的责任之一）
+		PRINTW 
+	ENDIF
+ENDIF
+
+;反抗刻印
+IF TFLAG:21 == 1
+	PRINTFORML 「%CALLNAME:MASTER%大人」
+	PRINTFORML 「就算是我、也会有生气的时候哦？」
+	PRINTW 
+ELSEIF TFLAG:21 == 2
+	PRINTFORML 「………………」
+	PRINTFORML 典的嘴角虽然是上扬的微笑、但眼神里完全没有笑意
+	PRINTW 
+ELSEIF TFLAG:21 == 3
+	IF TALENT:恋慕 || TALENT:恋人
+		PRINTFORML 「过去都是因为是你做的所以我才一直都在纵容你的……」
+		PRINTFORML 「但即使是%CALLNAME:MASTER%大人我现在也忍无可忍了」
+		PRINTFORML 「已经太迟了、就算后悔也没用了喔？」
+		PRINTFORML 典以十分平静的口气、流露着那激烈的怒火……
+		PRINTW 
+	ELSE
+		PRINTFORML 「过去都是因为没出什么太大的问题所以才一直都在纵容你的……」
+		PRINTFORML 「这回可是忍无可忍了」
+		PRINTFORML 「已经太迟了、就算后悔也没用了喔？」
+		PRINTFORML 典以十分平静的口气、流露着那激烈的怒火……
+		PRINTW 
+	ENDIF
+ENDIF

@@ -1,0 +1,96 @@
+﻿;-------------------------------------------------
+;料理喜爱程度
+;ARGS	DISH_TASTE
+;-------------------------------------------------
+@REVIEW_DISH_FOR_MENU(CHARA, ARGS)
+#FUNCTION
+#DIM CHARA
+#DIMS TASTE_CHARA_GOOD
+#DIMS TASTE_CHARA_BAD
+#DIM TASTE_GOOD
+#DIM TASTE_BAD
+
+TASTE_CHARA_GOOD = %GET_STR(, "キャラデータ", CHARA, "料理：喜欢的味道")%
+TASTE_CHARA_BAD = %GET_STR(, "キャラデータ", CHARA, "料理：讨厌的味道")%
+
+;共通设定；好き
+;甜点はみんな好き
+TASTE_CHARA_GOOD += "甜点/"
+;できたてはみんな好き
+TASTE_CHARA_GOOD += "できたて/"
+;[妖怪]は妖力が好き
+SIF CHECK_CHARA(CHARA, "妖怪") && !CHECK_CHARA(CHARA, "半人类")
+	TASTE_CHARA_GOOD += "妖力/"
+;[神灵][人类]は神力が好き
+SIF CHECK_CHARA(CHARA, "神灵") || (CHECK_CHARA(CHARA, "人类") && !CHECK_CHARA(CHARA, "半人类"))
+	TASTE_CHARA_GOOD += "神力/"
+;[妖精]は生命力が好き
+SIF CHECK_CHARA(CHARA, "妖精")
+	TASTE_CHARA_GOOD += "生命力/"
+;[魔法使]は魔力が好き
+SIF CHECK_CHARA(CHARA, "魔法使")
+	TASTE_CHARA_GOOD += "魔力/"
+;[幽灵][付丧神]は灵障が嫌いじゃないなら好き
+SIF (CHECK_CHARA(CHARA, "幽灵") || CHECK_CHARA(CHARA, "付丧神")) && !STRCOUNT(TASTE_CHARA_BAD, "灵障/")
+	TASTE_CHARA_GOOD += "灵障/"
+;[付丧神]は鬼的魔力が好き
+SIF CHECK_CHARA(CHARA, "付丧神")
+	TASTE_CHARA_GOOD += "鬼的魔力/" * 3
+;[幼稚]は母亲的味道が好き
+SIF TALENT:CHARA:幼稚
+	TASTE_CHARA_GOOD += "母亲的味道/"
+;[幼稚]は儿童午餐が好き
+SIF TALENT:CHARA:幼稚
+	TASTE_CHARA_GOOD += "儿童午餐/" * 5
+;DISH_ASSIなら嫉妒は好き（BOUNS）
+SIF CHARA == DISH_ASSI
+	TASTE_CHARA_GOOD += "嫉妒/" * 3
+;BASEPOINTが500以上なら隐し味は好き（BOUNS）
+SIF DISH_BASEPOINT >= 500
+	TASTE_CHARA_GOOD += "隐し味/" * 2
+;[动物耳]はまんまが好き
+SIF TALENT:CHARA:动物耳
+	TASTE_CHARA_GOOD += "まんま/" * 3
+;夏は冷ものが、冬は温暖ものが好き（嫌いじゃなければ）
+IF GET_MONTH() == "夏之月" && !STRCOUNT(TASTE_CHARA_BAD, "冷/")
+	TASTE_CHARA_GOOD += "冷/"
+ELSEIF GET_MONTH() == "冬之月" && !STRCOUNT(TASTE_CHARA_BAD, "温暖/")
+	TASTE_CHARA_GOOD += "温暖/"
+ENDIF
+;爱情,ASSI→MASTERへの爱情であって点数化できないのでは？,今のところフレーバー
+
+
+;共通设定：嫌い
+;[劣化]はみんな嫌い
+TASTE_CHARA_BAD += "劣化/" * 3
+;[过季]はNG
+TASTE_CHARA_BAD += "过季/" * 6
+;[妖怪][幽灵][付丧神]は神力が好きじゃないなら嫌い
+SIF (CHECK_CHARA(CHARA, "妖怪") || CHECK_CHARA(CHARA, "幽灵") || CHECK_CHARA(CHARA, "付丧神")) && !STRCOUNT(TASTE_CHARA_GOOD, "神力/")
+	TASTE_CHARA_BAD  += "神力/"
+;[人类][神灵]は妖力が好きじゃないなら嫌い
+SIF (CHECK_CHARA(CHARA, "人类") || CHECK_CHARA(CHARA, "神灵")) && !STRCOUNT(TASTE_CHARA_GOOD, "妖力/")
+	TASTE_CHARA_BAD  += "妖力/"
+;[人类]は灵障が好きじゃないなら嫌い
+SIF CHECK_CHARA(CHARA, "人类") && !CHECK_CHARA(CHARA, "半人类") && !STRCOUNT(TASTE_CHARA_GOOD, "灵障/")
+	TASTE_CHARA_BAD  += "灵障/"
+;DISH_ASSIでないなら嫉妒は嫌い（减点）
+IF CHARA != DISH_ASSI
+	IF TALENT:CHARA:恋人
+		TASTE_CHARA_BAD  += "嫉妒/" * 5
+	ELSEIF TALENT:CHARA:恋慕
+		TASTE_CHARA_BAD  += "嫉妒/" * 3
+	ELSEIF TALENT:CHARA:思慕
+		TASTE_CHARA_BAD  += "嫉妒/"
+	ENDIF
+ENDIF
+;BASEPOINTが500未满なら隐し味は嫌い（减点）
+SIF DISH_BASEPOINT < 500
+	TASTE_CHARA_BAD += "隐し味/" * 2
+
+;评价得点
+TASTE_GOOD = STR_MULTI_COUNT(TASTE_CHARA_GOOD, ARGS)
+;评价减点
+TASTE_BAD = STR_MULTI_COUNT(TASTE_CHARA_BAD, ARGS)
+
+RETURNF TASTE_GOOD - TASTE_BAD

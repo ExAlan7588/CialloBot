@@ -1,0 +1,252 @@
+﻿;オブジェクト本体
+;ここでARGで渡されるのはIRAI_SLOTの中身（依赖ID + 依赖者登录番号 * 1000）です
+;函数名の@固有依赖XのXは角色番号（灵梦の依赖）ね
+;こいつは@EXIST函数不要でよし（ということにする）
+;上流、キャラデータ侧で依赖IDの范围を记述するのが存否の确认を兼ねる
+;函数名etcをミスったらエラー吐いてくれるしわかるだろ
+@固有依赖1(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE ARG % 1000
+;ID101：揉肩
+CASE 101
+	SELECTCASE O_DATA
+	CASE "依赖名"
+		CALLF MAKE_STR(V_NAME, "揉肩")
+	CASE "依赖内容表示"
+		CALLF MAKE_STR(V_NAME, "为灵梦揉肩")
+	CASE "依赖报酬表示"
+		CALLF MAKE_STR(V_NAME, "青汁")
+	CASE "依赖实行指令名"
+		CALLF MAKE_STR(V_NAME, "揉肩")
+		
+	CASE "依赖内容"
+		CALLF MAKE_INT(V_NAME, MAKE_IRAI_DATA(0, "作业"))
+	CASE "依赖サブ"
+	CASE "依赖期限"
+	;发生时ではなく受托时に确定します
+	CASE "依赖发生率"
+	;これは他の固有依赖との相对概率なんで10％ではありません
+		CALLF MAKE_INT(V_NAME, 10)
+	CASE "依赖发生条件"
+		CALLF MAKE_INT(V_NAME, 1)
+	CASE "依赖受托可能条件"
+	;受托可能は@COM_ABLE366も确认のこと
+	;ここを参照するのは依赖人をTARGETにしてる时なので素通しでよし
+		CALLF MAKE_INT(V_NAME, 1)
+	CASE "依赖实行可能条件"
+	;实行可能は@COM_ABLE367も确认のこと
+	;素通しでよし
+		CALLF MAKE_INT(V_NAME, 1)
+	;成功/失败处理はCARRYOUTで直接书く
+	;SOURCEやITEM入手など、内容が复杂なので
+	CASE "依赖消灭条件"
+	;30％で消失
+		SIF RAND:100 < 30
+			CALLF MAKE_INT(V_NAME, 1)
+	ENDSELECT
+
+;ID102：魔理沙的遗失物
+CASE 102
+	SELECTCASE O_DATA
+	CASE "依赖名"
+		CALLF MAKE_STR(V_NAME, "魔理沙的遗失物")
+	CASE "依赖内容表示"
+		CALLF MAKE_STR(V_NAME, "把遗失物交给魔理沙")
+	CASE "依赖报酬表示"
+		CALLF MAKE_STR(V_NAME, @"%金额表示(500)%")
+	CASE "依赖报告不要"
+		CALLF MAKE_STR(V_NAME, "报告不要（接受报酬必须报告）")
+	CASE "依赖实行指令名"
+		CALLF MAKE_STR(V_NAME, "送回遗失物")
+		
+	CASE "依赖内容"
+		CALLF MAKE_INT(V_NAME, MAKE_IRAI_DATA(11, "传令（人物）"))
+	CASE "依赖サブ"
+	CASE "依赖期限"
+		CALLF MAKE_INT(V_NAME, 7)
+	;发生时ではなく受托时に确定します
+	CASE "依赖发生率"
+	;これは他の固有依赖との相对概率なんで10％ではありません
+		CALLF MAKE_INT(V_NAME, 10)
+	CASE "依赖发生条件"
+		SIF GET_MAPID(CFLAG:11:当前位置) != 0 && CAN_MEET(11)
+			CALLF MAKE_INT(V_NAME, 1)
+	CASE "依赖受托可能条件"
+	;受托可能は@COM_ABLE366も确认のこと
+	;ここを参照するのは依赖人をTARGETにしてる时なので素通しでよし
+		CALLF MAKE_INT(V_NAME, 1)
+	CASE "依赖实行可能条件"
+	;实行可能は@COM_ABLE367/@CAN_IRAI_SLOT_DOも确认のこと
+	;素通しでよし
+		CALLF MAKE_INT(V_NAME, 1)
+	;成功/失败处理はCARRYOUTで直接书く
+	;SOURCEやITEM入手など、内容が复杂なので
+	CASE "依赖消灭条件"
+	;30％で消失
+		SIF RAND:100 < 30
+			CALLF MAKE_INT(V_NAME, 1)
+	ENDSELECT
+
+;ID103：宴会用的酒
+CASE 103
+	SELECTCASE O_DATA
+	CASE "依赖名"
+		CALLF MAKE_STR(V_NAME, "宴会用的酒")
+	CASE "依赖内容表示"
+		CALLF MAKE_STR(V_NAME, "提供酒水(10本)")
+	CASE "依赖报酬表示"
+		CALLF MAKE_STR(V_NAME, "宴会规模提高")
+	CASE "依赖实行指令名"
+		CALLF MAKE_STR(V_NAME, "送出酒水")
+		
+	;对象のITEM_IDが选择可能なのでとりあえず作业分类に
+	CASE "依赖内容"
+		CALLF MAKE_INT(V_NAME, MAKE_IRAI_DATA(0, "作业"))
+	CASE "依赖サブ"
+	CASE "依赖期限"
+	;发生时ではなく受托时に确定します
+	CASE "依赖发生率"
+	;条件を满たすのが稀だと思うので高めにしましょう
+		CALLF MAKE_INT(V_NAME, 100)
+	CASE "依赖发生条件"
+		SIF FLAG:宴会举办FLAG == 1
+			CALLF MAKE_INT(V_NAME, 1)
+	CASE "依赖受托可能条件"
+	;受托可能は@COM_ABLE366も确认のこと
+	;ここを参照するのは依赖人をTARGETにしてる时なので素通しでよし
+		CALLF MAKE_INT(V_NAME, 1)
+	CASE "依赖实行可能条件"
+	;实行可能は@COM_ABLE367も确认のこと
+		SIF MAX(ITEM:51, ITEM:52, ITEM:53) >= 10
+			CALLF MAKE_INT(V_NAME, 1)
+	;成功/失败处理はCARRYOUTで直接书く
+	;SOURCEやITEM入手など、内容が复杂なので
+	CASE "依赖消灭条件"
+		SIF FLAG:宴会举办FLAG == 1 && !DAY % 7
+			CALLF MAKE_INT(V_NAME, 1)
+	ENDSELECT
+ENDSELECT
+
+
+
+;固有依赖の实处理用
+;この函数は实行/成功/失败时の
+;报酬とペナルティと地の文のみを扱います
+;各角色のメッセージは别所にて
+@IRAI_固有1(CHARA, IRAI_ID, SCENE)
+#DIM  CHARA
+#DIM  IRAI_ID
+#DIMS SCENE
+#DIM  CLIENT_ID
+CLIENT_ID = IRAI_ID_TO_CLIENT(IRAI_ID)
+SELECTCASE STR_DATA_IRAI(IRAI_ID, "依赖名", CLIENT_ID)
+;个々の依赖名で分岐
+CASE "揉肩"
+	SELECTCASE SCENE
+	CASE "依赖条件表示"
+	;何か専用の表示情报を设けたい时用
+	;受托済みの依赖表示で使用されます
+	;
+	;PRINT系だけでSOURCEとかは入れちゃダメ、WAITも无しで
+	;ここ以外の表示项目は
+	;PRINTFORML 　　　　　：
+	;となっているのでスペースを揃えたほうが见栄えが良いです
+	
+	CASE "依赖实行时"
+	;依赖实行时にはRESULTが意味を持ちます
+	;このCASEに限り、RESULTが意味を持ちます
+	;依赖实行时のRESULTにはIRAI_CONST_RESULT()を使用してください
+	;可能な参数は"中止", "实行して成功", "实行して失败", "实行して未解决"です
+	;独自处理を仕込みたい时は"实行して未解决"で先延ばしするなりしてください
+	;
+	;・实行时/成功报告/失败报告で地の文をつけるとき是ずれも最后にWAITつけたほうがいい
+	;・ただし、@CHANGE_CFLAGを使用と函数侧でPRINTFORMWしてWAITが入る
+		SOURCE:欢乐 = 1000
+		SOURCE:情爱 = 300
+		SOURCE:露出 = 20
+		DOWNBASE:气力 += 50
+		DOWNBASE:MASTER:气力 += 50
+		PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%给%NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%揉了揉肩
+		;これは追加の10分
+		TIME += 10
+		;四割の概率でもっとやって！分岐
+		IF RAND:100 < 60
+			RETURN IRAI_CONST_RESULT("实行して未解决")
+		ELSE
+			RETURN IRAI_CONST_RESULT("实行して成功")
+		ENDIF
+	CASE "依赖成功时"
+	;成功报告时の报酬など
+		SOURCE:欢乐 += 1000
+		CALL CHANGE_CFLAG(2, 1, 20)
+		CALL CHANGE_CFLAG(4, 1, 5)
+		CALL GET_ITEM("青汁", 1, 2)
+	CASE "依赖失败时"
+	;失败报告时の处理
+		CALL CHANGE_CFLAG(2, 1, -5)
+		CALL CHANGE_CFLAG(4, 1, -3)
+	ENDSELECT
+
+CASE "魔理沙的遗失物"
+	SELECTCASE SCENE
+	CASE "依赖条件表示"
+	CASE "依赖实行时"
+		SOURCE:欢乐 = 500
+		PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%把遗落的东西送到了%NAME_OUTPUT_TRANSLATION("CALLNAME", 11)%手上
+		;システムメッセージつき好感度变化
+		;最后の参数だけ好感度が变化
+		CALL CHANGE_CFLAG(2, 11, 20)
+		CALL CHANGE_CFLAG(4, 11, 10)
+		RETURN IRAI_CONST_RESULT("实行して成功")
+	CASE "依赖成功时"
+		SOURCE:TARGET:欢乐 += 1000
+		;システムメッセージつき好感度变化
+		;最后の参数だけ好感度が变化
+		CALL CHANGE_CFLAG(2, TARGET, 20)
+		;システムメッセージつき信赖度变化
+		;最后の参数だけ信赖度が变化
+		CALL CHANGE_CFLAG(4, TARGET, 10)
+		CALL GET_MONEY_YEN(500, 2)
+	CASE "依赖失败时"
+		CALL CHANGE_CFLAG(2, TARGET, -10)
+		CALL CHANGE_CFLAG(4, TARGET, -10)
+	ENDSELECT
+
+CASE "宴会用的酒"
+	SELECTCASE SCENE
+	CASE "依赖条件表示"
+	CASE "依赖实行时"
+		PRINTL 要交出什么呢？
+		CALL 酒一览表示(10)
+		IF INRANGE(RESULT, 51, 53)
+			PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%把酒交给了%NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%
+			ITEM:RESULT -= 10
+			FLAG:宴会礼品 = RESULT
+			RETURN IRAI_CONST_RESULT("实行して成功")
+		ELSE
+			RETURN IRAI_CONST_RESULT("中止")
+		ENDIF
+	CASE "依赖成功时"
+		;システムメッセージつき好感度变化
+		;最后の参数だけ好感度が变化
+		CALL CHANGE_CFLAG(2, TARGET, 50)
+		;システムメッセージつき信赖度变化
+		;最后の参数だけ信赖度が变化
+		CALL CHANGE_CFLAG(4, TARGET, 20)
+	CASE "依赖失败时"
+		;システムメッセージつき好感度变化
+		;最后の参数だけ好感度が变化
+		CALL CHANGE_CFLAG(2, TARGET, -30)
+		;システムメッセージつき信赖度变化
+		;最后の参数だけ信赖度が变化
+		CALL CHANGE_CFLAG(4, TARGET, -10)
+	ENDSELECT
+
+ENDSELECT
+
+
+

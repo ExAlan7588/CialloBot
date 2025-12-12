@@ -1,0 +1,147 @@
+﻿@CHARAMOVE_DATA_53(ARG, ARG:2)
+LOCAL = 53
+SELECTCASE ARG
+	;连动设定（RETURN=依存する角色, RESULT:1～3=对等に连动する角色）
+	CASE 1
+	;特殊生活时间设定（CFLAG:LOCAL:生活时间补正を设定する）
+	CASE 3
+	;移动倾向（±～10=行きやすい/行きにくい, -100=行かない）
+	CASE 4
+		SELECTCASE ARG:2
+			;梦幻馆には行かない
+			CASE P450玄关 TO P466庭
+				RETURN -100
+			;他人的家には入らない
+			CASE P432影狼的家, P437梅蒂欣的家, P439拉尔瓦的家, P443米斯蒂亚的家, P445妹红的家
+				RETURN -100
+			;来客用厕所,永琳私室,辉夜私室,后院はあんまり行かない
+			CASE P406来客用厕所, P413永琳私室, P414辉夜私室, P422后院
+				RETURN -5
+			;帝私室,铃仙私室,庭が稍微好き
+			CASE P410帝私室, P411铃仙私室, P421庭
+				RETURN 3
+			;走廊,起居室,兔的洞穴,斜角的竹林,迷失的小道によく居る
+			CASE P409走廊, P416起居室, P431兔的洞穴, P433斜角的竹林, P434迷失的小道
+				RETURN 5
+		ENDSELECT
+	;出现场所
+	CASE 7
+		SELECTCASE ARG:2
+			CASE 竹林入口, 迷失的小道, 斜角的竹林, 兔的洞穴, 永远亭, 无名之丘, 太阳花田
+				RETURN 1
+			CASE 森林的入口, 香霖堂, 古木的大树, 再思之道, 无缘冢
+				RETURN 1
+		ENDSELECT
+	;引力设定
+	CASE 8
+		;平日は5分の3で竹林をうろつく
+		IF YOUBI_MATCH(DAY, "月火水木金") && INRANGE(TIME, 600, 960)
+			SELECTCASE CFLAG:LOCAL:今日的运势 % 5
+			CASE 1
+				TCVAR:LOCAL:引力点 = 431
+			CASE 2
+				TCVAR:LOCAL:引力点 = 434
+			CASE 3
+				TCVAR:LOCAL:引力点 = 446
+			CASEELSE
+				TCVAR:LOCAL:引力点 = 0
+			ENDSELECT
+		ENDIF
+ENDSELECT
+
+@EXIST_キャラデータ53
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@キャラデータ53(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "称呼"
+	CALLF MAKE_STR(V_NAME, "帝")
+;こっから衣装设定
+CASE "今天的睡衣"
+	CALLF MAKE_STR(V_NAME, "睡衣（襦袢）套")
+
+CASE "便装：饰品"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("饰品", "首饰"))
+CASE "便装：连衣裙"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("连衣裙", "连衣裙"))
+
+CASE "固有指令"
+	CALLF MAKE_STR(V_NAME, "买药")
+CASE "固有指令实行可能"
+	CALLF MAKE_INT(V_NAME, 1)
+
+CASE "固有内衣形容词"
+	CALLF MAKE_STR(V_NAME, "风水上有金钱运的")
+CASE "固有下半身内衣名"
+	CALLF MAKE_STR(V_NAME, "缎带内裤")
+CASE "固有上半身内衣"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "固有上半身内衣名"
+	CALLF MAKE_STR(V_NAME, "缎带胸罩")
+CASE "固有内衣着用条件"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "固有内衣半透明(前)"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "固有内衣半透明(后)"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "固有内衣布料厚度"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;料理关联
+CASE "料理：喜欢的味道"
+	CALLF MAKE_STR(V_NAME, "野菜/蘑菇/和食/叶物/简易/浓厚/豪华/野趣/家庭的/软糯的/神力/玉兔流/赏月/甜/甜/咸/咸/胡萝卜/胡萝卜/胡萝卜/胡萝卜/胡萝卜/")
+CASE "料理：讨厌的味道"
+	CALLF MAKE_STR(V_NAME, "丰盛/朴素/辣/辣/" + "青蛙/野味/虫肉/谜料理/" * 3)
+CASE "料理：助手效果"
+	CALLF MAKE_STR(V_NAME, "心跳味/幸运/")
+;赠り物关联
+CASE "感性：好き"
+	CALLF MAKE_STR(V_NAME, "粉色/高级/可爱的/和风/活泼/" + "护符/" * 3 + "兔の/四叶の/幸运の/" * 5)
+CASE "感性：嫌い"
+	CALLF MAKE_STR(V_NAME, "充满力量/可怕的/" + "安物/水/刃物/护臂/" * 3 + "龟の/" * 10)
+
+;农民关联
+;金もってそう
+CASE "农民：说明"
+	CALLF MAKE_STR(V_NAME, "胡萝卜农家")
+CASE "农民：作物"
+	CALLF MAKE_STR(V_NAME, "胡萝卜")
+CASE "农民：田的种类"
+	CALLF MAKE_STR(V_NAME, "胡萝卜畑")
+CASE "农民：畑の所在地"
+	CALLF MAKE_STR(V_NAME, "迷途竹林")
+
+CASE "农民：MapID"
+	CALLF MAKE_INT(V_NAME, 4)
+CASE "农民：场所ID"
+	CALLF MAKE_INT(V_NAME, 433)
+CASE "农民：报酬"
+	CALLF MAKE_INT(V_NAME, 450)
+CASE "农民：金利"
+	CALLF MAKE_INT(V_NAME, 15)
+ENDSELECT
+
+;-------------------------------------------------
+;固有料理设定
+;DISH_NAME          料理名
+;RESULTS            料理の种类（轻食/主食/甜点）
+;CALL 材料设定("")  材料の指定。"泛用"を入れると自动で泛用食材になる
+;DISH_TASTE         味の设定
+;DISH_COMMENT       （任意）一行コメント
+;DISH_TIME          （任意）调理にかかる时间
+;DISH_MAXLIMIT      （任意）料理の持续时间
+;-------------------------------------------------
+@SPECIAL_MENU_53
+DISH_NAME = 红白脍
+RESULTS = 轻食
+CALL 材料设定("高级食材", "胡萝卜")
+DISH_TASTE = 和食/野菜/酸/简易/健康/幸运/
+DISH_COMMENT = 这道年节菜里包含了具有红白色系、象征好运的醋渍菜。
+RETURN 1
+

@@ -1,0 +1,466 @@
+;==================================================
+;催眠口上
+;XX　　　　　　Chara ID
+;ARG　　　　　Hypnosis Type
+;ARG:1　　　Hypnosis Result
+;==================================================
+@M_KOJO_EVENT_K60_666(ARG, ARG:1)
+;口上主はTARGET
+;ARGは催眠タイプ（0催眠キャンセル、1反抗抑制、2合意误认、3发情抑制/发情促进、4常识改变）
+;ARG:1は催眠结果（-3大失败、-2大失败、-1失败、0キャンセル、1成功、2大成功、3大成功）
+;臨时素質（TALENT:反抗抑制、TALENT:合意误认、TCVAR:Common_Sense_Alteration_Status）
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	SIF 颜绘付きメッセージ && ARG != 0 && ARG:1 > 0
+		PRINTL 
+
+	;催眠タイプ
+	SELECTCASE ARG
+		;催眠キャンセル　　Hypnosis Cancel
+		CASE 0
+			;催眠结果　　必ず0である　　そして记入を推奖しない
+			PRINTFORMDL %CALLNAME:[[帕露西]]% 眨了眨眼，摇了摇头。
+			SELECTCASE K60_ATTITUDE()
+				CASE 0, 3
+					PRINTFORMW 「为什么我感觉这么奇怪……？」
+				CASE 1
+					PRINTFORMW 「发生了什么？我被%CALLNAME:MASTER%的 \@ IS_MALE(MASTER) ? 英俊 # 美丽\@ 迷住了？」
+				CASE 2
+					PRINTFORML 「不知为何，我突然觉得有点恶心。而且我很确定这是你的错。」
+					PRINTFORMDW %CALLNAME:[[帕露西]]% 瞪了过来。
+			ENDSELECT
+
+		;反抗抑制　　Resistance Weakened
+		CASE 1
+			;催眠结果
+			SELECTCASE ARG:1
+				;失败　　Fail
+				CASE -1, -2, -3
+					SELECTCASE K60_ATTITUDE()
+						CASE 0, 3
+							SELECTCASE RAND:3
+								CASE 0
+									PRINTFORMW 「我不知道你在想什么，但这只会让我更恼火。」
+								CASE 1
+									PRINTFORMW 「你为什么不试着道歉，而不是……做那些乱七八糟的事情？」
+								CASE 2
+									PRINTFORMW 「你弄得我头疼。请停下来。」
+							ENDSELECT
+						CASE 1
+							SELECTCASE RAND:3
+								CASE 0
+									PRINTFORMW 「如果你想引诱我，那是不可能的。」
+								CASE 1
+									PRINTFORMW 「你在用你的手做什么？这是什么新的性技巧吗？」
+								CASE 2
+									PRINTFORMW 「与其挥舞你的双手，不如用它们做点别的事情？」
+									PRINTFORMDW %CALLNAME:[[帕露西]]%拉下衬衫，露出一点乳沟，然后眨了眨眼。
+							ENDSELECT
+						CASE 2
+							SELECTCASE RAND:3
+								CASE 0
+									CALL PRINT_STRL, @"「滚去别的地方念你的 @ITALIC@经@。」"
+									PRINTFORMW 「离我越远越好。」
+								CASE 1
+									PRINTFORMW 「你为什么不能表现得像个正常人？」
+								CASE 2
+									PRINTFORMW 「我不知道你在做什么，但如果你不停止，我就放瓦赫比兹对付你。」
+							ENDSELECT
+					ENDSELECT
+				;成功　　Success
+				CASE 1
+					SELECTCASE K60_ATTITUDE()
+						CASE 0, 3
+							PRINTFORMW （我应该对 他 生气的……不是吗？）
+							PRINTFORMDW %CALLNAME:[[帕露西]]% 皱着眉头。
+							PRINTFORML （我记得我对 他 很生气，但我记不起为什么了……）
+							PRINTFORMW （我想这并不重要。）
+						CASE 1
+							PRINTFORMW 「（嗯？我对 %K60_MASTER()% 很生气……但现在我不生气了。而且我不记得我为什么生气了。）」
+							PRINTFORMW %BREAKENG(@"「（哦，没关系。反正我也没办法对这么 \@ IS_MALE(MASTER) ? 英俊 # 漂亮\@ 的人生气太久。）」")%
+						CASE 2
+							PRINTFORMDW %CALLNAME:[[帕露西]]% 茫然地盯着你。
+							PRINTFORMW 「你？……有念头告诉我我应该生气，但我没有。」
+							PRINTFORMDW 她揉了揉她的额头。
+							PRINTFORMW 「而且我努力思考时头有点疼。」
+							PRINTFORMW 「你做了什-」
+							PRINTFORMDW 她摇了摇头。
+							PRINTFORMW 「算了。这不重要。」
+
+					ENDSELECT
+				;Great Success
+				CASE 2, 3
+					SELECTCASE K60_ATTITUDE()
+						CASE 0, 3
+							PRINTFORMW 「嗯？我...对你生气了吗？」
+							PRINTFORMDW 帕露西的脸红了。
+							PRINTFORMW 「原谅我，%K60_MASTER()%。我也不知道我为什么会因为一点小事生气。」
+						CASE 1
+							PRINTFORML 「我当时在想什么呢？因为一点小事就生气，这样对待朋友是不对的。」
+							PRINTFORMW 「不如...我向你道歉？私下里？」
+							PRINTFORMDW 帕露西眨了眨眼。
+						CASE 2
+							PRINTFORML 「我因为一点小事对你大发雷霆。一点小事而已。你竟然还待在我身边？！」
+							PRINTFORMW 「你是笨蛋吗？！」
+							PRINTFORMDW ...催眠术真的起作用了吗？
+					ENDSELECT
+			ENDSELECT
+		;合意误认　　Make Sex Acceptable
+		CASE 2
+			;催眠结果
+			SELECTCASE ARG:1
+				;失败　　Fail
+				CASE -1, -2, -3
+					SELECTCASE K60_ATTITUDE()
+						CASE 0
+							SELECTCASE RAND:3
+								CASE 0
+									PRINTFORMW 「明明我们是恋人，但果然还是结婚之后再说吧。」
+								CASE 1
+									PRINTFORMW 「请…请停止对我做那些让我忍不住想和你上床的事情啦。真的很让人困扰的说。」
+								CASE 2
+									PRINTFORMW 「我是绝对不会和你上床的，还有，对我做奇怪的手势也没用的说。」
+							ENDSELECT
+						CASE 1
+							SELECTCASE RAND:3
+								CASE 0
+									PRINTFORML 
+								CASE 1
+									PRINTFORML 
+								CASE 2
+									PRINTFORML 
+							ENDSELECT
+						CASE 2
+							SELECTCASE RAND:3
+								CASE 0
+									PRINTFORMW 「呜哇，你好恶心！去冲个冷水澡冷静一下啦。」
+								CASE 1
+									PRINTFORMDL %CALLNAME:[[帕露西]]%翻了个白眼，然后开始对你扭动手指。
+									PRINTFORMW 「你会离开我的…你不会再试图催眠我的…」
+									PRINTFORMW 「你不会再试图和幻想乡的每个人睡觉…你会为你的罪孽忏悔的…」
+								CASE 2
+									PRINTFORMW 「你这个堕落之徒。再这样我就要掰断你的手指了哦。」
+							ENDSELECT
+						CASE 3
+							SELECTCASE RAND:3
+								CASE 0
+									PRINTFORMW 「这种要求太不合适了。不要再问我第二次了。」
+								CASE 1
+									PRINTFORMW 「不行。还有，停止…停止你正在做的事情啦。」
+								CASE 2
+									PRINTFORMW 「你是想催眠我吗？」
+									PRINTFORMDW %CALLNAME:[[帕露西]]%嗤之以鼻。
+									PRINTFORMW 「真的假的？你以为这招只在工口漫画里有用吗？」
+							ENDSELECT
+					ENDSELECT
+				;成功　　Success
+				CASE 1
+					PRINTFORMDW %CALLNAME:[[帕露西]]%咬着她的的嘴唇，双腿也在互相摩擦。
+					PRINTFORMW （怎么回事？只是看着他，就让我越来越兴奋…）
+					SELECTCASE K60_ATTITUDE()
+						CASE 0
+							PRINTFORMW 「（也许这是欧尔马兹达大人的旨意，让我和他睡觉。）」
+							PRINTFORMW 「（反正我们最终也会结婚的，应该没关系吧。）」
+							PRINTFORMW 「（嗯。当然没关系。为什么会有关系呢？）」
+						CASE 1
+						CASE 2
+							PRINTFORMW 「（可恶，为什么？我越是努力抵抗对他的感情，它就变得越强烈！） 」
+							PRINTFORMW 「（也许只要和他上床，这种感觉就会消失了吧。这很合乎逻辑。）」
+						CASE 3
+							PRINTFORMW 「（也许就这一次。欧尔马兹达大人会原谅我的。）」
+							PRINTFORMW 「（而且，我不能伤害旅行者，也不能让他们受到伤害，这是我作为桥姬的职责。）」
+							PRINTFORMW 「（如果我太兴奋而无法专注，那就没法好好工作对吧？） 」
+					ENDSELECT
+					PRINTFORMDW %CALLNAME:[[帕露西]]%似乎很纠结…但随后她转过身来，对你露出一个紧张的笑容。
+					PRINTFORMDW 看来这招奏效了…
+				;Great Success
+				CASE 2, 3
+					SELECTCASE K60_ATTITUDE()
+						CASE 0
+							PRINTFORMW 「（我在干什么啊？我们是恋人，都差不多要结婚了。）」
+							PRINTFORMW 「（而且，要是不做的话，他说不定会因为我太保守而离开我……）」
+						CASE 1
+						CASE 2
+							PRINTFORMW 「（说不定我做爱很烂，他会因此离开我呢。）」
+						CASE 3
+							PRINTFORMW 「（我知道我不该和her上床……但不知为何，我真的好想……）」
+							SIF !(CFLAG:[[帕露西]]:既成事实 & 合意_诶嘿嘿)
+								PRINTFORMW 「（而且 \@CFLAG:K60EN_PARSEE_STARTING_VIRGINITY ? 我终于要失去我的童贞了 # 我已经将近一千年没有做过了\@. 也许就这一次…）」
+					ENDSELECT
+			ENDSELECT
+		;发情抑制/发情促进　　Estrus Control
+		CASE 3
+			;催眠结果
+			SELECTCASE ARG:1
+				;失败　　Fail
+				CASE -1, -2, -3
+					SELECTCASE K60_ATTITUDE()
+						CASE 0
+							SELECTCASE RAND:3
+								CASE 0
+									PRINTFORMW 「想做的话直接说就好了嘛。你在干什么啦？」
+								CASE 1
+									PRINTFORMDL %CALLNAME:[[帕露西]]% 嘻嘻一笑。
+									PRINTFORMW 「哎呀，%K60_MASTER()%大…光是看着你，人家就有点兴奋了呢。不需要特意做这些的啦。」
+								CASE 2
+									PRINTFORMW 「我不知道你在干什么，但是已经开始有点头痛了啦。」
+									PRINTFORMW 「如果想要让我更有感觉的话……」
+									PRINTFORMDW %CALLNAME:[[帕露西]]% 用食指戳着，脸颊微红。
+									PRINTFORMW 「可以试着咬咬我的耳朵哦……」
+							ENDSELECT
+						CASE 1
+							SELECTCASE RAND:3
+								CASE 0
+									PRINTFORMDL %CALLNAME:[[帕露西]]% 翻了个白眼。
+									PRINTFORMW 「给我点催情药之类的就行了。」
+								CASE 1
+									PRINTFORMW 「想让我发情的话，试试按摩我的耳朵。」
+								CASE 2
+									PRINTFORML 「真的吗，%K60_MASTER()%？难道我还不够渴望吗？」
+									PRINTFORMW 「你是不是还想让我纹上那种魔法子宫纹身？」
+							ENDSELECT
+						CASE 2
+							SELECTCASE RAND:3
+								CASE 0
+									PRINTFORMW 「我又不是动物，%CALLNAME:MASTER%。我不会发情。」
+									PRINTFORMW 「这是基本生物学常识。你怎么会这么无知？」
+									CALL PRINT_STRL, @"「你真的知道@ITALIC@小穴@在哪里吗？」"
+									CALL PRINT_STRW, @"「还是说你只是想 \@ HAS_PENIS(TARGET) ? 把你的@ITALIC@鸡巴@塞进每个洞里 # 舔遍可怜的女孩 \@ 直到找到它？」"
+								CASE 1
+									PRINTFORMW 「发情？不如我 \@ HAS_PENIS(TARGET) ? 阉了你 # 给你做绝育手术\@如何？」
+								CASE 2
+									PRINTFORMW 「哈啊……我感到一股无法控制的冲动涌上我的身体……」
+									PRINTFORMW 「一种想用尽全力踢%CALLNAME:MASTER%的裆部的冲动……」
+							ENDSELECT
+						CASE 3
+							SELECTCASE RAND:3
+								CASE 0
+									PRINTFORMW 「我不会发情，就算会，对着我挥手指也不会让我发情。」
+								CASE 1
+									PRINTFORML 「你想催眠我吗？你真的不擅长这个。」
+									PRINTFORMW 「不如去问问觉？她可是个厉害的催眠师。」
+								CASE 2
+									PRINTFORMW 「你弄得我头疼。在我给你点颜色看看之前住手。」
+							ENDSELECT
+					ENDSELECT
+				;成功　　Success
+				CASE 1
+					PRINTFORMDW %CALLNAME:[[帕露西]]% 咽了口唾沫，一滴汗珠从她的脸上滑落。
+					SELECTCASE K60_ATTITUDE()
+						CASE 0
+							PRINTFORMW 「（我想我从来没有这么兴奋过。我太兴奋了，都开始痛了。）」
+							PRINTFORMW 「（这不正常，对吧？但是%K60_MASTER()%会知道该怎么做的。我确信。）」
+							PRINTFORMW 「（但首先我应该让他和我做爱，直到我能再次理清头绪。）」
+							PRINTFORMDW 她把一只手放在你的肩膀上，对你微笑。
+							PRINTFORML 「你知道吗，我最近在读一本来自故乡的书。爱经。」
+							PRINTFORMW 「它教会了我很多关于做爱的艺术。你想让我展示一下我学到的东西吗？」
+						CASE 1
+							PRINTFORMW 「（我总是看到%K60_MASTER()%就兴奋，但这次不一样！）」
+							PRINTFORMW 「（有些奇怪的事情正在发生……但我太兴奋了，无法理清头绪。）」
+							PRINTFORMW 「（等我冷静下来再担心吧。）」
+							PRINTFORMDL 她靠在你的肩膀上，在你耳边低语。
+							CALL PRINT_STRW, @"「@ITALIC@ 操我，%CALLNAME:MASTER%。撕掉我的衣服，让我成为你的所有物。@」"
+							PRINTFORMDW 她走到你面前，抓住你的头，把她的舌头塞进你的嘴里。
+							CALL MUTUAL_KISS
+							PRINTFORMDW 也许你做得有点过头了……
+						CASE 2
+							PRINTFORMW 「(真理至善，行真理者得幸福......)」
+							PRINTFORMDL 她紧闭双眼，小声祈祷着。
+							PRINTFORMDW 但没用的。你已经确保了她越是反抗，就越是兴奋。
+							;Persian for "This is so frustrating!"
+							CALL PRINT_STRL, @"「@ITALIC@这太累人了!@」"
+							PRINTFORMDW %CALLNAME:[[帕露西]]% 抱起胳膊，咬紧牙关，怒视着你。
+							PRINTFORML 「我、我不管了。我要说出来了。」
+							PRINTFORMW 「你、你再不上我，我就要疯掉了！」
+							PRINTFORMW %BREAKENG(@"「现在 \@ !(GET_TARGETNUM() == 1 && (CFLAG:TARGET:当前位置 == 940 || CFLAG:TARGET:当前位置 == CFLAG:TARGET:初始位置)) ? 带我到没人的地方 #\@ 要了我吧」")%
+							CALL M_KOJO_COLOR_K60_JEALOUS
+							CALL PRINT_STRL, @"「还、还有，不准说我丑！我、我可看到过你那些@ITALIC@狐狸精@朋友！」"
+							PRINTFORMW 「至少我的牙齿都还在！而且我才不会像那些鬼女一样，涂得一脸粉，恨不得把脸都闷死！」
+							CALL M_KOJO_COLOR_K60_VERY_JEALOUS
+							PRINTFORMW 「可恶……她们有钱买那么多化妆品来掩盖缺点……」
+							CALL M_KOJO_COLOR_K60
+							PRINTFORMDL 结果她开始喋喋不休了。
+							PRINTFORMDW 最好现在就上她，不然她就要被嫉妒冲昏头脑了。
+						CASE 3
+							PRINTFORMW （我、我这是怎么了？）
+							PRINTFORMW （为什么我会这么……）
+							PRINTFORMDL %CALLNAME:[[帕露西]]% 咽了口唾沫，双腿互相摩擦着。
+							PRINTFORMW （而且，而且为什么我一看到他，就会更加……）
+							PRINTFORMDW 你能看到她因为饥渴地盯着你，乳头都变硬了。
+					ENDSELECT
+				;Great Success
+				CASE 2, 3
+					SELECTCASE K60_ATTITUDE()
+						CASE 0
+							PRINTFORMW 「%K60_MASTER()%...」
+							PRINTFORM 「
+							SIF !(GET_TARGETNUM() == 1 && (CFLAG:TARGET:当前位置 == 940 || CFLAG:TARGET:当前位置 == CFLAG:TARGET:初始位置))
+								PRINTFORM 「那个，我们能不能找个没人的地方？」
+							PRINTFORMW 「我、我真的很想…嗯，和你做那种事。」
+							PRINTFORMW 「啊，不对，不是那种说法。」
+							PRINTFORMDW %CALLNAME:[[帕露西]]% 咬了咬 她的 嘴唇。
+							CALL PRINT_STRW, @"「我不想做爱，我想 @ITALIC@草死你@。」"
+							PRINTFORMW 「我已经不记得上次这么想要你是什么时候了…」
+							PRINTFORMW 「拜托了，%K60_MASTER()%。我已经用尽全力才忍住没在这里把你推倒…」
+						CASE 1
+							PRINTFORMW 「啊！」
+							PRINTFORMDL %CALLNAME:[[帕露西]]% 双腿颤抖，擦了擦 她的 脸上的汗珠。
+							PRINTFORMW 「我不想说粗俗的话，但是，那个…%K60_MASTER()%，我突然变得好想要…」
+							CALL PRINT_STRW, @"「能不能帮我个忙？再来点舌头，还有 \@ HAS_PENIS(MASTER) ? @ITALIC@你的家伙@ # 假@ITALIC@东西@\@…」"
+						CASE 2
+							PRINTFORMW 「好吧，我就直说了。」
+							PRINTFORMDW %CALLNAME:[[帕露西]]% 饥渴地盯着你。
+							PRINTFORMW 「我知道你和幻想乡一半的女孩睡过，还想和另一半也睡。」
+							PRINTFORMW 「别把我排除在外，拜托了。」
+							PRINTFORMDL 她 舔了舔 她的 嘴唇。
+							PRINTFORMW 「我想要你，%K60_MASTER()%。我想要你，要到快要痛死了…」
+						CASE 3
+							PRINTFORMW 「%K60_MASTER()%？」
+							PRINTFORMDW %CALLNAME:[[帕露西]]% 紧张地对你微笑。
+							PRINTFORMW 「我知道这有点突然…」
+							PRINTFORMW 「但是我…啊，突然变得非常兴奋。你能帮帮我吗？」
+
+					ENDSELECT
+			ENDSELECT
+		;常识改变　　Common-Sense Control
+		CASE 4
+			;催眠结果
+			SELECTCASE ARG:1
+				;失败　　Fail
+				CASE -1, -2
+					SELECTCASE K60_ATTITUDE()
+						CASE 0
+							SELECTCASE RAND:3
+								CASE 0
+									PRINTFORMW 「“绝对服从我的命令”？别说傻话了。」
+									PRINTFORMDW %CALLNAME:[[帕露西]]% 皱着眉头看着你。
+									PRINTFORMW 「我是你的恋人，不是你的奴隶。」
+								CASE 1
+									PRINTFORMW 「我不知道你是不是在开玩笑…但如果是的话，一点都不好笑。」
+								CASE 2
+									PRINTFORMDL %CALLNAME:[[帕露西]]% 叹了口气。
+									PRINTFORMW 「你能别这样吗？好奇怪啊。」
+							ENDSELECT
+						CASE 1
+							SELECTCASE RAND:3
+								CASE 0
+									PRINTFORMW 「哦，我们要做催眠游戏吗？也许会很有趣。」
+									PRINTFORMDW %CALLNAME:[[帕露西]]% 盯着你的手，咧嘴一笑…但很快又变成了皱眉。
+									PRINTFORMW 「我觉得没用，再试一次。」
+								CASE 1
+									PRINTFORMW 「不，我才不会呢～」
+									PRINTFORMDW %CALLNAME:[[帕露西]]% 对你露出笑容。
+									CALL HPH_PRINT, @"「如果你想催眠我，就得更努力才行HPH」", "W"
+								CASE 2
+									PRINTFORMDW %CALLNAME:[[帕露西]]% 闭上 她的 眼睛，集中精神。
+									PRINTFORMW 「我不知道“改变常识”是什么感觉，但我觉得没成功。」
+							ENDSELECT
+						CASE 2
+							SELECTCASE RAND:3
+								CASE 0
+									CALL PRINT_STRL, @"「我有个更好的主意。不如我往你头上倒点 @ITALIC@牛尿@ 怎么样？」"
+									PRINTFORMW 「这样可以驱赶你身上附着的恶魔。不过以你的情况来看，可能需要好几瓶…」
+								CASE 1
+									PRINTFORMW 「黑魔法对我没用的，笨蛋。我可是受到奥尔马兹德大人的庇护。」
+								CASE 2
+									PRINTFORML 「真诚乃是幸福的最佳食粮和源泉...」
+									PRINTFORMDW %CALLNAME:[[帕露西]]% 皱着眉头看着你，开始祈祷。
+							ENDSELECT
+						CASE 3
+							SELECTCASE RAND:3
+								CASE 0
+									PRINTFORMW 「你在做什么？住手。」
+								CASE 1
+									PRINTFORML 「你说什么？你刚才说了什么？」
+									PRINTFORMDW %CALLNAME:[[帕露西]]% 抱起 她的 双臂，怒视着你。
+								CASE 2
+									PRINTFORMW 「你的巫术对我没用的。别浪费时间了…也别浪费我的时间。」
+							ENDSELECT
+					ENDSELECT
+				;成功　　Success
+				CASE 1
+					SELECTCASE K60_ATTITUDE()
+						CASE 0
+							PRINTFORMW 「诶？不，我-」
+							PRINTFORMDW %CALLNAME:[[帕露西]]% 皱着眉头，揉了揉 她的 额头。
+							PRINTFORMW 「我…」
+							PRINTFORMDW 你尽你所能地集中精神，重复你的命令。
+							PRINTFORMDW 你还提醒 她 服从 她的 \@ IS_MALE(MASTER) ? 主人 # 女主人\@ 会是多么舒服。
+							PRINTFORMW 「我…」
+							PRINTFORMDW 她 咽了口唾沫。
+							PRINTFORMW 「我会的。」
+							PRINTFORMDW 她 看起来有点惊讶。
+						CASE 1
+							PRINTFORMW 「喂喂，别这样。」
+							PRINTFORMDW %CALLNAME:[[帕露西]]% 皱着眉头。
+							PRINTFORMW 「我知道我们是炮友，但这并不意味着-」
+							PRINTFORMDW 你尽你所能地集中精神，重复你的命令。
+							PRINTFORMDW 你还提醒 她 服从 她的 \@ IS_MALE(MASTER) ? 主人 # 女主人\@ 会是多么舒服。
+							PRINTFORMW 「我…」
+							PRINTFORMDW %CALLNAME:[[帕露西]]% 舔了舔 她的 嘴唇。
+							PRINTFORMW 「我想也是。为你服务感觉真好，所以这一定是正确的事。」
+							PRINTFORMDW 她 低下了头。
+							PRINTFORMW 「我能为您做些什么，\@ IS_MALE(MASTER) ? 主人 # 女主人\@？」
+						CASE 2, 3
+							PRINTFORMW 「什么？！不要！你傻了吗？！」
+							PRINTFORMDW %CALLNAME:[[帕露西]]% 怒视着你。
+							PRINTFORMW 「再试一次我就-」
+							PRINTFORMDW 你尽你所能地集中精神，重复你的命令。
+							PRINTFORMDW 你还提醒 她 服从 她的 \@ IS_MALE(MASTER) ? 主人 # 女主人\@ 会是多么舒服。
+							PRINTFORMW 「确实…确实感觉很好…」
+							PRINTFORMDW %CALLNAME:[[帕露西]]% 的眼神开始变得茫然。
+							IF K60_ATTITUDE() == 2
+								PRINTFORMW 「如果我服从你的命令，你就能安全。」
+								PRINTFORMW 「当我被你控制的时候，我就无法伤害你，也无法伤害任何人。」
+								PRINTFORMDW 她 低下了头。
+								PRINTFORMW 「我知道我不该对您提出任何要求，\@ IS_MALE(MASTER) ? 主人 # 女主人\@。」
+								PRINTFORMW 「但是请您，永远不要让我从这种恍惚状态中醒来。为了您自己。」
+								PRINTFORMW 「我怕我醒来后又会伤害您…」
+							ELSE
+								CALL M_KOJO_COLOR_K60_JEALOUS
+								PRINTFORMW 「我的头感觉怪怪的…」
+								PRINTFORMW 「我好嫉妒那些能正常思考的人…」
+								PRINTFORMDW %CALLNAME:[[帕露西]]% 摇了摇头。
+								PRINTFORMW 「给我一个命令吧，\@ IS_MALE(MASTER) ? 主人 # 女主人\@。让我专注于那个…」
+							ENDIF
+					ENDSELECT
+				;Great Success
+				CASE 2
+					SELECTCASE K60_ATTITUDE()
+						CASE 0
+							PRINTFORMW 「当然！」
+							PRINTFORMDW %CALLNAME:[[帕露西]]% 对你微笑。
+							PRINTFORML 「你在问什么问题啊？我怎么会想到违抗我的 \@ IS_MALE(MASTER) ? 主人 # 女主人\@ 的命令！」
+							PRINTFORMW 「我太爱你了，不会做那种事的。」
+						CASE 1
+							PRINTFORMW 「当然！」
+							PRINTFORMDW %CALLNAME:[[帕露西]]% 对你露出下流的笑容。
+							PRINTFORML 「我唯一会违抗你命令的时候，就是我想要被惩罚的时候。」
+							PRINTFORMW 「而且即使那样，如果你使用了我们的安全词，我也不会那样做。」
+							PRINTFORMW 「你想让我为你做什么，\@ IS_MALE(MASTER) ? 主人 # 女主人\@？」
+							CALL PRINT_STRL, @"「或者，你更喜欢我 @ITALIC@对@ 你做些什么吗？」"
+						CASE 2
+							PRINTFORML 「当然…不会。」
+							PRINTFORMDW %CALLNAME:[[帕露西]]% 抱起 她的 双臂。
+							PRINTFORMW 「我永远不会听像你这种堕落者的命令。你以为你是谁啊？」
+							PRINTFORMDW 她 气冲冲地走到你面前，开始揉你的裤裆。
+							PRINTFORML 「脱掉你的衣服。现在。如果你这么想要性，我就给你你所能承受的所有性。」
+							PRINTFORMW 「然后也许你就会-」
+							PRINTFORMDW 你嘟囔着对 %CALLNAME:[[帕露西]]% 说“还没到时候”，她 从你身边走开，露出得意笑容。
+							PRINTFORMW 「不，我还不会惩罚你。我要先让你积攒一些挫败感。」
+							PRINTFORMDW 她 停顿了一下，然后 她的 露出笑容。
+							PRINTFORML 「哦？现在你开始乞求了吗？太可惜了。我不在乎。」
+							PRINTFORMW 「我告诉过你，我不会听你的命令。」
+						CASE 3
+							PRINTFORMW 「当然！」
+							PRINTFORMDW %CALLNAME:[[帕露西]]% 对你微笑。
+							PRINTFORMW 「当他们看到你是我的 \@ IS_MALE(MASTER) ? 主人 # 女主人\@ 的时候，所有人都会非常嫉妒的。」
+							PRINTFORMDW 她 舔了舔 她的 嘴唇。
+					ENDSELECT
+			ENDSELECT
+	ENDSELECT
+ENDIF
+RETURN 1

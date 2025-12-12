@@ -1,0 +1,127 @@
+﻿;绕道
+@COM605
+LOCAL = RAND:100
+LOCAL:1 = 90 + GET_SUCCESS_RATE() / 5
+SIF LOCAL:1 > 99
+	LOCAL:1 = 99
+IF LOCAL <= 9
+	;10％で大成功
+	EXP:MASTER:会话经验 ++
+	EXP:MASTER:约会经验 ++
+	EXP:TARGET:约会经验 ++
+	TFLAG:193 = 1
+ELSEIF LOCAL >= LOCAL:1
+	;10～1％で失败
+	TFLAG:193 = -1
+ELSE
+	;残りは成功
+	TFLAG:193 = 0
+ENDIF
+;先制发生时は失败しない
+SIF TCVAR:20
+	TFLAG:193 = MAX(TFLAG:193,0)
+DOWNBASE:MASTER:气力 += 50
+DOWNBASE:MASTER:体力 += 30
+DOWNBASE:气力 += 30
+DOWNBASE:体力 += 20
+
+;固定で获得するソース
+SOURCE:欢乐 = 500
+SOURCE:情爱 = 300
+
+;ABL:顺从をみる
+IF ABL:顺从 <= 1
+	SOURCE:欢乐 += (ABL:顺从 * 60)
+	SOURCE:情爱 += (ABL:亲密 * 30)
+ELSEIF ABL:顺从 <= 3
+	SOURCE:欢乐 += 200 + (ABL:顺从 * 60)
+	SOURCE:情爱 += 200 + (ABL:亲密 * 30)
+ELSEIF ABL:顺从 <= 5
+	SOURCE:欢乐 += 500 + (ABL:顺从 * 60)
+	SOURCE:情爱 += 500 + (ABL:亲密 * 30)
+ELSEIF ABL:顺从 <= 8
+	SOURCE:欢乐 += 750 + (ABL:顺从 * 75)
+	SOURCE:情爱 += 750 + (ABL:亲密 * 45)
+ELSEIF ABL:顺从 <= 11
+	SOURCE:欢乐 += 1000 + (ABL:顺从 * 75)
+	SOURCE:情爱 += 1000 + (ABL:亲密 * 50)
+ELSE
+	SOURCE:欢乐 += 2000 + (ABL:顺从 * 30)
+	SOURCE:情爱 += 2000 + (ABL:亲密 * 20)
+ENDIF
+
+;好感度をみる
+IF CFLAG:2 <= 500
+	SOURCE:欢乐 += CFLAG:2
+	SOURCE:情爱 += CFLAG:2
+ELSEIF CFLAG:2 <= 5000
+	SOURCE:欢乐 += 500 + (CFLAG:2 - 500) / 3
+	SOURCE:情爱 += 300 + (CFLAG:2 - 300) / 3
+ELSE
+	SOURCE:欢乐 += 2000 + (CFLAG:2 - 5000) / 5
+	SOURCE:情爱 += 1000 + (CFLAG:2 - 1000) / 5
+ENDIF
+SIF SOURCE:欢乐 < 0
+	SOURCE:欢乐 = 0
+SIF SOURCE:情爱 < 0
+	SOURCE:情爱 = 0
+
+
+SOURCE:被动 = 200 + 100 * ABL:顺从
+SOURCE:征服 = 200 + 100 * ABL:施虐属性
+
+IF TFLAG:193 == -1
+	TIMES SOURCE:欢乐 , 0.10
+	TIMES SOURCE:征服 , 0.50
+	TIMES SOURCE:被动 , 0.50
+ELSEIF TFLAG:193 == 0
+	TIMES SOURCE:欢乐 , 1.00
+	TIMES SOURCE:征服 , 1.00
+	TIMES SOURCE:被动 , 1.00
+ELSE
+	TIMES SOURCE:欢乐 , 2.00
+	TIMES SOURCE:征服 , 2.00
+	TIMES SOURCE:被动 , 2.00
+ENDIF
+
+;寄り道したフラグ
+TCVAR:309 = 1440 * DAY + TIME
+TIME += 10
+;约会道中と相杀
+TFLAG:约会道中 += 10
+EXP:MASTER:约会经验 ++
+EXP:TARGET:约会经验 ++
+
+RETURN 1
+
+;-------------------------------------------------
+;实行可能判定
+;-------------------------------------------------
+;绕道
+@COM_ABLE605
+;批量管理
+SIF GLOBAL_COMABLE(605)
+	RETURN RESULT
+;相手が居ない
+SIF !TARGET
+	RETURN 0
+;约会中以外
+SIF !CHK_DATENOW(CFLAG:12)
+	RETURN 0
+;约会道中以外
+SIF !TFLAG:约会道中
+	RETURN 0
+;待客室
+SIF CFLAG:MASTER:当前位置 == OMANEKIBEYA()
+	RETURN 0
+;30分间隔
+SIF TIME_PROGRESS(TCVAR:309) < 30
+	RETURN 0
+;睡眠中
+SIF CFLAG:睡眠
+	RETURN 0
+;时间停止中
+SIF FLAG:70
+	RETURN 0
+RETURN 1
+

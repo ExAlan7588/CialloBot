@@ -1,0 +1,153 @@
+﻿;-----------------------------------------------------------
+;约会中かどうか判定する函数
+;现在はCFLAG:约会中が当前位置のMAPIDとして使われている为、约会中の判定が别途必要になった
+;ARG      CFLAG:X:约会中（MAPID)
+;RETURNF  0=约会してない,1=约会してる
+;-----------------------------------------------------------
+@CHK_DATENOW(ARG)
+#FUNCTION
+;#DIM MAPID_DATE
+IF ARG == MAIN_MAP
+	RETURNF 0
+ELSE
+	RETURNF 1
+ENDIF
+
+;-----------------------------------------------------------
+;场所ARGのMAPIDを返す函数
+;ARG      场所ID
+;RETURNF  MAPID
+;-----------------------------------------------------------
+@GET_MAPID(ARG)
+#FUNCTION
+RETURNF ARG / 100
+
+;-------------------------------------------------
+;いわゆるROUND函数判定
+;ARG <= ARG:1 <= ARG:2ならば1を、そうでなければ0を返す
+;-------------------------------------------------
+@CHK_FOCUS(ARG, ARG:1, ARG:2)
+#FUNCTION
+SIF INRANGE(ARG:1, ARG:0, ARG:2)
+	RETURNF 1
+SIF ARG > ARG:2
+	PRINT ARG:0 > ARG:2 エラー
+RETURNF 0
+
+;-----------------------------------------------------------
+;在宅判定
+;角色ARGが据点にいるか判定
+;ARG        角色番号
+;RETURN     0=据点にいない、1=据点にいる、2=据点の外
+;-----------------------------------------------------------
+@AT_HOME(ARG)
+#FUNCTION
+RETURNF IN_HOME(CFLAG:ARG:当前位置)
+
+;-----------------------------------------------------------
+;据点判定
+;场所ARGが据点の中か判定
+;ARG        场所ID
+;RETURN     0=据点ではない、1=据点の中、2=据点の外
+;-----------------------------------------------------------
+@IN_HOME(ARG)
+#FUNCTION
+IF ARG == MAXROOM
+	RETURNF 2
+ELSEIF INRANGE(ARG, MINROOM(), MAXROOM)
+	RETURNF 1
+ELSE
+	RETURNF 0
+ENDIF
+
+;------------------------------------------
+;据点（外出目的地）の出入り口となる地点の场所IDを返す
+;------------------------------------------
+@GET_ENTRANCE(MAPID)
+#FUNCTION
+#DIM MAPID
+;据点
+IF MAPID == MAIN_MAP
+	RETURNF ENTRANCE
+;外出目的地
+ELSE
+	RETURNF MAPID * 100 + 10
+ENDIF
+
+;------------------------------------------
+;场所IDがMAPIDの参道（出入り口）か判定する
+;MAPIDを省略した场合はMAPIDにARGの所属MAPを代入する
+;ARG:场所ID
+;MAPID：对象MAP
+;------------------------------------------
+@CHK_ENTRANCE(ARG, MAPID = 999)
+#FUNCTION
+#DIM MAPID
+;	// MAPIDが省略された场合
+SIF MAPID == 999
+	MAPID = GET_MAPID(ARG)
+;	//ODEKAKEMAP使用时
+SIF ARG == GET_ENTRANCE(MAPID)
+	RETURNF 1
+;出发専用の入口(里口),何かのために区别できるよう2にしておく
+SIF MAPID == MAP山麓 && ARG == P732通向山顶的路
+	RETURNF 2
+RETURNF 0
+
+;------------------------------------------
+;待客室の名前文字列を返す。招かれる前はTARGETの待客室文字列を返す
+;呼び出し元:NAME_FROM_PLACE()
+;ARG  家主
+;------------------------------------------
+@OMANEKI_PLACE(ARG)
+#FUNCTIONS
+#DIMS PNAME
+#DIM OMANEKI_TARGET
+IF ARG
+	OMANEKI_TARGET = ARG
+ELSE
+	IF CFLAG:MASTER:招待
+		OMANEKI_TARGET = CFLAG:MASTER:招待
+	ELSE
+		OMANEKI_TARGET = TARGET
+	ENDIF
+ENDIF
+
+PNAME = %NAME_OUTPUT_TRANSLATION("CALLNAME", (OMANEKI_TARGET))%
+
+IF TEQUIP:浴室PLAY
+	IF TFLAG:泡澡堂
+		PNAME = %PNAME%的个室澡堂
+	ELSE
+		PNAME = %PNAME%的澡堂
+	ENDIF
+ELSE
+	SELECTCASE OMANEKI_TARGET
+		CASE [[阿求]]
+				PNAME = 稗田邸
+		CASEELSE
+			IF OUTROOF(CFLAG:OMANEKI_TARGET:自宅位置)
+				PNAME = %PNAME%的住所
+			ELSE
+				PNAME = %PNAME%的房间
+			ENDIF
+	ENDSELECT
+ENDIF
+RETURNF PNAME
+
+;-----------------------------------------------------------
+;おでかけ地点を随机に出力する函数
+;据点ごとに等分の概率で出す（地点が多いほど概率が高くなったりしない）
+;-----------------------------------------------------------
+@RANDOM_ODEKAKE
+#FUNCTION
+#DIM MAPID
+#DIM P_ID
+MAPID = RAND:MAXHOME
+SIF MAPID == MAIN_MAP
+	RESTART
+P_ID = 0
+WHILE NAME_FROM_PLACE(P_ID) == "" || P_ID == 0
+	P_ID = MAPID * 100 + RAND:10 * 10
+WEND
+RETURNF P_ID

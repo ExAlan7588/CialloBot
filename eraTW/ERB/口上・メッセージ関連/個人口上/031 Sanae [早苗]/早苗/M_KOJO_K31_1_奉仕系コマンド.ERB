@@ -1,0 +1,270 @@
+﻿;※※※※※※※※※※※※※※※※※※※※※※※※※
+;侍奉系指令
+;※※※※※※※※※※※※※※※※※※※※※※※※※
+;==================================================
+;80,手淫
+;==================================================
+@M_KOJO_MESSAGE_COM_K31_80
+CALL M_KOJO_MESSAGE_COM_K31_80_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K31_80_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL && !FLAG:70 ;时奸
+
+	IF TALENT:恋人 || TALENT:恋慕
+		SELECTCASE RAND:3
+			CASE 1
+				PRINTFORML 「呵呵，舒服吗？%UNICODE(0x2665) *1%」
+				PRINTFORML 「高潮的时候要好好地说“要去了”才行哦%UNICODE(0x2665) *1%」
+			CASE 2
+				PRINTFORML 「啊哈哈，很舒服呢？%UNICODE(0x2665) *1%」
+				PRINTFORML 「一脸焦急的%CALLNAME:MASTER%…好可爱%UNICODE(0x2665) *1%」
+			CASEELSE
+				PRINTFORML 「好棒的表情%UNICODE(0x2665) *1%」
+				PRINTFORML 「来%UNICODE(0x2665) *1%　去吧%UNICODE(0x2665) *2%　上啊%UNICODE(0x2665) *3%」
+		ENDSELECT
+	ELSEIF TALENT:思慕
+		PRINTFORML 「呵呵，舒服吗？%UNICODE(0x2665) *1%」
+		PRINTFORML 「高潮的时候要好好地说“要去了”才行哦%UNICODE(0x2665) *1%」
+	ELSE
+		PRINTFORML 「呵呵，舒服吗？」
+	ENDIF
+		PRINTFORMW
+ENDIF
+RETURN 1
+
+;==================================================
+;81,口交
+;==================================================
+@M_KOJO_MESSAGE_COM_K31_81
+CALL M_KOJO_MESSAGE_COM_K31_81_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K31_81_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL && !FLAG:70 ;时奸
+PRINTFORML {!FLAG:70}
+	IF TALENT:恋人 || TALENT:恋慕
+		SELECTCASE RAND:3
+			CASE 1
+				PRINTFORML 「请忍住不要发出奇怪的声音哦？%UNICODE(0x2665) *1%」
+			CASE 2
+				PRINTFORML 「如果舒服的话发出声音也没关系哦？%UNICODE(0x2665) *1%」
+			CASEELSE
+				PRINTFORML 「嗯…舔舔…啾…%UNICODE(0x2665) *1%」
+		ENDSELECT
+	ELSEIF TALENT:思慕
+		PRINTFORML 「要含进去了哦%UNICODE(0x2665) *1%」
+		PRINTFORML 「嗯…舔舔…啾…%UNICODE(0x2665) *1%」
+	ELSE
+		PRINTFORML 「要含进去了哦」
+	ENDIF
+		PRINTFORMW
+ENDIF
+RETURN 1
+
+;==================================================
+;82,乳交
+;==================================================
+@M_KOJO_MESSAGE_COM_K31_82
+CALL M_KOJO_MESSAGE_COM_K31_82_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K31_82_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL && !FLAG:70 ;时奸
+
+	IF TALENT:恋人 || TALENT:恋慕
+		SELECTCASE RAND:3
+			CASE 1
+				PRINTFORML 「来，看着我的眼睛%UNICODE(0x2665) *1%　不许移开哦%UNICODE(0x2665) *2%」
+			CASE 2
+				PRINTFORML 「如果舒服的话发出声音也没关系哦？%UNICODE(0x2665) *1%」
+			CASEELSE
+				PRINTFORML 「嗯…舔舔…啾…%UNICODE(0x2665) *1%」
+		ENDSELECT
+	ELSEIF TALENT:思慕
+		PRINTFORML 「乳交…%UNICODE(0x2665) *1%　　明白了%UNICODE(0x2665) *1%」
+		PRINTFORML 「嗯…舔舔…啾…%UNICODE(0x2665) *1%」
+	ELSE
+		PRINTFORML 「乳交…　　明白了」
+	ENDIF
+		PRINTFORMW
+ENDIF
+RETURN 1
+
+;==================================================
+;83,素股
+;==================================================
+@M_KOJO_MESSAGE_COM_K31_83
+CALL M_KOJO_MESSAGE_COM_K31_83_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K31_83_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL && !FLAG:70 ;时奸
+
+	IF TALENT:恋人 || TALENT:恋慕
+		SELECTCASE RAND:3
+			CASE 1
+				PRINTFORML 「高潮的时候要好好地说“要去了”才行哦%UNICODE(0x2665) *1%」
+			CASE 2
+				PRINTFORML 「嗯？难道还是想插入？%UNICODE(0x2665) *1%？　不行哦%UNICODE(0x2665) *1%　忍耐忍耐%UNICODE(0x2665) *2%」
+			CASEELSE
+				PRINTFORML 「来%UNICODE(0x2665) *1%　去吧%UNICODE(0x2665) *2%　上啊%UNICODE(0x2665) *3%」
+		ENDSELECT
+	ELSEIF TALENT:思慕
+		PRINTFORML 「是素股呢…%UNICODE(0x2665) *1%　　可以哦%UNICODE(0x2665) *1%」
+		PRINTFORML 「啊%UNICODE(0x2665) *1%　呵呵……」
+	ELSE
+		PRINTFORML 「是素股呢…　　可以哦」
+	ENDIF
+		PRINTFORMW
+ENDIF
+RETURN 1
+
+;==================================================
+;84,泡泡浴
+;==================================================
+@M_KOJO_MESSAGE_COM_K31_84
+CALL M_KOJO_MESSAGE_COM_K31_84_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K31_84_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;恋慕
+	IF TALENT:恋慕
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;85,足交
+;==================================================
+@M_KOJO_MESSAGE_COM_K31_85
+CALL M_KOJO_MESSAGE_COM_K31_85_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K31_85_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL && !FLAG:70 ;时奸
+
+	IF TALENT:恋人 || TALENT:恋慕
+		SELECTCASE RAND:10
+			CASE 1
+				PRINTFORML 「足で踏まれて气持ちいいんですか？%UNICODE(0x2665) *1%　まったく恥ずかしい人ですね%UNICODE(0x2665) *2%」
+			CASE 2
+				PRINTFORML 「こういうのが好きなんでしょう？　まったく变态さんですね……%UNICODE(0x2665) *1%」
+			CASE 3
+				PRINTFORML 「ほーら%UNICODE(0x2665) *1%　ほらっ%UNICODE(0x2665) *1%　あぁ、何かに目觉めそうです%UNICODE(0x2665) *2%」
+			CASE 4
+				PRINTFORML 「あぁ……ゾクゾクします%UNICODE(0x2665) *1%　幻想乡では常识にとらわれて是けないのですね…%UNICODE(0x2665) *1%」
+			CASE 5
+				PRINTFORML 「そういうプレイ好きですよね？　つきあってあげます%UNICODE(0x2665) *1%　コホン、」
+				PRINTFORML 『ほらっ坦率に气持ちいいって言いなさい！！%UNICODE(0x2665) *1%』ｸﾞﾘｸﾞﾘ
+			CASE 6
+				PRINTFORML 「イイ反応ですね%UNICODE(0x2665) *1%　もっと强くしてあげます……ふふっ%UNICODE(0x2665) *1%」
+			CASE 7
+				PRINTFORML 「%CALLNAME:MASTER%さん、どうしましょう、すっごく乐しいです%UNICODE(0x2665) *1%」
+			CASE 8
+				PRINTFORML 「あはっ%UNICODE(0x2665) *1%　なんだかイイ气分になってきました……%UNICODE(0x2665) *1%」
+			CASE 9
+				PRINTFORML 「骂倒してほしいんですか？良いですよ、『ざぁこ%UNICODE(0x2665) *1%　ざこ%CALLNAME:MASTER%　%UNICODE(0x2665) *1%　ざこ%UNICODE(0x2665) *1%』」ｸﾞﾘｸﾞﾘ
+			CASEELSE
+				PRINTFORML 「ふふ……なかなかに无样な格好ですね%UNICODE(0x2665) *1%　可爱的%UNICODE(0x2665) *1%」
+		ENDSELECT
+	ELSEIF TALENT:思慕
+		PRINTFORML 「こういうのが好きなんでしょう？　まったく变态さんですね……%UNICODE(0x2665) *1%」
+	ELSE
+		PRINTFORML 「足で踏まれて气持ちいいんですか？%UNICODE(0x2665) *1%　まったく恥ずかしい人ですね%UNICODE(0x2665) *1%」
+	ENDIF
+	CALL K31_MASTER逆转经验取得(3)
+		PRINTFORMW
+ENDIF
+RETURN 1
+;==================================================
+;88,真空口交
+;==================================================
+@M_KOJO_MESSAGE_COM_K31_88
+CALL M_KOJO_MESSAGE_COM_K31_88_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K31_88_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;时奸中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:恋慕
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1

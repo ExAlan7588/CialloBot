@@ -1,0 +1,28 @@
+﻿;イベント发生判定。EVXのXを批量置换で空いてる数字に变えてください。
+@GO_OUT_CONDITION_EVX
+IF !RAND:10
+	CALL GO_OUT_EVX
+ELSE
+	;イベント不成立ならRETURN 0
+	RETURN 0
+ENDIF
+
+;イベント本体。最后はRETURN 1でお愿いします。
+@GO_OUT_EVX
+RETURN 1
+
+[SKIPSTART]
+※补足事项
+・发生タイミングは时止め无しの据点归还时、一日一回
+・CFLAG:当前位置は移动直前のまま
+・FLAG:约会的对象に约会的对象の角色番号、0なら你一人
+・角色变量を使用场合は角色番号の指定が必要
+・お出かけイベントの成否に系わらず、この次に约会后イベントも发生机会あります
+
+経験变动处理の后に运动ののでEXP加算が次ターンに持ち越されます
+この函数内で例えばMASTERの射精经验を3足す时は
+EXP:MASTER:射精经验 +=3
+TCVAR:MASTER:射精经验 += 3
+PRINTFORML 射精经验 +3(%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%)
+こうするとスマートに见えます
+[SKIPEND]

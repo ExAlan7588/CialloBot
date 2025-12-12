@@ -1,0 +1,44 @@
+﻿@GO_OUT_CONDITION_EV4
+#DIM NUM 
+;OPTION设定次第で发生しない
+SIF FLAG:交流来访模式 == 3
+	RETURN 0
+CALL FISHER_YATES_SHAFFLE(RANDOM_CHARANUM)
+;随机で10人拨片UP
+FOR COUNT, 0, 10
+	NUM = SHAFFLE_ARRAY:COUNT
+	;出禁/据点住まい/来访不能角色、你を弹く
+	SIF CFLAG:NUM:出禁 || CFLAG:NUM:神社在住 || CFLAG:NUM:来访不能 || !NUM
+		CONTINUE
+	;访问予定/仕事/宴会参加角色を弹く
+	SIF CFLAG:NUM:据点来访 || 仕事日チェック(NUM) || CFLAG:NUM:宴会参加
+		CONTINUE
+	;隙间にいない/活动时间外/衰弱中角色を弹く
+	SIF CFLAG:NUM:当前位置 != SUKIMA() || !VISIT(NUM) || CFLAG:NUM:衰弱
+		CONTINUE
+	;来访フラグ.ERBから流用した角色别设定
+	SELECTCASE NUM
+		CASE [[妹红]], [[辉夜]]
+			SIF CFLAG:NUM:好感度 <= 500
+				CONTINUE
+		CASE [[依姫]], [[丰姫]], [[探女]]
+			SIF !TALENT:NUM:恋慕 && !TALENT:NUM:思慕
+				CONTINUE
+		CASE [[若鹭姫]]
+			SIF !GETBIT(FLAG:泳池, 3)
+				CONTINUE
+	ENDSELECT
+;ここまで通った角色を据点に呼ぶ
+	CALL GO_OUT_EV4(NUM)
+	RETURN 1
+NEXT
+RETURN 0
+
+@GO_OUT_EV4(ARG)
+CFLAG:ARG:据点来访 = 1
+CFLAG:ARG:当前位置 = ENTRANCE
+CFLAG:ARG:最后来访的日期 = DAY
+PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%看到一位少女向%NAME_FROM_PLACE(ENTRANCE)%走去
+PRINTFORMW 【%NAME_OUTPUT_TRANSLATION("CALLNAME", ARG)%来访了】
+PRINTFORML 
+RETURN 1

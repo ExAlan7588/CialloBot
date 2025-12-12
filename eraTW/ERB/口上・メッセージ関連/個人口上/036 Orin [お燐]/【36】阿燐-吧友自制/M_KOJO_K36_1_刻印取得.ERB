@@ -1,0 +1,75 @@
+﻿;-------------------------------------------
+;刻印取得
+;-------------------------------------------
+@M_KOJO_吧友火焔猫燐制作_MESSAGE_MARKCNG_K36
+;このままだと地の文が表示されません
+;地の文を表示したい方は、下记のコメントアウトを削除して下さい
+;CALL MARK_MESSAGE
+;苦痛刻印
+IF TFLAG:22 == 1
+	PRINTFORMW 
+ELSEIF TFLAG:22 == 2
+	PRINTFORMW 
+ELSEIF TFLAG:22 == 3
+	PRINTFORMW 
+ENDIF
+
+;时奸刻印
+IF TFLAG:时奸刻印取得 == 1
+	PRINTFORMW 
+ELSEIF TFLAG:时奸刻印取得 == 2
+	PRINTFORMW 
+ELSEIF TFLAG:时奸刻印取得 == 3
+	PRINTFORMW 
+ENDIF
+
+;快乐刻印
+IF TFLAG:23 == 1
+	PRINTFORMW 
+ELSEIF TFLAG:23 == 2
+	PRINTFORMW 
+ELSEIF TFLAG:23 == 3
+	PRINTFORMW 
+ENDIF
+
+;屈服刻印
+;快乐による刻印
+;LV1
+IF TFLAG:24 == 11
+	PRINTFORMW 
+;LV2
+ELSEIF TFLAG:24 == 12
+	PRINTFORMW 
+;LV3
+ELSEIF TFLAG:24 == 13
+	PRINTFORMW 
+;屈服、恭顺による刻印
+;LV1
+ELSEIF TFLAG:24 == 31
+	PRINTFORMW 
+;LV2
+ELSEIF TFLAG:24 == 32
+	PRINTFORMW 
+;LV3
+ELSEIF TFLAG:24 == 33
+	PRINTFORMW 
+ENDIF
+
+;反抗刻印
+IF TFLAG:21 == 1
+	PRINTFORML 「喂喂！小哥，偶然开开玩笑是没所谓。但注意别做得太过火了！」
+	PRINTFORML 「就算是咱这次也不能那么轻易原谅你！给我好好反省一下！」
+	PRINTFORMW 阿燐怒容满面，生气地大声责骂着
+
+ELSEIF TFLAG:21 == 2
+	PRINTFORML 「小哥…要是你把咱当成路边小猫的话，吃亏的会是你喔？」
+	PRINTFORMW 从阿燐浅笑之中，能感觉到一丝背后的怒意
+ 
+ELSEIF TFLAG:21 == 3
+	PRINTFORML 「小哥啊…姑且还是提醒你一下，这里可不是什么旅游景点，像你这种外来人，就算在死在某个角落里，变成乌鸦的食粮，也不会有人发现的哦？」
+	PRINTFORML 从阿燐诡异的浅笑中，周围的气氛变得危险了起来
+	PRINTFORML 地狱妖精在空中发出高声的尖笑，周围悬浮的怨灵越来越多，空洞的眼睛注视着%CALLNAME:MASTER%，盘旋在旁
+	PRINTFORML 只要阿燐的一句话，恐怕%CALLNAME:MASTER%就会死无全尸了吧……
+	PRINTFORMW 「啊，不过没事的，尸体我会回收的……好好地，回收起来~」
+ 
+ENDIF

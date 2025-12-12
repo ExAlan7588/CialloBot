@@ -1,0 +1,267 @@
+﻿;FileName_TRACHECK.ERB ----------------------------- Rev1.00
+;信赖度上升计算处理
+;CALL		USER
+;ARG		0:角色NO
+;RETURN		VOID
+;COMMENT	
+;-----------------------------------------------------------
+@TRUST_CALC(ARG)
+#DIM 信赖度上升值
+DEBUGPRINTFORML 【TRUST_CALC】TRAST_CALC_START ,{ARG}
+;COMABLE范围外抑止
+SIF !TFLAG:102
+	RETURN 0
+;对象がMASTER以外の时启动
+SIF !ARG
+	RETURN 0
+
+;失败指令フラグ
+SIF TFLAG:98 < 0
+	TFLAG:99 ++
+
+信赖度上升值 = TFLAG:98
+
+;亲密度に合わせて上升修正
+信赖度上升值 += ABL:ARG:亲密 / 5
+DEBUGPRINTFORML 【TRUST_CALC】初期值 TFLAG98={信赖度上升值} 失败フラグ {TFLAG:99}
+
+;愤怒值によって信赖度DOWN
+SIF BASE:ARG:愤怒 > 0 && TFLAG:98 < 0
+	信赖度上升值 -= (BASE:ARG:愤怒 / 100)
+DEBUGPRINTFORML 【TRUST_CALC】愤怒变动 TFLAG98={信赖度上升值}
+
+;素質による增减
+
+;叛逆
+SIF TALENT:ARG:态度 > 0 && !TALENT:ARG:恋慕
+	信赖度上升值 -= 1
+;心情
+信赖度上升值 += TALENT:ARG:15
+;坦率
+SIF TALENT:ARG:态度 < 0 && TFLAG:98 > 0
+	信赖度上升值 += 1
+;开朗同士
+SIF TALENT:ARG:开朗／阴郁 > 0 && TALENT:MASTER:开朗／阴郁 > 0
+	信赖度上升值 += 1
+
+;阴郁同士
+SIF TALENT:ARG:开朗／阴郁 < 0 && TALENT:MASTER:开朗／阴郁 < 0
+	信赖度上升值 += 1
+
+;感情缺乏
+SIF TALENT:ARG:感情缺乏
+	信赖度上升值 -= 1
+;抵抗
+SIF TALENT:ARG:抵抗
+	信赖度上升值 -= 2
+;献身的
+SIF TALENT:ARG:献身的 && TFLAG:98 > 0
+	信赖度上升值 += 1
+;讨厌男人,讨厌女人
+SIF OTOKOGIRAI(ARG)
+	信赖度上升值 -= 1
+;主人の谜之魅力
+SIF TALENT:MASTER:谜之魅力
+	信赖度上升值 += 1
+SIF TALENT:ARG:路人 == 1
+	信赖度上升值 += 10
+;恋慕
+SIF TALENT:ARG:恋慕
+	信赖度上升值 += 2
+;思慕
+SIF TALENT:ARG:思慕
+	信赖度上升值 += 1
+SIF TALENT:ARG:动物耳 && TALENT:ARG:动物耳 == TFLAG:耳补正
+	信赖度上升值 += 3
+DEBUGPRINTFORML 【TRUST_CALC】素質变动 TFLAG98={信赖度上升值}
+
+LOCAL = 0
+LOCAL:1 = 0
+;情爱
+LOCAL += (50 - 250000 / (SOURCE:ARG:情爱 + 5000))
+;达成感
+LOCAL += (30 - 30000 / (SOURCE:ARG:达成 + 1000))
+;恭顺
+LOCAL += (20 - 20000 / (SOURCE:ARG:恭顺 + 1000))
+LOCAL:2 += (20 - 20000 / (SOURCE:ARG:恭顺 + 1000))
+;屈服
+LOCAL += (15 - 15000 / (SOURCE:ARG:屈从 + 1000))
+LOCAL:2 += (10 - 10000 / (SOURCE:ARG:屈从 + 1000))
+;欢乐
+LOCAL += (30 - 150000 / (SOURCE:ARG:欢乐 + 5000))
+;征服
+LOCAL += (30 - 90000 / (SOURCE:ARG:征服 + 3000))
+;被动
+LOCAL += (30 - 90000 / (SOURCE:ARG:被动 + 3000))
+LOCAL:1 += LOCAL
+;情欲
+;LOCAL:2 += (30 - 90000 / (SOURCE:ARG:情欲 + 3000))
+;快ＶＡＣＢ
+;LOCAL:2 += (20 - 200000 / (SOURCE:ARG:快Ｖ + 10000))
+;LOCAL:2 += (20 - 200000 / (SOURCE:ARG:快Ａ + 10000))
+;LOCAL:2 += (10 - 100000 / (SOURCE:ARG:快Ｃ + 10000))
+;LOCAL:2 += (10 - 100000 / (SOURCE:ARG:快Ｂ + 10000))
+DEBUGPRINTFORML 【TRUST_CALC】UPPERソース变动计算 {LOCAL}
+
+;屈服
+;LOCAL -= (50 - 50000 / (SOURCE:ARG:屈从 + 1000))
+;LOCAL:2 += (50 - 50000 / (SOURCE:ARG:屈从 + 1000))
+;恐怖
+LOCAL -= (50 - 20000 / (SOURCE:ARG:恐怖 + 400)) * (ABL:ARG:顺从 - 3) / 3
+LOCAL:2 += (100 - 40000 / (SOURCE:ARG:恐怖 + 400)) * (ABL:ARG:顺从 - 3) / 3
+;苦痛
+LOCAL -= (50 - 20000 / (SOURCE:ARG:苦痛 + 400)) * (ABL:ARG:受虐属性 - 3) / 3
+LOCAL:2 += (100 - 40000 / (SOURCE:ARG:苦痛 + 400)) * (ABL:ARG:受虐属性 - 3) / 3
+;不洁
+LOCAL -= (50 - 25000 / (SOURCE:ARG:不洁 + 500)) * (2 - TALENT:ARG:污臭耐性) / 2
+;郁闷
+LOCAL -= (50 - 15000 / (SOURCE:ARG:郁闷 + 300))
+;偏离正轨
+LOCAL -= (50 - 25000 / (SOURCE:ARG:偏离正轨 + 500))
+;反抗
+LOCAL -= (30 - 10000 / (SOURCE:ARG:反感 + 500))
+
+
+DEBUGPRINTFORML 【TRUST_CALC】DOWNERソース变动计算 {LOCAL:1 - LOCAL} ,{LOCAL}
+
+信赖度上升值 += LOCAL / 10
+DEBUGPRINTFORML 【TRUST_CALC】ソース变动 TFLAG98={信赖度上升值}
+
+;技能が低いと减少补正
+IF (TALENT:ARG:性的兴趣 == -1 || TALENT:ARG:自尊心 > 0) && 信赖度上升值 > 0
+	SIF ABL:ARG:教养 > ABL:MASTER:教养 || ABL:ARG:战斗能力 > ABL:MASTER:战斗能力
+		信赖度上升值 -= 1
+ELSE
+SIF (ABL:ARG:教养 > ABL:MASTER:教养 + 2 || ABL:ARG:战斗能力 > ABL:MASTER:战斗能力 + 2) && 信赖度上升值 > 0
+	信赖度上升值 -= 1
+ENDIF
+IF GETBIT (CFLAG:ARG:继承, 1)
+	信赖度上升值 += 2
+ELSEIF GETBIT (CFLAG:ARG:继承, 0)
+	信赖度上升值 += 1
+ENDIF
+;反抗刻印补正
+信赖度上升值 -= (FLAG:4 + 1) * MARK:ARG:反抗刻印
+
+;结果が一定数未满の场合
+;IF MARK:反抗刻印 >= 3 && 信赖度上升值 < -3
+;	信赖度上升值 = -3
+;ELSEIF MARK:反抗刻印 == 2 && 信赖度上升值 < -2
+;	信赖度上升值 = -2
+;ELSEIF MARK:反抗刻印 == 1 && 信赖度上升值 < -1
+;	信赖度上升值 = -1
+;ENDIF
+
+;同性は信赖度が上がりやすく。
+SIF HETEROSEX(ARG,PLAYER) && !OTOKOGIRAI(ARG)
+	信赖度上升值 += 1
+
+;冷漠か难以越过的底线の场合、恋慕がないと信赖度が上がりにくい
+IF (TALENT:ARG:冷漠 || TALENT:ARG:难以越过的底线) && !TALENT:ARG:恋慕
+	IF 信赖度上升值 > 1
+		信赖度上升值 /= 2
+	ELSEIF 信赖度上升值 > 0
+		信赖度上升值 = 1
+	ENDIF
+ENDIF
+
+
+IF FLAG:70
+;	SIF 信赖度上升值 > 0
+;		信赖度上升值 = 0
+;	IF MARK:反抗刻印 >= 3
+;		CFLAG:ARG:344 += TFLAG:98
+;	ELSEIF MARK:反抗刻印 == 2
+;		CFLAG:ARG:344 += TFLAG:98 / 2
+;	ELSEIF MARK:反抗刻印 == 1
+;		CFLAG:ARG:344 += TFLAG:98 / 3
+;	ELSE
+;		CFLAG:ARG:344 += TFLAG:98 / 4
+;	ENDIF
+ELSE
+[SKIPSTART]
+;不诚实度によるペナルティ
+SELECTCASE TCVAR:ARG:不诚实度
+	CASE IS <= 10
+		 信赖度上升值 ++
+	CASE 11 TO 20
+	CASE 21 TO 50
+		信赖度上升值 -= 1
+	CASE 51 TO 100
+		信赖度上升值 -= 3
+	CASE 101 TO 300
+		信赖度上升值 -= 5
+	CASEELSE
+		信赖度上升值 -= 7
+ENDSELECT
+[SKIPEND]
+IF CFLAG:ARG:以身体为目的
+	SIF 信赖度上升值 > 0
+		信赖度上升值 /= 2
+ENDIF
+
+;理性と情绪で修正
+IF BASE:ARG:情绪 == MAXBASE:ARG:情绪
+	信赖度上升值 += 2
+	;情绪が全开なら信赖度减少无し
+	SIF 信赖度上升值 < 0
+		信赖度上升值 = 0
+ELSEIF BASE:ARG:情绪 >= (MAXBASE:ARG:情绪 / 5 * 4) || BASE:ARG:理性 <= (MAXBASE:ARG:理性 / 2)
+	信赖度上升值 += 1
+	;情绪が4/5以上または理性が1/2以下の时、信赖度减少が半分
+	SIF 信赖度上升值 < 0
+		信赖度上升值 += ABS(信赖度上升值) / 2
+ENDIF
+DEBUGPRINTFORML 【TRUST_CALC】情绪变动 {信赖度上升值}
+
+SIF TFLAG:好感度BOUNS && 信赖度上升值 > 0
+	;信赖度上升值 = 信赖度上升值 * TFLAG:好感度BOUNS
+	信赖度上升值 = 信赖度上升值 * (100 + TFLAG:好感度BOUNS) / 100
+
+;信赖度上升が低い场合、据点住人であり路人が同じ场所にいればBOUNS
+SIF 信赖度上升值 < 3 && WITH_MOB() && MAP_住人(MAIN_MAP,ARG)
+	信赖度上升值 ++
+;失败フラグが立ってなければ信赖は下がらない
+SIF !TFLAG:99 && 信赖度上升值 < 0
+	信赖度上升值 = 0
+SIF TFLAG:99 && 信赖度上升值 > 0
+	信赖度上升值 = 0
+;ソフトウフフ时はプラス无し
+SIF SELECTCOM >= 313 && SELECTCOM <= 330 && 信赖度上升值 > 0
+	信赖度上升值 = 0
+;什么也不做を使用した场合は上限を0にする
+SIF 信赖度上升值 > 0 && SELECTCOM == 21
+	信赖度上升值 = 0
+;助手调教中
+SIF ASSIPLAY == 1
+	信赖度上升值 = 0
+;睡眠中は上升值0
+SIF CFLAG:ARG:睡眠 || TCVAR:TARGET:烂醉
+	信赖度上升值 = 0
+
+;信赖度上升の下限设定。（反抗刻印のレベルに心情の修整を加える）×-5が下限）
+信赖度上升值 = MAX(信赖度上升值 , MAX(MARK:ARG:反抗刻印 - TALENT:ARG:15 , 0) * -5)
+
+SIF FLAG:信赖度上升率 > 0
+	信赖度上升值 = 信赖度上升值 * FLAG:信赖度上升率
+
+DEBUGPRINTFORML 【TRUST_CALC】信赖度变动 {信赖度上升值}
+SIF LOCAL:1
+	CFLAG:ARG:信赖度 += 信赖度上升值
+;信赖度は0以下にも100万以上にもならない
+CFLAG:ARG:信赖度 = LIMIT(CFLAG:ARG:信赖度, 0, 999999)
+LOCAL:1 = 0
+FOR LOCAL,0,100
+	SIF SOURCE:ARG:LOCAL
+		LOCAL:1 ++
+NEXT
+SIF !LOCAL:1
+	信赖度上升值 = 0
+
+;信赖度表示
+SIF 信赖度上升值
+PRINTFORML \@(信赖度上升值 >= 0) ? 信赖度＋{信赖度上升值} # 信赖度－{-信赖度上升值}\@
+ENDIF
+TFLAG:98 = 0
+TFLAG:99 = 0
+信赖度上升值 = 0

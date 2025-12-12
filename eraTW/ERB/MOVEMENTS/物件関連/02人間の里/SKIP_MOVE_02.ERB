@@ -1,0 +1,153 @@
+﻿;-----------------------------------------------------------
+;远距离移动の设定
+;ARG     目的地
+;ARG:1   现在地
+;RETURN  次の目的地
+;-----------------------------------------------------------
+@SKIP_MOVE_2(ARG, ARG:1)
+#DIM 现在的位置
+;当前位置取得
+IF ARG:1
+	现在的位置 = ARG:1
+ELSE
+	现在的位置 = CFLAG:MASTER:当前位置
+ENDIF
+
+;目的地に直接移动できる场合そこに移动
+SIF CAN_MOVE(现在的位置, ARG) & 1
+	RETURN ARG
+
+;袋小路から行ける场所は固定なので、そこを目指す
+SELECTCASE 现在的位置
+CASE P201人里的门
+	RETURN P203南大街
+CASE P211酒屋, P212咖啡馆, P218小料理屋
+	RETURN P203南大街
+CASE P217甜品店
+	RETURN P204东大街
+CASE P225情侣酒店
+	RETURN P206西大街
+CASE P226小铃私室
+	RETURN P213铃奈庵
+CASE P229阿求私室
+	RETURN P221稗田邸
+CASE P228包场浴场
+	RETURN P223钱汤
+CASE P230空的房间 TO P237公用水井, P208雷鼓的房间 TO P210弁弁的房间, P241空的房间 TO P243空的房间
+	RETURN P214长屋前
+CASE P239美宵的房间
+	RETURN P238鲵吞亭
+CASE P281小兔姫私室
+	RETURN P280警察署
+ENDSELECT
+
+;直接移动できない场合、1つ近い位置を暂定目的地に设定し直してループ
+;基本的に最短で行けるコースを设定する
+;现在地によってコースが变わることも考虑して对応する
+SELECTCASE ARG
+	CASE P201人里的门, P211酒屋, P212咖啡馆, P218小料理屋
+		RETURN P203南大街
+	CASE P202中央广场
+		SELECTCASE 现在的位置
+		CASE P213铃奈庵, P217甜品店, P223钱汤
+			RETURN P204东大街
+		CASE P219集会所, P222寺子屋, P224慧音宅
+			RETURN P205北大街
+		CASE P214长屋前, P221稗田邸, P229阿求私室, P225情侣酒店, P238鲵吞亭, P281小兔姫私室
+			RETURN P206西大街
+		CASEELSE
+			RETURN P203南大街
+		ENDSELECT
+	CASE P203南大街
+		SELECTCASE 现在的位置
+		CASE P219集会所, P222寺子屋, P224慧音宅
+			RETURN P204东大街
+		CASEELSE
+			RETURN P202中央广场
+		ENDSELECT
+	CASE P204东大街
+		SELECTCASE 现在的位置
+		CASE P214长屋前
+			RETURN P203南大街
+		CASE P221稗田邸, P229阿求私室
+			RETURN P205北大街
+		CASEELSE
+			RETURN P202中央广场
+		ENDSELECT
+	CASE P205北大街
+		RETURN P202中央广场
+	CASE P206西大街
+		SELECTCASE 现在的位置
+		CASE P219集会所, P222寺子屋, P224慧音宅
+			RETURN P205北大街
+		CASEELSE
+			RETURN P202中央广场
+		ENDSELECT
+	CASE P207龙神像
+		SELECTCASE 现在的位置
+		CASE P219集会所, P221稗田邸, P229阿求私室, P222寺子屋, P224慧音宅
+			RETURN P205北大街
+		CASEELSE
+			RETURN P202中央广场
+		ENDSELECT
+	CASE P213铃奈庵, P217甜品店, P223钱汤
+		RETURN P204东大街
+	CASE P214长屋前
+		SELECTCASE 现在的位置
+		CASE P204东大街
+			RETURN P203南大街
+		CASEELSE
+			RETURN P206西大街
+		ENDSELECT
+	CASE P215花屋, P216食料品店, P220瞭望楼
+		RETURN P202中央广场
+	CASE P219集会所, P222寺子屋, P224慧音宅
+		SELECTCASE 现在的位置
+		CASE P206西大街, P207龙神像, P221稗田邸, P229阿求私室, P281小兔姫私室, P280警察署
+			RETURN P205北大街
+		CASEELSE
+			RETURN P204东大街
+		ENDSELECT
+	CASE P221稗田邸
+		SELECTCASE 现在的位置
+		CASE P207龙神像, P219集会所, P222寺子屋, P224慧音宅
+			RETURN P205北大街
+		CASEELSE
+			RETURN P206西大街
+		ENDSELECT
+	CASE P225情侣酒店, P238鲵吞亭
+		RETURN P206西大街
+	CASE P226小铃私室
+		RETURN P213铃奈庵
+	CASE P229阿求私室
+		RETURN P221稗田邸
+	CASE P227蔬菜店
+		SELECTCASE 现在的位置
+		CASE P219集会所, P222寺子屋, P224慧音宅
+			RETURN P204东大街
+		CASEELSE
+			RETURN P202中央广场
+		ENDSELECT
+	CASE P228包场浴场
+		RETURN P223钱汤
+	CASE P230空的房间 TO P237公用水井, P208雷鼓的房间 TO P210弁弁的房间, P241空的房间 TO P243空的房间
+		RETURN P214长屋前
+	CASE P239美宵的房间
+		RETURN P238鲵吞亭
+	CASE P280警察署
+		SELECTCASE 现在的位置
+		CASE P207龙神像, P219集会所, P221稗田邸, P229阿求私室, P222寺子屋, P224慧音宅
+			RETURN P205北大街
+		CASEELSE
+	    	RETURN P202中央广场
+		ENDSELECT
+	CASE P281小兔姫私室
+	    SELECTCASE 现在的位置
+		CASE P214长屋前, P221稗田邸, P229阿求私室, P225情侣酒店, P238鲵吞亭
+		    RETURN P205北大街
+		CASEELSE
+		    RETURN P280警察署
+	    ENDSELECT
+	CASEELSE
+		RETURN P201人里的门
+ENDSELECT

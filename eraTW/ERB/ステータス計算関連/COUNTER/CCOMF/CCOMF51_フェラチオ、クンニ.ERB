@@ -1,0 +1,86 @@
+﻿;*********************************************************************************************
+;Counter指令：フェラチオ、クンニ
+;ARG = 对象の角色番号
+;*********************************************************************************************
+@CCOMF51(ARG)
+
+	;体势の变更
+	;=============================
+	CALL TOUCH_SET(SET_FROM_M,1,ARG)
+	TFLAG:MASTERのＣ使用中 ++
+
+	;ソース计算および内部处理系统
+	;=============================
+	IF TEQUIP:PLAYER:0 & 12
+		CALL DATUI_BOTTOM(ARG,2)
+	ELSEIF TEQUIP:PLAYER:0 & 2
+		SIF RAND:2
+			CALL DATUI_BOTTOM(ARG,1)
+	ENDIF
+	SOURCE:ARG:性行动 += 300
+	SOURCE:ARG:诱惑 += 600
+	SOURCE:ARG:挑衅 += 150
+	SOURCE:ARG:征服 += 250
+	SOURCE:ARG:侍奉 += 800
+	SOURCE:ARG:快Ｍ += 200
+	SIF !(TALENT:PLAYER:2 & 2)
+		SOURCE:PLAYER:快Ｃ += 500
+	;射精部位（1=膣内 2=肛门 3=手淫 4=口淫 5=乳交 6=素股 7=足交 8=体表 9=肛门侍奉 10=道具 11=触手 12=Ａ调教 13=Ｖ调教）
+	CALL 射精对象登录(PLAYER, ARG, 4)
+	;强度
+	TCVAR:PLAYER:4 += 800
+	EXP:ARG:口淫经验 ++
+	;侍奉FLAG
+	TCVAR:ARG:108 = 1
+	CALL EVENT_COUNTER_POSE_69(ARG,2)
+
+	;マ斯塔Counter制御
+	;(ビット立ちで不可 0=摸屁股 1=拥抱 2=接吻 3=胸爱抚 4=肛门爱抚 5=阴蒂爱抚 6=指插入れ 7=掀裙子)
+	;=============================
+	;CALL Counter插入され继续中处理(ARG)
+	SETBIT TCVAR:ARG:26 ,1
+	SETBIT TCVAR:ARG:26 ,2
+	SETBIT TCVAR:ARG:26 ,3
+
+RETURN 1
+
+;*********************************************************************************************
+;Counter实行可否出力函数
+;ARG = 对象の角色番号
+;*********************************************************************************************
+@CCOM_ABLE51(ARG)
+
+	SIF TFLAG:62
+		RETURN 0
+	SIF ABL:ARG:舌 < 1
+		RETURN 0
+	SIF TEQUIP:50 >= 0 || TEQUIP:51 >= 0
+		RETURN 0
+	SIF TEQUIP:MASTER:50 >= 0 || TEQUIP:MASTER:51 >= 0
+		RETURN 0
+
+RETURN 1
+
+;*********************************************************************************************
+;Counter实行判定值算出函数
+;ARG = 对象の角色番号
+;*********************************************************************************************
+@CCOM_ORDER51(指令番号, ARG, 基本值)
+#DIM 指令番号
+#DIM 基本值
+#DIMS Counterタイプ
+
+	;Counterタイプ设定
+	;=============================
+	Counterタイプ = 脱衣爱抚
+
+	;实行判定值算出式
+	;=============================
+	LOCAL = 基本值 + TALENT:ARG:污臭耐性 + 2 * TALENT:ARG:舌头灵活 + ABL:ARG:舌 + BASE:MASTER:勃起 / 500
+
+	;Counterタイプ别计算处理 实质实行判定处理を含む
+	;=============================
+	LOCAL = MAX(LOCAL + COUNTER_SIKOU:ARG:指令番号, 1)
+	LOCAL *= COUNTER_TYPE(Counterタイプ, ARG)
+
+RETURN LOCAL

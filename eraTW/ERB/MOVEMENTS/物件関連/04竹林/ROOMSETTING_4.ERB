@@ -1,0 +1,293 @@
+﻿;＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+;地点の属性设定
+;场所_ワンルーム   家主が不在のとき键がかかる,被窝・屋内・厨房・勉强・休憩・饮食・プライベートが自动で付与
+;场所_被窝         休憩が自动で付与
+;场所_洋室         屋内だけど靴を履いたまま,屋内が自动で付与
+;场所_屋内         
+;场所_屋根         屋外だけど屋根がある场所,屋内でも屋根でも无い场合は野外判定（旧露天）
+;场所_广阔         
+;场所_赏月         屋内や屋根があっても月が见える场所
+;场所_休憩         
+;场所_澡堂         
+;场所_厕所       
+;场所_厨房         つまみ食いが自动で付与
+;场所_训练         
+;场所_学习         
+;场所_天之声       
+;场所_菜园         
+;场所_打水       
+;场所_身体测定     
+;场所_物干し       风景描写用
+;场所_饮食         自由行动用
+;场所_つまみ食い   自由行动用
+;场所_留まらない   あまり角色が留まらない（移动しやすい）
+;场所_过疎         あまり角色が立ち入らない（移动されにくい）
+;场所_プライベート 节度のある角色は入ってこない,主に私室と澡堂・厕所
+;场所_炬燵         自由行动用
+;场所_公共の场     推倒てこない
+;＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+@ROOMSETTING_4
+#DIM ROOM
+VARSET ROOMDATA
+MAXROOM = 467
+ENTRANCE = P447竹林入口
+SUMIKOMI_ROOM = P440废屋
+避难处 = P446祠
+SIF GET_MAPID(据点_酒虫) != MAIN_MAP
+	据点_酒虫 = P417厨房
+MAP_PAGES = 3
+MAPNAME:1 = 永远亭
+MAPNAME:2 = 梦幻馆
+MAPNAME:3 = 迷途竹林
+
+CFLAG:[[依姫]]:(450 + MAIN_MAP) = P421庭
+CFLAG:[[丰姫]]:(450 + MAIN_MAP) = P421庭
+CFLAG:[[铃仙二号]]:(450 + MAIN_MAP) = P421庭
+CFLAG:[[探女]]:(450 + MAIN_MAP) = P421庭
+
+FOR LOCAL, MINROOM(), MAXROOM
+	ROOM = LOCAL % 100
+	SELECTCASE LOCAL
+	;被窝・屋内・厨房・勉强・休憩・饮食・プライベートが自动で付与
+	CASE P432影狼的家, P439拉尔瓦的家, P443米斯蒂亚的家, P445妹红的家
+		ROOMDATA:ROOM |= 场所_ワンルーム
+	CASE P437梅蒂欣的家
+		ROOMDATA:ROOM |= 场所_ワンルーム
+		ROOMDATA:ROOM |= 场所_洋室
+	CASE P401永远亭入口
+		ROOMDATA:ROOM |= 场所_广阔
+		ROOMDATA:ROOM |= 场所_训练
+		ROOMDATA:ROOM |= 场所_公共の场
+	CASE P403等候室, P404诊察室
+		ROOMDATA:ROOM |= 场所_屋内
+		ROOMDATA:ROOM |= 场所_身体测定
+		ROOMDATA:ROOM |= 场所_公共の场
+	CASE P405配药室
+		ROOMDATA:ROOM |= 场所_屋内
+		ROOMDATA:ROOM |= 场所_プライベート
+	CASE P406来客用厕所
+		ROOMDATA:ROOM |= 场所_屋内
+		ROOMDATA:ROOM |= 场所_厕所
+	CASE P407走廊, P408中走廊, P426二层走廊
+		ROOMDATA:ROOM |= 场所_屋内
+		ROOMDATA:ROOM |= 场所_留まらない
+	CASE P409走廊
+		ROOMDATA:ROOM |= 场所_屋内
+		ROOMDATA:ROOM |= 场所_休憩
+		ROOMDATA:ROOM |= 场所_饮食
+		ROOMDATA:ROOM |= 场所_赏月
+		ROOMDATA:ROOM |= 场所_物干し
+	;永远亭の空的房间は最初から整ってる
+	CASE P410帝私室, P411铃仙私室, P428二层空的房间
+		ROOMDATA:ROOM |= 场所_屋内
+		ROOMDATA:ROOM |= 场所_被窝
+		ROOMDATA:ROOM |= 场所_学习
+		ROOMDATA:ROOM |= 场所_プライベート
+	CASE P413永琳私室, P414辉夜私室, P412空的房间
+		ROOMDATA:ROOM |= 场所_屋内
+		ROOMDATA:ROOM |= 场所_被窝
+		ROOMDATA:ROOM |= 场所_学习
+		ROOMDATA:ROOM |= 场所_赏月
+		ROOMDATA:ROOM |= 场所_プライベート
+	CASE P415大厅
+		ROOMDATA:ROOM |= 场所_屋内
+		ROOMDATA:ROOM |= 场所_广阔
+		ROOMDATA:ROOM |= 场所_饮食
+	CASE P416起居室
+		ROOMDATA:ROOM |= 场所_屋内
+		ROOMDATA:ROOM |= 场所_学习
+		ROOMDATA:ROOM |= 场所_饮食
+		ROOMDATA:ROOM |= 场所_炬燵
+	CASE P417厨房
+		ROOMDATA:ROOM |= 场所_屋内
+		ROOMDATA:ROOM |= 场所_厨房
+	CASE P418厕
+		ROOMDATA:ROOM |= 场所_屋内
+		ROOMDATA:ROOM |= 场所_厕所
+	CASE P419更衣间
+		ROOMDATA:ROOM |= 场所_屋内
+		ROOMDATA:ROOM |= 场所_身体测定
+		ROOMDATA:ROOM |= 场所_留まらない
+		ROOMDATA:ROOM |= 场所_プライベート
+	CASE P420澡堂
+		ROOMDATA:ROOM |= 场所_屋内
+		ROOMDATA:ROOM |= 场所_澡堂
+		ROOMDATA:ROOM |= 场所_赏月
+		ROOMDATA:ROOM |= 场所_プライベート
+	CASE P421庭
+		ROOMDATA:ROOM |= 场所_广阔
+		ROOMDATA:ROOM |= 场所_训练
+		ROOMDATA:ROOM |= 场所_菜园
+	CASE P422后院
+		ROOMDATA:ROOM |= 场所_广阔
+		ROOMDATA:ROOM |= 场所_训练
+		ROOMDATA:ROOM |= 场所_过疎
+	CASE P424库房, P427仓库
+		ROOMDATA:ROOM |= 场所_屋内
+		ROOMDATA:ROOM |= 场所_过疎
+	CASE P430地下室
+		ROOMDATA:ROOM |= 场所_屋内
+		ROOMDATA:ROOM |= 场所_被窝
+		ROOMDATA:ROOM |= 场所_学习
+		ROOMDATA:ROOM |= 场所_过疎
+
+	CASE P431兔的洞穴
+		ROOMDATA:ROOM |= 场所_屋根
+		ROOMDATA:ROOM |= 场所_训练
+		ROOMDATA:ROOM |= 场所_赏月
+	CASE P433斜角的竹林, P434迷失的小道
+		ROOMDATA:ROOM |= 场所_训练
+	CASE P435水井
+		ROOMDATA:ROOM |= 场所_打水
+	CASE P436无名之丘, P438太阳花田
+		ROOMDATA:ROOM |= 场所_广阔
+		ROOMDATA:ROOM |= 场所_训练
+	;自室になると被窝,勉强,プライベートが付与
+	CASE P440废屋
+		ROOMDATA:ROOM |= 场所_屋内
+		ROOMDATA:ROOM |= 场所_休憩
+		ROOMDATA:ROOM |= 场所_饮食
+	CASE P441温泉
+		ROOMDATA:ROOM |= 场所_澡堂
+	;人が入るとワンルームが付与
+	CASE P442空的小屋
+		ROOMDATA:ROOM |= 场所_屋内
+		ROOMDATA:ROOM |= 场所_厨房
+		ROOMDATA:ROOM |= 场所_休憩
+		ROOMDATA:ROOM |= 场所_饮食
+	CASE P444夜雀的小摊
+		ROOMDATA:ROOM |= 场所_屋根
+		ROOMDATA:ROOM |= 场所_赏月
+		ROOMDATA:ROOM |= 场所_饮食
+	CASE P446祠
+		ROOMDATA:ROOM |= 场所_广阔
+		ROOMDATA:ROOM |= 场所_天之声
+		ROOMDATA:ROOM |= 场所_过疎
+	CASE P447竹林入口
+		ROOMDATA:ROOM |= 场所_广阔
+		ROOMDATA:ROOM |= 场所_训练
+		ROOMDATA:ROOM |= 场所_留まらない
+
+	CASE P450玄关
+		ROOMDATA:ROOM |= 场所_洋室
+		ROOMDATA:ROOM |= 场所_留まらない
+	CASE P451胡桃私室, P452艾丽私室, P457梦月私室, P459幻月私室, P463幽香私室
+		ROOMDATA:ROOM |= 场所_洋室
+		ROOMDATA:ROOM |= 场所_被窝
+		ROOMDATA:ROOM |= 场所_学习
+		ROOMDATA:ROOM |= 场所_プライベート
+
+	CASE P453餐厅
+		ROOMDATA:ROOM |= 场所_洋室
+		ROOMDATA:ROOM |= 场所_厨房
+	CASE P454浴室
+		ROOMDATA:ROOM |= 场所_洋室
+		ROOMDATA:ROOM |= 场所_澡堂
+		ROOMDATA:ROOM |= 场所_身体测定
+		ROOMDATA:ROOM |= 场所_プライベート
+	CASE P455厕所
+		ROOMDATA:ROOM |= 场所_洋室
+		ROOMDATA:ROOM |= 场所_厕所
+		ROOMDATA:ROOM |= 场所_プライベート
+	CASE P456仓库
+		ROOMDATA:ROOM |= 场所_洋室
+		ROOMDATA:ROOM |= 场所_过疎
+	CASE P458走廊
+		ROOMDATA:ROOM |= 场所_洋室
+		ROOMDATA:ROOM |= 场所_留まらない
+	;自室になると勉强,プライベートが付与
+	CASE P460空的房间
+		ROOMDATA:ROOM |= 场所_屋内
+		ROOMDATA:ROOM |= 场所_被窝
+	CASE P461客厅
+		ROOMDATA:ROOM |= 场所_洋室
+		ROOMDATA:ROOM |= 场所_休憩
+		ROOMDATA:ROOM |= 场所_饮食
+		ROOMDATA:ROOM |= 场所_炬燵
+	CASE P462阳台, P464露台
+		ROOMDATA:ROOM |= 场所_屋根
+		ROOMDATA:ROOM |= 场所_饮食
+		ROOMDATA:ROOM |= 场所_赏月
+		ROOMDATA:ROOM |= 场所_物干し
+	CASE P465大堂
+		ROOMDATA:ROOM |= 场所_洋室
+		ROOMDATA:ROOM |= 场所_广阔
+		ROOMDATA:ROOM |= 场所_饮食
+	CASE P466庭
+		ROOMDATA:ROOM |= 场所_广阔
+		ROOMDATA:ROOM |= 场所_训练
+		ROOMDATA:ROOM |= 场所_打水
+	ENDSELECT
+NEXT
+
+;-----------------------------------------
+;默认の初始位置と大家の设定
+;-----------------------------------------
+@DEFAULT_OWNER_4
+默认初始位置 = P442空的小屋
+据点_家主 = [[永琳]]
+
+;-----------------------------------------
+;お出かけMapの设定
+;ARG   对象の地点
+;ARGS  判定文字典数
+;-----------------------------------------
+@ODEKAKEMAP_SETTING_4(ARG, ARGS)
+#FUNCTION
+;＼1 2 3 4 5 6 7 8 9 
+;01　　　　　　　　　
+;02　　　　　　　　　
+;03　　８　　　　　　
+;04　　５　　９　　　
+;05　　　　　　　　　
+;06　　　　　　　　　
+;07４３　　　７　　　
+;08　　　２　　　　　
+;09　　１　　６　　　
+SELECTCASE ARG
+CASE 竹林入口
+	SIF ARGS == "座标"
+		RETURNF 39
+	SIF GROUPMATCH(ARGS, "")
+		RETURNF 1
+CASE 迷失的小道
+	SIF ARGS == "座标"
+		RETURNF 48
+	SIF GROUPMATCH(ARGS, "")
+		RETURNF 1
+CASE 斜角的竹林
+	SIF ARGS == "座标"
+		RETURNF 27
+	SIF GROUPMATCH(ARGS, "")
+		RETURNF 1
+CASE 兔的洞穴
+	SIF ARGS == "座标"
+		RETURNF 17
+	SIF GROUPMATCH(ARGS, "屋根")
+		RETURNF 1
+CASE 永远亭
+	SIF ARGS == "座标"
+		RETURNF 34
+	SIF GROUPMATCH(ARGS, "身体测定", "屋内", "赏月", "休憩", "路人")
+		RETURNF 1
+CASE 无名之丘
+	SIF ARGS == "座标"
+		RETURNF 69
+	SIF GROUPMATCH(ARGS, "广阔", "便当")
+		RETURNF 1
+CASE 太阳花田
+	SIF ARGS == "座标"
+		RETURNF 67
+	SIF GROUPMATCH(ARGS, "广阔", "便当")
+		RETURNF 1
+CASE 永远亭的内院
+	SIF ARGS == "座标"
+		RETURNF 33
+	SIF GROUPMATCH(ARGS, "屋内", "赏月")
+		RETURNF 1
+CASE 梦幻馆
+	SIF ARGS == "座标"
+		RETURNF 64
+	SIF GROUPMATCH(ARGS, "屋内", "洋室")
+		RETURNF 1
+ENDSELECT

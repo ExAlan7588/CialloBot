@@ -1,0 +1,16 @@
+﻿;钱汤コマンド用の变量
+
+;消费金额
+;MAXHOMEはERB\DIM.ERHで定义された据点マップの数
+#DIM SAVEDATA SENTO_CONSUMPTION, MAXHOME
+;フラグ
+#DIM SAVEDATA SENTO_FLAG, MAXHOME
+
+;人里の钱汤
+
+;旧地狱温泉
+;SENTO_FLAG:9用
+#DIM CONST 旧地狱温泉_BIT_ニュープラン_完成 = 0
+#DIM SAVEDATA 旧地狱温泉_ニュープラン_完成日, 1
+#DIM CONST 旧地狱温泉_ニュープラン_必要额 = 30000
+#DIM CONST 旧地狱温泉_ニュープラン_工期 = 93

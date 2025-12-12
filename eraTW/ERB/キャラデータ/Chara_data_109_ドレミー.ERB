@@ -1,0 +1,157 @@
+﻿@CHARAMOVE_DATA_109(ARG, ARG:2)
+LOCAL = 109
+SELECTCASE ARG
+	;连动设定（RETURN=依存する角色, RESULT:1～3=对等に连动する角色）
+	CASE 1
+	;特殊生活时间设定（CFLAG:LOCAL:生活时间补正を设定する）
+	CASE 3
+	;移动倾向（±～10=行きやすい/行きにくい, -100=行かない）
+	CASE 4
+		SELECTCASE ARG:2
+			;纯狐邸には行かない
+			CASE P1060纯狐邸・玄关 TO P1072赫卡提亚私室
+				RETURN -100
+			;绵月亭には行かない
+			CASE P1020绵月亭・门 TO P1044会客厅
+				RETURN -100
+			;他人的家には行かない
+			CASE P1008铃瑚宅, P1009清兰宅
+				RETURN -100
+		ENDSELECT
+	;出现场所
+	CASE 7
+		SELECTCASE ARG:2
+			CASE 槐安通路
+				RETURN 1
+			CASE 神社境内
+				RETURN 1
+			CASE 广场
+				RETURN 1
+		ENDSELECT
+	;引力设定（CFLAG:LOCAL:引力点を设定する）
+	CASE 8
+ENDSELECT
+
+@EXIST_キャラデータ109
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@キャラデータ109(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "称呼"
+	CALLF MAKE_STR(V_NAME, "哆来咪")
+;こっから衣装设定
+CASE "今天的睡衣"
+	CALLF MAKE_STR(V_NAME, "睡衣（裤子）套")
+
+CASE "便装：帽子"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("帽子", "圣诞帽"))
+CASE "便装：袜子"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("袜子", "袜子"))
+CASE "便装：连衣裙"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("连衣裙", "连衣裙"))
+
+CASE "固有内衣形容词"
+	CALLF MAKE_STR(V_NAME, "可塑性高的柔软")
+CASE "固有下半身内衣名"
+	CALLF MAKE_STR(V_NAME, "梦魂胖次")
+CASE "固有上半身内衣"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "固有上半身内衣名"
+	CALLF MAKE_STR(V_NAME, "梦魂胸罩")
+CASE "固有内衣着用条件"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "固有内衣半透明(前)"
+	CALLF MAKE_INT(V_NAME, 0)
+CASE "固有内衣半透明(后)"
+	CALLF MAKE_INT(V_NAME, 0)
+CASE "固有内衣布料厚度"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;料理关联
+CASE "料理：喜欢的味道"
+	CALLF MAKE_STR(V_NAME, "牛奶/卵/面类/清淡/艺术的/新鲜/软绵绵/甜/甜/酸/酸/" + "谜料理/" * 3)
+CASE "料理：讨厌的味道"
+	CALLF MAKE_STR(V_NAME, "浓厚/朴素/梦幻风/咸/咸/")
+CASE "料理：助手效果"
+	CALLF MAKE_STR(V_NAME, "未知の味/")
+;赠り物关联
+CASE "感性：好き"
+	CALLF MAKE_STR(V_NAME, "青/美的/奇妙/活泼/不思议/狂热/" + "精神/置物/" * 3 + "羊の/貘の/梦の/睡眠の/恶梦の/软乎乎の/梦境的/" * 5)
+CASE "感性：嫌い"
+	CALLF MAKE_STR(V_NAME, "充满力量/洛丽塔/威严/" + "刃物/弹/" * 3)
+ENDSELECT
+
+;-------------------------------------------------
+;固有料理设定
+;DISH_NAME          料理名
+;RESULTS            料理の种类（轻食/主食/甜点）
+;CALL 材料设定("")  材料の指定。"泛用"を入れると自动で泛用食材になる
+;DISH_TASTE         味の设定
+;DISH_COMMENT       （任意）一行コメント
+;DISH_TIME          （任意）调理にかかる时间
+;DISH_MAXLIMIT      （任意）料理の持续时间
+;-------------------------------------------------
+@SPECIAL_MENU_109
+DISH_NAME = 谜之梦魂果子
+RESULTS = 甜点
+CALL 材料设定("彷徨灵魂")
+DISH_TASTE = 未知の味/未知の味/未知の味/浓厚/新鲜/谜料理/软绵绵/软糯的/魔力/
+DISH_COMMENT = 像梦魂一样粘糊糊的神秘点心。味道也是个谜。
+RETURN 1
+
+;IMAGE_I109_特殊服装(CHARA)-------------------------------------------------------------------
+;角色特有の服装表示条件
+;エフェクトを共有する服装差分はこちらで指定する
+;使用时注意点:
+;	RESULTSに特殊服装を格纳すること
+;	书式は %服装%%特殊服装% 适宜"_"等入れること
+;-------------------------------------------------------------------------------------------
+@IMAGE_I109_特殊服装(CHARA)
+#DIM CHARA
+VARSET RESULTS
+
+IF CFLAG:CHARA:应用差分替换
+	;替换用画像
+	IF CHECK_NUDE(CHARA)
+		;裸
+		IF FLAG:立绘种类
+			;颜绘
+		ELSE
+			;立绘
+		ENDIF
+	ELSE
+		;服
+		IF FLAG:立绘种类
+			;颜绘
+		ELSE
+			;立绘
+		ENDIF
+	ENDIF
+ELSE
+	;通常画像
+	IF CHECK_NUDE(CHARA)
+		;裸
+		IF FLAG:立绘种类
+			;颜绘
+		ELSE
+			;立绘
+		ENDIF
+	ELSE
+		;服
+		IF CFLAG:CHARA:衣物暂时更换 == 55 || (CFLAG:CHARA:基本服装SET == 55 && CFLAG:CHARA:衣物暂时更换==0)
+			IF FLAG:立绘种类
+				;颜绘
+				RESULTS = _バニー
+			ELSE
+				;立绘
+				RESULTS = _バニー
+			ENDIF
+		ENDIF
+	ENDIF
+ENDIF

@@ -1,0 +1,215 @@
+﻿;-------------------------------------------------
+;会话
+;日常系指令　レベル1
+;-------------------------------------------------
+@COM300
+
+;会话累积值が阈值を超えると失败
+IF TCVAR:302 && !TALENT:恋慕
+	PRINTFORML 虽然想向%NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%搭话可是不知道该说些什么
+	PRINTW 四周弥漫着尴尬的气氛…
+	TIME += 10
+	IF CHK_DATENOW(CFLAG:TARGET:约会中)
+		DOWNBASE:气力 += 50
+		DOWNBASE:MASTER:气力 += 50
+		TFLAG:193 = -1
+	ELSE
+		DOWNBASE:气力 += 100
+		DOWNBASE:MASTER:气力 += 100
+		TFLAG:193 = -1
+	ENDIF
+	RETURN 1
+ENDIF
+IF MARK:反抗刻印 >= 3
+	PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%似乎不想理睬%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%的样子
+	SOURCE:反感 = 300
+	BASE:MASTER:气力 -= 100
+	RETURN -1
+ENDIF
+CALL REVEAL_YOUKAI(TARGET)
+
+SELECTCASE TFLAG:192
+	;通常
+	CASE 0
+		LOCAL = RAND:100
+		LOCAL:1 = MIN(90 + GET_SUCCESS_RATE() / 5, 99)
+		;相手が烂醉中だと大成功にも失败にもならない
+		SIF TCVAR:烂醉
+			LOCAL = 50
+		IF LOCAL < 5
+			;7％で大成功
+			TFLAG:193 = 1
+			TFLAG:98 = 1
+			EXP:MASTER:会话经验 ++
+			IF CHK_DATENOW(CFLAG:TARGET:约会中)
+				EXP:MASTER:约会经验 ++
+				EXP:TARGET:约会经验 ++
+			ENDIF
+		ELSEIF LOCAL >= LOCAL:1
+			;10～1％で失败
+			TFLAG:193 = -1
+			TFLAG:98 = -1
+		ELSE
+			;残りは成功
+			TFLAG:193 = 0
+			TFLAG:98 = 0
+		ENDIF
+	;强制成功or大成功
+	CASE 1
+		IF RAND:100 <= 7
+			TFLAG:193 = 1
+			TFLAG:98 = 1
+			EXP:MASTER:会话经验 ++
+			IF CHK_DATENOW(CFLAG:TARGET:约会中)
+				EXP:MASTER:约会经验 ++
+				EXP:TARGET:约会经验 ++
+			ENDIF
+		ELSE
+			TFLAG:193 = 0
+			TFLAG:98 = 0
+		ENDIF
+	;强制失败
+	CASE -1
+		TFLAG:193 = -1
+		TFLAG:98 = -1
+	;指令结束
+	CASE -2
+		TFLAG:193 = -1
+		RETURN 0
+ENDSELECT
+
+;先制发生时は失败しない
+SIF TCVAR:20
+	TFLAG:193 = MAX(TFLAG:193,0)
+IF CFLAG:TARGET:陪睡中
+	DOWNBASE:MASTER:气力 += 10
+	SOURCE:情爱 = 200
+ELSE
+	DOWNBASE:气力 += 20
+	DOWNBASE:MASTER:气力 += 20
+ENDIF
+
+SIF ABL:教养 > ABL:MASTER:教养 + 3 && FLAG:催眠强度 <= 50
+	TFLAG:193 = -2
+
+;固定で获得するソース
+SOURCE:欢乐 = 200
+
+;ABL:亲密をみる
+IF ABL:亲密 <= 1
+	SOURCE:欢乐 += (ABL:亲密 * 30)
+ELSEIF ABL:亲密 <= 3
+	SOURCE:欢乐 += 200 + (ABL:亲密 * 30)
+ELSEIF ABL:亲密 <= 5
+	SOURCE:欢乐 += 500 + (ABL:亲密 * 30)
+ELSEIF ABL:亲密 <= 8
+	SOURCE:欢乐 += 750 + (ABL:亲密 * 50)
+ELSEIF ABL:亲密 <= 10
+	SOURCE:欢乐 += 1000 + (ABL:亲密 * 50)
+ELSE
+	SOURCE:欢乐 += 1600 + (ABL:亲密 * 30)
+ENDIF
+
+
+SOURCE:欢乐 = LIMIT(SOURCE:欢乐,0,5000)
+
+
+SOURCE:被动 = 100 + 100 * ABL:顺从
+SOURCE:征服 = 100 + 100 * ABL:施虐属性
+
+IF TFLAG:193 == -1 || TFLAG:193 == -2
+	TIMES SOURCE:欢乐 , 0.10
+	TIMES SOURCE:征服 , 0.50
+	TIMES SOURCE:被动 , 0.50
+ELSEIF TFLAG:193 == 0
+	TIMES SOURCE:欢乐 , 1.00
+	TIMES SOURCE:征服 , 1.00
+	TIMES SOURCE:被动 , 1.00
+ELSE
+	TIMES SOURCE:欢乐 , 2.00
+	TIMES SOURCE:征服 , 2.00
+	TIMES SOURCE:被动 , 2.00
+	TCVAR:301 += 50
+ENDIF
+SELECTCASE ABL:MASTER:话术技能
+	CASE 0
+		TIMES SOURCE:欢乐 , 0.20
+		TIMES SOURCE:征服 , 0.20
+		TIMES SOURCE:被动 , 0.20
+	CASE 1
+		TIMES SOURCE:欢乐 , 0.40
+		TIMES SOURCE:征服 , 0.40
+		TIMES SOURCE:被动 , 0.40
+	CASE 2
+		TIMES SOURCE:欢乐 , 0.70
+		TIMES SOURCE:征服 , 0.70
+		TIMES SOURCE:被动 , 0.70
+	CASE 3
+		TIMES SOURCE:欢乐 , 1.00
+		TIMES SOURCE:征服 , 1.00
+		TIMES SOURCE:被动 , 1.00
+	CASE 4
+		TIMES SOURCE:欢乐 , 1.20
+		TIMES SOURCE:征服 , 1.20
+		TIMES SOURCE:被动 , 1.20
+	CASEELSE
+		TIMES SOURCE:欢乐 , 1.50
+		TIMES SOURCE:征服 , 1.50
+		TIMES SOURCE:被动 , 1.50
+ENDSELECT
+
+;会话累积值
+IF CHK_DATENOW(CFLAG:TARGET:约会中)
+;	TCVAR:301 += 150 / (4 + ABL:MASTER:话术技能)
+	TCVAR:301 += 150 / (4 + MIN(ABL:MASTER:话术技能 + (FLAG:催眠强度 > 25) + (FLAG:催眠强度 > 50) + (FLAG:催眠强度 > 75), 6))
+ELSE
+;	TCVAR:301 += 300 / (4 + ABL:MASTER:话术技能)
+	TCVAR:301 += 300 / (4 + MIN(ABL:MASTER:话术技能 + (FLAG:催眠强度 > 25) + (FLAG:催眠强度 > 50) + (FLAG:催眠强度 > 75), 6))
+ENDIF
+IF TCVAR:301>100
+	SETCOLOR C_RED
+	PRINTFORML 会话累积值={TCVAR:301}
+	RESETCOLOR
+ELSE
+	PRINTFORML 会话累积值={TCVAR:301}
+ENDIF
+TIME += 10
+;IF TARGET == 110
+;	PRINTFORML 笔谈したので稍微时间がかかった…
+;	TIME += 15
+;ENDIF
+EXP:MASTER:会话经验 ++
+IF CHK_DATENOW(CFLAG:TARGET:约会中)
+	EXP:MASTER:约会经验 ++
+	EXP:TARGET:约会经验 ++
+ENDIF
+
+;相手が烂醉中だと效果大幅低减
+IF TCVAR:烂醉
+	TIMES SOURCE:欢乐 , 0.10
+	TIMES SOURCE:征服 , 0.10
+	TIMES SOURCE:被动 , 0.10
+ENDIF
+RETURN 1
+
+;-------------------------------------------------
+;实行判定
+;-------------------------------------------------
+@COM_ABLE300
+;会话实行判定
+SIF !TFLAG:100
+	RETURN 0
+;批量管理
+SIF GLOBAL_COMABLE(300)
+	RETURN RESULT
+;睡眠中
+SIF CFLAG:睡眠 && !CFLAG:陪睡中
+	RETURN 0
+;气力0
+SIF BASE:MASTER:气力 <= 0
+	RETURN 0
+;停止中は不可
+SIF FLAG:70
+	RETURN 0
+
+RETURN 1

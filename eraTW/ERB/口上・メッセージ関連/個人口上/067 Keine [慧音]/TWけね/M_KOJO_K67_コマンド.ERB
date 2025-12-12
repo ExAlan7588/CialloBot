@@ -1,0 +1,1197 @@
+﻿;※※※※※※※※※※※※※※※※※※※※※※※※※
+;逆肛交系指令
+;※※※※※※※※※※※※※※※※※※※※※※※※※
+;==================================================
+;90,被肛门爱抚
+;==================================================
+@M_KOJO_MESSAGE_COM_K67_90
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K67_90_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K67_90_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		IF 情感状态() == 4
+			PRINTFORMW 「爱、爱抚……菊、菊部嘛！？」
+			PRINTFORMW 「但、但是那边不是用来排泄的器官……」
+			PRINTFORMW 「这个……%MASTERNAME:67%……的癖好有点奇怪呢」
+			PRINTFORMW 慧音有点放不开的用手爱抚着%CALLNAME:MASTER%的肛门
+			PRINTFORMW 因为慧音的技术不够熟练直接插进了里面、使%CALLNAME:MASTER%有些痛苦
+			PRINTFORMW 「啊…抱、抱歉」
+			PRINTFORMW 「这个……不知道该怎么做……」
+			PRINTFORMW 慧音的神情充满着绯红和尴尬
+		ELSEIF 情感状态() == 3
+			PRINTFORMW 「嗯、什么………？」
+			PRINTFORMW 「要我爱抚……那边吗？」
+			PRINTFORMW 「那是用来………用来排泄的地方……」
+			PRINTFORMW 「%CALLNAME:MASTER%……的性癖……」
+			PRINTFORMW 「变态」
+			PRINTFORMW 慧音虽然爱抚着%CALLNAME:MASTER%的肛门
+			PRINTFORMW 但还是忍不住对这种性癖感到变态
+		ELSEIF 情感状态() == 2 || 情感状态() == 1
+			PRINTFORMW 「爱抚那边的话……能得到什么快感吗…」
+			PRINTFORMW 「总觉得……这样子很变态……」
+		ELSEIF MARK:2 == 3
+			PRINTFORMW 「这样子舒服吗？」
+			PRINTFORMW 「看到你舒服的样子就可以了」
+			PRINTFORMW 专心玩弄着%CALLNAME:MASTER%肛门的慧音
+			PRINTFORMW %CALLNAME:MASTER%看到充满知性的教师这种行为
+			PRINTFORMW 浓浓的背德感刺激着%CALLNAME:MASTER%
+		ENDIF
+			PRINTFORMW 「我还真的想不到能做这种事情、这样子也会有什么感受吗？」
+			PRINTFORMW 「真是令人感到惊奇」
+		RETURN 1
+	ENDIF
+	;基本セット
+	;恋慕
+	IF 情感状态() == 4
+		SELECTCASE RAND:3
+		CASE 0
+			IF ABL:MASTER:2 > 10
+				PRINTFORMW 「因为被玩弄着后庭而兴奋着吗？」
+				PRINTFORMW 「我都不知道%MASTERNAME:67%这么变态呢」
+				PRINTFORMW 慧音笑瞇瞇的说着、更让人感到兴奋了
+			ELSE
+				PRINTFORMW 「这样子爱抚真的有感觉吗……？」
+				PRINTFORMW 「%MASTERNAME:67%怎么会喜欢这种……玩法呢？」
+			ENDIF
+		CASE 1
+			IF ABL:MASTER:2 > 20
+				PRINTFORMW 「呵呵、准备来检查直肠」
+				PRINTFORMW 慧音看着%CALLNAME:MASTER%雄起的下身、露出了色情的样子
+				PRINTFORMW 慧音不断用润滑的手指插进%CALLNAME:MASTER%的菊门
+				PRINTFORMW 被玩弄着的%CALLNAME:MASTER%忍不住微微颤抖
+				PRINTFORMW 「哈～看起来很健康嘛～%UNICODE(0x2665)%」
+			ELSE
+				PRINTFORMW 「这样子……会舒服吗？」
+				PRINTFORMW 「%MASTERNAME:67%………这样子有些变态呢」
+			ENDIF
+		CASE 2
+			IF ABL:MASTER:2 > 20
+				PRINTFORMW 「嗯～喜欢这样吗？」
+				PRINTFORMW 慧音不断刺激着%CALLNAME:MASTER%后面的性感带
+				PRINTFORMW 「呵呵、看着%MASTERNAME:67%的表情也令我……兴奋起来了呢」
+				PRINTFORMW 慧音的身体渐渐发情了起来
+				BASE:67:10 += 400
+				PALAM:67:9 += 1000
+			ELSE
+				PRINTFORMW 「这样子…可以吗？」
+				PRINTFORMW 慧音慢慢的刺激着%CALLNAME:MASTER%的后面
+			ENDIF
+		ENDSELECT
+	ELSEIF 情感状态() == 3
+		PRINTFORMW 「从没想过可以这样玩呢」
+		PRINTFORMW 「%CALLNAME:MASTER%现在的表情……很可爱呢」
+		PRINTFORMW 慧音边用手指刺激着%CALLNAME:MASTER%菊门边不断的看着%CALLNAME:MASTER%的表情
+	ELSEIF 情感状态() == 2 || 情感状态() == 1
+		PRINTFORMW 「%CALLNAME:MASTER%……喜欢这样吗？」
+		PRINTFORMW 「明明这里并不是用来做这种事情的器官」
+		PRINTFORMW 「真是……」
+	ELSEIF MARK:2 == 3
+		PRINTFORMW 「呵呵、这样子舒服吗？」
+		PRINTFORMW 「太好了呢、手指都充满了%CALLNAME:MASTER%的味道」
+		PRINTFORMW 慧音将手指摆到自己的鼻前用力嗅着
+		PRINTFORMW 「%CALLNAME:MASTER%的气味充满在我脑中呢」
+		PRINTFORMW 露出色情表情的慧音
+	ELSE
+		PRINTFORMW 「这样子还可以吧？」
+		PRINTFORMW 「总觉得不是该做这种事情的时候……」
+	ENDIF
+	RETURN 1
+ENDIF
+RETURN 1
+;==================================================
+;91,被舔肛门
+;==================================================
+@M_KOJO_MESSAGE_COM_K67_91
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K67_91_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K67_91_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		IF 情感状态() == 4
+			PRINTFORMW 「要、要让我舔那里嘛！？」
+			PRINTFORMW 「这……应该是相当不卫生的行为……」
+			PRINTFORMW 「%MASTERNAME:67%有先洗过澡了吗？」
+			PRINTFORMW 「这样子舔的话…很容易造成奇怪的状况……」
+			PRINTFORMW 「总、总之………」
+			PRINTFORMW 「我……尽量尝试看看」
+			PRINTFORMW 「………」
+			PRINTFORMW 慧音将舌头渐渐朝向%CALLNAME:MASTER%的后庭慢慢的侍奉起来
+		ELSEIF 情感状态() == 3
+			PRINTFORMW 「……要我舔这里吗？」
+			PRINTFORMW 「嗯……这个………没、没关系」
+			PRINTFORMW 「只要是%CALLNAME:MASTER%的话……」
+			PRINTFORMW 渐渐的只剩下呼吸声、慧音用着舌头不断的侍奉着
+		ELSEIF 情感状态() == 2 || 情感状态() == 1
+			PRINTFORMW 「要我舔……这里？」
+			PRINTFORMW 「不行、绝对不能接受！」
+			PRINTFORMW 「说什么都不会做这种事情的！」
+			TFLAG:193 = 0
+			RETURN RESULT
+		ELSEIF MARK:2 == 3
+			PRINTFORMW 「要我舔这里吗？」
+			PRINTFORMW 「好吧、如果%CALLNAME:MASTER%喜欢的话…」
+			PRINTFORMW 慧音朝向%CALLNAME:MASTER%的菊门、不断的舔弄着
+		ELSE
+			PRINTFORMW 「要我舔这里？」
+			PRINTFORMW 「你是在开玩笑嘛！！」
+			PRINTFORMW 「居然想让我做这种事情！」
+			PRINTFORMW 「你到底…把这种事情当成什么了！！」
+			PRINTFORMW 「今天这种羞辱我一定会好好记着的！」
+			PRINTFORMW 慧音相当生气的样子…
+			PRINTFORMW 慧音反发 +1
+			CFLAG:318 = 1
+			CFLAG:322 = 1
+			CFLAG:67:2 -= 300
+			CFLAG:67:4 -= 100
+			BASE:12 += 3000
+			Juel:30 += 2000
+			Juel:31 += 2000
+			MARK:3 += 1
+			MARK:4 += 1
+			TFLAG:193 = 0
+			RETURN RESULT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;基本
+	IF 情感状态() == 4
+		SELECTCASE RAND:3
+		CASE 0
+			IF ABL:MASTER:2 > 15
+				PRINTFORMW 「喜欢这样子玩弄吗？」
+				PRINTFORMW 一小段时间的熟悉后慧音大致上排除了不适感
+				PRINTFORMW 已经可以好好的舔弄着%CALLNAME:MASTER%后穴
+				PRINTFORMW 「%MASTERNAME:67%最喜欢的慧音的舌头呢、嘿嘿」
+				PRINTFORMW 慧音努力的侍奉着
+			ELSE
+				PRINTFORMW 「这样子……舔………」
+				PRINTFORMW 「很……奇怪呢」
+				PRINTFORMW 「%MASTERNAME:67%…我能拒绝这种要求吗……」
+				PRINTFORMW 「不是说讨厌……只是………」
+				PRINTFORMW 慧音最后还是乖乖的用着舌头侍奉着
+			ENDIF
+		CASE 1
+			IF ABL:MASTER:2 > 20
+				PRINTFORMW 慧音柔软的舌头不断的在%CALLNAME:MASTER%菊门周围围绕着
+				PRINTFORMW %CALLNAME:MASTER%被刺激的抖动着
+				PRINTFORMW 「嘻嘻、%MASTERNAME:67%这么喜欢别人玩弄你的菊部吗？」
+				PRINTFORMW 「这种性癖真的…很变态呢」
+			ELSE
+				PRINTFORMW 「嘞嘞嘞……」
+				PRINTFORMW 慧音努力的用舌头舔弄着%CALLNAME:MASTER%的菊部
+				PRINTFORMW 「这样子…舌头好酸呢……」
+				PRINTFORMW 慧音捏了捏自己的下顎
+				PRINTFORMW 「%MASTERNAME:67%的这种性癖真是变态…」
+				PRINTFORMW 「不过……我好像也…兴奋起来了呢…」
+			ENDIF
+		CASE 2
+			IF ABL:MASTER:2 > 30
+				PRINTFORMW 慧音用力撑开了%CALLNAME:MASTER%的屁股
+				PRINTFORMW 「这样子可爱的屁股、要好好的玩弄一下呢」
+				PRINTFORMW 慧音用嘴不断的朝着%CALLNAME:MASTER%的嫩壁吹气着
+				PRINTFORMW 「呼～呼～%MASTERNAME:67%喜欢这样嘛～」
+				PRINTFORMW 经过好几次的玩弄后、%CALLNAME:MASTER%后门的敏感度已经相当敏感、并且不断的收缩着
+				PRINTFORMW 「呵呵、只是被这样吹气着就兴奋成这样吗？」
+				PRINTFORMW 「%MASTERNAME:67%真是…喜欢让人玩弄自己后面……的变态呢」
+				PRINTFORMW 挑逗完%CALLNAME:MASTER%的慧音用着舌头玩弄着%CALLNAME:MASTER%后面的肉壁
+			ELSEIF ABL:MASTER:2 > 15
+				PRINTFORMW 「让自己的爱人做这种事情、%MASTERNAME:67%真是个大变态」
+				PRINTFORMW 慧音用手指不断围绕着%CALLNAME:MASTER%的后庭刺激着
+				PRINTFORMW 「嘿嘿、怎么这个地方一直不断的收缩着、难道是兴奋了？」
+				PRINTFORMW 「真是个坏孩子呢、老师我要好好的教育才行」
+				PRINTFORMW 慧音用舌头不断舔舐着%CALLNAME:MASTER%内部的肉壁
+			ELSE
+				PRINTFORMW 「%MASTERNAME:67%真是的……让自己的恋人做这种事情……不羞愧吗？」
+				PRINTFORMW 「这种奇怪的事情………无法理解……」
+				PRINTFORMW 「…………」
+				PRINTFORMW 「…………」
+				PRINTFORMW 「不要这样盯着我看」
+				PRINTFORMW 「………好嘛、我……尝试看看」
+				PRINTFORMW 慧音用不熟练的舌头舔弄着%CALLNAME:MASTER%的后庭
+			ENDIF
+		ENDSELECT
+	ELSEIF 情感状态() == 3
+		IF ABL:MASTER:2 > 10
+			PRINTFORMW 「舔这里…有这么舒服吗…」
+			PRINTFORMW 「真是……奇怪的癖好呢」
+		ELSE
+			PRINTFORMW 「……真的…要舔这里吗？」
+			PRINTFORMW 「嗯……没、没问题的……」
+			PRINTFORMW (%CALLNAME:MASTER%原来有这种变态的性癖……人无完人、没关系的…)
+			PRINTFORMW 渐渐的只剩下呼吸和舌头侍奉的声音
+		ENDIF
+	ELSEIF 情感状态() == 2 || 情感状态() == 1
+		IF CFLAG:67:2 > 2500
+			PRINTFORMW 「……%CALLNAME:MASTER%就这么想要……我做这种事情吗？」
+			PRINTFORMW 「好、好吧……」
+			PRINTFORMW 「我………尝试看看吧…」
+			PRINTFORMW 慧音用着舌头侍奉着%CALLNAME:MASTER%的排泄用的肉壁
+		ELSEIF CFLAG:67:2 > 2000
+			PRINTFORMW 「这种事情……太………肮脏了」
+			PRINTFORMW 「如果因此感染了一些问题就……不好了」
+			PRINTFORMW 「所以……不行的」
+			TFLAG:193 = 0
+			RETURN RESULT
+		ELSE
+			PRINTFORMW 「我说了这种事情…我不会做的」
+			PRINTFORMW 「就算是%CALLNAME:MASTER%这样拜托也是！」
+			TFLAG:193 = 0
+			RETURN RESULT
+		ENDIF
+	ELSEIF MARK:2 == 3
+		PRINTFORMW 「对这种事情…感到习惯的我……有几分羞耻的感觉呢…」
+	ELSE
+		PRINTFORMW 「不用痴心妄想了」
+		PRINTFORMW 「这种事情我不会做的」
+		PRINTFORMW 「不谈种族、纵使是正常人类也不会做这种事情的」
+		PRINTFORMW 「你在招惹我吗！？」
+		PRINTFORMW 慧音相当生气的样子…
+		PRINTFORMW 慧音反发 +1
+		CFLAG:318 = 1
+		CFLAG:322 = 1
+		CFLAG:67:2 -= 300
+		CFLAG:67:4 -= 100
+		BASE:12 += 3000
+		Juel:30 += 2000
+		Juel:31 += 2000
+		MARK:3 += 1
+		MARK:4 += 1
+		TFLAG:193 = 0
+		RETURN RESULT
+	ENDIF
+	RETURN 1
+ENDIF
+RETURN 1
+;==================================================
+;92,被Ａ正常位
+;==================================================
+@M_KOJO_MESSAGE_COM_K67_92
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K67_92_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K67_92_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;恋人
+	IF TALENT:恋人
+		SELECTCASE RAND:2
+		CASE 0
+			;PRINTFORMW 「さて、いただきます」
+			;PRINTFORMW 「%CALLNAME:MASTER%は私のものだって隅々までしっかりマーキングしておかないと」
+			;PRINTFORMW 「おなかでちゃんと吸收してね、ふふ」
+			PRINTFORMW 「那么、我开动了」
+			PRINTFORMW 「%CALLNAME:MASTER%是我的，得仔细地在每个角落都留下标记呢」
+			PRINTFORMW 「要好好地用肚子吸收哦，呵呵」
+		CASE 1
+			;PRINTFORMW 「すごく气持ち良さそうだけど、厕とか不便してないのか？」
+			;PRINTFORMW 「排泄器官でよがる变态さん？」
+			PRINTFORMW 「看起来这么舒服，不会上厕所都有感觉吧？」
+			PRINTFORMW 「排泄器官都能有快感的大变态？」
+		ENDSELECT
+		RETURN 1
+	ELSEIF TALENT:恋慕
+		;PRINTFORMW 「あ、あの、%CALLNAME:MASTER%……痛くない、か？」
+		;PRINTFORMW ゆっくり腰を揺すりながらもこちらを气にかけてくれている
+		;PRINTFORMW 气持ち良いよと答えると、颜を真っ赤にして俯いてしまった
+		PRINTFORMW 「啊，那个，%CALLNAME:MASTER%……不痛吗？」
+		PRINTFORMW 一边慢慢地摇晃着腰，一边关心着对方
+		PRINTFORMW 听到很舒服的回答后，满脸通红地低下了头
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		;PRINTFORMW 「……哈啊、哈啊……」
+		;PRINTFORML 慧音は颜を伏せながらも无心で腰を振っている。
+		;PRINTFORMW すっかり远虑を无くした抽插に、自らも快乐を感じる%CALLNAME:MASTER%だった。
+		PRINTFORMW 「……哈啊、哈啊……」
+		PRINTFORML 慧音虽然低着头，但还是心无旁骛地摇着腰。
+		PRINTFORMW %CALLNAME:MASTER%面对这毫不客气的抽插，自身也涌起快感。
+		RETURN 1
+	;それ以外
+	ELSE
+		;PRINTFORMW 「犯してくれだと？」
+		;PRINTFORMW 「いや、やられるよりはずっといいんだけど……变な奴だな」
+		PRINTFORMW 「你说让我侵犯你？」
+		PRINTFORMW 「不、虽说比起被侵犯要好得多……真是个奇怪的家伙」
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;93,被Ａ后背位
+;==================================================
+@M_KOJO_MESSAGE_COM_K67_93
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K67_93_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K67_93_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;恋人
+	IF TALENT:恋人
+		;PRINTFORMW 「さ、交尾しよっか」
+		;PRINTFORMW そう言いつつ『交尾』とは关系のない器官に慧音のモノが沉んでいく
+		;PRINTFORML 「このカッコ、いいよねえ……私たちみたいな变态にはぴったりだと思わない？」
+		;PRINTFORMW 荡ける程柔らかな彼女の舌が%CALLNAME:MASTER%の耳筋を抚でる
+		;PRINTFORML 「こっちでヤったらいくら出しても无駄だって思うとさ」
+		;PRINTFORML 「すっごく兴奋するんだけど……先生だけかなぁ？」
+		;PRINTFORMW ねっとりとした腰使いで%CALLNAME:MASTER%の肛门を掘削しながら嗫いてきた
+		PRINTFORMW 「那么，我们交配吧」
+		PRINTFORMW 虽然这么说，但慧音的东西没入与“交尾”无关的器官中
+		PRINTFORML 「这副样子，真不错啊……你不觉得很适合我们这样的变态吗？」
+		PRINTFORMW 她柔软得要化掉的舌头抚摸着%CALLNAME:MASTER%的耳朵
+		PRINTFORML 「如果用这里做的话，无论射出来多少都没关系」
+		PRINTFORML 「老师我很兴奋哦……只有我在兴奋吗？」
+		PRINTFORMW 慧音一边轻声耳语着，一边妖娆地扭动着腰深入%CALLNAME:MASTER%的肛门
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		;PRINTFORMW 「……哈啊、哈啊……」
+		;PRINTFORMW 慧音は颜を伏せながらも无心で腰を振っている。
+		;PRINTFORMW すっかり远虑を无くした抽插に、自らも快乐を感じる%CALLNAME:MASTER%だった。
+		PRINTFORMW 「……哈啊、哈啊……」
+		PRINTFORML 慧音虽然低着头，但还是心无旁骛地摇着腰。
+		PRINTFORMW %CALLNAME:MASTER%面对这毫不客气的抽插，自身也涌起快感。
+		RETURN 1
+	;それ以外
+	ELSE
+		;PRINTFORMW 「犯してくれだと？」
+		;PRINTFORMW 「いや、やられるよりはずっといいんだけど……变な奴だな」
+		PRINTFORMW 「你说让我侵犯你？」
+		PRINTFORMW 「不、虽说比起被侵犯要好得多……真是个奇怪的家伙」
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;94,Ａ骑乘位
+;==================================================
+@M_KOJO_MESSAGE_COM_K67_94
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K67_94_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K67_94_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;时奸中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:恋慕
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;※※※※※※※※※※※※※※※※※※※※※※※※※
+;助手による指令、及びレズプレイ
+;※※※※※※※※※※※※※※※※※※※※※※※※※
+;==================================================
+;120,强制舔阴
+;==================================================
+@M_KOJO_MESSAGE_COM_K67_120
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K67_120_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K67_120_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;恋慕
+	IF TALENT:恋慕
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;121,贝あわせ
+;==================================================
+@M_KOJO_MESSAGE_COM_K67_121
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K67_121_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K67_121_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;恋慕
+	IF TALENT:恋慕
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;123,足交
+;==================================================
+@M_KOJO_MESSAGE_COM_K67_123
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K67_123_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K67_123_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;恋人
+	IF TALENT:恋人
+		;PRINTFORMW 「あっ……」
+		;PRINTFORMW 「もうちょっとだけ、强く……お愿い」
+		;PRINTFORML 痛いんじゃないかと心配になる%CALLNAME:MASTER%だったが、
+		;PRINTFORMW 慧音は%CALLNAME:MASTER%の足に蹂躏される自らの股间を涎を垂らしながら见つめていた
+		PRINTFORMW 「啊……」
+		PRINTFORMW 「再稍微用力一点……拜托了」
+		PRINTFORML %CALLNAME:MASTER%担心这样会不会痛、
+		PRINTFORMW 但慧音垂涎地凝视着自己被%CALLNAME:MASTER%的脚蹂躏的股间
+		RETURN 1
+	ELSEIF TALENT:恋慕
+		;PRINTFORMW 「……」
+		;PRINTFORMW 命令を受けておずおずと股を广げる慧音
+		;PRINTFORMW 自らの股间に伸びる%CALLNAME:MASTER%の足を复杂な表情で见つめていた
+		PRINTFORMW 「……」
+		PRINTFORMW 受命畏首畏尾张开双腿的慧音
+		PRINTFORMW 用复杂的表情注视着伸向自己股间的%CALLNAME:MASTER%的脚
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		;PRINTFORMW 「……乱暴なことはしてくれるなよ？」
+		PRINTFORMW 「……可别太粗暴了哦？」
+		RETURN 1
+	;それ以外
+	ELSE
+		;PRINTFORMW 「……」
+		;PRINTFORMW (……あんまり气持ちよくない……)
+		PRINTFORMW 「……」
+		PRINTFORMW (……不太舒服呢……)
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;124,手淫
+;==================================================
+@M_KOJO_MESSAGE_COM_K67_124
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K67_124_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K67_124_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;恋人
+	IF TALENT:恋人
+		IF TALENT:1 == 3
+			;PRINTFORML 「あ、%CALLNAME:MASTER%の手だぁ……」
+			;PRINTFORMW 轻く竿を握ってやると、それだけでうっとりとした表情を浮かべる
+			;PRINTFORML 「ね、シコシコして……はやくぅ……」
+			;PRINTFORML 荡けた表情でおねだりしてくる慧音に少し意地恶をしたくなった%CALLNAME:MASTER%は、
+			;PRINTFORMW 彼女の竿を握ったまま静止してみた
+			;PRINTFORML 「うぅ……哈啊……ふぅ……」
+			;PRINTFORML お互いの沉黙の中、荒い呼吸音だけが响く
+			;PRINTFORMW 次第に泪目で恳求するような表情になる慧音に、自分でやりなさいと命じる%CALLNAME:MASTER%
+			;PRINTFORML 「あうぅ……意地恶するなよぉ……！」
+			;PRINTFORMW 散々焦らされた慧音は情けない声を上げて抗议してきたが、%CALLNAME:MASTER%の手で自慰を始めるのだった
+			PRINTFORML 「啊、是%CALLNAME:MASTER%的手啊……」
+			PRINTFORMW 光是这样轻轻握住肉棒，就会露出陶醉的表情
+			PRINTFORML 「呐、都硬邦邦的了……快点……」
+			PRINTFORML 慧音一脸淫荡地央求着，让%CALLNAME:MASTER%变得有点想使坏、
+			PRINTFORMW 握着她肉竿的手停了下来
+			PRINTFORML 「呜……哈……呼……」
+			PRINTFORML 在彼此的沉默中，只有粗重的呼吸声在回响
+			PRINTFORMW 慧音渐渐露出了含泪恳求的表情，%CALLNAME:MASTER%却命令慧音自己动
+			PRINTFORML 「啊呜……别使坏啊……！」
+			PRINTFORMW 被逼得急不可耐的慧音虽然以可怜兮兮的声音发出抗议、但还是用%CALLNAME:MASTER%的手开始自慰
+		ELSE
+			;PRINTFORML 「ひゃんっ……！？」
+			;PRINTFORMW 素早く慧音の膣に指を埋め、爱液をかき出してやる
+			;PRINTFORML 「やっ、急すぎだっ……」
+			;PRINTFORMW 不意を突かれてしまい、慌てて%CALLNAME:MASTER%の腕を离そうとする
+			;PRINTFORML 「ちょっ、ちょっと待っ……ひぅっ！」
+			;PRINTFORMW 小刻みに内を责められ、ぷしゃ、と小さく潮を吹いた
+			PRINTFORML 「呀呜……！？」
+			PRINTFORMW 迅速地把手指埋进慧音的阴道内，挖出爱液来
+			PRINTFORML 「咿、太突然了……」
+			PRINTFORMW 慧音被打了个措手不及、慌慌张张地想要推开%CALLNAME:MASTER%的手
+			PRINTFORML 「等、等一下……哦！」
+			PRINTFORMW 穴内被一点一点地玩弄着、小小的潮吹噗噗地喷射出来
+				IF ABL:Ｖ感觉 >= 4
+					;PRINTFORMW 「ばっ……バカぁ……」
+					;PRINTFORMW 抵抗する彼女の腕が弛缓した隙に、更に责め立てる
+					;PRINTFORMW 「ひっ……や、やめ、ぇ……っ！」
+					;PRINTFORMW …………
+					;PRINTFORMW ……
+					;PRINTFORMW 「哈啊……哈啊……ひぇん、ひぇ……こわれ、りゅぅ……」
+					;PRINTFORMW ……少々やりすぎてしまった
+					PRINTFORMW 「笨……笨蛋……」
+					PRINTFORMW 趁着她抵抗的手松弛的间隙，进一步进攻
+					PRINTFORMW 「咿……呀、不要、不……啊！」
+					PRINTFORMW …………
+					PRINTFORMW ……
+					PRINTFORMW 「哈啊……哈……唏、希……要坏掉了、啦……」
+					PRINTFORMW ……做得有点过头了
+				ELSE
+					;PRINTFORMW 「ばっ……バカぁ……」
+					PRINTFORMW 「笨……笨蛋……」
+				ENDIF
+		ENDIF
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;125,被爱抚
+;==================================================
+@M_KOJO_MESSAGE_COM_K67_125
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K67_125_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K67_125_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;恋慕
+	IF TALENT:恋慕
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;126,互相揉胸
+;==================================================
+@M_KOJO_MESSAGE_COM_K67_126
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K67_126_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K67_126_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;恋慕
+	IF TALENT:恋慕
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;=================================================
+;特殊指令
+;=================================================
+;-------------------------------------------------
+;180,润滑乳液
+;-------------------------------------------------
+@M_KOJO_MESSAGE_COM_K67_180
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K67_180_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K67_180_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;时奸中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:恋慕
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;181,媚药,
+;==================================================
+@M_KOJO_MESSAGE_COM_K67_181
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K67_181_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K67_181_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;恋慕
+	IF TALENT:恋慕
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;182,利尿剂,
+;==================================================
+@M_KOJO_MESSAGE_COM_K67_182
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K67_182_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K67_182_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;恋慕
+	IF TALENT:恋慕
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;183,摄像机,
+;==================================================
+@M_KOJO_MESSAGE_COM_K67_183
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K67_183_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K67_183_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;开始
+	IF TEQUIP:28
+		;恋慕
+		IF TALENT:恋慕
+			PRINTFORMW 
+			RETURN 1
+		;屈服3
+		ELSEIF MARK:屈服刻印 == 3
+			PRINTFORMW 
+			RETURN 1
+		;それ以外
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	;结束
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;187,浴室PLAY
+;==================================================
+@M_KOJO_MESSAGE_COM_K67_187
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K67_187_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K67_187_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;开始
+	IF TEQUIP:31
+		;恋慕
+		IF TALENT:恋慕
+			PRINTFORMW 
+			RETURN 1
+		;屈服3
+		ELSEIF MARK:屈服刻印 == 3
+			PRINTFORMW 
+			RETURN 1
+		;それ以外
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	;结束
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;188,喷淋装置
+;==================================================
+@M_KOJO_MESSAGE_COM_K67_188
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K67_188_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K67_188_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;开始
+	IF TEQUIP:32
+		;恋慕
+		IF TALENT:恋慕
+			PRINTFORMW 
+			RETURN 1
+		;屈服3
+		ELSEIF MARK:屈服刻印 == 3
+			PRINTFORMW 
+			RETURN 1
+		;それ以外
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	;结束
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;189,新娘PLAY
+;==================================================
+@M_KOJO_MESSAGE_COM_K67_189
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K67_189_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K67_189_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;开始
+	IF TEQUIP:33
+		;恋慕
+		IF TALENT:恋慕
+			PRINTFORMW 
+			RETURN 1
+		;屈服3
+		ELSEIF MARK:屈服刻印 == 3
+			PRINTFORMW 
+			RETURN 1
+		;それ以外
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	;结束
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;190,新妻（になる）プレイ
+;==================================================
+@M_KOJO_MESSAGE_COM_K67_190
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K67_190_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K67_190_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;开始
+	IF TEQUIP:34
+		;恋慕
+		IF TALENT:恋慕
+			PRINTFORMW 
+			RETURN 1
+		;屈服3
+		ELSEIF MARK:屈服刻印 == 3
+			PRINTFORMW 
+			RETURN 1
+		;それ以外
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	;结束
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;-------------------------------------------
+;调教后のテ接吻ト
+;TFLAG:8 (1=TARGETが扫除 2=ASSIが扫除 3=TARGETとASSIが扫除)
+;-------------------------------------------
+@M_KOJO_MESSAGE_PALAMCNG_C_K67
+CALL PALAM_MESSAGE_C
+;处女丧失
+IF TCVAR:破瓜
+	;正真正铭处女丧失
+	IF TCVAR:破瓜 == 1
+	;再生处女丧失
+	ELSEIF TCVAR:破瓜 == 2
+	;无自觉非处女丧失
+	ELSEIF TCVAR:破瓜 == -1
+	ENDIF
+ENDIF
+
+;Ａ处女丧失
+IF TCVAR:Ａ破瓜
+	;正真正铭Ａ处女丧失
+	IF TCVAR:Ａ破瓜 == 1
+	;无自觉Ａ处女丧失
+	ELSEIF TCVAR:Ａ破瓜 == -1
+	ENDIF
+ENDIF
+
+;口交で射精后の扫除
+IF (TCVAR:MASTER:112 == 1 || TCVAR:MASTER:112 == 2) && SELECTCOM == 81
+	PRINTFORMW 
+ENDIF

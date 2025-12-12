@@ -1,0 +1,556 @@
+﻿;※※※※※※※※※※※※※※※※※※※※※※※※※
+;道具系指令
+;※※※※※※※※※※※※※※※※※※※※※※※※※
+;==================================================
+;40,跳蛋
+;==================================================
+@M_KOJO_MESSAGE_COM_K61_40
+
+CALL M_KOJO_MESSAGE_COM_K61_40_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K61_40_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;时奸中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF 陷落状态() == 3
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;41,电动按摩棒
+;==================================================
+@M_KOJO_MESSAGE_COM_K61_41
+
+CALL M_KOJO_MESSAGE_COM_K61_41_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K61_41_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;时奸中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF 陷落状态() == 3
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;42,阴蒂夹
+;==================================================
+@M_KOJO_MESSAGE_COM_K61_42
+
+CALL M_KOJO_MESSAGE_COM_K61_42_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K61_42_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;装着
+	IF TEQUIP:阴蒂夹
+		;时奸中
+		IF FLAG:70
+			PRINTFORMW 
+			RETURN 1
+		;恋慕
+		ELSEIF 陷落状态() == 3
+			PRINTFORMW 
+			RETURN 1
+		;屈服3
+		ELSEIF MARK:屈服刻印 == 3
+			PRINTFORMW 
+			RETURN 1
+		;それ以外
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	;解除
+	ELSE
+		PRINTFORMW
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;43,飞机杯
+;==================================================
+@M_KOJO_MESSAGE_COM_K61_43
+
+CALL M_KOJO_MESSAGE_COM_K61_43_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K61_43_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;装着
+	IF TEQUIP:飞机杯
+		;恋慕
+		IF 陷落状态() == 3
+			PRINTFORMW 
+			RETURN 1
+		;屈服3
+		ELSEIF MARK:屈服刻印 == 3
+			PRINTFORMW 
+			RETURN 1
+		;それ以外
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	;解除
+	ELSE
+		PRINTFORMW
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;44,振动棒
+;==================================================
+@M_KOJO_MESSAGE_COM_K61_44
+
+CALL M_KOJO_MESSAGE_COM_K61_44_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K61_44_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		IF TCVAR:破瓜 == 1
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;基本セット
+	;装着
+	IF TEQUIP:振动棒
+		;时奸中
+		IF FLAG:70
+			PRINTFORMW 
+			RETURN 1
+		;恋慕
+		ELSEIF 陷落状态() == 3
+			PRINTFORMW 
+			RETURN 1
+		;屈服3
+		ELSEIF MARK:屈服刻印 == 3
+			PRINTFORMW 
+			RETURN 1
+		;それ以外
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	;解除
+	ELSE
+		PRINTFORMW
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;45,肛用振动棒
+;==================================================
+@M_KOJO_MESSAGE_COM_K61_45
+
+CALL M_KOJO_MESSAGE_COM_K61_45_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K61_45_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;装着
+	IF TEQUIP:肛用振动棒
+		;时奸中
+		IF FLAG:70
+			PRINTFORMW 
+			RETURN 1
+		;恋慕
+		ELSEIF 陷落状态() == 3
+			PRINTFORMW 
+			RETURN 1
+		;屈服3
+		ELSEIF MARK:屈服刻印 == 3
+			PRINTFORMW 
+			RETURN 1
+		;それ以外
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	;解除
+	ELSE
+		PRINTFORMW
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;46,后庭拉珠
+;==================================================
+@M_KOJO_MESSAGE_COM_K61_46
+
+CALL M_KOJO_MESSAGE_COM_K61_46_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K61_46_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;装着
+	IF TEQUIP:后庭拉珠
+		;恋慕
+		IF 陷落状态() == 3
+			PRINTFORMW 
+			RETURN 1
+		;屈服3
+		ELSEIF MARK:屈服刻印 == 3
+			PRINTFORMW 
+			RETURN 1
+		;それ以外
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	;解除
+	ELSE
+		PRINTFORMW
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;47,乳头夹
+;==================================================
+@M_KOJO_MESSAGE_COM_K61_47
+
+CALL M_KOJO_MESSAGE_COM_K61_47_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K61_47_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;装着
+	IF TEQUIP:乳头夹
+		;时奸中
+		IF FLAG:70
+			PRINTFORMW 
+			RETURN 1
+		;恋慕
+		ELSEIF 陷落状态() == 3
+			PRINTFORMW 
+			RETURN 1
+		;屈服3
+		ELSEIF MARK:屈服刻印 == 3
+			PRINTFORMW 
+			RETURN 1
+		;それ以外
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	;解除
+	ELSE
+		PRINTFORMW
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;48,搾乳机
+;==================================================
+@M_KOJO_MESSAGE_COM_K61_48
+
+CALL M_KOJO_MESSAGE_COM_K61_48_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K61_48_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;装着
+	IF TEQUIP:搾乳机
+		;恋慕
+		IF 陷落状态() == 3
+			PRINTFORMW 
+			RETURN 1
+		;屈服3
+		ELSEIF MARK:屈服刻印 == 3
+			PRINTFORMW 
+			RETURN 1
+		;それ以外
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	;解除
+	ELSE
+		PRINTFORMW
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;49,乳头跳蛋
+;==================================================
+@M_KOJO_MESSAGE_COM_K61_49
+
+CALL M_KOJO_MESSAGE_COM_K61_49_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K61_49_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;时奸中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF 陷落状态() == 3
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;50,避孕套装备
+;==================================================
+@M_KOJO_MESSAGE_COM_K61_50
+
+CALL M_KOJO_MESSAGE_COM_K61_50_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K61_50_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	IF TEQUIP:PLAYER:避孕套 && EXP:分娩经验 && !FLAG:70
+		IF 陷落状态() >= 4
+			PRINTFORML 「……%MASTERNAME:61%、你在想什么呢？」
+			PRINTFORML 「笑脸很可怕？　……不是理所当然的嘛。为什么要戴避孕套、不生孩子什么的」
+			PRINTFORML 「哎！焚烧处分完成、喂、好好地播种、让宝宝孕育吧？」
+		ELSEIF 陷落状态() == 3
+			PRINTFORML 「……为什么要用避孕套之类的东西呢？你不想让我怀孕吗？」
+			PRINTFORML 「不管%CALLNAME:MASTER%怎么说、我希望能生孩子、所以没收了」
+		ELSEIF 陷落状态() == 2
+			PRINTFORML 「因为我想要孩子、所以这样的东西不能使用。」
+		ENDIF
+		TEQUIP:PLAYER:避孕套 = 0
+		PRINTFORML 
+		PRINTFORMW 避孕套被妹红强制拿走了
+	;基本セット
+	;时奸中
+	ELSEIF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF 陷落状态() == 3
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+

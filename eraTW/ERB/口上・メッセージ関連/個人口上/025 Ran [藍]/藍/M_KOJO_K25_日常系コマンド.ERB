@@ -1,0 +1,4340 @@
+﻿;※※※※※※※※※※※※※※※※※※※※※※※※※
+;日常系指令
+;※※※※※※※※※※※※※※※※※※※※※※※※※
+;==================================================
+;300,会话
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_300
+;指令共通メッセージ(TRAIN_MESSAGE) 
+;削除すると「～说着话。」とかが消えます
+;口上メイン呼出
+CALL M_KOJO_MESSAGE_COM_K25_300_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_300_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+;时间停止口上を追加する场合は”&& !FLAG:70”を削除し、”IF FLAG:70 == 1”または”IF FLAG:时间停止”などで分岐
+IF LOCAL && !FLAG:70
+	IF TCVAR:302
+		PRINTFORMW 「喂，冷静点。别那么慌张。」
+	ELSE
+		;恋慕以上の筈
+		IF CFLAG:陪睡中
+			SELECTCASE RAND:5
+			CASE 0
+				PRINTFORML 「很在意尾巴吗。就算被压到也不会疼痛喔」
+				PRINTFORMW 「在往我这睡近点吧」
+			CASE 1
+				PRINTFORML 「一起在窝在棉被里聊天也不错」
+				PRINTFORMW 「想就这样永远一起……」
+			CASE 2
+				PRINTFORML 「409。421。433。呵呵、下一个是什么呢？」
+				PRINTFORMW 数字游戏中赢了蓝
+			CASE 3
+				PRINTFORML 「干嘛一直看我的鼻子阿、喂！」
+				PRINTFORMW 蓝像害羞的遮住鼻子
+			CASE 4
+				PRINTFORML 「……嗯，呼，我没有睡」
+				PRINTFORMW 蓝眼睛已经瞇成一条线了
+			ENDSELECT
+			;配置变更＆よりわかりやすい感じに
+			;CFLAG:12からFLAG:73に变更。また约会中でも概率で通常会话を呼び出すように
+			;约会中に季节会话まで呼び出すと约会会话が出てこなさすぎるので季节会话は通常会话と并用
+		ELSEIF TALENT:恋慕
+			IF FLAG:约会的对象 == 25
+				SELECTCASE RAND:2
+				CASE 0
+					CALL RAN_DATETALK
+				CASE 1
+					CALL RAN_NORMALTALK
+				ENDSELECT
+			ELSEIF !TCVAR:25:354
+				SELECTCASE RAND:2
+				CASE 0
+					CALL RAN_NORMALTALK
+				CASE 1
+					CALL RAN_SEASONTALK
+				ENDSELECT
+			ELSE
+				CALL RAN_NORMALTALK
+			ENDIF
+;		;恋慕が付いてから本番。分岐が增えすぎたので别の函数に分けました。スッキリ
+;		;引っ越しに伴う场所IDや约会中フラグの变化が把握出来ずこのような形に
+;			;神社から引っ越してた场合
+;			IF MAIN_MAP >= 1
+;				;现在地が引っ越した先のMap内
+;				IF GET_MAPID(CFLAG:当前位置) == MAIN_MAP
+;					CALL RAN_NORMALTALK
+;				;そうじゃなかったら外。どっかで偶然出会った场合でも约会会话になるけど今は妥协
+;				ELSE
+;					CALL RAN_DATETALK
+;				ENDIF
+;			;以下は神社在住（默认）时
+;			ELSE
+;				IF CFLAG:约会中
+;					CALL RAN_DATETALK
+;				ELSE
+;					CALL RAN_NORMALTALK
+;				ENDIF
+;			ENDIF
+		ELSEIF TALENT:思慕
+			SELECTCASE RAND:10
+			CASE 0
+				PRINTFORML 蓝静静的望着%CALLNAME:MASTER%的脸
+				PRINTFORML 「我说、你会觉得我很可怕吗？」
+				PRINTFORML 「怎么不说话、『一次都没有』你倒是给我这样说阿」
+				PRINTFORMW 有点气呼呼的表情、露出尖牙想吓我
+			CASE 1
+				PRINTFORML 「是是是、别太操心了。我会优先照顾自己的」
+				PRINTFORML 『总是很忙呢』身为年长者的余裕都没了
+				PRINTFORML 随口的回答、不过、感觉到彼此的距离有些微拉近
+				PRINTFORMW 「啊？怎么了？」
+			CASE 2
+				PRINTFORML 「努力是不会白费的。就算是料理跟打扫都是很棒的技能」
+				PRINTFORML 「即使只专精一个、也不会被任何上司讨厌」
+				PRINTFORMW 蓝得意的对我传授诀窍
+			CASE 3
+				PRINTFORML 「本来人跟妖怪不可能在同一个时空的概念」
+				PRINTFORML 「这样的常识也被打破了、时代真是改变了呢」
+				PRINTFORMW 蓝遥望着远方嘟哝着、%CALLNAME:MASTER%在身旁注视蓝的侧脸
+			CASE 4
+				PRINTFORML 「到底有什么不同呢……」
+				PRINTFORML 「唔、这么说的话」
+				PRINTFORMW 倾听着的%CALLNAME:MASTER%朝蓝苦笑着摇头
+			CASE 5
+				PRINTFORML 「你想看我的弹幕？」
+				PRINTFORMW 「呵呵。如果有时间的话就给你看」
+			CASE 6
+				PRINTFORML 「你不是被博丽的巫女使唤着吗？」
+				PRINTFORMW 「灵梦的确完全不会客气。但也不是什么都接受、还是会适当的拒绝」
+			CASE 7
+				PRINTFORML 「玉藻前？ 华阳夫人？ 抱歉跟狐狸有什么关系」
+				PRINTFORMW 嘴上这么说着、蓝却在顾左右而言他
+			CASE 8
+				PRINTFORML 「呵？ 你在盯着哪里看呢？」
+				PRINTFORMW 蓝的微笑不禁让人有些惊慌失措
+			CASE 9
+				PRINTFORML 「以前有过变幻姿态去过人之里」
+				PRINTFORML 「用各种不同的形象、外貌的变换虽有些麻烦」
+				PRINTFORMW 「直到近期也熟练了、节省了不少时间」
+			ENDSELECT
+		ELSE
+			PRINTFORML 蓝听了你的话、轻轻地随声附和着
+			PRINTDATA
+				DATAFORM 「嗯、然后呢？」
+				DATAFORM 「呵呵、是呢」
+				DATAFORM 「你也很辛苦呢」
+				DATAFORM 「烦恼着这种小事。」
+				DATAFORM 「是是是、我明白了」
+				DATAFORM 「呵呵、我也有相同的经历」
+				DATAFORM 「无论是谁都会有失败的时候」
+				DATAFORM 「唔、那边的店家卖的更便宜吗」
+				DATAFORM 「你真不明白。你真是不明白油炸豆皮寿司的魅力阿」
+				DATAFORM 「我的主人？ 想了解她的话就去找她本人才对」
+				;10
+				DATAFORM 「选猫还是狗？不用问当然是猫阿！」
+				DATAFORM 「蘑菇还是竹笋？ 如果是我会都加入菜单上」
+				DATAFORM 「君子不近危。也有不战斗却很强大的存在」
+				DATAFORM 「呵呵。在盯着哪里阿」
+				DATAFORM 「想要埋进尾巴里？ 不行毛发会乱掉的」
+				DATAFORM 「戴着帽子耳朵也是听的到拉」
+				DATAFORM 「曾经考虑过。当个傻瓜也不错」
+				DATAFORM 「不知道从什么时候、人之里白泽住的地方。冒出一堆土豆」
+				DATAFORM 「呵呵、很努力。好孩子好孩子」
+				DATAFORM 「听了……过去的事情糗事。感觉有点难为情」
+				;20
+				DATAFORM 「从外界迷失闯进来的人。也有专精服饰的人。可以期待今年新作」
+				DATAFORM 「最近内裤不知道为何卖的特别火热」
+				DATAFORM 「可要小心狐狸。个性可是很恶劣的」
+				DATAFORM 「不要贸然去危险的地方。博丽的名号也不是绝对有用的」
+				DATAFORM 「说着说着。好想吃豆皮寿司」
+				DATAFORM 「平时都有好好保养不让毛发脱落」
+				DATAFORM 「真和平阿」
+				DATAFORM 「拒绝软弱」
+				DATAFORM 「你出门。头发都这样乱遭遭的吗？」
+				DATAFORM 「欺负我的式神绝不留情」
+				;30
+			ENDDATA
+		ENDIF
+		PRINTL 
+	ENDIF
+ENDIF
+RETURN 1
+;━━━━━━━━━━━━━━━━━━━━━━━━━
+;以下自作函数。影狼口上を参考にさせて顶きました
+;蓝样通常会话（恋慕前提）
+;━━━━━━━━━━━━━━━━━━━━━━━━━
+@RAN_NORMALTALK
+	;通常会话のうち四季を问わない物をこちらへ集约
+	;季节によっては烂れた生活が～とか见れないのが嫌だったんです……
+	SELECTCASE RAND:32
+	CASE 0
+		IF TALENT:恋人
+			PRINTFORML 「真是个好男人呢、%CALLNAME:MASTER%」
+			PRINTFORML 突然被表扬感到不知所措的%CALLNAME:MASTER%。蓝看着静静的笑了
+			PRINTFORMW 「不过、动作还不够典雅。我会彻底磨练你的」
+		ELSE
+			PRINTFORML  「……………」
+			PRINTFORML 在对谈途中突然沉默、蓝的目光盯着%CALLNAME:MASTER%
+			PRINTFORML 然后、被用食指弹了额头
+			PRINTFORML 「给你的行为一个惩罚。不用向我道谢」
+			PRINTFORMW 望着窃笑的蓝%CALLNAME:MASTER%尝试反击回去、不过轻易的被逃脱了
+		ENDIF
+	CASE 1
+		IF TCVAR:25:352 == 1
+			PRINTFORML 「自古以来都有狐狸迷惑人类的传说」
+			PRINTFORML 「%CALLNAME:MASTER%难道不认为我在欺骗你吗？」
+			PRINTFORMW 「……这样阿。问了个笨问题」
+		ELSE
+			PRINTFORML 「前阵子我教橙的小知识。就考考你」
+			PRINTFORMW 「%CALLNAME:MASTER%这石头到底是什么呢？」
+			$INPUT_LOOP_01
+			PRINTL [0] 钻石
+			PRINTL [1] 碳结晶
+			PRINTL [2] 叶子
+			INPUT
+			SELECTCASE RESULT
+			CASE 0
+				PRINTFORML 「可惜。答案只是一片叶子」
+				PRINTFORML 「回答错误也没关系。这本来就只是考验内心本质的问题」
+				PRINTFORMW 「你直率的说出心中所想。是个善与倾听的人」
+			CASE 1
+				PRINTFORML 「可惜。这是玻璃制的假物」
+				PRINTFORML 「察觉到正确答案是不可能的。哈哈干嘛突然从我后面搔痒」
+				PRINTFORMW 「答错就恼羞成怒阿」
+			CASE 2
+				PRINTFORML 「可惜。其实是真的」
+				PRINTFORML 「虽说如此、正确与否。真真假假有什么意义呢？」
+				PRINTFORMW 「哎啊、钻石被风吹走了」
+			CASEELSE
+			GOTO INPUT_LOOP_01
+			ENDSELECT
+			TCVAR:25:352 = 1
+		ENDIF
+	CASE 2
+		IF TALENT:恋人
+			PRINTFORML 「八云家的仇家大概会瞄准你下手吧」
+			PRINTFORML 「我还要变的更强。力量与智慧还远远不够」
+			PRINTFORMW 蓝小声的嘟哝着自言自语
+		ELSE
+			PRINTFORML 「虽然是自杀行为、但有能力破坏大结界的人偶尔会出现」
+			PRINTFORML 「在幻想乡初生的年轻妖怪。一般都在想馋食着人类」
+			PRINTFORML 「在和平时代成长的家伙可不明白那价值观。来踏入危险之中、追寻着试炼吧」
+			PRINTFORML 「我可会好好传授给你」
+			PRINTFORMW 微微嗜虐的的表情。莫非和平太久让她积存着压力
+		ENDIF
+	CASE 3
+		IF TALENT:恋人
+			PRINTFORML 「今天都在训练橙练习术式」
+			PRINTFORMW 「当她成为独当一面的式神、约定好会亲手缝制道士服奖励她」
+		ELSE
+			PRINTFORML 「想送给橙跟我一样的道士服」
+			PRINTFORML 「虽然早就缝制好了、但该用什么理由当奖励呢」
+			PRINTFORMW 「生日吗、还是做个困难点的课题。在奖励呢」
+		ENDIF
+	CASE 4
+		PRINTFORML 「你有听过、狐狸是怎么叫的吗」
+		PRINTFORMW 「要我表演看看吗 ……呵呵」
+	CASE 5
+		PRINTFORML 「呼、把要清洗的衣服都拿进来了……」
+		PRINTFORML 「嗯？ 辛苦？。家事这种小事可累不倒我」
+		PRINTFORMW 深深感觉到她真是高规格的万能式神
+	CASE 6
+		PRINTFORML 「善狐恶狐怎么区分？」
+		PRINTFORMW 「我不过是一个式神。只为听从紫样的命令行事」
+	CASE 7
+		PRINTFORML 「在春天的这个季节使人变的懒洋洋的呢」
+		PRINTFORMW 「不过身为最强式神、可不能如此堕落」
+	CASE 8
+		IF TALENT:恋人
+			PRINTFORML 「跟八云家关系亲密的你、你会被视为八云家的一份子」
+			PRINTFORML 「所以要小心点必须有保护自己的手段」
+			SIF TALENT:26:恋慕
+				PRINTFORML 「你对紫样来说可是唯一的弱点」
+			PRINTFORMW 蓝认真严肃的说着
+		ELSE
+			PRINTFORML 「紫样有时候也会表现的跟孩子一样」
+			PRINTFORML 「虽说、平时都像个冷静的智者似的」
+			PRINTFORML 「但在家里总是跟橙一起玩弄我的尾巴 」
+			PRINTFORMW 不知从何处飞来的水盆朝着蓝飞去
+		ENDIF
+	CASE 9
+		IF TALENT:恋人
+			PRINTFORML 「觉得玩花牌有点无聊？」
+			PRINTFORMW 「嗯……那就来换个规则、输的那一方脱一件如何？」
+		ELSE
+			PRINTFORML 「麻将。花牌。这类”公平”的游戏在人之里最近很流行呢」
+			PRINTFORML 「但要普及到人与妖一起玩得话。果然还是缺少什么契机呢……」
+			PRINTFORML 蓝在身边思考着各式各样的新要素、%CALLNAME:MASTER%有点无聊的看着
+			PRINTFORMW 「呵、想到了、引进脱衣规则不就好了」
+		ENDIF
+	CASE 10
+		PRINTFORML 「我也喜欢甜食哦。无聊是什么甜食都爱」
+		PRINTFORMW 「和果子我也会做。这次就来做个米饼吧」
+	CASE 11
+		PRINTFORML 「我不喜欢的东西？」
+		PRINTFORML 「过去有怕过狼尾妖怪」
+		PRINTFORMW 「现在……害怕听到孩子的哭声」
+	CASE 12
+		PRINTFORML 「是大脑在接收爱的想法吗？」
+		PRINTFORML 「那么、当脑不去思考的话还会产生爱情吗」
+		PRINTFORML 「%CALLNAME:MASTER%。你怎么想呢？」
+		PRINTFORMW 什么都没说、只能呆呆的望着蓝
+	CASE 13
+		PRINTFORML 「我最后哭的时候是多久前呢」
+		PRINTFORML 「……唔、这么说来最近常常哭……」
+		PRINTFORMW 被蓝凝视着苦笑
+	CASE 14
+		PRINTFORML 「有个秘密的爱好、最近的内裤样式多很多呢」
+		PRINTFORMW 「最常盯着内裤看的某人、有什么喜欢的款式？」
+	CASE 15
+		IF ABL:MASTER:战斗能力 >= 4
+			PRINTFORML 「真厉害完全成长起来了呢」
+			PRINTFORML 「在这短短的时间已经够资格排入幻想乡战斗力一流的行列。自豪吧」
+			PRINTFORMW 尽管蓝这么说。但站在她身旁就知道还离她有段距离
+		ELSEIF ABL:MASTER:战斗能力 == 3
+			PRINTFORML 「%CALLNAME:MASTER%比以前更强了」
+			PRINTFORML 「不过、弹幕跟战斗能力可不同喔。」
+			PRINTFORMW 玩弹幕游戏是很强、但现实里不知道会怎样
+		ELSE
+			PRINTFORML 「战斗的基礎是格斗。术式作为辅助」
+			PRINTFORML 「肉体贫弱的家伙、也只会被人玩弄而已」
+			PRINTFORMW 脑中浮现出某个抱着精装书的睡衣少女
+		ENDIF
+	CASE 16
+		IF TALENT:恋人
+			PRINTFORML 「最近、人之里招呼的声音也减少了」
+			PRINTFORML 「知道什么意思吗？ 小心夜路阿―」
+			PRINTFORMW %CALLNAME:MASTER%不由自主的环顾四周
+		ELSE
+			PRINTFORML 「唔、对了。最近常被男人搭讪呢」
+			PRINTFORML 「虽然习惯拒绝、但纯粹的少年带着花就有点为难呢」
+			PRINTFORMW 「这么可爱不小心就想点头了……呵呵、别当真啊」
+		ENDIF
+	CASE 17
+		;紫样の恋慕の有无とか
+		IF TALENT:恋人
+			PRINTFORML 「唔、你是要去迷途之家的吗？」
+			IF TALENT:26:恋慕
+				PRINTFORML 「%CALLNAME:MASTER%吧听紫样说过、欢迎呢」
+				SIF TALENT:24:恋慕
+					PRINTFORML 「就算是橙也没必要在意我的眼光」
+				PRINTFORML 「如何。不止一年二年、跟我们一起糜烂的生活」
+				PRINTFORMW %CALLNAME:MASTER%说着『在考虑』、蓝偷偷的笑着
+			ELSE
+				PRINTFORML 「紫样的话没问题。感觉很有趣」
+				PRINTFORML 「人手增加了我的工作也减少、相对我的空闲时间就变多」
+				PRINTFORMW 「考虑到这点让我很开心」
+			ENDIF
+		ELSE
+			PRINTFORML 「最近都被紫样戏弄。被说像是少女一样」
+			IF TALENT:26:恋慕
+				PRINTFORML 「靠过来一点、有些话想对你说」
+				PRINTFORML 「因为这是你的责任、所以请好好的负起责任」
+				PRINTFORMW 『要永远在一起』在耳边低语、%CALLNAME:MASTER%顿住了
+			ELSE
+				PRINTFORML 「有什么在脸上？ 化妆什么的也只是稍微淡妆」
+				PRINTFORMW 『笑脸非常可爱』%CALLNAME:MASTER%说着、蓝满脸通红的撇开脸
+			ENDIF
+		ENDIF
+	CASE 18
+		PRINTFORML 「我的话当然是狐狸乌龙面」
+		PRINTFORML 「退一步的话乌龙面也可以」
+		PRINTFORML 「那么、你可别说讨厌喔？」
+		PRINTFORMW 做着愚蠢的对话、确实体会到拉近了关系
+	CASE 19
+		PRINTFORML 「哈哈哈、为什么那孩子在那里！」
+		PRINTFORMW 说着没什么内容的话、貌似戳到蓝的笑点
+	CASE 20
+		PRINTFORML 「这样盯着我旋转不会头晕吗？」
+		PRINTFORML 「那么。要开始使出全力啰」
+		PRINTFORMW 「我要开始急停跟变化方向啰。盯太久可会眼睛痛的」
+	CASE 21
+		PRINTFORML 「唔……女狐的性感带什么的可不是能公然聊的阿」
+		PRINTFORMW 「虽然、就算不说你也应该知道。嘴唇跟尾巴根部、即下面这边」
+	CASE 22
+		PRINTFORML 「『如果跟伊吹殿战斗的话谁会赢』唔、听到这样的话题」
+		PRINTFORMW 「应该不会在这方面输才对。其他的就不知道了。」
+	CASE 23
+		PRINTFORML 「…………啊。怎么了？」
+		PRINTFORML 在对话途中、想着事情的蓝望向这、头微微斜倾
+		PRINTFORMW 捕获到一个鲜少看到的画面、%CALLNAME:MASTER%这样想着
+	CASE 24
+		;橙の话
+		IF TALENT:恋人
+			IF TALENT:24:恋慕
+				PRINTFORML 「很想好好疼爱橙、后宫（顺序）我要先上」
+				PRINTFORML 「来来站起来。可不要让我们不满喔、亲爱的」
+				PRINTFORMW 两个人一起来的话……、蓝的提案真有魅力
+			ELSEIF TALENT:24:思慕
+				PRINTFORML 「这可真是……。橙的表情居然……」
+				PRINTFORML 蓝用湿润的眼睛盯着%CALLNAME:MASTER%
+				PRINTFORMW 「既然这样。就让你看看、我们主从二人的羁绊」
+			ELSE
+				PRINTFORML 「跟橙的关系很好、让我很高兴」
+				PRINTFORML 「……不过。你应该没有什么其他的想法吧？」
+				PRINTFORMW 好久没见过蓝这样冰冷的视线
+			ENDIF
+		ELSE
+			PRINTFORML 「就算是好朋友也该讲究礼仪」
+			PRINTFORML 「所以」
+			PRINTFORML 「如果让橙哭了、那我也会让你哭喔」
+			PRINTFORMW 那皮笑肉不笑的表情让人感受到她是认真的
+		ENDIF
+	CASE 25
+		IF TALENT:恋人
+			PRINTFORML 「呼呼。真难为情」
+			PRINTFORML 「从没想过会跟男性一起、呵呵呵呵……」
+			PRINTFORMW 瞇着双眼望了过来
+		ELSE
+			PRINTFORML 「我没有恋爱经验」
+			PRINTFORML 「连一次都没有过」
+			PRINTFORMW 「到现在为止、是这样」
+		ENDIF
+	CASE 26
+		PRINTFORML 「嗯、如果有必要的话会给予我权限去外面」
+		PRINTFORML 「虽说只停留很小一段时间就回来。那里的空气对肌肤不好」
+		PRINTFORML 「服装？ 大致上我是穿西装、感到意外吗」
+		PRINTFORMW 想像了一下威风凛凛的蓝、不由的走神
+	CASE 27
+		PRINTFORML 「我最自豪的就是尾巴」
+		PRINTFORML 「我每天都勤奋的整理、才不会显的杂乱」
+		PRINTFORML 「嗯？给你摸一摸也是可以的喔」
+		PRINTFORMW %CALLNAME:MASTER%被诱惑摆动的尾巴动摇着
+	CASE 28
+		PRINTFORML 「总是被误解、我跟稻荷神其实没有直接关系」
+		PRINTFORML 「即使被膜拜我也没办法加护之类的」
+		PRINTFORML 「……不过。要是只有你一个的话。我可是会永远守护的喔」
+		PRINTFORMW 被蓝疼爱的摸着头、%CALLNAME:MASTER%把手合起对着女神拍一拍
+	CASE 29
+		PRINTFORML 「幻想乡的豆腐店无论是人妖仙都有在卖」
+		PRINTFORMW 「到底哪边的更好吃呢。虽然油炸后都喜欢就是了」
+	CASE 30
+		PRINTFORML 「和食・洋食・中华。全都学的精通」
+		PRINTFORMW 「为了紫样而努力的成果。虽然积累了很多经验但是料理之路是无止尽的」
+	CASE 31
+		PRINTFORML 「爱丽斯的人偶剧真不错呢」
+		PRINTFORML 「操演的技术越来越好、剧本跟演出看的出来有下功夫」
+		PRINTFORML 「在约会中观看的话肯定很开心」
+		PRINTFORMW %CALLNAME:MASTER%听着微笑点点头
+	CASE 32
+		PRINTFORML 「对了、说起来%CALLNAME:MASTER%见到过钓瓶落吗？见到它的时候可要小心」
+		PRINTFORMW 「秋日的太阳落得很快。这句话会在不经意闲体现的」
+	ENDSELECT
+	TCVAR:25:354 = 0
+RETURN 1
+
+
+;━━━━━━━━━━━━━━━━━━━━━━━━━
+;蓝样季节会话（恋慕前提）
+;━━━━━━━━━━━━━━━━━━━━━━━━━
+@RAN_SEASONTALK
+	;DAY:2で季节を选择。
+	;通常会话の中で季节を感じさせるものはこちらへ
+	SELECTCASE DAY:2
+	;春
+	CASE 1
+		SELECTCASE RAND:5
+		CASE 0
+			SELECTCASE RAND:2
+			CASE 0
+				PRINTFORML 「唔、这是普莉兹姆利巴音乐会的传单」
+				PRINTFORML 「总是在春天精力充沛的活动着。找个时间去吧」
+				PRINTFORMW 难得被蓝邀请。%CALLNAME:MASTER%爽快点头答应
+			CASE 1
+				PRINTFORML 「唔、这是普莉兹姆利巴音乐会的传单」
+				PRINTFORML 「咦？有新成员加入了吗。这次是W'zH、对吧？」
+				PRINTFORMW 对于这个难以形容的名字、两个人都笑了起来
+			ENDSELECT
+		CASE 1
+			PRINTFORML 「在春天就要去白玉楼赏花」
+			PRINTFORMW 「在这时期可以看到被一片樱花覆盖。美到连灵魂都被抚慰的程度」
+		CASE 2
+			PRINTFORML 「附近一带的雪都完全融化了」
+			PRINTFORML 「春天再度到来。从今以后也将继续多次迎接春天的到来吧」
+			PRINTFORMW 蓝温柔的瞇着双眼的
+		CASE 3
+			PRINTFORML 「春天是花妖跟虫妖活跃的时候。在这季节这些笨蛋可控制不住妖力」
+			PRINTFORML 「现在是适合繁殖的季节、无论是传粉还是产卵」
+			PRINTFORMW 如果被逆推的话……出神妄想着的%CALLNAME:MASTER%、被蓝盯着
+		CASE 4
+			PRINTFORML 「说到春天的花、就会让人想到樱花吧？」
+			PRINTFORML 「的确、盛开的樱花很美丽、宣告春天到来的梅花也美丽得让人心动」
+			PRINTFORMW 「以梅花下酒的话。和赏樱花时的感觉又不一样呢」
+		ENDSELECT
+	;夏
+	CASE 2
+		SELECTCASE RAND: 5
+		CASE 0
+			PRINTFORML 「呵呵。我可是从很久很久以前就已经是九尾了喔」
+			PRINTFORMW 「在防范炎热方面可是万无一失。只要隐藏起尾巴就好了！」
+		CASE 1
+			PRINTFORML 「看上去很凉快？ 其实全都是汗水、来帮我擦拭一下」
+			PRINTFORML 这样说着朝我把衣领拉开。在脖子上闪烁的汗水、朝着下面缓缓滴落……
+			PRINTFORMW 「嗯、谢谢哦」
+		CASE 2
+			PRINTFORML 「还没尝试过晒黑呢。或许、因为我是妖怪所以晒不黑？」
+			PRINTFORML 「想要看晒黑的我……遗憾从过去到现在感觉肤色好像都没变过」
+			PRINTFORMW 妄想着黑肉的蓝、身上有鲜明的日晒痕感觉会非常的性感
+		CASE 3
+			PRINTFORML 「说起夏日怪谈。妖怪的恐怖故事完全不同」
+			PRINTFORML 「『某个夏日的夜晚。饥饿的食人妖怪被墓场试胆孩子碰到了、兴冲冲的往孩子冲去』」
+			PRINTFORMW 「『好恶心。臭死了。这几个人类真难吃真是有够恶心』」
+		CASE 4
+			PRINTFORML 「鸟兽伎乐……？啊、就是在村子外闹腾的那个吧」
+			PRINTFORML 「趁着夏天的热气喊叫倒也无所谓、但对于我的耳朵来说实在是太吵了」
+			PRINTFORMW 蓝说着皱起了眉头。看来是不喜欢这种激烈的音乐
+		ENDSELECT
+	;秋
+	CASE 3
+		SELECTCASE RAND:6
+		CASE 0
+			PRINTFORML 「呼，呼，呼。买了很多山栗子」
+			PRINTFORML 「准备煮栗子饭。泡上一壶茶。来点西洋风格的下午茶」
+			PRINTFORMW 高兴的摆动尾巴的蓝很可爱
+		CASE 1
+			PRINTFORML 「秋季可是收获的季节。很多果实成熟也代表很多植物枯萎」
+			PRINTFORML 「看着落叶随风飘动。有种莫名的感伤呢」
+			PRINTFORMW 蓝将头倾靠在%CALLNAME:MASTER%肩膀上
+		CASE 2
+			PRINTFORML 「喜欢篝火。能感受到秋天的风情」
+			PRINTFORML 「特别是在黄昏时刻。在摇动的火焰里、互相用肌肤温暖彼此」
+			PRINTFORMW 脑中浮现不健全的想法、的确是满适合的
+		CASE 3
+			PRINTFORML 「你来赏月的时候记得带圆团子。橙非常的喜欢」
+			PRINTFORMW 「哎、不明白？圆滚滚的团子阿」
+		CASE 4
+			PRINTFORML 「九十九姐妹啊。嗯、确实是技术一流」
+			PRINTFORML 「秋天的漫漫长夜或许正合适。下次和我一起去吧？」
+			PRINTFORMW 难得被蓝邀请。%CALLNAME:MASTER%爽快点头答应
+		CASE 5
+			IF TALENT:恋人
+				PRINTFORML 「最近外面传了很多节日进来啊。现在这个时期是万圣节吗」
+				PRINTFORML 「我会化装后来到%CALLNAME:MASTER%的枕边、记得要先准备好润滑油哦？」
+				PRINTFORMW 这些准备并不是为了搞恶作剧……既然蓝说要准备润滑油的话、那估计会是什么淫秽的事情吧
+			ELSE
+				PRINTFORML 「最近外面传了很多节日进来啊。现在这个时期是万圣节吗」
+				PRINTFORML 「好不容易来一次、怂恿南瓜鬼去吓唬妖梦如何」
+				PRINTFORMW 虽然觉得妖梦很可怜、但也想看看平时威风凛凛的她大吃一惊的样子
+			ENDIF
+		ENDSELECT
+	;冬
+	CASE 4
+		SELECTCASE RAND:5
+		CASE 0
+			PRINTFORML 「呃。。最近总感觉到背后的视线」
+			PRINTFORML 「果然、我的尾巴被人盯上了……！ 而且人数不少……！」
+			PRINTFORMW 毕竟是寒冷的季节会被人盯上也是在所难免这样想着的%CALLNAME:MASTER%不敢说出口
+		CASE 1
+			PRINTFORML 「过去也曾在雪上打滚玩耍」
+			PRINTFORML 「现在都在走廊泡着茶、看着橙在雪地上游戏」
+			PRINTFORMW 虽然这样说、如果被橙邀请的话大概马上就跟着去玩了
+		CASE 2
+			PRINTFORML 「冰精经常假装成雪女嬉闹」
+			PRINTFORML 「看你这么冷、看招。嘿」
+			PRINTFORMW 冰冷的双手往%CALLNAME:MASTER%脖子贴去、吓得跳了跳得
+		CASE 3
+			PRINTFORML 「冬季果然还是要火锅。可以放下各种各样的食材、如果要你二选一主食的话」
+			PRINTFORML 「呵呵……你会选乌龙面、还是杂烩粥?」
+			PRINTFORMW 二人之间有股莫名其妙的紧张感
+		CASE 4
+			IF TALENT:26:恋慕
+				PRINTFORML 「紫样今年看来没有要冬眠的样子」
+				PRINTFORMW 「或许是因为有你在迷途之家的话就没法好好睡吧」
+			ELSE
+				PRINTFORML 「紫样今年看来没有要冬眠的样子」
+				PRINTFORMW 「虽然有点僭越。但还是有点担心、有十天没像往常那样狂睡了啊」
+			ENDIF
+		ENDSELECT
+	ENDSELECT
+	TCVAR:25:354 = 1
+RETURN 1
+
+
+;━━━━━━━━━━━━━━━━━━━━━━━━━
+;蓝样约会会话（恋慕前提）
+;━━━━━━━━━━━━━━━━━━━━━━━━━
+@RAN_DATETALK
+	;幻想乡人妖探访
+	SELECTCASE CFLAG:当前位置
+	;博丽神社 これでいけるかなーと思ったら表示出来てないのでコメントアウト
+	;CASE 樱花道的鸟居,神社境内,神社本堂,神社走廊,妖精的大树,梦幻遗迹
+	;CASEに当前位置のサブMap变量を叩きこむことで运动のよう成为了。ﾔｯﾀﾈ
+	CASE 10,20,30,40,50,60
+		SELECTCASE RAND:5
+		CASE 0
+			PRINTFORML 「妖怪神社的名字也不是摆样子玩的」
+			PRINTFORML 「话又说回来、博丽神社从来没有变成过现在这种模样」
+			PRINTFORMW 不是因为博丽、而是因为灵梦吧
+		CASE 1
+			PRINTFORML 「回顾幻想乡的历史、也有过几次罕见的巫女缺席的时期」
+			PRINTFORML 「虽然只有短短几年。但是、没有人意识到这一空白」
+			PRINTFORMW 不用问也知道是谁占了空位
+		CASE 2
+			PRINTFORML 「那么、伊吹殿在吗」
+			PRINTFORML 「如果您又喝得衣冠不整的话、请不要客气、让我来照顾您吧」
+		CASE 3
+			PRINTFORML 「老实说、我的耳朵比鼻子好使」
+			PRINTFORMW 「在那附近鬼鬼祟祟的妖精的一举一动也都一清二楚」
+		CASE 4
+			PRINTFORML 「老实说、这里有温泉真的让我很高兴。」
+			PRINTFORMW 「工作结束的时候泡在温泉里真的是最棒的」
+		ENDSELECT
+	;命莲寺
+	;CASE 地藏小路,倒垂的柳树下,命莲寺境内,命莲寺方丈,墓地,神灵庙广场,神灵庙道场
+	CASE 110,120,130,140,160,170
+		SELECTCASE RAND:8
+		CASE 0
+			PRINTFORML 「……油鼠是狐狸妖怪爱吃的食物。用油炸跟天妇罗之类最棒了」
+			PRINTFORML 「居然敢出现在我的面前……」
+			PRINTFORMW 在蓝淡淡笑着眼前视线里、有着一群拼命逃跑的老鼠
+		CASE 1
+			PRINTFORML 「住在这里的妖怪似乎变多了」
+			PRINTFORML 「是认为有危险的时候会被保护吗？ 谁、保护谁？」
+			PRINTFORMW 蓝笑容里夹杂着嘲弄
+		CASE 2
+			PRINTFORML 「我听的懂狐狸的语言」
+			PRINTFORMW 「唔……佐渡那家伙比外表年轻。大概三百左右」
+		CASE 3
+			PRINTFORML 「即使现在鵺的姿态已经暴露了、但那也不是能被轻视的存在」
+			PRINTFORMW 「她的『正体不明』非常麻烦。让人难以分析」
+		CASE 4
+			PRINTFORML 「那是曾经互相敌视的妖怪、她一直都是独来独往的样子」
+			PRINTFORMW 「拥有意料之外的实力、之后赠送了美酒和解后、现在互相视彼此为伙伴」
+		CASE 5
+			PRINTFORML 「到底有没有觊觎圣德道场的妖怪」
+			PRINTFORMW 「毕竟仙人的肉很有魅力。成员品质也都很豪华」
+		CASE 6
+			PRINTFORML 「那是僵尸吗……还是不要靠近的好」
+			PRINTFORMW 「你想、被咬的话会很难过吧？」
+		CASE 7
+			PRINTFORML 突然一阵雷响
+			PRINTFORMW 「……吓…吓一跳。真是突然呢。这个雷」
+		ENDSELECT
+	;人里
+	;CASE 情侣酒店
+	;情侣酒店のほか、地底の情人旅馆でも表示するように
+	CASE 260,950
+		SELECTCASE RAND:5
+		CASE 0
+			PRINTFORML 「跑到情人旅店、闲聊到棉被里还真是奇怪」
+			PRINTFORMW 「还想更多温暖、不行吗？」
+		CASE 1
+			PRINTFORML 蓝的鼻子跟下巴发出哼哼响声
+			PRINTFORMW 「在房间里都是性交的气味。呼、这可真是」
+		CASE 2
+			PRINTFORML 「%CALLNAME:MASTER%、来听听隔壁。贴着墙」
+			PRINTFORMW 将耳朵贴上、传来年轻女人断断续续的娇喘声
+		CASE 3
+			PRINTFORML 「前往这种旅馆、都是自负为性豪的男人」
+			PRINTFORMW 「敢把我带来这里自古以来也就只有你一人。」
+		CASE 4
+			PRINTFORML 「怎么还、没呢。什么事都没有哦」
+			PRINTFORMW 蓝明显在扭扭捏捏催促着什么
+		ENDSELECT
+	;CASE 广场,商业街,吞屋小道,寺子屋,大众浴场,长屋街
+	CASE 210,220,230,240,250,270
+		SELECTCASE RAND:10
+		CASE 0
+			PRINTFORML 「今天的人之里可真热闹」
+			PRINTFORML 「虽然也可以说是好事啦……」
+			PRINTFORMW 突然一阵巨响。上空出现像弹幕般的烟火
+		CASE 1
+			PRINTFORML 「抱着你的手腕是不是很有约会的感觉？」
+			PRINTFORML 肩贴了上来、蓝有点坏心眼的说着
+			PRINTFORMW 四周一直传来嫉妒的视线
+		CASE 2
+			PRINTFORML 「这边这边。快过来ー」
+			PRINTFORMW 「呵呵呵、约会不都这样吗」
+		CASE 3
+			PRINTFORML 「接着去服装店看看吧」
+			PRINTFORML 「无论是怎样的衣服内衣、只要是你选的我就穿哟」
+			PRINTFORMW %CALLNAME:MASTER%牵着蓝的手加快了步伐
+		CASE 4
+			PRINTFORML 「老先生。我拜托你好几次了吧」
+			PRINTFORML 「啊啊啊你的孙子。虽然喜欢被摸着尾巴、但可以不要拔毛吗ー」
+			PRINTFORMW 抽着脸亲切地说着的蓝、%CALLNAME:MASTER%在旁边偷偷笑着
+		CASE 5
+			PRINTFORML 「这次、打扮成普通的人类去人之里玩耍」
+			PRINTFORML 「外观及年龄都随你喜好。呵呵感觉很有趣吧？」
+			PRINTFORMW 认真说着各种喜好的%CALLNAME:MASTER%让蓝感到傻眼
+		CASE 6
+			PRINTFORML 「那里的茶屋阿。从以前开始最推荐的就是竹团子了」
+			PRINTFORML 「虽然每一代的味道都不太相同、不过每代店主都很有本事」
+			PRINTFORMW 「唔、接下来的几代会是怎样的团子呢……」
+		CASE 7
+			PRINTFORML 「……感觉脸都红了起来」
+			PRINTFORMW 「路上行人似乎都很讶异我跟%CALLNAME:MASTER%一起走着呢」
+		CASE 8
+			PRINTFORML 「如果你能引导我的话也不会拒绝你呢」
+			PRINTFORMW 「现在马上去旅馆的话。乐意奉陪哦」
+		CASE 9
+			PRINTFORML 「妖怪普通的在人之里散步的时代吗」
+			PRINTFORML 「曾经我也怀疑过自己是不是傻了。真的……」
+			PRINTFORMW %CALLNAME:MASTER%想着过去的幻想乡到底是什么模样
+		ENDSELECT
+	;红魔馆
+	;CASE 雾之湖,冰造的小雪屋,废洋馆
+	CASE 310,320,330
+		SELECTCASE RAND:5
+		CASE 0
+			PRINTFORML 「湖面上照映出的天空」
+			PRINTFORML 「在一片云层的尽头，有什么东西在朝向这边」
+			PRINTFORMW 「唔。水面成了巨大的门」
+		CASE 1
+			PRINTFORML 「那洋馆的幽灵屋敷完全不及格」
+			PRINTFORMW 「没有威胁人类的必要的话、那么多的幽灵不知道做什么」
+		CASE 2
+			PRINTFORML 「如果想要冰就跟雪女交涉」
+			PRINTFORMW 「冰精的话。那孩子是无法理解什么是交易」
+		CASE 3
+			PRINTFORML 「那个人鱼还不唱歌吗？」
+			PRINTFORMW 「催促的话也挺没礼貌呢。在等等吧」
+		CASE 4
+			PRINTFORML 「张开了让妖精看不到结界」
+			PRINTFORMW 「为什么？这些家伙如果看到我就会来恶作剧」
+		ENDSELECT
+	;CASE 正门,大厅,食堂,大图书馆,地下室
+	CASE 340,350,360,370,380
+		SELECTCASE RAND:7
+		CASE 0
+			PRINTFORML 「%CALLNAME:MASTER%对傲慢的吸血鬼是怎么想？」
+			PRINTFORML 「我一直很意外。为什么、那家伙一开始就是说日语」
+			PRINTFORMW 蓝关注的点很奇怪、%CALLNAME:MASTER%思考着
+		CASE 1
+			PRINTFORML 「那个女仆……唔」
+			PRINTFORML 「拥有一身真本事。到底是钻研了多少时间呢」
+			PRINTFORMW 一脸认真的蓝、似乎激起斗争心、虽然是家事方面
+		CASE 2
+			PRINTFORML 「红魔馆里有很多妖精在工作着、但是有用吗？」
+			PRINTFORMW 「如果是我的话连窗户都不给她们擦。餐具也是」
+		CASE 3
+			PRINTFORML 「我对大图书馆感到兴趣。」
+			PRINTFORMW 「拥有着无限的藏书、想着胸口就跳动着」
+		CASE 4
+			PRINTFORML 「幻想乡里都是女人的家族不少见……」
+			PRINTFORML 「特别是这里、如果扔了一个雄性在这那可就是大事了。」
+			PRINTFORMW %CALLNAME:MASTER%若无其事的移开视线
+		CASE 5
+			PRINTFORML 「知道吸血鬼吗、呐」
+			PRINTFORMW 「或许不知不觉你就被咬了呢」
+		CASE 6
+			PRINTFORML 「让妖精帮忙的报酬行情是一片饼干与一杯牛奶」
+			PRINTFORMW 「给她们衣服的话就会非常高兴、然后什么事都不做就这么跑掉」
+		ENDSELECT
+	;迷途竹林
+	;CASE 迷失的小道,斜角的竹林,兔的洞穴,永远亭,无名之丘,太阳花田,永远亭的内院
+	CASE 410,420,430,440,450,460,470,480
+		SELECTCASE RAND:7
+		CASE 0
+			PRINTFORML 「”平安时代对美的看法与现在不一样的说法”之类的、其实是错的」
+			PRINTFORMW 「辉夜姬的容貌从古至今都被极力的赞扬着」
+		CASE 1
+			PRINTFORML 「哎呀、看到那只兔子了吗」
+			PRINTFORMW 「很喜欢用门牙跟头锤欺负人、小心点」
+		CASE 2
+			PRINTFORML 「人狼传说中有个爱沙尼亚的Hans the Werewolf（狼男的汉斯）」
+			PRINTFORML 「实际上呢、当时流行的人狼审判里被处死的只是一个可怜人类而已」
+			PRINTFORMW 「不过……汉斯这个名字的人狼是确实存在的」
+		CASE 3
+			PRINTFORML 「要来挖掘竹笋吗。总是在人之里买」
+			PRINTFORMW 「可以省点金钱也不错吧？」
+		CASE 4
+			PRINTFORML 「小心。脚下的那种花」
+			PRINTFORML 「要知道、那可是被名为终末喔」
+			PRINTFORMW 小小红色的花瓣在无风摇动着
+		CASE 5
+			PRINTFORML 「没有名字的婴孩被丢弃在有毒的铃兰丛、渐渐的死去」
+			PRINTFORMW 「之后尸体被妖怪吃掉、消灭的一干二净这是无名之丘流传的传说」
+		CASE 6
+			PRINTFORML 「别被外表欺骗了」
+			PRINTFORML 「那个白兔、可是大胃王呢」
+		ENDSELECT
+	;魔法之森
+	;CASE 森林的入口,香霖堂,古木的大树,雾雨魔法店,人偶的洋馆,再思之道,无缘冢
+	CASE 510,520,530,540,550,560,570
+		SELECTCASE RAND:6
+		CASE 0
+			PRINTFORML 不知何处飘来的毒孢子的浓雾、蓝挥了挥单手
+			PRINTFORML 「如果普通人类住在这、没死就是不可思议的奇迹了」
+			PRINTFORMW 「那户房子一看就明白。在引导着些什么似的」
+		CASE 1
+			PRINTFORML 「那里什么都没有。不要离开我、继续前进吧」
+			PRINTFORMW 在森林里的黑暗中、看见了无数的触手在蠕动
+		CASE 2
+			PRINTFORML 「没得到推荐是无法进入无缘冢的」
+			PRINTFORMW 「尤其是会对幻想乡产生危险的东西、以你来讲算是安全的地方」
+		CASE 3
+			PRINTFORML 「！？ %CALLNAME:MASTER%、看到了吗？」
+			PRINTFORML 「大概3m左右、短手短脚像蘑菇一样的……妖怪？ 还是植物？」
+			PRINTFORMW 魔法之森的生态在今天也很新颖
+		CASE 4
+			PRINTFORML 「魔界的神在路边闲逛」
+			PRINTFORMW 「这样真的好吗……」
+		CASE 5
+			PRINTFORML 「香霖堂的主人经营着杂货屋。不过感觉没多少客源……」
+			PRINTFORMW 「不过。这因为如此、才像是他吧」
+		ENDSELECT
+	;三途之川～冥界
+	;CASE 中有之道,三途之川,彼岸,白玉楼庭院,白玉楼
+	CASE 610,620,640,650,660
+		SELECTCASE RAND:5
+		CASE 0
+			PRINTFORML 「%CALLNAME:MASTER%阿、知道妖梦几岁吗？」
+			PRINTFORML 「那孩子是半人半灵。成长的速度也比普通的人类还慢」
+			PRINTFORMW 「也就是、在你预想的数字乘以二就是答案了」
+		CASE 1
+			PRINTFORML 「河面上……死神究竟是为什么……唔嗯……」
+			PRINTFORMW 蓝似乎在计算着什么的样子
+		CASE 2
+			PRINTFORML 「阎魔样的说教如果认真听的话。死后的刑罚就会轻轻地带过」
+			PRINTFORML 「知道了吗、可要好好记住呢」
+			PRINTFORMW 蓝轻轻的笑着
+		CASE 3
+			PRINTFORML 「白玉楼的料理黄泉户喫（欧洲牛）用的都是现世的食材。不要担心」
+			PRINTFORMW 「想在冥界活下去的话、就不要对亡灵姫没礼貌就好了」
+		CASE 4
+			PRINTFORML 二人的前方有鬼火飘来飘去
+			PRINTFORML 「…鬼火天妇罗…」
+			PRINTFORMW 蓝嘟哝着什么、鬼火突然加快了速度飞走
+		ENDSELECT
+	;妖怪之山　山麓
+	;CASE 迷途之家
+	;文字列指定だと三途之川～冥界侧の迷途之家で表示されないので数值で指定
+	CASE 630,740
+		SELECTCASE RAND:10
+		CASE 0
+			PRINTFORML 「到迷途之家就感到洋溢着幸福、呵」
+			PRINTFORMW 「或许是因为你把我带回来的缘故」
+		CASE 1
+			PRINTFORML 「要稍微休息一下吗？」
+			PRINTFORMW 「如果太晚就住下来吧。当然、是在我房里」
+		CASE 2
+			PRINTFORML 「院子里有猫的话、我都会怜爱的对待」
+			PRINTFORMW 「也有妖怪混杂在一起。有时候还会有小老虎在呢」
+		CASE 3
+			PRINTFORML 「我跟平时看起来不同」
+			PRINTFORML 「因为这个家有你跟我在一起」
+			PRINTFORMW 就像夫妻一般的对话、%CALLNAME:MASTER%脸颊有点搔痒
+			PRINTL 
+			PRINTFORML 爱情经验＋2
+			EXP:25:爱情经验 += 2
+		CASE 4
+			;紫样の恋慕
+			IF TALENT:26:恋慕
+				PRINTFORML 「……唔？ 要去哪%CALLNAME:MASTER%？」
+				PRINTFORML 「原来如此。是紫样阿」
+				PRINTFORMW 即时看不见身影、她也一直都在身旁跟着
+				PRINTL 
+				PRINTFORML 紫爱情经验＋2
+				EXP:26:爱情经验 += 2
+			ELSE
+				PRINTFORML 「紫样座位总是打开的」
+				PRINTFORML 「毕竟常常会有突发事件要处理」
+				PRINTFORMW %CALLNAME:MASTER%点点头回答了
+			ENDIF
+		CASE 5
+			;橙の恋慕
+			IF TALENT:24:恋慕
+				PRINTFORML 「这是橙为你做的汤」
+				PRINTFORML 「最近也有在好好的修行着呢」
+				PRINTFORMW 在苦%CALLNAME:MASTER%也甘愿
+				PRINTL 
+				PRINTFORML 橙爱情经验＋2
+				EXP:24:爱情经验 += 2
+			ELSE
+				PRINTFORML 「那根柱子的裂痕是橙磨爪磨出来的」
+				PRINTFORMW 「过去的事怎么说呢，我的失败……」
+			ENDIF
+		CASE 6
+			PRINTFORML 「那么、明日的菜单是什么呢……」
+			PRINTFORML 「偶然想做些与众不同的东西。有什么提案吗」
+			PRINTL 
+			IF ABL:MASTER:料理技能 >= 4
+				PRINTFORML %CALLNAME:MASTER%想了想、提议了个正式的菜单
+				PRINTFORML 「既然决定了。会来帮我的吧？」
+				PRINTFORMW 当然、毫无犹豫的点头
+				PRINTL 
+				PRINTFORML 料理经验＋2
+				EXP:MASTER:料理经验 += 2
+			ELSEIF ABL:MASTER:料理技能 == 3
+				PRINTFORML %CALLNAME:MASTER%从自己会的挑出几项出来
+				PRINTFORML 「唔、正好。食材也都还有」
+				PRINTFORMW 她好像拿出干劲了
+				PRINTL 
+				PRINTFORML 料理经验＋1
+				EXP:MASTER:料理经验 += 1
+			ELSE
+				PRINTFORML 虽然会做料理但%CALLNAME:MASTER%想不出什么好主意
+				PRINTFORML 脑中浮现出咕噜咕噜料理
+				PRINTFORML 「听都没听过……是用什么材料？」
+				PRINTFORMW 咕噜咕噜。
+			ENDIF
+		CASE 7
+			PRINTFORML 「在家务的空闲中休息。会有种充实的感觉」
+			PRINTFORMW 「即使在忙碌、疲惫也会有被治愈的感觉」
+		CASE 8
+			PRINTFORML 「过去、我还只是三尾的时候……」
+			PRINTFORMW %CALLNAME:MASTER%倾听着、蓝过去的往事
+		CASE 9
+			PRINTFORML 「问我以前有没有喜欢的男性？」
+			PRINTFORMW 「直到现在喜欢的就只有你」
+		ENDSELECT
+	;CASE 山麓树海,玄武之泽,大蛤蟆之池,仙人的宅邸,间歇泉地下中枢
+	CASE 710,720,730,750,760
+		SELECTCASE RAND:5
+		CASE 0
+			PRINTFORML 「知道吗。河童的双臂是在体内互相连结着、伸出一只手另一只就会缩回去」
+			PRINTFORML 「找看看这一带好像有在出没」
+			PRINTFORMW 找了一阵子绿色皮肤头上还有碟的河童
+		CASE 1
+			PRINTFORML 「喔、那种地方居然有猫」
+			PRINTFORML 「真可惜。在我的地盘就能好好清理一下」
+			PRINTFORMW 完全无视正被对方咬在小腿上的事实……
+		CASE 2
+			PRINTFORML 「厄运之神、被厄运缠绕着、即使只看一眼也会遭遇不幸」
+			PRINTFORMW 「但如果变得亲近的话。她会变成雏人形来靠近」
+		CASE 3
+			PRINTFORML 「嗯、这有很多怀着不好目的找寻迷途之家的妖怪」
+			PRINTFORMW 「不过、只要不被邀请是没有机会找到的」
+		CASE 4
+			PRINTFORML 「偶尔也会有来采摘野菜而迷路的人类闯进来、真让人为难」
+			PRINTFORMW 「在这种时候就要诱导到河童跟仙人的住处。这可是秘密」
+		ENDSELECT
+	;妖怪之山　山顶
+	;CASE 九天瀑布,绝景之丘,山之湖,守矢神社境内,守矢神社本殿,天界
+	CASE 810,820,830,840,850,890
+		SELECTCASE RAND:7
+		CASE 0
+			PRINTFORML 「看……龙在飞着。似乎还很年轻」
+			PRINTFORMW 「对人类来说很罕见、而妖怪都习惯了」
+		CASE 1
+			PRINTFORML 「乘着落山风的话很快就能到达山脚下」
+			PRINTFORMW 「不过、偶而会见到天狗」
+		CASE 2
+			PRINTFORML 蓝突然想到了什么将符印解开
+			PRINTFORML 「不要在意。有些嘈杂的家伙在而已、已经离开了」
+			PRINTFORMW 远处的树林沙沙的有什么东西在闹腾着
+		CASE 3
+			PRINTFORML 「守矢神社做为建筑物很美丽」
+			PRINTFORML 「但是、打扫会很麻烦呢……」
+			PRINTFORMW 话说巫女平时是怎么扫除的感到兴趣
+		CASE 4
+			PRINTFORML 「即使不小心、我想这也没什么」
+			PRINTFORMW 「只不过是一个调皮的小姑娘在幻想乡。寻找刺激的地方而已」
+		CASE 5
+			PRINTFORML 「椛（犬走）、枫（松岛）、椚（麻栎）、樒（莽草）、椿（山茶）」
+			PRINTFORMW 「每一个都是白狼天狗的名字。排列开来可别看错」
+		CASE 6
+			PRINTFORML 「不管怎么亲近、神终究是神。接触时可要小心」
+			PRINTFORMW 「她们一但感情被动摇了、就会产生激烈的反应」
+		ENDSELECT
+	;地底
+	;CASE 幻想风穴,地狱的深道,旧地狱街道,旧地狱温泉,地灵殿,灼热地狱遗迹
+	CASE 910,920,930,940,960,970
+		SELECTCASE RAND:7
+		CASE 0
+			PRINTFORML 「不想碰上鬼阿……」
+			PRINTFORML 「为什么呢、一对上脸就会心神不宁」
+			PRINTFORMW 确实、喜欢打架的鬼跟喜欢鬼的蓝碰上了可是很能闹的
+		CASE 1
+			PRINTFORML 「觉？ 没什么好害怕的。只要自然的应对就好了」
+			PRINTFORML 「但是、嘛、虽然不擅长但心理战还是比一般人强」
+			PRINTFORMW 「被带进环里就麻烦了」
+		CASE 2
+			PRINTFORML 「那个土蜘蛛算是和善的」
+			PRINTFORML 「从以前、就在四处搜集着疾病」
+			PRINTFORMW 难道是觉得流感与黑死病之类的很可爱吗
+		CASE 3
+			PRINTFORML 「地底。即使对人以外的生物来说也是很不舒服」
+			PRINTFORML 「饭屋供应着腐烂的肉及沸腾的蛆虫我可不想进去」
+			PRINTFORMW 这貌似是地底流行的菜单
+		CASE 4
+			PRINTFORML 在过去、地底的上空满是颜色鲜艳的弹幕
+			PRINTFORML 「一堆攻击性的弹幕。总是把对方剥光成裸体才分出胜负」
+			PRINTFORMW %CALLNAME:MASTER%凝视着眼睛、望着上空什么都没有
+		CASE 5
+			PRINTFORML 「……地底从地狱分出去后、就开始慢慢变冷了」
+			PRINTFORMW 「尤其在觉大人在上面建起地灵殿后、越发昏暗寂寥」
+		CASE 6
+			PRINTFORML 「真是？」
+			PRINTFORMW 「怎么说、有种被谁抓了尾巴似的感觉……」
+		ENDSELECT
+	CASEELSE
+		;蓝的房间 の筈
+		;IF CFLAG:当前位置 == OMANEKIBEYA()
+		;现住所のID*100に98(たぶん进入房间指令の奴)を足すと直接指定できるっぽい
+		IF CFLAG:当前位置 == (98 + MAIN_MAP * 100)
+			SELECTCASE RAND:6
+			CASE 0
+				PRINTFORML 在整理周到的房间里、蓝的座位周围都开着花
+				PRINTFORML 「呵。你可是第一个进来的男人」
+				PRINTFORMW 「虽然也没有其他踏入迷途之家的雄性就是了。除了猫之外」
+			CASE 1
+				PRINTFORML 「在这种只有二人的时候、都不知道该说些什么」
+				PRINTFORMW 「一旦安静下来、就感到心跳的很快」
+			CASE 2
+				PRINTFORML 「知道吗。尾巴越多就表示越强、越长就表示越聪明」
+				PRINTFORML 「呵呵、到现在还没出现能打赢我跟紫样的组合」
+				PRINTFORMW 毕竟身旁的她已是幻想乡最强的妖兽了
+			CASE 3
+				PRINTFORML 「幽明境有什么不同？。去白玉楼的。都是九泉之下的客人」
+				PRINTFORML 「你的情况比较特殊」
+				PRINTFORMW 「放心吧%CALLNAME:MASTER%、已经拜托幽幽子样了、不用担心」
+			CASE 4
+				PRINTFORML 「听过吗、女人会因为甜言蜜语而陷入恋爱」
+				PRINTFORML 「我想这应该是真的呢」
+				PRINTFORMW 蓝托着腮、狐狸的耳朵灵巧的动着
+			CASE 5
+				PRINTFORML 「为了庭院的美观保养结界是不可缺少的」
+				PRINTFORML 「只要准备万全的话、即使没照料」
+				PRINTFORMW 「即使下了一晚上的暴雨也不会被糟蹋掉」
+			ENDSELECT
+		;これ以外だと道中会话 の筈
+		ELSE
+			SELECTCASE RAND:6
+			CASE 0
+				PRINTFORML 「如果是从空中飞的话一下就到了」
+				PRINTFORML 「不过还是并肩走在一起让人开心」
+				PRINTFORMW 被贴着紧扣手臂、品味触感的%CALLNAME:MASTER%偷笑着
+			CASE 1
+				PRINTFORML 仔细的看着身旁的身姿、某个明显地方在摇晃
+				PRINTFORMW 「喂%CALLNAME:MASTER%你倒是看着我的脸阿」
+			CASE 2
+				PRINTFORML 「山哟山哟　小道里　是谁经过　是谁通过」
+				PRINTFORMW 「是狐狸的孩子　走过小道　在月夜狸　经过小道」注：童谣
+			CASE 3
+				PRINTFORML 「啊、幽灵」
+				PRINTFORMW 「冥界往那边直直走。不快一点可是会被路过的妖怪吞食掉喔」
+			CASE 4
+				PRINTFORML 「跟我在一起不用担心被袭击。看到我大概就逃光了」
+				PRINTFORMW 「很遗憾、没有让你表现男子气概的机会」
+			CASE 5
+				PRINTFORML 「再想着这条路是谁做的？」
+				PRINTFORMW 「我想肯定是需要用脚走路的家伙」
+			ENDSELECT
+		ENDIF
+	ENDSELECT
+RETURN 1
+;==================================================
+;301,泡茶
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_301
+CALL M_KOJO_MESSAGE_COM_K25_301_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_301_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL && !FLAG:70
+	IF TALENT:恋慕
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 「呵呵。真是美味」
+			PRINTFORMW 很荣幸的获得称赞
+		CASE 1
+			PRINTFORML 「是是。谢谢你的体贴、我可不担心胃下垂喔」
+			PRINTFORMW 模仿着战国武将的故事、俏皮的调侃
+		CASE 2
+			PRINTFORMW 茶杯温暖着手、度过两人寂静的时间
+		ENDSELECT
+	ELSEIF TALENT:思慕
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 「我喜欢更热一点呢」
+			PRINTFORMW 好好地记住了
+		CASE 1
+			PRINTFORML 「无论何时何地都能变出茶呢、满能干的」
+			PRINTFORMW 身为从者的自尊心被挑起的样子
+		CASE 2
+			PRINTFORML 「还可以、但根据茶叶的不同有各自适合的温度」
+			PRINTFORMW 拥有数百年泡茶经验的前辈开始传授起秘诀
+		ENDSELECT
+	ELSE
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 「还行」
+			PRINTFORMW 蓝以优美的姿态端着茶碗
+		CASE 1
+			PRINTFORML 「…………」
+			PRINTFORMW 好像、泡出来的茶失败了
+		CASE 2
+			PRINTFORML 「建议？ 不、感觉普普通通」
+			PRINTFORMW 似乎没有特别明显的失败
+		ENDSELECT
+	ENDIF
+	PRINTL 
+ENDIF
+RETURN 1
+;==================================================
+;302,身体接触
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_302
+CALL M_KOJO_MESSAGE_COM_K25_302_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_302_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL && !FLAG:70
+	;会话と并んで使用频度が高いだけにバリエーション重视
+	IF TALENT:恋慕
+		;神社から引っ越してた场合
+		IF FLAG:约会的对象 == 25
+			CALL RAN_DATESKINSHIP
+		ELSE
+			CALL RAN_NORMALSKINSHIP
+;		IF MAIN_MAP >= 1
+;			;现在地が引っ越した先のMap内
+;			IF GET_MAPID(CFLAG:当前位置) == MAIN_MAP
+;				CALL RAN_NORMALSKINSHIP
+;			;そうじゃなかったら外
+;			ELSE
+;				CALL RAN_DATESKINSHIP
+;			ENDIF
+;		;以下は神社在住（默认）时
+;		ELSE
+;			IF CFLAG:约会中
+;				CALL RAN_DATESKINSHIP
+;			ELSE
+;				CALL RAN_NORMALSKINSHIP
+;			ENDIF
+		ENDIF
+	ELSEIF TALENT:思慕
+		SELECTCASE RAND:10
+		CASE 0
+			PRINTFORML 「呵、来吧。喜欢就来摸吧」
+			PRINTFORMW 蓝苦笑着允许了
+		CASE 1
+			PRINTFORML 「过去都是用爪子来整理头发呢」
+			PRINTFORML 「刘海有点参差不齐。不许动喔」
+			PRINTFORMW 近距离确认了那像名刀般锋利的利爪
+		CASE 2
+			PRINTFORML 「呵呵。稍微外侧一点也拜托了」
+			PRINTFORMW 感觉肩膀酸痛的蓝正享受着%CALLNAME:MASTER%按摩
+		CASE 3
+			PRINTFORML 「知道吗。手指相扑意外的有趣喔」
+			PRINTFORML 跟蓝纤细的手互相握住
+			PRINTFORMW 感受着手心上的温度、这纤细的手指不知道哪来的力量
+		CASE 4
+			PRINTFORML 指腹用适当的力量在蓝的腰部往小腹推拿
+			PRINTFORML 「真是拿手阿%CALLNAME:MASTER%。完全明白我的弱点」
+			PRINTFORMW 如果对手是美女的话、按摩的兴致也会高涨
+		CASE 5
+			PRINTFORML 「唔、怎么、一直搓揉着手臂？」
+			PRINTFORMW 听说手臂肉跟胸部一样柔软、这可说不出口
+		CASE 6
+			PRINTFORML 朝蓝的耳后轻轻的抚摸
+			PRINTFORMW 渐渐的蓝朝被抚摸的方向微微倾倒过来
+		CASE 7
+			PRINTFORML 不动声色的像恋人般朝着腰环报
+			PRINTFORMW 一点抵抗都没有、蓝没事继续聊着
+		CASE 8
+			PRINTFORML 「呵呵。后面怎样了？」
+			PRINTFORMW 对谈中、%CALLNAME:MASTER%装作自然的搂着蓝的细腰
+		CASE 9
+			PRINTFORML 「就这么喜欢我？ 得意忘形了你、笨蛋」
+			PRINTFORMW 鼻子被捏了一下
+		ENDSELECT
+	ELSE
+		SELECTCASE RAND:10
+		CASE 0
+			PRINTFORML 得到许可后、摸着其中一条尾巴
+			PRINTFORML 跟普通的狐狸不同、蓝的毛皮手感非常好……
+			PRINTFORMW 「如何。尾巴可是让我很自豪的」
+		CASE 1
+			PRINTFORML 用手轻轻捞着金色的头发、欣赏着光泽
+			PRINTFORML 「难道你喜欢这样吗」
+			PRINTFORMW 蓝回头望着
+		CASE 2
+			PRINTFORML 恭敬的牵着蓝的手、垂下头吻了一下手背
+			PRINTFORML 「再做练习吗？ 嘴唇要向手指靠近点才是正确的礼节」
+			PRINTFORMW 看来、这种程度的身体接触不会让她感到害羞
+		CASE 3
+			PRINTFORML 「你阿、别四处乱摸」
+			PRINTFORMW 被半瞇着眼盯着
+		CASE 4
+			PRINTFORML 「唔。在使点力」
+			PRINTFORMW 用按摩肩膀来得到好评中
+		CASE 5
+			PRINTFORML 「就连腰部按摩都……很擅长、唔」
+			PRINTFORMW 眼前摇摆的尾巴。似乎感觉不坏
+		CASE 6
+			PRINTFORML 「发现开叉的的头发。剪掉吧？」
+			PRINTFORMW 蓝的锐利的指甲伸长朝脸接近
+		CASE 7
+			PRINTFORML 「突然靠近可是很危险的喔」
+			PRINTFORML 「我说不定会用尾巴扫飞你」
+			PRINTFORMW 被小小的威胁了
+		CASE 8
+			PRINTFORML 「你还真是摸不腻、我的尾巴可是保养得很完美」
+			PRINTFORMW 的确、完全没有一丝杂乱
+		CASE 9
+			PRINTFORML 「要触碰可是要等到许可的喔」
+			PRINTFORMW 婉言拒绝的感觉
+		ENDSELECT
+	ENDIF
+	PRINTL 
+ENDIF
+RETURN 1
+;━━━━━━━━━━━━━━━━━━━━━━━━━
+;蓝样通常身体接触（恋慕前提）
+;━━━━━━━━━━━━━━━━━━━━━━━━━
+@RAN_NORMALSKINSHIP
+	;お澡堂场身体接触
+;	IF TALENT:恋慕 && (CFLAG:当前位置 == 13 || CFLAG:当前位置 == 24 || CFLAG:当前位置 == 30 || CFLAG:当前位置 == 39)
+	IF BATHCHECK(CFLAG:MASTER:当前位置) && IN_HOME(CFLAG:MASTER:当前位置)
+		SELECTCASE RAND:5
+		CASE 0
+			PRINTFORML 「这边实在没办法。就拜托你了」
+			PRINTFORML 将九尾分开细心的清洗着
+			PRINTFORMW 虽然跟期待的不同、但能保养蓝重要的地方感到很开心
+		CASE 1
+			PRINTFORML 蓝用术式将尾巴隐藏了起来、往背上清洗洁白柔软的肌肤
+			PRINTFORML 盯着小蛮腰、腋下之间露出的乳房、坐在椅子上而改变形状的艳丽臀部
+			PRINTFORMW 「呵呵、你在看哪里我都明白」
+		CASE 2
+			PRINTFORML 在蓝护理尾巴的时候、%CALLNAME:MASTER%自动的洗着身体前面
+			PRINTFORML 从颈部开始向下。往起伏大的地方清洗着
+			PRINTFORMW 「唔、喂。胸部我会自己洗的……」
+		CASE 3
+			PRINTFORML 注意着力道、用毛巾擦拭着蓝修长的背
+			PRINTFORML 水嫩细腻的肌肤、适度紧致的美丽线条
+			PRINTFORMW 「这边也麻烦你了好吗、%CALLNAME:MASTER%？」
+		CASE 4
+		;お毛々を弄る 五分の一なので狙って出しづらいかも
+			IF CFLAG:25:1006 == 1
+				PRINTFORML 突然、%CALLNAME:MASTER%蓝的阴部映入我的眼帘
+				PRINTFORMW 以前自己修剪过的地方。现在的模样是……
+				$INPUT_LOOP_02
+				PRINTL [0] 一如既往的像馅饼面包。
+				PRINTL [1] 长出了一点点的毛
+				PRINTL [2] 毛已经长齐了
+				INPUT
+				SELECTCASE RESULT
+				CASE 0
+					PRINTFORMW 孩子般的光秃秃的阴阜。无毛状态
+					PRINTFORML 蓝听从%CALLNAME:MASTER%的话保持着这个姿态
+					PRINTFORML 「大致上每天都会处理。为了你的喜好」
+					PRINTFORMW 很开心、不过也想看着柔毛长出的过程、%CALLNAME:MASTER%偷偷想着
+				CASE 1
+					PRINTFORML 看来、金色的柔毛正在肆无忌惮的长着
+					PRINTFORML 「说着不要啦……我也是会有羞耻的阿」
+					PRINTFORML 脸红瞪着的蓝被%CALLNAME:MASTER%向后推倒仰躺在地
+					PRINTFORML 将臀部抬起来固定住观察着、肛门四周也开始微微长出柔毛出来
+					PRINTFORMW 因为太羞耻说不出话来、在蓝满脸通红的时候、慎重操纵着剃刀……
+				CASE 2
+					PRINTFORML 「如你看到的那样、已经长出来了。跟原来一样」
+					PRINTFORML 柔软有光泽的金色阴毛、优雅地整理好了
+					PRINTFORMW 觉得没必要修剪掉、用手指津津有味的缠绕着
+					CFLAG:25:1006 = 0
+				CASEELSE
+				GOTO INPUT_LOOP_02
+				ENDSELECT
+			ELSE
+				PRINTFORML 突然、%CALLNAME:MASTER%蓝的阴部映入我的眼帘
+				PRINTFORML 打理过的金色阴毛因为热水淋湿显的光亮
+				PRINTFORML 「？ 怎么了%CALLNAME:MASTER%、这么专注的看着」
+				PRINTFORMW 「事到如今也该习惯了吧？」
+				$INPUT_LOOP_03
+				PRINTL [0] 往那里清洗着
+				PRINTL [1] 将毛剃掉
+				PRINTL [2] 帮忙修整
+				INPUT
+				SELECTCASE RESULT
+				CASE 0
+					PRINTFORML 「呵。那么%CALLNAME:MASTER%就拜托了」
+					PRINTFORML 想都没想、蓝从容的答应了
+					PRINTFORML 将朝向这边的身体慢慢地左右打开双腿
+					PRINTFORML %CALLNAME:MASTER%手上满是气泡、往茂密的阴毛伸去
+					PRINTFORMW 跟自己的质感完全不同的柔软阴毛轻轻抚弄着
+				CASE 1
+					PRINTFORML 「呵呵、这是什么。你这变态」
+					PRINTFORML 觉得无奈的蓝苦笑的答应了
+					PRINTFORML 往地板铺上毛巾仰躺在上面、让双腿往左右张开展示着阴部
+					PRINTFORML 在前面坐下来的%CALLNAME:MASTER%手拿着剃刀脸朝着阴部靠近
+					PRINTFORMW 将长出来的毛发剃落、蓝阴部像是馅饼面包般
+					CFLAG:25:1006 = 1
+				CASE 2
+					PRINTFORML 「咦？ 啊、我可以自己整理的……」
+					PRINTFORML 「……总之是想改变阴毛形状阿。真是奇怪的性癖」
+					PRINTFORML 一边说着蓝还是笑着答应了
+					PRINTFORML 往地板铺上毛巾仰躺在上面、让双腿往左右张开展示着阴部
+					PRINTFORML 在前面坐下来的%CALLNAME:MASTER%手拿着剃刀脸朝着阴部靠近……
+					IF RAND:4 == 0
+						PRINTFORMW 蓝的阴毛剃成可爱的心型状
+					ELSEIF RAND:3 == 0
+						PRINTFORMW 蓝的阴毛剃成钻石般菱形的样子
+					ELSEIF RAND:2 == 0
+						PRINTFORMW 蓝的阴毛剃成标准的椭圆型
+					ELSE
+						PRINTFORMW 蓝的阴毛剃成小小的逆三角型
+					ENDIF
+				CASEELSE
+				GOTO INPUT_LOOP_03
+				ENDSELECT
+			ENDIF
+		ENDSELECT
+	ELSE
+		SELECTCASE RAND:10
+		CASE 0
+			PRINTFORML 「来、向上。让我看看你的脸」
+			PRINTFORMW 不知不觉就被颠倒立场、被蓝疼爱了起来
+		CASE 1
+			PRINTFORML 向描绘着轮廓一样、用指尖抚摸着脸的脸庞
+			PRINTFORMW 「这么害羞的事情。真亏你做的出来」
+		CASE 2
+			PRINTFORML 瞄准空档朝蓝的侧腹偷袭戳一下
+			PRINTFORML 「唔、真是、恶作剧小鬼」
+			PRINTFORMW 护着身体的蓝无奈的笑着
+		CASE 3
+			PRINTFORML 「在众人面前被这样抚摸、那我的威严就……唔、你的手……」
+			PRINTFORMW 被像抚摸小狗般的对待、蓝既羞耻又开心
+		CASE 4
+			PRINTFORML 蓝的尾巴在%CALLNAME:MASTER%面前左右摆动着
+			PRINTFORML 「唔ー」
+			PRINTFORMW 似乎因为背部被抚摸感到开心
+		CASE 5
+			PRINTFORML 用手指、朝着下巴抚弄着
+			PRINTFORML 「因为是犬类嘛。……唔」
+			PRINTFORMW 有点害羞抖着耳朵的蓝很可爱
+		CASE 6
+			PRINTFORML 「阿 哈哈哈、等、好痒！ 等等！」
+			PRINTFORMW 朝着胳肢搔痒着
+		CASE 7
+			PRINTFORML 用手疏通着金色的头发。顺便闻着味道
+			PRINTFORML 「被你称赞很漂亮、让我很高兴」
+			PRINTFORMW 将蓝遮羞隐藏着脸的手轻轻移开
+		CASE 8
+			PRINTFORML 什么都没说、用双手捧着蓝的脸蛋
+			PRINTFORML 「！？」
+			PRINTFORMW 手掌感受到脸蛋开始温热起来
+		CASE 9
+			PRINTFORML 一边甜言蜜语、一边与蓝亲密的身体接触
+			PRINTFORMW 「唔、我也、我也爱着你哟」
+		ENDSELECT
+	ENDIF
+RETURN 1
+;━━━━━━━━━━━━━━━━━━━━━━━━━
+;蓝样约会中身体接触（恋慕前提）
+;━━━━━━━━━━━━━━━━━━━━━━━━━
+@RAN_DATESKINSHIP
+	;约会中は别扱い。现状は迷途之家と情侣酒店でだけ専用あり
+
+	IF !CFLAG:诶嘿嘿
+		SELECTCASE CFLAG:当前位置
+		;博丽神社
+;		CASE 樱花道的鸟居,神社境内,神社本堂,神社走廊,妖精的大树,梦幻遗迹
+		;命莲寺
+;		CASE 地藏小路,倒垂的柳树下,命莲寺境内,命莲寺方丈,墓地,神灵庙广场,神灵庙道场
+		;人里・情侣酒店
+		CASE 260,950
+			SELECTCASE RAND:5
+			CASE 0
+				PRINTFORML 蓝朝%CALLNAME:MASTER%耳朵轻轻的咬了咬
+				PRINTFORMW 背后压过来的膨胀感。雌兽的独特香味在强烈撼动着理性
+			CASE 1
+				PRINTFORML 「唔、坏心眼……」
+				PRINTFORML 隔着衣服朝蓝的阴部抚弄着
+				PRINTFORMW 渐渐的因为触碰而兴奋的蓝、都看得出眼里飘散着爱心了
+			CASE 2
+				PRINTFORML 将食指竖起、慎重的瞄准目标发动进攻
+				PRINTFORMW 「失败。呵呵、可要好好对准目标」
+			CASE 3
+				PRINTFORML 将食指竖起、慎重的瞄准目标发动进攻
+				PRINTFORML 「漂亮、命中。……那就这样结束了吗？」
+				PRINTFORMW 回应期待、指尖朝着深处轻轻搅动
+			CASE 4
+				PRINTFORML 抓住蓝的脚将袜子脱掉、按摩着洁白的双足
+				PRINTFORML 「唔、真是微妙、有点难为情」
+				PRINTFORMW 有点焦虑的扭动妖魅的身体
+			ENDSELECT
+		;人里
+;		CASE 广场,商业街,吞屋小道,寺子屋,大众浴场,长屋街
+		;红魔馆
+;		CASE 雾之湖,冰造的小雪屋,废洋馆,正门,大厅,食堂,大图书馆,地下室
+		;迷途竹林
+;		CASE 迷失的小道,斜角的竹林,兔的洞穴,永远亭,无名之丘,太阳花田,永远亭的内院
+		;魔法之森
+;		CASE 森林的入口,香霖堂,古木的大树,雾雨魔法店,人偶的洋馆,再思之道,无缘冢
+		;三途之川～冥界
+;		CASE 中有之道,三途之川,彼岸,白玉楼庭院,白玉楼
+		;妖怪之山　山麓・迷途之家
+		CASE 630,740
+			SELECTCASE RAND:5
+			CASE 0
+				PRINTFORML %CALLNAME:MASTER%横躺着榻榻米将头靠在蓝膝上、被温柔的抚摸着头
+				PRINTFORMW 蓝轻轻的玩着头发及耳朵
+			CASE 1
+				PRINTFORML 蓝的九尾是妖力的根源。不过感觉分不太出每条的区别
+				PRINTFORML 颜色的差异、手感、抚摸时的反应、好像每尾都不太一样……
+				PRINTFORMW 「呼。呼。怎么一直注意着尾巴呢？」
+			CASE 2
+				PRINTFORML 「我的狐狸身姿？ 那可是非常厉害」
+				PRINTFORML 「一个眼神降下灾祸、身体有如高山般、尾巴覆盖着天空」
+				PRINTFORML 「来吧。像往常那样崇拜我吧」
+				PRINTFORMW 但是抚摸着下巴跟背的话、就会表现的跟可爱的宠物一样呢、我的蓝大人
+			CASE 3
+				PRINTFORML 「帮你按摩如何、%CALLNAME:MASTER%」
+				PRINTFORML 「经常帮紫样在浴室按摩。对自己的手艺可是很有自信」
+				PRINTFORMW 承蒙好意、将身体放松让蓝按压、身体开始起了反应
+				PRINTL 
+				PRINTFORML %CALLNAME:MASTER%的体力和精力简短地恢复了。
+				BASE:MASTER:体力 += 50
+				BASE:MASTER:气力 += 100
+			CASE 4
+				PRINTFORML 「唔真不错。啊、那里、再加强一点」
+				PRINTFORML 替趴着的蓝细心的按摩着
+				PRINTFORMW 下半身周围感觉特别有效、特别是大腿跟臀部喜欢慢慢的柔捏
+				PRINTL 
+				PRINTFORML 蓝的体力和精力简短地恢复了。
+				BASE:25:体力 += 50
+				BASE:25:气力 += 100
+			ENDSELECT
+		;妖怪之山　山麓
+;		CASE 山麓树海,玄武之泽,大蛤蟆之池,仙人的宅邸,间歇泉地下中枢
+		;妖怪之山　山顶
+;		CASE 九天瀑布,绝景之丘,山之湖,守矢神社境内,守矢神社本殿,天界
+		;地底
+;		CASE 幻想风穴,地狱的深道,旧地狱街道,旧地狱温泉,地灵殿,灼热地狱遗迹
+		;それ以外
+		CASEELSE
+			IF CFLAG:当前位置 == (98 + MAIN_MAP * 100)
+				SELECTCASE RAND:5
+				CASE 0
+					PRINTFORML 愉快的玩了一回、蓝将头靠在%CALLNAME:MASTER%的膝上
+					PRINTFORMW 像个孩子似的、跟蓝互相笑着
+				CASE 1
+					PRINTFORML 不用言语、这都没有意义
+					PRINTFORMW 不知从什么时候二人就开始互相紧握彼此的手
+				CASE 2
+					PRINTFORML 「这样黏在一起……」
+					PRINTFORML 「真是、就不能考虑考虑衣服吗？」
+					PRINTFORMW 瞳孔中闪烁着似乎有什么含意想表达
+				CASE 3
+					PRINTFORML 被触摸着的蓝摇动的身体
+					PRINTFORMW 丰满的肉体像巨大的肉毬微微颤抖着
+				CASE 4
+					PRINTFORML 蓝说着说着就将双乳朝着后背压迫上来
+					PRINTFORMW 享受着她体积庞大、接触面积宽广的巨乳触感
+				ENDSELECT
+			ELSE
+			SELECTCASE RAND:8
+			CASE 0
+				PRINTFORML 「什么？」
+				PRINTFORMW 注意到的瞬间、蓝靠近%CALLNAME:MASTER%挽起手臂
+			CASE 1
+				PRINTFORML 「唔、像个少女似的。脸都变的热起来了」
+				PRINTFORMW 作了个像恋人般的动作后、总是落落大方的蓝意外的害羞起来了
+			CASE 2
+				PRINTFORML %CALLNAME:MASTER%朝着蓝的腰搂抱上去
+				PRINTFORMW 如果有人看到她跟男人这样亲近、大概会觉得很惊讶吧
+			CASE 3
+				PRINTFORML 在触摸的时候将蓝的帽子拿掉
+				PRINTFORML 忽然露出来的狐耳轻轻的抖动着、觉得很有趣
+				PRINTFORMW 「就这样吗？别的也可以喔、唔……真让人着急呢」
+			CASE 4
+				PRINTFORML %CALLNAME:MASTER%的手紧扣着愉快笑着的蓝
+				PRINTFORMW 以前总是保持沉默高冷的美貌、现在只要%CALLNAME:MASTER%在身边就总是一脸傻呼呼的直盯着
+			CASE 5
+				PRINTFORML 蓝对%CALLNAME:MASTER%挽着手臂已经不能满足了、而将手臂埋在身体中心的贴着
+				PRINTFORML 手臂被温暖的包裹着、手背贴着蓝的下腹部偷偷的搔弄着……
+				PRINTFORMW 「谁都看不到喔……」
+			CASE 6
+				PRINTFORML 「除了十指紧扣外」
+				PRINTFORML 「是不是……还想摸摸其他的地方呢？」
+				PRINTFORMW 为了响应蓝的邀请、%CALLNAME:MASTER%朝着她浑圆的臀部伸出了手
+			CASE 7
+				PRINTFORML 突然间、手跟腰腿被尾巴缠绕了过来
+				PRINTFORMW 好像在向四周主张这是自己的东西一样
+			ENDSELECT
+
+			ENDIF
+		ENDSELECT
+	ENDIF
+RETURN 1
+;==================================================
+;303,道歉
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_303
+CALL M_KOJO_MESSAGE_COM_K25_303_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_303_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;304,帮忙干活
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_304
+CALL M_KOJO_MESSAGE_COM_K25_304_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_304_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL && !FLAG:70
+	IF TALENT:恋慕 || TALENT:思慕
+		IF ABL:MASTER:教养 >= 4
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 提高知识跟技术、%CALLNAME:MASTER%就能大致理解大结界的构造
+				PRINTFORML 「……没事。好好的工作吧、%CALLNAME:MASTER%」
+				PRINTFORMW 蓝默默的检查、有什么事藏在心里的样子
+			CASE 1
+				PRINTFORML 「接下来换个地方。检查的步骤如往常一样」
+				PRINTFORMW %CALLNAME:MASTER%已经不会拖蓝的后腿了。一起迅速的分工着
+			CASE 2
+				PRINTFORML 「辛苦了。暂时休息吧」
+				PRINTFORML 「累了、膝可以借我一下吗」
+				PRINTFORMW 蓝将帽子取下、躺倒在%CALLNAME:MASTER%的膝上
+			ENDSELECT
+			PRINTL 
+			EXP:MASTER:学习经验 += 3
+			PRINTFORML 学习经验＋3
+		ELSEIF ABL:MASTER:教养 == 3
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 现在的%CALLNAME:MASTER%已经可以理解蓝的工作内容
+				PRINTFORML 「好。就拜托你调查啰」
+				PRINTFORMW 依照指示、开始认真的忙着
+			CASE 1
+				PRINTFORML 「唔？ 这里也有漏洞……」
+				PRINTFORMW 为了不打扰到蓝、默默的进行被托付的工作
+			CASE 2
+				PRINTFORML 「不用担心。有好好的帮上忙」
+				PRINTFORML 使劲的努力着、但是跟蓝的速度相比%CALLNAME:MASTER%明显慢了不少
+				PRINTFORMW 想着是不是妨碍到了、蓝微微笑着鼓励似的摸着%CALLNAME:MASTER%的头
+			ENDSELECT
+			PRINTL 
+			EXP:MASTER:学习经验 += 2
+			PRINTFORML 学习经验＋2
+		ELSE
+			PRINTFORML 虽然是在帮着蓝工作、但是完全理解不了阿
+			PRINTFORML 「做一点是一点。另外可以帮我泡点茶吗」
+			PRINTFORMW %CALLNAME:MASTER%老老实实的当起打杂
+			PRINTL 
+			EXP:MASTER:学习经验 += 1
+			PRINTFORML 学习经验＋1
+		ENDIF
+	ELSE
+		PRINTFORML 「想帮忙？谢谢」
+		PRINTFORML 「那么、先帮我泡点茶吧」
+		PRINTFORMW 做了些工作以外的杂务
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;305,索求膝枕
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_305
+CALL M_KOJO_MESSAGE_COM_K25_305_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_305_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL && !FLAG:70
+	IF TALENT:恋慕
+		SELECTCASE RAND:5
+		CASE 0
+			PRINTFORML 「呵呵呵」
+			PRINTFORMW 抚摸着%CALLNAME:MASTER%的脑袋、蓝温柔的笑着
+		CASE 1
+			PRINTFORML 枕在膝上。尾巴盖在身上
+			PRINTFORMW 蓝将身体微微放宽、让自己躺的更舒服
+		CASE 2
+			PRINTFORML 「怎么了？」
+			PRINTFORMW 蓝的手在腹部来回抚摸着、怎么说下半身有点平静不下来
+		CASE 3
+			PRINTFORML 用大腿做膝枕、将头埋入更深的地方
+			PRINTFORMW 在大腿的根部及下腹。暴露的地方脸上感受到有些湿润柔软……
+		CASE 4
+			PRINTFORML 总觉得、蓝看起来满喜欢膝枕的
+			PRINTFORMW 带着母性的表情抚摸着脸颊
+		ENDSELECT
+	ELSEIF TALENT:思慕
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 「好、来吧」
+			PRINTFORMW 微笑的蓝朝着大腿拍了拍
+		CASE 1
+			PRINTFORML 「真是。毛手毛脚的、都不害噪」
+			PRINTFORMW 脸颊享受着大腿的触感
+		CASE 2
+			PRINTFORML 平躺后往上看被高耸的双乳占满视线、蓝敲了敲头
+			PRINTFORMW 「呵呵、一脸下流的样子」
+		ENDSELECT
+	ELSE
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 「哎呀，哎呀。真拿你没办法」
+			PRINTFORMW 死命的恳求后、勉勉强强的答应了
+		CASE 1
+			PRINTFORML 「倒是很少有人敢把颈部暴露给妖怪看呢」
+			PRINTFORMW 指甲若无其事的戳着颈动脉
+		CASE 2
+			PRINTFORML 「该起床了喔」
+			PRINTFORMW 在蓝的膝枕睡着了、真让人依依不舍
+		ENDSELECT
+	ENDIF
+	PRINTL
+ENDIF
+RETURN 1
+;==================================================
+;306,抚摸肚子
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_306
+CALL M_KOJO_MESSAGE_COM_K25_306_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_306_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL && !FLAG:70
+	;上から怀孕、事后、通常
+	IF TALENT:妊娠
+		IF TALENT:恋慕 || TALENT:思慕
+			SELECTCASE RAND:5
+			CASE 0
+				PRINTFORML 「出色的命中了」
+				PRINTFORMW 『跟预期的一样』感觉听到嘟哝声
+			CASE 1
+				PRINTFORML 「感觉到孩子在踢肚子。看来会是调皮的孩子呢」
+				PRINTFORMW 点点头、二人一起抚摸着肚子
+			CASE 2
+				PRINTFORML 「橙在为了成为姐姐而干劲十足」
+				PRINTFORMW 做为父亲跟蓝聊着育儿的话题
+			CASE 3
+				PRINTFORML 手贴在蓝肚子、感触着孩子的动静
+				PRINTFORMW 度过一段娴静的时间
+			CASE 4
+				PRINTFORML 「怎么、一脸老实样……」
+				PRINTFORMW 蓝的肚子里怀着是自己的孩子、%CALLNAME:MASTER%深深的拥抱着蓝
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 「不需要摆父亲的架子」
+				PRINTFORMW 被拒绝只好缩回手
+			CASE 1
+				PRINTFORML 「马上就会生出来。不用担心」
+				PRINTFORMW 即使肚子变大了蓝也像往常一样冷漠
+			CASE 2
+				PRINTFORML 「对不起、这个孩子的名字由八云家来决定」
+				PRINTFORMW 被不由分说的拒绝了
+			ENDSELECT
+		ENDIF
+	ELSEIF 充填率(TARGET,1) > 30
+	;无自觉射精のケースは考虑せず。问答无用で你のせいになります
+		IF TALENT:恋慕
+			SELECTCASE RAND:4
+			CASE 0
+				PRINTFORML 「被你的精液灌的满满的」
+				PRINTFORMW 蓝幸福的说着
+			CASE 1
+				PRINTFORML 「完全膨胀起来了」
+				PRINTFORMW %CALLNAME:MASTER%的手往下腹伸去、蓝诱惑般的的低声说着
+			CASE 2
+				PRINTFORML 「因为不想弄脏衣服、所以用术式就把隔绝了出口」
+				PRINTFORML 「我看这几天都只能维持这样了」
+				PRINTFORMW 听到蓝这样说、%CALLNAME:MASTER%感觉又有点硬了
+			CASE 3
+				PRINTFORML 「唔、这精液实在太过浓稠了」
+				PRINTFORML 「我可是有数。你究竟往里面射了几回喔」
+				PRINTFORMW 听着得%CALLNAME:MASTER%搔着自己的双颊笑着
+			ENDSELECT
+		ELSEIF TALENT:思慕
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 「万一怀孕了怎么办？」
+				PRINTFORMW 看着支支吾吾的%CALLNAME:MASTER%、蓝轻轻的笑了
+			CASE 1
+				PRINTFORML 「虽然是我说可以的……但是……」
+				PRINTFORMW %CALLNAME:MASTER%无耻的撒娇着、空气中还带有情欲的味道
+			CASE 2
+				PRINTFORML 「居然有胜过野兽的精力。我也真是服了」
+				PRINTFORMW 被大量精液灌的满满的肚子蓝轻抚着
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 「你居然敢这么做」
+				PRINTFORMW 不快的表情似乎在打算盘算着什么
+			CASE 1
+				PRINTFORML 「你的精力跟无耻都让我震惊」
+				PRINTFORMW 被责备着朝不是恋人的女性做亲密的事情
+			CASE 2
+				PRINTFORML 「胡闹可要适当」
+				PRINTFORMW 适当的话、就没关系的意思吗
+			ENDSELECT
+		ENDIF
+	ELSE
+		IF TALENT:恋慕
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 「就这么想撒娇吗……」
+				PRINTFORMW 都能看到蓝的眼睛散发出爱心了
+			CASE 1
+				PRINTFORML 「真安心」
+				PRINTFORMW 听着她低声闲聊日常
+			CASE 2
+				PRINTFORMW 「那里可还没有孩子喔、还要再加油呢」
+			ENDSELECT
+		ELSEIF TALENT:思慕
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 「知道吗。里面可是子宫喔」
+				PRINTFORMW 蓝说着诱惑的台词
+			CASE 1
+				PRINTFORML 「恩？ 怎么啦」
+				PRINTFORMW 蓝将手覆盖了上来
+			CASE 2
+				PRINTFORMW 「这样摸还挺舒服的」
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 触摸时感觉到绷紧的腹肉
+				PRINTFORMW 「真是乱来的家伙……」
+			CASE 1
+				PRINTFORMW 「还不停止吗？」
+			CASE 2
+				PRINTFORMW 「……到底在想什么」
+			ENDSELECT
+		ENDIF
+	ENDIF
+	PRINTL
+ENDIF
+RETURN 1
+;==================================================
+;307,捏脸蛋
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_307
+CALL M_KOJO_MESSAGE_COM_K25_307_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_307_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL && !FLAG:70
+	IF CFLAG:睡眠
+		IF TALENT:恋慕
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 戳着柔软的脸颊
+				PRINTFORMW 看着蓝静谧得睡脸上滑稽的变化、忍不住笑了
+			CASE 1
+				PRINTFORML 一旦睡着蓝就很难醒来
+				PRINTFORMW 明明自己就在面前、这无防备的脸显的更加可爱
+			CASE 2
+				PRINTFORML 耳朵贴近也听不到鼾声
+				PRINTFORMW %CALLNAME:MASTER%朝着脸蛋捏了捏
+			ENDSELECT
+		ELSE
+			PRINTFORML 沉睡的蓝露出了牙齿
+			PRINTFORMW 感觉马上就会起床、但还是忍不住想戳脸蛋……
+		ENDIF
+	ELSEIF TALENT:恋慕
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 「不要扯啦。会变成奇怪的表情」
+			PRINTFORMW 说着更想跩了
+		CASE 1
+			PRINTFORML 「还击」
+			PRINTFORMW 蓝的脸蛋被捏的红通通
+		CASE 2
+			PRINTFORML 拥有独特美貌的蓝被捏着脸蛋感觉很有趣
+			PRINTFORMW 二人互相的玩耍一番
+		ENDSELECT
+	ELSEIF TALENT:思慕
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 「如果妆糊了怎么办啦」
+			PRINTFORMW 即使是倾国倾城的美人抱怨着、依然阻止不了邪恶的魔手
+		CASE 1
+			PRINTFORML 「呵ー呵ー呵。想被惩罚吗？」
+			PRINTFORMW 之后单方面的被蓝捏着脸
+		CASE 2
+			PRINTFORML 「橙都比你还像大人」
+			PRINTFORMW 对喜欢的女孩子恶作剧、不是很正常的吗
+		ENDSELECT
+	ELSE
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 「那么（嗯）」
+			PRINTFORMW 小恶作剧一下就被瞪了
+		CASE 1
+			PRINTFORML 「…………」
+			PRINTFORMW 蓝往手上狠很捏了一下
+		CASE 2
+			PRINTFORMW 被尾巴给缠住了
+		ENDSELECT
+	ENDIF
+	PRINTL
+ENDIF
+RETURN 1
+;==================================================
+;308,捅脸颊
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_308
+CALL M_KOJO_MESSAGE_COM_K25_308_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_308_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL && !FLAG:70
+	IF CFLAG:睡眠
+		IF TALENT:恋慕 || TALENT:思慕
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 戳了戳蓝的脸颊、鉴赏着精致的容貌
+				PRINTFORMW 暖呼呼的脸好可爱
+			CASE 1
+				PRINTFORML 「………唔」
+				PRINTFORMW 似乎对刺激有反应、沉睡的蓝像狐狸幼崽般喉咙发出呼噜呼噜的声音
+			CASE 2
+				PRINTFORML 朝着仰睡的蓝脸颊恶作剧
+				PRINTFORML 虽说压着尾巴是不会痛、但好像有点难睡的样子
+				PRINTFORMW 知道难睡是因为看到、胸口的起伏变大了
+			ENDSELECT
+		ELSE
+			PRINTFORML 用指尖逗弄着双颊
+			PRINTFORMW 在嘴上跟狐耳出现些微反应
+		ENDIF
+	ELSEIF TALENT:恋慕
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 「在这么玩耍就要扣分了喔」
+			PRINTFORMW 马上停手的%CALLNAME:MASTER%又偷戳了一下
+		CASE 1
+			PRINTFORML 「如果对紫样这样做。可是会被狠很反击的」
+			PRINTFORMW 死皮赖脸的黏着蓝
+		CASE 2
+			PRINTFORML 「呵呵。礼尚往来」
+			PRINTFORMW 跟蓝贴身的交流着
+		ENDSELECT
+	ELSEIF TALENT:思慕
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 「唔唔」
+			PRINTFORMW 意外的被蓝反击了
+		CASE 1
+			PRINTFORML 「真是居然对女性的脸这样做。看招」
+			PRINTFORMW 无论怎样躲避都逃不掉蓝的魔爪
+		CASE 2
+			PRINTFORMW 轻轻的用指尖、搔痒着脸蛋
+		ENDSELECT
+	ELSE
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 从后面敲着肩膀、幼稚地等蓝转头瞬间戳脸颊的%CALLNAME:MASTER%
+			PRINTFORMW 得手之后、遭遇了搔痒地狱反击
+		CASE 1
+			PRINTFORML 「唔。总觉得坐立难安」
+			PRINTFORMW 寻找空档伺机而行
+		CASE 2
+			PRINTFORML 「唔、戳到牙齿了」
+			PRINTFORMW 被蓝用双手转动着太阳穴
+		ENDSELECT
+	ENDIF
+	PRINTL
+ENDIF
+RETURN 1
+;==================================================
+;309,摸头
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_309
+CALL M_KOJO_MESSAGE_COM_K25_309_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_309_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL && !FLAG:70
+	;遥か年下にいい子いい子されるという屈辱
+	IF CFLAG:睡眠
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML %CALLNAME:MASTER%朝无防备熟睡的蓝用手轻轻地梳理头发
+			PRINTFORMW 柔顺的触感、艳丽的金发、可谓金发巨乳的尤物
+		CASE 1
+			PRINTFORML 被静谧的美丽睡颜所吸引，情不自禁地伸出手
+			PRINTFORMW 对仿佛是金丝般的头发小心地抚摸着
+		CASE 2
+			PRINTFORML 「唔………」
+			PRINTFORMW 为了不妨碍睡眠，%CALLNAME:MASTER%轻轻地抚摸着头
+		ENDSELECT
+	ELSEIF CFLAG:陪睡中
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 「呵。真可爱」
+			PRINTFORML 只有两个人的话蓝就会放下平时威风凛凛的样子
+			PRINTFORMW 温柔的抚摸头发就会瞇起双眼
+		CASE 1
+			PRINTFORML 虽然不知道闭上眼的蓝是不是睡着了
+			PRINTFORMW 只是、%CALLNAME:MASTER%将手放开的话、耳朵就会动了动
+		CASE 2
+			PRINTFORML %CALLNAME:MASTER%轻轻地抱着蓝
+			PRINTFORML 「……好喜欢」
+			PRINTFORMW 默默的用手梳理她的头发
+		ENDSELECT
+	ELSEIF TALENT:恋慕
+		SELECTCASE RAND:5
+		CASE 0
+			PRINTFORML 蓝把脑袋垂了下来
+			PRINTFORMW 「好喜欢。你的一切」
+		CASE 1
+			PRINTFORML %CALLNAME:MASTER%摸着狐耳触感不输给尾巴
+			PRINTFORMW 「耳后很敏感的」
+		CASE 2
+			PRINTFORML 本来是我在摸头的、不知不觉变成被摸的对象
+			PRINTFORML 「好了、乖孩子乖孩子」
+			PRINTFORMW 被像孩子般对待、不过感觉也不坏
+		CASE 3
+			PRINTFORML 摘下帽子、从上面俯看跟以往的印象有很大的变化
+			PRINTFORML %CALLNAME:MASTER%用疼爱年幼少女的心情抚摸着蓝
+			PRINTFORMW 「这种事、本来除紫样以外的人是不允许的……」
+		CASE 4
+			PRINTFORML 正对的蓝摸着头、突然往怀里扑进来
+			PRINTFORML 似乎是想要撒娇抱抱的样子
+			PRINTFORMW %CALLNAME:MASTER%疼爱的抱了抱蓝大人
+		ENDSELECT
+	ELSEIF TALENT:思慕
+		SELECTCASE RAND:5
+		CASE 0
+			PRINTFORML 「平常、都是我再摸头」
+			PRINTFORMW 表情不服的样子、朝%CALLNAME:MASTER%摸头、变成两人互相摸的情景
+		CASE 1
+			PRINTFORML 「……………」
+			PRINTFORMW 一边感受蓝锐利的视线一边抚摸。有种莫名的紧张呢
+		CASE 2
+			PRINTFORML 将耳朵造型的帽子取下后抚摸着头
+			PRINTFORMW 耳朵受到惊吓似的动了动、视线有点锐利。但总觉得会上瘾
+		CASE 3
+			PRINTFORML 「唔……搞什么阿」
+			PRINTFORMW %CALLNAME:MASTER%好孩子好孩子的喊着蓝的脸微微发红
+		CASE 4
+			PRINTFORML 「还没满足阿」
+			PRINTFORMW 总时很沉着的蓝、很难得的语气有些急促
+		ENDSELECT
+	ELSE
+		SELECTCASE RAND:5
+		CASE 0
+			PRINTFORML 隔着帽子抚摸着蓝的头
+			PRINTFORMW 「得意忘形了你」
+		CASE 1
+			PRINTFORML 蓝一溜烟地逃走了
+			PRINTFORMW 「喂、过份亲暱了」
+		CASE 2
+			PRINTFORML 蓝皱了皱眉头
+			PRINTFORMW 「这样对我、你可真有胆量」
+		CASE 3
+			PRINTFORMW 「喂，别碰耳朵」
+		CASE 4
+			PRINTFORMW 「我说啊。注意你的手」
+		ENDSELECT
+	ENDIF
+
+ENDIF
+RETURN 1
+;==================================================
+;310,摸屁股
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_310
+CALL M_KOJO_MESSAGE_COM_K25_310_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_310_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	IF FLAG:时间停止
+		PRINTFORML %CALLNAME:MASTER%朝着一动也不动的蓝伸出手抓着肉臀
+		PRINTFORMW 既然怎么做都不会生气。就抓到心满意足为止
+	ELSEIF TALENT:恋慕
+		SELECTCASE RAND:10
+		CASE 0
+			PRINTFORML %CALLNAME:MASTER%想着真糟糕、手掌整个包覆住屁股的触感实在太好
+			PRINTFORML 「满足了吗？」
+			PRINTFORMW 虽然没有被责备、但似乎被认为有喜爱臀部的性癖……
+		CASE 1
+			PRINTFORML %CALLNAME:MASTER%揉着完全没有抵抗的浑圆臀部
+			PRINTFORMW 蓝无奈的笑了笑、继续聊着话题
+		CASE 2
+			PRINTFORML 沿着大腿根部。让手指轻微的隔着衣服爬过
+			PRINTFORMW 蓝平时坦然自如的尾巴、现在一副忍受着什么似的弯曲着
+		CASE 3
+			PRINTFORML 「摸的用力点、我也不在意」
+			PRINTFORMW 一个长长的尾巴卷在蓝的胳膊上、被身姿吸引的%CALLNAME:MASTER%更加大胆的下手
+		CASE 4
+			PRINTFORML 手朝着浑圆的臀部慢慢往下滑、在腿上来回滑着
+			PRINTFORMW 蓝的表情像少女般的满脸通红
+		CASE 5
+			PRINTFORML 丰满的肉臀、只要摸过一次就会被魔性的魅力诱惑
+			PRINTFORMW 到底有什么不同呢、%CALLNAME:MASTER%思考着蓝的臀部当然手也没有停下
+		CASE 6
+			PRINTFORML 「在这样摸下去可会忍不住的喔……」
+			PRINTFORMW %CALLNAME:MASTER%看见蓝的眼中闪烁著名为情欲的危险光芒
+		CASE 7
+			PRINTFORML %CALLNAME:MASTER%用双手托着安产型的肉臀、增加指尖力道
+			PRINTFORML 似乎刺激到了脂肪下的筋肉
+			PRINTFORMW 「唔。那个%CALLNAME:MASTER%、这可不是按摩了耶……」
+		CASE 8
+			PRINTFORML 「本来、你这无礼的手可是会落地的」
+			PRINTFORMW 蓝苦笑的看着肆无忌惮的手抓着臀部
+		CASE 9
+			PRINTFORML 「我的屁股跟胸部。你喜欢哪一个？」
+			PRINTFORMW 顿时陷入的难题
+		ENDSELECT
+	ELSEIF TALENT:思慕
+		SELECTCASE RAND:5
+		CASE 0
+			PRINTFORML 「我没制止的话你恐怕会一直摸下去……」
+			PRINTFORMW 被傻眼的蓝看着、不过屁股还是紧抓着不放
+		CASE 1
+			PRINTFORML 感觉已经很亲密了、用恶作剧似的轻轻摸过去应该没关系吧
+			PRINTFORML 「唔」
+			PRINTFORMW 然后就被尾巴缠绕起来后仍飞
+		CASE 2
+			PRINTFORML 「虽然我总是看到你在摸着女人的臀部」
+			PRINTFORMW 「但到现在还活地好好的、真是佩服你阿」
+		CASE 3
+			PRINTFORML 朝着蓝的臀部搔着
+			PRINTFORMW 「嗯……怎么？ 你这是在诱惑我吗？」
+		CASE 4
+			PRINTFORML 对蓝说无法抵抗想要揉揉这浑圆的屁股
+			PRINTFORMW 没有回应、蓝假装没听到似的扭过脸
+		ENDSELECT
+	ELSE
+		SELECTCASE RAND:5
+		CASE 0
+			PRINTFORMW 娑啦娑啦地摸着、之后手就被尾巴缠住了
+		CASE 1
+			PRINTFORML 「注意你的手」
+			PRINTFORMW 蓝的尾巴毛竖起、如针刺般的变化。慎重地缩回了手……
+		CASE 2
+			PRINTFORML 「喂、不想活了吗」
+			PRINTFORMW 手背被狠很的捏着
+		CASE 3
+			PRINTFORML 「真是个厚颜无耻的家伙」
+			PRINTFORMW 对性骚扰的%CALLNAME:MASTER%叹了口气的
+		CASE 4
+			PRINTFORML 「像你这样无畏的人还真难见」
+			PRINTFORMW 蓝一脸无奈的摇摇头
+		ENDSELECT
+	ENDIF
+	PRINTL 
+ENDIF
+RETURN 1
+;==================================================
+;311,拥抱
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_311
+CALL M_KOJO_MESSAGE_COM_K25_311_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_311_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL && !FLAG:70
+	;尻尾ダイブはここ。简单には许してくれない
+	IF CFLAG:睡眠
+		SELECTCASE RAND:5
+		CASE 0
+			PRINTFORML 抱着熟睡中的蓝
+			PRINTFORMW 可找不到这么奢侈的抱枕
+		CASE 1
+			PRINTFORML 手绕到蓝的背后、将手埋在狐尾里
+			PRINTFORMW 那里的触感非常好、暖呼呼的
+		CASE 2
+			PRINTFORML 将手移向臀部揉了揉、沉睡的蓝微微地颤抖着
+			PRINTFORMW 隔着轻薄的布料传来的触感、让人无法收手
+		CASE 3
+			PRINTFORML 埋入蓝的双乳之间、深吸一口气
+			PRINTFORMW 有种无法言喻的香甜气息。温暖轻柔的触感让人很安心
+		CASE 3
+			PRINTFORML 紧紧抱住蓝、在近距离鉴赏着美丽的睡脸
+			PRINTFORML 长长的睫毛。凛然工整的美貌。樱色水嫩的嘴唇
+			PRINTFORMW 光是看着就让人激起欲望
+		ENDSELECT
+	ELSEIF CFLAG:陪睡中
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 拉着蓝的手将她抱进怀里
+			PRINTFORMW 轻抚着丰满的肉体。蓝配合着像孩子似地撒娇
+		CASE 1
+			PRINTFORML 平时的威风凛凛消失了。现在只有渴望被人疼爱的蓝大人
+			PRINTFORMW 「呼。有点怀念的感觉…」
+		CASE 2
+			PRINTFORML 「唔ー」
+			PRINTFORMW 只要向狐耳跟脸颊搔痒、怀里就会有只可爱的小动物在撒娇
+		ENDSELECT
+	ELSEIF TALENT:恋慕
+		SELECTCASE RAND:5
+		CASE 0
+			PRINTFORML 「好吧。扑进来吧」
+			PRINTFORML 蓝突然背对着这么说
+			PRINTFORML %CALLNAME:MASTER%做个深呼吸、向九尾扑了进去
+			PRINTFORMW 全身被毛茸茸的包覆着。这里莫非是天界的乐园
+		CASE 1
+			PRINTFORML 从正面紧抱的话、就会感受到被丰满的双乳轻轻的挤回来
+			PRINTFORML 蓝无论是前面后面抱起来的感觉都是最棒的
+			PRINTFORMW 「呵呵呵。抱上瘾了阿」
+		CASE 2
+			PRINTFORML 被自己抱的时候很多、被蓝抱着倒是很少见
+			PRINTFORML 蓝将自己整个人埋在怀里
+			PRINTFORMW 「总觉得。这样很安心」
+		CASE 3
+			PRINTFORML 「这样就算在哪都能闻到你的味道呢……」
+			PRINTFORML 「不做好宣示主权可不行」
+			PRINTFORMW 被蓝尽情的抱着、仿佛要将全身都覆盖上自己的气味
+		CASE 4
+			PRINTFORML 「我过去啰。嘿咻」
+			PRINTFORML 蓝把脸朝脖子靠近、使劲的闻着气味
+			PRINTFORMW 看起来很开心的样子
+		ENDSELECT
+	ELSEIF TALENT:思慕
+		SELECTCASE RAND:5
+		CASE 0
+			PRINTFORML 「呵呵」
+			PRINTFORMW 「猜猜吃了什么」
+		CASE 1
+			PRINTFORML 「你这拈花惹草的家伙。在我之前抱过谁？」
+			PRINTFORMW 蓝阴沉沉的笑着
+		CASE 2
+			PRINTFORML 「虽然彼此熟识、但这真是缺乏警惕的行为阿」
+			PRINTFORMW 「万一我不心情不好、你可是会被弹幕吹飞哦」
+		CASE 3
+			PRINTFORML 鼻子靠近。蓝的衣服上传来薄薄香木的气味
+			PRINTFORMW 「哎呀，哎呀。好像快被你的气味盖掉了」
+		CASE 4
+			PRINTFORML 「温柔一点喔」
+			PRINTFORML 终于从蓝得到抱住尾巴的许可
+			PRINTFORMW 就算只抱住一尾、那毛茸茸的触感真让人难以抗拒
+		ENDSELECT
+	ELSE
+		SELECTCASE RAND:5
+		CASE 0
+			PRINTFORML 「你在做什么？」
+			PRINTFORMW 抱上去的话、会被钻脑袋吧
+		CASE 1
+			PRINTFORML 「满足了就赶快出去」
+			PRINTFORMW 被冷冰冰的盯着
+		CASE 2
+			PRINTFORML 「去抱其他的女人吧」
+			PRINTFORMW 蓝无奈的口气劝说
+		CASE 3
+			PRINTFORML 蓝将手藏在袖子里
+			PRINTFORMW 「你没有恋人吗？」
+		CASE 4
+			PRINTFORML 「这种时候嗅觉灵敏很为难阿」
+			PRINTFORMW 说完就把脸背过去
+		ENDSELECT
+	ENDIF
+	PRINTL 
+ENDIF
+RETURN 1
+;==================================================
+;312,接吻
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_312
+CALL M_KOJO_MESSAGE_COM_K25_312_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_312_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;轻めの接吻。ディープなのは”更多的接吻”にて
+	;と思ったけどごちゃまぜの方が变化が付くかも
+	IF FLAG:时间停止
+		PRINTFORML 看着静止的蓝、贴上去夺走了嘴唇
+		PRINTFORMW 将强大的女性贪婪的索求着、带给征服欲的满足
+	ELSEIF TALENT:恋慕
+		IF CFLAG:睡眠
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 袭击熟睡的九尾妖狐大妖怪、用舌头描绘般舔着那娇嫩的嘴唇
+				PRINTFORMW 发现似乎有些反应的张开了嘴、%CALLNAME:MASTER%马上吸吮着甜美的舌肉
+			CASE 1
+				PRINTFORML 享受着弹性上乘的嘴唇一段时间
+				PRINTFORMW 大概是完全对自己信任的缘故、即使这样也没醒来
+			CASE 2
+				PRINTFORML 脸颊、手、下巴、脖子
+				PRINTFORMW 眼前见到的一切都被反复的亲吻着
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:10
+			CASE 0
+				PRINTFORML 「可别忘了。这可不是廉价的嘴唇」
+				PRINTFORMW 用温暖的食指指着唇、蓝眼神温柔说着
+			CASE 1
+				PRINTFORML 「哎呀，哎呀。红色的唇膏沾上去了」
+				PRINTFORMW 蓝将%CALLNAME:MASTER%沾在嘴唇上的唇膏用无名指擦去、然后涂在自己的唇上
+			CASE 2
+				PRINTFORML 唇跟唇在互相贪求着、变换着各种角度、灵巧的互相搅弄着
+				PRINTFORML 「……这个动作记住了吗、%CALLNAME:MASTER%？」
+				PRINTFORMW 兴奋的点了点头
+			CASE 3
+				PRINTFORML 「问题。接吻跟亲吻的区别是什么？」
+				PRINTFORML 「答案很简单。接触的面积」
+				PRINTFORMW 之后用很长一段时间来证明答案是否正确
+			CASE 4
+				PRINTFORML 「抚摸头发跟脸颊也喜欢……但现在想集中在嘴唇上」
+				PRINTFORMW %CALLNAME:MASTER%对于蓝的要求使劲的满足着
+			CASE 5
+				PRINTFORML 「这次的吻……90分、不行……再一次…才能确认」
+			CASE 6
+				PRINTFORMW 被吻到喘不过气的蓝深吸了一口气、表情很满足的样子
+			CASE 7
+				PRINTFORMW 互相摩擦着彼此的唇、蓝的舌朝向%CALLNAME:MASTER%的唇灵活的舔着
+			CASE 8
+				PRINTFORMW 一旦开始热吻、蓝就会试着夺走领导权、然后吻个没完没了
+			CASE 9
+				PRINTFORMW 「真是的、反应可爱的家伙呢」
+			ENDSELECT
+		ENDIF
+	ELSEIF TALENT:思慕
+		IF CFLAG:睡眠
+			PRINTFORML 安心睡着的脸真可爱、偷偷的往唇上吻了下去
+			PRINTFORMW 即使被吵醒也不会拒绝吧。这样想的话更燃烧起欲望来了
+		ELSE
+			SELECTCASE RAND:10
+			CASE 0
+				PRINTFORML 「是的是的、我也喜欢你哦」
+				PRINTFORMW 蓝像在哄孩子一样
+			CASE 1
+				PRINTFORML %CALLNAME:MASTER%有礼貌的朝蓝说『拜托跟我接吻』
+				PRINTFORML 「呵呵。真拿你没办法、要温柔点哦」
+				PRINTFORMW 吻完后被调笑着刚才的表情
+			CASE 2
+				PRINTFORML 「63分。还需要多多练习、知道吗」
+				PRINTFORMW 高兴的扑上去继续亲着
+			CASE 3
+				PRINTFORML 「………」
+				PRINTFORMW 嘴唇贴合在一起时、与蓝互相凝视着对方
+			CASE 4
+				PRINTFORML 在嘴唇短暂分离的瞬间、蓝又吻了上来
+				PRINTFORMW 「呵。大意可不好」
+			CASE 5
+				PRINTFORMW 蓝已经对%CALLNAME:MASTER%索吻完全不会拒绝了
+			CASE 6
+				PRINTFORMW 变的亲近后、最近连碰面打招呼都是用接吻的方式了
+			CASE 7
+				PRINTFORMW 眼睛被湿润的嘴唇吸引着、突然之间就被吻了上来
+			CASE 8
+				PRINTFORML 「越来越拿手了」
+				PRINTFORMW 「……但是、我还觉得不够」
+			CASE 9
+				PRINTFORMW 「紫样？难以想像耶……话说都在跟我接吻还在想别的女人扣分 」
+			ENDSELECT
+		ENDIF
+	ELSE
+		IF CFLAG:睡眠
+			PRINTFORML 悄悄的夺走睡眠中蓝的嘴唇
+			PRINTFORMW 这样小恶作剧应该是可以的吧
+		ELSE
+			SELECTCASE RAND:10
+			CASE 0
+				PRINTFORML 朝着蓝的脸颊轻轻啄了一下
+				PRINTFORMW 「我什么时候跟你这么亲近了」
+			CASE 1
+				PRINTFORML 偷偷在脸上距离最接近的时候、轻轻的啄了下唇
+				PRINTFORMW 「呵。咬紧牙关老实的接收我的回礼吧」
+			CASE 2
+				PRINTFORML 「活了几百年了敢这样做的可还没见过」
+				PRINTFORMW 「再随便做这种事情的话、总有一天会遇到可怕的遭遇喔」
+			CASE 3
+				PRINTFORMW 「……唔、这次就原谅你」
+			CASE 4
+				PRINTFORMW 「就不能正经一点吗？」
+			CASE 5
+				PRINTFORMW 「孩子的恶作剧阿」
+			CASE 6
+				PRINTFORMW 接吻后、蓝严肃的表情感到有点战栗
+			CASE 7
+				PRINTFORMW 「我说你阿、把我作为练习的道具吗」
+			CASE 8
+				PRINTFORMW 「31分。亲密度大幅下降」
+			CASE 9
+				PRINTFORMW 「你这样突然把脸靠近对我的心脏不好」
+			ENDSELECT
+		ENDIF
+	ENDIF
+	PRINTL
+ENDIF
+RETURN 1
+;==================================================
+;313,胸爱抚
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_313
+CALL M_KOJO_MESSAGE_COM_K25_313_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_313_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	IF FLAG:时间停止
+		PRINTFORML 一手用力的抓着乳肉、一手扭捏着乳头、真是玩不腻的巨乳
+		PRINTFORMW 乳头已经完全勃起了、使劲的拉了拉、蓝的表情完全没改变
+	ELSEIF ABL:Ｂ感觉 > 4
+		SELECTCASE RAND:5
+		CASE 0
+			PRINTFORML 从正面玩弄着蓝的巨乳、饱满的膨胀感百玩不厌
+			PRINTFORMW 愉快把玩着手中的乳玩具、手指绕着乳房感受着庞大的面积
+		CASE 1
+			PRINTFORML 将有重量感的乳肉托在手掌上摇晃着、看着抖动的乳肉、叹了一口气
+			PRINTFORMW %CALLNAME:MASTER%觉得双手被铭刻上了触感、只要触摸到就能知道是蓝的巨乳
+		CASE 2
+			PRINTFORML 「对吧……因为是店老板固执的女儿、所以不能直率的说出口……唔」
+			PRINTFORMW 说着日常对话的同时、朝着蓝的乳房不断的柔捏
+		CASE 3
+			PRINTFORML 从后面、向痴汉般用双手抓住乳房
+			PRINTFORMW 一边品味的手上的重量一边听着耳边传来的喘息声
+		CASE 4
+			PRINTFORML 双手扶着乳袋、上下左右的摇晃着
+			PRINTFORMW 蓝无奈的任由%CALLNAME:MASTER%在身上玩弄着
+		ENDSELECT
+	ELSEIF ABL:Ｂ感觉 == 3
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 用像按摩般的力道朝蓝的乳袋按压着
+			PRINTFORMW 就这样边聊边揉、听着蓝轻声娇喘表情装作不在意的样子
+		CASE 1
+			PRINTFORML 从下方托起、用不触碰乳尖的方式揉着整个乳房
+			PRINTFORMW 虽然是从书中看到的作法、不过蓝的表情似乎觉得不坏
+		CASE 2
+			PRINTFORML 冰凉的手渐渐的被手中的乳肉温暖
+			PRINTFORMW 像是对待宝物般的、用细心的手法揉着蓝的胸部
+		ENDSELECT
+	ELSE
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 伸出双手、紧紧的抓着蓝的双乳
+			PRINTFORMW 犹豫着要不要揉的时候、%CALLNAME:MASTER%还是缩了
+		CASE 1
+			PRINTFORML 用像要支撑巨乳的方式将手埋入乳肉里
+			PRINTFORMW 这样毫无忌惮的揉着、大满足
+		CASE 2
+			PRINTFORML 「怎么、满足了吗」
+			PRINTFORMW 蓝的唇角微微的上扬
+		ENDSELECT
+	ENDIF
+	PRINTL 
+ENDIF
+RETURN 1
+;==================================================
+;314,肛门爱抚
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_314
+CALL M_KOJO_MESSAGE_COM_K25_314_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_314_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	IF FLAG:时间停止
+		PRINTFORML 用中指伸入到狭窄的肠道、来回戳弄着温暖的肠黏膜
+		PRINTFORMW 一边望着威风凛凛的蓝、征服欲大满足
+	ELSEIF ABL:Ａ感觉 > 4
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 用手指描绘着肛门口的皱褶
+			PRINTFORMW 轻戳着收缩的肛门口、挑逗地看着蓝喘息的脸
+		CASE 1
+			PRINTFORML 手指抚摸着黏呼呼的柔软肠黏膜
+			PRINTFORMW 手微微搅动、蓝耐不住摇动起臀部的身姿极具诱惑
+		CASE 2
+			PRINTFORML 「唔……」
+			PRINTFORMW 肛门被触碰的瞬间、蓝掩着嘴压抑声音
+		ENDSELECT
+	ELSEIF ABL:Ａ感觉 == 3
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 蓝的肛门承受不了中指的刺激
+			PRINTFORMW 脸上的复杂表情让人激起嗜虐心
+		CASE 1
+			PRINTFORML 使劲的将手指侵入肛门、收缩的括约肌紧紧吸住手指
+			PRINTFORMW 在里面轻轻搅动后、蓝的双腿微微颤抖似乎要站不住了
+		CASE 2
+			PRINTFORML 「唔……为什么是那里」
+			PRINTFORMW 轻轻抚弄时蓝的身体哆嗦的不停
+		ENDSELECT
+	ELSE
+		PRINTFORML 「喂、那里是 ……」
+		PRINTFORMW 被用手指搔着肛门口的蓝皱着小脸
+	ENDIF
+
+ENDIF
+RETURN 1
+;==================================================
+;315,阴蒂爱抚
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_315
+CALL M_KOJO_MESSAGE_COM_K25_315_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_315_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	IF FLAG:时间停止
+		PRINTFORML 捏着蓝的阴核、随意的柔捏着
+		PRINTFORMW 因为本人没有意识到、所以不必担心被胖揍
+	ELSEIF ABL:Ｃ感觉 > 4
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 用两根手指夹着阴蒂、沿着耻丘揉挤着给予刺激
+			PRINTFORMW 蓝咬牙喘着气忍受着下体带来的快感
+		CASE 1
+			PRINTFORML 用手指摩擦着秘裂使其渐渐湿润起来、之后绕着肉芽滑着圆圈
+			PRINTFORMW 只是这样摩擦着、蓝的腰淫靡地跟着手指摇晃起来
+		CASE 2
+			PRINTFORML 已经习惯蓝的身体、弱点是敏感的阴核
+			PRINTFORMW 蓝忍受着阴核被骚动的快感、发出甜美的悲鸣
+		ENDSELECT
+	ELSEIF ABL:Ｃ感觉 == 3
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 用指腹压迫着阴蒂、抚弄着柔嫩的阴肉
+			PRINTFORMW 蓝的腰开始微微弯曲似乎在强忍着
+		CASE 1
+			PRINTFORML 从慢慢地温柔爱抚、突然将敏感的阴蒂使劲捏了一下
+			PRINTFORMW 蓝抵抗不了这种强力刺激差点跌倒
+		CASE 2
+			PRINTFORML 将凸出的阴蒂、疼爱的搓弄着
+			PRINTFORMW 蓝虽然从容的笑着、只是颤抖的身体出卖了她
+		ENDSELECT
+	ELSE
+		PRINTFORML 将手深入蓝的股间、轻轻的挑逗阴蒂
+		PRINTFORMW 虽然并非没有效果、但蓝看起来没什么反应
+	ENDIF
+	PRINTL 
+ENDIF
+RETURN 1
+;==================================================
+;316,指插入れ
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_316
+CALL M_KOJO_MESSAGE_COM_K25_316_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_316_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	IF FLAG:时间停止
+		PRINTFORML 将一根手指伸进蓝的阴道里搅动
+		PRINTFORMW 理所当然、现在的蓝毫无反应
+	ELSEIF ABL:Ｖ感觉 > 4
+		SELECTCASE RAND:5
+		CASE 0
+			PRINTFORML 将手掌贴住耻丘、让中指滑入狭窄的缝隙
+			PRINTFORML 「唔」、蓝轻轻的喊出声
+			PRINTFORMW 拇指压迫着阴蒂中指朝着阴道壁滑动、转眼间爱液渗了出来
+		CASE 1
+			PRINTFORML %CALLNAME:MASTER%朝蓝的阴道毫不客气地伸入两根手指
+			PRINTFORML 粗暴的侵入揉着阴肉、手腕使劲扭着、发出摩擦的声音
+			PRINTFORMW 被开发完成的女性器产生强烈的刺激、朝着全身传递着快感、蓝的腰也顺着手腕开始摆动起来
+		CASE 2
+			PRINTFORML 插入两根手指的温湿阴道像是欢迎般的收缩着
+			PRINTFORML 想是引诱般的微微刮着阴肉、突然一阵激烈抽插后拔出阴道口
+			PRINTFORMW 阴道口涌出一堆温热的爱液、朝着股间外四处的溅射
+		CASE 3
+			PRINTFORML 紧缩的膣腔肉壁朝%CALLNAME:MASTER%的手指像是吸吮般的蠢动
+			PRINTFORML 单纯的名器可表现不出来。这是加上蓝开发技术而实现的魔性诱惑
+			PRINTFORMW 这放荡的肉穴该好好教训、%CALLNAME:MASTER%使劲手段反击
+		CASE 4
+			PRINTFORML 充满爱液的雌穴一被手指插入、就响起淫荡的水声
+			PRINTFORML 已经完全掌握G点的%CALLNAME:MASTER%让蓝完全沦陷在高超的技巧里
+			PRINTFORML 但是、觉得可能是演技的%CALLNAME:MASTER%、无情的加快了进攻的速度
+		ENDSELECT
+	ELSEIF ABL:Ｖ感觉 == 3
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 蓝的性感带跟癖好已经大致掌握住了
+			PRINTFORML %CALLNAME:MASTER%将手指伸入持续的进出、阴道持续的吞吐数次
+			PRINTFORMW 经验丰富的蓝即使知道不是肉棒在阴道里、但控制不了本能的开始溢出爱液
+		CASE 1
+			PRINTFORML 蓝的富余已经被全被击溃、%CALLNAME:MASTER%朝着阴道黏膜无情的搅弄
+			PRINTFORML 凝视着表情变化，刺激着体内的各处，探寻反应激烈的地方
+			PRINTFORMW 蓝扭着腰挑衅的向%CALLNAME:MASTER%说『还差的远……唔』
+		CASE 2
+			PRINTFORML %CALLNAME:MASTER%将手指插进后缓慢的移动数着阴道壁的皱褶
+			PRINTFORML 一边攻击一边思考的时候、被蓝笑话
+			PRINTFORMW 最后蓝因为品尝了一段时间的爱抚、隐约听到娇喘
+		ENDSELECT
+	ELSE
+		PRINTFORML 承受着蓝的视线、缓缓的将手指伸入阴道内
+		PRINTFORMW 食指小心的挖着阴道口、仔细的攻击入口附近的阴道壁
+	ENDIF
+	PRINTL 
+ENDIF
+RETURN 1
+;==================================================
+;317,Ｖ腰を振る
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_317
+CALL M_KOJO_MESSAGE_COM_K25_317_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_317_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;318,Ａ腰を振る
+;==================================================
+;@M_KOJO_MESSAGE_COM_K25_318
+;CALL M_KOJO_MESSAGE_COM_K25_318_1
+;RETURN RESULT
+
+;@M_KOJO_MESSAGE_COM_K25_318_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+;LOCAL = 0
+;-------------------------------------------------
+;IF LOCAL
+
+;ENDIF
+;RETURN 1
+;==================================================
+;330,掀裙子
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_330
+CALL M_KOJO_MESSAGE_COM_K25_330_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_330_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL && !FLAG:70
+	;EVENT_MESSAGE_COM_性骚扰 から分岐をコピー
+	;CFLAG:2は好感度。LOCAL:3で人の有无を确认。无人なら露出癖4以上でたくし上げ、人目が那个ば6以上でたくし上げ
+	LOCAL:3 = 0
+	FOR LOCAL,1,CHARANUM
+		SIF CFLAG:LOCAL:同室
+			LOCAL:3 ++
+	NEXT
+		SELECTCASE CFLAG:2
+			;好感度5000未满では叱られる
+			CASE IS < 5000
+				IF TALENT:思慕 || TALENT:恋慕
+					SELECTCASE RAND:5
+					CASE 0
+						PRINTFORML 因为蓝的大尾巴、不太好从背后袭击掀裙子
+						PRINTFORML 所以都装作不经意的从面前缓慢接近下手……
+						PRINTFORMW 「真不知你哪来的胆量、总是正面袭击」
+					CASE 1
+						PRINTFORML 「别随便展示我的内裤啊」
+						PRINTFORMW 被笑着敲了下头
+					CASE 2
+						PRINTFORML 「又不是孩子」
+						PRINTFORMW 哭笑不得的蓝、但好色之心不分年龄
+					CASE 3
+						PRINTFORML 「你这家伙啊……就算责备你大概也没用」
+						PRINTFORMW 完全没错
+					CASE 4
+						PRINTFORML 「唔」
+						PRINTFORMW 屁股被尾巴鞭了一下
+					ENDSELECT
+				ELSE
+					SELECTCASE RAND:5
+					CASE 0
+						PRINTFORML 「笨蛋」
+						PRINTFORMW 额头挨了一发
+					CASE 1
+						PRINTFORML 「喂喂」
+						PRINTFORMW 一条尾巴朝手背打落
+					CASE 2
+						PRINTFORML 「恶作剧要适可而止」
+						PRINTFORMW 被单手抓着头抬高
+					CASE 3
+						PRINTFORMW 「那么想看的话、要不要让你倒在地上看？」
+					CASE 4
+						PRINTFORMW 「对我做这种事不想活了吗」
+					ENDSELECT
+				ENDIF
+			CASE IS > 5000
+				IF LOCAL:3 == 1
+				;人目が无い场合
+					IF TALENT:恋慕 && ABL:露出癖 > 3
+						SELECTCASE RAND:3
+						CASE 0
+							PRINTFORML 『今天的内裤穿什么？』轻挑的向蓝询问
+							PRINTFORML 『告诉我吧』蓝妖媚的微笑、将裙子从膝盖慢慢卷起
+						CASE 1
+							PRINTFORML 一口气往蓝的裙子翻起、慢了一步被阻止了
+							PRINTFORML 「笨蛋。直接跟我说、我也会给你看的」
+							PRINTFORML 这么说的蓝往这翘起屁股、将裙子慢慢的卷了起来……
+						CASE 2
+							PRINTFORML 抱着蓝的腰、尝试单手翻起裙子
+							PRINTFORML 持续了数分钟都没成功。被恶作剧的本人苦笑着帮忙
+							PRINTFORML 「真是个笨孩子阿。来、看吧……」
+						ENDSELECT
+						PRINTL 
+						IF EQUIP:TARGET:下半身内衣１ || EQUIP:TARGET:下半身内衣２
+							SELECTCASE RAND:5
+							CASE 0
+								PRINTFORML 雪白的双腿沐浴在阳光下、包裹着蓝的秘部的%PANTS_DESCRIPTION(EQUIP:TARGET:下半身内衣２, TARGET)%%SHOW_BOTTOM(TARGET)%暴露了出来
+								PRINTFORMW 只有彼此不在意别人的目光。充分地鉴赏着丰满的下半身
+							CASE 1
+								PRINTFORML 蓝穿的是什么%PANTS_DESCRIPTION(EQUIP:TARGET:下半身内衣２, TARGET)%%SHOW_BOTTOM(TARGET)%呢
+								PRINTFORMW 自己卷起衣服、将内裤暴露出来的她既害羞又快乐
+							CASE 2
+								PRINTFORML 把脸凑过去、目不转睛地盯着蓝的%PANTS_DESCRIPTION(EQUIP:TARGET:下半身内衣２, TARGET)%%SHOW_BOTTOM(TARGET)%
+								PRINTFORMW 似乎感受到鼻息、蓝微微扭动着下半身
+							CASE 3
+								PRINTFORML 蓝把自己的裙子卷到腰部的位置、%PANTS_DESCRIPTION(EQUIP:TARGET:下半身内衣２, TARGET)%%SHOW_BOTTOM(TARGET)%完全露了出来
+								PRINTFORMW 服务着她唯一的观众、用各种煽情的姿势展示
+							CASE 4
+								PRINTFORML 包住臂部的%PANTS_DESCRIPTION(EQUIP:TARGET:下半身内衣２, TARGET)%%SHOW_BOTTOM(TARGET)%就在眼前
+								PRINTFORMW %CALLNAME:MASTER%一句话也没说就伸出手指从臀部沿着曲线滑到膝部
+							ENDSELECT
+						ELSE
+							SELECTCASE RAND:3
+							CASE 0
+								PRINTFORML 心急的%CALLNAME:MASTER%猛掀起裙子的同时、蓝的阴部完全暴露了出来
+								PRINTFORMW 什么都没穿的赤裸股间。她无言的的凝视猛盯自己性器的男人、笑了出来
+							CASE 1
+								PRINTFORML 提心吊胆的%CALLNAME:MASTER%终于将那个部位暴露在阳光之下
+								IF CFLAG:25:1006 == 1
+									PRINT 那光溜溜的无毛秘裂。
+								ELSE
+									PRINT 整理过的茂盛金毛、白胖胖的阴户。
+								ENDIF
+								PRINTFORMW 看到蓝赤裸的女阴
+							CASE 2
+								PRINTFORML 修长的双腿根部、印入眼帘的私密部位没有穿着内裤
+								PRINTFORMW 以为是看错了眨了几次眼、蓝的阴部完全暴露在空气中
+							ENDSELECT
+						ENDIF
+					ELSE
+						SELECTCASE RAND:3
+						CASE 0
+							PRINTFORML 『今天的内裤穿什么？』轻挑的向蓝询问
+							PRINTFORML 『让我看看』蓝宽容的答应、慢慢地将裙子卷起
+						CASE 1
+							PRINTFORML %CALLNAME:MASTER%弯着腰抓着蓝的尾巴、伸手将裙子往上翻
+							PRINTFORML 无视应该就是默认了。从背后大胆的将裙子全部拉上
+						CASE 2
+							PRINTFORML 想趁蓝不注意掀裙子是不可能的
+							PRINTFORML 得出结论的%CALLNAME:MASTER%再蓝说话的时候掀起
+							PRINTFORML 将手放在袖子里的蓝有趣的望着、裙子一口气被拉到胸部
+						ENDSELECT
+						PRINTL 
+						IF EQUIP:TARGET:下半身内衣１ || EQUIP:TARGET:下半身内衣２
+							SELECTCASE RAND:3
+							CASE 0
+								PRINTFORML 在黑暗中看见了蓝的%PANTS_DESCRIPTION(EQUIP:TARGET:下半身内衣２, TARGET)%%SHOW_BOTTOM(TARGET)%
+								PRINTFORMW 那可是永远都看不腻的景象
+							CASE 1
+								PRINTFORML 将裙子卷到腰部的位置、蓝的%PANTS_DESCRIPTION(EQUIP:TARGET:下半身内衣２, TARGET)%%SHOW_BOTTOM(TARGET)%就这样暴露在白日下
+								PRINTFORMW 被一直卷着裙的蓝似乎也承受不了害羞、羞红着脸往旁边转去
+							CASE 2
+								PRINTFORML 被%PANTS_DESCRIPTION(EQUIP:TARGET:下半身内衣２, TARGET)%%SHOW_BOTTOM(TARGET)%包裹着的屁股露了出来
+								PRINTFORMW %CALLNAME:MASTER%将长裙拉到腰部打结固定、蓝害羞着露出内裤
+							ENDSELECT
+						ELSE
+							SELECTCASE RAND:3
+							CASE 0
+								PRINTFORML 不知为何蓝没穿内裤……
+								PRINTFORMW %CALLNAME:MASTER%愣了一下、轻轻的将裙子复原
+							CASE 1
+								PRINTFORML 在那里的是蓝毫无遮蔽的性器
+								PRINTFORMW 惊讶一声后、%CALLNAME:MASTER%靠近地欣赏着狭缝
+							CASE 2
+								PRINTFORMW 掀起的瞬间、轻柔的金色阴毛随风飘动
+								PRINTFORMW 蓝没穿着内裤、秘唇露出在外
+							ENDSELECT
+						ENDIF
+					ENDIF
+				ELSE
+				;人目がある场合
+					IF TALENT:恋慕 && ABL:露出癖 > 5
+						SELECTCASE RAND:3
+						CASE 0
+							PRINTFORML 蓝毫不在乎旁人的目光迅速的拉起裙子
+							PRINTFORML 屁股有尾巴遮着、再从正面看一览无余
+						CASE 1
+							PRINTFORML 在蓝的注目下掀起裙子
+							PRINTFORML %CALLNAME:MASTER%翻动着裙子、将裙内风光暴露在外
+						CASE 2
+							PRINTFORML 蓝妖魅的的笑着、将裙子慢慢的拉起来
+							PRINTFORML 此刻只要有人瞄一眼就会被看到、但蓝一点踌躇都没有
+						ENDSELECT
+						PRINTL 
+						IF EQUIP:TARGET:下半身内衣１ || EQUIP:TARGET:下半身内衣２
+							SELECTCASE RAND:3
+							CASE 0
+								PRINTFORML 蓝的%PANTS_DESCRIPTION(EQUIP:TARGET:下半身内衣２, TARGET)%%SHOW_BOTTOM(TARGET)%光明正大地在别人的面前露了出来
+								PRINTFORMW 非常大胆的将裙子扯到腰部、或许被谁发现了也说不定
+							CASE 1
+								PRINTFORML 蓝色的%PANTS_DESCRIPTION(EQUIP:TARGET:下半身内衣２, TARGET)%%SHOW_BOTTOM(TARGET)%一直被褪到腰部，完全露了出来
+								PRINTFORMW 或许、现在把内裤扯下来她也不会有抵抗吧
+							CASE 2
+								PRINTFORML 穿的是%PANTS_DESCRIPTION(EQUIP:TARGET:下半身内衣２, TARGET)%%SHOW_BOTTOM(TARGET)%
+								PRINTFORMW 蓝已经完全不在乎别人的眼光了
+							ENDSELECT
+						ELSE
+							SELECTCASE RAND:3
+							CASE 0
+								PRINTFORML 然而、衣服的下面是完全没有遮蔽的肉色
+								PRINTFORMW 吃惊的%CALLNAME:MASTER%望着、蓝微笑着光明正大的露出性器
+							CASE 1
+								PRINTFORML 看着蓝展示着身下
+								PRINTFORMW 惊叹的%CALLNAME:MASTER%视线集中在、赤裸的阴唇在阳光下沐浴着
+							CASE 2
+								PRINTFORML %CALLNAME:MASTER%看到完全露出的狭缝
+								PRINTFORMW 蓝的手指摸着那个地方、手指微微掰开着裂口、证明这不是眼花
+							ENDSELECT
+						ENDIF
+					ELSE
+						SELECTCASE RAND:3
+						CASE 0
+							PRINTFORML 「喂、这里有人阿……」
+							PRINTFORML 难得见到害羞的蓝、感到兴奋的同时、强行把裙子拉起来
+						CASE 1
+							PRINTFORML 「至少不要被四周看到阿……」
+							PRINTFORML 压低声音的蓝点了点头、慢慢的将裙子卷起来
+						CASE 2
+							PRINTFORML 「等……唔、没事」
+							PRINTFORML 朝着蓝打了声招呼、从尾巴的后面偷偷的将裙子翻开来
+						ENDSELECT
+						PRINTL 
+						IF EQUIP:TARGET:下半身内衣１ || EQUIP:TARGET:下半身内衣２
+							SELECTCASE RAND:3
+							CASE 0
+								PRINTFORML 今天穿的内裤是%PANTS_DESCRIPTION(EQUIP:TARGET:下半身内衣２, TARGET)%%SHOW_BOTTOM(TARGET)%
+								PRINTFORMW 「唔。被这样死盯着…」
+							CASE 1
+								PRINTFORML 仔细确认了%PANTS_DESCRIPTION(EQUIP:TARGET:下半身内衣２, TARGET)%%SHOW_BOTTOM(TARGET)%后摆正姿势
+								PRINTFORMW 蓝叹了口气绷紧身体
+							CASE 2
+								PRINTFORML 悄悄地迅速地、让我欣赏一下%PANTS_DESCRIPTION(EQUIP:TARGET:下半身内衣２, TARGET)%%SHOW_BOTTOM(TARGET)%
+								PRINTFORMW 最后无耻的行为被蓝用尾巴挡住
+							ENDSELECT
+						ELSE
+							SELECTCASE RAND:3
+							CASE 0
+								PRINTFORML 看到蓝没穿内裤、%CALLNAME:MASTER%望向她的脸
+								PRINTFORMW 「怎么、看不明白吗」
+							CASE 1
+								PRINTFORML 裸露的秘裂进入%CALLNAME:MASTER%的眼里
+								PRINTFORMW 像被掌握把柄似的、挡着蓝想要拉下裙子的手
+							CASE 2
+								PRINTFORML 没有见到内裤的存在、那里只有女性器裸露着
+								PRINTFORMW 以为自己看错、%CALLNAME:MASTER%用手指触碰后再次确认了
+							ENDSELECT
+						ENDIF
+					ENDIF
+				ENDIF
+		ENDSELECT
+		PRINTL 
+ENDIF
+RETURN 1
+;==================================================
+;331,泡茶（下药）
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_331
+CALL M_KOJO_MESSAGE_COM_K25_331_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_331_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;350,推倒（时奸时猥亵
+;TFLAG:194 (0=成功 1=人目がある　2=野外は嫌でござりまする　3=多人数プレイは勘弁　4=合意があっても情绪が足りぬ）
+;TCVAR:初次拥抱　1=普通に合意ゲット　2=先に接吻ぐらいしろよ　3=媚药or发情には胜てなかったよお…　4=悔しい…刻印さえなければﾋﾞｸﾋﾞｸﾝ
+;5=强引に迫られると断れぬ(素質胆怯持ち専用) 6=まんざらでもない　7=駄目　8=论外
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_350
+CALL M_KOJO_MESSAGE_COM_K25_350_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_350_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;351,带出去
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_351
+;连れ出しにはTRAIN_MESSAGEが无い
+CALL M_KOJO_MESSAGE_COM_K25_351_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_351_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;352,告白
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_352
+CALL M_KOJO_MESSAGE_COM_K25_352_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_352_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL && !FLAG:70
+	IF TFLAG:193
+		SIF CFLAG:25:1005 == 1
+			PRINTFORMW 现在正是向蓝表明心意的时候
+		PRINTFORMW 决意的%CALLNAME:MASTER%望向蓝的身影
+		PRINTFORMW 堂堂九尾女狐的身姿、凛然的站着带来强大的存在感
+		PRINTFORMW 深吸口气后有点胆怯扭扭捏捏的、张开了口
+		PRINTL 
+		PRINTFORMW 「和我、恋人……」
+		PRINTL 
+		PRINTFORMW 蓝的反应不是很好
+		PRINTFORMW 皱了皱眉头、朝着这的脸注视
+		PRINTL 
+		PRINTFORMW 「别太骄傲自满了」
+		PRINTFORMW 「我们只是一起玩耍的朋友。这种程度而已、在这之上的关系是不可能的」
+		PRINTFORMW 「你想跟我对等？。跟八云紫的式神、对等？」
+		PRINTL 
+		PRINTFORMW 说着压迫感的言语
+		PRINTFORMW 并非不是开玩笑。看出这边是认真的对方也以认真的姿态回复
+		PRINTFORMW 那么答案是、再次朝蓝问、%CALLNAME:MASTER%挺起胸膛直视着蓝
+		PRINTL 
+		PRINTFORMW 「……这样阿。看来已经做出觉悟」
+		PRINTFORMW 「既然这样的话。我也……也一样」
+		PRINTL 
+		PRINTFORMW 将尾巴垂下变老实的篮、紧抱在怀里
+		PRINTL 
+		EXP:MASTER:爱情经验 += 30
+		PRINTFORML 爱情经验＋30
+	ELSE
+	;言叶が口から出て来ない
+		PRINTFORML 想要告白、但怎样都抓不住时机
+		PRINTFORMW 下一次一定、下定决心、这次就先将话题岔开
+	ENDIF
+	PRINTL 
+ENDIF
+RETURN 1
+;==================================================
+;353,猥亵
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_353
+CALL M_KOJO_MESSAGE_COM_K25_353_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_353_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;354,陪睡（相手は起きて被窝に招く感じ）
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_354
+CALL M_KOJO_MESSAGE_COM_K25_354_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_354_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	IF TALENT:恋慕
+		;こんなあからさまに寂しがりそうにないけど唯一本气になった相手だしまあ多少はね？
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 「……嗯、%CALLNAME:MASTER%」
+			PRINTFORML 「一起睡吧。虽然有点像小孩子，一个人睡觉是很寂寞的」
+			PRINTFORMW  那个有魅力的提案我也没理由拒绝，于是就不客气地打扰了
+		CASE 1
+			PRINTFORML 「……太寂寞了。」
+			PRINTFORML 「看，里面很暖和哦。」
+			PRINTFORMW 应怕寂寞的蓝的要求，我立刻进去了
+		CASE 2
+			PRINTFORML 「哦，来了来了。」
+			PRINTFORML 「老爷，我已经把被窝给热了哦……开玩笑的」
+			PRINTFORMW %CALLNAME:MASTER%简短的调侃着蓝，蓝招招手邀请他到被窝里。
+		ENDSELECT
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;355,时止め（地の文の改变程度に留めるべき
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_355
+CALL M_KOJO_MESSAGE_COM_K25_355_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_355_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;360,任凭摆布
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_360
+CALL M_KOJO_MESSAGE_COM_K25_360_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_360_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;363,朗读（[幼稚]持ち）
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_363
+CALL M_KOJO_MESSAGE_COM_K25_363_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_363_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;402,就寝（添い寝时）
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_402
+;就寝にTRAIN_MESSAGEは无い
+CALL M_KOJO_MESSAGE_COM_K25_402_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_402_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;403,休憩
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_403
+CALL M_KOJO_MESSAGE_COM_K25_403_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_403_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;405,外出(同行时约会に外出
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_405
+;外出にTRAIN_MESSAGEは无い
+CALL M_KOJO_MESSAGE_COM_K25_405_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_405_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL && !FLAG:70
+	;约会。博丽神社が住まいの时は何故か读まれない
+	IF CFLAG:同行
+		IF TALENT:恋人
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 「慢慢地走吧。到哪都行」
+				PRINTFORML 蓝在%CALLNAME:MASTER%的一步后方跟着
+				PRINTFORMW 那么、今天要去哪呢？
+			CASE 1
+				PRINTFORML 「唔……还是避开那里会比较好。观战弹幕比试可是很危险的」
+				PRINTFORML 「或者、觉得那样比较刺激？」
+				PRINTFORMW 还是乖乖的约会好了、朝着安全的路上走去
+			CASE 2
+				PRINTFORML 「在内外界伸出脚吧」
+				PRINTFORML 「这样、你可能会发生什么特别的际遇」
+				PRINTFORMW 为了准备以后向这样的机会中为话题
+			ENDSELECT
+		ELSEIF TALENT:恋慕 || TALENT:思慕
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 约会的邀请蓝在身边欣然允诺了
+				PRINTFORML 「那么、今天要去哪呢？」
+				PRINTFORMW 脚朝向的地方、%CALLNAME:MASTER%回答
+			CASE 1
+				PRINTFORML 「好吧、正好有空」
+				PRINTFORML 终于约到了、平时的蓝总是很忙碌
+				PRINTFORMW 「剩下的都很容易就完成。没关系、不用担心」
+			CASE 2
+				PRINTFORML 「风景好的地方大概都知道在哪」
+				PRINTFORML 「还有、适合二人独处的地方」
+				PRINTFORMW 长年从事维持幻想乡工作的蓝、哪里有约会景点都清楚
+			ENDSELECT
+		ELSE
+			PRINTFORML 「约会阿。嘛、就陪陪你吧」
+			PRINTFORML 听到邀请的蓝思考着时间后点点头
+			PRINTFORMW 这是与她拉近关系的好机会。必须慎重精心的对待
+		ENDIF
+	;非同行时。此方の分岐は问题なく读まれる
+	ELSE
+		IF TALENT:恋慕
+			PRINTFORML 「平安回来。不然我会哭」
+			PRINTFORMW 蓝开玩笑地挥挥手、不过还是能感到认真的气味
+		ELSEIF TALENT:思慕
+			PRINTFORML 「记住要尽量走在安全的路上」
+			PRINTFORMW 被担心的蓝目送着离开
+		ELSE
+			PRINTFORML 「要外出吗。路上小心」
+			PRINTFORMW 蓝挥了挥手
+		ENDIF
+	ENDIF
+	PRINTL 
+ENDIF
+RETURN 1
+;==================================================
+;410,扫除
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_410
+CALL M_KOJO_MESSAGE_COM_K25_410_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_410_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	IF FLAG:时间停止
+		PRINTFORML 这种能力根据想法有各种应用
+		PRINTFORMW 将静止的尘土收集、把垃圾扔到垃圾袋里
+	ELSEIF CFLAG:睡眠
+		PRINTFORML 在睡着的蓝附近把东西都收拾干净
+		PRINTFORMW 起床见到干净的空间心情也会感到愉悦吧
+	ELSEIF CFLAG:诶嘿嘿
+		IF TALENT:恋慕
+			PRINTFORML 乱七八糟的好在意、%CALLNAME:MASTER%无奈的看了蓝一眼开始打扫
+			PRINTFORML 「都不懂我的心情……唔、这个笨蛋。大笨蛋」
+			PRINTFORMW 对新颖的放置的PLAY感到有趣
+		ELSE
+			PRINTFORML 乱七八糟的好在意、%CALLNAME:MASTER%无奈的看了蓝一眼开始打扫
+			PRINTFORML 「意义不明」
+			PRINTFORMW 用尾巴敲打地板搞的满是尘埃飞舞
+		ENDIF
+	ELSE
+		IF TALENT:恋慕 || TALENT:思慕
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 「好、来帮忙吧。这边就全部交给我了」
+				PRINTFORMW 充满干劲的样子、%CALLNAME:MASTER%跟蓝同时卷起袖子
+				PRINTL 
+				EXP:25:清扫经验 += 1
+				EXP:MASTER:清扫经验 += 1
+				PRINTFORML 清扫经验＋1
+			CASE 1
+				PRINTFORML 「呼呼。就让你见见、百年来承担家务清扫的完美手法」
+				PRINTFORML 在扫除方面自己也不会输
+				PRINTFORMW 蓝跟%CALLNAME:MASTER%像是比赛似的在周围扫除
+				PRINTL 
+				EXP:25:清扫经验 += 1
+				EXP:MASTER:清扫经验 += 1
+				PRINTFORML 清扫经验＋1
+			CASE 2
+				PRINTFORML 「扫除的真随是……唔等等、还是停止讲解好了」
+				PRINTFORML 「身体力行才是学的最快了！」
+				PRINTFORMW 之后、二人的家政妇/夫扫除开始了……！
+				PRINTL 
+				EXP:25:清扫经验 += 2
+				EXP:MASTER:清扫经验 += 2
+				PRINTFORML 清扫经验＋2
+			ENDSELECT
+		ELSE
+			PRINTFORML 「适当的努力吧」
+			PRINTFORMW 蓝温柔的支持着
+		ENDIF
+	ENDIF
+	PRINTL 
+ENDIF
+RETURN 1
+;==================================================
+;411,战斗训练
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_411
+CALL M_KOJO_MESSAGE_COM_K25_411_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_411_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL && !FLAG:70
+	;各符卡ごとに你の战斗能力で分岐(4以上回避、3はギリギリ、2以下被弹)
+	;真言は随意検索したもの。カッコが付けばなんでもよし！
+	IF TALENT:恋慕 || TALENT:恋人 
+		PRINTFORML 「来吧。从腰开始锻炼」
+		PRINTL 
+		SELECTCASE RAND:4
+		CASE 0
+			PRINTFORML 「オン ギャクギャク　エンノウバソク アランジャウン ソワカ」（神变大菩萨的真言）
+			PRINTFORMW 「『飞翔役小角』！」
+			PRINTW 
+			IF ABL:MASTER:战斗能力 >= 4
+				PRINTFORML %CALLNAME:MASTER%见蓝超人般的高速突进果断、漂亮地接招攻略
+				PRINTFORMW 「干得很好！ 那么就来点更难的实战训练如何？」
+				PRINTL 
+				EXP:MASTER:战斗经验 += 2
+				PRINTFORML 战斗经验＋2
+			ELSEIF ABL:MASTER:战斗能力 == 3
+				PRINTFORML %CALLNAME:MASTER%见蓝像蝴蝶般飘湖不定的追逼、最后还是被击倒
+				PRINTFORMW 「在紧要闭头可要冷静。即使感觉痛苦也不能动摇意志」
+				PRINTL 
+				EXP:MASTER:战斗经验 += 2
+				PRINTFORML 战斗经验＋2
+			ELSE
+				PRINTFORML %CALLNAME:MASTER%被蓝以猛烈的速度撞飞
+				PRINTFORMW 「想用速度逃跑？ 跑去开阔处可就太天真了！」
+				PRINTL 
+				EXP:MASTER:战斗经验 += 1
+				PRINTFORML 战斗经验＋1
+			ENDIF
+		CASE 1
+			PRINTFORML 「ナウマク サマンダ バザラダン カン」（不动明王的真言）
+			PRINTFORMW 「『八千万枚护摩』！」
+			PRINTW 
+			IF ABL:MASTER:战斗能力 >= 4
+				PRINTFORML %CALLNAME:MASTER%被大范围贴满符的弹幕袭来
+				PRINTFORMW 「问答无用。在弹幕比试中可不会给你发牢骚」
+				PRINTL 
+				EXP:MASTER:战斗经验 += 2
+				PRINTFORML 战斗经验＋2
+			ELSEIF ABL:MASTER:战斗能力 == 3
+				PRINTFORML %CALLNAME:MASTER%虽然回避了大量的符咒、但没有攻击的余裕
+				PRINTFORMW 「差一点了。不错呢、已经知道要往哪方面改善」
+				PRINTL 
+				EXP:MASTER:战斗经验 += 2
+				PRINTFORML 战斗经验＋2
+			ELSE
+				PRINTFORML %CALLNAME:MASTER%被压到性的符咒弹幕击倒
+				PRINTFORMW 「安全地带在我的背后。那么想想该怎么攻略吧？」
+				PRINTL 
+				EXP:MASTER:战斗经验 += 1
+				PRINTFORML 战斗经验＋1
+			ENDIF
+		CASE 2
+			PRINTFORML 「オン チラチラヤ ソワカ」（饭绳智罗天狗的真言）
+			PRINTFORMW 「『饭纲权现降临』！」
+			PRINTW 
+			IF ABL:MASTER:战斗能力 >= 4
+				PRINTFORML %CALLNAME:MASTER%提高集中力、将从正面逼近的弹幕闪避开来
+				PRINTFORMW 「优秀的动作。继续维持这种状态」
+				PRINTL 
+				EXP:MASTER:战斗经验 += 2
+				PRINTFORML 战斗经验＋2
+			ELSEIF ABL:MASTER:战斗能力 == 3
+				PRINTFORML %CALLNAME:MASTER%差目的地一步的距离被流弹击中
+				PRINTFORMW 「可惜。但有稳定的进步呢」
+				PRINTL 
+				EXP:MASTER:战斗经验 += 2
+				PRINTFORML 战斗经验＋2
+			ELSE
+				PRINTFORML %CALLNAME:MASTER%被激烈的弹幕逼近、完全被压制住
+				PRINTFORMW 「要避免这种简单的手法。反复的持续练习」
+				PRINTL 
+				EXP:MASTER:战斗经验 += 1
+				PRINTFORML 战斗经验＋1
+			ENDIF
+		CASE 3
+			PRINTFORML 「ナム クビラダイショウ ナム バ沙拉イショウ ナム メキラダイショウ……」（药师如来の十二神将中的宫毘罗大将、伐折罗大将、迷企罗大将）
+			PRINTFORMW 「『十二神将の宴』！」
+			PRINTW 
+			IF ABL:MASTER:战斗能力 >= 4
+				PRINTFORML %CALLNAME:MASTER%同时进行攻击及回避、快速的逼近攻略
+				PRINTFORMW 「真出色。不过、还要继续加油离目标不远了」
+				PRINTL 
+				EXP:MASTER:战斗经验 += 2
+				PRINTFORML 战斗经验＋2
+			ELSEIF ABL:MASTER:战斗能力 == 3
+				PRINTFORML %CALLNAME:MASTER%往腹部注入气势、闪避着弹幕
+				PRINTFORMW 「呼呼、让我看看你的男子气概」
+				PRINTL 
+				EXP:MASTER:战斗经验 += 2
+				PRINTFORML 战斗经验＋2
+			ELSE
+				PRINTFORML %CALLNAME:MASTER%对袭来的弹幕仓皇失措、就这样被击倒
+				PRINTFORMW 「慌张是无法回避的。要相信自己的眼睛」
+				PRINTL 
+				EXP:MASTER:战斗经验 += 1
+				PRINTFORML 战斗经验＋1
+			ENDIF
+		ENDSELECT
+	ELSE
+		PRINTFORML 「好的。我会慢慢地陪着你训练」
+		PRINTL 
+		SELECTCASE RAND:4
+		CASE 0
+			PRINTFORML 「オン キリカク ソワカ」（稻荷真言）
+			PRINTFORMW 「『凭依荼吉尼天』」
+			PRINTW 
+			IF ABL:MASTER:战斗能力 >= 4
+				PRINTFORML %CALLNAME:MASTER%冷静的穿梭在弹幕缝隙
+				PRINTFORMW 「完全捕捉到我的动作。挺行的」
+				PRINTL 
+				EXP:MASTER:战斗经验 += 2
+				PRINTFORML 战斗经验＋2
+			ELSEIF ABL:MASTER:战斗能力 == 3
+				PRINTFORML %CALLNAME:MASTER%差点就被击中但最终还是回避了
+				PRINTFORMW 「还不错。攻略的方向是对的」
+				PRINTL 
+				EXP:MASTER:战斗经验 += 1
+				PRINTFORML 战斗经验＋1
+			ELSE
+				PRINTFORML %CALLNAME:MASTER%跟不上蓝的动作、被轻松的击中
+				PRINTFORMW 「被包围不要慌张、要尽速找到回避的方向」
+			ENDIF
+		CASE 1
+			PRINTFORML 「来吧」
+			PRINTFORMW 「『最后的佛徒』」
+			PRINTW 
+			IF ABL:MASTER:战斗能力 >= 4
+				PRINTFORML %CALLNAME:MASTER%完美的避开一切弹幕
+				PRINTFORMW 「流畅的动作、做的好」
+				PRINTL 
+				EXP:MASTER:战斗经验 += 2
+				PRINTFORML 战斗经验＋2
+			ELSEIF ABL:MASTER:战斗能力 == 3
+				PRINTFORML %CALLNAME:MASTER%完全闪避
+				PRINTFORMW 「没有疏忽大意呢下次要加强弹幕啰」
+				PRINTL 
+				EXP:MASTER:战斗经验 += 1
+				PRINTFORML 战斗经验＋1
+			ELSE
+				PRINTFORML %CALLNAME:MASTER%急着变换方向结果被击中
+				PRINTFORMW 「怎么、腿软了吗？」
+			ENDIF
+		CASE 2
+			PRINTFORML 「你看穿了吗？」
+			PRINTFORMW 「『迷人的四面楚歌』」
+			PRINTW 
+			IF ABL:MASTER:战斗能力 >= 4
+				PRINTFORML %CALLNAME:MASTER%移到宽广视野的空间、一边避开弹幕一边反击
+				PRINTFORMW 「满分。看来这招已经对你行不通了」
+				PRINTL 
+				EXP:MASTER:战斗经验 += 2
+				PRINTFORML 战斗经验＋2
+			ELSEIF ABL:MASTER:战斗能力 == 3
+				PRINTFORML %CALLNAME:MASTER%在视线被迷惑前成功避免了
+				PRINTFORMW 「马马虎虎。经验不足要多来几次」
+				PRINTL 
+				EXP:MASTER:战斗经验 += 1
+				PRINTFORML 战斗经验＋1
+			ELSE
+				PRINTFORML %CALLNAME:MASTER%毫无策略的被击飞
+				PRINTFORMW 「大失败。眼睛放错位置了」
+			ENDIF
+		CASE 3
+			PRINTFORML 「牛刀小试」
+			PRINTFORMW 「『仙狐思念』」
+			PRINTW 
+			IF ABL:MASTER:战斗能力 >= 4
+				PRINTFORML %CALLNAME:MASTER%一步一步的避开了
+				PRINTFORMW 「看来对你而言太简单了」
+				PRINTL 
+				EXP:MASTER:战斗经验 += 2
+				PRINTFORML 战斗经验＋2
+			ELSEIF ABL:MASTER:战斗能力 == 3
+				PRINTFORML %CALLNAME:MASTER%慢条斯理的的对应着
+				PRINTFORMW 「哼哼、看来不像初心者」
+				PRINTL 
+				EXP:MASTER:战斗经验 += 1
+				PRINTFORML 战斗经验＋1
+			ELSE
+				PRINTFORML %CALLNAME:MASTER%被弹幕轻轻的击中
+				PRINTFORMW 「着急了吗。就算被击中也没事的」
+			ENDIF
+		ENDSELECT
+	ENDIF
+	PRINTL 
+ENDIF
+RETURN 1
+;==================================================
+;412,学习
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_412
+CALL M_KOJO_MESSAGE_COM_K25_412_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_412_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL && !FLAG:70
+	;教养0～1はお子样。2は幻想乡平均。3は博识。4は天才。5は贤者
+	IF CFLAG:睡眠
+		PRINTFORML 在身旁的蓝平静的睡着
+		PRINTFORMW %CALLNAME:MASTER%安静的拿起纸笔
+	ELSEIF ABL:MASTER:教养 >= 4
+		SELECTCASE RAND:5
+		CASE 0
+			PRINTFORML 「在调查橙弄出的错误术式。来帮忙吧」
+		CASE 1
+			PRINTFORML 「紫样说、我总是很被动的过生活。不过现在总是有尝试各种各样想法的打算」
+		CASE 2
+			PRINTFORML 「用符牌做出互补的弹幕。想法是很好、但是处理繁琐难以执行」
+		CASE 3
+			PRINTFORML 「又出现了新品种的植物。要慎重的考察是否对生态有所影响」
+		CASE 4
+			PRINTFORML 「幻想乡的人口推移。妖怪方面虽然稳定、但在人之里却是有少子化的倾向……」
+		ENDSELECT
+		PRINTL 
+		PRINTFORMW 跟蓝平等争论着
+		PRINTL 
+		EXP:MASTER:学习经验 += 2
+		PRINTFORML 学习经验＋2
+	ELSEIF ABL:MASTER:教养 == 3
+		SELECTCASE RAND:5
+		CASE 0
+			PRINTFORML 「外敌的存在统一群众、不久就会相互抑止均衡状态。稳定的对立构筑和平」
+		CASE 1
+			PRINTFORML 「人类三色型色觉、猫狗等众多的哺乳类是双色型色觉。鸟类是四种颜色的色觉。化生的基本是准此」
+		CASE 2
+			PRINTFORML 「在地球上、物体上存在的东西就存在。即计算和重力的强度和作用范围……」
+		CASE 3
+			PRINTFORML 「对数螺旋对自然界最多数的曲线。在力学等各种各样的应用……黄金之旋转？那是什么概念？」
+		CASE 4
+			PRINTFORML 「这次的机会比诗歌游戏如何？。输了的人罚酒」
+		ENDSELECT
+		PRINTL 
+		PRINTFORMW 蓝以专业的高度传授着知识
+		PRINTL 
+		EXP:MASTER:学习经验 += 1
+		PRINTFORML 学习经验＋1
+	ELSEIF ABL:MASTER:教养 == 2
+		SELECTCASE RAND:5
+		CASE 0
+			PRINTFORML 「灵力、妖力、魔力、神力、道力、仙力、然后气力。其实、根本的性质是同样的」
+		CASE 1
+			PRINTFORML 「那是毕竟（终究）和阅读。」就是说最后是这样的意思」
+		CASE 2
+			PRINTFORML 「山一失去森林，就失去了蓄水能力。在山火等后雨下，地滑的危险性提高」
+		CASE 3
+			PRINTFORML 「珍藏宝物钥有云，「菩萨的用心，都是慈悲，以本（基礎），利他以先（线）。」。即……」
+		CASE 4
+			PRINTFORML 「在人身上，有一种与身体不相符的食物。妖怪，什么都可以不光是恶食消化」
+		ENDSELECT
+		PRINTL 
+		PRINTFORMW 蓝为我传授知识
+		PRINTL 
+		EXP:MASTER:学习经验 += 1
+		PRINTFORML 学习经验＋1
+	ELSEIF ABL:MASTER:教养 == 1
+		SELECTCASE RAND:5
+		CASE 0
+			PRINTFORML 「关于圣德太子的功绩，问……本人会比较有容易记住吧」
+		CASE 1
+			PRINTFORML 「没关系，只是在正式的数值上的问题。试试看」
+		CASE 2
+			PRINTFORML 「那是饱满（おういつ）。这是秋天的樱花（波斯菊）。这是光一（拔尖儿）」
+		CASE 3
+			PRINTFORML 「桉树硬，毒性强。无尾熊为了消化这个拥有2米的长的盲肠」
+		CASE 4
+			PRINTFORML 「莺的技术，幻想乡也流传着。不过，如果被侵入者飞到天空的话就没有意义」
+		ENDSELECT
+		PRINTL 
+		PRINTFORMW 蓝色教了简单的学习
+	ELSE
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 「首先从算术开始？」
+		CASE 1
+			PRINTFORML 「汉字的写顺序也不应该忽视」
+		CASE 2
+			PRINTFORML 「学九九乘法表的话那心算就还早呢」
+		ENDSELECT
+		PRINTL 
+		PRINTFORMW 蓝从最简单的地方温柔的教导
+	ENDIF
+	PRINTL 
+ENDIF
+RETURN 1
+;==================================================
+;413,料理
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_413
+;料理にTRAIN_MESSAGEは无い
+CALL M_KOJO_MESSAGE_COM_K25_413_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_413_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL && !FLAG:70
+	;蓝样の料理技能は初期で3
+	IF ABL:MASTER:料理技能 >= 4
+		SELECTCASE RAND:5
+		CASE 0
+			PRINTFORML 「呵呵」
+			PRINTFORML 「完美的本事。学到了」
+		CASE 1
+			PRINTFORML 「美味。这汤汁到底是怎么做的呢？」
+		CASE 2
+			PRINTFORML 「唔哇、这浓郁的香味到底……？」
+			PRINTFORML 「恐怕、酒中腌着什么水果之类的东西……桑果！ 对吧？」
+		CASE 3
+			PRINTFORML 「喂、厨房的角落里那像山一样的是」
+			PRINTFORML 「第一次见过的食材……名字是？」
+			PRINTFORML 咕噜咕噜。
+		CASE 4
+			PRINTFORML 「嗯、完美的完成」
+			PRINTFORML 「我的手艺多少也有些成长吧」
+		ENDSELECT
+		PRINTL 
+		PRINTFORMW %CALLNAME:MASTER%跟蓝在比试着料理的手艺、提高了技术
+		PRINTL 
+		EXP:MASTER:料理经验 += 2
+		EXP:25:料理经验 += 2
+		PRINTFORML 二人料理经验＋2
+	ELSEIF ABL:MASTER:料理技能 == 3
+		SELECTCASE RAND:5
+		CASE 0
+			PRINTFORML 「盐味一采摘，有时也会改变。那就是和食」
+		CASE 1
+			PRINTFORML 「剪断之前用术式冷冻……唔、之前你不是不会吗？」
+		CASE 2
+			PRINTFORML 「中华料理火力就是命。就交给我吧」
+		CASE 3
+			PRINTFORML 「尝尝味道。是不是有点不够咸？」
+		CASE 4
+			PRINTFORML 「说真的即使不好吃但这也是料理有趣的地方」
+			PRINTFORML 「当然、只有爱情也是不行就是了」
+		ENDSELECT
+		PRINTL 
+		PRINTFORMW 跟蓝肩并肩做了料理
+		PRINTL 
+		EXP:MASTER:料理经验 += 1
+		EXP:25:料理经验 += 1
+		PRINTFORML 二人の料理经验＋1
+	ELSEIF ABL:MASTER:料理技能 == 2
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 「呵呵。这就是男人的料理」
+			PRINTFORML 「有点可爱呢」
+		CASE 1
+			PRINTFORML 「要帮忙的话、就传授几个密传」
+		CASE 2
+			PRINTFORML 「鸡蛋壳混进去了？ 这时候就要这样……」
+			PRINTFORML 「看、简单就拿出来了」
+		ENDSELECT
+		PRINTL 
+		PRINTFORMW %CALLNAME:MASTER%做料理的时候、蓝在身旁帮忙打点
+		PRINTL 
+		EXP:MASTER:料理经验 += 1
+		PRINTFORML 料理经验＋1
+	ELSEIF ABL:MASTER:料理技能 <= 1
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 「……总觉得不太对劲。稍微让我看看」
+		CASE 1
+			PRINTFORML 「好危险阿。菜刀是要这样拿的」
+		CASE 2
+			PRINTFORML 「没用火的时候、要记得闭掉阿……」
+		ENDSELECT
+		PRINTL 
+		PRINTFORMW 不挑战不习惯的料理、蓝一步一步的教导着
+	ENDIF
+	PRINTL 
+ENDIF
+RETURN 1
+;==================================================
+;414,吃饭
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_414
+CALL M_KOJO_MESSAGE_COM_K25_414_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_414_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;415,招待吃饭
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_415
+CALL M_KOJO_MESSAGE_COM_K25_415_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_415_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;416,演奏(冻结中？
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_416
+CALL M_KOJO_MESSAGE_COM_K25_416_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_416_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;417,午睡をする
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_417
+CALL M_KOJO_MESSAGE_COM_K25_417_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_417_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;421,祈愿する
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_421
+CALL M_KOJO_MESSAGE_COM_K25_421_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_421_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL && !FLAG:70
+	;祈愿は一日一回。以下の口上はお愿いを済ませた后に表示される
+	;念のためTCVARを入れて制御。また气力体力精力はCALL BUFFへ。精力は浓厚精液でない场合浓厚精液付加
+	IF TALENT:恋慕 && !TCVAR:25:353
+		PRINTFORML 祈祷完后的%CALLNAME:MASTER%跟蓝这样说
+		PRINTFORML 「拜托不知名的神跟九尾的妖狐」
+		PRINTFORML 「那么、说一个愿望。可能会灵验喔」
+		PRINTL 
+		$INPUT_LOOP_04
+		PRINTL [0] 想增加体力
+		PRINTL [1] 想增加气力
+		PRINTL [2] 想增加精力
+		PRINTL [3] 想要蓝的内裤
+		PRINTL [4] 希望尽情的玩弄尾巴
+		INPUT
+		PRINTL 
+		SELECTCASE RESULT
+		CASE 0
+			PRINTFORML 「确实收到了」
+			PRINTFORML 蓝的手触摸到胸口、有股暖流导入身体
+			PRINTFORML 感觉不怎么疲惫了
+			PRINTL 
+			PRINTFORML 体力＋300
+			CALL BUFF_BASE(MASTER,BASE_体力,300)
+			TCVAR:25:353 = 1
+			;BASE:MASTER:体力 = MIN(MAXBASE:MASTER:体力,BASE:MASTER:体力 + 300)
+		CASE 1
+			PRINTFORML 「确实收到了」
+			PRINTFORML 蓝的手触摸到胸口、有股暖流导入身体
+			PRINTFORML 感觉稍微有点干劲了
+			PRINTL 
+			PRINTFORML 气力＋300
+			CALL BUFF_BASE(MASTER,BASE_气力,300)
+			TCVAR:25:353 = 1
+			;BASE:MASTER:气力 = MIN(MAXBASE:MASTER:气力,BASE:MASTER:气力 + 300)
+		CASE 2
+			;浓厚精液を胜手に足してしまったけどたぶん大丈夫だろう
+			PRINTFORML 「确实收到了。……那么、今夜的目标是？」
+			PRINTFORML 蓝的手握住股间、有股暖流导入身体
+			PRINTFORML …………不知道是不是因为心理作用、突然感觉股闲变重了
+			PRINTL 
+			PRINTFORML 精力＋300
+			SIF !TALENT:MASTER:120
+				TALENT:MASTER:120 = 1
+			CALL BUFF_BASE(MASTER,BASE_精力,300)
+			TCVAR:25:353 = 1
+			;BASE:MASTER:精力 = MIN(MAXBASE:MASTER:精力,BASE:MASTER:精力 + 300)
+		CASE 3
+		;USERCOM_脱衣服 から处理をコピペ
+			PRINTFORML 「……确实收到了。真是好色」
+			PRINTFORML 满脸通红的蓝将裙子卷起、露出洁白的长腿
+			PRINTFORML 将内裤拉下从脚尖抽掉、在%CALLNAME:MASTER%的面前展开内裤、中间似乎有些水渍
+			PRINTL 
+			PRINTFORML %CALLNAME:MASTER%得到了蓝的%PANTSNAME(EQUIP:TARGET:下半身内衣２, TARGET)%！
+			CALL PANTS_GET(TARGET,"もらう")
+			TCVAR:25:353 = 1
+		CASE 4
+			PRINTFORML 「确实收到了……但是现在」
+			PRINTFORML 「好吧许可了就没办法了」
+			PRINTFORML 听到答应的%CALLNAME:MASTER%将身体迈入九尾中
+			PRINTFORML 就想在梦里般、%CALLNAME:MASTER%的活力满满上升
+			PRINTL 
+			PRINTFORML 体力・气力＋150 爱情经验＋5
+			BASE:MASTER:体力 = MIN(MAXBASE:MASTER:体力,BASE:MASTER:体力 + 150)
+			BASE:MASTER:气力 = MIN(MAXBASE:MASTER:气力,BASE:MASTER:气力 + 150)
+			EXP:TARGET:爱情经验 += 5
+			TCVAR:25:353 = 1
+		CASEELSE
+		GOTO INPUT_LOOP_04
+		ENDSELECT
+	ELSE
+		PRINTFORML 「到底有什么好处……」
+		PRINTFORML 蓝一脸感到可疑的样子
+	ENDIF
+	PRINTW 
+ENDIF
+RETURN 1
+;==================================================
+;431,在浴室里放松
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_431
+CALL M_KOJO_MESSAGE_COM_K25_431_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_431_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL && !FLAG:70
+	IF TALENT:恋慕
+		SELECTCASE RAND:4
+		CASE 0
+			PRINTFORML 「呼ー。抒解疲劳呢ー」
+			PRINTFORML 心情舒畅尽情地伸懒腰
+			PRINTFORMW 配合着抖动的身体、颤抖着的巨乳。大饱眼福
+		CASE 1
+			PRINTFORML 「泡澡还包着毛巾是违反礼仪的」
+			PRINTFORML 「既然是混浴、就不要难为情遮遮掩掩的」
+			PRINTFORMW 蓝堂堂正正的展露着乳房。明显在逗弄%CALLNAME:MASTER%
+		CASE 2
+			PRINTFORML 「呼呼呼呼呼……」
+			PRINTFORML 蓝抿嘴笑着靠近、将%CALLNAME:MASTER%的手紧紧的抱在胸中
+			PRINTFORMW 被热水淋湿的肌肤。在被双乳夹在中间的手传来了不得了的感触
+		CASE 3
+			PRINTFORML 「豆知识」
+			PRINTFORML 「用香皂的话、可以把黏在臀部上的毛轻易的清理下来」
+			PRINTFORMW 不由自主的视线往下看去也是没办法的事情
+		ENDSELECT
+	ELSE
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 「一直盯着看可不好喔？」
+			PRINTFORML 一起入浴的蓝水上悄悄的用手覆盖住乳房
+			PRINTFORMW 但我觉得这个动作更加的煽动着男人的情欲
+		CASE 1
+			PRINTFORML 「真是好汤、%CALLNAME:MASTER%」
+			PRINTFORML 这样搭话的蓝捞了水、从颈部缓缓的留下来
+			PRINTFORMW 跟倾城的美女一起泡别有一番风味
+		CASE 2
+			PRINTFORML 「真是气派。都说不出话来了」
+			PRINTFORML 有些害羞呢、不愧是蓝看到男人的肉棒都不会动摇呢
+			PRINTFORMW 不过、跟美女坦诚相见这种状况真是不错
+		ENDSELECT
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;440,等待
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_440
+CALL M_KOJO_MESSAGE_COM_K25_440_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_440_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;441,听课(慧音専用？
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_441
+CALL M_KOJO_MESSAGE_COM_K25_441_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_441_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;442,采伐
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_442
+CALL M_KOJO_MESSAGE_COM_K25_442_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_442_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+
+;※※※※※※※※※※※※※※※※※※※※※※※※※
+;约会系指令
+;※※※※※※※※※※※※※※※※※※※※※※※※※
+[SKIPSTART]
+;现状未实装
+;==================================================
+;600,约会会话
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_600
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K25_600_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_600_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+
+;==================================================
+;601,约会身体接触
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_601
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K25_601_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_601_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+
+;==================================================
+;602,约会接吻
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_602
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K25_602_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_602_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+[SKIPEND]
+;==================================================
+;603,牵手
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_603
+CALL M_KOJO_MESSAGE_COM_K25_603_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_603_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL && !FLAG:70
+	SELECTCASE RAND:3
+	CASE 0
+		PRINTFORMW 「喔、可要好好牵住喔」
+	CASE 1
+		PRINTFORMW 「有点不好意思」
+	CASE 2
+		PRINTFORMW 「恩、来吧」
+	ENDSELECT
+	PRINTL 
+ENDIF
+RETURN 1
+
+;==================================================
+;604,散步
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_604
+;散步にはTRAIN_MESSAGEが无い
+CALL M_KOJO_MESSAGE_COM_K25_604_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_604_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;605,绕道
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_605
+;绕道にはTRAIN_MESSAGEが无い
+CALL M_KOJO_MESSAGE_COM_K25_605_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_605_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+
+;==================================================
+;610,请吃饭
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_610
+CALL M_KOJO_MESSAGE_COM_K25_610_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_610_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL && !FLAG:70
+	SELECTCASE RAND:3
+	CASE 0
+		PRINTFORMW %CALLNAME:MASTER%跟蓝一起并肩着、取出筷子吃饭
+	CASE 1
+		PRINTFORMW 「恩……这道菜具有很细腻的味道」
+	CASE 2
+		PRINTFORMW 「美味。就用来参考好了」
+	ENDSELECT
+	PRINTL 
+ENDIF
+RETURN 1
+
+;==================================================
+;613,赚钱
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_613
+CALL M_KOJO_MESSAGE_COM_K25_613_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_613_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;614,采购食材
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_614
+CALL M_KOJO_MESSAGE_COM_K25_614_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_614_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;615,吃便当
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_615
+CALL M_KOJO_MESSAGE_COM_K25_615_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_615_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	IF TALENT:恋慕 || TALENT:思慕
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 蓝从袖子里取出超大便当盒
+			PRINTFORML 「作为从者、如果主人肚子饿了就要能马上应对」
+			PRINTFORML 「难道你不这样认为吗？」
+			PRINTFORMW %CALLNAME:MASTER%在这样的场合下、二人吃完沏着茶悠闲的度过
+		CASE 1
+			PRINTFORML 在膝上放着便当、二人用着同一双筷子
+			PRINTFORML 「饭团的海苔要另外放、在要吃的时候再卷起。这样才不会干扁」
+			PRINTFORMW 蓝表现得像是完美爱妻主妇一样
+		CASE 2
+			PRINTFORML 打开便当、野猫像是闻到气味竖着慢慢靠近
+			PRINTFORML 不像一般的野兽乖乖的再蓝的脚边坐着等待
+			PRINTFORML 「你是……好像在哪件过。是橙的手下吗」
+			PRINTFORMW 三毛猫喵了一声回答、一猫一人一狐分享着便当的美味
+		ENDSELECT 
+	ELSE
+		PRINTFORML 「便当？ 没有做呢」
+		PRINTFORML 「不过、现在也不是不能马上准备。等着」
+		PRINTFORML 说着的蓝瞬间消失了身影、之后不知从拿得来一尾活泼的溪鱼
+		PRINTFORML 取出盐巴、一转眼就开始盐烤了起来
+		PRINTFORMW 「就这样也没问题吧？ 那么就请用餐吧」
+	ENDIF
+	PRINTL 
+ENDIF
+RETURN 1
+;==================================================
+;617,甜品店に诱う
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_617
+CALL M_KOJO_MESSAGE_COM_K25_617_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_617_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL && !FLAG:70
+	SELECTCASE RAND:5
+	CASE 0
+		PRINTFORMW 跟蓝美味的吃着细竹丸子
+	CASE 1
+		PRINTFORMW 在装潢漂亮的蛋糕店里、彼此用蛋糕分享快乐
+	CASE 2
+		PRINTFORMW 二人坐一起吃着烤面包
+	CASE 3
+		PRINTFORMW 专注着吃着豆沙水果凉粉的蓝非常可爱、像个孩子似的
+	CASE 4
+		PRINTFORMW 拿着牙签戳着年糕、看着年糕摇摇晃晃的蓝表情像被治愈似的
+	ENDSELECT
+	PRINTL 
+ENDIF
+RETURN 1
+;==================================================
+;618,花屋
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_618
+CALL M_KOJO_MESSAGE_COM_K25_618_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_618_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;620,铃奈庵
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_620
+CALL M_KOJO_MESSAGE_COM_K25_620_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_620_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;660,读书
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_660
+CALL M_KOJO_MESSAGE_COM_K25_660_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_660_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;698,进入房间
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_698
+CALL M_KOJO_MESSAGE_COM_K25_698_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_698_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;699,外出
+;==================================================
+@M_KOJO_MESSAGE_COM_K25_699
+CALL M_KOJO_MESSAGE_COM_K25_699_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K25_699_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+
+;※※※※※※※※※※※※※※※※※※※※※※※※※
+;派生指令
+;※※※※※※※※※※※※※※※※※※※※※※※※※
+;==================================================
+;60,掏耳朵
+;==================================================
+@M_KOJO_MESSAGE_SCOM_K25_60
+CALL M_KOJO_MESSAGE_SCOM_K25_60_1
+RETURN RESULT
+@M_KOJO_MESSAGE_SCOM_K25_60_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL && !FLAG:70
+	IF TALENT:恋慕 || TALENT:思慕
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 「完成」
+			PRINTFORMW 在最后朝着耳朵内吹了一口气
+		CASE 1
+			PRINTFORML 「掏耳朵掏过头也不好喔」
+			PRINTFORMW 在这个时间对身体不好也要干
+		CASE 2
+			PRINTFORML 「动物跟人类的耳朵清理的方式不同」
+			PRINTFORMW 「可要好好记住喔」
+		ENDSELECT
+	ELSE
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 「既然、都这样拜托了」
+			PRINTFORMW 苦求着拜托、一脸真受不了的做了掏耳朵
+		CASE 1
+			PRINTFORML 「坦白说、真是提不起干劲呢」
+			PRINTFORMW 虽然这么说但手上还是帮忙做了掏耳朵
+		CASE 2
+			PRINTFORML 「干脆来收费好了」
+			PRINTFORMW 如果是蓝的话生意大概会很火热
+		ENDSELECT
+	ENDIF
+	PRINTL 
+ENDIF
+RETURN 1
+;==================================================
+;61,抱き枕
+;==================================================
+@M_KOJO_MESSAGE_SCOM_K25_61
+CALL M_KOJO_MESSAGE_SCOM_K25_61_1
+RETURN RESULT
+@M_KOJO_MESSAGE_SCOM_K25_61_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL && !FLAG:70
+	PRINTFORMW 紧紧的拥抱着、被幸福感所包围
+ENDIF
+RETURN 1
+;==================================================
+;62,亲额头
+;==================================================
+@M_KOJO_MESSAGE_SCOM_K25_62
+CALL M_KOJO_MESSAGE_SCOM_K25_62_1
+RETURN RESULT
+@M_KOJO_MESSAGE_SCOM_K25_62_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	IF FLAG:时间停止
+		PRINTFORMW 拨开刘海、吻了几次额头
+	ELSEIF TALENT:恋慕
+		IF CFLAG:睡眠
+			PRINTFORML 「唔……」
+			PRINTFORMW 不只是额头、睑、鼻梁、都反复的吻着
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 「什么时候吻上来的呢」
+				PRINTFORMW 感到有点好笑似的、感觉真从容
+			CASE 1
+				PRINTFORML 「这边才是我想要的」
+				PRINTFORMW 蓝手指点了点自己的唇上
+			CASE 2
+				PRINTFORML 「唔……再来一次」
+				PRINTFORMW 蓝羞红的望着
+			ENDSELECT
+		ENDIF
+	ELSEIF TALENT:思慕
+		IF CFLAG:睡眠
+			PRINTFORML 不吵醒蓝、嘴唇轻轻触碰
+			PRINTFORMW 感觉到她微微的笑了
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 「唔。就这样吗」
+				PRINTFORMW 蓝微笑着盯着唇
+			CASE 1
+				PRINTFORML 「还击」
+				PRINTFORMW 蓝把%CALLNAME:MASTER%刘海移开、吻了下去
+			CASE 2
+				PRINTFORML 「呵呵呵……表情可真认真」
+				PRINTFORMW 被蓝给笑了
+			ENDSELECT
+		ENDIF
+	ELSE
+		IF CFLAG:睡眠
+			PRINTFORML 往熟睡中的蓝额头吻去
+			PRINTFORMW 被死死盯着
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 「这种事最好去找没见过世面的少女」
+				PRINTFORMW 蓝一脸嫌弃的样子
+			CASE 1
+				PRINTFORML 蓝手指按在要贴近的唇上
+				PRINTFORMW 「很丢脸请住手」
+			CASE 2
+				PRINTFORML 「没有恋人就随便找个女的、你是这么打算的吗」
+				PRINTFORMW 说着的蓝望着%CALLNAME:MASTER%
+			ENDSELECT
+		ENDIF
+	ENDIF
+	PRINTL 
+ENDIF
+RETURN 1
+;==================================================
+;63,更多的接吻
+;==================================================
+@M_KOJO_MESSAGE_SCOM_K25_63
+CALL M_KOJO_MESSAGE_SCOM_K25_63_1
+RETURN RESULT
+@M_KOJO_MESSAGE_SCOM_K25_63_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	IF FLAG:时间停止
+		PRINTFORML 往时间停止的蓝深吻着
+		PRINTFORMW 把彼此的舌头缠绕着、好好的品味一番
+	ELSEIF TALENT:恋慕
+		IF CFLAG:睡眠
+			PRINTFORML 沉睡中的蓝舌头附和着、从里到外都好好的品尝一番
+			PRINTFORMW 唾液沿着她的脸颊流下也毫不在乎的继续舔着
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 深深接吻着、要移开的%CALLNAME:MASTER%被蓝压住头
+				PRINTFORML 被吻到呼吸困难时、被放了开来感觉都快站不住
+				PRINTFORMW 「承蒙款待」
+			CASE 1
+				PRINTFORML 「呼……嗯、嗯……」
+				PRINTFORML 舌头扫着牙、互相交换着唾液、用力吸吮着
+				PRINTFORMW 一边听着淫荡的声音一边唾液交换持续了一段时间
+			CASE 2
+				PRINTFORML 「唔。嗯、嗯、唔……」
+				PRINTFORML 蓝故意发出声音搅动着舌头
+				PRINTFORMW 瞇着双眼凝视%CALLNAME:MASTER%的表情
+			ENDSELECT
+		ENDIF
+	ELSEIF TALENT:思慕
+		IF CFLAG:睡眠
+			PRINTFORML 趁现在撬开双唇、将舌头伸入进去
+			PRINTFORMW 看着蓝无意识跟反应、开始逗弄着舌头
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 蓝的手藏在袖子里、提起下巴后吻了很长一段时间
+				PRINTFORMW 「――唔。唔、再一次？」
+			CASE 1
+				PRINTFORML 即使伸入舌头蓝也没有生气
+				PRINTFORMW 配合着互相吸吮着舌头
+			CASE 2
+				PRINTFORML 『妖怪的牙齿可是很容易就能撕裂人类的肉骨』
+				PRINTFORML 蓝说了一个让人不安的开场白后还是接受了接吻
+				PRINTFORMW 不屈服威胁的%CALLNAME:MASTER%将舌头深入搅动着
+			ENDSELECT
+		ENDIF
+	ELSE
+		IF CFLAG:睡眠
+			PRINTFORML 现在蓝醒来的话肯定会暴怒的吧
+			PRINTFORMW 虽然这么想但还是忍不住、%CALLNAME:MASTER%朝蓝的嘴唇贪婪的所求着
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 「……真是纠缠不休」
+				PRINTFORMW 默默的忍受着
+			CASE 1
+				PRINTFORML 撬开双唇深入舌头、被蓝用犬齿夹住
+				PRINTFORML 「喂、别得意忘形了」
+				PRINTFORMW 被明确的警告了
+			CASE 2
+				PRINTFORML 「……真是无耻的男人。就不知道什么叫克制吗」
+				PRINTFORMW 一边擦拭着嘴唇一边用冰冷的视线瞪着
+			ENDSELECT
+		ENDIF
+	ENDIF
+	PRINTL 
+ENDIF
+RETURN 1
+;==================================================
+;80,拉手
+;==================================================
+@M_KOJO_MESSAGE_SCOM_K25_80
+CALL M_KOJO_MESSAGE_SCOM_K25_80_1
+RETURN RESULT
+@M_KOJO_MESSAGE_SCOM_K25_80_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL && !FLAG:70
+	SELECTCASE RAND:3
+	CASE 0
+		PRINTFORMW 「哎呀，哎呀」
+	CASE 1
+		PRINTFORMW 「怎么了」
+	CASE 2
+		PRINTFORMW 「会摔倒喔ー」
+	ENDSELECT
+	PRINTL 
+ENDIF
+RETURN 1
+

@@ -1,0 +1,3681 @@
+﻿
+;※※※※※※※※※※※※※※※※※※※※※※※※※
+;派生指令
+;※※※※※※※※※※※※※※※※※※※※※※※※※
+;==================================================
+;1,六九式
+;==================================================
+@M_KOJO_MESSAGE_SCOM_K42_1
+CALL M_KOJO_MESSAGE_SCOM_K42_1_1
+RETURN 1
+@M_KOJO_MESSAGE_SCOM_K42_1_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(TFLAG:50 + 500)
+		IF FLAG:70
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+		ENDIF
+		RETURN 1
+	ENDIF
+	;基本セット
+	;时奸中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:恋慕
+		PRINTFORMW 
+		RETURN 1
+	ELSEIF TALENT:爱欲 || TALENT:炮友
+		;强制舐阴←→舐阴は六九式目标对象外らしい
+		;强制舐阴←→给对方口交も×
+		;给对方口交←→口交はＯＫ
+		;果扶她
+		IF HAS_PENIS(TARGET) == 1
+			;你もちんこついてる（男または扶她）
+			IF HAS_PENIS(MASTER) == 1
+				IF PREVCOM == 1;舐阴
+					;果口交中
+					IF TEQUIP:TARGET:口接触部位 == 1
+						PRINTFORML 「呀呜！？　啊、真是的，现在舔的话，不行啦…」
+						PRINTFORML 用舌头一口气从肉棒的根部到会阴舔来舔去，果的屁股颤抖了一下
+						PRINTW 
+					;果正在舔阴
+					ELSE
+						PRINTFORML 被眼前啪嗒啪嗒张合的雌穴所诱惑，悄悄地亲吻了上去
+						PRINTFORML 「啊嗯～%UNICODE(0x2665) *1%　真是的，现在是轮到我了啦…%UNICODE(0x2665) *1%」
+						PRINTW 
+					ENDIF
+				ELSEIF PREVCOM == 2;给对方口交
+					;果口交中
+					IF TEQUIP:TARGET:口接触部位 == 1
+						SELECTCASE RAND:2
+						CASE 0
+							PRINTFORML 「呀呜！？」
+							PRINTFORML 咬住在眼前晃来晃去的果的肉棒，在口中颤抖了一下
+							PRINTW 
+						CASE 1
+							PRINTFORM 在被果的口交技巧玩弄的时候，眼前
+							SELECTCASE TALENT:TARGET:形状
+							CASE 6,10;巨根、马并み
+								PRINTFORM 出现了与那里格格不入的，大概有人类手腕那么粗的
+							CASE 1,2;粗チン
+								PRINTFORM 不知为何有些可爱的
+							CASE 5;长疣的
+								PRINTFORM 与主人截然相反的凶恶形状的
+							CASEELSE
+								PRINTFORM 与外表不符的健壮的
+							ENDSELECT
+							PRINTFORML 肉棒闯入了视线
+							PRINTW 
+							PRINTFORML 吧唧…
+							PRINTFORML 「欸！？　真是的，你干什么啊，嗯嗯！！%UNICODE(0x2665) *1%」
+							PRINTW 
+							PRINTFORML 「要、要比比看谁先高潮吗…奉陪就是了」
+							PRINTFORML 「我才不会输呢…%UNICODE(0x2665) *1%　哈姆、噗啵、噗啵…%UNICODE(0x2665) *1%」
+							PRINTW 
+						ENDSELECT
+					;果正在舔阴
+					ELSE
+						PRINTFORM 在被果爱抚着雌穴的时候，眼前
+						SELECTCASE TALENT:TARGET:形状
+						CASE 6,10;巨根、马并み
+							PRINTFORM 出现了与那里格格不入的，大概有人类手腕那么粗的
+						CASE 1,2;粗チン
+							PRINTFORM 不知为何有些可爱的
+						CASE 5;长疣的
+							PRINTFORM 与主人截然相反的凶恶形状的
+						CASEELSE
+							PRINTFORM 与外表不符的健壮的
+						ENDSELECT
+						PRINTFORML 肉棒闯入了视线
+						PRINTW 
+						PRINTFORML 噗噜…
+						PRINTFORML 「呀！？　真是、真是的，顶端、我很敏感的啊，呜咿～%UNICODE(0x2665) *1%」
+						PRINTFORML 「不要啦、好舒服～%UNICODE(0x2665) *1%　那样舔来舔去的，不要啊…%UNICODE(0x2665) *1%」
+						PRINTW 
+					ENDIF
+				ELSEIF PREVCOM == 81;口交
+					IF TEQUIP:MASTER:口接触部位 == 1
+						PRINTFORML 「也让我舔舔你的啊…%UNICODE(0x2665) *1%　哈姆～%UNICODE(0x2665) *1%」
+					ELSEIF TEQUIP:MASTER:口接触部位 == 6
+						PRINTFORML 「不要这样，只舔那个地方嘛…%UNICODE(0x2665) *1%」
+						PRINTFORML 「我也会做的…%UNICODE(0x2665) *1%　哈姆～%UNICODE(0x2665) *1%」
+					ENDIF
+					PRINTFORML 「嗯、嗯、嗯…%UNICODE(0x2665) *1%　硬硬的，好…%UNICODE(0x2665) *1%」
+					PRINTW 
+				ELSE
+				ENDIF
+			;你は女。对応指令がないよ！
+			ELSE
+			ENDIF
+		;果女
+		ELSE
+			IF PREVCOM == 1;舐阴
+				SELECTCASE RAND:5
+				CASE 0
+					PRINTFORML 「啊、真是的，现在是我让你舒服啊…啊%UNICODE(0x2665) *1%　嗯%UNICODE(0x2665) *1%」
+					PRINTFORML 「嗯啾%UNICODE(0x2665) *1%　哈啊%UNICODE(0x2665) *1%　啊啊%UNICODE(0x2665) *1%%UNICODE(0x2665) *1%」
+					PRINTW 
+				CASE 1
+					PRINTFORML 嘟啾、啾啪、啾噜噜…
+					PRINTFORML 「嗯%UNICODE(0x2665) *1%　呼%UNICODE(0x2665) *1%　呼%UNICODE(0x2665) *1%　呼～～～～%UNICODE(0x2665) *1%」
+					PRINTW 
+				CASE 2
+					PRINTFORML 「啊、那样的话、就不能好好地、让你舒服了…嗯%UNICODE(0x2665) *1%」
+					PRINTW 
+				CASE 3
+					PRINTFORML 「啊、那种地方、不要扩张啊！」
+					PRINTFORML （不要啊…被%MASTERNAME:42%全部看到了…%UNICODE(0x2665) *1%）
+					PRINTW 
+					PRINTFORML 「口正闲着，还不是你做了那种事情…嗯%UNICODE(0x2665) *1%　嗯嗯%UNICODE(0x2665) *1%%UNICODE(0x2665) *1%」
+					PRINTFORML 「湿淋淋之类的、不用说出来啊…笨蛋%MASTERNAME:42%…%UNICODE(0x2665) *1%」
+					PRINTW 
+				CASE 4
+					PRINTFORML 在眼前，果肉感十足的屁股摇晃着…
+					PRINTFORML 在那正中央，果那色情的肉穴，散发着雌性的气味，抽动着，像是渴望着什么一样地开合着
+					PRINTW 
+					PRINTFORML 「嗯嗯！？　啊、笨蛋、不要用手指、掰开啊、看到肉壶的话就糟了」
+					PRINTFORML 用双手将阴唇扒开，随着“滋”的一声粘着声，小穴口暴露了出来
+					PRINTFORML 果中断了口中的服侍，慌忙抗议
+					PRINTW 
+					PRINTFORML 被说了不要，当然不可能回答“我知道了”。无视抗议，将舌尖拧入小穴口
+					PRINTFORML 「呀%UNICODE(0x2665) *1%　舌头、进来了～～～～%UNICODE(0x2665) *1%」
+					PRINTW 
+					PRINTFORML 「不要舔肉壶～～%UNICODE(0x2665) *1%　小弟弟、没法舔了、啊%UNICODE(0x2665) *1%　呀%UNICODE(0x2665) *1%」
+					PRINTFORML 「你、你这家伙…哈姆～%UNICODE(0x2665) *1%　唔噗、唔噗～%UNICODE(0x2665) *1%　啾啵、啾啵、啾啵%UNICODE(0x2665) *1%」
+					PRINTFORML 或许是燃烧起了对抗意识，果以比刚才更加热情的舌头，重新开始了口交
+					PRINTW 
+					PRINTFORML 这样下去，不快点让她高潮的话，我好像会先射出来…
+					PRINTFORML （快点高潮，快点高潮啊～%UNICODE(0x2665) *1%　我已经、要高潮了哟～%UNICODE(0x2665) *1%%UNICODE(0x2665) *1%）
+					PRINTW 
+				ENDSELECT
+			ELSEIF PREVCOM == 81;口交
+				SELECTCASE RAND:4
+				CASE 0
+					PRINTFORML 「一直被你摆布的话可不行、我要报仇…%UNICODE(0x2665) *1%　嗯噗…%UNICODE(0x2665) *1%」
+					PRINTFORML 「哈、嗯%UNICODE(0x2665) *1%　啾噗、啾噗…%UNICODE(0x2665) *1%　
+				CASE 1
+					PRINTFORML 嘟啾、啾啪、啾噜噜…
+					PRINTFORML 「嗯%UNICODE(0x2665) *1%　呼%UNICODE(0x2665) *1%　呼%UNICODE(0x2665) *1%　呼～～～～%UNICODE(0x2665) *1%」
+					PRINTW 
+				CASE 2
+					PRINTFORML 「哈、哈…%UNICODE(0x2665) *1%　嗯…你的、看起来很痛苦的样子…哈姆%UNICODE(0x2665) *1%」
+					PRINTFORML 
+					PRINTW 
+				CASE 3
+					PRINTFORML 「哈啊%UNICODE(0x2665) *1%　啊啊%UNICODE(0x2665) *1%」
+					PRINTFORML 「狡猾，只有%MASTERNAME:42%…哈姆%UNICODE(0x2665) *1%」
+					PRINTFORML 「嗯%UNICODE(0x2665) *1%　呼呜%UNICODE(0x2665) *1%　嗯嗯嗯%UNICODE(0x2665) *1%%UNICODE(0x2665) *1%」
+					PRINTW 
+				ENDSELECT
+			ENDIF
+		ENDIF
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+;未记入
+;CALLFORM M_KOJO_MESSAGE_COM_K42_{SELECTCOM}_1
+RETURN 1
+
+;==================================================
+;2,岩清水
+;==================================================
+@M_KOJO_MESSAGE_SCOM_K42_2
+CALL M_KOJO_MESSAGE_SCOM_K42_2_1
+RETURN 1
+@M_KOJO_MESSAGE_SCOM_K42_2_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(TFLAG:50 + 500)
+		IF FLAG:70
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;基本セット
+	;时奸中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:恋慕
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+;未记入
+;CALLFORM M_KOJO_MESSAGE_COM_K42_{SELECTCOM}_1
+RETURN 1
+
+;==================================================
+;3,G点刺激
+;==================================================
+@M_KOJO_MESSAGE_SCOM_K42_3
+CALL M_KOJO_MESSAGE_SCOM_K42_3_1
+RETURN 1
+@M_KOJO_MESSAGE_SCOM_K42_3_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(TFLAG:50 + 500)
+		IF FLAG:70
+			RETURN 1
+		ELSE
+			PRINTFORML 「──嗯、什么呀、这个…」
+			PRINTFORML 「那里、不要蹭蹭得戳着呀、会变得、奇怪的啦…」
+			PRINTW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;基本セット
+	;时奸中
+	IF FLAG:70
+		PRINTFORML 用手指蹭蹭得刺激着膣壁的上部时、膣口和肉壶褶皱就会不断地蠢动着
+		IF TALENT:恋慕 || TALENT:恋人
+			PRINTFORML 因为果的小穴很敏感、所以很期待很棒的反应呢
+			PRINTW 
+		ELSE
+			PRINTFORML 虽然平时对这种事情比较晚熟、但是身体却是很诚实呢
+			PRINTW 
+		ENDIF
+		PRINTW 
+		RETURN 1
+	ELSE
+		IF TALENT:恋慕 || TALENT:恋人
+			PRINTFORML 「啊啊%UNICODE(0x2665) *1%　那里、那里好厉害%UNICODE(0x2665) *1%」
+			PRINTFORML 「轻飘飘的了、果、脑袋要变得轻飘飘的了！　啊啊啊%UNICODE(0x2665) *1%」
+			PRINTW 
+		RETURN 1
+		ELSEIF TALENT:爱欲 || TALENT:炮友
+			IF ABL:Ｖ感觉 > 3
+				SELECTCASE RAND:2
+				CASE 0
+					PRINTFORML 「呀…嗯…%UNICODE(0x2665) *1%　手指…%UNICODE(0x2665) *1%」
+					PRINTFORML 手指拨开小穴壁，发现有一个鼓起来的部分
+					PRINTW 
+					PRINTFORML 「哦！？%UNICODE(0x2665) *1%　嘶！？%UNICODE(0x2665) *1%」
+					PRINTFORML 用手指的指腹轻轻按压，果的反应和至今为止明显不同了
+					PRINTW 
+					PRINTFORML 「那里不行%UNICODE(0x2665) *1%　要出来了%UNICODE(0x2665) *1%%UNICODE(0x2665) *1%」
+					PRINTFORML 仍然用手指咚咚咚地持续按压，果一边痉挛着身体一边噗咻地喷出了潮水
+					PRINTW 
+				CASE 1
+					PRINTFORML 「哦哦！？%UNICODE(0x2665) *1%　哦%UNICODE(0x2665) *1%　那里不行诶%UNICODE(0x2665) *1%%UNICODE(0x2665) *1%」
+					PRINTFORML 每次用手指咚咚地刺激小穴壁上粗糙的部分，果都噗咻、噗咻地喷出潮水
+					PRINTW 
+				ENDSELECT
+			ELSE
+				PRINTFORML 「嗯咕！！　呀啊…那里、不行啊……啊啊啊啊啊%UNICODE(0x2665) *1%%UNICODE(0x2665) *1%%UNICODE(0x2665) *1%」
+				PRINTFORML 敏感的果的小穴肉，被手指刺激着粗糙的部分，紧紧地、急速地重复着收缩
+				PRINTW 
+			ENDIF
+			RETURN 1
+		ELSE
+			PRINTFORML 「都说了不行、了啊…那里、手指、不要插着呀…」
+			PRINTFORML 「被这样子、温柔地对待的话…呜呜…%UNICODE(0x2665) *1%」
+			PRINTW 
+			RETURN 1
+		ENDIF
+	ENDIF
+ENDIF
+;未记入
+;CALLFORM M_KOJO_MESSAGE_COM_K42_{SELECTCOM}_1
+RETURN 1
+
+;==================================================
+;4,乱牡丹
+;==================================================
+@M_KOJO_MESSAGE_SCOM_K42_4
+CALL M_KOJO_MESSAGE_SCOM_K42_4_1
+RETURN 1
+@M_KOJO_MESSAGE_SCOM_K42_4_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(TFLAG:50 + 500)
+		IF FLAG:70
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;基本セット
+	;时奸中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:恋慕
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+;未记入
+;CALLFORM M_KOJO_MESSAGE_COM_K42_{SELECTCOM}_1
+RETURN 1
+
+;==================================================
+;5,手淫口交
+;==================================================
+@M_KOJO_MESSAGE_SCOM_K42_5
+CALL M_KOJO_MESSAGE_SCOM_K42_5_1
+RETURN 1
+@M_KOJO_MESSAGE_SCOM_K42_5_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(TFLAG:50 + 500)
+		IF FLAG:70
+			RETURN 1
+		ELSE
+			IF TALENT:恋慕 || TALENT:恋人
+				PRINTFORML 「哈啊…这ー种事情ー你总是立马就能想到呢…」
+				PRINTFORML 「可以ー哟、让%MASTERNAME:42%觉得舒服的事情、会做的啦…♪」
+				PRINTW 
+				PRINTFORML 「在手撸动着的时候、用舌头、啊ー嗯…呸咯、Pecha、呸咯…啾、啾噜噜…」
+				PRINTFORML 「嗯呼、表情看起来ー很开心呢…♪　会给你做更多的呢…♪　啾噜、呸咯呸咯…」
+				PRINTW 
+			ELSE
+				PRINTFORML 「用嘴舔着的时候还要用手摩擦着吗…？　总觉得超麻烦的ー…」
+				PRINTFORML 「能ー想到这种玩法倒是很天才啦…真的是…」
+				PRINTW 
+				PRINTFORML 「像这样…用手摩擦着…呸咯、Pecha…这种感觉可以吗？」
+				PRINTFORML 「果有这种才能什么的…就算因为这种事情被表扬ー…嘛这样子ー被称赞也行的啦」
+				PRINTW 
+			ENDIF
+			RETURN 1
+		ENDIF
+	ENDIF
+	;基本セット
+	;时奸中
+	IF FLAG:70
+		PRINTFORML 因为她不会自己舔着或者撸动着、实在是非常的麻烦…！
+		PRINTFORML 说舒服倒是很舒服啦、但是感觉这两个要是单做的话会不会更好呢…
+		PRINTW 
+		RETURN 1
+	ELSE
+		IF TALENT:恋慕 || TALENT:恋人
+			PRINTFORML 「欸嘿嘿、会给%MASTERNAME:42%、努力ー地侍奉的哟…♪」
+			PRINTFORML 「niu噜～～～、啾噜噜、滋滋、啾啪、啾啪、呸咯呸咯…」
+			PRINTW 
+			PRINTFORML 「呼呼、在一抖一抖着哟…♪　%MASTERNAME:42%、真可爱ー%UNICODE(0x2665) *1%」
+			PRINTFORML 「啾噗、啾噜、啾噗、呸咯…被撸动着的时候被舔舐着、很舒服ー吗？」
+			PRINTW 
+			RETURN 1
+		ELSE
+			PRINTFORML 「啊、舔着这里的话ー就会很舒服啊…♪　那么ー这样子呢？」
+			PRINTFORML 「呼呼、%MASTERNAME:42%的反应、真ー有趣♪」
+			PRINTW 
+			RETURN 1
+		ENDIF
+	ENDIF
+ENDIF
+;未记入
+;CALLFORM M_KOJO_MESSAGE_COM_K42_{SELECTCOM}_1
+RETURN 1
+
+;==================================================
+;6,插入Ｇスポ责め
+;==================================================
+@M_KOJO_MESSAGE_SCOM_K42_6
+CALL M_KOJO_MESSAGE_SCOM_K42_6_1
+RETURN 1
+@M_KOJO_MESSAGE_SCOM_K42_6_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(TFLAG:50 + 500)
+		IF FLAG:70
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;基本セット
+	;时奸中
+	IF FLAG:70
+		PRINTFORML 用龟头执拗地蹂躏果肉壶中粗糙的部分
+		PRINTFORML 每次这样，小穴壁都会紧紧强烈地收缩，夹紧%TINKO(PLAYER)%
+		PRINTW 
+		RETURN 1
+	ELSEIF TALENT:恋慕 || TALENT:恋人
+		SELECTCASE RAND:3
+		CASE 0
+			CALL HPH_PRINT,@"「那里HPH　一直顶那里HPH」","L"
+		CASE 1
+			CALL HPH_PRINT,@"「呀啊、这个、好厉害HPH　好厉害哦HPH」","L"
+		CASE 2
+			CALL HPH_PRINT,@"「不知道HPH　我不知道啦HPH」","L"
+			CALL HPH_PRINT,@"「啊HPH　又、嗖嗖地HPH」","L"
+		ENDSELECT
+		RETURN 1
+	ELSEIF TALENT:爱欲 || TALENT:炮友
+		SELECTCASE RAND:3
+		CASE 0
+			CALL HPH_PRINT,@"「那里HPH　好舒服HPH」","L"
+			PRINTW 
+		CASE 1
+			CALL HPH_PRINT,@"「不要HPH　一直顶同一个地方HPH」","L"
+			PRINTW 
+		CASE 2
+			CALL HPH_PRINT,@"「呀HPH　不要一直摩擦同一个地方HPH」","L"
+			PRINTW 
+		CASE 3
+			CALL HPH_PRINT,@"「好厉害HPH　在那里、摩擦HPH　再多一点HPH」","L"
+		ENDSELECT
+		RETURN 1
+	ELSEIF TALENT:思慕
+		SELECTCASE RAND:3
+		CASE 0
+			CALL HPH_PRINT,@"「啊啊HPH　那里HPH　好舒服HPH」","L"
+			PRINTW 
+		CASE 1
+			CALL HPH_PRINT,@"「咯吱咯吱HPH　好舒服HPH」","L"
+			PRINTW 
+		CASE 2
+			CALL HPH_PRINT,@"「呀HPH　不要一直摩擦同一个地方HPH」","L"
+			PRINTW 
+		ENDSELECT
+		RETURN 1
+	ENDIF
+ENDIF
+;未记入
+;CALLFORM M_KOJO_MESSAGE_COM_K42_{SELECTCOM}_1
+RETURN 1
+
+;==================================================
+;7,插入子宫口玩弄
+;==================================================
+@M_KOJO_MESSAGE_SCOM_K42_7
+CALL M_KOJO_MESSAGE_SCOM_K42_7_1
+RETURN 1
+@M_KOJO_MESSAGE_SCOM_K42_7_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(TFLAG:50 + 500)
+		IF TALENT:恋慕 || TALENT:恋人
+			PRINTFORML 「那里、是最深的地方…啊呜呜！」
+			PRINTFORML 「那里是、子宫口吗？　好、好难受…！」
+			IF EXP:爱情经验 >= 50
+				PRINTFORML 「没、没问题、因为在很温柔的待我、并不、痛哟」
+				PRINTFORML 「%MASTERNAME:42%想做的事、不管是什么、我都会接受的啦」
+				PRINTW 
+			ELSE
+				PRINTFORML 「稍微、有点痛苦…请更加地、温柔啊…」
+				PRINTW 
+			ENDIF
+		ELSEIF TALENT:思慕
+			PRINTFORML 「啊咕呜！　痛、好痛…那个、讨厌…」
+			PRINTW 
+		ELSE
+			PRINTFORML 「好痛！　讨厌！？　好可怕、讨厌啊、拔出来！！」
+			PRINTFORML （好痛苦、好恶心、这样的讨厌、讨厌啊）
+			PRINTW 
+		ENDIF
+		RETURN 1
+	ENDIF
+	;基本セット
+	IF FLAG:70
+		PRINTFORML 将龟头压在身体无法动弹的果的小穴深处子宫口上、无数次反复激烈地抽插着
+		IF TALENT:恋慕 || TALENT:恋人
+			IF ESTRUS_CYCLE(TARGET) == 150
+				IF CFLAG:TARGET:允许无套 == 2
+					PRINTFORML 不过说起来、已经得到了生孩子的许可要说的话和平时也没什么区别
+					PRINTFORML 虽然说可以不必担心对方、但也有没法听到她娇啼声的无聊
+				ELSE
+					PRINTFORML 这全都是明明是爱着自己、却不允许不戴套中出的果的不好
+					PRINTFORML 我认为妖怪是不可能那么轻易就怀上的、果可能是很认真的缘故吧、对避孕十分的固执
+					PRINTW 
+				ENDIF
+			ELSE
+				IF CFLAG:TARGET:允许无套 >= 1
+					PRINTFORML 因为如果不是危险日的话平时就会让我不戴套直接插入、所以没有反应稍微有点寂寞
+					PRINTFORML 嘛啊、不用专心配合果的动作随自己的喜好去做也算挺轻松惬意的呢
+					PRINTW 
+				ELSE
+					PRINTFORML 明明想要直接中出、但是果和外表不同意外的防御很牢固、很有常识
+					PRINTFORML 因此、像这样子停止时间然后无责任地在肉壶射精也是没办法的吧
+					PRINTW 
+				ENDIF
+			ENDIF
+			PRINTFORML 虽然平时那样灌注了爱情的性交也很棒、但是这样把她当作自慰洞令你感到强烈的兴奋感
+			PRINTFORML 要是知道了自己做了这种事的话、果会发狂般地生气吗。还是说、会难过地哭喊着呢
+			PRINTFORML 或者是──
+			PRINTW 
+		ELSE
+			PRINTFORML 把平时看起来很了不起的天狗当作自慰洞使用的事实、让你的射精感急速的增长着
+			IF TALENT:思慕
+				IF EXP:约会经验 >= 5
+					PRINTFORML 虽然已经有约会过几次了、但还是不允许我碰她的身体
+					PRINTFORML 和看起来很轻浮的外表相反、意外地是很固执的性格
+				ELSEIF EXP:约会经验 == 0
+					PRINTFORML 是完全没有约会过的对象呢
+					PRINTFORML 姑且是、关系算比较亲密了、但对方喜不喜欢我完全不知道
+					PRINTFORML 虽然偶尔会有暗中示意的言行举动、但不知她有多认真啊
+					PRINTW 
+				ENDIF
+			ELSE
+				IF EXP:约会经验 >= 5
+					PRINTFORML 虽然已经有约会过几次了、但还是不允许我碰她的身体
+					PRINTFORML 和看起来很轻浮的外表相反、意外地是很固执的性格
+					PRINTFORML 还以为她和人里卖的小薄本一样、是会更加简单地交出身体的呢
+					PRINTW 
+				ELSEIF EXP:约会经验 == 0
+					PRINTFORML 反正、是不怎么亲密的对象。那边也是、肯定对这边不关心
+					PRINTFORML 这样的话、至少在身体上的交往来保持亲密关系吧
+					PRINTFORML 停止时间把美妙的女子当作自慰洞来使用什么的、简直就像人里卖的小薄本一样啊
+					PRINTW 
+				ENDIF
+			ENDIF
+			PRINTFORML 虽然也不讨厌有爱的性交、但是单方面侵犯强势的女人也很有趣呢
+			PRINTFORML 就请果、今后也成为方便的自慰洞吧
+			PRINTW 
+		ENDIF
+		RETURN 1
+	ELSE
+	
+		IF 充填率(TARGET,3) >= 1000
+				;PRINT  股间から精液が滝のように喷出している
+			IF TALENT:恋慕 || TALENT:恋人
+				PRINTFORML 「好腻害、小穴、要变成笨蛋了啊%UNICODE(0x2665) *1%　啊哈啊%UNICODE(0x2665) *1%」
+				PRINTW 
+			ELSEIF TALENT:思慕
+				PRINTFORML 「呼行、已经、进呼乃、小穴拟、要坏掉」
+				PRINTW 
+			ELSE
+				PRINTFORML 「阿嘎、原谅、我吧、已经、要坏掉」
+				PRINTW 
+			ENDIF
+		ELSEIF 充填率(TARGET,3) >= 200
+				;PRINT  胎内に精液は收まり切らず、とめどなく喷出している
+			IF TALENT:恋慕 || TALENT:恋人
+				PRINTFORML 「精子、洒漏出来了呜、不行、漏出来不行%UNICODE(0x2665) *1%」
+				PRINTW 
+			ELSEIF TALENT:思慕
+				PRINTFORML 「已经、不行了呀、果、要变得奇怪了、不行」
+				PRINTW 
+			ELSE
+				PRINTFORML 「不要再射出来了、肚子、要坏掉了呜」
+				PRINTW 
+			ENDIF
+		ELSEIF 充填率(TARGET,3) >= 100
+				;问
+			IF TALENT:恋慕 || TALENT:恋人
+				PRINTFORML 「啊哈啊%UNICODE(0x2665) *1%　果的肚子、变得像怀上了小宝宝一样了呀」
+				PRINTW 
+			ELSEIF TALENT:思慕
+				PRINTFORML 「好、好难受、已经不行了、不要再继续了…！」
+				PRINTW 
+			ELSE
+				PRINTFORML 「不行、真的已经、放不进来了啊」
+				PRINTW 
+			ENDIF
+		ELSEIF 充填率(TARGET,3) >= 50
+				;PRINT  お腹は精液で少し膨らんでしまている
+			IF TALENT:恋慕 || TALENT:恋人
+				PRINTFORML 「啊哇、肚子被%MASTERNAME:42%射的满满的啦…%UNICODE(0x2665) *1%」
+				PRINTW 
+			ELSEIF TALENT:思慕
+				PRINTFORML 「呜啊啊、肚子被、精液给…」
+				PRINTW 
+			ELSE
+				PRINTFORML 「不要再射出来了啊、肚子、好难受」
+				PRINTW 
+			ENDIF
+		ENDIF
+	
+		SELECTCASE EXP:TARGET:子宫口开发经验
+		CASE IS > 50;开发されきった
+			IF TALENT:恋慕 && TALENT:恋人
+				SELECTCASE RAND:2
+				CASE 0
+					PRINTFORML 「噢%UNICODE(0x2665) *1%　噢%UNICODE(0x2665) *1%」
+					PRINTFORML 「深处、够到了深处呀、咕啾咕啾的、小宝宝的房间%UNICODE(0x2665) *1%」
+					PRINTW 
+				CASE 1
+					PRINTFORML 「嗷腻害%UNICODE(0x2665) *1%　果的、最深处%UNICODE(0x2665) *1%」
+					PRINTFORML 「重要的地方、被%MASTERNAME:42%的顶到了呀%UNICODE(0x2665) *1%」
+					PRINTW 
+				ENDSELECT
+			ELSEIF TALENT:恋慕 || TALENT:恋人
+				SELECTCASE RAND:2
+				CASE 0
+					PRINTFORML 「身体的缝隙%UNICODE(0x2665) *1%　%MASTERNAME:42%的那个、埋进去了啊%UNICODE(0x2665) *1%」
+					PRINTFORML 「更加地、激烈也可以的、%MASTERNAME:42%也、舒服起来吧%UNICODE(0x2665) *1%」
+					PRINTW 
+				CASE 1
+					PRINTFORML 「啊%UNICODE(0x2665) *1%　啊啊啊%UNICODE(0x2665) *1%　啊啊～～～～%UNICODE(0x2665) *1%」
+					PRINTFORML 「名字、不要含着名字的同时、蹭蹭地抽插着呀%UNICODE(0x2665) *1%」
+					PRINTFORML 「要打开了、小宝宝的、入口、全部打开了呜%UNICODE(0x2665) *1%%UNICODE(0x2665) *1%」
+					PRINTW 
+				ENDSELECT
+			ELSEIF TALENT:思慕
+				PRINTFORML 「明明不是、明明还不是恋人%UNICODE(0x2665) *1%」
+				PRINTFORML 「小宝宝%UNICODE(0x2665) *1%　小宝宝的房间、砰砰地%UNICODE(0x2665) *1%　砰砰地敲打着%UNICODE(0x2665) *1%」
+				PRINTW 
+			ELSE
+				PRINTFORML 「讨厌、因为这样的而舒服起来什么的、讨厌啊%UNICODE(0x2665) *1%」
+				PRINTFORML 「不要把小宝宝的房间、给玷污弄脏呀…不要砰砰地、撞击着呀…%UNICODE(0x2665) *1%」
+				PRINTW 
+			ENDIF
+		CASE 25 TO 50;苦闷の色は单薄的
+			IF TALENT:恋慕 && TALENT:恋人
+				PRINTFORML 「哈%UNICODE(0x2665) *1%　呜、呜呜呜～～」
+				PRINTFORML 「到深处、插到深处来了、这样的、完全不知道啊%UNICODE(0x2665) *1%」
+				PRINTW 
+			ELSEIF TALENT:恋慕 || TALENT:恋人
+				SELECTCASE RAND:2
+				CASE 0
+					PRINTFORML 「进到肚脐下面来了、插进来了呀、那里、不可以%UNICODE(0x2665) *1%」
+					PRINTW 
+				CASE 1
+					PRINTFORML 「啊～～、呜啊啊%UNICODE(0x2665) *1%、啊咕呜」
+					PRINTFORML （如果摆出那种难过的表情的话、就变得想要努力了啊%UNICODE(0x2665) *1%）
+					PRINTFORML （虽然很痛苦、但是想用子宫、让%MASTERNAME:42%变得舒服起来啊%UNICODE(0x2665) *1%）
+					PRINTW 
+				ENDSELECT
+			ELSEIF TALENT:思慕
+				PRINTFORML 「～～呜呜、嘎咻呜！？　进、来了、小宝宝的房间、进来了呀%UNICODE(0x2665) *1%」
+				PRINTW 
+			ELSE
+				PRINTFORML 「呜啊啊、啊啊、恩恩恩恩、呼呜呜呜呜」
+				PRINTFORML （明明很讨厌的、明明感觉很恶心的）
+				PRINTFORML （明明很痛苦的、为什么、我会接受他这样做啊…！）
+				PRINTW 
+			ENDIF
+		CASE IS < 25;异物感、こじ开けられる
+			IF TALENT:恋慕 && TALENT:恋人
+				PRINTFORML 「Hi咕呜！　呜啊、哈啊、啊啊啊啊啊%UNICODE(0x2665) *1%」
+				PRINTFORML （小宝宝的房间、被撬开了呀）
+				PRINTFORML （那里、明明是、欧金金不可以放进去的地方）
+				PRINTW 
+			ELSEIF TALENT:恋慕 || TALENT:恋人
+				SELECTCASE RAND:2
+				CASE 0
+					PRINTFORML 「咕呜呜、呜呜、呜啊啊」
+					PRINTFORML （肚子、好痛苦、但是、%MASTERNAME:42%感觉很舒服的样子、必须、要忍耐）
+					PRINTW 
+				CASE 1
+					PRINTFORML 「没、没问、题、没关系的、所以」
+					PRINTFORML （其、其实并不是没问题啊、好、好难受）
+					PRINTW 
+				ENDSELECT
+			ELSEIF TALENT:思慕
+				PRINTFORML 「咕呜呜呜呜、好难受…」
+				PRINTFORML 「肚子、好痛苦啊…呼咕、呜呜」
+				PRINTW 
+			ELSE
+				PRINTFORML 「这个、拔出来…拔出来呀…感觉好难受…」
+				PRINTW 
+			ENDIF
+		ENDSELECT
+	
+		;种付けプレス
+		IF TEQUIP:TARGET:体位 == 1
+			IF NOWEX:MASTER:射精
+				IF !TEQUIP:MASTER:避孕套 && !TCVAR:TARGET:口服避孕药
+					IF TALENT:妊娠
+						IF TALENT:MASTER:浓厚精液
+							SELECTCASE RAND:2
+							CASE 0
+								PRINTFORML 
+							CASE 1
+								PRINTFORML 「怎么这样%UNICODE(0x2665) *1%　这么浓厚的要是射出来的话%UNICODE(0x2665) *1%」
+								PRINTFORML 「肚子里的小宝宝要被精液给灌满了%UNICODE(0x2665) *1%　小宝宝要溺水了啊%UNICODE(0x2665) *1%」
+								PRINTW 
+							ENDSELECT
+						ELSE
+							PRINTFORML 「明明已经有小宝宝了%UNICODE(0x2665) *1%　明明不能怀孕了%UNICODE(0x2665) *1%」
+							PRINTFORML 「精液要在最深处射出来了呀%UNICODE(0x2665) *1%」
+							PRINTW 
+						ENDIF
+					ELSE
+						;危险日
+						IF CFLAG:生理周期 == 7
+							IF CFLAG:儿童人数 > 0
+								IF TALENT:怀孕愿望
+									PRINTFORML 「唔嗯、来做吧%UNICODE(0x2665) *1%　第{CFLAG:儿童人数 + 1}个孩子、来制造吧%UNICODE(0x2665) *1%%UNICODE(0x2665) *1%」
+								ELSE
+									CALL HPH_PRINT,@"「要生了HPH　要再生%MASTERNAME:42%的孩子了HPH」","L"
+								ENDIF
+							ELSE
+								PRINTFORML （果、要变成妈妈了、要变成妈妈了啊%UNICODE(0x2665) *1%）
+								SELECTCASE RAND:5
+								CASE 0
+									PRINTFORML 「果、要变成妈妈了%UNICODE(0x2665) *1%　要变成妈妈了%UNICODE(0x2665) *1%　尽情地射出来%UNICODE(0x2665) *1%%UNICODE(0x2665) *1%」
+									PRINTW 
+								CASE 1
+									PRINTFORML 「果、想要变成和%MASTERNAME:42%的小宝宝%UNICODE(0x2665) *1%　的妈妈呀%UNICODE(0x2665) *1%　所以啦%UNICODE(0x2665) *1%」
+									PRINTFORML 「在子宫里尽情地射出来%UNICODE(0x2665) *1%　让果受精吧%UNICODE(0x2665) *1%」
+									PRINTW 
+								CASE 2
+									PRINTFORML 「射出来也可以啦、不要拔出来、就这样射出来吧%UNICODE(0x2665) *1%」
+									PRINTW 
+								CASE 3
+									PRINTFORML 「小宝宝、和%MASTERNAME:42%的小宝宝、想要呀%UNICODE(0x2665) *1%」
+									PRINTFORML 「请射进来、制造小宝宝的汁液、射进来呀%UNICODE(0x2665) *1%」
+									PRINTW 
+								CASE 4
+									PRINTFORML 「变得不能留在妖怪之山也可以%UNICODE(0x2665) *1%　想要和%MASTERNAME:42%的小宝宝%UNICODE(0x2665) *1%」
+									PRINTFORML 「拜托了%UNICODE(0x2665) *1%　让果、让果ー变成妈妈吧%UNICODE(0x2665) *1%」
+									PRINTW 
+								ENDSELECT
+								PRINTW 
+							ENDIF
+						;安全日
+						ELSEIF CFLAG:生理周期 == 1 || CFLAG:生理周期 == 2
+							PRINTFORML （小宝宝的房间%UNICODE(0x2665) *1%　明明是安全日%UNICODE(0x2665) *1%　我却想要变成妈妈了%UNICODE(0x2665) *1%）
+							SELECTCASE RAND:3
+							CASE 0
+								PRINTFORML 「射出来%UNICODE(0x2665) *1%　射出来%UNICODE(0x2665) *1%」
+								PRINTFORML 「果的肉壶、%MASTERNAME:42%快填充的满满的吧%UNICODE(0x2665) *1%」
+								PRINTW 
+							CASE 1
+								PRINTFORML 「%MASTERNAME:42%的前段%UNICODE(0x2665) *1%　顶到了果小宝宝的房间了呀%UNICODE(0x2665) *1%」
+								PRINTFORML 「喜欢%UNICODE(0x2665) *1%　深处、戳到了深处的、喜欢%UNICODE(0x2665) *1%」
+							CASE 2
+								PRINTFORML 「唔嗯、因为今天是没问题的日子啦%UNICODE(0x2665) *1%　大量的、大量的射出来也可以啦%UNICODE(0x2665) *1%」
+								PRINTFORML 「比起平时在更深处射出来%UNICODE(0x2665) *1%　把浓厚的射出来呀%UNICODE(0x2665) *1%」
+								PRINTW 
+							ENDSELECT
+						ELSE
+							PRINTFORML （如果那样子被渴求的话%UNICODE(0x2665) *1%　卵、要出来了呀%UNICODE(0x2665) *1%）
+							SELECTCASE RAND:3
+							CASE 0
+								PRINTFORML 「不行的啊%UNICODE(0x2665) *1%　外面%UNICODE(0x2665) *1%　不在外面射出去的话%UNICODE(0x2665) *1%」
+								PRINTFORML 「说不定、就要怀上了呀%UNICODE(0x2665) *1%」
+								PRINTW 
+							CASE 1
+								PRINTFORML 「%MASTERNAME:42%、要变成%UNICODE(0x2665) *1%　爸爸了啊%UNICODE(0x2665) *1%」
+								PRINTFORML 「可以ー吗？　要射出来吗？　要在果的肉壶射出来吗？」
+								PRINTW 
+							CASE 2
+								PRINTFORML 「啊啊、要因为%MASTERNAME:42%的%UNICODE(0x2665) *1%　精液而受精了呜%UNICODE(0x2665) *1%」
+								PRINTFORML 「这样子、要怀孕了呀%UNICODE(0x2665) *1%」
+								PRINTW 
+							ENDSELECT
+						ENDIF
+					ENDIF
+				ELSEIF TCVAR:TARGET:口服避孕药
+					;危险日
+					IF CFLAG:生理周期 == 7
+						IF CFLAG:TARGET:允许无套 == 2
+							IF TALENT:怀孕愿望
+								PRINTFORML （明明今天、是容易怀上的日子、为什么呀）
+								PRINTFORML （%MASTERNAME:42%、和我的小宝宝、不想要吗…）
+							ELSE
+								PRINTFORML （明明不用避孕的）
+							ENDIF
+							CALL HPH_PRINT,@"「没关系哦、射出来、射在肉壶里HPH　注入更多HPH」","L"
+							PRINTW 
+						ELSEIF CFLAG:TARGET:允许无套 <= 1
+							PRINTFORML 「唔嗯%UNICODE(0x2665) *1%　因为有好好地、喝下避孕药了啦」
+							PRINTFORML 「可以哟、直接在里面中出吧%UNICODE(0x2665) *1%
+							PRINTFORML （因为喝了药、所以就算是在危险日内射也没问题吧、大概）
+							PRINTW 
+						ELSE
+							IF TALENT:恋慕 || TALENT:恋人
+								PRINTFORML （果然、%MASTERNAME:42%是喜欢不戴套中出啊）
+								PRINTFORML （这种事情、希望能够好好的在只制造小宝宝的时候做啊…%MASTERNAME:42%、是热情消退了吗）
+								PRINTFORML 「唔嗯%UNICODE(0x2665) *1%　可以哟%UNICODE(0x2665) *1%　在里面、在肉壶射出来也ー可以哟%UNICODE(0x2665) *1%」
+								PRINTW 
+							ELSEIF TALENT:思慕
+								PRINTFORML 「啊%UNICODE(0x2665) *1%　姑、姑且、有喝下了避孕药、啊啊%UNICODE(0x2665) *1%」
+								PRINTFORML 「射出来的时候就不要再外面、啊、讨厌、那么得%UNICODE(0x2665) *1%　不行%UNICODE(0x2665) *1%」
+								PRINTW 
+							ELSE
+								PRINTFORML 「呜啊！　啊啊啊！　哈！　嗯啊啊啊！」
+								PRINTFORML （避孕药、有起作用吧？　就算直接中出、也没问题吧？）
+								PRINTW 
+							ENDIF
+						ENDIF
+					ELSEIF CFLAG:生理周期 == 1 || CFLAG:生理周期 == 2
+						IF CFLAG:TARGET:允许无套 == 2
+							PRINTFORML （今天、明明是没问题的日子的、这是在关心我吗…%UNICODE(0x2665) *1%）
+							PRINTFORML 「可以哟、在果的、在果的肉壶射出来吧%UNICODE(0x2665) *1%　大量地射出来吧%UNICODE(0x2665) *1%」
+							PRINTW 
+						ELSEIF CFLAG:TARGET:允许无套 == 1
+							PRINTFORML 「唔嗯%UNICODE(0x2665) *1%　因为有好好地、喝下避孕药了所以没事啦」
+							PRINTFORML 「可以哟、直接在里面中出吧%UNICODE(0x2665) *1%
+							PRINTFORML （也喝了避孕药、而且是安全日、在里面内射也没问题呢、大概）
+							PRINTW 
+						ELSE
+							IF TALENT:恋慕 || TALENT:恋人
+								PRINTFORML （果然、%MASTERNAME:42%是喜欢不戴套中出啊）
+								PRINTFORML （这种事情、希望能够好好的在只制造小宝宝的时候做啊…%MASTERNAME:42%、是热情消退了吗）
+								PRINTFORML 「唔嗯%UNICODE(0x2665) *1%　可以哟%UNICODE(0x2665) *1%　在里面、在肉壶射出来也ー可以哟%UNICODE(0x2665) *1%」
+								PRINTW 
+							ELSEIF TALENT:思慕
+								PRINTFORML 「啊%UNICODE(0x2665) *1%　姑、姑且、有喝下了避孕药、啊啊%UNICODE(0x2665) *1%」
+								PRINTFORML 「射出来的时候就不要再外面、啊、讨厌、那么得%UNICODE(0x2665) *1%　不行%UNICODE(0x2665) *1%」
+								PRINTW 
+							ELSE
+								PRINTFORML 「嗯啊啊啊啊！　你啊、射出来的时候、要好好的射在外面呀…！」
+								PRINTFORML 「嗯！　这是、理所当然的吧、啊啊！万一、要是怀上的话、该ー怎么办呀、呜啊啊！」
+								PRINTFORML （避孕药、有起作用吧？　因为是安全日、就算直接中出、也没问题的吧？）
+								PRINTW 
+							ENDIF
+						ENDIF
+					ELSE
+						IF CFLAG:TARGET:允许无套 == 2
+							PRINTFORML （今天、我想大概是没问题的日子、是在、关心着我吗）
+							PRINTFORML 「没问题、嗯%UNICODE(0x2665) *1%　有好好的、喝下避孕药了啦%UNICODE(0x2665) *1%」
+							PRINTFORML 「虽然想着大概是怀不上的、唔嗯、可以哟、射出来、在肉壶射出来吧%UNICODE(0x2665) *1%」
+							PRINTW 
+						ELSEIF CFLAG:TARGET:允许无套 == 1
+							PRINTFORML （虽然不是危险日、但是说不定也会怀上呢）
+							PRINTFORML （%MASTERNAME:42%是能好好听我说话的人真是太好了）
+							PRINTFORML 「可以哟、是想要…在里面射出来对吧%UNICODE(0x2665) *1%　没问题ー的、所以%UNICODE(0x2665) *1%」
+							PRINTW 
+						ELSE
+							IF TALENT:恋慕 || TALENT:恋人
+								PRINTFORML （果然、%MASTERNAME:42%是喜欢不戴套中出啊）
+								PRINTFORML （这种事情、希望能够好好的在只制造小宝宝的时候做啊…%MASTERNAME:42%、是热情消退了吗）
+								PRINTFORML 「唔嗯%UNICODE(0x2665) *1%　可以哟%UNICODE(0x2665) *1%　在里面、在肉壶射出来也ー可以哟%UNICODE(0x2665) *1%」
+								PRINTW 
+							ELSEIF TALENT:思慕
+								PRINTFORML 「啊%UNICODE(0x2665) *1%　姑、姑且、有喝下了避孕药、啊啊%UNICODE(0x2665) *1%」
+								PRINTFORML 「射出来的时候就不要再外面、啊、讨厌、那么得%UNICODE(0x2665) *1%　不行%UNICODE(0x2665) *1%」
+								PRINTW 
+							ELSE
+								PRINTFORML 「呜啊！　啊啊啊！　哈！　嗯啊啊啊！」
+								PRINTFORML （避孕药、有起作用吧？　就算直接中出、也没问题吧？）
+								PRINTW 
+							ENDIF
+						ENDIF
+					ENDIF
+				ELSEIF TEQUIP:MASTER:避孕套
+					;危险日
+					IF CFLAG:生理周期 == 7
+						IF CFLAG:TARGET:允许无套 == 2
+							IF TALENT:怀孕愿望
+								PRINTFORML （想要不戴套直接做、%MASTERNAME:42%的精子、想要不戴套直接做呀%UNICODE(0x2665) *1%）
+								CALL HPH_PRINT,@"「%MASTERNAME:42%、套子、把套子摘掉啦HPH　想要孩子、想要孩子啦HPH」","L"
+								PRINTW 
+							ELSE
+								CALL HPH_PRINT,@"「%MASTERNAME:42%、可以无套的哦、怀了孕也没关系的HPH」","L"
+								PRINTW 
+							ENDIF
+						ELSEIF CFLAG:TARGET:允许无套 == 1
+							PRINTFORML 「那、那么得、拼命…%UNICODE(0x2665) *1%　不要推着呀%UNICODE(0x2665) *1%」
+							PRINTFORML 「套套、套套要被弄破了啦%UNICODE(0x2665) *1%　要怀上了啦%UNICODE(0x2665) *1%」
+							PRINTW 
+						ELSE
+							IF TALENT:恋慕 || TALENT:恋人 || TALENT:思慕
+								PRINTFORML （套套、感觉要被弄破了、%MASTERNAME:42%的、好激烈）
+								PRINTFORML 「啊%UNICODE(0x2665) *1%　啊啊啊%UNICODE(0x2665) *1%　不行%UNICODE(0x2665) *1%　这样子、太激烈%UNICODE(0x2665) *1%」
+								PRINTFORML 「套、套套要是被弄破的话、会怀上的啦%UNICODE(0x2665) *1%」
+								PRINTW 
+							ELSE
+								PRINTFORML 「库、恩！　啊啊呜！　不要那么、激烈的做啊…」
+								PRINTFORML 「套套、要被弄破了啦、要怀上了啦、啊啊啊！」
+								PRINTW 
+							ENDIF
+						ENDIF
+					;安全日
+					ELSEIF CFLAG:生理周期 == 1 || CFLAG:生理周期 == 2
+						IF TALENT:恋慕 || TALENT:恋人
+							PRINTFORML 「%MASTERNAME:42%、套套、不戴上ー也可以的」
+							PRINTFORML 「啊%UNICODE(0x2665) *1%　今天就%UNICODE(0x2665) *1%　不戴套%UNICODE(0x2665) *1%　直接在里面射出来吧%UNICODE(0x2665) *1%　我会全部接下的啦%UNICODE(0x2665) *1%」
+							PRINTW 
+						ELSEIF TALENT:思慕
+							PRINTFORML 「等、等下、会、会好好的、接受%UNICODE(0x2665) *1%　的%UNICODE(0x2665) *1%啊%UNICODE(0x2665) *1%」
+							PRINTFORML 「不可以推到、小宝宝的房间里去呀%UNICODE(0x2665) *1%」
+							PRINTW 
+						ELSE
+							PRINTFORML 「噢、啊！　啊啊！　不、不要那么用力地、推进来呀…」
+							PRINTFORML （套套、套套要被弄破了、就算是安全日、插到那么深处、说不定会怀上的啊）
+							PRINTW 
+						ENDIF
+					;安全日以外
+					ELSE
+						IF TALENT:恋慕 || TALENT:恋人
+							IF TALENT:怀孕愿望
+								CALL HPH_PRINT,@"「啊HPH　呀HPH　肉壶HPH　在肉壶里HPH」","L"
+								PRINTFORML （想要无套内射，想要无套内射啦）
+								PRINTFORML （明明想要无套中出）
+								PRINTW 
+							ELSE
+								CALL HPH_PRINT,@"「不HPH　行HPH　啊HPH　嘶HPH」","L"
+								PRINTFORML （在里面、在里面回响）
+								PRINTFORML （虽然很舒服、但想要无套地感受%MASTERNAME:42%）
+								PRINTW 
+							ENDIF
+						ELSEIF TALENT:爱欲 || TALENT:炮友
+							CALL HPH_PRINT,@"「哦哦HPH　好深HPH　到里面了HPH」","L"
+							PRINTFORML （每次被顶到子宫、就什么都无法思考了）
+							PRINTW 
+						ELSEIF TALENT:思慕
+							PRINTFORML 「嗯%UNICODE(0x2665) *1%　会拔出去的吧？　会、会在外面射出来的吧？」
+							CALL HPH_PRINT,@"「不行不行不行不行HPH　以、以那样的姿势射出来的话HPH」","L"
+							PRINTW 
+						ELSE
+							PRINTFORML 「嗯、嗯嗯\/\/\/　啊、啊、啊啊啊%UNICODE(0x2665) *1%」
+							PRINTFORML （套、套套…有戴着吧？　没有拿下来吧？）
+							PRINTW 
+						ENDIF
+					ENDIF
+				ENDIF
+			;MASTERが射精していない
+			ELSE
+				IF TALENT:恋慕 && TALENT:恋人
+					SELECTCASE RAND:2
+					CASE 0
+						PRINTFORML 「噢噢噢～～、噢噢%UNICODE(0x2665) *1%　噢呜！？　噢%UNICODE(0x2665) *1%　噢噢%UNICODE(0x2665) *1%」
+						PRINTFORML （身体在、子宫在擅自的接受欧金金的插入了呜%UNICODE(0x2665) *1%）
+						PRINTFORML （小宝宝的房间、在欢喜着%UNICODE(0x2665) *1%%UNICODE(0x2665) *1%）
+						PRINTW 
+					CASE 1
+						PRINTFORML 「好厉%UNICODE(0x2665) *1%　果的深处、顶到了呀%UNICODE(0x2665) *1%」
+						PRINTFORML 「小宝宝的房间、在被%MASTERNAME:42%敲打着呀%UNICODE(0x2665) *1%」
+						PRINTW 
+					ENDSELECT
+				ELSEIF TALENT:恋慕 || TALENT:恋人
+					SELECTCASE RAND:3
+					CASE 0
+						PRINTFORML 「呀啊%UNICODE(0x2665) *1%　那里、好深%UNICODE(0x2665) *1%」
+						PRINTFORML 「在砰砰地、顶到那里了呀%UNICODE(0x2665) *1%」
+						PRINTW 
+					CASE 1
+						PRINTFORML 「啊嗯%UNICODE(0x2665) *1%　啊%UNICODE(0x2665) *1%　啊啊！」
+						PRINTFORML 「%MASTERNAME:42%的、顶到了深处呀%UNICODE(0x2665) *1%」
+						PRINTW 
+					CASE 2
+						PRINTFORML 「呀啊嗯、啊嗯、啊嗯%UNICODE(0x2665) *1%」
+						PRINTFORML 「手腕、被抓着逃不掉呀%UNICODE(0x2665) *1%　太舒服ー了啦、完全逃不掉啊%UNICODE(0x2665) *1%」
+						PRINTW 
+					ENDSELECT
+				ELSEIF TALENT:思慕
+					SELECTCASE RAND:2
+					CASE 0
+						PRINTFORML 「啊啊、什、子宫里」
+						PRINTFORML 「那里、插进去不行的啊、啊啊嗯！」
+						PRINTW 
+					CASE 1
+						PRINTFORML 「啊咕！　深处、被顶到了啊！」
+						PRINTFORML 「不行、那么、用力撞着的话」
+						PRINTW 
+					ENDSELECT
+				ELSE
+				ENDIF
+			ENDIF
+		;种付け交尾
+		ELSEIF TEQUIP:TARGET:体位 == 2
+			IF NOWEX:MASTER:射精
+				PRINTFORML 「啊啊～～～～%UNICODE(0x2665) *1%　啊啊～～～～～%UNICODE(0x2665) *1%」
+				IF !TEQUIP:MASTER:避孕套 && !TCVAR:TARGET:口服避孕药
+					IF CFLAG:生理周期 == 7
+						PRINTFORML （果、要变成妈妈了、要变成妈妈了呀%UNICODE(0x2665) *1%）
+					ELSEIF CFLAG:生理周期 == 1 || CFLAG:生理周期 == 2
+						PRINTFORML （小宝宝的房间%UNICODE(0x2665) *1%　明明是安全日%UNICODE(0x2665) *1%　我却想要变成妈妈了%UNICODE(0x2665) *1%）
+					ELSE
+						PRINTFORML （如果那样子被渴求的话%UNICODE(0x2665) *1%　卵、要出来了呀%UNICODE(0x2665) *1%）
+					ENDIF
+					PRINTW 
+				ELSEIF TCVAR:TARGET:口服避孕药
+					IF CFLAG:生理周期 == 7
+						IF TALENT:恋慕 && TALENT:恋人
+							PRINTFORML 「从后面来做%UNICODE(0x2665) *1%　好舒服%UNICODE(0x2665) *1%　好舒服呀%UNICODE(0x2665) *1%」
+							PRINTFORML 「最深处%UNICODE(0x2665) *1%　在最深处%UNICODE(0x2665) *1%」
+							PRINTFORML 「可以哟、biu得射出来、在里面射出来%UNICODE(0x2665) *1%　最喜欢、最喜欢%UNICODE(0x2665) *1%」
+							PRINTW 
+						ELSEIF TALENT:恋慕 || TALENT:恋人
+							SELECTCASE RAND:3
+							CASE 0
+								PRINTFORML 「可、可以哟、在肉壶射出来、已经、喝下了避孕药啦」
+								PRINTFORML 「在喜欢的时候射出来%UNICODE(0x2665) *1%　射出来呀%UNICODE(0x2665) *1%　%UNICODE(0x2665) *1%」
+								PRINTW 
+							CASE 1
+								PRINTFORML （这种体位、就算喝了避孕药ー也说不定会真的怀孕｛怀上｝呢%UNICODE(0x2665) *1%）
+								PRINTFORML 「啊啊%UNICODE(0x2665) *1%　外面、在外面射出去啊」
+								PRINTFORML （肉壶里还想要%UNICODE(0x2665) *1%　射出来%UNICODE(0x2665) *1%　射出来%UNICODE(0x2665) *1%）
+								PRINTFORML 「外面…%UNICODE(0x2665) *1%　外%UNICODE(0x2665) *1%　啊啊啊%UNICODE(0x2665) *1%」
+								PRINTW 
+							CASE 2
+								PRINTFORML 「射出来%UNICODE(0x2665) *1%　直接地在子宫里%UNICODE(0x2665) *1%」
+								PRINTFORML 「用%MASTERNAME:42%的子种、把果播种吧%UNICODE(0x2665) *1%」
+								PRINTW 
+							ENDSELECT
+						ELSEIF TALENT:思慕
+							PRINTFORML 「嗯%UNICODE(0x2665) *1%　会拔出去吧？　会、会在外面射出来的吧？」
+							PRINTFORML 「不行不行不行不行%UNICODE(0x2665) *1%　在、在这种姿势下射出来的话%UNICODE(0x2665) *1%」
+							PRINTFORML 「危险日、因为是危险日啦、大概会怀上、会怀上的啦」
+							PRINTW 
+						ELSE
+							PRINTFORML 「讨厌讨厌讨厌、求你了、外面、在外面射出来」
+							PRINTFORML 「这种体位、就算喝了避孕药也会怀上的、因为是危险日啊」
+							PRINTW 
+						ENDIF
+					ELSEIF CFLAG:生理周期 == 1 || CFLAG:生理周期 == 2
+						IF TALENT:恋慕 && TALENT:恋人
+							PRINTFORML 「啊%UNICODE(0x2665) *1%　啊%UNICODE(0x2665) *1%　啊啊0%UNICODE(0x2665) *1%」
+							PRINTFORML 「不要忍耐%UNICODE(0x2665) *1%　今天呀%UNICODE(0x2665) *1%　随你喜欢地射出来也可以的啦%UNICODE(0x2665) *1%」
+							PRINTFORML 「%MASTERNAME:42%、想射的时候就射吧%UNICODE(0x2665) *1%　啊呜嗯%UNICODE(0x2665) *1%」
+							PRINTW 
+						ELSEIF TALENT:恋慕 || TALENT:恋人
+							SELECTCASE RAND:2
+							CASE 0
+								PRINTFORML 「嗯%UNICODE(0x2665) *1%　唔嗯、因为是ー没问题的日子、啦%UNICODE(0x2665) *1%　来吧%UNICODE(0x2665) *1%」
+								PRINTFORML 「我会接受下来的啦、在果的身体里射出来呀吧%UNICODE(0x2665) *1%　快点、射出来呀%UNICODE(0x2665) *1%」
+								PRINTW 
+							CASE 1
+								PRINTFORML 「唔嗯%UNICODE(0x2665) *1%　今天是、安全日%UNICODE(0x2665) *1%　没问题ー的啦%UNICODE(0x2665) *1%」
+								PRINTFORML 「不用避孕ー也可以啦、在果的肉壶射出来%UNICODE(0x2665) *1%　射出来呀%UNICODE(0x2665) *1%」
+								PRINTW 
+							ENDSELECT
+						ELSEIF TALENT:思慕
+							PRINTFORML 「啊啊、讨厌、这种姿态、好羞耻呀」
+							PRINTFORML 「啊咕%UNICODE(0x2665) *1%　啊咕呜%UNICODE(0x2665) *1%　太用力、太用力了%UNICODE(0x2665) *1%」
+							PRINTW 
+						ELSE
+							PRINTFORML 「什、打算在肉壶射出来吗…、啊呜！　啊呜呜！」
+							PRINTFORML （今天、是安全日、而且也喝了避孕药、应该ー没问题吧？）
+							PRINTFORML （而且、我是妖怪、大概、没问题…！）
+							PRINTFORML 「赶紧的、来做吧、呜啊啊！」
+							PRINTW 
+						ENDIF
+					ELSE
+						IF TALENT:恋慕 && TALENT:恋人
+							PRINTFORML 「最深处%UNICODE(0x2665) *1%　在最深处射出来%UNICODE(0x2665) *1%%UNICODE(0x2665) *1%」
+							PRINTFORML 「用喝了避孕药也可能会怀上程度%UNICODE(0x2665) *1%　把浓厚的射在最深处呀%UNICODE(0x2665) *1%」
+							PRINTW 
+						ELSEIF TALENT:恋慕 || TALENT:恋人
+							SELECTCASE RAND:2
+							CASE 0
+								PRINTFORML 「其、其实不戴套套是不可以的呢%UNICODE(0x2665) *1%」
+								PRINTFORML 「因为是%MASTERNAME:42%、所以特别地让你这么做呢%UNICODE(0x2665) *1%」
+								PRINTW 
+							CASE 1
+								PRINTFORML 「嗯%UNICODE(0x2665) *1%　嗯%UNICODE(0x2665) *1%　即、即使喝了避孕药、在肉壶射出来也是会怀上的呢%UNICODE(0x2665) *1%」
+								PRINTFORML 「其实是不可以的、嗯%UNICODE(0x2665) *1%　但是%MASTERNAME:42%、特别地就允许了%UNICODE(0x2665) *1%」
+								PRINTFORML 「笨、笨蛋、我只会和%MASTERNAME:42%、做这种、事情的啦%UNICODE(0x2665) *1%」
+								PRINTW 
+							ENDSELECT
+						ELSEIF TALENT:思慕
+							PRINTFORML 「嗯%UNICODE(0x2665) *1%　会拔出去吧？　会、会在外面射出来的吧？」
+							PRINTFORML 「不行不行不行不行%UNICODE(0x2665) *1%　在、在这种姿势下射出来的话%UNICODE(0x2665) *1%」
+							PRINTFORML 「会怀上的、说不定会怀上的、不行、不行的呀%UNICODE(0x2665) *1%　嗯啊啊%UNICODE(0x2665) *1%」
+							PRINTW 
+						ELSE
+							PRINTFORML 「嗯、嗯、呜嗯嗯、啊、这和安全日什么的没关系啊！」
+							PRINTFORML 「射、射出来的时候、要拔出来呀、不要、有什么、在里面膨胀起来了、外面、在外面…！」
+							PRINTW 
+						ENDIF
+					ENDIF
+				ELSEIF TEQUIP:MASTER:避孕套
+					IF CFLAG:生理周期 == 7
+						IF CFLAG:TARGET:允许无套 == 2
+							PRINTFORML 「明明是排卵日前、明明是很想要的%UNICODE(0x2665) *1%」
+							PRINTFORML 「把套套、摘下去吧%UNICODE(0x2665) *1%　呐、呐%UNICODE(0x2665) *1%」
+							PRINTFORML 「不是在套套内、而是在肉壶、在肉壶射出来呀%UNICODE(0x2665) *1%」
+							PRINTW 
+						ELSEIF CFLAG:TARGET:允许无套 == 1
+							PRINTFORML 「啊啊%UNICODE(0x2665) *1%　好厉%UNICODE(0x2665) *1%　好厉害%UNICODE(0x2665) *1%」
+							PRINTFORML 「在这种姿势下、要去了%UNICODE(0x2665) *1%　要去了啊%UNICODE(0x2665) *1%」
+							PRINTFORML 「因为有套套所以在肉壶、在肉壶射出来呀%UNICODE(0x2665) *1%」
+							PRINTW 
+						ELSE
+							IF TALENT:恋慕 && TALENT:恋人
+								PRINTFORML 「Hi～～～～～～～～～～～%UNICODE(0x2665) *1%」
+								PRINTFORML （不妙啊这个%UNICODE(0x2665) *1%　如果不带套的话、绝对要怀孕的啊%UNICODE(0x2665) *1%）
+								PRINTFORML 「噢噢、噢呜%UNICODE(0x2665) *1%　来吧、来吧、来吧～～%UNICODE(0x2665) *1%」
+								PRINTW 
+							ELSEIF TALENT:恋慕 || TALENT:恋人
+								SELECTCASE RAND:2
+								CASE 0
+									PRINTFORML 「这样的%UNICODE(0x2665) *1%　知道了、就没法ー恢复到普通的那样了啊%UNICODE(0x2665) *1%」
+									PRINTFORML 「果的那里、要坏掉了呜%UNICODE(0x2665) *1%　要坏掉了呀%UNICODE(0x2665) *1%」
+								CASE 1
+									PRINTFORML 「啊%UNICODE(0x2665) *1%　啊%UNICODE(0x2665) *1%　不行、不行不行不行不行不行呀%UNICODE(0x2665) *1%」
+									PRINTFORML 「那里要变成笨蛋了、要变成笨蛋了啊、不行、不行%UNICODE(0x2665) *1%」
+								ENDSELECT
+							ELSEIF TALENT:思慕
+								PRINTFORML 「这、这个、不行%UNICODE(0x2665) *1%　脑袋、要飞走了、要飞走了呜%UNICODE(0x2665) *1%」
+								PRINTFORML （套套、带上去了吧？　还是摘下来了？　脑袋、已经没法运转了）
+								PRINTW 
+							ELSE
+								PRINTFORML 「噢呜！？　啊咕、啊啊、啊、啊、～～～～～～～～～%UNICODE(0x2665) *1%」
+								PRINTFORML （套套、带上去了吧？　没有被戳破吧？）
+								PRINTFORML 这个、不妙、脑袋、要飞走了要变笨蛋了%UNICODE(0x2665) *1%）
+								PRINTW 
+							ENDIF
+						ENDIF
+					ELSEIF CFLAG:生理周期 == 1 || CFLAG:生理周期 == 2
+						IF CFLAG:TARGET:允许无套 == 2
+							PRINTFORML 「明明今天是希望你直接地来做的、精子、不戴套更好呀」
+							PRINTFORML 「啊呜%UNICODE(0x2665) *1%　子宫被、套套、膨胀起来了啊%UNICODE(0x2665) *1%」
+							PRINTW 
+						ELSEIF CFLAG:TARGET:允许无套 == 1
+							PRINTFORML 「今天、是没问题的日子哟。可以吗？　直接在肉壶射出来也可以哦？」
+							PRINTFORML 「嗯%UNICODE(0x2665) *1%　肉壶被、%MASTERNAME:42%的、一颤一颤地%UNICODE(0x2665) *1%」
+							PRINTFORML 「进来了、好开心…%UNICODE(0x2665) *1%　全部、都射出来吧…%UNICODE(0x2665) *1%」
+							PRINTW 
+						ELSE
+							IF TALENT:恋慕 && TALENT:恋人
+								PRINTFORML 「可以哟、在里面射出来%UNICODE(0x2665) *1%　在果的里面射出来%UNICODE(0x2665) *1%」
+								PRINTW 
+							ELSEIF TALENT:恋慕 || TALENT:恋人
+								PRINTFORML 「射出来、射出来%UNICODE(0x2665) *1%　在里面射出来也可以的啦%UNICODE(0x2665) *1%」
+								PRINTFORML 「在果的肉壶、最深的地方、biーubiーu得射出来%UNICODE(0x2665) *1%」
+								PRINTW 
+							ELSEIF TALENT:思慕
+								PRINTFORML 「嗯%UNICODE(0x2665) *1%　要去了吗？　要射出来了？　要射出来了？」
+								PRINTFORML 「就这样子、去吧、在里面、去了也可以哟」
+								PRINTFORML 「啊啊、好厉害、射出来了、即使隔着套套也、能明白…！」
+								PRINTW 
+							ELSE
+								PRINTFORML （不管用多少套套也行因为是安全日什么的、这样的、这样的）
+							ENDIF
+						ENDIF
+					ELSE
+						IF CFLAG:TARGET:允许无套 == 2
+							PRINTFORML 「在里面射出来、在里面射出来呀%UNICODE(0x2665) *1%」
+							PRINTFORML 「不需要套套、不需要啊%UNICODE(0x2665) *1%　想要%MASTERNAME:42%直接射出来的精子啊%UNICODE(0x2665) *1%」
+							PRINTFORML 「和子宫ー在啾ー得亲吻、在砰砰得亲吻着呀%UNICODE(0x2665) *1%」
+							PRINTW 
+						ELSEIF CFLAG:TARGET:允许无套 == 1
+							PRINTFORML 「明明说了直接做更好的%UNICODE(0x2665) *1%　%MASTERNAME:42%、真是认真呀%UNICODE(0x2665) *1%」
+							PRINTFORML 「更加、更加用力的扭着腰呀%UNICODE(0x2665) *1%　套套、被弄破了也可以的啦%UNICODE(0x2665) *1%」
+							PRINTW 
+						ELSE
+							IF TALENT:恋慕 && TALENT:恋人
+								PRINTFORML 「子宫、要变成%MASTERNAME:42%的形状了呜%UNICODE(0x2665) *1%」
+								PRINTFORML 「射出来%UNICODE(0x2665) *1%　像野兽一样激烈地扭着腰呀%UNICODE(0x2665) *1%」
+								PRINTW 
+							ELSEIF TALENT:恋慕 || TALENT:恋人
+								SELECTCASE RAND:2
+								CASE 0
+									PRINTFORML 「啊呜！？　啊呜！　啊呜、啊呜、啊呜、啊呜、啊呜%UNICODE(0x2665) *1%」
+								CASE 1
+									PRINTFORML 啪啪啪啪啪啪啪啪！
+								ENDSELECT
+								PRINTFORML 「好激烈、套套、要被弄破了呀%UNICODE(0x2665) *1%」
+							ELSEIF TALENT:思慕
+								PRINTFORML 「嗯%UNICODE(0x2665) *1%　会拔出去吧？　会、会在外面射出来的吧？」
+								PRINTFORML 「不行不行不行不行%UNICODE(0x2665) *1%　在、在这种姿势下射出来的话%UNICODE(0x2665) *1%」
+								PRINTFORML 「
+							ELSE
+								PRINTFORML 「嗯、嗯嗯\/\/\/　啊、啊、啊啊啊%UNICODE(0x2665) *1%」
+								PRINTFORML （套、套套…有戴着吧？　没有拿下来吧？）
+								PRINTFORML 
+							ENDIF
+						ENDIF
+					ENDIF
+				ENDIF
+			;后背位でMASTERがイってない
+			ELSE
+				IF TALENT:恋慕 && TALENT:恋人
+					SELECTCASE RAND:4
+					CASE 0
+						PRINTFORML 「噢噢噢～～、噢噢%UNICODE(0x2665) *1%　噢呜！？　噢%UNICODE(0x2665) *1%　噢噢%UNICODE(0x2665) *1%」
+						PRINTFORML （子宫、要对着欧金金投降了啊%UNICODE(0x2665) *1%　抱歉果已经输了%UNICODE(0x2665) *1%）
+						PRINTFORML （马上就输掉简单的就接受肉棒了呀%UNICODE(0x2665) *1%）
+						PRINTW 
+					CASE 1
+						PRINTFORML 「好厉%UNICODE(0x2665) *1%　果的深处、顶到了呀%UNICODE(0x2665) *1%」
+						PRINTFORML 「小宝宝的房间、在被%MASTERNAME:42%敲打着呀%UNICODE(0x2665) *1%」
+						PRINTW 
+					CASE 2
+						PRINTFORML 「啊、啊啊啊、啊啊啊～～～～%UNICODE(0x2665) *1%　啊啊啊～～～～～～～～～～%UNICODE(0x2665) *1%%UNICODE(0x2665) *1%」
+						PRINTFORML 「被这酿、温柔地、敲打责了话%UNICODE(0x2665) *1%」
+						PRINTFORML 「子宫、要被打开了%UNICODE(0x2665) *1%　全乎、都会接艘的啦%UNICODE(0x2665) *1%%UNICODE(0x2665) *1%」
+						PRINTW 
+					CASE 3
+						PRINTFORML 「喵啊啊啊%UNICODE(0x2665) *1%　喵%UNICODE(0x2665) *1%　喵啊啊～～～～%UNICODE(0x2665) *1%」
+						PRINTFORML 「奥狡猾%UNICODE(0x2665) *1%　奥狡桦%UNICODE(0x2665) *1%」
+						PRINTFORML 「被这酿、温柔地、砰砰地酢了的哇%UNICODE(0x2665) *1%」
+						PRINTFORML 「欧金金、就要娇惯欧金金这样了呜%UNICODE(0x2665) *1%　子宫ー要醉稀饭则个了呜%UNICODE(0x2665) *1%%UNICODE(0x2665) *1%」
+						PRINTW 
+					ENDSELECT
+				ELSEIF TALENT:恋慕 || TALENT:恋人
+					SELECTCASE RAND:5
+					CASE 0
+						PRINTFORML 「噢%UNICODE(0x2665) *1%　噢噢%UNICODE(0x2665) *1%　被后面、子宫ー、要被压碎了呀%UNICODE(0x2665) *1%」
+						PRINTFORML 「那里是很重要的地方呀%UNICODE(0x2665) *1%　不可以那么激烈%UNICODE(0x2665) *1%」
+						PRINTW 
+					CASE 1
+						PRINTFORML 「即使看不见、也能够感觉到%MASTERNAME:42%的欧金金、插进来了呀」
+						PRINTFORML 「子宫ー和欧金金、在亲吻着、在亲吻着呀%UNICODE(0x2665) *1%%UNICODE(0x2665) *1%」」
+						PRINTW 
+					CASE 2
+						PRINTFORML 「呀啊嗯、啊嗯、啊嗯%UNICODE(0x2665) *1%」
+						PRINTFORML 「手腕、被抓着逃不掉呀%UNICODE(0x2665) *1%　太舒服ー了啦、完全逃不掉啊%UNICODE(0x2665) *1%」
+						PRINTW 
+					CASE 3
+						PRINTFORML 「啊～～～～%UNICODE(0x2665) *1%　啊哇啊～～～～%UNICODE(0x2665) *1%」
+						PRINTFORML 「连同深处、都疼爱着%UNICODE(0x2665) *1%　好、深咿、咿咿%UNICODE(0x2665) *1%」
+						PRINTW 
+					CASE 4
+						PRINTFORML 「啊、啊啊啊、啊啊啊～～～～%UNICODE(0x2665) *1%　啊啊啊～～～～～～～～～～%UNICODE(0x2665) *1%%UNICODE(0x2665) *1%」
+						PRINTFORML 「被这酿、温柔地、敲打责了话%UNICODE(0x2665) *1%」
+						PRINTFORML 「子宫、要被打开了%UNICODE(0x2665) *1%　全乎、都会接艘的啦%UNICODE(0x2665) *1%%UNICODE(0x2665) *1%」
+						PRINTW 
+					ENDSELECT
+				ELSEIF TALENT:思慕
+					SELECTCASE RAND:2
+					CASE 0
+						PRINTFORML 「啊咕呜、子宫、要被压碎了呜！」
+						PRINTFORML 「咔哇、哦咕！？　好、好深、」
+						PRINTW 
+					CASE 1
+						PRINTFORML 「啊咕！　深处、被顶到了啊！」
+						PRINTFORML 「不行、那样子、用力地啪啪着的话」
+						PRINTW 
+					ENDSELECT
+				ELSE
+				ENDIF
+			ENDIF
+		;骑乘位で子宫口责め
+		;杭打ち骑乘位って单语すごくエロい
+		ELSEIF TEQUIP:体位 == 3
+			IF CFLAG:K42C_结婚 >= 1
+				;射精时
+				IF NOWEX:MASTER:射精
+					;生性交
+					IF !TEQUIP:MASTER:避孕套 && !TCVAR:TARGET:口服避孕药
+						;危险日
+						IF CFLAG:生理周期 == 7
+							IF TALENT:怀孕愿望
+								SELECTCASE RAND:2
+								CASE 0
+									CALL HPH_PRINT,@"「快点HPH　精液HPH　在子宫里满满的HPH」","L"
+								CASE 1
+									CALL HPH_PRINT,@"「给我HPH　快点HPH　在肉壶里HPH　想要孩子HPH」","L"
+								CASE 2
+									CALL HPH_PRINT,@"「要出来了吗？HPH　没关系哦HPH　射出来吧HPH」","L"
+									CALL HPH_PRINT,@"「让果当妈妈HPH　让我怀孕HPH」","L"
+								ENDSELECT
+								PRINTFORML 
+								SELECTCASE RAND:2
+								;打桩骑乘位
+								CASE 0
+									CALL HPH_PRINT,@"啪嗯HPH　啪嗯HPH　啪嗯HPH　啪嗯HPH","L"
+									SELECTCASE RAND:2
+									CASE 0
+										PRINTFORML 果把%CALLNAME:MASTER%摆成翻跟头的姿势，
+										PRINTFORML 在让他无法动弹后，多次垂直地敲击着腰部
+									CASE 1
+										PRINTFORML 果像打桩一样多次垂直地落下腰部，寻求着精液
+									ENDSELECT
+										PRINTW 
+								;蜘蛛骑乘位
+								CASE 1
+									CALL HPH_PRINT,@"啪嗯HPH　啪嗯HPH　啪嗯HPH　啪嗯HPH","L"
+									PRINTFORML 果以像蜘蛛捕食一样的姿势摇动腰部，贪婪地吮吸着%TINKO(MASTER)%
+									PRINTW 
+									IF TEQUIP:继续接吻
+										PRINTFORML 即使我想动，嘴唇也被果堵住，只能任她摆布
+										CALL HPH_PRINT,@"果的表情失去了理智，仿佛眼睛里都快要看到HPH了","L"
+									ELSE
+										PRINTFORML 或许是为了尽可能多地榨取精液，
+										SELECTCASE RAND:2
+										CASE 0
+											PRINTFORML 果用舌头舔着%CALLNAME:MASTER%的乳头
+										CASE 1
+											PRINTFORML 果用手指用力地揉搓着%CALLNAME:MASTER%的两侧乳头
+										ENDSELECT
+									ENDIF
+								ENDSELECT
+							;没有怀孕愿望
+							ELSE
+								SELECTCASE RAND:3
+								CASE 0
+									CALL HPH_PRINT,@"「没关系哦HPH　我会接住你的HPH」","L"
+									CALL HPH_PRINT,@"「不要忍耐HPH　射在果的肉壶里HPH」","L"
+								CASE 1
+									CALL HPH_PRINT,@"「给我HPH　在肉壶里HPH　想要HPH」","L"
+								CASE 2
+									CALL HPH_PRINT,@"「要出来了吗？HPH　没关系哦HPH　射出来吧HPH」","L"
+								ENDSELECT
+								PRINTFORML 
+								SELECTCASE RAND:2
+								;果在上面（打桩骑乘位）
+								CASE 0
+									CALL HPH_PRINT,@"啪嗯HPH　啪嗯HPH　啪嗯HPH　啪嗯HPH","L"
+									PRINTFORML 果像打桩一样多次垂直地落下腰部，寻求着精液
+									PRINTW 
+									PRINTFORML 感受到%CALLNAME:MASTER%快要高潮的征兆，果把%TINKO(PLAYER)%埋入肉壶的根部，
+									PRINTFORML 用小穴壁紧紧地夹紧，促使射精
+									PRINTW 
+								;你在下面
+								CASE 1
+									CALL HPH_PRINT,@"啪嗯HPH　啪嗯HPH　啪嗯HPH　啪嗯HPH","L"
+									PRINTFORML 从果和%CALLNAME:MASTER%的结合部，响起肉体撞击的声音
+									PRINTW 
+									IF TEQUIP:继续接吻
+										PRINTFORML 即使我想动，嘴唇也被果堵住，只能任她摆布
+										CALL HPH_PRINT,@"果的表情失去了理智，仿佛眼睛里都快要看到HPH了","L"
+									ELSE
+										PRINTFORML 或许是为了尽可能多地榨取精液，
+										SELECTCASE RAND:2
+										CASE 0
+											PRINTFORML 果用舌头舔着%CALLNAME:MASTER%的乳头
+										CASE 1
+											PRINTFORML 果用手指用力地揉搓着%CALLNAME:MASTER%的两侧乳头
+										ENDSELECT
+									ENDIF
+								ENDSELECT
+							ENDIF
+						;安全日
+						ELSEIF CFLAG:生理周期 == 1 || CFLAG:生理周期 == 2
+							SELECTCASE RAND:3
+							CASE 0
+								CALL HPH_PRINT,@"「射吧HPH　射在果的肉壶里HPH」","L"
+								CALL HPH_PRINT,@"「就这样HPH　可以射出来了HPH」","L"
+							CASE 1
+								CALL HPH_PRINT,@"「没关系哦HPH　今天没事的啦HPH」","L"
+								CALL HPH_PRINT,@"「射出来HPH　不要忍耐，射出来HPH」","L"
+								PRINTW 
+							CASE 2
+								CALL HPH_PRINT,@"「%MASTERNAME:42%、好激烈HPH　啊%UNICODE(0x2665) *1%　啊啊%UNICODE(0x2665) *1%」","L"
+								CALL HPH_PRINT,@"「要出来了吗？　要出来了吗？　射出来HPH　肉壶里射HPH」","L"
+							ENDSELECT
+							
+							SELECTCASE RAND:2
+							CASE 0
+								PRINTFORML 果主动摇动腰部，想要引导射精
+								PRINTFORML 看到她那充满活力的样子，我感到蛋蛋里涌上了%SAMEN_DESCRIPTION(PLAYER,1)%
+								PRINTW 
+							CASE 1
+								PRINTFORML 和果十指相扣的同时，在射精的瞬间，将龟头按压在小穴深处咯吱咯吱的部分
+								PRINTFORML 敏锐地感觉到肉棒膨胀的果，在紧扣的手上注入了力量
+								PRINTW 
+							ENDSELECT
+						;安全期以外
+						ELSE
+							SELECTCASE RAND:3
+							CASE 0
+								CALL HPH_PRINT,@"「没关系HPH　在肉壶里没关系HPH」","L"
+								CALL HPH_PRINT,@"「在最深处射出来HPH　让子宫喝下去HPH」","L"
+							CASE 1
+								CALL HPH_PRINT,@"「没关系哦HPH　射出来HPH　射出来HPH」","L"
+								CALL HPH_PRINT,@"「怀了孕也没关系HPH」","L"
+								PRINTW 
+							CASE 2
+								CALL HPH_PRINT,@"「大概、没事的啦、射吧、射出来HPH」","L"
+								CALL HPH_PRINT,@"「怀了孕也没关系、想要在肉壶里HPH」","L"
+							ENDSELECT
+							PRINTFORML 
+							SELECTCASE RAND:2
+							CASE 0
+								PRINTFORML 果主动摇动腰部，想要引导射精
+								PRINTFORML 看到她那充满活力的样子，我感到蛋蛋里涌上了%SAMEN_DESCRIPTION(PLAYER,1)%
+								PRINTW 
+							CASE 1
+								PRINTFORML 收到果的求中出讯号，我感到精液迅速涌上来
+								PRINTFORML 为了在果的小穴深处射精，我用力抓住她柔软的屁股，
+								PRINTFORML 只想着舒服地射精，一次又一次毫不留情地抽插着……
+								PRINTW 
+							ENDSELECT
+						ENDIF
+					ELSEIF TCVAR:TARGET:口服避孕药 == 1
+						;危险期
+						IF CFLAG:生理周期 == 7
+							IF TALENT:怀孕愿望
+								PRINTFORML 「啊、要射了吗？　射吧、射出来啊」
+								PRINTFORML 即使知道会被药物抑制，渴望怀孕的果的子宫，还是啾啾地吸附着龟头，想要促使射精……
+								PRINTFORML （下次……想要无套地射在肉壶里啊）
+								PRINTW 
+							ELSE
+								PRINTFORML 「啊、要射了吗？　啊、呜呜」
+								CALL HPH_PRINT,@"「从下面顶上来、要去了、要去了HPH」","L"
+								PRINTW 
+							ENDIF
+						;安全期
+						ELSEIF CFLAG:生理周期 == 1 || CFLAG:生理周期 == 2
+							PRINTFORML 「嗯、因为是安全期、而且我也吃了口服避孕药」
+							CALL HPH_PRINT,@"「射出来HPH　一边摩擦子宫一边在最深处射出来HPH」","L"
+							PRINTW 
+						;安全期以外
+						ELSE
+							IF TALENT:怀孕愿望
+								CALL HPH_PRINT,@"「拜托了HPH　在最深处、注入子宫里HPH」","L"
+								CALL HPH_PRINT,@"「就算吃了口服避孕药也会怀孕的那种HPH　给我浓浓的HPH」","L"
+								PRINTW 
+								PRINTFORML 果缠着%CALLNAME:MASTER%，最大限度地贴紧腰部，想要把精液尽可能地送到深处
+								PRINTFORML 似乎真的想要怀上%CALLNAME:MASTER%的孩子……
+								PRINTW 
+							ELSE
+								CALL HPH_PRINT,@"「子宫HPH　一边敲打着宝宝的房间一边HPH」","L"
+								CALL HPH_PRINT,@"「要被射了HPH　要被射在最深处了HPH」","L"
+								PRINTW 
+							ENDIF
+						ENDIF
+					ELSEIF TEQUIP:MASTER:避孕套
+						;危险期
+						IF CFLAG:生理周期 == 7
+							IF TALENT:怀孕愿望
+								SELECTCASE RAND:2
+								CASE 0
+									CALL HPH_PRINT,@"「拜托了HPH　套套HPH　把套套取下来吧HPH」","L"
+									CALL HPH_PRINT,@"「想要孩子HPH　想要%MASTERNAME:42%的孩子HPH」","L"
+									PRINTW 
+								CASE 1
+									CALL HPH_PRINT,@"「呐、绝对是无套更舒服啦」","L"
+									CALL HPH_PRINT,@"「无套地射HPH　在最深处射出来HPH」","L"
+									PRINTW 
+								ENDSELECT
+								PRINTFORML 果不想错过怀孕的机会，在耳边低语着无套的美好，
+								PRINTFORML 同时妖娆地扭动着腰部，促使射精……
+								PRINTW 
+							ELSE
+								SELECTCASE RAND:2
+								CASE 0
+									CALL HPH_PRINT,@"「如果那样咚咚地顶的话、套套会破掉的啦HPH」","L"
+									CALL HPH_PRINT,@"（非常渴望…HPH　被顶到子宫里、好激烈）","L"
+								CASE 1
+									CALL HPH_PRINT,@"（虽然说了危险期要戴套套的…）","L"
+									CALL HPH_PRINT,@"（果然还是想要无套啊HPH　但是、会被觉得不知羞耻吧）","L"
+									CALL HPH_PRINT,@"（因为%MASTERNAME:42%在敲打着我的子宫啊HPH　笨蛋啊HPH）","L"
+								CASE 2
+									CALL HPH_PRINT,@"「哈呜HPH　嗯嗯HPH　嗯啊HPH」","L"
+									CALL HPH_PRINT,@"（HPH）","L"
+								ENDSELECT
+							ENDIF
+						;安全日ゴムあり
+						ELSEIF CFLAG:生理周期 == 1 || CFLAG:生理周期 == 2
+							IF TALENT:怀孕愿望
+								SELECTCASE RAND:2
+								CASE 0
+									CALL HPH_PRINT,@"「今天戴套套也可以啦，但是其他日子要无套哦、哈呜HPH」","L"
+									PRINTFORML 我像要打断果的话一样从下面顶了上去
+									CALL HPH_PRINT,@"「还在HPH　话还没说完HPH　哦HPH　在里面HPH」","L"
+									PRINTW 
+								CASE 1
+									PRINTFORML （真是的、明明是安全期还要戴套套～）
+									PRINTFORML （就算是为了珍视果也太过分了吧～）
+									PRINTFORML 想要和%CALLNAME:MASTER%生孩子的果，内心复杂地摇动着腰部……
+									PRINTW 
+								ENDSELECT
+							ELSE
+								PRINTFORML （啊、肉壶在微微颤抖……%CALLNAME:MASTER%、要射了）
+								PRINTFORML （至少、在最深处、想要感受被射在肉壶里…）
+								PRINTW 
+								PRINTFORML 果像要覆盖住我一样抱紧%CALLNAME:MASTER%，让小穴壁紧紧地收缩
+								CALL HPH_PRINT,@"「射出来HPH　在果的最深处HPH」","L"
+								PRINTW 
+							ENDIF
+						;安全期以外有套套
+						ELSE
+							IF TALENT:怀孕愿望
+								CALL HPH_PRINT,@"「哦、哦哦HPH」","L"
+								CALL HPH_PRINT,@"「再多一点HPH　再、更激烈地顶HPH　就这样、在肉壶里HPH」","L"
+								PRINTW 
+								PRINTFORML 如果在被激烈地顶撞的同时射精的话，套套会不会破掉呢…
+								PRINTFORML 隐藏着真心话的同时，果恳求在小穴深处射精
+								PRINTW 
+							ELSE
+								CALL HPH_PRINT,@"「哦HPH　哦哦HPH　好、激、烈HPH　啊啊HPH」","L"
+								CALL HPH_PRINT,@"「如果那样一直摩擦摩擦的话、套套会破掉的HPH」","L"
+								PRINTW 
+								PRINTFORML 果似乎很在意避孕会不会失败，但我毫不在意地从下面顶了上去
+								PRINTFORML 仿佛那是她真正的愿望一样，子宫口开始啾啾地吸附%CALLNAME:MASTER%的龟头……
+								PRINTW 
+							ENDIF
+						ENDIF
+					ENDIF
+				;你还没有射精
+				ELSE
+					IF TEQUIP:MASTER:避孕套
+						SELECTCASE RAND:2
+						CASE 0
+							CALL HPH_PRINT,@"「在里面HPH　顶到里面了HPH」","L"
+						CASE 1
+							CALL HPH_PRINT,@"「啊啊HPH　不要那样摩擦摩擦啦HPH」","L"
+						CASE 2
+							CALL HPH_PRINT,@"「啊啊HPH　好棒HPH　好棒哦HPH」","L"
+							CALL HPH_PRINT,@"（好厉害、即使隔着套套、也能感觉到小弟弟的形状…HPH）","L"
+						ENDSELECT
+					;无套
+					ELSE
+						SELECTCASE RAND:4
+						CASE 0
+							CALL HPH_PRINT,@"「啊HPH　无套、好舒服HPH」","L"
+						CASE 1
+							CALL HPH_PRINT,@"「呀HPH　无套的不要那样顶进去啦HPH」","L"
+						CASE 2
+							CALL HPH_PRINT,@"「来了HPH　无套的小弟弟HPH」","L"
+							CALL HPH_PRINT,@"「里面咯吱咯吱地顶着HPHHPH」","L"
+						CASE 3
+							CALL HPH_PRINT,@"（好厉害HPH　仅仅只是没有套套而已HPH）","L"
+							CALL HPH_PRINT,@"（这样更舒服HPH　无套好舒服HPH）","L"
+						ENDSELECT
+					ENDIF
+				ENDIF
+			ELSEIF TALENT:恋慕 || TALENT:恋人
+				;射精时
+				IF NOWEX:MASTER:射精
+					;无套性交
+					IF !TEQUIP:MASTER:避孕套 && !TCVAR:TARGET:口服避孕药
+						;危险期
+						IF CFLAG:生理周期 == 7
+							IF TALENT:怀孕愿望
+								PRINTFORML 从下面突入着，向果确认想要射在哪里
+								CALL HPH_PRINT,@"「肉壶HPH　在肉壶里HPH　啊啊呜HPH」","L"
+								CALL HPH_PRINT,@"「在我的、最深的地方、贴着子宫（深处）HPH」","L"
+								PRINTW 
+							ELSE
+								CALL HPH_PRINT,@"「啊啊、到那么深的地方、啊呜呜HPH」","L"
+								PRINTFORML 「啊呜呜…要、要射了吗？　在肉壶里？　在肉壶里、射出来吗？」
+								PRINTW 
+								CALL HPH_PRINT,@"「呜咿HPH　如果在那么深的地方射出来的话、会怀孕的…！」","L"
+								CALL HPH_PRINT,@"「要变成妈妈了、想要让果变成妈妈吗？　哈啊呜HPH」","L"
+								PRINTW 
+							ENDIF
+						;安全期
+						ELSEIF CFLAG:生理周期 == 1 || CFLAG:生理周期 == 2
+							IF TALENT:怀孕愿望
+								CALL HPH_PRINT,@"「塞满我HPH　%MASTERNAME:42%的精液HPH」","L"
+								CALL HPH_PRINT,@"「因为可能会怀孕HPH　即使是安全期也没关系HPH」","L"
+								PRINTW 
+								PRINTFORML 虽然概率很低，但果抱着一丝希望，拼命地恳求着精液
+								PRINTFORML 紧贴着腰部，将子宫口按在龟头上的动作，
+							ELSE
+								CALL HPH_PRINT,@"「在里面HPH　射满我HPH」","L"
+								CALL HPH_PRINT,@"「因为是安全期HPH　在子宫里注满HPH」","L"
+								PRINTW 
+							ENDIF
+						;安全期以外
+						ELSE
+							IF TALENT:怀孕愿望
+								;排卵日
+								IF ESTRUS_CYCLE(TARGET) == 100
+									CALL HPH_PRINT,@"「呜HPH　呀HPH　呀啊HPH」","L"
+									PRINTFORML （啊……今天、是排卵日吗……）
+									PRINTW 
+									CALL HPH_PRINT,@"「要射了吗？　要在果的肉壶里射了吗？　HPH」","L"
+									PRINTFORML （说不定、如果在里面射的话、会中奖呢……）
+									PRINTW 
+									CALL HPH_PRINT,@"「射出来HPH　就这样HPH　在最深处HPH」","L"
+									CALL HPH_PRINT,@"（啊、抽动了一下、要来了……要来了……HPH）","L"
+									PRINTFORML 果在肉壶的最深处，感受到了%CALLNAME:MASTER%的肉棒变得格外膨胀……
+								ELSE
+									CALL HPH_PRINT,@"「嗯啊HPH　啊啊HPH」","L"
+									CALL HPH_PRINT,@"「好、激、烈HPH　要去了吗？　啊HPH　我、也要去了HPH」","L"
+									PRINTW 
+									PRINTFORML 渴望怀孕的果的子宫，无视周期，打开入口，贪婪地寻求着精液而降临…
+									PRINTFORML 啪嗒啪嗒开合的子宫口，在与龟头交换亲吻的瞬间，开始啾啾地吸附
+									PRINTFORML 
+									CALL HPH_PRINT,@"「嗯咿～～HPH　咿～～～～～HPHHPH」","L"
+									PRINTW 
+								ENDIF
+							ELSE
+							ENDIF
+						ENDIF
+					ELSEIF TCVAR:TARGET:口服避孕药 == 1
+							IF TALENT:怀孕愿望
+								CALL HPH_PRINT,@"「明明不需要口服避孕药的HPH　明明想要造小孩的HPH」","L"
+								PRINTFORML 果一边抱怨着无法造小孩，一边以屈服于快乐的表情摇晃着腰部
+								PRINTW 
+								CALL HPH_PRINT,@"「啰嗦啦HPH　因为最喜欢H、所以要做很多次啦HPH　啊、里面、顶到了HPH」","L"
+								CALL HPH_PRINT,@"「要射了吗？　射吧HPH　在最深处射出来的练习HPH」","L"
+								CALL HPH_PRINT,@"「我也会、在里面接住的、所以HPH」","L"
+								PRINTW 
+							ELSE
+								CALL HPH_PRINT,@"「咿HPH　咯吱咯吱的HPH　深处咯吱咯吱的HPH」","L"
+								PRINTFORML 果被紧紧抓住腰部，似乎对无法从播种中逃脱感到兴奋
+								CALL HPH_PRINT,@"（要来了HPH　腰被抓住、小弟弟被按在子宫口、要被播种了HPH）","L"
+								CALL HPH_PRINT,@"「射出来HPH　就这样、让我喝下精液HPH」","L"
+							ENDIF
+					ELSEIF TEQUIP:MASTER:避孕套
+						;危险日
+						IF CFLAG:生理周期 == 7
+							IF TALENT:怀孕愿望
+								CALL HPH_PRINT,@"「不需要套套HPH　我不需要套套啦HPH」","L"
+								CALL HPH_PRINT,@"「更多HPH　更多、给我精液啦HPH」","L"
+								CALL HPH_PRINT,@"「要坏掉啦HPH　啊～～、啊～～HPH」","L"
+							ELSE
+								CALL HPH_PRINT,@"「嘶HPH　嗯呜HPH　嗯HPH　嗯～～～～HPH」","L"
+								PRINTFORML （明明想要说“套套会破掉所以不要”，但是）
+								CALL HPH_PRINT,@"「哈HPH　啊嗯HPH　嗯啊HPH」","L"
+								PRINTFORML （子宫、被顶着、只能发出喘息声）
+							ENDIF
+						;安全期
+						ELSEIF CFLAG:生理周期 == 1 || CFLAG:生理周期 == 2
+							PRINTFORML 「要射了吗？　%MASTERNAME:42%、%MASTERNAME:42%…！」
+							CALL HPH_PRINT,@"「射出来…%MASTERNAME:42%的…精液、在里面HPH」","L"
+							PRINTFORML 果在%CALLNAME:MASTER%身上咔嗒咔嗒地颤抖着身体，收紧了达到极限的%TINKO(PLAYER)%……
+							PRINTW 
+						;安全期以外
+						ELSE
+							IF TALENT:怀孕愿望
+								;排卵日
+								IF ESTRUS_CYCLE(TARGET) == 100
+									CALL HPH_PRINT,@"「真是的、明明今天就是排卵日HPH」","L"
+									CALL HPH_PRINT,@"「我知道啦HPH　身体想要%MASTERNAME:42%的宝宝HPH」","L"
+									PRINTW 
+									CALL HPH_PRINT,@"「下次要无套哦HPH　因为怀了孕也没关系HPH」","L"
+									CALL HPH_PRINT,@"「射出来HPH　就这样HPH　在最深处HPH」","L"
+									PRINTW 
+									CALL HPH_PRINT,@"（啊、抽动了一下、要来了……要来了……HPH）","L"
+									PRINTFORML 果在肉壶的最深处，感受到了%CALLNAME:MASTER%的肉棒变得格外膨胀……
+									PRINTW 
+								ELSE
+									CALL HPH_PRINT,@"「嗯啊HPH　啊啊HPH」","L"
+									CALL HPH_PRINT,@"「好、激、烈HPH　要去了吗？　啊HPH　我、也要去了HPH」","L"
+									PRINTW 
+									PRINTFORML 渴望怀孕的果的子宫，无视周期，打开入口，贪婪地寻求着精液而降临…
+									PRINTFORML 啪嗒啪嗒开合的子宫口，在与龟头交换亲吻的瞬间，开始啾啾地吸附
+									PRINTFORML 
+									CALL HPH_PRINT,@"「嗯HPH　呐、呐、下次要无套哦HPH」","L"
+									CALL HPH_PRINT,@"「想要%MASTERNAME:42%的宝宝、想要宝宝HPH　啊啊啊HPH」","L"
+									PRINTW 
+								ENDIF
+							ELSE
+								CALL HPH_PRINT,@"啪嗯HPH　啪嗯HPH　啪嗯HPH　啪嗯HPH","L"
+								PRINTL 
+								CALL HPH_PRINT,@"「好、深～～～～HPH　顶、顶到里面了HPH」","L"
+								CALL HPH_PRINT,@"（这个角度、%MASTERNAME:42%的小弟弟顶到最里面了HPH）","L"
+								CALL HPH_PRINT,@"「射出来HPH　在肉壶里满满的HPH　在我里面射出来HPH」","L"
+							ENDIF
+						ENDIF
+					ENDIF
+				;还没有射精
+				ELSE
+					SELECTCASE RAND:3
+					CASE 0
+						PRINTFORML 咕啾…　咕啾…　咕啾…
+						PRINTW 
+						CALL HPH_PRINT,@"「啊～～啊啊～～～～HPH」","L"
+						PRINTFORML 把果的屁股拉向这边，用力按压腰部
+						PRINTFORML 慢慢地、但粘腻地花费时间，摩擦着子宫口
+						PRINTW 
+						
+					CASE 1
+						CALL HPH_PRINT,@"「啊啊啊啊啊…HPH　不要、不要那样摩擦啦…HPH　啊啊啊啊啊…HPH」","L"
+						PRINTFORML 精心细致地花费时间，用龟头爱抚着子宫口
+						PRINTW 
+						PRINTFORML 最初还露出痛苦表情的果，在被敲打着子宫颈之前，渐渐地沉沦下去
+						CALL HPH_PRINT,@"「不要啊、想要了、想要精液了、想要在肉壶里HPH　哦HPH」","L"
+						PRINTW 
+					CASE 2
+						PRINTFORML 啪啾、啪啾、啪啾、啪啾…
+						PRINTW 
+						CALL HPH_PRINT,@"「啊呜呜、好、深HPH　哦、呜HPH　呜HPH」","L"
+						PRINTFORML 果那水嫩的屁股，每次被从下面顶起来都会轻快地弹起来
+						PRINTFORML （顶、被顶上来的时候的冲击，和下去的时候前端咯吱咯吱摩擦的感觉）
+						CALL HPH_PRINT,@"「啊HPH　哈HPH　哈呜HPH　等、等等HPH　等一下HPH」","L"
+						PRINTW 
+					ENDSELECT
+				ENDIF
+			ELSEIF TALENT:思慕
+				SELECTCASE RAND:2
+				CASE 0
+					PRINTFORML 「不要那样、摩擦摩擦、不要抵在里面啦」
+					PRINTFORML 「那里、不能抵在上面蹭啊」
+					PRINTW 
+				CASE 1
+					PRINTFORML 「从下面、咚咚地顶的话」
+					PRINTFORML 「不要、不行、再慢一点」
+					PRINTW 
+				ENDSELECT
+			ELSE
+			ENDIF
+		;对面座位で子宫口责め
+		ELSEIF TEQUIP:体位 == 4
+			IF CFLAG:K42C_结婚 >= 1
+				;射精时
+				IF NOWEX:MASTER:射精
+					;生性交
+					IF !TEQUIP:MASTER:避孕套 && !TCVAR:TARGET:口服避孕药
+						;危险日
+						IF CFLAG:生理周期 == 7
+							IF TALENT:怀孕愿望
+								SELECTCASE RAND:2
+								CASE 0
+									PRINTFORML 告知快要高潮后，果紧紧地抱了上来
+									CALL HPH_PRINT,@"「射出来HPH　射出来HPH　在最里面HPH」","L"
+									PRINTW 
+									CALL HPH_PRINT,@"「嗯呜HPH　哈呼HPH　呼ーHPH　呼ーHPH」","L"
+									PRINTFORML 果热情地缠绕着舌头，一边紧紧地收缩着小穴褶皱，一边引诱射精
+									CALL HPH_PRINT,@"（要来了HPH　要来了HPH　小弟弟、在小穴里微微颤抖HPH）","L"
+									CALL HPH_PRINT,@"（射出来HPH　让果怀孕HPH）","L"
+									PRINTW 
+								CASE 1
+									CALL HPH_PRINT,@"「哈啊HPH　啊HPH　怎么了吗…？」","L"
+									PRINTFORML 在果的耳边低语，要从现在开始认真地让她怀孕
+									PRINTL 
+									CALL HPH_PRINT,@"「…………HPHHPH」","W"
+									CALL HPH_PRINT,@"「嗯HPH　创造吧HPH　宝宝、创造吧HPH」","L"
+									CALL HPH_PRINT,@"「想要{EXP:分娩经验 +1}个了HPH」","L"
+									PRINTW 
+									CALL HPH_PRINT,@"「射出来HPH　射出来HPH」","L"
+									CALL HPH_PRINT,@"「射在果的危险期小馒头里HPH　Darling的子种HPH」","L"
+									CALL HPH_PRINT,@"「让果怀孕HPH　啊啊啊～～HPHHPH」","L"
+									PRINTW 
+								ENDSELECT
+							ELSE
+								CALL HPH_PRINT,@"「要射了吗？　要射了吗？　没关系哦，在小穴里射出来HPH」","L"
+								CALL HPH_PRINT,@"「怀了孕也没关系HPH　我会生下%MASTERNAME:42%的宝宝的」","L"
+								PRINTW 
+							ENDIF
+						;安全日
+						ELSEIF CFLAG:生理周期 == 1 || CFLAG:生理周期 == 2
+							CALL HPH_PRINT,@"「要去了吗？　没关系哦，就这样，射出来HPH」","L"
+							CALL HPH_PRINT,@"「因为是没事的日子HPH　在果这里射出来HPH」","L"
+							PRINTW 
+						;安全期以外
+						ELSE
+							IF TALENT:怀孕愿望
+								CALL HPH_PRINT,@"「要射了吗？　不行、不准拔出来HPH」","L"
+								CALL HPH_PRINT,@"「宝宝HPH　给我宝宝的原料HPH」","L"
+								PRINTW 
+								PRINTFORML 当我试图在射精临近时拔出肉棒时，
+								PRINTFORML 敏锐地察觉到这一点的果，将脚缠绕在%CALLNAME:MASTER%的腰上
+								PRINTW 
+								PRINTFORML 「不行HPH　能射出来的，只有果的肉壶而已HPH」
+								PRINTFORML 「就这样HPH　一边摩擦子宫一边射出来HPH」
+								PRINTW 
+							ELSE
+							ENDIF
+						ENDIF
+					ELSEIF TCVAR:TARGET:口服避孕药 == 1
+					ELSEIF TEQUIP:MASTER:避孕套
+					ENDIF
+				;射精していない
+				ELSE
+					IF TEQUIP:继续接吻
+						SELECTCASE RAND:3
+						CASE 0
+							CALL HPH_PRINT,@"　咚HPH　「噗呜HPH」","L"
+							CALL HPH_PRINT,@"　　咚HPH　「嗯呜HPH」","L"
+							CALL HPH_PRINT,@"　　　咚HPH　「嗯嗯嗯呜HPHHPH」","L"
+							PRINTW 
+							PRINTFORML 「明明在接吻，却这样顶里面…」
+							CALL HPH_PRINT,@"咚啾HPH　「哈啊呜HPHHPHHPH　啊HPH　啊…HPH」","L"
+							PRINTW 
+						CASE 1
+							CALL HPH_PRINT,@"噗啾HPH　噗啾HPH　噗啾HPH","L"
+							CALL HPH_PRINT,@"「嗯HPH　啾HPH　啾HPH」","L"
+							CALL HPH_PRINT,@"（啊啊、头、变得晕乎乎的…HPH）","L"
+							PRINTW 
+						CASE 2
+							CALL HPH_PRINT,@"啾HPH　啾HPH","L"
+							CALL HPH_PRINT,@"「DarlingHPH　DarlingHPH」","L"
+							PRINTW 
+							PRINTFORML 果以似乎眼睛里都浮现出心形符号的表情，用上下的嘴巴索求着%CALLNAME:MASTER%
+							CALL HPH_PRINT,@"「喜欢HPH　好喜欢HPH　再多一点HPH　再多动一点HPH」","L"
+							PRINTW 
+						ENDSELECT
+					ELSE
+						SELECTCASE RAND:2
+						CASE 0
+							CALL HPH_PRINT,@"「慢慢动…HPH　头、变得轻飘飘的…HPH」","L"
+							PRINTFORML 果是因为刺激太强而无法保持姿势吗，瘫软地靠在%CALLNAME:MASTER%身上……
+						CASE 1
+							CALL HPH_PRINT,@"「哈啊…HPH　顶、顶到里面了…HPH」","L"
+							PRINTFORML 果为了忍受子宫口被压迫的感觉，紧紧地抱住%CALLNAME:MASTER%
+							PRINTW 
+						ENDSELECT
+					ENDIF
+				ENDIF
+			ELSEIF TALENT:恋慕 || TALENT:恋人
+				;射精时
+				IF NOWEX:MASTER:射精
+					;生性交
+					IF !TEQUIP:MASTER:避孕套 && !TCVAR:TARGET:口服避孕药
+						;危险日
+						IF CFLAG:生理周期 == 7
+							IF TALENT:怀孕愿望
+								PRINTFORML 用眼神向果传达了射精的意愿，她点了点头
+								CALL HPH_PRINT,@"（子宫想要%MASTERNAME:42%的精子…HPH）","L"
+								CALL HPH_PRINT,@"（能感觉到她想要怀孕，毫无防备地完全敞开了HPH）","L"
+								CALL HPH_PRINT,@"「在肉壶里HPH　在肉壶里、给我吧HPH　啊啊啊啊HPHHPH」","L"
+								PRINTW 
+							ELSE
+								CALL HPH_PRINT,@"「肉壶HPH　被咚咚地顶着啦HPH　啊啊啊HPH」","L"
+								CALL HPH_PRINT,@"（不行HPH　要被射在肉壶里了HPH　要怀孕了HPH）","L"
+								PRINTW 
+								CALL HPH_PRINT,@"「嗯HPH　射出来HPH　在肉壶里HPH」","L"
+								CALL HPH_PRINT,@"「把%MASTERNAME:42%的满满地、射出来啊啊啊HPHHPH」","L"
+								PRINTFORML 就在果尖叫的同时，肉棒变得格外膨胀……
+								PRINTW 
+							ENDIF
+						;安全期
+						ELSEIF CFLAG:生理周期 == 1 || CFLAG:生理周期 == 2
+							IF TALENT:怀孕愿望
+								CALL HPH_PRINT,@"「抱紧我HPH　一边摩擦子宫一边射HPH」","L"
+								CALL HPH_PRINT,@"「没关系的啦HPH　因为是安全期HPH　就这样HPH」","L"
+								PRINTW 
+								PRINTFORML 将子宫口用力按在龟头上摩擦，一边缠绕着四肢一边恳求精液的果
+								PRINTFORML 果知道即使是安全期，怀孕的可能性也不是零
+								CALL HPH_PRINT,@"「%MASTERNAME:42%、%MASTERNAME:42%HPH　射出来！　%MASTERNAME:42%HPH」","L"
+								PRINTW 
+							ELSE
+								CALL HPH_PRINT,@"「啊啊HPH　摩擦摩擦也好！　啦罩罩布也好HPH」","L"
+								CALL HPH_PRINT,@"「都喜欢HPH　最喜欢%MASTERNAME:42%了HPH」","L"
+								CALL HPH_PRINT,@"「我爱你HPH　因为我爱你HPH　在肉壶里！　」","L"
+								PRINTW 
+							ENDIF
+						;安全期以外
+						ELSE
+							IF TALENT:怀孕愿望
+								;排卵日
+								IF ESTRUS_CYCLE(TARGET) == 100
+									PRINTFORML 「射出来！　精液、要多到怀孕的程度」
+									CALL HPH_PRINT,@"「精…哦！？　HPHHPH」","L"
+									PRINTW 
+									PRINTFORML 为了回应果的要求，在小穴的最深处…子宫口，一边滴着前列腺液一边继续用龟头摩擦
+									CALL HPH_PRINT,@"「啊HPH　啊啊啊啊HPH　射、啊、射HPH」","L"
+									PRINTW 
+								ELSE
+									CALL HPH_PRINT,@"「在%MASTERNAME:42%的…、里面HPH」","L"
+									CALL HPH_PRINT,@"「就这样、在肉壶里HPH　就这样按在宝宝房间里、射出来HPH」","L"
+									PRINTW 
+								ENDIF
+							ELSE
+								SELECTCASE RAND:2
+								CASE 0
+									PRINTFORML 「要射了吗？　要射在肉壶里了吗？」
+									CALL HPH_PRINT,@"「不要啊、不要拔出来、我不要拔出来啦HPH」","L"
+									CALL HPH_PRINT,@"「怎么办啊HPH　不想拔出来、不想拔出来啊HPH」","L"
+									CALL HPH_PRINT,@"「啊、等等、果然还是可怕的、啊、不要、等等HPH　啊HPH　啊啊HPH」","L"
+									PRINTW 
+								CASE 1
+									CALL HPH_PRINT,@"「呀啊、那样摩擦摩擦是不行的HPH」","L"
+									CALL HPH_PRINT,@"「因为会想要射在肉壶里啦HPH　因为可能会怀孕啦HPH」","L"
+									PRINTW 
+								ENDSELECT
+							ENDIF
+						ENDIF
+					ELSEIF TCVAR:TARGET:口服避孕药 == 1
+						CALL HPH_PRINT,@"「就这样在里面HPH　可以射在肉壶里哦HPH」","L"
+						PRINTFORML 就在射精感涌上来的时候，果缠住了我的腿，恳求射在肉壶里
+						PRINTW 
+						CALL HPH_PRINT,@"「给我吧HPH　精液HPH　在里面、在肉壶里HPH」","L"
+					ELSEIF TEQUIP:MASTER:避孕套
+						CALL HPH_PRINT,@"「啊HPH　好舒服HPH　里面、顶到了HPH」","L"
+						CALL HPH_PRINT,@"（明明隔着套套、也能感觉到小弟弟的形状HPH　在最里面亲吻着HPH）","L"
+						PRINTW 
+						CALL HPH_PRINT,@"「呜啊、啊～～HPH　我也、要去了HPH　要…要、要去了HPH」","L"
+						CALL HPH_PRINT,@"「来吧、来吧HPH　我也要去了HPH」","L"
+						PRINTW 
+					ENDIF
+				;没有射精
+				ELSE
+					IF TEQUIP:继续接吻
+						SELECTCASE RAND:2
+						CASE 0
+							CALL HPH_PRINT,@"　咚HPH　「噗呜HPH」","L"
+							CALL HPH_PRINT,@"　　咚HPH　「嗯呜HPH」","L"
+							CALL HPH_PRINT,@"　　　咚HPH　「嗯嗯嗯呜HPHHPH」","L"
+							PRINTW 
+							PRINTFORML 「明明在接吻，却这样顶里面…」
+							CALL HPH_PRINT,@"咚啾HPH　「哈啊呜HPHHPHHPH　啊HPH　啊…HPH」","L"
+							PRINTW 
+						CASE 1
+							CALL HPH_PRINT,@"噗啾HPH　噗啾HPH　噗啾HPH","L"
+							CALL HPH_PRINT,@"「嗯HPH　啾HPH　啾HPH」","L"
+							CALL HPH_PRINT,@"（啊啊、头、变得晕乎乎的…HPH）","L"
+							PRINTW 
+						ENDSELECT
+					ELSE
+						SELECTCASE RAND:2
+						CASE 0
+							CALL HPH_PRINT,@"「慢慢动…HPH　头、变得轻飘飘的…HPH」","L"
+							PRINTFORML 果是因为刺激太强而无法保持姿势吗，瘫软地靠在%CALLNAME:MASTER%身上……
+						CASE 1
+							CALL HPH_PRINT,@"「哈啊…HPH　顶、顶到里面了…HPH」","L"
+							PRINTFORML 果为了忍受子宫口被压迫的感觉，紧紧地抱住%CALLNAME:MASTER%
+							PRINTW 
+						ENDSELECT
+					ENDIF
+				ENDIF
+			ELSEIF TALENT:爱欲 || TALENT:炮友
+				;射精时
+				IF NOWEX:MASTER:射精
+					;生性交
+					IF !TEQUIP:MASTER:避孕套 && !TCVAR:TARGET:口服避孕药
+						;危险日
+						IF CFLAG:生理周期 == 7
+						;安全日
+						ELSEIF CFLAG:生理周期 == 1 || CFLAG:生理周期 == 2
+						;安全日以外
+						ELSE
+						ENDIF
+					ELSEIF TCVAR:TARGET:口服避孕药 == 1
+					ELSEIF TEQUIP:MASTER:避孕套
+					ENDIF
+				;射精していない
+				ELSE
+					IF TEQUIP:继续接吻
+						CALL HPH_PRINT,@"噗啾HPH　噗啾HPH　噗啾HPH","L"
+						CALL HPH_PRINT,@"「嗯HPH　啾HPH　啾HPH」","L"
+						PRINTW 
+						CALL HPH_PRINT,@"（糟了…HPH　一边接吻一边被顶到最里面，超级舒服…HPH）","L"
+						CALL HPH_PRINT,@"（只有现在…会觉得%MASTERNAME:42%像恋人一样…HPH）","L"
+						PRINTW 
+					ELSE
+						CALL HPH_PRINT,@"「哈啊HPH　糟了、这个、顶到很深的地方了HPH」","L"
+						PRINTW 
+					ENDIF
+				ENDIF
+			ELSEIF TALENT:思慕
+				SELECTCASE RAND:4
+				CASE 0
+					PRINTFORML 「顶到宝宝的房间了」
+				CASE 1
+					PRINTFORML 「啊呜呜、这个、好深」
+				CASE 2
+					PRINTFORML 「不要、不要那样咚咚地敲啦…」
+				CASE 3
+					PRINTFORML 「啊啊啊啊…顶、顶到里面了……」
+				ENDSELECT
+				PRINTW 
+			ELSE
+			ENDIF
+		;背面座位で子宫口责め
+		ELSEIF TEQUIP:体位 == 5
+			IF CFLAG:K42C_结婚 >= 1
+				;射精时
+				IF NOWEX:MASTER:射精
+					;生性交
+					IF !TEQUIP:MASTER:避孕套 && !TCVAR:TARGET:口服避孕药
+						IF TALENT:怀孕愿望
+							PRINTFORML 一只手抱住果的同时，用空着的手抚摸她的下腹部
+							PRINTFORML 在她耳边低语，从现在开始要把子种注入到这里
+							PRINTL 
+							CALL HPH_PRINT,@"「肚子…HPH　在肚子里面…HPH　宝宝…HPH」","L"
+							CALL HPH_PRINT,@"「啊啊啊HPH　从外面和里面HPH　不要敲打HPH」","L"
+							CALL HPH_PRINT,@"「快点HPH　精液HPH　给我、Darling的精液HPH」","L"
+							PRINTW 
+						ELSE
+							CALL HPH_PRINT,@"「在最里面、抵着射出来HPH」","L"
+							PRINTW 
+						ENDIF
+					ELSEIF TCVAR:TARGET:口服避孕药 == 1
+					ELSEIF TEQUIP:MASTER:避孕套
+					ENDIF
+				;射精していない
+				ELSE
+					SELECTCASE RAND:2
+					CASE 0
+						CALL HPH_PRINT,@"「HPH」","L"
+					CASE 1
+					ENDSELECT
+				ENDIF
+			ELSEIF TALENT:恋慕 || TALENT:恋人
+				;射精时
+				IF NOWEX:MASTER:射精
+					;生性交
+					IF !TEQUIP:MASTER:避孕套 && !TCVAR:TARGET:口服避孕药
+						IF TALENT:怀孕愿望
+							PRINTFORML 一只手抱住果的同时，用空着的手抚摸她的下腹部
+							PRINTFORML 在她耳边低语，从现在开始要把子种注入到这里
+							PRINTL 
+							CALL HPH_PRINT,@"「肚子…HPH　在肚子里面…HPH　宝宝…HPH」","L"
+							CALL HPH_PRINT,@"「啊啊啊HPH　从外面和里面HPH　不要敲打HPH」","L"
+							CALL HPH_PRINT,@"「快点HPH　精液HPH　给我、Darling的精液HPH」","L"
+							PRINTW 
+						ELSE
+							CALL HPH_PRINT,@"「在最里面、抵住射出来HPH」","L"
+							PRINTW 
+						ENDIF
+					ELSEIF TCVAR:TARGET:口服避孕药 == 1
+					ELSEIF TEQUIP:MASTER:避孕套
+					ENDIF
+				;射精していない
+				ELSE
+					SELECTCASE RAND:2
+					CASE 0
+						CALL HPH_PRINT,@"「HPH」","L"
+					CASE 1
+CALL HPH_PRINT,@"「被用力地挤压着，好厉害啊 HPH」","L"
+						PRINTW 
+					ENDSELECT
+				ENDIF
+			ELSEIF TALENT:爱欲 || TALENT:炮友
+				;射精时
+				IF NOWEX:MASTER:射精
+					;生性交
+					IF !TEQUIP:MASTER:避孕套 && !TCVAR:TARGET:口服避孕药
+						;危险日
+						IF CFLAG:生理周期 == 7
+						;安全日
+						ELSEIF CFLAG:生理周期 == 1 || CFLAG:生理周期 == 2
+						;安全日以外
+						ELSE
+						ENDIF
+					ELSEIF TCVAR:TARGET:口服避孕药 == 1
+					ELSEIF TEQUIP:MASTER:避孕套
+					ENDIF
+				;射精していない
+				ELSE
+					IF TEQUIP:继续接吻
+						CALL HPH_PRINT,@"噗 HPH 噗 HPH 噗 HPH","L"
+						CALL HPH_PRINT,@"「嗯 HPH 啾 HPH 啾 HPH」","L"
+						PRINTW 
+						CALL HPH_PRINT,@"（糟、糟糕了…HPH 接吻的时候还被插到最里面，感觉好棒…HPH）","L"
+						CALL HPH_PRINT,@"（总觉得拥抱的方式好温柔…好温暖…HPH）","L"
+						CALL HPH_PRINT,@"（只有现在…感觉 %MASTERNAME:42% 就像恋人一样…HPH）","L"
+						PRINTW 
+					ELSE
+						SELECTCASE RAND:2
+						CASE 0
+							CALL HPH_PRINT,@"「啊～～HPH 啊～～～～HPH」","L"
+							CALL HPH_PRINT,@"（老是顶到最里面…HPH 小穴要坏掉了…HPH）","L"
+							PRINTW 
+							CALL HPH_PRINT,@"「呜咿咿咿！？ 不要啊 HPH 两边一起…HPH 咿…HPH」","L"
+							PRINTFORML 用手指轻轻地捻着阴蒂，果向后仰着身体，全身抽搐
+							PRINTW 
+						CASE 1
+							CALL HPH_PRINT,@"「哈啊 HPH 不妙，这个，顶到最深处了 HPH」","L"
+							CALL HPH_PRINT,@"「也多摸摸胸啊 HPH 呐，这里 HPH」","L"
+							PRINTW 
+						ENDSELECT
+					ENDIF
+				ENDIF
+			ELSEIF TALENT:思慕
+				SELECTCASE RAND:2
+				CASE 0
+					CALL HPH_PRINT,@"（被这么紧紧地抱着，逃不掉了啦…HPH）","L"
+					PRINTW 
+				CASE 1
+					CALL HPH_PRINT,@"「啊啊，再抱紧一点…HPH」","L"
+					PRINTW 
+				ENDSELECT
+			ELSE
+			ENDIF
+		ENDIF
+		RETURN 1
+	ENDIF
+ENDIF
+;未记入
+;CALLFORM M_KOJO_MESSAGE_COM_K42_{SELECTCOM}_1
+RETURN 1
+
+;==================================================
+;8,６９乳交
+;==================================================
+@M_KOJO_MESSAGE_SCOM_K42_8
+CALL M_KOJO_MESSAGE_SCOM_K42_8_1
+RETURN 1
+@M_KOJO_MESSAGE_SCOM_K42_8_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(TFLAG:50 + 500)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;时奸中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:恋慕
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+;未记入
+;CALLFORM M_KOJO_MESSAGE_COM_K42_{SELECTCOM}_1
+RETURN 1
+
+;==================================================
+;9,双重口交
+;==================================================
+
+;==================================================
+
+@M_KOJO_MESSAGE_SCOM_K42_9
+CALL M_KOJO_MESSAGE_SCOM_K42_9_1
+RETURN RESULT
+
+;一人目口上
+@M_KOJO_MESSAGE_SCOM_K42_9_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	LOCAL = MASTER_POSE(4,1,1)
+	IF LOCAL:1 && FIRSTTIME(TFLAG:50 + 500)
+		PRINTFORML 「真是的、这种事情ー明明只有我才能做的…」
+		PRINTFORML 「%MASTERNAME:42%真是个花心大萝卜…呸咯」
+		RETURN 1
+	ENDIF
+	
+	;基本セット
+	;时奸中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	ELSE
+		IF TALENT:恋慕 || TALENT:恋人
+			;荷取
+			IF LOCAL == 51
+				PRINTFORML 「啊、喂…光是一个人舔着不可以的！　也让我来舔吧」
+				PRINTW 
+				PRINTFORML 『即使是天狗大人的命令、我也不会听啊ー…』
+				PRINTFORML 『因为、盟友的黄瓜、这么粗壮还流出了这么多甜美的汁水呀…%UNICODE(0x2665) *1%』
+				PRINTW 
+			;白莲
+			ELSEIF LOCAL == 55
+				SELECTCASE RAND:2
+				CASE 0
+					PRINTFORML 「呸咯、呸咯…等待、白莲桑、你可是僧侣ー对吧」
+					PRINTFORML 「僧侣做这种色情的事情不行的吧！」
+					PRINTW 
+					PRINTFORML 『嗯、啾噜…不、这是为了救赎痛苦的%CALLNAME:MASTER%的行为…』
+					PRINTFORML 『用我的嘴来、啊姆、将烦恼尽数吐出…啊啊、真是美妙…%UNICODE(0x2665) *1%』
+					PRINTW 
+				CASE 1
+					PRINTFORML 「啊姆、嗯、嗯姆、呼～～～～%UNICODE(0x2665) *1%　呼～～～～%UNICODE(0x2665) *1%」
+					PRINTW 
+					PRINTFORML 『啊啊、真是如此淫猥的…但是、这个气味和这个形状、目光没法移开…』
+					PRINTW 
+				ENDSELECT
+			;辉夜
+			ELSEIF LOCAL == 62
+				PRINTFORML （哇、哇ー…如此美丽的公主大人ー竟然也是会吮吸欧金金的啊ー…）
+				PRINTFORML （总觉得反而是我更加心跳加速了…\/\/\/）
+				PRINTW 
+				PRINTFORML 『啊姆、恩、啾…啊啊、好大…很美妙哟、%CALLNAME:MASTER%…』
+				PRINTW 
+			;勇仪
+			ELSEIF LOCAL == 64
+				PRINTFORML 「嗯嗯、嗯姆、嗯姆、嗯姆%UNICODE(0x2665) *1%」
+				PRINTFORML 「即使以鬼为互动对象、我也不会把%MASTERNAME:42%让出去的啦…%UNICODE(0x2665) *1%」
+				PRINTW 
+				PRINTFORML 『天狗的小姐、你拼命的吮吸着的姿态真是可爱呢…♪』
+				PRINTFORML 『啾淙淙…好啦、这枚金玉里面积累的子种汁、赶紧都吐出来吧♪』
+				PRINTW 
+			;椛
+			ELSEIF LOCAL == 65
+				IF BASE:MASTER:勃起 < 1000
+					SELECTCASE RAND:3
+					CASE 0
+						PRINTFORML 「啊姆、唔唔、嗯嗯、哈啊、嗯呼呼…♪」
+						PRINTFORML 果将半勃起的阴茎含入口中，在口腔内温柔地滚动
+						PRINTW 
+						SETCOLOR 0xF5F5F5
+						PRINTFORML 『我来这边…♪ 啾噜噜、啾啵、啾呜呜呜、噗啵』
+						PRINTFORML 椛吸吮着睾丸，像舔舐糖果一样在口腔内来回舔舐
+						PRINTW 
+						RESETCOLOR
+						PRINTFORML 经过细心的伺候，龟头再次进入临战状态，一点点地抬起头
+						PRINTFORML 「啊哈…♪ 变大了…♪」
+						SETCOLOR 0xF5F5F5
+						PRINTFORML 『是呢…♪ 这样又能继续了呢…♪』
+						PRINTW 
+					CASE 1
+						SETCOLOR 0xF5F5F5
+						PRINTFORML 『呜呼呼…♪ %CALLNAME:MASTER%的小小鸡鸡，好可爱…%UNICODE(0x2665) *1%』
+						PRINTFORML 『但是，我等不及了，要让它变大哦…♪ 啊呜%UNICODE(0x2665) *1%』
+						PRINTW 
+						PRINTFORML 椛脸上浮现出与可爱面容不符的淫靡表情，将半勃起的龟头含入口中，用舌头滚动般爱抚着
+						PRINTFORML 椛的口腔内温暖，仿佛放入了她的小穴一般
+						PRINTW 
+						RESETCOLOR
+						PRINTFORML 「%MASTERNAME:42%，你露出这么没出息的表情啊…」
+						PRINTFORML 「不过啊，我会让你露出更没出息的表情的…♪」
+						PRINTW 
+						PRINTFORML 果将脸凑近这边胯间，开始用舌头爱抚睾丸
+						PRINTFORML 时而用嘴唇轻咬蛋袋，一边小心翼翼地不造成疼痛，一边玩弄着睾丸
+						PRINTW 
+						SETCOLOR 0xF5F5F5
+						PRINTFORML 『噗哈，果桑，%CALLNAME:MASTER%的，变大了哦…♪』
+						RESETCOLOR
+						PRINTFORML 「%MASTERNAME:42%，你好厉害%UNICODE(0x2665) *1%」
+						PRINTW 
+					CASE 2
+						PRINTFORML 「嗯，啾噜，啾呜…来嘛，%MASTERNAME:42%，快点让鸡鸡变大嘛…%UNICODE(0x2665) *1%」
+						PRINTW 
+						SETCOLOR 0xF5F5F5
+						PRINTFORML 『嗯姆，啾…啾咕…加油加油…%UNICODE(0x2665) *1% 嘿嘿，这是恢复精神的魔法…♪』
+						PRINTW 
+						PRINTFORML 「『哇…变大了…%UNICODE(0x2665) *1%%UNICODE(0x2665) *1%』」
+						RESETCOLOR
+						PRINTW 
+					ENDSELECT
+				ELSE
+					IF TALENT:65:恋慕
+						IF ABL:65:精液中毒 > 3
+							IF ABL:精液中毒 > 3
+								SETCOLOR 0xF5F5F5
+								PRINTFORML 『啾，啾噜噜，%CALLNAME:MASTER%，请给我多多的精液…%UNICODE(0x2665) *1%』
+								PRINTFORML 『想射在哪里呢？ 想让我喝吗？ 我啊，哪个都…%UNICODE(0x2665) *1%』
+								PRINTW 
+								RESETCOLOR
+								PRINTFORML 「啊，不行啦。%MASTERNAME:42% 的种子，全部都是我的东西啊」
+								PRINTFORML 「啾，啾呜呜呜%UNICODE(0x2665) *1% 啾噜噜噜%UNICODE(0x2665) *1%」
+								PRINTW 
+							ELSEIF ABL:精液中毒 <= 3
+								SETCOLOR 0xF5F5F5
+								PRINTFORML 『噗，滋噜噜噜噜噜噜噜，嗯噗，奴噗，嗯啵…』
+								PRINTFORML 『%CALLNAME:MASTER%，%CALLNAME:MASTER%…请让我喝精液…%UNICODE(0x2665) *1%』
+								PRINTW 
+								RESETCOLOR
+								PRINTFORML 「哇…椛她，含得那么深…到底有多想要精液啊…」
+								PRINTFORML 「眼睛也变得迷离了…完全是中毒者了嘛…」
+							ENDIF
+						ELSE
+							IF ABL:精液中毒 > 3
+								PRINTFORML 「精液 %UNICODE(0x2665) *1% %MASTERNAME:42% 的精液 %UNICODE(0x2665) *1%」
+								PRINTFORML 「快点，射满果的嘴里 %UNICODE(0x2665) *1% 让我喝 %UNICODE(0x2665) *1%」
+								PRINTW 
+								SETCOLOR 0xF5F5F5
+								PRINTFORML 『哇哇哇哇…那个果桑…露出那么H的表情…』
+								PRINTFORML 『但是，心情稍微能理解了…♪ 啾噜，非常，浓烈的气味…♪』
+								PRINTW 
+								RESETCOLOR
+							ELSEIF ABL:精液中毒 <= 3
+								PRINTFORML 「嗍嗍 %UNICODE(0x2665) *1% 哈呼，啾噜噜噜，啾噗 %UNICODE(0x2665) *1% 啾噗 %UNICODE(0x2665) *1% 啾噗 %UNICODE(0x2665) *1%」
+								PRINTFORML 「啊哈…%UNICODE(0x2665) *1% %MASTERNAME:42% 的这个，开始一抖一抖的了♪ 已经要去了…♪」
+								PRINTW 
+								SETCOLOR 0xF5F5F5
+								PRINTFORML 『咧啰，咧啰哦哦…%CALLNAME:MASTER%，想射在哪里呢？ 想射给谁呢？』
+								PRINTFORML 『啾啪 %UNICODE(0x2665) *1% 啾啪 %UNICODE(0x2665) *1% 果桑？ 还是，我？』
+								PRINTW 
+								RESETCOLOR
+								PRINTFORML 「快点决定啊，不然，就要空射了哦…♪ 咧啰咧啰哦…♪」
+								SETCOLOR 0xF5F5F5
+								PRINTFORML 『快点决定要让谁喝啊…♪ 啊～嗯…♪』
+								PRINTW 
+								RESETCOLOR
+							ENDIF
+						ENDIF
+						
+						SELECTCASE RAND:3
+						CASE 0
+							PRINTFORML 「咧啰，哈啊%UNICODE(0x2665) *1% 哈 %UNICODE(0x2665) *1%」
+							PRINTFORML 「呼呼，%MASTERNAME:42% 最喜欢被舔这里软乎乎的地方了呢…%UNICODE(0x2665) *1%」
+							PRINTW 
+							SETCOLOR 0xF5F5F5
+							PRINTFORML 『%CALLNAME:MASTER%的鸡鸡，非常热呢…%UNICODE(0x2665) *1%』
+							PRINTFORML 『看来我们的服侍让你感觉很棒呢…%UNICODE(0x2665) *1%』
+							PRINTW 
+							RESETCOLOR
+						CASE 1
+							PRINTFORML 「啾呜，啾，咧啰咧啰…%MASTERNAME:42% 的，好硬…%UNICODE(0x2665) *1% 果的嘴巴，让你这么舒服？」
+							PRINTW 
+							SETCOLOR 0xF5F5F5
+							PRINTFORML 『不是哦，是我的嘴巴让你舒服吧…♪ 啾噜，啾，啾呜%UNICODE(0x2665) *1%』
+							PRINTW 
+							RESETCOLOR
+						CASE 2
+							PRINTFORML 「啊，椛，不许独占啦…」
+							PRINTFORML 「咧啰，噼啪，也让我舔舔那里嘛…啊姆」
+							PRINTW 
+							SETCOLOR 0xF5F5F5
+							PRINTFORML 『啾噜，滋噜噜噜…哈啊，%CALLNAME:MASTER%，舒服吗？』
+							PRINTFORML 『想出来的话，嗯，就射在椛的嘴里吧…%UNICODE(0x2665) *1%』
+							PRINTW 
+							RESETCOLOR
+						ENDSELECT
+					ELSEIF TALENT:65:思慕
+						PRINTFORML 「嗯嗯，嗯啵，嗯啵，嗯哈…！ %MASTERNAME:42%，更多地，在果的嘴里变得舒服吧…%UNICODE(0x2665) *1%」
+						PRINTW 
+						SETCOLOR 0xF5F5F5
+						PRINTFORML 『果桑，很努力呢…非常喜欢 %CALLNAME:MASTER%呢…♪』
+						PRINTFORML 『我也想让 %CALLNAME:MASTER%，变得舒服呢…♪ 嗯，啾…啾噜噜…』
+						PRINTW 
+						RESETCOLOR
+					ELSE
+						PRINTFORML 「嗯，嗯，啾噜噜噜～，啾噗，啾噗，啾噗，滋溜，噗啵%UNICODE(0x2665) *1%」
+						PRINTW 
+						SETCOLOR 0xF5F5F5
+						PRINTFORML 『哇哇哇…果桑，好厉害…』
+						PRINTFORML 『哇，我也要加油才行…啾噜…啾，啾呜…』
+						PRINTW 
+						RESETCOLOR
+					ENDIF
+				ENDIF
+			;小町
+			ELSEIF LOCAL == 76
+				PRINTFORML 「等下、死神做这种事情没问题吗？」
+				PRINTFORML 「这个可是属于我的、啊姆、嗯、嗯、嗯…%UNICODE(0x2665) *1%」
+				PRINTW 
+				PRINTFORML 『呸咯、啾噜…又没有规定死神一定要清正廉洁才行呢…♪』
+				PRINTFORML 『嗯、fu%UNICODE(0x2665) *1%　嘛、某种意义上这也是收割生命的工作呢…♪　呸咯…%UNICODE(0x2665) *1%』
+				PRINTW 
+			ELSE
+				PRINTFORML 「嗯、啾噜、呸咯…」
+				PRINTFORML 「%MASTERNAME:42%、感觉舒服吗？　还是我的嘴里、更舒服对吧？」
+				PRINTW 
+			ENDIF
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+ENDIF
+;未记入
+;CALLFORM M_KOJO_MESSAGE_COM_K42_{SELECTCOM}_1
+RETURN 1
+
+;二人目口上
+@M_KOJO_MESSAGE_SCOM_K42_9_2
+VARSET LOCAL
+;一人目
+LOCAL:101 = MASTER_POSE(4,1)
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	LOCAL = MASTER_POSE(4,1)
+	IF LOCAL:1 && FIRSTTIME(TFLAG:50 + 500)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;时奸中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	ELSE
+		IF TALENT:恋慕 || TALENT:恋人
+			IF LOCAL == 65
+				PRINTFORML 「好了、来舔吧」
+				PRINTFORML 『就这么做吧』
+				PRINTW 
+			ENDIF
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;10,双重素股
+;==================================================
+@M_KOJO_MESSAGE_SCOM_K42_10
+CALL M_KOJO_MESSAGE_SCOM_K42_10_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_SCOM_K42_10_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	LOCAL = MASTER_POSE(2,1,1)
+	IF LOCAL:1 && FIRSTTIME(TFLAG:50 + 500)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;时奸中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	ELSE
+		IF TALENT:恋慕 || TALENT:恋人
+			;椛
+			IF LOCAL == 65
+				SELECTCASE RAND:10
+				CASE 0
+					PRINTFORML 「啊，喂，不许偷偷抢跑啦…！」
+					PRINTW 
+					SETCOLOR 0xF5F5F5
+					PRINTFORML 『因为，果桑，%CALLNAME:MASTER%的这里，感觉非常想被插入的样子…%UNICODE(0x2665) *1%』
+					PRINTFORML 『不让他舒服一下，会很难受的吧…♪』
+					PRINTW 
+					RESETCOLOR
+				CASE 1
+					PRINTFORML 「啊，这个，好像和椛一起做一样…」
+					PRINTFORML 「啊，椛，不许看啦，会害羞的…」
+					PRINTW 
+					SETCOLOR 0xF5F5F5
+					PRINTFORML 『啊，嗯 %UNICODE(0x2665) *1% 果桑，好可爱…%UNICODE(0x2665) *1%』
+					PRINTFORML 『请让我多看看果桑可爱的脸…%UNICODE(0x2665) *1%』
+					PRINTW 
+					RESETCOLOR
+				CASE 2
+					PRINTFORML 「来，两个人一起夹紧你，不要忍耐，好好地舒服一下吧 %UNICODE(0x2665) *1%」
+					PRINTW 
+					SETCOLOR 0xF5F5F5
+					PRINTFORML 『啊啊 %UNICODE(0x2665) *1% 好厉害…%UNICODE(0x2665) *1%』
+					PRINTFORML 『在我们的中间，鸡鸡变得越来越大了…%UNICODE(0x2665) *1%』
+					PRINTW 
+					RESETCOLOR
+				CASE 3
+					PRINTFORML 「来，这样就满足了吗？ 差不多想被插入了吧♪」
+					PRINTFORML 「想插入到哪里呢？ 快点决定啊♪」
+					PRINTW 
+					SETCOLOR 0xF5F5F5
+					PRINTFORML 『那个，在果桑之后也可以…也让我…♪』
+					PRINTFORML 『想让 %CALLNAME:MASTER%，变得舒服…%UNICODE(0x2665) *1%』
+					PRINTW 
+					RESETCOLOR
+				CASE 4
+					SETCOLOR 0xF5F5F5
+					PRINTFORML 『啊！ 果桑，偷偷抢跑太狡猾了哦』
+					PRINTW 
+					RESETCOLOR
+					PRINTFORML 「因为，摩擦着摩擦着就滑进去了嘛 %UNICODE(0x2665) *1%」
+					PRINTFORML 「%MASTERNAME:42% 也露出了很想被插入的表情嘛♪ 啊 %UNICODE(0x2665) *1%」
+					PRINTW 
+				CASE 5
+					SETCOLOR 0xF5F5F5
+					PRINTFORML 『果桑，请看。鸡鸡在我们的中间一抖一抖的…♪』
+					PRINTW 
+					RESETCOLOR
+					PRINTFORML 「啊哈♪ 被我们的大腿夹住，有那么舒服吗…♪」
+					PRINTW 
+				CASE 6
+					PRINTFORML 「哇…椛，湿透了…//// 舒服吗？」
+					PRINTW 
+					SETCOLOR 0xF5F5F5
+					PRINTFORML 『果桑也是…♪ 我们，被 %CALLNAME:MASTER%的鸡鸡，弄得好舒服呢…♪』
+					PRINTW 
+					RESETCOLOR
+				CASE 7
+					PRINTFORML 「呀，椛的大腿和我的贴在一起…总觉得，有点奇怪的感觉…%UNICODE(0x2665) *1%」
+					PRINTW 
+					SETCOLOR 0xF5F5F5
+					PRINTFORML 『我也是…总觉得H的心情停不下来了…果桑…%UNICODE(0x2665) *1%』
+					PRINTW 
+					RESETCOLOR
+				CASE 8
+					PRINTFORML 「啊哈…我们，姿势好奇怪ー…♪ 但是，总觉得有点兴奋…♪」
+					PRINTW 
+					SETCOLOR 0xF5F5F5
+					PRINTFORML 『嗯，是呢…♪ 虽然非常下流，但是，让人心跳不已呢…%UNICODE(0x2665) *1%』
+					PRINTW 
+					RESETCOLOR
+				CASE 9
+					PRINTFORML 「%MASTERNAME:42% 的前端有液体流出来了…♪ 喜欢被这样挤啊挤的ー♪」
+					PRINTW 
+					SETCOLOR 0xF5F5F5
+					PRINTFORML 『鸡鸡，好像很难受的样子…想要出来了吧…♪ 就是那里，就是那里♪』
+					PRINTW 
+					RESETCOLOR
+				ENDSELECT
+			ENDIF
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+ENDIF
+;未记入
+;CALLFORM M_KOJO_MESSAGE_COM_K42_{SELECTCOM}_1
+RETURN 1
+
+@M_KOJO_MESSAGE_SCOM_K42_10_2
+VARSET LOCAL
+;一人目
+LOCAL:101 = MASTER_POSE(2,1)
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	LOCAL = MASTER_POSE(2,1)
+	IF LOCAL:1 && FIRSTTIME(TFLAG:50 + 500)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;时奸中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	ELSE
+		IF TALENT:恋慕 || TALENT:恋人
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;11,双重乳交
+;==================================================
+@M_KOJO_MESSAGE_SCOM_K42_11
+CALL M_KOJO_MESSAGE_SCOM_K42_11_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_SCOM_K42_11_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	LOCAL = MASTER_POSE(5,1,1)
+	IF LOCAL:1 && FIRSTTIME(TFLAG:50 + 500)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;时奸中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	ELSE
+		IF TALENT:恋慕 || TALENT:恋人
+			;椛
+			IF LOCAL == 65
+				;巨乳以上
+				IF TALENT:TARGET:胸围 > 0
+					IF TALENT:65:胸围 == -1
+						PRINTFORML 「呼呼，只有椛的不够吧？」
+						PRINTFORML 「来来，我会用我的欧派好好夹紧你的哦♪」
+						PRINTW 
+						SETCOLOR 0xF5F5F5
+						PRINTFORML 『果桑，真好啊…那个…有变得舒服吗？ 那个，我对胸部没有太大的自信…』
+						PRINTFORML 『啊…乳头，被摩擦了…%UNICODE(0x2665) *1%』
+						PRINTW 
+						RESETCOLOR
+					ELSEIF TALENT:65:胸围 >= 0
+						PRINTFORML 「快看呀椛。%MASTERNAME:42%那放荡的表情…♪」
+						PRINTFORML 「露出那ー么没出息表情的家伙、只有我们才会来照顾你呢…♪」
+						PRINTW 
+						SETCOLOR 0xF5F5F5
+						PRINTFORML 『是呢，果桑…♪ %CALLNAME:MASTER%如果放着不管的话会很让人担心的…♪』
+						RESETCOLOR
+						PRINTFORML 「『所以，必须让我们来照顾他…♪』」
+						PRINTW 
+					ELSEIF TALENT:65:胸围 == -2
+						PRINTFORML 「呼哼、就用果的胸部让你尽情得ー舒服起来呢…♪」
+						PRINTFORML 「可以做到许多椛做不到的事情呢…♪」
+						PRINTW 
+						SETCOLOR 0xF5F5F5
+						PRINTFORML 『明知我没有胸部…%CALLNAME:MASTER%桑、真是坏心眼…』
+						PRINTFORML 『滑溜溜的很舒服、吗…？　这样的话、就原谅你吧…♪』
+						PRINTW 
+						RESETCOLOR
+					ENDIF
+				;贫乳。默认
+				ELSEIF TALENT:TARGET:胸围 == -1
+					IF TALENT:65:胸围 == -1
+						PRINTFORML 「是知道我们胸部很小才这么要求的吧…欺负人」
+						PRINTFORML 「嗯…有点难办呢…椛、再稍微ー偏移下」
+						PRINTW 
+						SETCOLOR 0xF5F5F5
+						PRINTFORML 『那个…有感觉舒服吗？　那个、我对胸部没什么自信所以…』
+						PRINTFORML 『啊…乳头、在摩擦着…%UNICODE(0x2665) *1%』
+						PRINTW 
+						RESETCOLOR
+					ELSEIF TALENT:65:胸围 >= 0
+						PRINTFORML 「明明之前我们还是同样大小的胸部的…」
+						PRINTFORML 「为什么变大了啊～」
+						PRINTW 
+						SETCOLOR 0xF5F5F5
+						PRINTFORML 『欸嘿嘿…我对自己的胸部还是很有自信的哟…♪』
+						PRINTFORML 『感觉舒服吗？　再用力点给你夹住呢…♪』
+						PRINTW 
+						RESETCOLOR
+					ELSEIF TALENT:65:胸围 == -2
+						PRINTFORML 「好啦、果的胸部会再用力些压着的呢%UNICODE(0x2665) *1%」
+						PRINTFORML 「软乎乎ー的很舒服对吧、嗯…%UNICODE(0x2665) *1%」
+						PRINTW 
+						SETCOLOR 0xF5F5F5
+						PRINTFORML 『呜呜…这个、我在这里有任何意义吗…』
+						PRINTFORML 『啊、但是这个、乳头、感觉很舒服的说…%UNICODE(0x2665) *1%』
+						PRINTW 
+						RESETCOLOR
+					ENDIF
+				;绝壁
+				ELSEIF TALENT:TARGET:胸围 == -2
+					IF TALENT:65:胸围 == -1
+						PRINTFORML 「是知道我们胸部很小才这么要求的吧…欺负人」
+						PRINTFORML 「但是、乳头在不断旋转磨蹭着…%UNICODE(0x2665) *1%」
+						PRINTW 
+						SETCOLOR 0xF5F5F5
+						PRINTFORML 『那个…有感觉舒服吗？　那个、我对胸部没什么自信所以…』
+						PRINTFORML 『啊…乳头、在摩擦着…%UNICODE(0x2665) *1%』
+						PRINTW 
+						RESETCOLOR
+					ELSEIF TALENT:65:胸围 >= 0
+						PRINTFORML 「这就是格差社会…」
+						PRINTFORML 「椛、不要用大胸部把欧金金藏起来呀～」
+						PRINTW 
+						SETCOLOR 0xF5F5F5
+						PRINTFORML 『欸嘿嘿…我对自己的胸部还是很有自信的哟…♪』
+						PRINTFORML 『感觉舒服吗？　再用力点给你夹住呢…♪』
+						PRINTW 
+						RESETCOLOR
+					ELSEIF TALENT:65:胸围 == -2
+						PRINTFORML 「这个…我们做这种有任何意义吗…？」
+						PRINTW 
+						SETCOLOR 0xF5F5F5
+						PRINTFORML 『呜呜…%CALLNAME:MASTER%桑真欺负人…』
+						PRINTW 
+						RESETCOLOR
+					ENDIF
+				;普通尺寸
+				ELSE
+					IF TALENT:65:胸围 == -1
+						SETCOLOR 0xF5F5F5
+						PRINTFORML 『很奇怪啊、果桑、明明和我的胸部是差不多大小的…』
+						PRINTFORML 『呜呜、大小完全不够啊…』
+						PRINTW 
+						RESETCOLOR
+						PRINTFORML 「欸嘿嘿、比起之前更加能够夹住了对吧…♪」
+						PRINTFORML 「椛、你也对胸部之神献上祈祷不就好了嘛…嗯♪」
+						PRINTW 
+					ELSEIF TALENT:65:胸围 >= 1
+						PRINTFORML 「这就是格差社会…」
+						PRINTFORML 「椛、不要用大胸部把欧金金藏起来呀～」
+						PRINTW 
+						SETCOLOR 0xF5F5F5
+						PRINTFORML 『欸嘿嘿…我对自己的胸部还是很有自信的哟…♪』
+						PRINTFORML 『感觉舒服吗？　再用力点给你夹住呢…♪』
+						PRINTW 
+						RESETCOLOR
+					ELSEIF TALENT:65:胸围 == -2
+						PRINTFORML 「这个…我们做这种有任何意义吗…？」
+						PRINTW 
+						SETCOLOR 0xF5F5F5
+						PRINTFORML 『呜呜…%CALLNAME:MASTER%桑真欺负人…』
+						PRINTW 
+						RESETCOLOR
+					ELSE
+						PRINTFORML 「我们的胸部、感觉舒服吗？　因为稍微长大了一点呢…♪」
+						PRINTFORML 「你看、这可是之前做不到的胸部三明治哟～♪」
+						PRINTW 
+						SETCOLOR 0xF5F5F5
+						PRINTFORML 『欸嘿嘿、我的胸部能够把%CALLNAME:MASTER%桑的欧金金包裹住、好开心…♪」
+						PRINTFORML 「接下来会好好ー地进行侍奉呢♪　嗯咻、嗯咻…』
+						PRINTW 
+						RESETCOLOR
+					ENDIF
+				ENDIF
+			ELSE
+				IF TALENT:LOCAL:胸围 >= 0
+					PRINTFORML 「稍、稍微夹住一点的话这我也做得到啊…！」
+					PRINTFORML 「%MASTERNAME:42%、在果的胸部上摩擦着、变得更舒服吧…」
+					PRINTW 
+				ELSE
+					PRINTFORML 「真是的、夹住%MASTERNAME:42%的欧金金明明是我要做的事情～！」
+					PRINTFORML 「好啦、赶紧用果的胸部舒服起来吧、嗯、嗯…%UNICODE(0x2665) *1%」
+					PRINTW 
+				ENDIF
+			ENDIF
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+ENDIF
+;未记入
+;CALLFORM M_KOJO_MESSAGE_COM_K42_{SELECTCOM}_1
+RETURN 1
+
+@M_KOJO_MESSAGE_SCOM_K42_11_2
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	LOCAL = MASTER_POSE(5,1)
+	IF LOCAL:1 && FIRSTTIME(TFLAG:50 + 500)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;时奸中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	ELSE
+		IF TALENT:恋慕 || TALENT:恋人
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;12,乳夹口交
+;==================================================
+@M_KOJO_MESSAGE_SCOM_K42_12
+CALL M_KOJO_MESSAGE_SCOM_K42_12_1
+RETURN 1
+@M_KOJO_MESSAGE_SCOM_K42_12_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;时奸中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:恋慕
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+;未记入
+;CALLFORM M_KOJO_MESSAGE_COM_K42_{SELECTCOM}_1
+RETURN 1
+
+;==================================================
+;13,交互插入
+;==================================================
+@M_KOJO_MESSAGE_SCOM_K42_13
+CALL M_KOJO_MESSAGE_SCOM_K42_13_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_SCOM_K42_13_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	LOCAL = MASTER_POSE(6,1,1)
+	IF LOCAL:1 && FIRSTTIME(TFLAG:50 + 500)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;时奸中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:恋慕
+		IF LOCAL == 65
+			IF TCVAR:65:发情
+				SELECTCASE RAND:3
+				CASE 0
+					SETCOLOR 0xF5F5F5
+					PRINTFORML 『%CALLNAME:MASTER% %UNICODE(0x2665) *1% 更多地 %UNICODE(0x2665) *1% 更多地顶撞 %UNICODE(0x2665) *1%』
+					PRINTFORML 『用鸡鸡更多地咚咚咚 %UNICODE(0x2665) *1% 请顶撞到最深处 %UNICODE(0x2665) *1% 呜呜 %UNICODE(0x2665) *1%』
+					PRINTL 
+					RESETCOLOR
+					PRINTFORML 「哎呀呀…椛完全变成发情的母狗一样了呢ー…」
+					PRINTFORML 「肯定只有在 %MASTERNAME:42% 的面前才会露出这种姿态吧。当然，我也是…呜咿 %UNICODE(0x2665) *1% 突然 %UNICODE(0x2665) *1% 最深处 %UNICODE(0x2665) *1% 呜呜 %UNICODE(0x2665) *1%」
+					PRINTW 
+				CASE 1
+					SETCOLOR 0xF5F5F5
+					PRINTFORML 『%CALLNAME:MASTER% %UNICODE(0x2665) *1% %CALLNAME:MASTER% %UNICODE(0x2665) *1%%UNICODE(0x2665) *1% %CALLNAME:MASTER% %UNICODE(0x2665) *1%%UNICODE(0x2665) *1%』
+					PRINTFORML 『像野兽一样 %UNICODE(0x2665) *1% 侵犯我 %UNICODE(0x2665) *1% 请把我弄得乱七八糟 %UNICODE(0x2665) *1% 呜呜 %UNICODE(0x2665) *1% 呜呼 %UNICODE(0x2665) *1%%UNICODE(0x2665) *1%』
+					PRINTL 
+					RESETCOLOR
+					PRINTFORML 「哎呀呀…椛，回来啦ー…已经听不见了呢ー…」
+					PRINTFORML 「%MASTERNAME:42%，不要光顾着椛，也来陪陪我嘛，啊哈 %UNICODE(0x2665) *1% 来了 %UNICODE(0x2665) *1% 我想要你的鸡鸡 %UNICODE(0x2665) *1%%UNICODE(0x2665) *1%」
+					PRINTW 
+				CASE 2
+					SETCOLOR 0xF5F5F5
+					PRINTFORML 『要侵犯 %CALLNAME:MASTER% %UNICODE(0x2665) *1% 了哦 %UNICODE(0x2665) *1% 就是那里，就是那里 %UNICODE(0x2665) *1%』
+					PRINTFORML 『鸡鸡好舒服 %UNICODE(0x2665) *1% 鸡鸡，好舒服哦 %UNICODE(0x2665) *1% 啊 %UNICODE(0x2665) *1% 啊 %UNICODE(0x2665) *1%』
+					PRINTL 
+					RESETCOLOR
+					PRINTFORML 「哇…椛，完全被打开了发情的开关了呢…」
+					PRINTFORML 「但是，这边也不能输啊… %UNICODE(0x2665) *1% 来，来这里… %UNICODE(0x2665) *1% 只属于 %MASTERNAME:42% 的，果的小穴里… %UNICODE(0x2665) *1%」
+					PRINTFORML 「啊 %UNICODE(0x2665) *1% 嗯哈啊 %UNICODE(0x2665) *1% 好开心 %UNICODE(0x2665) *1% 更多 %UNICODE(0x2665) *1% 更多地咚咚咚 %UNICODE(0x2665) *1%」
+					PRINTL 
+					SETCOLOR 0xF5F5F5
+					PRINTFORML 『啊，明明是很好的地方…果桑也好不到哪里去嘛 %UNICODE(0x2665) *1%』
+					PRINTFORML 『露出了非常H，没出息的表情哦 %UNICODE(0x2665) *1%』
+					PRINTL 
+					RESETCOLOR
+					PRINTFORML 「因为，因为 %UNICODE(0x2665) *1% 看到了两个人激烈的样子嘛 %UNICODE(0x2665) *1% 啊，啊 %UNICODE(0x2665) *1%」
+					PRINTFORML 「好舒服，停不下来了 %UNICODE(0x2665) *1% 啊，嗯，顶到深处了 %UNICODE(0x2665) *1%」
+					PRINTW 
+				ENDSELECT
+			ENDIF
+			
+			;果が危险日生ハメ〇
+			IF CFLAG:42:允许无套 == 2
+				;椛も危险日生ハメ〇
+				IF CFLAG:65:允许无套 == 2
+					IF TALENT:42:怀孕愿望
+						IF TALENT:65:怀孕愿望
+							PRINTFORML 「快点 %UNICODE(0x2665) *1% 要射在哪里 %UNICODE(0x2665) *1% %MASTERNAME:42% %UNICODE(0x2665) *1%」
+							PRINTFORML 「我们，都做好了成为母亲的准备哦 %UNICODE(0x2665) *1% 啊 %UNICODE(0x2665) *1%」
+							PRINTL 
+							SETCOLOR 0xF5F5F5
+							PRINTFORML 『是 %UNICODE(0x2665) *1% 我也是 %UNICODE(0x2665) *1% 我也，想要 %CALLNAME:MASTER%的孩子 %UNICODE(0x2665) *1%』
+							PRINTFORML 『请用 %CALLNAME:MASTER%的孩子，让我成为母亲 %UNICODE(0x2665) *1%』
+							PRINTW 
+							RESETCOLOR
+						ELSE
+							PRINTFORML 「要来了 %UNICODE(0x2665) *1% %MASTERNAME:42% %UNICODE(0x2665) *1% 让果怀孕 %UNICODE(0x2665) *1%」
+							PRINTFORML 「要成为 %UNICODE(0x2665) *1% 要成为母亲 %UNICODE(0x2665) *1% 要生 %MASTERNAME:42% 的孩子 %UNICODE(0x2665) *1%」
+							PRINTL 
+							SETCOLOR 0xF5F5F5
+							PRINTFORML 『哇，我也是，虽然有点害怕，但是，如果是 %CALLNAME:MASTER%的孩子的话，就可以了 %UNICODE(0x2665) *1%』
+							PRINTFORML 『请给我 %UNICODE(0x2665) *1% %CALLNAME:MASTER%的孩子的种子 %UNICODE(0x2665) *1% 请射在我的里面 %UNICODE(0x2665) *1%』
+							RESETCOLOR
+						ENDIF
+					ELSE
+						SELECTCASE RAND:2
+						CASE 0
+							IF TEQUIP:MASTER:避孕套
+								SELECTCASE RAND:2
+								CASE 0
+									PRINTFORML 「即使隔着套套也能感觉到 %UNICODE(0x2665) *1% %MASTERNAME:42% 的鸡鸡，好舒服哦 %UNICODE(0x2665) *1%」
+									SETCOLOR 0xF5F5F5
+									PRINTFORML 『是的 %UNICODE(0x2665) *1% %CALLNAME:MASTER%的鸡鸡，和我很合拍 %UNICODE(0x2665) *1%』
+									PRINTL 
+									RESETCOLOR
+									PRINTFORML 「才不是呢，和我的相性才更好呢，对吧，%MASTERNAME:42% %UNICODE(0x2665) *1% 像这样 %UNICODE(0x2665) *1% 啾啾 %UNICODE(0x2665) *1%」
+									SETCOLOR 0xF5F5F5
+									PRINTFORML 『想插在我的里面吧 %UNICODE(0x2665) *1% 嘿，嘿 %UNICODE(0x2665) *1%』
+									PRINTL 
+									RESETCOLOR
+									PRINTFORML 「快点决定要在哪里出来啦 %UNICODE(0x2665) *1% 快点 %UNICODE(0x2665) *1% 快点 %UNICODE(0x2665) *1%」
+									SETCOLOR 0xF5F5F5
+									PRINTFORML 『%CALLNAME:MASTER%的，太棒了 %UNICODE(0x2665) *1% 啊 %UNICODE(0x2665) *1% 啊 %UNICODE(0x2665) *1%』
+									PRINTW 
+									RESETCOLOR
+								CASE 1
+									PRINTFORML 「明明，直接在里面也可以啊 %UNICODE(0x2665) *1% 啊 %UNICODE(0x2665) *1% 啊 %UNICODE(0x2665) *1%」
+									SETCOLOR 0xF5F5F5
+									PRINTFORML 『%CALLNAME:MASTER%，是很为我们着想的温柔的人啊 %UNICODE(0x2665) *1% 哈啊 %UNICODE(0x2665) *1%』
+									PRINTW 
+									RESETCOLOR
+								ENDSELECT
+							ELSEIF TCVAR:42:口服避孕药 == 1
+								PRINTFORML 「直接，好舒服 %UNICODE(0x2665) *1% 也许再也回不到戴套的时候了 %UNICODE(0x2665) *1% 啊 %UNICODE(0x2665) *1%」
+								SETCOLOR 0xF5F5F5
+								PRINTFORML 『都是 %CALLNAME:MASTER%不好 %UNICODE(0x2665) *1% 都是你，教会我们直接的好处 %UNICODE(0x2665) *1% 呜 %UNICODE(0x2665) *1%』
+								PRINTL 
+								RESETCOLOR
+								IF TCVAR:65:口服避孕药 == 1
+									PRINTFORML 「%MASTERNAME:42%，想出来的话，可以在果的小穴里射哦 %UNICODE(0x2665) *1% 嗯 %UNICODE(0x2665) *1% 呀 %UNICODE(0x2665) *1%」
+									SETCOLOR 0xF5F5F5
+									PRINTFORML 『%CALLNAME:MASTER%，我也是，没关系的，我有避孕 %UNICODE(0x2665) *1% 尽情地，在里面，在里面 %UNICODE(0x2665) *1% 呜呜 %UNICODE(0x2665) *1%』
+									PRINTW 
+									RESETCOLOR
+								ELSE
+									PRINTFORML 「%MASTERNAME:42%，想出来的话，可以在果的小穴里射哦 %UNICODE(0x2665) *1% 没关系的，嗯 %UNICODE(0x2665) *1% 呀 %UNICODE(0x2665) *1%」
+									SETCOLOR 0xF5F5F5
+									PRINTFORML 『%CALLNAME:MASTER%，即使怀孕了，也没关系哦 %UNICODE(0x2665) *1% 尽情地，在里面，在里面 %UNICODE(0x2665) *1% 呜呜 %UNICODE(0x2665) *1%』
+									PRINTL 
+									RESETCOLOR
+									PRINTFORML 「椛，你，不避孕是认真的吗？ 会怀上孩子的哦？」
+									SETCOLOR 0xF5F5F5
+									PRINTFORML 『如果是 %CALLNAME:MASTER%的话，即使怀上了也没关系，所以，在里面，我想要 %CALLNAME:MASTER%的精液 %UNICODE(0x2665) *1%』
+									PRINTW 
+									RESETCOLOR
+								ENDIF
+							ELSE
+								PRINTFORML 「啊哈 %UNICODE(0x2665) *1% 我们，糟糕了呢，不避孕就直接H了 %UNICODE(0x2665) *1%」
+								PRINTFORML 『哈，啊呼，呜 %UNICODE(0x2665) *1% 大概，要怀上了吧 %UNICODE(0x2665) *1%』
+								PRINTL 
+								PRINTFORML 
+							ENDIF
+						CASE 1
+							PRINTFORML 「射出来 %UNICODE(0x2665) *1% 在果的小穴里射满精液 %UNICODE(0x2665) *1%%UNICODE(0x2665) *1% 射出来 %UNICODE(0x2665) *1%」
+							PRINTFORML 「果，想要孩子 %UNICODE(0x2665) *1% 要生 %MASTERNAME:42% 的孩子 %UNICODE(0x2665) *1%
+							PRINTW 
+							SETCOLOR 0xF5F5F5
+							PRINTFORML 『不行哦 %UNICODE(0x2665) *1% 要生 %CALLNAME:MASTER%的孩子的是我 %UNICODE(0x2665) *1%』
+							PRINTFORML 『%CALLNAME:MASTER% %UNICODE(0x2665) *1% 想出来的话，就在椛的小穴里出来吧 %UNICODE(0x2665) *1%%UNICODE(0x2665) *1%』
+							PRINTW 
+							RESETCOLOR
+						ENDSELECT
+					ENDIF
+				;椛が危险日以外なら生ハメ〇
+				ELSEIF CFLAG:65:允许无套 == 1
+					;椛が危险日
+					IF ESTRUS_CYCLE(65) == 150
+						IF TEQUIP:MASTER:避孕套
+							PRINTFORML 「啊嗯、明明今天想要不戴套来做的%UNICODE(0x2665) *1%」
+							PRINTFORML 「明明是脚踏两条船的家伙、在奇怪的地方却很认真呢%UNICODE(0x2665) *1%」
+							PRINTW 
+							SETCOLOR 0xF5F5F5
+							PRINTFORML 『啊嗯、啊嗯%UNICODE(0x2665) *1%　果、果桑、对不起、Hi啊啊%UNICODE(0x2665) *1%』
+							PRINTFORML 『等到危险日过了之后、就能够不戴套做了啦%UNICODE(0x2665) *1%　Kya嗯%UNICODE(0x2665) *1%』
+							PRINTW 
+							RESETCOLOR
+						ELSEIF TCVAR:65:口服避孕药 == 1
+							PRINTFORML 「啊嗯%UNICODE(0x2665) *1%　啊%UNICODE(0x2665) *1%　啊昂%UNICODE(0x2665) *1%」
+							PRINTFORML 「好啦、是想在我的肉壶射出来对吧%UNICODE(0x2665) *1%　请给我、精液%UNICODE(0x2665) *1%　全部都在我体内射出来呀%UNICODE(0x2665) *1%」
+							PRINTW 
+							SETCOLOR 0xF5F5F5
+							PRINTFORML 『我也%UNICODE(0x2665) *1%　也请在我的里面射出来%UNICODE(0x2665) *1%』
+							PRINTFORML 『已经喝下了避孕药了、不会怀上的所以、在我的小穴内射出来吧%UNICODE(0x2665) *1%　请中出人家吧%UNICODE(0x2665) *1%%UNICODE(0x2665) *1%』
+							PRINTW 
+							RESETCOLOR
+						ENDIF
+					;椛が安全日
+					ELSEIF ESTRUS_CYCLE(65) == 15
+						IF TEQUIP:MASTER:避孕套
+							PRINTFORML 「啊嗯、明明今天想要不戴套来做的%UNICODE(0x2665) *1%」
+							PRINTFORML 「明明是脚踏两条船的家伙、在奇怪的地方却很认真呢%UNICODE(0x2665) *1%」
+							PRINTW 
+							SETCOLOR 0xF5F5F5
+							PRINTFORML 『啊嗯、啊嗯%UNICODE(0x2665) *1%　就、就是说哟%UNICODE(0x2665) *1%』
+							PRINTFORML 『今天哈啊%UNICODE(0x2665) *1%　明明不带套也可以的哟%UNICODE(0x2665) *1%　明明是%UNICODE(0x2665) *1%　可以随便中出的%UNICODE(0x2665) *1%』
+							PRINTW 
+							RESETCOLOR
+						ELSE
+							SELECTCASE RAND:2
+							CASE 0
+								PRINTFORML 「啊%UNICODE(0x2665) *1%　啊嗯%UNICODE(0x2665) *1%　在肉壶射出来、请在里面射出来呀%UNICODE(0x2665) *1%」
+								PRINTFORML 「%MASTERNAME:42%的浓厚的%UNICODE(0x2665) *1%　大量地射出来%UNICODE(0x2665) *1%」
+								PRINTW 
+								SETCOLOR 0xF5F5F5
+								PRINTFORML 『我也、我也是在安全日的啊%UNICODE(0x2665) *1%』
+								PRINTFORML 『啊%UNICODE(0x2665) *1%　啊%UNICODE(0x2665) *1%　不要忍耐、在我的肉壶、请在深处射出来呀%UNICODE(0x2665) *1%』
+								PRINTW 
+							RESETCOLOR
+							CASE 1
+								PRINTFORML 「呐、你想在谁体内射出来呢%UNICODE(0x2665) *1%」
+								PRINTFORML 「就这样子%UNICODE(0x2665) *1%　就这样子在果的肉壶射出来%UNICODE(0x2665) *1%」
+								PRINTW 
+								SETCOLOR 0xF5F5F5
+								PRINTFORML 『Kya昂%UNICODE(0x2665) *1%　这边也%UNICODE(0x2665) *1%　哈啊呜%UNICODE(0x2665) *1%　哈啊啊嗯%UNICODE(0x2665) *1%』
+								PRINTFORML 『%CALLNAME:MASTER%桑%UNICODE(0x2665) *1%　我的肉壶、在我的肉壶%UNICODE(0x2665) *1%』
+								PRINTW 
+							RESETCOLOR
+							ENDSELECT
+						ENDIF
+					ELSE
+						PRINTFORML 「椛、今日并不是安全日对吧%UNICODE(0x2665) *1%」
+						PRINTFORML 「呀%UNICODE(0x2665) *1%　啊啊%UNICODE(0x2665) *1%　所以我、作为代替就射在我的肉壶吧%UNICODE(0x2665) *1%」
+						PRINTW 
+												SETCOLOR 0xF5F5F5
+PRINTFORML 『啊%UNICODE(0x2665) *1%　呀啊%UNICODE(0x2665) *1%　%CALLNAME:MASTER%桑他说过的%UNICODE(0x2665) *1%』
+						PRINTFORML 『大概、是没有问题的%UNICODE(0x2665) *1%　在肉壶、请在肉壶射出来%UNICODE(0x2665) *1%　Kya呼%UNICODE(0x2665) *1%』
+						PRINTW 
+						RESETCOLOR
+					ENDIF
+				;危险日以外も生严禁
+				ELSE
+					IF TEQUIP:MASTER:避孕套
+						PRINTFORML 「啊 %UNICODE(0x2665) *1% %MASTERNAME:42%，好棒 %UNICODE(0x2665) *1%」
+						PRINTFORML 「不可以让椛怀孕哦 %UNICODE(0x2665) *1% 要好好避孕才行哦 %UNICODE(0x2665) *1% 哦 %UNICODE(0x2665) *1%」
+						PRINTW 
+						SETCOLOR 0xF5F5F5
+						PRINTFORML 『避孕是，嗯，很重要的，是果桑，太胆大了，呜 %UNICODE(0x2665) *1%』
+						PRINTFORML 『%CALLNAME:MASTER%，那里，好舒服…%UNICODE(0x2665) *1%』
+						PRINTW 
+						RESETCOLOR
+					ELSEIF TCVAR:TARGET:口服避孕药 == 1
+						PRINTFORML 「椛，直接做很舒服吧♪ 可以清楚地感觉到 %MASTERNAME:42% 的鸡鸡的形状 %UNICODE(0x2665) *1%」
+						PRINTFORML 「而且，呀，啊，啊，啊 %UNICODE(0x2665) *1% 在里面biu biu地射出来，感觉好舒服 %UNICODE(0x2665) *1% 呀 %UNICODE(0x2665) *1%」
+						PRINTW 
+						SETCOLOR 0xF5F5F5
+						PRINTFORML 『是的，直接，好舒服 %UNICODE(0x2665) *1% 啊，好棒… %UNICODE(0x2665) *1%』
+						PRINTFORML 『我已经好好吃了避孕药了，尽情地，在小穴里… %UNICODE(0x2665) *1%』
+						PRINTW 
+						RESETCOLOR
+					ENDIF
+				ENDIF
+			;果が危险日生ハメ×
+			ELSEIF CFLAG:42:允许无套 == 1
+				IF CFLAG:65:允许无套 == 2
+					PRINTFORML 「好哦，出来吧 %UNICODE(0x2665) *1% 在果的里面出来 %UNICODE(0x2665) *1%」
+					PRINTL
+					SETCOLOR 0xF5F5F5
+					PRINTFORML 『%CALLNAME:MASTER% %UNICODE(0x2665) *1% 如果要出来的话，就射在做好了生育准备的我这里 %UNICODE(0x2665) *1% 呜呜 %UNICODE(0x2665) *1%』
+					PRINTW 
+					RESETCOLOR
+				ELSEIF CFLAG:65:允许无套 == 1
+					IF TCVAR:42:口服避孕药 == 1 && TCVAR:65:口服避孕药 == 1
+						PRINTFORML 「哈，嗯 %UNICODE(0x2665) *1% %CALLNAME:MASTER%，想射在哪里都可以哦 %UNICODE(0x2665) *1%」
+						SETCOLOR 0xF5F5F5
+						PRINTFORML 『是啊 %UNICODE(0x2665) *1% 我们，有避孕的 %UNICODE(0x2665) *1% 可以随便中出了 %UNICODE(0x2665) *1% 嗯呼，呜，哈 %UNICODE(0x2665) *1%』
+						PRINTW 
+						RESETCOLOR
+					ELSE
+					ENDIF
+				ELSE
+				ENDIF
+			;果が通常时生ハメ×
+			ELSE
+				IF CFLAG:65:允许无套 == 2
+					PRINTFORML 「要出来了吗？ 要出来的话就射在外面，孩子什么的，还太早了 %UNICODE(0x2665) *1%」
+					PRINTL 
+					SETCOLOR 0xF5F5F5
+					PRINTFORML 『%CALLNAME:MASTER%，不可以让果桑怀孕哦 %UNICODE(0x2665) *1%』
+					PRINTFORML 『我，如果是我，就没关系的 %UNICODE(0x2665) *1%』
+					IF TCVAR:65:发情
+						PRINTFORML 『孩子，即使怀上了也没关系，请射在里面 %UNICODE(0x2665) *1%』
+						PRINTL 
+						RESETCOLOR
+						PRINTFORML （椛，即使是危险期也让你中出…那也就是说，她想要 %MASTERNAME:42% 的孩子吧…）
+						PRINTFORML （现在的椛，和平时见到的完全不一样，充满了女人的味道…连我都心跳不已…）
+						PRINTW 
+					ENDIF
+				ELSE
+					IF TCVAR:42:口服避孕药 == 1
+						IF TCVAR:65:口服避孕药 == 1
+							PRINTFORML 「因为有避孕 %UNICODE(0x2665) *1% 没关系哦 %UNICODE(0x2665) *1% 射在小穴里吧 %UNICODE(0x2665) *1%」
+							SETCOLOR 0xF5F5F5
+							PRINTFORML 『我也是，没关系的 %UNICODE(0x2665) *1% %CALLNAME:MASTER%的，给我热热的 %UNICODE(0x2665) *1%』
+							RESETCOLOR
+						ELSE
+							IF ESTRUS_CYCLE(65) == 15
+								SETCOLOR 0xF5F5F5
+								PRINTFORML 『%CALLNAME:MASTER% %UNICODE(0x2665) *1% 我，今天是在安全期 %UNICODE(0x2665) *1%』
+								PRINTFORML 『在里面，请射在里面 %UNICODE(0x2665) *1%』
+								PRINTL 
+								RESETCOLOR
+								PRINTFORML 「椛，即使是安全期也不能在里面射啊…」
+								PRINTFORML 平时一本正经的椛，大胆地要求中出，看到这一幕，果似乎无法冷静了…
+								PRINTW 
+							ELSE
+								SETCOLOR 0xF5F5F5
+								PRINTFORML 『嗯，嗯 %UNICODE(0x2665) *1% %CALLNAME:MASTER%，如、如果实在忍不住的话，在我的里面…』
+								PRINTFORML 『那个，不能让果桑怀孕啊…』
+								PRINTL 
+								RESETCOLOR
+								PRINTFORML 「我、我也有避孕的…在我这里出来也可以哦？ 真是的，不可以独占！ 啊 %UNICODE(0x2665) *1% 进来了 %UNICODE(0x2665) *1%」
+								SETCOLOR 0xF5F5F5
+								PRINTFORML 『真是的，明明还轮到我呢。%CALLNAME:MASTER%，来，回到这里来… %UNICODE(0x2665) *1%』
+								PRINTL 
+								RESETCOLOR
+								PRINTFORML 每次阴茎被拔出，两人都摇晃着屁股，主张自己的雌穴更舒服…
+								PRINTFORML 「%MASTERNAME:42% %UNICODE(0x2665) *1%」
+								SETCOLOR 0xF5F5F5
+								PRINTFORML 『%CALLNAME:MASTER% %UNICODE(0x2665) *1%』
+								PRINTW 
+								RESETCOLOR
+							ENDIF
+						ENDIF
+					ELSEIF TEQUIP:MASTER:避孕套
+						PRINTFORML 「可以哦 %UNICODE(0x2665) *1% 随时都可以在果的小穴里出来 %UNICODE(0x2665) *1% 在小穴里让我好好感受 %UNICODE(0x2665) *1%」
+						SETCOLOR 0xF5F5F5
+						PRINTFORML 『不行哦 %UNICODE(0x2665) *1% %CALLNAME:MASTER%，是在我的里面射精的 %UNICODE(0x2665) *1% 是吧，%CALLNAME:MASTER% %UNICODE(0x2665) *1%』
+						PRINTW 
+						RESETCOLOR
+					ENDIF
+				ENDIF
+			ENDIF
+			
+			;果と椛の泛用会话
+			IF LOCAL == 65
+			
+				IF !TALENT:无接吻经验 && !TALENT:65:无接吻经验
+					;２人とも百合属性あり
+					IF ABL:42:百合属性 > 0 && ABL:65:百合属性 > 0
+						SELECTCASE RAND:4
+						CASE 0
+							PRINTFORML 「椛，好可爱… %UNICODE(0x2665) *1% 嗯… %UNICODE(0x2665) *1%」
+							PRINTL 
+							SETCOLOR 0xF5F5F5
+							PRINTFORML 『果桑… 嗯 %UNICODE(0x2665) *1% 嗯 %UNICODE(0x2665) *1% 呼 %UNICODE(0x2665) *1%』
+							PRINTW 
+							RESETCOLOR
+						CASE 1
+							PRINTFORML 「嗯，啾，啵，椛，椛… %UNICODE(0x2665) *1%」
+							PRINTL 
+							SETCOLOR 0xF5F5F5
+							PRINTFORML 『嘞咯，啵，果桑，果桑… %UNICODE(0x2665) *1%』
+							PRINTW 
+							RESETCOLOR
+						CASE 2
+							PRINTFORML 「椛，可以，舌头，更深入地缠绕吗…？ 嗯 %UNICODE(0x2665) *1% 啾，嘞咯 %UNICODE(0x2665) *1%」
+							PRINTL 
+							SETCOLOR 0xF5F5F5
+							PRINTFORML 『嗯，我也，想更深地接吻… %UNICODE(0x2665) *1% 嗯 %UNICODE(0x2665) *1% 哈 %UNICODE(0x2665) *1%』
+							PRINTW 
+							RESETCOLOR
+						CASE 3
+							PRINTFORML 「椛，椛 %UNICODE(0x2665) *1% 要出来的时候，牵着我的手 %UNICODE(0x2665) *1% 不要放开哦 %UNICODE(0x2665) *1%」
+							SETCOLOR 0xF5F5F5
+							PRINTFORML 『嗯 %UNICODE(0x2665) *1% 紧紧地握着呢 %UNICODE(0x2665) *1% 一起，一起出来吧 %UNICODE(0x2665) *1%』
+							PRINTL 
+							RESETCOLOR
+							PRINTFORML 「椛 %UNICODE(0x2665) *1%」
+							SETCOLOR 0xF5F5F5
+							PRINTFORML 『果桑 %UNICODE(0x2665) *1%』
+							PRINTW 
+							RESETCOLOR
+						ENDSELECT
+					;果に百合属性あり、椛に无
+					ELSEIF ABL:42:百合属性 > 0 && ABL:65:百合属性 == 0
+							PRINTFORML 「椛，好可爱… %UNICODE(0x2665) *1% 亲一下，可以吧… %UNICODE(0x2665) *1% 嗯… %UNICODE(0x2665) *1%」
+							PRINTL 
+							SETCOLOR 0xF5F5F5
+							PRINTFORML 『不行，果桑，我们都是女孩子…嗯嗯！ 嗯，嗯嗯，嗯… %UNICODE(0x2665) *1% 果桑…嗯 %UNICODE(0x2665) *1% 明明不行，但是… %UNICODE(0x2665) *1%』
+							PRINTW 
+							RESETCOLOR
+					;椛に百合属性あり、果に无
+					ELSEIF ABL:42:百合属性 == 0 && ABL:65:百合属性 > 0
+						SELECTCASE RAND:2
+						CASE 0
+							PRINTFORML 「嗯 %UNICODE(0x2665) *1% 嗯 %UNICODE(0x2665) *1% %CALLNAME:MASTER%，感觉真好 %UNICODE(0x2665) *1%」
+							SETCOLOR 0xF5F5F5
+							PRINTFORML 『果桑享受的表情，好可爱… %UNICODE(0x2665) *1% 我也，开始心跳加速了… %UNICODE(0x2665) *1%』
+							PRINTL 
+							RESETCOLOR
+							PRINTFORML 椛向果露出好色的笑容，用舌头滚动着她坚挺的乳头
+							PRINTFORML 「椛，你在做什么啊 %UNICODE(0x2665) *1%」
+							SETCOLOR 0xF5F5F5
+							PRINTFORML 『做什么？ 只是帮助你变得舒服而已… %UNICODE(0x2665) *1% 怎么样？ 舒服吗？』
+							RESETCOLOR
+							PRINTFORML 「不行，要出来了，要出来了 %UNICODE(0x2665) *1% 嗯 %UNICODE(0x2665) *1% 咿啊啊啊嗯 %UNICODE(0x2665) *1%」
+							SETCOLOR 0xF5F5F5
+							PRINTFORML 『呵呵，果桑，你真可爱… %UNICODE(0x2665) *1% 好想，更加疼爱你… %UNICODE(0x2665) *1%』
+							PRINTW 
+							RESETCOLOR
+						CASE 1
+							SETCOLOR 0xF5F5F5
+							PRINTFORML 『果桑…嗯 %UNICODE(0x2665) *1% 可以，接吻吗… %UNICODE(0x2665) *1% 哈姆，啾噜，啾咕啾咕… %UNICODE(0x2665) *1%』
+							PRINTL 
+							RESETCOLOR
+							PRINTFORML 「等等，等等，椛，我们，都是女孩子…嗯呜，嗯，嗯嗯嗯… %UNICODE(0x2665) *1% 哈啊… %UNICODE(0x2665) *1%」
+							PRINTW 
+						ENDSELECT
+					ENDIF
+				ENDIF
+				
+				SELECTCASE RAND:4
+				CASE 0
+					PRINTFORML 「啊哈 %UNICODE(0x2665) *1% 好厉害 %UNICODE(0x2665) *1% 好激烈 %UNICODE(0x2665) *1% 都要坏掉了 %UNICODE(0x2665) *1%」
+					PRINTL
+					SETCOLOR 0xF5F5F5
+					PRINTFORML 『啊哈… %UNICODE(0x2665) *1% 果桑，你露出了非常色情的表情… %UNICODE(0x2665) *1%%UNICODE(0x2665) *1%』
+					PRINTW 
+					RESETCOLOR
+				CASE 1
+					PRINTFORML 「%MASTERNAME:42%，比起椛，我的感觉更好吧 %UNICODE(0x2665) *1% 更多，更多 %UNICODE(0x2665) *1%」
+					PRINTL 
+					SETCOLOR 0xF5F5F5
+					PRINTFORML 『啊哈 %UNICODE(0x2665) *1% %CALLNAME:MASTER%，才没有那种事呢 %UNICODE(0x2665) *1%』
+					PRINTFORML 『啊 %UNICODE(0x2665) *1% 真棒 %UNICODE(0x2665) *1%』
+					PRINTW 
+					RESETCOLOR
+				CASE 2
+					PRINTFORML 「啊，好棒 %UNICODE(0x2665) *1% 好棒哦，%MASTERNAME:42% %UNICODE(0x2665) *1%%UNICODE(0x2665) *1%」
+					PRINTL 
+					SETCOLOR 0xF5F5F5
+					PRINTFORML 『%CALLNAME:MASTER%，也给我这边一点 %UNICODE(0x2665) *1%』
+					PRINTFORML 『我也，好舒服，好舒服 %UNICODE(0x2665) *1%』
+					PRINTW 
+					RESETCOLOR
+				CASE 3
+					PRINTFORML 「啊，啊 %UNICODE(0x2665) *1% 好硬 %UNICODE(0x2665) *1% %MASTERNAME:42% 的，非常硬 %UNICODE(0x2665) *1%」
+					PRINTFORML 「呀，不要拔出来，更多，再给我更多 %UNICODE(0x2665) *1%」
+					PRINTL 
+					SETCOLOR 0xF5F5F5
+					PRINTFORML 『呜呜 %UNICODE(0x2665) *1% 果桑，接下来轮到我了哦 %UNICODE(0x2665) *1%』
+					PRINTFORML 『%CALLNAME:MASTER%也好，%CALLNAME:MASTER%的鸡鸡也好，都喜欢，最喜欢了 %UNICODE(0x2665) *1%%UNICODE(0x2665) *1%』
+					PRINTW 
+					RESETCOLOR
+				ENDSELECT
+			ENDIF
+		ENDIF
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+;未记入
+;CALLFORM M_KOJO_MESSAGE_COM_K42_{SELECTCOM}_1
+RETURN 1
+
+@M_KOJO_MESSAGE_SCOM_K42_13_2
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	LOCAL = MASTER_POSE(6,1,1)
+	IF LOCAL:1 && FIRSTTIME(TFLAG:50 + 500)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;时奸中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:恋慕
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;14,玩弄Ｓ状结肠
+;==================================================
+@M_KOJO_MESSAGE_SCOM_K42_14
+CALL M_KOJO_MESSAGE_SCOM_K42_14_1
+RETURN 1
+@M_KOJO_MESSAGE_SCOM_K42_14_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(TFLAG:50 + 500)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;时奸中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:恋慕
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+;未记入
+;CALLFORM M_KOJO_MESSAGE_COM_K42_{SELECTCOM}_1
+RETURN 1
+;==================================================
+;15,隔着刺激小穴
+;==================================================
+@M_KOJO_MESSAGE_SCOM_K42_15
+CALL M_KOJO_MESSAGE_SCOM_K42_15_1
+RETURN 1
+@M_KOJO_MESSAGE_SCOM_K42_15_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(TFLAG:50 + 500)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;时奸中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:恋慕
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+;未记入
+;CALLFORM M_KOJO_MESSAGE_COM_K42_{SELECTCOM}_1
+RETURN 1
+
+;==================================================
+;17,同时吸乳头
+;==================================================
+@M_KOJO_MESSAGE_SCOM_K42_17
+CALL M_KOJO_MESSAGE_SCOM_K42_17_1
+RETURN 1
+@M_KOJO_MESSAGE_SCOM_K42_17_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(TFLAG:50 + 500)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;基本セット
+	;时奸中
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;恋慕
+	ELSEIF TALENT:恋慕
+		PRINTFORMW 
+		RETURN 1
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+		RETURN 1
+	;それ以外
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+;未记入
+;CALLFORM M_KOJO_MESSAGE_COM_K42_{SELECTCOM}_1
+RETURN 1
+
+;==================================================
+;19,授乳PLAY
+;==================================================
+@M_KOJO_MESSAGE_SCOM_K42_19
+CALL M_KOJO_MESSAGE_SCOM_K42_19_1
+RETURN 1
+@M_KOJO_MESSAGE_SCOM_K42_19_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(TFLAG:50 + 500)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	IF TALENT:恋慕 && TALENT:恋人
+		SELECTCASE RAND:22
+		CASE 0
+			PRINTFORML 「真是的～、这明明是%CHILDNAME:42:(TALENT:TARGET:育儿中)%的份呀」
+			PRINTFORML 「多了一个小宝宝呢…%UNICODE(0x2665) *1%」
+			PRINTW 
+		CASE 1
+			PRINTFORML 「啊咧啊咧～、有个很大的小宝宝在呢～%UNICODE(0x2665) *1%」
+			PRINTFORML 「是想要对着妈妈撒娇吗～%UNICODE(0x2665) *1%」
+			PRINTW 
+		CASE 2
+			PRINTFORML 「嗯…%UNICODE(0x2665) *1%　是个吮吸方法很H的小宝宝呢…%UNICODE(0x2665) *1%」
+			PRINTFORML 「呀昂…%UNICODE(0x2665) *1%　普通ー的小宝宝、可是不会在乳头上打转的呢…%UNICODE(0x2665) *1%」
+			PRINTW 
+		CASE 3
+			PRINTFORML 「好啦ー、对着果妈妈尽情ー撒娇也是可以的哟ー%UNICODE(0x2665) *1%」
+			PRINTFORML 「要好好地啾啾胸部呢～%UNICODE(0x2665) *1%」
+			PRINTW 
+		CASE 4
+			PRINTFORML 「想要吸胸部吗？　明明不是小宝宝哪ー」
+			PRINTFORML 「好啦、对着果的胸部啾ー啾ー得撒娇也可以ー哟…%UNICODE(0x2665) *1%」
+			PRINTW 
+		CASE 5
+			PRINTFORML 「好乖好乖、是发生了什么讨厌的事情吗？」
+			PRINTFORML 「对着果尽情地撒娇也可以的呢…%UNICODE(0x2665) *1%」
+			PRINTW 
+		CASE 6
+			PRINTFORML 「嗯呼…%UNICODE(0x2665) *1%　拼命地ー吸着胸部的%MASTERNAME:42%、真可爱ー%UNICODE(0x2665) *1%」
+			PRINTFORML 「好乖好乖、随便怎么系都可以的呢…%UNICODE(0x2665) *1%」
+		CASE 7
+			PRINTFORML 吮吸着乳房的时候、果无言而温柔地持续抚摸着你的头
+			PRINTW 
+		CASE 8
+			PRINTFORML 「哎呀，明明是小宝宝，鸡鸡却变得这么大了呢」
+			PRINTFORML 「弄得这么硬，真是个坏孩子呢～♪」
+			PRINTW 
+		CASE 9
+			PRINTFORML 「哎呀，为什么这里会变得这么大呢？」
+			PRINTFORML 「想要妈妈帮你撸撸吗？ 真是没办法呢…%UNICODE(0x2665) *1%」
+			PRINTW 
+		CASE 10
+			PRINTFORML 「弄得这么硬，顶端还流出好多黏糊糊的东西…♪」
+			PRINTFORML 「一直都在忍耐着呢，真乖真乖♪」
+			PRINTW 
+		CASE 11
+			PRINTFORML 「今天也努力了一天呢，真乖真乖♪」
+			PRINTFORML 「妈妈会好好地宠爱你的哦♪」
+			PRINTW 
+		CASE 12
+			PRINTFORML 「嗯，乖乖，今天也努力了呢…%UNICODE(0x2665) *1%」
+			PRINTFORML 「%MASTERNAME:42% 真乖真乖…%UNICODE(0x2665) *1%」
+			PRINTW 
+		CASE 13
+			PRINTFORML 「白色的尿尿，要biu biu地射出来了吗？」
+			PRINTFORML 「能好好地出来吗？ 加油 %UNICODE(0x2665) *1% 加油 %UNICODE(0x2665) *1%」
+			PRINTW 
+		CASE 14
+			PRINTFORML 「呵呵，%MASTERNAME:42%，乖孩子，乖孩子…%UNICODE(0x2665) *1%」
+			PRINTFORML 「用滑溜溜的小手来撸撸哦～%UNICODE(0x2665) *1%」
+			PRINTW 
+		CASE 15
+			PRINTFORML 「欧派好吃吗？ 呵呵，着迷地吸着呢…%UNICODE(0x2665) *1%」
+			PRINTFORML 「这边也精力充沛呢♪」
+			PRINTW 
+		CASE 16
+			PRINTFORML 「%MASTERNAME:42% 真贪心呢～%UNICODE(0x2665) *1%」
+			PRINTFORML 「吸着欧派，还让人家帮你撸鸡鸡～%UNICODE(0x2665) *1%」
+			PRINTW 
+		CASE 17
+			PRINTFORML 「不用忍耐哦♪」
+			PRINTFORML 「一边喝着欧派一边biu biu地射出来吧？」
+			PRINTW 
+		CASE 18
+			PRINTFORML 「能把鸡鸡弄得这么大，真了不起 %UNICODE(0x2665) *1%」
+			PRINTFORML 「一边吸着妈妈的欧派，一边biu biu地射出白色的东西吧 %UNICODE(0x2665) *1%」
+			PRINTW 
+		CASE 19
+			PRINTFORML 「这么喜欢妈妈的欧派吗～？」
+			PRINTFORML 「可以尽情地喝哦～%UNICODE(0x2665) *1%」
+			PRINTW 
+		CASE 20
+			PRINTFORML （呵呵，%MASTERNAME:42% 吸着欧派的表情，好可爱…%UNICODE(0x2665) *1%）
+			PRINTFORML （这边也很舒服呢，一抖一抖的…%UNICODE(0x2665) *1%）
+			PRINTW 
+		CASE 21
+			PRINTFORML 「嗯…%UNICODE(0x2665) *1% 好认真地吸着呢…%UNICODE(0x2665) *1%」
+			PRINTFORML 「没关系，再多吸一点。可以尽情地撒娇哦 %UNICODE(0x2665) *1%」
+			PRINTW 
+		ENDSELECT
+		RETURN 1
+	ELSEIF TALENT:恋慕 || TALENT:恋人
+		IF TALENT:TARGET:育儿中
+			PRINTFORML 「真是的ー爸爸、这样就完全不知道哪边是小宝宝了啊ー」
+			PRINTFORML 果苦笑着、温柔地抚摸着这边的头…
+			PRINTW 
+		ELSE
+			SELECTCASE RAND:4
+			CASE 0
+				PRINTFORML 「呵呵，像小宝宝一样拼命地吸着 %UNICODE(0x2665) *1%」
+				PRINTW 
+			CASE 1
+				PRINTFORML 「真是个大宝宝呢，真是的… %UNICODE(0x2665) *1%」
+			CASE 2
+				PRINTFORML 「是不是有点太宠溺了呢。不是 %CHILDNAME:42:(TALENT:TARGET:育儿中)% 而是 %MASTERNAME:42%」
+				PRINTFORML 果露出略微无奈的表情，一边给我喂着母乳…
+				PRINTW 
+			CASE 3
+				PRINTFORML 「果的欧派，好吃吗…？」
+				PRINTFORML 「呵呵，太入迷了，都听不见了呢… %UNICODE(0x2665) *1%」
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ELSE
+		IF TALENT:TARGET:育儿中
+			PRINTFORML 「哈啊…明明光是照顾%CHILDNAME:42:(TALENT:TARGET:育儿中)%就已经很费事了、你真的是很需要照顾呢ー」
+			PRINTFORML 虽然不能说是侮蔑、果露出了从心底里露出吃惊的表情、被这边吸着奶
+			PRINTW 
+		ELSE
+			PRINTFORML 「反ー正都要吸胸部的话、还是给小宝宝吸比较好啊…」
+			PRINTFORML 果露出了从心底里感到厌烦的表情、让你持续地吮吸着母乳
+		ENDIF
+		RETURN 1
+	ENDIF
+ENDIF
+;未记入
+;CALLFORM M_KOJO_MESSAGE_COM_K42_{SELECTCOM}_1
+RETURN 1

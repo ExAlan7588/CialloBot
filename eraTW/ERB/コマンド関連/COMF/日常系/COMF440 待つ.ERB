@@ -1,0 +1,36 @@
+﻿;-------------------------------------------------
+;等待
+;日常系指令、レベル1
+;-------------------------------------------------
+@COM440
+DOWNBASE:MASTER:气力 = 50
+;SIF FLAG:70 == 1
+	;BASE:MASTER:TSP -= 50
+;SIF FLAG:70 != 1
+TIME += 20
+RETURN 1
+
+;等待
+@COM_ABLE440
+;ショップ画面では不可
+SIF !TFLAG:100
+	RETURN 0
+;批量管理
+SIF GLOBAL_COMABLE(440)
+	RETURN RESULT
+;气力0では不可
+SIF BASE:MASTER:气力 <= 0
+	RETURN 0
+;ウフフ中は不可
+SIF CFLAG:诶嘿嘿
+	RETURN 0
+;据点外かつ、樱花道的鸟居(实数10で指定)、地藏小路、广场、雾之湖、竹林入口、森林的入口、中有之道、山麓树海、九天瀑布、幻想风穴、命连寺山门でなければ不可
+SIF !IN_HOME(CFLAG:MASTER:当前位置) && NOSAMES(CFLAG:MASTER:当前位置, 10, 地藏小路, 广场, 雾之湖, 竹林入口, 森林的入口, 中有之道, 山麓树海, 九天瀑布, 幻想风穴, 槐安通路)
+	RETURN 0
+;据点内は据点入り口以外は不可
+SIF IN_HOME(CFLAG:MASTER:当前位置) && !CHK_ENTRANCE(CFLAG:MASTER:当前位置, MAIN_MAP)
+	RETURN 0
+;停止中は不可
+SIF FLAG:70 == 1
+	RETURN 0
+RETURN 1

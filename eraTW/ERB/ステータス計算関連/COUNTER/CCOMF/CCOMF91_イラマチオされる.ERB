@@ -1,0 +1,90 @@
+﻿;*********************************************************************************************
+;Counter指令：被深喉
+;ARG = 对象の角色番号
+;*********************************************************************************************
+@CCOMF91(ARG)
+
+	;体势の变更
+	;=============================
+	CALL TOUCH_SET(SET_FROM_P,4,ARG)
+	TFLAG:MASTERの口使用中 ++
+	
+	;ソース计算および内部处理系统
+	;=============================
+	CALL DATUI_FOR_INSERT(ARG)
+	SIF GETBIT(TALENT:PLAYER:2,0)
+		SOURCE:ARG:快Ｃ += 200
+	SOURCE:ARG:性行动 += 300
+	SOURCE:ARG:征服 += 800
+	SOURCE:PLAYER:液体 += 100
+	SOURCE:ARG:施虐 += 800
+	SOURCE:ARG:强迫 += 800
+	SOURCE:ARG:偏离正轨 += 100
+	SOURCE:PLAYER:快Ｍ += 80
+	;射精部位（1=膣内 2=肛门 3=手淫 4=口淫 5=乳交 6=素股 7=足交 8=体表 9=肛门侍奉 10=道具 11=触手 12=Ａ调教 13=Ｖ调教）
+	CALL 射精对象登录(ARG, PLAYER, 4)
+	TCVAR:ARG:嗜虐フラグ = 1
+	;强度
+	TCVAR:ARG:4 += 800
+	STAIN:ARG:2 |= STAIN:PLAYER:0
+	STAIN:PLAYER:0 |= STAIN:ARG:2
+	EXP:PLAYER:口淫经验 ++
+	CALL EVENT_COUNTER_POSE_69(ARG,0)
+
+	;マ斯塔Counter制御
+	;(ビット立ちで不可 0=摸屁股 1=拥抱 2=接吻 3=胸爱抚 4=肛门爱抚 5=阴蒂爱抚 6=指插入れ 7=掀裙子)
+	;=============================
+	;CALL Counter插入され继续中处理(ARG)
+	SETBIT TCVAR:ARG:26 ,0
+	SETBIT TCVAR:ARG:26 ,1
+	SETBIT TCVAR:ARG:26 ,2
+	SETBIT TCVAR:ARG:26 ,3
+	SETBIT TCVAR:ARG:26 ,4
+	SETBIT TCVAR:ARG:26 ,5
+	SETBIT TCVAR:ARG:26 ,6
+	SETBIT TCVAR:ARG:26 ,7
+
+RETURN 1
+
+;*********************************************************************************************
+;Counter实行可否出力函数
+;ARG = 对象の角色番号
+;*********************************************************************************************
+@CCOM_ABLE91(ARG)
+
+	SIF !(TALENT:ARG:2 & 2)
+		RETURN 0
+	SIF BASE:ARG:勃起 < 1000
+		RETURN 0
+	SIF TEQUIP:50 >= 0 || TEQUIP:51 >= 0
+		RETURN 0
+	SIF TEQUIP:PLAYER:50 == ARG || TEQUIP:PLAYER:51 == ARG
+		RETURN 0
+	SIF TFLAG:60
+		RETURN 0
+
+RETURN 1
+
+;*********************************************************************************************
+;Counter实行判定值算出函数
+;ARG = 对象の角色番号
+;*********************************************************************************************
+@CCOM_ORDER91(指令番号, ARG, 基本值)
+#DIM 指令番号
+#DIM 基本值
+#DIMS Counterタイプ
+
+	;Counterタイプ设定
+	;=============================
+	Counterタイプ = 责め
+
+	;实行判定值算出式
+	;=============================
+	LOCAL = 基本值 + ABL:ARG:Ｃ感觉 + ABL:ARG:施虐属性
+	
+	;Counterタイプ别计算处理 实质实行判定处理を含む
+	;=============================
+	LOCAL = MAX(LOCAL + COUNTER_SIKOU:ARG:指令番号, 1)
+	LOCAL *= COUNTER_TYPE(Counterタイプ, ARG)
+
+RETURN LOCAL

@@ -1,0 +1,48 @@
+﻿[SKIPSTART]
+@UNIQUE_FA_XX(CHARA, ARGS,时间系数)
+#DIM CHARA
+#DIM CHAIN
+#DIM 现在地
+#DIM メッセージ表示
+#DIM 时间系数
+现在地 = CFLAG:CHARA:当前位置
+メッセージ表示 = 现在地 == CFLAG:MASTER:当前位置 ? 1 # 0
+
+UNIQUE_FA_NAME:CHARA = ナントカする
+
+SELECTCASE ARGS
+	CASE "发生"
+		;在住角色が自室にいる时
+		SIF !CFLAG:CHARA:神社在住
+			RETURN 0
+		SIF 现在地 != CFLAG:CHARA:神社在住
+			RETURN 0
+		SIF BASE:CHARA:气力 <= 500
+			RETURN 0
+		SIF メッセージ表示
+			PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", CHARA)%はなにやらナントカし始めた。
+		;返し值は行动时间
+		RETURN 90
+	CASE "行动中"
+		IF メッセージ表示
+			PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", CHARA)%はナントカしている
+		ENDIF
+	CASE "完了"
+		SIF メッセージ表示
+			PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", CHARA)%はナントカを终えたようだ。
+	CASE "中断"
+		;中断メッセージは诶嘿嘿突入时等でも表示されてしまうので表示しない
+	CASE "交手"
+		PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", PLAYER)%は%NAME_OUTPUT_TRANSLATION("CALLNAME", CHARA)%にナントカを寻ねた
+		IF TFLAG:193 < 0
+			PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", CHARA)%は身体を强张らせ、ナントカしてしまった…
+		ELSE
+			PRINTFORML ナントカだったようだ…
+		ENDIF
+	CASE "ソース"
+		DOWNBASE:MASTER:气力 += 20 * 时间系数
+		DOWNBASE:TARGET:气力 += 20 * 时间系数
+		SOURCE:欢乐 = (100 + ((ABL:亲密 + ABL:MASTER:话术技能) * 50)) * 时间系数
+		SOURCE:被动 = (60 + ((ABL:顺从 + ABL:MASTER:话术技能) * 30)) * 时间系数
+ENDSELECT
+[SKIPEND]

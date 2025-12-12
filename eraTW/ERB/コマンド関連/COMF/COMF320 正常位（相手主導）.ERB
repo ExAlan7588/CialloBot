@@ -1,0 +1,157 @@
+﻿;-------------------------------------------------
+;对方主导正常位
+;性交系指令、レベル1
+;-------------------------------------------------
+@COM320
+;-------------------------------------------------
+;特殊派生处理
+;-------------------------------------------------
+
+;ベッドがないと立位に
+SIF !BEDROOM(CFLAG:PLAYER:当前位置) && !(BATHROOM() && ITEM:20)
+	TFLAG:193 = 1
+
+;-------------------------------------------------
+;COM别FLAGの设定
+;-------------------------------------------------
+;行为者
+TCVAR:116 = PLAYER
+
+;侍奉快乐フラグ
+TCVAR:PLAYER:108 = 1
+
+CALL TOUCH_SET(SET_FROM_V,1,TARGET)
+TCVAR:PLAYER:2 = 1
+TCVAR:PLAYER:童贞丧失 = 1
+TEQUIP:TARGET:体位 = 1
+TFLAG:MASTERのＰ插入中 = 1
+TEQUIP:50 = PLAYER
+
+
+CSTR:PLAYER:10 += @"{TARGET}/"
+;TCVAR:2 射精部位フラグ（-1=避孕套 1=膣内 2=肛门 3=手淫 4=口淫 5=乳交 6=素股 7=足交 8=体表 9=肛门侍奉 10=道具 11=触手 12=Ａ调教 13=Ｖ调教）
+TCVAR:PLAYER:2 = 1
+TCVAR:PLAYER:童贞丧失 = 1
+;强度
+TCVAR:PLAYER:4 = 800
+
+CSTR:TARGET:10 += @"{PLAYER}/"
+;TCVAR:2 射精部位フラグ（-1=避孕套 1=膣内 2=肛门 3=手淫 4=口淫 5=乳交 6=素股 7=足交 8=体表 9=肛门侍奉 10=道具 11=触手 12=Ａ调教 13=Ｖ调教）
+TCVAR:TARGET:2 = 13
+;强度
+TCVAR:TARGET:4 = 1500
+
+
+;正常位补正
+;PLAYERがTARGETの膣に插入している
+SIF (BEDROOM(CFLAG:PLAYER:当前位置) || (BATHROOM() && ITEM:20)) && TEQUIP:50 == PLAYER
+	TCVAR:PLAYER:4 += EXP:爱情经验 * 5
+SIF TCVAR:PLAYER:4 >= 3000
+	TCVAR:PLAYER:4 = 3000
+
+DOWNBASE:PLAYER:体力 += 30
+DOWNBASE:PLAYER:气力 += 40
+
+SOURCE:PLAYER:快Ｃ = 400
+
+DOWNBASE:体力 += 40
+DOWNBASE:气力 += 50
+
+SOURCE:快Ｖ = 400
+SOURCE:情爱 = 300
+SOURCE:苦痛 = 500
+SOURCE:露出 = 50
+SIF TFLAG:193
+	SOURCE:露出 = 300
+;正常位补正
+SIF BEDROOM(CFLAG:PLAYER:当前位置) && !ASSIPLAY
+	SOURCE:快Ｖ += EXP:爱情经验
+SIF SOURCE:快Ｖ >= 1000
+	SOURCE:快Ｖ = 1000
+
+;上のほうで计算した污れデータ
+SOURCE:不洁 = Y*10 + 60
+CALL 特殊ソース处理
+;Vへの苦痛は先に处理しておく
+CALL PAIN_CHECK_V(TARGET)
+;-------------------------------------------------
+;污れの处理
+;-------------------------------------------------
+;射精に关系なく行われる处理はここから
+CALL STAIN_膣内Ｐ插入
+;-------------------------------------------------
+;経験の处理
+;-------------------------------------------------
+EXP:PLAYER:插入经验 ++
+EXP:Ｖ经验 ++
+;同性爱　レズなら返回值1ゲイなら返回值2
+
+IF HETEROSEX(TARGET,PLAYER)
+	EXP:(50 + HETEROSEX(TARGET,PLAYER)) += 4
+	EXP:PLAYER:(50 + HETEROSEX(TARGET,PLAYER)) += 4
+ENDIF
+EXP:Ｖ性交经验 ++
+IF !ASSIPLAY
+	EXP:爱情经验 += TALENT:恋慕 * 3
+	;处女
+	SIF TALENT:处女 == 1 && TALENT:恋慕
+		EXP:爱情经验 += 10
+ENDIF
+
+RETURN 1
+
+;-------------------------------------------------
+;实行判定
+;-------------------------------------------------
+@COM_ABLE320
+SIF !TFLAG:100
+	RETURN 0
+SIF TCVAR:20 != 41
+	RETURN 0
+;毒人形だと性器がついてないのでダメ
+SIF TALENT:196 == 99
+	RETURN 0
+;调教者が男人、扶她の场合はある程度勃起てないとダメ
+SIF (TALENT:PLAYER:2 & 2) && BASE:PLAYER:勃起 < 1000
+	RETURN 0
+;振动棒插入中はダメ
+SIF TEQUIP:13
+	RETURN 0
+;男人だとダメ
+SIF !(TALENT:2 & 1)
+	RETURN 0
+;体格差がある场合は経験がないとダメ
+SIF 插入不可(TARGET) == 1 && EXP:Ｖ经验 < 50 && !TALENT:PLAYER:禁断的知识
+	RETURN 0
+;さらに体格差があると禁断的知识が必要
+SIF 插入不可(TARGET) == 2 && (!TALENT:PLAYER:禁断的知识 || EXP:Ｖ经验 < 50)
+	RETURN 0
+SIF 插入不可(TARGET) == 3
+	RETURN 0
+;调教者が男人、半人半妖、扶她、もしくは穿戴式假阴茎がないとダメ
+SIF !(TALENT:PLAYER:2 & 2) && ITEM:PBAND == 0
+	RETURN 0
+;处女で、顺从4以下・百合属性4以下のASSIの场合はできない（施虐狂ならＯＫ）
+IF TALENT:处女 && ASSIPLAY
+	SIF (ABL:ASSI:顺从 <= 4 || ABL:ASSI:百合属性 <= 4) && TALENT:ASSI:施虐狂 == 0
+		RETURN 0
+ENDIF
+;时间停止中はスキップ
+IF FLAG:70 != 1
+	;处女かつ润滑不足はだめ
+	SIF PALAM:润滑 < PALAMLV:2 && TALENT:处女 && TALENT:处女 != -1
+		RETURN 0
+ENDIF
+
+;下半身着衣
+SIF TEQUIP:0 & 4
+	RETURN 0
+;浴室PLAY中は气垫床が无いとダメ
+IF TEQUIP:31
+	SIF ITEM:20 == 0 && NOITEM == 0
+		RETURN 0
+ENDIF
+;背面座位からはダメ
+SIF TEQUIP:体位 == 5
+	RETURN 0
+RETURN 1

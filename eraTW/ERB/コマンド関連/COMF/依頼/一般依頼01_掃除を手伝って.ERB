@@ -1,0 +1,134 @@
+﻿;存否函数
+;F函数はTRYCALL系が使えないので通常函数で存否配列を作っちゃう
+@EXIST_一般依赖1
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+;オブジェクト本体
+;ここでARGで渡されるのはCLIENT_IDです
+@一般依赖1(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "依赖名"
+	CALLF MAKE_STR(V_NAME, "帮忙做扫除")
+CASE "依赖内容表示"
+	CALLF MAKE_STR(V_NAME, @"帮助%NAME_OUTPUT_TRANSLATION("CALLNAME", ARG)%扫除房间")
+CASE "依赖报酬表示"
+	CALLF MAKE_STR(V_NAME, @"低级素材")
+CASE "依赖实行指令名"
+	IF YOGORE:(GET_CHARAHOME(ARG)) < 1000
+		CALLF MAKE_STR(V_NAME, "扫除完毕")
+	ELSE
+		CALLF MAKE_STR(V_NAME, "开始扫除")
+	ENDIF
+CASE "依赖内容"
+	CALLF MAKE_INT(V_NAME, MAKE_IRAI_DATA(0, "作业"))
+CASE "依赖サブ"
+CASE "依赖期限"
+;发生时ではなく受托时に确定します
+CASE "依赖发生率"
+;これは他の一般依赖との相对概率なんで10％ではありません
+	CALLF MAKE_INT(V_NAME, 10)
+CASE "依赖发生条件"
+;自宅が你と同一Mapの角色のみ
+	SIF MAIN_MAP == GET_MAPID(GET_CHARAHOME(ARG))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "依赖受托可能条件"
+;その依赖者の自宅近边にいるとき
+;（基本条件としてまず依赖者と你が同一地点にいるはずなのでこれでよい）
+	IF MAIN_MAP != GET_MAPID(GET_CHARAHOME(ARG))
+	ELSEIF CFLAG:ARG:宴会参加
+	ELSEIF YOGORE:(GET_CHARAHOME(ARG)) < 1000
+	ELSEIF GET_MAPID(CFLAG:MASTER:当前位置) == MAIN_MAP
+		CALLF MAKE_INT(V_NAME, 1)
+	ENDIF
+CASE "依赖实行可能条件"
+;依赖者とTARGETが同一であり、その依赖者の自宅にいるとき
+;（基本条件としてまず依赖者と你が同一地点にいるはずなのでこれでよい）
+	IF MAIN_MAP != GET_MAPID(GET_CHARAHOME(ARG))
+	ELSEIF CFLAG:ARG:宴会参加
+	ELSEIF CFLAG:ARG:当前位置 == GET_CHARAHOME(ARG)
+		CALLF MAKE_INT(V_NAME, 1)
+	ENDIF
+;成功/失败处理はCARRYOUTで直接书く
+;SOURCEやITEM入手、消费が烦杂になるので
+CASE "依赖消灭条件"
+	SIF RAND:100 < 30
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "依赖人连れ出し可能"
+	CALLF MAKE_INT(V_NAME, 1)
+ENDSELECT
+
+
+
+@IRAI_一般1(CHARA, IRAI_ID, SCENE)
+#DIM  CHARA
+#DIM  IRAI_ID
+#DIMS SCENE
+#DIM  CLIENT_ID
+#DIM  SWEEP_ID
+#DIM  SWEEP_POWER
+#DIM  PREV_YOGORE
+CLIENT_ID = IRAI_ID_TO_CLIENT(IRAI_ID)
+SELECTCASE SCENE
+CASE "依赖条件表示"
+;何か専用の表示情报を设けたい时用
+;受托済みの依赖表示で使用されます
+;
+;PRINT系だけでSOURCEとかは入れちゃダメ、WAITも无しで
+;ここ以外の表示项目は
+;PRINTFORML 　　　　　：
+;となっているのでスペースを揃えたほうが见栄えが良いです
+
+CASE "依赖实行时"
+;このCASEに限り、RESULTが意味を持ちます
+;依赖实行时のRESULTにはIRAI_CONST_RESULT()を使用してください
+;可能な参数は"中止", "实行して成功", "实行して失败", "实行して未解决"です
+;独自处理を仕込みたい时は"实行して未解决"で先延ばしするなりしてください
+;
+;"依赖实行时"に限っていえば、CHARAはTARGETと同一であり、必ずしもCLIENT_IDと一致するとは限りません
+;个々のケースで确认する必要があります
+;この依赖は「作业」扱いであり、CLIENTがTARGETになっている时のみ实行できます
+;
+;
+;ほぼ扫除指令のコピーだが必ず手传ってくれて扫除效果が高い
+	IF YOGORE:(GET_CHARAHOME(TARGET)) < 1000
+		PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%的房间十分干净
+		TIME += 3
+	ELSE
+		PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%和%NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%合作清扫了房间
+		PRINTFORML 
+		SWEEP_ID = CFLAG:MASTER:当前位置
+		SWEEP_POWER = (2 + ABL:MASTER:清扫技能 + 3 * TALENT:MASTER:清扫中毒) * (5 - TALENT:MASTER:61) / 5
+		PREV_YOGORE = YOGORE:SWEEP_ID
+		YOGORE:SWEEP_ID = YOGORE:SWEEP_ID / (SWEEP_POWER + 1 + ABL:清扫技能)
+		SIF GROUPMATCH(CFLAG:MASTER:当前位置, 9, 10)
+			YOGORE:(54) = 0
+			;PRINTL 顺手把虫笼也清扫干净了
+			;PRINTFORML 因为只要挪开针妙丸的私人物品再倒过来抖一抖就行了所以很简单
+		EX:MASTER:今日的扫除回数 += PREV_YOGORE - YOGORE:SWEEP_ID
+		EXP:清扫经验 ++
+		EXP:MASTER:清扫经验 ++
+
+		DOWNBASE:MASTER:体力 = 50
+		DOWNBASE:MASTER:气力 = 100
+		DOWNBASE:气力 = 100
+		TIME += 20
+	ENDIF
+	SOURCE:欢乐 = 500
+	SOURCE:征服 = 200
+	RETURN IRAI_CONST_RESULT("实行して成功")
+CASE "依赖成功时"
+;成功报告时の报酬など
+	CALL CHANGE_CFLAG(2, TARGET, 20)
+	CALL CHANGE_CFLAG(4, TARGET, 10)
+		CALL GetRandMaterial(1, 1000)
+CASE "依赖失败时"
+;失败报告时の处理
+	CALL CHANGE_CFLAG(2, TARGET, -10)
+	CALL CHANGE_CFLAG(4, TARGET, -10)
+ENDSELECT

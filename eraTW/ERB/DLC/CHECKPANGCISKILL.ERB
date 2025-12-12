@@ -1,0 +1,44 @@
+﻿@CHECKPANGCISKILL(OPPONENT, 敌特殊技能, 相手强さ, 相手残机, 相手B值, プレイヤーB值)
+    #DIM OPPONENT
+    #DIM 敌特殊技能
+    #DIM 相手强さ
+    #DIM 相手残机
+    #DIM 相手B值
+    #DIM プレイヤーB值
+	IF 敌特殊技能 == 1
+        IF RAND:100 + 1 < 30 + 相手强さ * 2
+            LOCAL:1 = 相手强さ * 200
+            相手B值 += LOCAL:1
+            SETCOLOR C_RED
+                PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", OPPONENT)%的【蓝！白！碗！】发动！
+                PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", OPPONENT)%的B值增加了+{LOCAL:1}！
+            RESETCOLOR
+            ;口上呼び出し
+            CALL KOJO_MESSAGE_SEND("DANMAKU", 相手残机, OPPONENT, -1, -1, "乾坤一掷")
+            LOCAL = 相手B值 - プレイヤーB值
+        ENDIF
+    ELSEIF 敌特殊技能 == 2
+        IF RAND:100 + 1 < 10 + 相手强さ * 2
+            LOCAL:1 = 相手强さ * 300
+            相手B值 += LOCAL:1
+            SETCOLOR C_RED
+                PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", OPPONENT)%的【调教时间！】发动！
+                PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", OPPONENT)%的B值增加了+{LOCAL:1}！
+            RESETCOLOR
+            ;口上呼び出し
+            CALL KOJO_MESSAGE_SEND("DANMAKU", 相手残机, OPPONENT, -1, -1, "乾坤一掷")
+            LOCAL = 相手B值 - プレイヤーB值
+        ENDIF
+    ELSEIF 敌特殊技能 == 3
+        IF RAND:100 + 1 < 50 + 相手强さ * 2
+            LOCAL:1 = 相手强さ * 100
+            相手B值 += LOCAL:1
+            SETCOLOR C_RED
+                PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", OPPONENT)%的【透明人间】发动！
+                PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", OPPONENT)%的B值增加了+{LOCAL:1}！
+            RESETCOLOR
+            ;口上呼び出し
+            CALL KOJO_MESSAGE_SEND("DANMAKU", 相手残机, OPPONENT, -1, -1, "乾坤一掷")
+            LOCAL = 相手B值 - プレイヤーB值
+        ENDIF
+    ENDIF

@@ -1,0 +1,647 @@
+﻿;---------------------------------------------------------------------
+;ITEMの细かい分类等をまとめて设定する函数
+;主に通信贩卖をはじめショップ用
+;SALES  0=购入可, -1=卖完, -2=封印, ただしまとめ买いできるものはITEMSALES:ARGを返す
+;ARG:1  补足用の参数,值段の割引など
+;---------------------------------------------------------------------
+@ITEMDATA(ARG, ARGS, ARG:1)
+SELECTCASE ITEMNAME:ARG
+;无效な道具
+CASE ""
+	RETURN 0
+CASE "跳蛋", 
+	SELECTCASE ARGS
+	CASE "SALES"
+		IF ITEM:ARG
+			RETURN -1
+		ELSE
+			RETURN 0
+		ENDIF
+	CASE "购入"
+		CALL SHOP_ASK(ARG, ARG:1)
+		SIF !RESULT
+			ITEM:ARG ++
+	CASE "TYPE:调教", "TYPE:河童道具", "TYPE:跳蛋", "SHOP:通信贩卖", "SHOP:河童の道具屋", "SHOP:诊察"
+		RETURN 1
+	ENDSELECT
+CASE "电动按摩棒", "阴蒂夹", "飞机杯", "振动棒", "肛用振动棒", "乳头夹", "搾乳器", "穿戴式假阴茎", "眼罩", "绳", "气垫床", "围裙", "【捕缚技能】"
+	SELECTCASE ARGS
+	CASE "SALES"
+		IF ITEM:ARG
+			RETURN -1
+		ELSE
+			RETURN 0
+		ENDIF
+	CASE "购入"
+		CALL SHOP_ASK(ARG, ARG:1)
+		SIF !RESULT
+			ITEM:ARG ++
+	CASE "TYPE:调教", "TYPE:河童道具", "SHOP:通信贩卖", "SHOP:河童の道具屋", "SHOP:诊察"
+		RETURN 1
+	ENDSELECT
+CASE  "后庭拉珠", "飞机杯", "扩张气球", "浣肠器＋肛塞", "鞭", "针", "口球", "摄像机", "大镜", "项圈", "电极棒", "触手使役术"
+	;现在未实装
+CASE "测定仪", "角虫养成外骨骼", "调合用品一式", "保温壶", "钓鱼竿", "搅拌机", "昆虫采集套装"
+	SELECTCASE ARGS
+	CASE "SALES"
+		IF ITEM:ARG
+			RETURN -1
+		ELSE
+			RETURN 0
+		ENDIF
+	CASE "购入"
+		CALL SHOP_ASK(ARG, ARG:1)
+		SIF !RESULT
+			ITEM:ARG ++
+	CASE "TYPE:日用品", "TYPE:河童道具", "SHOP:通信贩卖", "SHOP:河童の道具屋"
+		RETURN 1
+	ENDSELECT
+CASE "电锯"
+	;电锯は通贩で买えない
+	SELECTCASE ARGS
+	CASE "SALES"
+		IF ITEM:ARG
+			RETURN -1
+		ELSE
+			RETURN 0
+		ENDIF
+	CASE "购入"
+		CALL SHOP_ASK(ARG, ARG:1)
+		SIF !RESULT
+			ITEM:ARG ++
+	CASE "TYPE:日用品", "TYPE:河童道具", "SHOP:河童の道具屋"
+		RETURN 1
+	ENDSELECT
+CASE "简易泳池"
+	SELECTCASE ARGS
+	CASE "SALES"
+		IF ITEM:ARG
+			RETURN -1
+		ELSE
+			RETURN 0
+		ENDIF
+	CASE "购入"
+		CALL SHOP_ASK(ARG, ARG:1)
+		SIF !RESULT
+			ITEM:ARG ++
+	CASE "TYPE:日用品", "TYPE:河童道具", "TYPE:改造可能", "SHOP:通信贩卖", "SHOP:河童の道具屋"
+		RETURN 1
+	ENDSELECT
+CASE "折叠伞"
+	SELECTCASE ARGS
+	CASE "SALES"
+		IF ITEM:ARG
+			RETURN -1
+		ELSE
+			RETURN 0
+		ENDIF
+	CASE "购入"
+		CALL SHOP_ASK(ARG, ARG:1)
+		IF !RESULT
+			ITEM:ARG ++
+			PRINTFORMW 因为买了新伞、所以把坏掉的伞处理掉了
+			ITEM:坏掉的伞 = 0
+		ENDIF
+	CASE "TYPE:日用品", "TYPE:河童道具", "SHOP:通信贩卖", "SHOP:河童の道具屋"
+		RETURN 1
+	ENDSELECT
+CASE "电子琴", "钢琴", "吉他", "小号", "小提琴"
+	SELECTCASE ARGS
+	CASE "SALES"
+		IF ITEM:ARG
+			RETURN -1
+		ELSE
+			RETURN 0
+		ENDIF
+	CASE "购入"
+		CALL SHOP_ASK(ARG, ARG:1)
+		SIF !RESULT
+			ITEM:ARG ++
+	CASE "TYPE:日用品", "TYPE:河童道具", "SHOP:通信贩卖", "SHOP:河童の道具屋"
+		RETURN 1
+	ENDSELECT
+CASE "诱捕用品【小型】", "诱捕用品【中型】", "诱捕用品【大型】"
+	SELECTCASE ARGS
+	CASE "SALES"
+		;无限に补充される
+		RETURN 99
+	CASE "购入"
+		CALL ITEM_MATOMEGAI(ARG, ARG:1)
+	CASE "TYPE:消耗品", "TYPE:河童道具", "SHOP:通信贩卖", "SHOP:河童の道具屋"
+		RETURN 1
+	ENDSELECT
+CASE "润滑液", "避孕套", "口服避孕药"
+	SELECTCASE ARGS
+	CASE "SALES"
+		;无限に补充される
+		RETURN 99
+	CASE "购入"
+		CALL ITEM_MATOMEGAI(ARG, ARG:1)
+	CASE "TYPE:消耗品", "TYPE:うさぎ药品", "SHOP:通信贩卖"
+		RETURN 1
+	ENDSELECT
+CASE "媚药", "利尿剂"
+	SELECTCASE ARGS
+	CASE "SALES"
+		IF ABL:MASTER:教养 >= 2
+			;无限に补充される
+			RETURN 99
+		ELSE
+			RETURN -2
+		ENDIF
+	CASE "购入"
+		CALL ITEM_MATOMEGAI(ARG, ARG:1)
+	CASE "TYPE:消耗品", "SHOP:通信贩卖"
+		RETURN 1
+	ENDSELECT
+CASE "易书", "奇迹之石", "逆之羽"
+	SELECTCASE ARGS
+	CASE "TYPE:消耗品"
+		RETURN 1
+	ENDSELECT
+CASE "绷带"
+	SELECTCASE ARGS
+	CASE "SALES"
+		;无限に补充される
+		RETURN 99
+	CASE "购入"
+		CALL ITEM_MATOMEGAI(ARG, ARG:1)
+	CASE "TYPE:消耗品", "TYPE:うさぎ药品"
+		RETURN 1
+	ENDSELECT
+CASE "录像带", "胶卷", "低温蜡烛"
+	;现在未实装
+CASE "平价食材", "优质食材", "高级食材", "甜味料"
+	SELECTCASE ARGS
+	CASE "SALES"
+		IF ITEMSALES:ARG <= 0
+			RETURN -1
+		ELSE
+			RETURN ITEMSALES:ARG
+		ENDIF
+	CASE "购入"
+		CALL ITEM_MATOMEGAI(ARG, ARG:1)
+	CASE "TYPE:食材", "SHOP:食料品店", "SHOP:通信贩卖"
+		RETURN 1
+	ENDSELECT
+CASE "浊酒", "清酒", "鬼杀酒", "甜酒"
+	SELECTCASE ARGS
+	CASE "SALES"
+		IF ITEMSALES:ARG <= 0
+			RETURN -1
+		ELSE
+			RETURN ITEMSALES:ARG
+		ENDIF
+	CASE "购入"
+		CALL ITEM_MATOMEGAI(ARG, ARG:1)
+	CASE "TYPE:酒", "SHOP:酒屋", "SHOP:通信贩卖"
+		RETURN 1
+	ENDSELECT
+CASE "神酒", "蒸馏酒", "药酒", "一夜奇稻田"
+	;非卖品
+	SELECTCASE ARGS
+	CASE "TYPE:酒"
+		RETURN 1
+	ENDSELECT
+;(酒造パッチ)道具追加
+CASE "烧酒", "蜂蜜酒", "果酒", "莓子酒", "白朗姆酒", "红酒", "金朗姆酒", "黑朗姆酒", "强化红酒", "贵腐红酒", "陈酿红酒", "优质陈酿红酒", "白兰地VS", "白兰地VSOP", "白兰地XO", "灰持酒", "果渣白兰地", "浊酒", "吟酿酒", "熟成酒", "古酒", "粕取烧酒", "三增酒", "贵酿浊酒", "贵酿酒", "贵酿熟成酒", "贵酿古酒"
+	;非卖品
+	SELECTCASE ARGS
+	CASE "TYPE:酒"
+		RETURN 1
+	ENDSELECT
+CASE "梅酒", "", "", "", "", "", ""
+	;现在未实装
+CASE "圣诞节礼物"
+	SELECTCASE ARGS
+	CASE "SALES"
+		IF ITEM:ARG
+			RETURN -1
+		ELSE
+			RETURN 0
+		ENDIF
+	CASE "购入"
+		CALL SHOP_ASK(ARG, ARG:1)
+		IF !RESULT
+			ITEM:ARG ++
+			PRINTFORMW 限定在冬月24日、约会中送出
+		ENDIF
+	CASE "TYPE:日用品", "SHOP:通信贩卖"
+		RETURN 1
+	ENDSELECT
+CASE "点心盒"
+	SELECTCASE ARGS
+	CASE "SALES"
+		IF ITEM:ARG
+			RETURN -1
+		ELSE
+			RETURN 0
+		ENDIF
+	CASE "购入"
+		CALL SHOP_ASK(ARG, ARG:1)
+		SIF !RESULT
+			ITEM:ARG ++
+	CASE "TYPE:日用品", "SHOP:通信贩卖"
+		RETURN 1
+	ENDSELECT
+CASE "金色的点心盒", "白装束", "包袱皮", "订婚戒指"
+	;现座未实装
+CASE "园艺用品一式"
+	SELECTCASE ARGS
+	CASE "SALES"
+		IF ITEM:ARG
+			RETURN -1
+		ELSE
+			RETURN 0
+		ENDIF
+	CASE "购入"
+		CALL SHOP_ASK(ARG, ARG:1)
+		SIF !RESULT
+			ITEM:ARG ++
+	CASE "TYPE:园艺用品", "SHOP:花屋"
+		RETURN 1
+	ENDSELECT
+CASE "卷心菜苗", "草莓苗", "芜菁苗", "黄瓜苗", "番茄苗", "洋葱苗", "西瓜苗", "茄子苗", "马铃薯苗", "南瓜苗", "白菜苗", "胡萝卜苗", "葱苗", "跳蛋苗", "肥料"
+	SELECTCASE ARGS
+	CASE "SALES"
+		IF ITEMSALES:ARG <= 0
+			RETURN -1
+		ELSE
+			RETURN ITEMSALES:ARG
+		ENDIF
+	CASE "购入"
+		CALL ITEM_MATOMEGAI(ARG, ARG:1)
+	CASE "TYPE:园艺用品", "SHOP:花屋"
+		RETURN 1
+	ENDSELECT
+CASE "卷心菜", "草莓", "芜菁", "黄瓜", "番茄", "洋葱", "西瓜", "茄子", "马铃薯", "南瓜", "白菜", "胡萝卜", "葱"
+	SELECTCASE ARGS
+	CASE "SALES"
+		IF ITEMSALES:ARG <= 0
+			RETURN -1
+		ELSE
+			RETURN ITEMSALES:ARG
+		ENDIF
+	CASE "购入"
+		CALL ITEM_MATOMEGAI(ARG, ARG:1)
+	CASE "TYPE:野菜", "SHOP:蔬菜店"
+		RETURN 1
+	ENDSELECT
+CASE "野味", "禽肉"
+	SELECTCASE ARGS
+	CASE "SALES"
+		IF ITEMSALES:ARG <= 0
+			RETURN -1
+		ELSE
+			RETURN ITEMSALES:ARG
+		ENDIF
+	CASE "购入"
+		CALL ITEM_MATOMEGAI(ARG, ARG:1)
+	CASE "TYPE:お肉", "SHOP:食料品店"
+		RETURN 1
+	ENDSELECT
+CASE "野鸡肉", "来历不明的肉"
+	;非卖品
+	SELECTCASE ARGS
+	CASE "TYPE:お肉"
+		RETURN 1
+	ENDSELECT
+CASE "青蛙", "鱼", "好吃的鱼", "虫", "稀有昆虫"
+	SELECTCASE ARGS
+	CASE "TYPE:お肉"
+		RETURN 1
+	ENDSELECT
+CASE "黑雷神巧克力", "巧克力", "高级巧克力", "本命巧克力"
+	SELECTCASE ARGS
+	CASE "TYPE:巧克力"
+		RETURN 1
+	ENDSELECT
+CASE "青汁", "大恢复药", "流星群Ｘ", "精力剂『天元凸破』"
+	SELECTCASE ARGS
+	CASE "TYPE:恢复"
+		RETURN 1
+	ENDSELECT
+CASE "药水", "魔法药水", "破眠药水", "万能药", "仙丹"
+	SELECTCASE ARGS
+	CASE "TYPE:恢复"
+		RETURN 1
+	ENDSELECT
+;(酒造パッチ)道具追加
+CASE "灰汁卷", "墨西哥卷饼"
+	SELECTCASE ARGS
+	CASE "TYPE:恢复"
+		RETURN 1
+	ENDSELECT
+CASE "槲叶糕", "冰淇淋", "红茶", "糖", "运动饮料", "八目鳗烤串"
+	SELECTCASE ARGS
+	CASE "SALES"
+		;无限に补充される
+		RETURN 99
+	CASE "TYPE:恢复"
+		RETURN 1
+	ENDSELECT
+CASE "营养饮料", "精力剂", "姜黄饮料"
+	SELECTCASE ARGS
+	CASE "SALES"
+		;无限に补充される
+		RETURN 99
+	CASE "购入"
+		CALL ITEM_MATOMEGAI(ARG, ARG:1)
+	CASE "TYPE:恢复", "TYPE:うさぎ药品"
+		RETURN 1
+	ENDSELECT
+CASE "仙香玉兔", "国士无双（药）", "毒气花园", "剧毒身躯"
+	SELECTCASE ARGS
+	CASE "SALES"
+		;エンカウント贩卖员用
+		RETURN 1
+	CASE "TYPE:调合物"
+		RETURN 1
+	ENDSELECT
+CASE "催情药", "睡眠药", "营养强化剂"
+	SELECTCASE ARGS
+	CASE "SALES"
+		;无限に补充される
+		RETURN 99
+	CASE "购入"
+		CALL ITEM_MATOMEGAI(ARG, ARG:1)
+	CASE "TYPE:调合物", "TYPE:うさぎ药品"
+		RETURN 1
+	ENDSELECT
+CASE "普通的菌菇", "毒菌菇", "粘性菌菇", "冬虫夏草", "可疑菌菇", "魔法菌菇", "龙之爪", "药草", "高级药草", "冰之鳞", "木材"
+	SELECTCASE ARGS
+	CASE "TYPE:素材"
+		RETURN 1
+	ENDSELECT
+CASE "山菜", "毒草", "特药草", "彼岸花", "雪灵草", "山芋", "姜黄", "高丽人参", "苦根", "曼陀罗草"
+	SELECTCASE ARGS
+	CASE "TYPE:素材"
+		RETURN 1
+	ENDSELECT
+CASE "白色树脂", "黄色树脂", "香甜树脂", "恶华乳液", "竜血", "木莓", "蜂蜜", "木通属", "竹笋", "仙桃"
+	SELECTCASE ARGS
+	CASE "TYPE:素材"
+		RETURN 1
+	ENDSELECT
+CASE "碎骨", "石膏", "滑石", "竜骨", "辰砂", "粪", "温泉花", "彷徨灵魂", "暗黑物质", "凤凰尾"
+	SELECTCASE ARGS
+	CASE "TYPE:素材"
+		RETURN 1
+	ENDSELECT
+CASE "蛤蟆油", "鱼粕", "龙涎香", "原木", "竹材", "香木", "龙珠", "肉骨粉"
+	SELECTCASE ARGS
+	CASE "TYPE:素材"
+		RETURN 1
+	ENDSELECT
+;(酒造パッチ)道具追加
+CASE "酒酵母(芋)", "陈酿前的莓子酒", "发酵的砂糖汁", "陈酿前的朗姆", "山葡萄", "发霉葡萄", "草木灰", "果渣"
+	SELECTCASE ARGS
+	CASE "TYPE:素材"
+		RETURN 1
+	ENDSELECT
+CASE "【禁断的知识】"
+	SELECTCASE ARGS
+	CASE "SALES"
+		IF TALENT:MASTER:禁断的知识
+			RETURN -1
+		ELSE
+			RETURN 0
+		ENDIF
+	CASE "购入"
+		CALL SHOP_ASK(ARG, ARG:1)
+		SIF !RESULT
+			TALENT:MASTER:禁断的知识 = 1
+	CASE "TYPE:素質", "SHOP:通信贩卖"
+		RETURN 1
+	ENDSELECT
+CASE "【技巧UP】"
+	SELECTCASE ARGS
+	CASE "SALES"
+		IF ABL:MASTER:技巧 < 5
+			RETURN 0
+		ELSE
+			RETURN -2
+		ENDIF
+	CASE "购入"
+		CALL SHOP_ASK(ARG, ARG:1)
+		SIF !RESULT
+			ABL:MASTER:技巧 ++
+	CASE "TYPE:素質", "SHOP:通信贩卖"
+		RETURN 1
+	ENDSELECT
+CASE "【技巧DOWN】"
+	SELECTCASE ARGS
+	CASE "SALES"
+		IF ABL:MASTER:技巧
+			RETURN 0
+		ELSE
+			RETURN -2
+		ENDIF
+	CASE "购入"
+		CALL SHOP_ASK(ARG, ARG:1)
+		SIF !RESULT
+			ABL:MASTER:技巧 --
+	CASE "TYPE:素質", "SHOP:通信贩卖"
+		RETURN 1
+	ENDSELECT
+CASE "【污臭耐性UP】"
+	SELECTCASE ARGS
+	CASE "SALES"
+		IF TALENT:MASTER:污臭耐性 < 2
+			RETURN 0
+		ELSE
+			RETURN -2
+		ENDIF
+	CASE "购入"
+		CALL SHOP_ASK(ARG, ARG:1)
+		SIF !RESULT
+			TALENT:MASTER:污臭耐性 ++
+	CASE "TYPE:素質", "SHOP:通信贩卖"
+		RETURN 1
+	ENDSELECT
+CASE "【污臭耐性DOWN】"
+	SELECTCASE ARGS
+	CASE "SALES"
+		IF TALENT:MASTER:污臭耐性 > -2
+			RETURN 0
+		ELSE
+			RETURN -2
+		ENDIF
+	CASE "购入"
+		CALL SHOP_ASK(ARG, ARG:1)
+		SIF !RESULT
+			TALENT:MASTER:污臭耐性 --
+	CASE "TYPE:素質", "SHOP:通信贩卖"
+		RETURN 1
+	ENDSELECT
+CASE "【施虐狂DOWN】"
+	SELECTCASE ARGS
+	CASE "SALES"
+		IF ABL:MASTER:施虐属性
+			RETURN 0
+		ELSE
+			RETURN -2
+		ENDIF
+	CASE "购入"
+		CALL SHOP_ASK(ARG, ARG:1)
+		IF !RESULT
+			ABL:MASTER:施虐属性 --
+			JUEL:MASTER:优越 = 0
+			EXP:MASTER:嗜虐快乐经验 = MAX(EXP:MASTER:嗜虐快乐经验 - 200, 0)
+		ENDIF
+	CASE "TYPE:素質", "SHOP:通信贩卖"
+		RETURN 1
+	ENDSELECT
+CASE "【受虐狂DOWN】"
+	SELECTCASE ARGS
+	CASE "SALES"
+		IF ABL:MASTER:受虐属性
+			RETURN 0
+		ELSE
+			RETURN -2
+		ENDIF
+	CASE "购入"
+		CALL SHOP_ASK(ARG, ARG:1)
+		IF !RESULT
+			ABL:MASTER:受虐属性 --
+			JUEL:MASTER:苦痛 = 0
+			EXP:MASTER:苦痛快乐经验 = MAX(EXP:MASTER:苦痛快乐经验 - 200, 0)
+		ENDIF
+	CASE "TYPE:素質", "SHOP:通信贩卖"
+		RETURN 1
+	ENDSELECT
+CASE "【调合知识】", "【污名洗刷】"
+	;现在未实装
+CASE "药的材料(双)"
+	SELECTCASE ARGS
+	CASE "SALES"
+		IF ITEM:ARG
+			RETURN -1
+		ELSEIF !TALENT:MASTER:禁断的知识 || FINDCHARA(TALENT:性别, 1) == -1
+			RETURN -2
+		ELSE
+			RETURN 0
+		ENDIF
+	CASE "购入"
+	CASE "TYPE:体质变化"
+		RETURN 1
+	ENDSELECT
+CASE "药的材料(消)"
+	SELECTCASE ARGS
+	CASE "SALES"
+		IF ITEM:ARG
+			RETURN -1
+		ELSEIF !TALENT:MASTER:禁断的知识 || FINDCHARA(TALENT:性别, 3) == -1
+			RETURN -2
+		ELSE
+			RETURN 0
+		ENDIF
+	CASE "购入"
+	CASE "TYPE:体质变化"
+		RETURN 1
+	ENDSELECT
+CASE "红色糖果"
+	SELECTCASE ARGS
+	CASE "SALES"
+		IF ITEM:ARG
+			RETURN -1
+		ELSEIF !TALENT:MASTER:禁断的知识 || ALLSAMES(-1, FINDCHARA(TALENT:处女, 0), FINDCHARA(TALENT:处女, -1))
+			RETURN -2
+		ELSE
+			RETURN 0
+		ENDIF
+	CASE "TYPE:体质变化"
+		RETURN 1
+	ENDSELECT
+CASE "茶色糖果"
+	SELECTCASE ARGS
+	CASE "SALES"
+		IF ITEM:ARG
+			RETURN -1
+		ELSEIF !TALENT:MASTER:禁断的知识 || FINDCHARA(TALENT:动物耳, 0) == -1
+			RETURN -2
+		ELSE
+			RETURN 0
+		ENDIF
+	CASE "购入"
+	CASE "TYPE:体质变化"
+		RETURN 1
+	ENDSELECT
+CASE "水色糖果"
+	SELECTCASE ARGS
+	CASE "SALES"
+		IF ITEM:ARG
+			RETURN -1
+		ELSEIF !TALENT:MASTER:禁断的知识 || !SUMCARRAY(TALENT:动物耳)
+			RETURN -2
+		ELSE
+			RETURN 0
+		ENDIF
+	CASE "购入"
+	CASE "TYPE:体质变化"
+		RETURN 1
+	ENDSELECT
+CASE "排卵诱发剂"
+	SELECTCASE ARGS
+	CASE "SALES"
+		IF ITEM:ARG
+			RETURN -1
+		ELSEIF !TALENT:MASTER:禁断的知识
+			RETURN -2
+		ELSE
+			RETURN 0
+		ENDIF
+	CASE "购入"
+	CASE "TYPE:体质变化"
+		RETURN 1
+	ENDSELECT
+CASE "恢复元气的药", "青色糖果", "丰胸剂", "缩胸剂", "记忆消去药"
+	;现在未实装
+CASE "魔水晶垂饰", "收藏隙间", "即时结界", "三粒の天滴", "大角虫养成外骨骼", "甜蜜安眠枕"
+	SELECTCASE ARGS
+	CASE "TYPE:特殊"
+		RETURN 1
+	ENDSELECT
+CASE "兔符「开运大纹」"
+	SELECTCASE ARGS
+	CASE "SALES"
+		IF ITEM:ARG
+			RETURN -1
+		ELSE
+			RETURN 0
+		ENDIF
+	CASE "特殊", "TYPE:うさぎ药品"
+		RETURN 1
+	ENDSELECT
+CASE "女仆服", "护士服", "圣诞服"
+	SELECTCASE ARGS
+	CASE "TYPE:衣装"
+		RETURN 1
+	ENDSELECT
+CASE "弹力药", "冰柱爆弹", "太乙火种", "魅惑的饵种", "贤者之石", "弹丸魔像", "墓志铭", "绯红之王", "生命卡", "符卡"
+	SELECTCASE ARGS
+	CASE "TYPE:弹幕"
+		RETURN 1
+	ENDSELECT
+CASE "祭坛", "木浴缸", "桐木床", "银杏案板", "榉木桌椅", "栎木沙发", "特制竹箒"
+	SELECTCASE ARGS
+	CASE "TYPE:特殊"
+		RETURN 1
+	ENDSELECT
+CASE "战术指南书", "调理指南书", "字典", "御伽草子", "演奏指南书", "纸芝居", "百鱼图鉴", "采集指南", "药学教本", "伐木心得"
+	SELECTCASE ARGS
+	CASE "TYPE:书物"
+		RETURN 1
+	ENDSELECT
+CASE "守矢之守札", "坏掉的伞", "作业"
+	SELECTCASE ARGS
+	CASE "其他"
+		RETURN 1
+	ENDSELECT
+CASE "喜欢的道具"
+	;分类しない
+ENDSELECT
+;购入时はRESULTを返す
+SIF ARGS == "购入"
+	RETURN RESULT
+

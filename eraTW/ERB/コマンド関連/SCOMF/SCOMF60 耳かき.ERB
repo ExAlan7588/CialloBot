@@ -1,0 +1,142 @@
+﻿@SCOM60
+;掏耳朵
+SELECTCASE TFLAG:192
+	;通常
+	CASE 0
+		LOCAL = RAND:110
+		LOCAL:1 = 90 + GET_SUCCESS_RATE() / 5
+		SIF LOCAL:1 > 109
+			LOCAL:1 = 109
+		IF LOCAL <= 9
+			;10％で大成功
+			TFLAG:193 = 1
+			;信赖
+			TFLAG:98 = 3
+		ELSEIF LOCAL >= LOCAL:1
+			;10～1％で失败
+			TFLAG:193 = -1
+			;信赖
+			TFLAG:98 = -2
+		ELSE
+			;残りは成功
+			TFLAG:193 = 0
+			;信赖
+			TFLAG:98 = 0
+		ENDIF
+	;强制成功or大成功
+	CASE 1
+		IF RAND:110 <= 9
+			;10％で大成功
+			TFLAG:193 = 1
+			;信赖
+			TFLAG:98 = 3
+		ELSE
+			;残りは成功
+			TFLAG:193 = 0
+			;信赖
+			TFLAG:98 = 0
+		ENDIF
+	;强制失败
+	CASE -1
+		TFLAG:193 = -1
+		TFLAG:98 = -2
+	;指令结束
+	CASE -2
+		TFLAG:193 = -1
+		RETURN 0
+ENDSELECT
+;先制发生时は失败しない
+SIF TFLAG:102 == 3
+	TFLAG:193 = MAX(TFLAG:193,0)
+DOWNBASE:气力 += 100
+DOWNBASE:MASTER:气力 += 50
+
+;固定で获得するソース
+SOURCE:情爱 = 170
+SOURCE:欢乐 = 100
+SOURCE:恭顺 = 85
+SOURCE:反感 = 50
+SIF TFLAG:193 == -1
+	SOURCE:反感 += 30
+
+;ABL:亲密をみる
+IF ABL:亲密 <= 1
+	SOURCE:情爱 += (ABL:亲密 * 20)
+	SOURCE:恭顺 += (ABL:亲密 * 10)
+ELSEIF ABL:亲密 <= 3
+	SOURCE:情爱 += 200 + (ABL:亲密 * 20)
+	SOURCE:恭顺 += 150 + (ABL:亲密 * 10)
+ELSEIF ABL:亲密 <= 5
+	SOURCE:情爱 += 400 + (ABL:亲密 * 20)
+	SOURCE:恭顺 += 200 + (ABL:亲密 * 10)
+ELSEIF ABL:亲密 <= 8
+	SOURCE:情爱 += 600 + (ABL:亲密 * 30)
+	SOURCE:恭顺 += 250 + (ABL:亲密 * 10)
+	SOURCE:欢乐 += 100 + (ABL:侍奉精神 * 10)
+ELSEIF ABL:亲密 <= 11
+	SOURCE:情爱 += 800 + (ABL:亲密 * 30)
+	SOURCE:恭顺 += 300 + (ABL:亲密 * 10)
+	SOURCE:欢乐 += 200 + (ABL:侍奉精神 * 10)
+ELSE
+	SOURCE:情爱 += 1000 + (ABL:亲密 * 20)
+	SOURCE:恭顺 += 500 + (ABL:亲密 * 10)
+	SOURCE:欢乐 += 300 + (ABL:侍奉精神 * 10)
+ENDIF
+
+LOCAL = 0
+;好感度が低いと好感度低下
+IF CFLAG:2 <= 50
+	LOCAL -= 3
+ELSEIF CFLAG:2 <= 100
+	LOCAL -= 2
+ELSEIF CFLAG:2 <= 250
+	LOCAL -= 1
+ENDIF
+
+
+SOURCE:被动 = 150 + 250 * ABL:顺从
+
+;好感度变化
+TFLAG:97 += LOCAL
+
+IF TFLAG:193 == -1
+	TIMES SOURCE:情爱 , 0.50
+	TIMES SOURCE:恭顺 , 0.50
+	TIMES SOURCE:被动 , 0.50
+	TIMES SOURCE:欢乐 , 0.40
+ELSEIF TFLAG:193 == 0
+	TIMES SOURCE:情爱 , 1.00
+	TIMES SOURCE:恭顺 , 1.00
+	TIMES SOURCE:被动 , 1.00
+	TIMES SOURCE:欢乐 , 0.80
+ELSE
+	TIMES SOURCE:情爱 , 1.50
+	TIMES SOURCE:恭顺 , 1.50
+	TIMES SOURCE:被动 , 2.00
+	TIMES SOURCE:欢乐 , 1.30
+ENDIF
+TIME += 30
+CALL SET_DERAY(6,TARGET)
+
+RETURN 1
+
+;-------------------------------------------------
+;选择可能判定
+;-------------------------------------------------
+;掏耳朵
+@COM_ABLE560
+SIF !TFLAG:100
+	RETURN 0
+;批量管理
+SIF GLOBAL_COMABLE(560)
+	RETURN RESULT
+;相手が居ないとダメ
+SIF !TARGET
+	RETURN 0
+;睡眠中
+SIF CFLAG:睡眠
+	RETURN 0
+SIF TFLAG:103 != TARGET
+	RETURN 0
+RETURN 1
+

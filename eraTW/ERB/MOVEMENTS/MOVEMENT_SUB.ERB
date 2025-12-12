@@ -1,0 +1,394 @@
+﻿;----------------------------
+;ここで1を返す角色はMOVEMENT关系の处理を一切行わない
+;----------------------------
+@MOVEMENTスキップ判定(ARG)
+#FUNCTION
+SIF TALENT:ARG:妄想的产物
+	RETURNF 1
+SIF FLAG:守矢神签约会的对象 == ARG && GET_MAPID(CFLAG:MASTER:当前位置) != MAIN_MAP
+	RETURNF 1
+SIF CFLAG:ARG:出禁
+	RETURNF 1
+RETURNF 0
+
+;----------------------------
+;MASTER含む全ての角色に适用
+;时间经过による自然变动、会话累积度、澡堂の处理
+;----------------------------
+@MOVEMENT共通处理(ARG)
+;BASEの自然变动
+CALL BASE自然变动(ARG)
+
+;会话累积值（100以上会话すると时间经过100分经过まで会话不能）
+SIF TCVAR:ARG:301 > 100
+	TCVAR:ARG:302 = 1
+TCVAR:ARG:301 = MAX(TCVAR:ARG:301 - TIME_PROGRESS(TIME:1) , 0)
+;时刻经过で累积值が0になったら会话可能
+SIF TCVAR:ARG:301 == 0
+	TCVAR:ARG:302 = 0
+
+;身体の清洁度
+LOCAL = CFLAG:ARG:澡堂
+
+;DEBUGPRINTFORML 【MOVEMENT】BATH_NO:{ARG} , {LOCAL} , \@ CFLAG:ARG:当前位置 == BATHROOM() ? in_BATH # {CFLAG:ARG:当前位置} \@
+
+
+;IF BATHCHECK(CFLAG:ARG:当前位置) && GET_MAPID(CFLAG:ARG:当前位置) == MAIN_MAP
+IF BATHROOM(CFLAG:ARG:当前位置) && GET_MAPID(CFLAG:ARG:当前位置) == MAIN_MAP
+	;污臭耐性が低いほど长澡堂（澡堂フラグが下がりにくい）,一日分的污垢は大体30分で洗浄
+	CFLAG:ARG:澡堂 = MAX(CFLAG:ARG:澡堂 - TIME_PROGRESS(TIME:1) * (50 + TALENT:ARG:污臭耐性 * 15), 0)
+ELSE
+	;二日分弱まで蓄积
+	CFLAG:ARG:澡堂 = MIN(CFLAG:ARG:澡堂 + TIME_PROGRESS(TIME:1), 2500)
+ENDIF
+
+;抱きつき禁止时间の减少
+IF TCVAR:ARG:抱きつき禁止时间 > 0
+	TCVAR:ARG:抱きつき禁止时间 = MAX(TCVAR:ARG:抱きつき禁止时间 - TIME_PROGRESS(TIME:1), 0)
+ENDIF
+
+
+;----------------------------
+;不适当な位置にいる角色を别の场所へ移动させる
+;----------------------------
+@强制移动(ARG)
+;时间停止中は处理しない
+IF !FLAG:70
+	;虫カゴに入らない角色を虫カゴから追い出す
+	IF CFLAG:ARG:当前位置 == 54 && TALENT:ARG:体型 > -5
+		IF ARG == [[针妙丸]]
+			TALENT:ARG:体型 = -5
+		ELSE
+			CFLAG:ARG:当前位置 = 9
+		ENDIF
+	ENDIF
+
+	;据点の外に衰弱中の角色がいる场合隙间に送る
+	IF CFLAG:ARG:衰弱
+		SIF GET_MAPID(CFLAG:ARG:当前位置) != MAIN_MAP
+			CFLAG:ARG:当前位置 = SUKIMA()
+	ENDIF
+ENDIF
+
+;----------------------------
+;同行中の角色を你に合わせて移动させる
+;----------------------------
+@同行处理(ARG)
+;※烂醉中は可能
+SIF FLAG:时间停止 || CFLAG:ARG:衰弱 || CFLAG:ARG:招待 || CFLAG:ARG:睡眠
+	RETURN
+
+;仕事中は基本的に无理、ただし宴会で醉いつぶれている场合は例外
+SIF CFLAG:ARG:行动 == 5 && CFLAG:ARG:职业种类 != 51
+	RETURN
+
+;同行フラグは1时间持续，添加魔改一直同行开关【Always_Following】判定
+SIF !CHK_DATENOW(CFLAG:ARG:约会中) && CFLAG:ARG:同行 && !Always_Following
+	CFLAG:ARG:同行 = MAX(CFLAG:ARG:同行 - TIME_PROGRESS(TIME:1),0)
+SIF CFLAG:ARG:同行 || CHK_DATENOW(CFLAG:ARG:约会中)
+	CFLAG:ARG:当前位置 = CFLAG:MASTER:当前位置
+
+
+;@角色移动前处理(ARG)
+;;衰弱中
+;IF CFLAG:ARG:衰弱 || TCVAR:ARG:烂醉 || CFLAG:ARG:招待
+;	RETURN
+;ENDIF
+;
+;;招待中(睡眠などを独自处理)
+;IF 
+;	CALL MOVEMENT_OMANEKI(ARG)
+;	RETURN
+;ENDIF
+;
+;;午睡を除いた睡眠时间中
+;IF !CFLAG:ARG:睡眠 && 睡眠时间(ARG)
+;	;住宿人物的家にお泊まりした时は归らないように97 + MAIN_MAP * 100に避难
+;	IF CFLAG:(ARG):当前位置 != 97 + MAIN_MAP * 100
+;		;约会中なら强制的に中止して回家
+;		CALL 睡眠时约会中断(ARG)
+;	ENDIF
+;ENDIF
+
+;------------------------------------------
+;时间に合わせて角色を起こす／寝かす
+;------------------------------------------
+@起床就寝处理(ARG)
+SIF FLAG:时间停止 || CFLAG:ARG:衰弱 || TCVAR:ARG:烂醉
+	RETURN
+SIF CFLAG:ARG:诶嘿嘿 && CFLAG:ARG:积攒度 > 0
+	RETURN
+;睡眠时间带の场合
+IF 睡眠时间(ARG)
+	;起きてたら寝かせる
+	IF !CFLAG:ARG:睡眠
+		;约会中なら午睡は无视する
+		IF !(CHK_DATENOW(CFLAG:ARG:约会中) && !睡眠时间(ARG))
+			;CHARA_SLEEP改良に伴い一旦冻结
+;			;住宿人物的家にお泊まりした时は归らないように97 + MAIN_MAP * 100に避难
+;			IF CFLAG:ARG:当前位置 != 97 + MAIN_MAP * 100
+;				;约会中に就寝时间になったら强制的に中止して回家
+;				CALL 睡眠时约会中断(ARG)
+;			ENDIF
+			IF !CFLAG:ARG:招待 && !(CFLAG:ARG:神社在住 && CFLAG:ARG:当前位置 == CFLAG:ARG:初始位置)
+				IF CFLAG:MASTER:当前位置 == CFLAG:ARG:当前位置 && !CFLAG:MASTER:睡眠
+					IF CFLAG:ARG:诶嘿嘿 || CHK_DATENOW(CFLAG:ARG:约会中)
+						PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", ARG)%再也无法抵抗困意、于是回到\@ CFLAG:ARG:神社在住 ? 自室 # 自宅 \@去了
+					ELSEIF IN_HOME(CFLAG:ARG:当前位置)
+						PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", ARG)%道别过后、就睡眼蒙眬地离开了
+					ENDIF
+				ENDIF
+			ENDIF
+		ENDIF
+	ENDIF
+	;主人公が起床中ならメッセージ表示
+	CALL CHARA_SLEEP, ARG, !CFLAG:MASTER:睡眠
+;睡眠时间带から外れている场合
+ELSE
+	;寝てたら起こす
+	IF CFLAG:ARG:睡眠
+		CALL CHARA_AWAKE, ARG
+		;住宿人物が自分的家で起きた场合、参道的另一边に移动させる
+		SIF CFLAG:ARG:神社在住 && CFLAG:ARG:当前位置 == 97 + MAIN_MAP * 100
+			CFLAG:ARG:当前位置 = MAXROOM
+	ENDIF
+ENDIF
+
+;------------------------------------------
+;访问フラグが立っている角色を你の据点物件に移动させる
+;角色を自分的家に返す／在宅中の处理を行う
+;------------------------------------------
+@访问回家处理(ARG)
+SIF FLAG:时间停止 || CFLAG:ARG:衰弱 || TCVAR:ARG:烂醉 || CFLAG:ARG:招待 || CFLAG:ARG:诶嘿嘿
+	RETURN
+
+;住宿人物・宴会に参加する角色は来访・回家の处理を行わない
+IF !CFLAG:ARG:神社在住 && !CFLAG:ARG:宴会参加
+	;活动时间内
+	IF VISIT(ARG)
+		IF CFLAG:ARG:据点来访
+			;来访フラグがあるなら主人公の据点に出现させる(仕事中は无理)
+			IF !AT_HOME(ARG) && !仕事中チェック(ARG)
+				CALL 主人公物件へ向かう(ARG)
+			ENDIF
+		ENDIF
+	;活动时间外
+	ELSE
+		;回家・在宅处理
+		CALL KITAKU(ARG)
+	ENDIF
+ENDIF
+
+;------------------------------------------
+;仕事がない角色を外出させる
+;------------------------------------------
+@休日移动处理(ARG)
+SIF CFLAG:ARG:宴会参加 > 0
+	RETURN	
+SIF FLAG:时间停止 || CFLAG:ARG:衰弱 || TCVAR:ARG:烂醉 || CFLAG:ARG:睡眠 || CFLAG:ARG:招待 || CFLAG:ARG:诶嘿嘿
+	RETURN
+
+;神社に行く予定の角色、当日仕事のある角色、神社に住んでいる角色は无视
+SIF CFLAG:ARG:据点来访 || CFLAG:ARG:行动 == 5 || CFLAG:ARG:神社在住
+	RETURN
+
+;访问时间でまだ移动していない场合
+IF VISIT(ARG) && CFLAG:ARG:当前位置 != CFLAG:ARG:遭遇位置
+	LOCAL = 0
+	IF CFLAG:ARG:当前位置 == CFLAG:MASTER:当前位置
+		;お泊まりすると起きる现象（连动角色を考虑すると面倒なことに）
+		LOCAL = 1
+	ENDIF
+	;全员共通の处理
+	CFLAG:ARG:当前位置 = CFLAG:ARG:遭遇位置 ? CFLAG:ARG:遭遇位置 # SUKIMA()
+	CFLAG:ARG:同行 = 0
+	IF CFLAG:ARG:当前位置 != CFLAG:MASTER:当前位置 && LOCAL
+		IF TALENT:ARG:恋慕 && !GROUPMATCH(NAME_FROM_PLACE(CFLAG:ARG:遭遇位置), "", "不明", "隙间空间")
+			PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", ARG)%说要去%NAME_FROM_PLACE(CFLAG:ARG:遭遇位置)%后离开了
+		ELSE
+			PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", ARG)%不知道到哪去了
+		ENDIF
+	ENDIF
+ENDIF
+
+
+;------------------------------------------
+;仕事中なら1を返す
+;@WORKINGとは挙动が违うので注意
+;------------------------------------------
+@仕事中チェック(ARG)
+#FUNCTION
+SIF TCVAR:ARG:工作开始 >= 0 && BETWEENTIME(TCVAR:ARG:工作开始,TCVAR:ARG:工作结束) && BASE:ARG:工作量 > 0
+	RETURNF 1
+RETURNF 0
+
+;------------------------------------------
+;当日に仕事の予定があるなら1を返す
+;@WORKINGとは挙动が违うので注意
+;------------------------------------------
+@仕事日チェック(ARG)
+#FUNCTION
+SIF TCVAR:ARG:工作开始 >= 0
+	RETURNF 1
+RETURNF 0
+
+
+@主人公物件へ向かう(ARG)
+;来访不能（口上用）
+IF CFLAG:ARG:来访不能
+	CFLAG:ARG:据点来访 = 0
+	RETURN
+ENDIF
+;お泊まりすると起きる现象
+IF CFLAG:ARG:当前位置 == CFLAG:MASTER:当前位置 && !CHK_DATENOW(CFLAG:ARG:约会中) && !TALENT:ARG:路人
+	IF CFLAG:ARG:态度 && !FLAG:约会的对象
+		PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", ARG)%想要去%GET_MAPNAME(MAIN_MAP)%
+		PRINTL [1] - 邀请去约会
+		PRINTL [2] - 一起去
+		PRINTL [0] - 目送之
+		INPUT
+		IF RESULT == 1
+			PRINTFORMW 决定和%NAME_OUTPUT_TRANSLATION("CALLNAME", ARG)%约会了
+			CFLAG:MASTER:同行 = 60
+			CFLAG:ARG:同行 = 60
+			CFLAG:ARG:约会中 = CFLAG:MASTER:当前位置 / 100
+			FLAG:约会的对象 = ARG
+			TFLAG:约会前好感度 = CFLAG:ARG:好感度
+		ELSEIF RESULT == 2
+			PRINTFORMW 决定带%NAME_OUTPUT_TRANSLATION("CALLNAME", ARG)%一起回去
+			CALL 回家の时间经过
+			CALL SET_DATE(99,ARG)
+			CFLAG:ARG:当前位置 = ENTRANCE
+			CFLAG:MASTER:当前位置 = ENTRANCE
+			CFLAG:ARG:约会中 = MAIN_MAP
+			CFLAG:MASTER:约会中 = MAIN_MAP
+			CFLAG:ARG:同行 = 60
+			CFLAG:MASTER:同行 = 60
+			IF TARGET == 93 && !GETBIT (FLAG:泳池, 0)
+				TIME += 30
+				BASE:MASTER:体力 = MAX(BASE:MASTER:体力 - 500,500)
+			ENDIF
+		ELSE
+			PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", ARG)%出门去%GET_MAPNAME(MAIN_MAP)%了
+			IF CFLAG:ARG:(450 + MAIN_MAP)
+				CFLAG:ARG:当前位置 = CFLAG:ARG:(450 + MAIN_MAP)
+			ELSE
+				CFLAG:ARG:当前位置 = MAXROOM
+			ENDIF
+		ENDIF
+	ELSE
+		PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", ARG)%好像出门去%GET_MAPNAME(MAIN_MAP)%了
+		IF CFLAG:ARG:(450 + MAIN_MAP)
+			CFLAG:ARG:当前位置 = CFLAG:ARG:(450 + MAIN_MAP)
+		ELSE
+			CFLAG:ARG:当前位置 = MAXROOM
+		ENDIF
+	ENDIF
+ELSE
+	IF CFLAG:ARG:(450 + MAIN_MAP)
+		CFLAG:ARG:当前位置 = CFLAG:ARG:(450 + MAIN_MAP)
+	;后户组特殊处理
+	ELSEIF GROUPMATCH(ARG, [[舞]], [[里乃]], [[隐岐奈]]) && AT_HOME(MASTER) && MAP_CAN_MOVE(CFLAG:MASTER:当前位置, ARG) && !CFLAG:MASTER:诶嘿嘿
+		CFLAG:ARG:当前位置 = CFLAG:MASTER:当前位置
+	ELSE
+		CFLAG:ARG:当前位置 = MAXROOM
+	ENDIF
+	SIF GETBIT(TALENT:MASTER:所在地察觉, 1) && AT_HOME(MASTER) == 1 && !CFLAG:MASTER:睡眠 && !CFLAG:MASTER:诶嘿嘿
+		PRINTFORMW 【%NAME_OUTPUT_TRANSLATION("CALLNAME", ARG)%来访了】
+ENDIF
+CALL EX_COSTUME(ARG, "おうち约会")
+
+
+
+;------------------------------------------
+;仕事や宴会の开始／经过／结束やメッセージの表示を行う
+;------------------------------------------
+@仕事宴会处理(ARG)
+SIF FLAG:时间停止 || CFLAG:ARG:衰弱 || CFLAG:ARG:招待 || CFLAG:ARG:睡眠
+	RETURN
+
+IF TCVAR:ARG:烂醉
+	;宴会で醉いつぶれた场合はメッセージのみ表示して返回
+	IF CFLAG:ARG:职业种类 == 51 && CFLAG:ARG:当前位置 == TFLAG:宴会场 && CFLAG:MASTER:当前位置 == CFLAG:ARG:当前位置
+		CALL 宴会描写(ARG)
+	ENDIF
+	RETURN
+ENDIF
+
+IF !CFLAG:ARG:诶嘿嘿 || WORKING(ARG) || (CFLAG:ARG:诶嘿嘿 == 2 && CFLAG:ARG:宴会参加 == 2)
+	;宴会时间带呼び出し
+	IF CFLAG:ARG:宴会参加 == 1 || CFLAG:ARG:宴会参加 == 2
+		CALL ENKAI_WORK(ARG)
+
+	;宴会会场に立ち寄ったり近づいた角色は一定概率で宴会に加わる
+	ELSEIF FLAG:参加人数 >= 2 && (CFLAG:ARG:当前位置 == TFLAG:宴会场 || CAN_MOVE(CFLAG:ARG:当前位置, TFLAG:宴会场) >= 2) && !CFLAG:ARG:诶嘿嘿
+		IF CFLAG:ARG:宴会参加 == 0 && RAND:5 < 4 && 宴会举办中判定() && TIME_PROGRESS(TIME:1) && 仕事中チェック(ARG) == 0
+			IF CFLAG:MASTER:当前位置 == TFLAG:宴会场
+				IF FLAG:参加人数 >= 8
+					PRINTFORMW 因为看上去很有趣、%NAME_OUTPUT_TRANSLATION("CALLNAME", ARG)%加入了宴会！
+				ELSE
+					PRINTFORMW 看到会场的%NAME_OUTPUT_TRANSLATION("CALLNAME", ARG)%、就这样参加了宴会！
+				ENDIF
+			ENDIF
+			CFLAG:ARG:宴会参加 = 1
+			CALL ENKAI_START(ARG)
+		ENDIF
+	ENDIF
+
+	;约会的对象が宴会やその准备に加わった场合、约会は强制的に中止
+	IF GROUPMATCH(CFLAG:ARG:职业种类, 48, 49, 50, 51) && CHK_DATENOW(CFLAG:ARG:约会中)
+		PRINTFORMW 和%NAME_OUTPUT_TRANSLATION("CALLNAME", ARG)%的约会暂且终止了
+		CFLAG:ARG:约会中 = MAIN_MAP
+		FLAG:约会的对象 = 0
+		TFLAG:约会前好感度 = 0
+		CFLAG:ARG:同行 = 0
+	ENDIF
+
+	;宴会の片付け予定が入っている角色は手が空き次第片付け开始
+	IF CFLAG:ARG:整理工作量
+		IF CFLAG:ARG:行动 == 0 && FLAG:参加人数 == 0
+			CALL ENKAI_KATAZUKE(ARG)
+			CFLAG:ARG:整理工作量 = 0
+			CFLAG:ARG:清扫的场所 = 0
+		ENDIF
+	ENDIF
+
+	;仕事时间中、宴会参加中、宴会准备中ならばCHARA_JOBSTR(ARG)
+	IF WORKING(ARG) || (GROUPMATCH(CFLAG:ARG:职业种类, 48, 49, 50) && BASE:ARG:工作量 > 0) || GROUPMATCH(CFLAG:ARG:职业种类, 51)
+		CALL CHARA_JOBSTR(ARG)
+	;工作结束していれば结束处理
+	ELSEIF CFLAG:ARG:行动 == 5
+		CALL CHARA_JOBEND(ARG)
+	ENDIF
+ENDIF
+
+
+;CHARA_SLEEP改良に伴い一旦冻结
+;@睡眠时约会中断(ARG)
+;IF CHK_DATENOW(CFLAG:ARG:约会中)
+;	IF CFLAG:ARG:衰弱
+;		PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", ARG)%精疲力尽就要睡着了…
+;	ELSE
+;		PRINTFORMW 已经到了%NAME_OUTPUT_TRANSLATION("CALLNAME", ARG)%回去睡觉的时间了…
+;	ENDIF
+;	IF GET_MAPID(CFLAG:ARG:自宅位置) == MAIN_MAP
+;		PRINTFORMW 决定一起返回%GET_MAPNAME(MAIN_MAP)%
+;		CALL SET_DATE(99, ARG)
+;	ELSE
+;		CALL ASK_YN("送回家","当场分别")
+;		IF RESULT == 0
+;			PRINTFORMW 决定把%NAME_OUTPUT_TRANSLATION("CALLNAME", ARG)%送回家
+;			CALL SET_DATE(99, ARG)
+;		ELSE
+;			PRINTFORMW 与%NAME_OUTPUT_TRANSLATION("CALLNAME", ARG)%的约会就在这个地方结束了
+;			FLAG:约会的对象 = 0
+;			TFLAG:约会前好感度 = 0
+;			CFLAG:ARG:约会中 = MAIN_MAP
+;		ENDIF
+;		CFLAG:ARG:当前位置 = CFLAG:ARG:自宅位置
+;	ENDIF
+;	IF CFLAG:ARG:诶嘿嘿
+;		CALL ENDUFUFU(ARG)
+;	ENDIF
+;	CFLAG:ARG:同行 = 0
+;ENDIF

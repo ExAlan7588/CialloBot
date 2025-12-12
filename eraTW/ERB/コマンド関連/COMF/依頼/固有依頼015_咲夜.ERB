@@ -1,0 +1,104 @@
+﻿@固有依赖15(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE ARG % 1000
+;ID101：美铃的慰劳品
+CASE 101
+	SELECTCASE O_DATA
+	CASE "依赖名"
+		CALLF MAKE_STR(V_NAME, "美铃的慰劳品")
+	CASE "依赖内容表示"
+		CALLF MAKE_STR(V_NAME, "把慰劳品送给美铃")
+	CASE "依赖报酬表示"
+		CALLF MAKE_STR(V_NAME, @"%金额表示(1000)%")
+	CASE "依赖报告不要"
+		CALLF MAKE_STR(V_NAME, "报告不要（不需报告也可获得报酬）")
+	CASE "依赖实行指令名"
+		CALLF MAKE_STR(V_NAME, "送出慰劳品")
+		
+	CASE "依赖内容"
+		CALLF MAKE_INT(V_NAME, MAKE_IRAI_DATA([[美铃]], "传令（人物）"))
+	CASE "依赖サブ"
+	CASE "依赖期限"
+	CASE "依赖发生率"
+	;これは他の固有依赖との相对概率なんで10％ではありません
+		CALLF MAKE_INT(V_NAME, 10)
+	CASE "依赖发生条件"
+		SIF CAN_MEET([[美铃]])
+			CALLF MAKE_INT(V_NAME, 1)
+	CASE "依赖受托可能条件"
+	;受托可能は@COM_ABLE366も确认のこと
+	;ここを参照するのは依赖人をTARGETにしてる时なので素通しでよし
+		IF !IS_WEEKDAY(DAY)
+		ELSEIF !INRANGE(TIME / 60, 7, 11)
+		ELSE
+			CALLF MAKE_INT(V_NAME, 1)
+		ENDIF
+	CASE "依赖实行可能条件"
+	;实行可能は@COM_ABLE367も确认のこと
+		CALLF MAKE_INT(V_NAME, 1)
+	;成功/失败处理はCARRYOUTで直接书く
+	;SOURCEやITEM入手など、内容が复杂なので
+	CASE "依赖消灭条件"
+	;30％で消失
+		SIF RAND:100 < 30
+			CALLF MAKE_INT(V_NAME, 1)
+	ENDSELECT
+ENDSELECT
+
+
+
+;固有依赖の设定用
+;この函数は实行/成功/失败时の
+;报酬とペナルティと地の文のみを扱います
+;各角色のメッセージは别所にて
+@IRAI_固有15(CHARA, IRAI_ID, SCENE)
+#DIM  CHARA
+#DIM  IRAI_ID
+#DIMS SCENE
+#DIM  CLIENT_ID
+CLIENT_ID = IRAI_ID_TO_CLIENT(IRAI_ID)
+SELECTCASE STR_DATA_IRAI(IRAI_ID, "依赖名", CLIENT_ID)
+;个々の依赖名で分岐
+CASE "美铃的慰劳品"
+	SELECTCASE SCENE
+	CASE "依赖条件表示"
+	;何か専用の表示情报を设けたい时用
+	;受托済みの依赖表示で使用されます
+	;
+	;PRINT系だけでSOURCEとかは入れちゃダメ、WAITも无しで
+	;ここ以外の表示项目は
+	;PRINTFORML 　　　　　：
+	;となっているのでスペースを揃えたほうが见栄えが良いです
+	
+	CASE "依赖实行时"
+	;このCASEに限り、RESULTが意味を持ちます
+	;依赖实行时のRESULTにはIRAI_CONST_RESULT()を使用してください
+	;可能な参数は"中止", "实行して成功", "实行して失败", "实行して未解决"です
+	;独自处理を仕込みたい时は"实行して未解决"で先延ばしするなりしてください
+		SOURCE:欢乐 = 500
+		PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%把%NAME_OUTPUT_TRANSLATION("CALLNAME", 15)%提供的慰劳品送给了%NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%
+		PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%高兴的收下了
+		PRINTL
+		CALL CHANGE_CFLAG(2, TARGET, 30)
+		CALL CHANGE_CFLAG(4, TARGET, 15)
+		TALENT:心情 = LIMIT(TALENT:心情 + 1, -1, 1)
+		RETURN IRAI_CONST_RESULT("实行して成功")
+	CASE "依赖成功时"
+	;成功报告时の报酬など
+		CALL CHANGE_CFLAG(2, TARGET, 20)
+		CALL CHANGE_CFLAG(4, TARGET, 10)
+		CALL GET_MONEY_YEN(1000, 2)
+	CASE "依赖报告不要"
+	;达成后に报告をしなかった场合、多少减らす
+		PRINTFORML 完成委托的%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%的房间送来了%NAME_OUTPUT_TRANSLATION("CALLNAME", CHARA)%的%金额表示(1000)%回礼
+		CALL GET_MONEY_YEN(1000, 1)
+		CALL CHANGE_CFLAG(2, CHARA, 15)
+		CALL CHANGE_CFLAG(4, CHARA, 7)
+	CASE "依赖失败时"
+	;失败报告时の处理
+	ENDSELECT
+ENDSELECT

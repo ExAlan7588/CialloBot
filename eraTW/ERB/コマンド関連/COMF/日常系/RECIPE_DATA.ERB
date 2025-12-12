@@ -1,0 +1,868 @@
+﻿;参数はレシピ番号
+;TYPE=0~5が素材、=6が生成量,=7が水の必要性, =8が同じ素材を复数使用
+@RECIPE_DATA(R_ID, TYPE)
+#FUNCTION
+#DIM TYPE
+#DIM ING, 6
+#DIM AMT
+#DIM WATER
+#DIM R_ID
+#DIM LOT
+
+VARSET ING
+AMT = 0
+WATER = 0
+LOT = 0
+
+SELECTCASE R_ID
+	CASE GETNUM(ITEM, "润滑液") * 10 + 1
+		ING:0 = [[粘性菌菇]]
+		AMT = 2
+	CASE GETNUM(ITEM, "润滑液") * 10 + 2
+		ING:0 = [[粘性菌菇]]
+		ING:1 = [[山芋]]
+		AMT = 4
+	CASE GETNUM(ITEM, "润滑液") * 10 + 3
+		ING:0 = [[粘性菌菇]]
+		ING:1 = [[滑石]]
+		AMT = 6
+	CASE GETNUM(ITEM, "媚药") * 10 + 1
+		ING:0 = [[毒菌菇]]
+		ING:1 = 641
+		AMT = 1
+	CASE GETNUM(ITEM, "媚药") * 10 + 2
+		ING:0 = [[毒草]]
+		ING:1 = 641
+		AMT = 1
+	CASE GETNUM(ITEM, "媚药") * 10 + 3
+		ING:0 = [[药草]]
+		ING:1 = [[香甜树脂]]
+		AMT = 2
+	CASE GETNUM(ITEM, "媚药") * 10 + 4
+		ING:0 = [[恶华乳液]]
+		AMT = 3
+	CASE GETNUM(ITEM, "媚药") * 10 + 5
+		ING:0 = [[曼陀罗草]]
+		AMT = 3
+	CASE GETNUM(ITEM, "利尿剂") * 10 + 1
+		ING:0 = [[高级药草]]
+		ING:1 = [[石膏]]
+		ING:2 = [[滑石]]
+		AMT = 1
+	CASE GETNUM(ITEM, "利尿剂") * 10 + 2
+		ING:0 = [[高级药草]]
+		ING:1 = [[彼岸花]]
+		AMT = 1
+	CASE GETNUM(ITEM, "利尿剂") * 10 + 3
+		ING:0 = [[可疑菌菇]]
+		ING:1 = [[石膏]]
+		AMT = 2
+	CASE GETNUM(ITEM, "利尿剂") * 10 + 4
+		ING:0 = [[可疑菌菇]]
+		ING:1 = [[滑石]]
+		AMT = 2
+	CASE GETNUM(ITEM, "避孕套") * 10 + 1
+		ING:0 = [[白色树脂]]
+		AMT = 3
+	CASE GETNUM(ITEM, "避孕套") * 10 + 2
+		ING:0 = [[黄色树脂]]
+		AMT = 10
+	CASE GETNUM(ITEM, "蒸馏酒") * 10 + 1
+		ING:0 = 52
+		ING:1 = 52
+		ING:2 = 52
+		ING:3 = 52
+		ING:4 = 52
+		AMT = 1
+		LOT = 5
+	CASE GETNUM(ITEM, "蒸馏酒") * 10 + 2
+		ING:0 = 53
+		ING:1 = 53
+		AMT = 1
+		LOT = 2
+	CASE GETNUM(ITEM, "蒸馏酒") * 10 + 3
+		ING:0 = 55
+		ING:1 = 55
+		AMT = 1
+		LOT = 2
+	CASE GETNUM(ITEM, "药酒") * 10 + 1
+		ING:0 = 58
+		ING:1 = [[药草]]
+		ING:2 = [[高级药草]]
+		ING:3 = [[苦根]]
+		AMT = 1
+	CASE GETNUM(ITEM, "药酒") * 10 + 2
+		ING:0 = 58
+		ING:1 = [[特药草]]
+		ING:2 = [[苦根]]
+		AMT = 1
+	CASE GETNUM(ITEM, "药的材料(双)") * 10 + 1
+		ING:0 = [[粘性菌菇]]
+		ING:1 = [[可疑菌菇]]
+		ING:2 = [[白色树脂]]
+		ING:3 = [[碎骨]]
+		AMT = 1
+	CASE GETNUM(ITEM, "药的材料(双)") * 10 + 2
+		ING:0 = [[魔法菌菇]]
+		ING:1 = [[曼陀罗草]]
+		ING:2 = [[白色树脂]]
+		ING:3 = [[碎骨]]
+		AMT = 1
+	CASE GETNUM(ITEM, "药的材料(消)") * 10 + 1
+		ING:0 = [[竹笋]]
+		ING:1 = [[竹笋]]
+		ING:2 = [[竹笋]]
+		ING:3 = [[竹笋]]
+		ING:4 = [[竹笋]]
+		AMT = 1
+		LOT = 5
+	CASE GETNUM(ITEM, "药的材料(消)") * 10 + 2
+		ING:0 = 639
+		AMT = 1
+	CASE GETNUM(ITEM, "红色糖果") * 10 + 1
+		ING:0 = [[蜂蜜]]
+		ING:1 = [[辰砂]]
+		ING:2 = 637
+		ING:3 = 640
+		AMT = 1
+	CASE GETNUM(ITEM, "红色糖果") * 10 + 2
+		ING:0 = [[蜂蜜]]
+		ING:1 = [[碎骨]]
+		ING:2 = [[辰砂]]
+		ING:3 = 637
+		ING:4 = 638
+		AMT = 1
+	CASE GETNUM(ITEM, "茶色糖果") * 10 + 1
+		ING:0 = [[蜂蜜]]
+		ING:1 = [[竜骨]]
+		ING:2 = 638
+		AMT = 1
+	CASE GETNUM(ITEM, "茶色糖果") * 10 + 2
+		ING:0 = [[龙之爪]]
+		ING:1 = [[蜂蜜]]
+		ING:2 = [[碎骨]]
+		ING:3 = 638
+		AMT = 1
+	CASE GETNUM(ITEM, "水色糖果") * 10 + 1
+		ING:0 = [[冰之鳞]]
+		ING:1 = [[蜂蜜]]
+		ING:2 = 639
+		AMT = 1
+	CASE GETNUM(ITEM, "排卵诱发剂") * 10 + 1
+		ING:0 = [[高级药草]]
+		ING:1 = [[白色树脂]]
+		ING:2 = [[恶华乳液]]
+		AMT = 1
+	CASE GETNUM(ITEM, "排卵诱发剂") * 10 + 2
+		ING:0 = [[特药草]]
+		ING:1 = [[姜黄]]
+		ING:2 = [[苦根]]
+		ING:3 = [[木通属]]
+		AMT = 1
+	CASE GETNUM(ITEM, "肥料") * 10 + 1
+		ING:0 = [[碎骨]]
+		ING:1 = 636
+		AMT = 1
+	CASE GETNUM(ITEM, "肥料") * 10 + 2
+		ING:0 = [[碎骨]]
+		ING:1 = 642
+		AMT = 1
+	CASE GETNUM(ITEM, "肥料") * 10 + 3
+		ING:0 = 648
+		AMT = 1
+	CASE GETNUM(ITEM, "冰淇淋") * 10 + 1
+		ING:0 = [[冰之鳞]]
+		AMT = 20
+	CASE GETNUM(ITEM, "红茶") * 10 + 1
+		ING:0 = [[山菜]]
+		ING:1 = [[山菜]]
+		ING:2 = [[山菜]]
+		ING:3 = [[山菜]]
+		ING:4 = [[山菜]]
+		AMT = 1
+		LOT = 5
+	CASE GETNUM(ITEM, "红茶") * 10 + 2
+		ING:0 = [[药草]]
+		ING:1 = [[药草]]
+		ING:2 = [[药草]]
+		AMT = 1
+		LOT = 3
+	CASE GETNUM(ITEM, "糖") * 10 + 1
+		ING:0 = [[蜂蜜]]
+		ING:1 = [[蜂蜜]]
+		AMT = 1
+		LOT = 2
+	CASE GETNUM(ITEM, "催情药") * 10 + 1
+		ING:0 = [[可疑菌菇]]
+		ING:1 = 641
+		AMT = 1
+	CASE GETNUM(ITEM, "催情药") * 10 + 2
+		ING:0 = [[可疑菌菇]]
+		ING:1 = [[香甜树脂]]
+		AMT = 1
+	CASE GETNUM(ITEM, "催情药") * 10 + 3
+		ING:0 = [[高级药草]]
+		ING:1 = [[恶华乳液]]
+		AMT = 2
+	CASE GETNUM(ITEM, "催情药") * 10 + 4
+		ING:0 = [[高级药草]]
+		ING:1 = [[曼陀罗草]]
+		AMT = 2
+	CASE GETNUM(ITEM, "睡眠药") * 10 + 1
+		ING:0 = [[毒菌菇]]
+		ING:1 = [[药草]]
+		ING:2 = [[毒草]]
+		ING:3 = 641
+		AMT = 1
+	CASE GETNUM(ITEM, "睡眠药") * 10 + 2
+		ING:0 = [[毒草]]
+		ING:1 = [[苦根]]
+		AMT = 1
+	CASE GETNUM(ITEM, "睡眠药") * 10 + 3
+		ING:0 = [[药草]]
+		ING:1 = [[恶华乳液]]
+		AMT = 3
+	CASE GETNUM(ITEM, "睡眠药") * 10 + 4
+		ING:0 = [[药草]]
+		ING:1 = [[曼陀罗草]]
+		AMT = 3
+	CASE GETNUM(ITEM, "青汁") * 10 + 1
+		ING:0 = [[山菜]]
+		AMT = 1
+		WATER = 1
+	CASE GETNUM(ITEM, "青汁") * 10 + 2
+		ING:0 = [[药草]]
+		AMT = 2
+		WATER = 1
+	CASE GETNUM(ITEM, "营养饮料") * 10 + 1
+		ING:0 = [[高丽人参]]
+		AMT = 1
+		WATER = 1
+	CASE GETNUM(ITEM, "营养饮料") * 10 + 2
+		ING:0 = [[冬虫夏草]]
+		AMT = 1
+		WATER = 1
+	CASE GETNUM(ITEM, "营养饮料") * 10 + 3
+		ING:0 = [[药草]]
+		ING:1 = [[高级药草]]
+		ING:2 = [[山芋]]
+		ING:3 = [[蜂蜜]]
+		AMT = 1
+		WATER = 1
+	CASE GETNUM(ITEM, "精力剂") * 10 + 1
+		ING:0 = [[冬虫夏草]]
+		ING:1 = [[高级药草]]
+		ING:2 = [[山芋]]
+		ING:3 = [[高丽人参]]
+		ING:4 = [[黄色树脂]]
+		AMT = 1
+		WATER = 1
+	CASE GETNUM(ITEM, "精力剂") * 10 + 2
+		ING:0 = [[冬虫夏草]]
+		ING:1 = [[高级药草]]
+		ING:2 = [[苦根]]
+		ING:3 = [[黄色树脂]]
+		AMT = 1
+		WATER = 1
+	CASE GETNUM(ITEM, "精力剂") * 10 + 3
+		ING:0 = [[可疑菌菇]]
+		ING:1 = [[山芋]]
+		ING:2 = [[高丽人参]]
+		ING:3 = [[黄色树脂]]
+		AMT = 1
+		WATER = 1
+	CASE GETNUM(ITEM, "大恢复药") * 10 + 1
+		ING:0 = [[冬虫夏草]]
+		ING:1 = [[高级药草]]
+		ING:2 = [[高丽人参]]
+		AMT = 1
+		WATER = 1
+	CASE GETNUM(ITEM, "大恢复药") * 10 + 2
+		ING:0 = [[药草]]
+		ING:1 = [[高级药草]]
+		ING:2 = [[特药草]]
+		ING:3 = [[山芋]]
+		AMT = 1
+		WATER = 1
+	CASE GETNUM(ITEM, "大恢复药") * 10 + 3
+		ING:0 = [[高级药草]]
+		ING:1 = [[苦根]]
+		ING:2 = [[黄色树脂]]
+		AMT = 1
+		WATER = 1
+	CASE GETNUM(ITEM, "流星群Ｘ") * 10 + 1
+		ING:0 = [[冬虫夏草]]
+		ING:1 = [[特药草]]
+		ING:2 = [[山芋]]
+		ING:3 = [[高丽人参]]
+		ING:4 = [[苦根]]
+		ING:5 = [[蜂蜜]]
+		AMT = 1
+		WATER = 1
+	CASE GETNUM(ITEM, "流星群Ｘ") * 10 + 2
+		ING:0 = [[可疑菌菇]]
+		ING:1 = [[特药草]]
+		ING:2 = [[雪灵草]]
+		AMT = 1
+		WATER = 1
+	CASE GETNUM(ITEM, "流星群Ｘ") * 10 + 3
+		ING:0 = [[特药草]]
+		ING:1 = [[雪灵草]]
+		ING:2 = [[苦根]]
+		AMT = 1
+		WATER = 1
+	CASE GETNUM(ITEM, "精力剂『天元凸破』") * 10 + 1
+		ING:0 = [[冬虫夏草]]
+		ING:1 = [[特药草]]
+		ING:2 = [[苦根]]
+		ING:3 = [[黄色树脂]]
+		ING:4 = [[竜骨]]
+		AMT = 1
+	CASE GETNUM(ITEM, "精力剂『天元凸破』") * 10 + 2
+		ING:0 = [[可疑菌菇]]
+		ING:1 = [[特药草]]
+		ING:2 = [[山芋]]
+		ING:3 = [[竜血]]
+		AMT = 1
+	CASE GETNUM(ITEM, "精力剂『天元凸破』") * 10 + 3
+		ING:0 = [[冬虫夏草]]
+		ING:1 = [[特药草]]
+		ING:2 = [[高丽人参]]
+		ING:3 = [[竜血]]
+		AMT = 1
+	CASE GETNUM(ITEM, "精力剂『天元凸破』") * 10 + 4
+		ING:0 = [[特药草]]
+		ING:1 = [[山芋]]
+		ING:2 = [[竜血]]
+		ING:3 = [[竜骨]]
+		AMT = 1
+	CASE GETNUM(ITEM, "药水") * 10 + 1
+		ING:0 = [[药草]]
+		ING:1 = [[碎骨]]
+		AMT = 1
+		WATER = 1
+	CASE GETNUM(ITEM, "药水") * 10 + 2
+		ING:0 = [[山菜]]
+		ING:1 = [[石膏]]
+		AMT = 1
+		WATER = 1
+	CASE GETNUM(ITEM, "药水") * 10 + 3
+		ING:0 = [[普通的菌菇]]
+		ING:1 = [[药草]]
+		AMT = 1
+		WATER = 1
+	CASE GETNUM(ITEM, "药水") * 10 + 4
+		ING:0 = [[普通的菌菇]]
+		ING:1 = [[石膏]]
+		AMT = 1
+		WATER = 1
+	CASE GETNUM(ITEM, "魔法药水") * 10 + 1
+		ING:0 = [[魔法菌菇]]
+		ING:1 = [[滑石]]
+		AMT = 1
+		WATER = 1
+	CASE GETNUM(ITEM, "魔法药水") * 10 + 2
+		ING:0 = [[魔法菌菇]]
+		ING:1 = [[高级药草]]
+		AMT = 1
+		WATER = 1
+	CASE GETNUM(ITEM, "魔法药水") * 10 + 3
+		ING:0 = [[高级药草]]
+		ING:1 = [[碎骨]]
+		ING:2 = 638
+		AMT = 1
+		WATER = 1
+	CASE GETNUM(ITEM, "魔法药水") * 10 + 4
+		ING:0 = [[冰之鳞]]
+		AMT = 2
+		WATER = 1
+	CASE GETNUM(ITEM, "破眠药水") * 10 + 1
+		ING:0 = [[药草]]
+		ING:1 = [[高级药草]]
+		ING:2 = [[特药草]]
+		ING:3 = [[碎骨]]
+		AMT = 1
+		WATER = 1
+	CASE GETNUM(ITEM, "破眠药水") * 10 + 2
+		ING:0 = 215
+		ING:1 = 215
+		ING:2 = 215
+		ING:3 = 215
+		ING:4 = 215
+		AMT = 1
+		WATER = 1
+		LOT = 5
+	CASE GETNUM(ITEM, "破眠药水") * 10 + 3
+		ING:0 = [[毒草]]
+		ING:1 = [[苦根]]
+		ING:2 = [[碎骨]]
+		AMT = 1
+		WATER = 1
+	CASE GETNUM(ITEM, "姜黄饮料") * 10 + 1
+		ING:0 = [[姜黄]]
+		AMT = 2
+		WATER = 1
+	CASE GETNUM(ITEM, "万能药") * 10 + 1
+		ING:0 = 59
+		ING:1 = [[魔法菌菇]]
+		ING:2 = [[毒草]]
+		ING:3 = [[雪灵草]]
+		ING:4 = [[曼陀罗草]]
+		ING:5 = [[竜血]]
+		AMT = 1
+	CASE GETNUM(ITEM, "仙丹") * 10 + 1
+		ING:0 = [[龙之爪]]
+		ING:1 = [[冰之鳞]]
+		ING:2 = [[辰砂]]
+		ING:3 = 637
+		ING:4 = 639
+		ING:5 = 640
+		AMT = 1
+	CASE GETNUM(ITEM, "一夜奇稻田") * 10 + 1
+		ING:0 = 55
+		ING:1 = [[毒菌菇]]
+		ING:2 = [[木莓]]
+		ING:3 = [[特药草]]
+		AMT = 1
+	CASE GETNUM(ITEM, "一夜奇稻田") * 10 + 2
+		ING:0 = 55
+		ING:1 = [[毒菌菇]]
+		ING:2 = [[木通属]]
+		ING:3 = [[雪灵草]]
+		AMT = 1
+	CASE GETNUM(ITEM, "一夜奇稻田") * 10 + 3
+		ING:0 = 53
+		ING:1 = [[毒菌菇]]
+		ING:2 = [[木莓]]
+		ING:3 = [[特药草]]
+		AMT = 1
+	CASE GETNUM(ITEM, "一夜奇稻田") * 10 + 4
+		ING:0 = 53
+		ING:1 = [[毒菌菇]]
+		ING:2 = [[木通属]]
+		ING:3 = [[雪灵草]]
+		AMT = 1
+	CASE GETNUM(ITEM, "仙香玉兔") * 10 + 1
+		ING:0 = [[魔法菌菇]]
+		ING:1 = [[曼陀罗草]]
+		ING:2 = [[香甜树脂]]
+		ING:3 = [[恶华乳液]]
+		ING:4 = 641
+		AMT = 1
+	CASE GETNUM(ITEM, "仙香玉兔") * 10 + 2
+		ING:0 = [[香甜树脂]]
+		ING:1 = [[恶华乳液]]
+		ING:2 = 643
+		AMT = 1
+	CASE GETNUM(ITEM, "仙香玉兔") * 10 + 3
+		ING:0 = [[魔法菌菇]]
+		ING:1 = [[恶华乳液]]
+		ING:2 = 646
+		AMT = 1
+	CASE GETNUM(ITEM, "国士无双（药）") * 10 + 1
+		ING:0 = [[冬虫夏草]]
+		ING:1 = [[可疑菌菇]]
+		ING:2 = [[龙之爪]]
+		ING:3 = [[特药草]]
+		ING:4 = [[高丽人参]]
+		AMT = 1
+		WATER = 1
+	CASE GETNUM(ITEM, "国士无双（药）") * 10 + 2
+		ING:0 = [[冬虫夏草]]
+		ING:1 = [[可疑菌菇]]
+		ING:2 = [[龙之爪]]
+		ING:3 = [[雪灵草]]
+		AMT = 1
+		WATER = 1
+	CASE GETNUM(ITEM, "毒气花园") * 10 + 1
+		ING:0 = [[毒菌菇]]
+		ING:1 = [[魔法菌菇]]
+		ING:2 = [[毒草]]
+		ING:3 = [[曼陀罗草]]
+		AMT = 1
+	CASE GETNUM(ITEM, "毒气花园") * 10 + 2
+		ING:0 = [[毒菌菇]]
+		ING:1 = [[魔法菌菇]]
+		ING:2 = [[毒草]]
+		ING:3 = [[彼岸花]]
+		ING:4 = 638
+		ING:5 = 641
+		AMT = 1
+	CASE GETNUM(ITEM, "毒气花园") * 10 + 3
+		ING:0 = [[魔法菌菇]]
+		ING:1 = [[毒草]]
+		ING:2 = 646
+		AMT = 1
+	CASE GETNUM(ITEM, "剧毒身躯") * 10 + 1
+		ING:0 = 59
+		ING:1 = [[毒菌菇]]
+		ING:2 = [[龙之爪]]
+		ING:3 = [[毒草]]
+		ING:4 = [[曼陀罗草]]
+		ING:5 = 638
+		AMT = 1
+	CASE GETNUM(ITEM, "剧毒身躯") * 10 + 2
+		ING:0 = 59
+		ING:1 = [[毒菌菇]]
+		ING:2 = [[龙之爪]]
+		ING:3 = [[彼岸花]]
+		ING:4 = [[辰砂]]
+		ING:5 = 638
+		AMT = 1
+	CASE GETNUM(ITEM, "剧毒身躯") * 10 + 3
+		ING:0 = 59
+		ING:1 = [[魔法菌菇]]
+		ING:2 = [[龙之爪]]
+		ING:3 = [[曼陀罗草]]
+		ING:4 = 638
+		AMT = 1
+	CASE GETNUM(ITEM, "剧毒身躯") * 10 + 4
+		ING:0 = 59
+		ING:1 = [[魔法菌菇]]
+		ING:2 = [[龙之爪]]
+		ING:3 = [[辰砂]]
+		ING:4 = 638
+		AMT = 1
+	CASE GETNUM(ITEM, "营养强化剂") * 10 + 1
+		ING:0 = 382
+		ING:1 = 500
+		ING:2 = [[冬虫夏草]]
+		ING:3 = [[山芋]]
+		ING:4 = [[碎骨]]
+		ING:5 = 642
+		AMT = 1
+	CASE GETNUM(ITEM, "营养强化剂") * 10 + 2
+		ING:0 = 382
+		ING:1 = 500
+		ING:2 = [[可疑菌菇]]
+		ING:3 = [[山芋]]
+		ING:4 = [[碎骨]]
+		ING:5 = 642
+		AMT = 1
+	;(酒造パッチ)烧酒
+	CASE GETNUM(ITEM, "烧酒") * 10 + 1
+		ING:0 = 660
+		ING:1 = 660
+		ING:2 = 660
+		ING:3 = 660
+		ING:4 = 660
+		AMT = 1
+		LOT = 5
+	CASE GETNUM(ITEM, "奇迹之石") * 10 + 1
+		ING:0 = 647
+		ING:1 = 647
+		ING:2 = 647
+		AMT = 1
+		LOT = 3
+	CASE GETNUM(ITEM, "奇迹之石") * 10 + 2
+		ING:0 = 647
+		ING:1 = 643
+		AMT = 1
+	CASE GETNUM(ITEM, "奇迹之石") * 10 + 3
+		ING:0 = 647
+		ING:1 = 605
+		ING:2 = 624
+		AMT = 1
+	CASE GETNUM(ITEM, "逆之羽") * 10 + 1
+		ING:0 = 640
+		ING:1 = 641
+		ING:2 = 642
+		ING:3 = 647
+		ING:4 = 648
+		AMT = 1
+	CASE GETNUM(ITEM, "蛤蟆油") * 10 + 1
+		ING:0 = 706
+		ING:1 = 706
+		ING:2 = 706
+		ING:3 = 706
+		ING:4 = 706
+		AMT = 1
+		LOT = 5
+	CASE GETNUM(ITEM, "鱼粕") * 10 + 1
+		ING:0 = 707
+		ING:1 = 707
+		AMT = 1
+		LOT = 2
+	CASE GETNUM(ITEM, "鱼粕") * 10 + 2
+		ING:0 = 708
+		AMT = 1
+	CASE GETNUM(ITEM, "肉骨粉") * 10 + 1
+		ING:0 = 702
+		AMT = 1
+	CASE GETNUM(ITEM, "肉骨粉") * 10 + 2
+		ING:0 = 703
+		AMT = 1
+	;(酒造パッチ)陈酿前的莓子酒
+	CASE GETNUM(ITEM, "陈酿前的莓子酒") * 10 + 1
+		ING:0 = 562
+		ING:1 = 562
+		ING:2 = 562
+		ING:3 = 562
+		ING:4 = 562
+		AMT = 1
+		LOT = 5
+	;(酒造パッチ)陈酿前的朗姆
+	CASE GETNUM(ITEM, "陈酿前的朗姆") * 10 + 1
+		ING:0 = 662
+		ING:1 = 662
+		ING:2 = 662
+		ING:3 = 662
+		ING:4 = 662
+		AMT = 1
+		LOT = 5
+	;(酒造パッチ)陈酿前的白兰地
+	CASE GETNUM(ITEM, "陈酿前的白兰地") * 10 + 1
+		ING:0 = 54
+		ING:1 = 54
+		ING:2 = 54
+		ING:3 = 54
+		ING:4 = 54
+		AMT = 1
+		LOT = 5
+	;(酒造パッチ)陈酿前的白兰地
+	CASE GETNUM(ITEM, "陈酿前的白兰地") * 10 + 2
+		ING:0 = 569
+		ING:1 = 569
+		ING:2 = 569
+		ING:3 = 569
+		AMT = 1
+		LOT = 4
+	;(酒造パッチ)陈酿前的白兰地
+	CASE GETNUM(ITEM, "陈酿前的白兰地") * 10 + 3
+		ING:0 = 570
+		ING:1 = 570
+		ING:2 = 570
+		AMT = 1
+		LOT = 3
+	;(酒造パッチ)草木灰
+	CASE GETNUM(ITEM, "草木灰") * 10 + 1
+		ING:0 = 607
+		AMT = 1
+	;(酒造パッチ)草木灰
+	CASE GETNUM(ITEM, "草木灰") * 10 + 2
+		ING:0 = 608
+		AMT = 1
+	;(酒造パッチ)草木灰
+	CASE GETNUM(ITEM, "草木灰") * 10 + 3
+		ING:0 = 611
+		AMT = 1
+	;(酒造パッチ)草木灰
+	CASE GETNUM(ITEM, "草木灰") * 10 + 4
+		ING:0 = 612
+		AMT = 1
+	;(酒造パッチ)草木灰
+	CASE GETNUM(ITEM, "草木灰") * 10 + 5
+		ING:0 = 610
+		AMT = 1
+	;(酒造パッチ)果渣白兰地
+	CASE GETNUM(ITEM, "果渣白兰地") * 10 + 1
+		ING:0 = 668
+		ING:1 = 668
+		ING:2 = 668
+		ING:3 = 668
+		ING:4 = 668
+		AMT = 1
+		LOT = 5
+		WATER = 1
+	;(酒造パッチ)墨西哥卷饼
+	CASE GETNUM(ITEM, "墨西哥卷饼") * 10 + 1
+		ING:0 = 667
+		ING:1 = 702
+		ING:2 = 351
+		ING:3 = 362
+		ING:4 = 363
+		AMT = 1
+		WATER = 1
+	;(酒造パッチ)灰汁卷
+	CASE GETNUM(ITEM, "灰汁卷") * 10 + 1
+		ING:0 = 82
+		ING:1 = 667
+		AMT = 1
+		WATER = 1
+	;(酒造パッチ)粕取烧酒
+	CASE GETNUM(ITEM, "粕取烧酒") * 10 + 1
+		ING:0 = 672
+		ING:1 = 672
+		ING:2 = 672
+		ING:3 = 672
+		ING:4 = 672
+		AMT = 1
+		LOT = 5
+		WATER = 1
+	;(酒造パッチ)甜酒
+	CASE GETNUM(ITEM, "甜酒") * 10 + 1
+		ING:0 = 672
+		ING:1 = 84
+		AMT = 10
+		WATER = 1
+	CASE GETNUM(ITEM, "弹力药") * 10 + 1
+		ING:0 = 58
+		ING:1 = [[药草]]
+		ING:2 = [[碎骨]]
+		ING:3 = 637
+		AMT = 1
+	CASE GETNUM(ITEM, "弹力药") * 10 + 2
+		ING:0 = 58
+		ING:1 = [[药草]]
+		ING:2 = [[白色树脂]]
+		ING:3 = 641
+		AMT = 1
+	CASE GETNUM(ITEM, "弹力药") * 10 + 3
+		ING:0 = 58
+		ING:1 = [[魔法菌菇]]
+		AMT = 2
+	CASE GETNUM(ITEM, "冰柱爆弹") * 10 + 1
+		ING:0 = 213
+		ING:1 = 508
+		AMT = 1
+	CASE GETNUM(ITEM, "冰柱爆弹") * 10 + 2
+		ING:0 = [[冰之鳞]]
+		AMT = 2
+	CASE GETNUM(ITEM, "太乙火种") * 10 + 1
+		ING:0 = [[黄色树脂]]
+		ING:1 = 637
+		ING:2 = 638
+		ING:3 = 641
+		AMT = 1
+	CASE GETNUM(ITEM, "太乙火种") * 10 + 2
+		ING:0 = [[魔法菌菇]]
+		ING:1 = 637
+		ING:2 = 638
+		ING:3 = 641
+		AMT = 1
+	CASE GETNUM(ITEM, "太乙火种") * 10 + 3
+		ING:0 = [[彼岸花]]
+		ING:1 = 637
+		ING:2 = 641
+		AMT = 1
+	CASE GETNUM(ITEM, "太乙火种") * 10 + 4
+		ING:0 = 638
+		ING:1 = 640
+		AMT = 2
+	CASE GETNUM(ITEM, "魅惑的饵种") * 10 + 1
+		ING:0 = [[普通的菌菇]]
+		ING:1 = [[恶华乳液]]
+		ING:2 = [[木莓]]
+		ING:3 = [[蜂蜜]]
+		ING:4 = 642
+		AMT = 1
+	CASE GETNUM(ITEM, "魅惑的饵种") * 10 + 2
+		ING:0 = [[山菜]]
+		ING:1 = [[恶华乳液]]
+		ING:2 = [[木莓]]
+		ING:3 = [[蜂蜜]]
+		ING:4 = 642
+		AMT = 1
+	CASE GETNUM(ITEM, "魅惑的饵种") * 10 + 3
+		ING:0 = [[苦根]]
+		ING:1 = [[恶华乳液]]
+		ING:2 = [[蜂蜜]]
+		ING:3 = 642
+		AMT = 1
+	CASE GETNUM(ITEM, "魅惑的饵种") * 10 + 4
+		ING:0 = [[香甜树脂]]
+		ING:1 = [[恶华乳液]]
+		ING:2 = [[蜂蜜]]
+		ING:3 = 642
+		AMT = 1
+	CASE GETNUM(ITEM, "魅惑的饵种") * 10 + 5
+		ING:0 = [[蜂蜜]]
+		ING:1 = 639
+		AMT = 2
+
+	CASE GETNUM(ITEM, "贤者之石") * 10 + 1
+		ING:0 = [[龙之爪]]
+		ING:1 = [[冰之鳞]]
+		ING:2 = [[仙桃]]
+		ING:3 = [[辰砂]]
+		ING:4 = 639
+		ING:5 = 640
+		AMT = 1
+	CASE GETNUM(ITEM, "弹丸魔像") * 10 + 1
+		ING:0 = [[碎骨]]
+		ING:1 = [[石膏]]
+		ING:2 = [[滑石]]
+		ING:3 = 637
+		ING:4 = 638
+		AMT = 1
+	CASE GETNUM(ITEM, "弹丸魔像") * 10 + 2
+		ING:0 = [[碎骨]]
+		ING:1 = [[石膏]]
+		ING:2 = [[滑石]]
+		ING:3 = 636
+		ING:4 = 638
+		AMT = 1
+	CASE GETNUM(ITEM, "生命卡") * 10 + 1
+		ING:0 = 647
+		ING:1 = 647
+		ING:2 = 647
+		AMT = 1
+		LOT = 3
+	CASE GETNUM(ITEM, "符卡") * 10 + 1
+		ING:0 = 647
+		ING:1 = 647
+		ING:2 = 647
+		AMT = 1
+		LOT = 3
+	CASE GETNUM(ITEM, "墓志铭") * 10 + 1
+		ING:0 = 521
+		ING:1 = 706
+		AMT = 1
+	CASE GETNUM(ITEM, "墓志铭") * 10 + 2
+		ING:0 = 647
+		ING:1 = 647
+		ING:2 = 647
+		ING:3 = 647
+		AMT = 1
+		LOT = 4
+	CASE GETNUM(ITEM, "绯红之王") * 10 + 1
+		ING:0 = 870
+		ING:1 = 521
+		ING:2 = 706
+		AMT = 1
+	CASEELSE
+		RETURNF -1
+ENDSELECT
+
+SELECTCASE TYPE
+	CASE 0 TO 5
+		RETURNF ING:TYPE
+	CASE 6
+		RETURNF AMT
+	CASE 7
+		RETURNF WATER
+	CASE 8
+		RETURNF LOT
+ENDSELECT
+
+;使い切りの体质变化药
+@PHARMA_VOLATILE(ARG)
+#FUNCTION
+SIF GROUPMATCH(ARG, 71, 72, 74, 77, 78)
+	RETURNF 1
+RETURNF 0
+
+
+;-----------------------------------------------------------
+;道具番号ARG:0の调合难易度を返す函数
+;（兼、调合可能道具であることの照合にも利用）
+;RETURNF	0 调合不可	1～5 调合の难易度
+;COMMENT	道具を追加した场合は、CASEに追记
+;-----------------------------------------------------------
+@PHARMACY_RANK(ARG:0)
+#FUNCTION
+SELECTCASE ITEMNAME:(ARG:0)
+	;(酒造パッチ)追加酒の调合难易度は1
+	CASE "润滑液", "避孕套", "蒸馏酒", "冰淇淋", "糖", "青汁", "药水", "姜黄饮料", "蛤蟆油", "鱼粕", "肉骨粉", "烧酒", "陈酿前的莓子酒", "陈酿前的朗姆", "陈酿前的白兰地", "果渣白兰地", "草木灰", "墨西哥卷饼", "粕取烧酒", "甜酒"
+		RETURNF 1
+	;(酒造パッチ)灰汁卷の调合难易度は2
+	CASE "利尿剂", "药酒", "肥料", "红茶", "营养饮料", "精力剂", "破眠药水", "营养强化剂", "弹力药", "冰柱爆弹", "墓志铭", "灰汁卷"
+		RETURNF 2
+	CASE "媚药", "催情药", "睡眠药", "大恢复药", "精力剂『天元凸破』", "魔法药水", "一夜奇稻田", "绯红之王"
+		RETURNF 3
+	CASE "药的材料(双)", "药的材料(消)", "排卵诱发剂", "流星群Ｘ", "万能药", "国士无双（药）", "毒气花园", "太乙火种", "魅惑的饵种", "弹丸魔像", "生命卡", "符卡"
+		RETURNF 4
+	CASE "红色糖果", "茶色糖果", "水色糖果", "奇迹之石", "逆之羽", "仙丹", "仙香玉兔", "剧毒身躯", "贤者之石"
+		RETURNF 5
+ENDSELECT
+RETURNF 0

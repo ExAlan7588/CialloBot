@@ -1,0 +1,292 @@
+﻿@COM604
+#DIM LPCOUNT
+#DIM 现在地点
+#DIM P_ID
+#DIM 所要时间
+#DIM 时间补正
+#DIM 时间停止ジャンプ
+#DIM 特殊ワープ
+#DIM ANIMATION_SEED
+#DIM PREV_REDRAW
+;散步
+时间停止ジャンプ = FLAG:时间停止 || (GETBIT(FLAG:瞬间移动, 0) && !FLAG:约会的对象)
+
+ANIMATION_SEED = 0
+PREV_REDRAW = CURRENTREDRAW()
+;Map Animation Code
+$MAPANIMATION
+LINESTART = LINECOUNT
+SIF ANIMATERECOLOREDMAPS && !FLAG:70
+	ANIMATION_SEED ++
+
+VARSET LOCAL
+DRAWLINEFORM ～
+
+IF RECOLOREDMAPS
+	CALL DRAW_COLOREDMAP(ANIMATION_SEED, "ODEKAKE")
+ELSE
+	CALL DRAW_MAP("ODEKAKE")
+ENDIF
+
+DRAWLINEFORM ～
+PRINTL 要去哪里呢？
+现在地点 = CFLAG:MASTER:当前位置 % 100 / 10
+FOR LPCOUNT, 1, 10
+	P_ID = CFLAG:MASTER:约会中 * 100 + LPCOUNT * 10
+	SIF NAME_FROM_PLACE(P_ID) == ""
+		CONTINUE
+	IF LPCOUNT == 现在地点
+		PRINTPLAINFORM [  0] - %NAME_FROM_PLACE(P_ID), 18, LEFT%
+		CALL COLORMESSAGE(@"现在地　", C_GREEN, 3)
+	ELSE
+		时间补正 = 0
+		IF 时间停止ジャンプ
+			LOCALS = TSP%" "%
+		ELSE
+			;小町の能力
+			SIF FLAG:约会的对象 == [[小町]]
+				时间补正 += -50
+			;若鹭姫の负担
+			SIF FLAG:约会的对象 == [[若鹭姫]] && !GETBIT (FLAG:泳池, 0)
+				时间补正 += 100
+			;地点ごとのショートカット效果
+			SIF SHORTCUT(CFLAG:MASTER:约会中, -1)
+				时间补正 += -50
+			LOCALS = 分　
+		ENDIF
+		所要时间 = 散步所要时间(CFLAG:MASTER:当前位置, P_ID, 时间补正)
+		PRINTFORM [{LPCOUNT, 3}] - %NAME_FROM_PLACE(P_ID), 18, LEFT%
+		IF 时间补正 < 0
+			SETCOLOR C_L_GREEN
+		ELSEIF 时间补正 > 0
+			SETCOLOR C_ROYAL_BLUE
+		ENDIF
+		PRINTFORM {所要时间, 3} %LOCALS%
+		RESETCOLOR
+	ENDIF
+	LOCAL ++
+	SIF LOCAL % 2 == 0
+		PRINTL
+NEXT
+SIF LOCAL % 2 == 1
+	PRINTL
+
+;特殊ワープ
+特殊ワープ = ODEKAKEMAP_SETTING(CFLAG:MASTER:当前位置, "特殊ワープ")
+IF 特殊ワープ
+	所要时间 = 时间停止ジャンプ ? 30 # 10
+	PRINTFORML [{特殊ワープ, 3}] - %NAME_FROM_PLACE(特殊ワープ), 18, LEFT%{所要时间, 3} %LOCALS%
+ENDIF
+
+PRINTL [100] - 返回　　　　　　　　　　　[ 99] - 移动至其他地域
+$INPUT_LOOP
+;Map Animation Code
+IF ANIMATERECOLOREDMAPS && !FLAG:70
+	REDRAW PREV_REDRAW
+	TINPUT ANIMATERECOLOREDMAPS,1234,0,""
+ELSE
+	INPUT
+ENDIF
+IF INRANGE(RESULT, 1, 9)
+	P_ID = CFLAG:MASTER:约会中 * 100 + RESULT * 10
+	;所要时间は消费TSPも込みになっているので注意
+	所要时间 = 散步所要时间(CFLAG:MASTER:当前位置, P_ID, 时间补正)
+ENDIF
+;返回
+IF RESULT == 100 || RESULT == 0
+	RETURN -1
+;移动至其他地域
+ELSEIF RESULT == 99
+	DRAWLINE
+	CALL OTHERREGIONS("散步")
+	IF RESULT == 100
+		RESTART
+	ELSE
+		RETURN 1
+	ENDIF
+;特殊ワープ,10分/30TSP固定
+ELSEIF 特殊ワープ && RESULT == 特殊ワープ
+	IF FLAG:时间停止 && BASE:MASTER:TSP < 30
+		PRINTW TSP不足
+		RESTART
+	ELSEIF 时间停止ジャンプ
+		BASE:MASTER:TSP -= 30
+	ELSE
+		TIME += 10
+	ENDIF
+	PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%踏入了空间的扭曲歪后
+	PRINTFORMW 不知不觉间便到达了%NAME_FROM_PLACE(特殊ワープ)%…
+	P_ID = 特殊ワープ
+	CFLAG:MASTER:当前位置 = P_ID
+	CFLAG:MASTER:约会中 = GET_MAPID(P_ID)
+	IF FLAG:约会的对象
+		CFLAG:(FLAG:约会的对象):当前位置 = P_ID
+		CFLAG:(FLAG:约会的对象):约会中 = GET_MAPID(P_ID)
+	ENDIF
+	RETURN 1
+ELSEIF RESULT == 1234
+	PREV_REDRAW = CURRENTREDRAW()
+	REDRAW 0
+	CLEARLINE LINECOUNT - LINESTART
+	GOTO MAPANIMATION
+;散步移动
+ELSEIF INRANGE(RESULT, 1, 9) && NAME_FROM_PLACE(P_ID) != ""
+	;移动できるかチェック
+	CALL SANSAKU_UNIQUEPLACE(P_ID)
+	IF RESULT
+		;P_IDへ移动
+		P_ID = RESULT
+		CFLAG:MASTER:当前位置 = P_ID
+		IF FLAG:约会的对象
+			CFLAG:(FLAG:约会的对象):当前位置 = P_ID
+			TIME += 所要时间
+		ELSEIF FLAG:时间停止 && BASE:MASTER:TSP < 所要时间
+			PRINTW TSP不足
+			RESTART
+		ELSEIF 时间停止ジャンプ
+			BASE:MASTER:TSP -= 所要时间
+		ELSE
+			TIME += 所要时间
+		ENDIF
+		RETURN 1
+	ENDIF
+ENDIF
+RESTART
+
+;-------------------------------------------------
+;实行可能判定
+;-------------------------------------------------
+;散步
+@COM_ABLE604
+SIF TFLAG:妄想中
+	RETURN 0
+;批量管理
+SIF GLOBAL_COMABLE(604)
+	RETURN RESULT
+;约会中以外
+SIF AT_HOME(MASTER)
+	RETURN 0
+SIF CFLAG:MASTER:当前位置 == OMANEKIBEYA()
+	RETURN 0
+SIF CFLAG:诶嘿嘿
+	RETURN 0
+;潜伏モード中は不可
+SIF GETBIT(FLAG:潜伏,0)
+	RETURN 0
+;约会道中
+SIF TFLAG:约会道中
+	RETURN 0
+;妄想中
+SIF TFLAG:妄想中 == 1
+	RETURN 0
+RETURN 1
+
+
+;-----------------------------------------------------------
+;现在地→移动先の散步にかかる所要时间
+;时间停止中は消费TSP
+;二次元座标间の距离を算出してる,例えば12→64だったら5+2=7
+;-----------------------------------------------------------
+@散步所要时间(现在地ID, 移动先ID, 时间补正)
+#FUNCTION
+#DIM 现在地ID
+#DIM 移动先ID
+#DIM 时间补正
+#DIM 现在地座标
+#DIM 移动先座标
+现在地座标 = ODEKAKEMAP_SETTING(现在地ID, "座标")
+移动先座标 = ODEKAKEMAP_SETTING(移动先ID, "座标")
+LOCAL = (ABS(现在地座标 / 10 - 移动先座标 / 10) + ABS(现在地座标 % 10 - 移动先座标 % 10)) * 2
+LOCAL = LOCAL * (100 + MAX(时间补正, -50)) / 100
+SIF FLAG:时间停止 || (GETBIT(FLAG:瞬间移动, 0) && !FLAG:约会的对象)
+	LOCAL *= 3
+RETURNF LOCAL
+
+;-----------------------------------------------------------
+;散步时に移动できるかを返す函数
+;散步版MAP_CAN_MOVE, メッセージもここで表示する
+;ARG     移动先の场所ID
+;RETRUN  0=移动できない, 0以外=移动先
+;-----------------------------------------------------------
+@SANSAKU_UNIQUEPLACE(ARG)
+SELECTCASE ARG
+	CASE 妖精的大树
+		IF ABL:MASTER:教养 < 1
+			PRINTFORMW 不熟悉的%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%没有找到…
+			RETURN 0
+		ENDIF
+	CASE 彼岸, 白玉楼庭院, 白玉楼, 天界, 地狱, 畜生界, 灵长园
+		IF ABL:MASTER:教养 < 1 && ABL:(FLAG:约会的对象):教养 < 1
+			PRINTFORMW 不多积累点教养就去那是很危险的
+			RETURN 0
+		ENDIF
+	CASE 月之都, 绵月亭, 玉兔之街, 桃林～沙滩, 宁静海
+		IF ABL:MASTER:教养 < 2 && ABL:(FLAG:约会的对象):教养 < 2
+			PRINTFORMW 不多积累点教养就去那是很危险的
+			RETURN 0
+		ENDIF
+	CASE 正邪的藏身处前
+		;本人は入れる;恋慕が那个ば入れてもらえる;前世で正邪が恋慕or恋人なら场所は分かる
+		IF FLAG:扮演 == [[正邪]] || TALENT:[[正邪]]:恋慕 || GETBIT (CFLAG:[[正邪]]:继承, 0) || GETBIT (CFLAG:[[正邪]]:继承, 1)
+		ELSE
+			PRINTFORMW 不知道现在在哪了…
+			RETURN 0
+		ENDIF
+	CASE 仙人的宅邸
+		;华扇が恋慕;本人は入れる
+		IF TALENT:[[华扇]]:恋慕 || FLAG:扮演 == [[华扇]]
+		;约会的对象が天子か自分が天子
+		ELSEIF FLAG:约会的对象 == [[天子]] || FLAG:扮演 == [[天子]]
+		;教养が足りないとたどり着けない
+		ELSEIF ABL:MASTER:教养 < 3
+			PRINTFORMW 从刚才开始和屋子的距离就完全没有减少……
+			PRINTFORMW 好像在同一个地方一直转着圈
+			RETURN 0
+		;それ以外は战斗力3以上必要
+		ELSEIF ABL:MASTER:战斗能力 < 3 && !FLAG:时间停止
+			PRINTFORMW 有危险的老虎蹲在在庭院中、看到%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%的样子后提高了呜呜的吼声
+			PRINTFORMW 看来不要靠近比较好
+			RETURN 0
+		ENDIF
+	CASE 永远亭的内院
+		IF FLAG:时间停止
+			PRINTFORMW 擅自进去了
+		ELSEIF !永远亭侵入许可()
+			PRINTL 虽然想进去里面、但在入口处被兔子们拦住了
+			RETURN 永远亭
+		ENDIF
+	CASE 情侣酒店, 情人旅馆
+		IF !FLAG:约会的对象
+			PRINTW 没办法一个人去
+			RETURN 0
+		ELSEIF MONEY < 3000
+			PRINTW 金钱不足
+			RETURN 0
+		ENDIF
+		SIF !GETBIT(CFLAG:(FLAG:约会的对象):既成事实 , 1) && !TALENT:(FLAG:约会的对象):合意误认
+			CALL 抱き寄せ(FLAG:约会的对象)
+		IF TCVAR:(FLAG:约会的对象):初次拥抱 >= 6 && !TCVAR:(FLAG:约会的对象):烂醉 && !CFLAG:(FLAG:约会的对象):败犬
+				PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", (FLAG:约会的对象))%拒绝一起入内
+				SIF TCVAR:(FLAG:约会的对象):初次拥抱 == 6
+					PRINTFORMW 但是%NAME_OUTPUT_TRANSLATION("CALLNAME", (FLAG:约会的对象))%看起来并不是不高兴的样子
+			RETURN 0
+		ELSE
+			PRINTFORML 要花%金额表示(3000)%。可以么？
+			CALL ASK_YN
+			CFLAG:(FLAG:约会的对象):诶嘿嘿 = 0
+			CFLAG:MASTER:诶嘿嘿 = 0
+			IF RESULT == 0
+				MONEY -= 3000
+				IF TCVAR:(FLAG:约会的对象):烂醉
+					PRINTFORMW 趁着%NAME_OUTPUT_TRANSLATION("CALLNAME", (FLAG:约会的对象))%头脑朦胧的时机、%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%把她带进了%NAME_FROM_PLACE(ARG)%
+				ELSEIF CFLAG:(FLAG:约会的对象):败犬
+					PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%把不情愿的%NAME_OUTPUT_TRANSLATION("CALLNAME", (FLAG:约会的对象))%拉近了%NAME_FROM_PLACE(ARG)%
+				ELSE
+					PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%和%NAME_OUTPUT_TRANSLATION("CALLNAME", (FLAG:约会的对象))%一起进入了%NAME_FROM_PLACE(ARG)%
+				ENDIF
+			ELSE
+				RETURN 0
+			ENDIF
+		ENDIF
+ENDSELECT
+RETURN ARG

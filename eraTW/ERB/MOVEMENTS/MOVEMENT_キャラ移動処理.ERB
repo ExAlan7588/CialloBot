@@ -1,0 +1,400 @@
+﻿;-----------------------------------------------------------
+;据点内で角色の挙动を处理する函数
+;             ARG   判定する角色
+;        留まり率   当前位置に对する移动率,高いほど留まる,减少になると移动しやすくなる
+;          移动先   移动判定を行う地点ID
+;        移动决定   实际に移动する地点ID
+;      无差别移动   移动先が侵入可能ならとりあえず移动する
+;        强制移动   移动先に何がなんでも移动する（无差别移动でどこにも移动できないと发动）
+;             END   结束フラグ
+;            N_ID   ARGの当前位置
+;         G_POINT   一时的な引力点
+;          引力点   徐々に移动していく目的地
+;保持不动   1ターンだけ持续する无差别移动にならないかぎり移动しない状态,移动直后や特定の行动を取った际になる
+;-----------------------------------------------------------
+@角色移动处理(ARG)
+#DIM 留まり率
+#DIM 移动先
+#DIM 移动决定
+#DIM 无差别移动
+#DIM 强制移动
+#DIM END
+#DIM N_ID
+#DIM G_POINT
+VARSET LOCAL
+END = 0
+;你の据点物件にいる角色のみが对象
+SIF !AT_HOME(ARG)
+	END = 1
+;行动不能
+SIF FLAG:时间停止 || CFLAG:ARG:衰弱 || CFLAG:ARG:招待 || CFLAG:ARG:睡眠
+	END = 1
+;仕事、延迟、添い寝、诶嘿嘿、同行中は移动处理リセット
+SIF CFLAG:ARG:行动 == 5 || CFLAG:ARG:延迟 || CFLAG:ARG:陪睡中 || CFLAG:ARG:诶嘿嘿 || CFLAG:ARG:同行
+	END = 1
+
+;结束处置
+IF END
+	TCVAR:ARG:保持不动 = 0
+	RETURN
+ENDIF
+
+N_ID = CFLAG:ARG:当前位置
+
+;まずその场に留まり率を设定
+;addition custom code, for custom charadata movement
+CALL KOJO_CHECK(ARG, "CHARADATA", "MOVE", 4, N_ID)
+IF RESULT == -1 ;等于-1时,表明口上侧需要是结果为0
+	RESULT = 0
+	CALLFORM CHARAMOVE_DATA_{NO:ARG}(4, N_ID)
+ELSEIF RESULT ;等于其他正值时，表明口上侧有自己的值
+ELSE 
+	;addition custom code, duplicated characters
+	CALLFORM CHARAMOVE_DATA_{NO:ARG}(4, N_ID)
+ENDIF 
+留まり率 = RESULT
+;待机场所は固定
+IF N_ID == MAXROOM
+	留まり率 = -10
+;引力点も固定
+ELSEIF N_ID == TCVAR:ARG:引力点
+	留まり率 = 5
+ELSE
+	;留まりにくい场所
+	SIF N_ID == GET_ENTRANCE(MAIN_MAP) || ROOMDATA:(N_ID % 100) & 场所_留まらない
+		留まり率 += -5
+	;你と同室だったら态度で留まる
+	SIF N_ID == CFLAG:MASTER:当前位置
+		留まり率 += CFLAG:ARG:态度 * 2
+ENDIF
+
+无差别移动 = 0
+强制移动 = 0
+;お澡堂にいる
+IF BATHROOM(N_ID)
+	;お澡堂なう
+	IF CFLAG:ARG:澡堂
+		TCVAR:ARG:保持不动 = 0
+		RETURN
+	;あがる
+	ELSE
+		无差别移动 = 1
+	ENDIF
+ENDIF
+;厕所は10分经过したら出てくる,利尿剂が效いてると出てこない
+IF IN_TOILET(N_ID) && TIME_PROGRESS(TIME:1) >= 10
+	IF TCVAR:ARG:利尿剂
+		TCVAR:ARG:保持不动 = 1
+	ELSEIF TIME_PROGRESS(TIME:1) >= 10 && !TCVAR:ARG:利尿剂
+		无差别移动 = 1
+	ENDIF
+ENDIF
+;天候ダメージが痛い
+SIF 天候造成的影响(ARG, N_ID) <= -3
+	无差别移动 = 1
+;当前位置の移动率を判定して、本来入らない场所（なおかつ你が居ない）ならG_POINTを付けて无差别移动
+CALL 角色移动率(ARG, N_ID)
+IF RESULT <= 0 && N_ID != CFLAG:MASTER:当前位置
+	无差别移动 = 1
+	;引力点が未设定ならとりあえず外に出ようとする
+	SIF !TCVAR:ARG:引力点
+		G_POINT = ENTRANCE
+ELSE
+	G_POINT = 0
+ENDIF
+;保持不动なら结束
+IF TCVAR:ARG:保持不动 && !无差别移动
+	TCVAR:ARG:保持不动 = 0
+	RETURN
+ENDIF
+
+CALL FISHER_YATES_SHAFFLE(MAXROOM - MINROOM())
+移动决定 = 0
+WHILE 1
+	;引力点の设定を行う
+	TCVAR:ARG:引力点 = 0
+	;addition custom code, for custom charadata movement
+	CALL KOJO_CHECK(ARG, "CHARADATA", "MOVE", 8)
+	IF RESULT == -1 ;等于-1时,表明口上侧需要是结果为0
+		RESULT = 0
+		CALLFORM CHARAMOVE_DATA_{NO:ARG}(8)
+	ELSEIF RESULT ;等于其他正值时，表明口上侧有自己的值
+	ELSE 
+	;addition custom code, duplicated characters
+	CALLFORM CHARAMOVE_DATA_{NO:ARG}(8)
+	ENDIF
+	CALL KOJO_MESSAGE_SEND("GRAVITY", 1, ARG)
+	;引力点または脱出用のG_POINTがある场合は引力点に向かって移动する,G_POINTは条件无し
+	IF 引力点发动可(ARG) || G_POINT
+		;引力点かG_POINTを目指す
+		移动先 = TCVAR:ARG:引力点 ? TCVAR:ARG:引力点 # G_POINT
+		;スキップムーブでルート検索
+		WHILE !(CAN_MOVE(N_ID, 移动先) & 1)
+			TRYCALLFORM SKIP_MOVE_{MAIN_MAP}(移动先, N_ID)
+			移动先 = RESULT
+		WEND
+		;移动先が主人公私室であり、その角色の私室でなく、そこで你がウフフ中の场合は入ってこれない
+		IF 移动先 == CFLAG:MASTER:初始位置 && 移动先 != CFLAG:ARG:初始位置 && 移动先 == CFLAG:MASTER:当前位置 && CFLAG:MASTER:诶嘿嘿
+		;结界发动中
+		ELSEIF TEQUIP:MASTER:结界发动 && 移动先 == CFLAG:MASTER:当前位置
+		ELSE
+			;留まり率に补正をかけて动きやすくする（要调整,-100だとほぼ运动の）
+			CALL 角色移动率(ARG, 移动先, 留まり率 - 100)
+			;移动判定
+			IF RESULT * TIME_PROGRESS(TIME:1) > RAND:1000
+				移动决定 = 移动先
+			;无差别移动时はなるべく移动,强制移动时は无条件に移动
+			ELSEIF (RESULT && 无差别移动) || 强制移动
+				移动决定 = 移动先
+			ENDIF
+		ENDIF
+	;通常の移动
+	ELSE
+		FOR LOCAL, 0, MAXROOM - MINROOM()
+			移动先 = SHAFFLE_ARRAY:LOCAL + MAIN_MAP * 100 + 1
+			;当前位置
+			SIF 移动先 == N_ID
+				CONTINUE
+			;移动できない
+			SIF !(CAN_MOVE(N_ID, 移动先) & 1)
+				CONTINUE
+			;移动できない２,ワンルーム制限等、移动に制限がある场所
+			SIF !MAP_CAN_MOVE(移动先, ARG)
+				CONTINUE
+			;移动先が主人公私室であり、その角色の私室でなく、そこで你がウフフ中の场合は入ってこれない
+			SIF 移动先 == CFLAG:MASTER:初始位置 && 移动先 != CFLAG:ARG:初始位置 && 移动先 == CFLAG:MASTER:当前位置 && CFLAG:MASTER:诶嘿嘿
+				CONTINUE
+			;强制移动时は以下の条件はパスする
+			IF !强制移动
+				;天候が今いる场所より痛い
+				SIF 天候造成的影响(ARG, 移动先) <= -3 && N_ID != MAXROOM && 天候造成的影响(ARG, N_ID) >= -2
+					CONTINUE
+				;追い出された先
+				SIF 移动先 == TCVAR:ARG:追い出され地点
+					CONTINUE
+				;结界发动中
+				SIF TEQUIP:MASTER:结界发动 && 移动先 == CFLAG:MASTER:当前位置
+					CONTINUE
+			ENDIF
+			;最初にヒットした移动先で判定してBREAKする（分岐が多いほど移动概率が上がらないようにするため）
+			CALL 角色移动率(ARG, 移动先, 留まり率)
+			;通常の移动判定
+			IF RESULT * TIME_PROGRESS(TIME:1) > RAND:1000
+				移动决定 = 移动先
+			;无差别移动时はなるべく移动,强制移动时は无条件に移动
+			ELSEIF (RESULT && 无差别移动) || 强制移动
+				移动决定 = 移动先
+			;移动率が0%じゃないなら判定结束（减少でも结束）
+			ELSEIF RESULT
+				;ただし无差别移动时は强制移动を付けて再判定
+				IF 无差别移动 && !强制移动
+					强制移动 = 1
+				ELSE
+					TCVAR:ARG:保持不动 = 0
+					RETURN
+				ENDIF
+			;0%なら再判定
+			ELSE
+				CONTINUE
+			ENDIF
+			BREAK
+		NEXT
+	ENDIF
+	;强制移动时は移动决定するまでループ
+	IF 强制移动 && !移动决定
+		CONTINUE
+	ELSEIF 移动决定
+		CALL 角色移动处理２(ARG, 移动先, N_ID)
+		RETURN
+	ELSE
+		TCVAR:ARG:保持不动 = 0
+		RETURN
+	ENDIF
+WEND
+
+;-----------------------------------------------------------
+;移动が决定したあとの处理
+;ARG     移动する角色
+;移动先  移动する地点ID
+;N_ID    ARGの当前位置
+;-----------------------------------------------------------
+@角色移动处理２(ARG, 移动先, N_ID)
+#DIM 移动先
+#DIM N_ID
+#DIM 移动メッセージ
+#DIM ワンルーム人数カウント
+#DIM SKIP
+移动メッセージ = 0
+SKIP = 0
+SETCOLOR C_YELLOW
+IF CAN_SEE(ARG) && !CFLAG:MASTER:睡眠
+	IF N_ID == MAXROOM
+		PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", ARG)%来到了【%NAME_FROM_PLACE(移动先)%】
+	ELSE
+		PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", ARG)%从【%NAME_FROM_PLACE(N_ID)%】往【%NAME_FROM_PLACE(移动先)%】移动了
+	ENDIF
+	移动メッセージ = 1
+ENDIF
+;ワンルーム处理
+IF ROOMDATA:(N_ID % 100) & 场所_ワンルーム
+	;ワンルーム家主が外出する场合、相性が良くない角色は一绪に外に出される
+	IF N_ID == CFLAG:ARG:初始位置
+		ワンルーム人数カウント = 0
+		FOR LOCAL, 1, CHARANUM
+			IF CFLAG:LOCAL:当前位置 == N_ID && LOCAL != ARG
+				;别の同居している角色がまだいる场合は逐出が发生しない
+				IF CFLAG:LOCAL:当前位置 == CFLAG:LOCAL:初始位置
+					SKIP = 1
+					BREAK
+				;相性の良い角色は居ても良い
+				ELSEIF RELATION:ARG:LOCAL <= 100
+					ワンルーム人数カウント ++
+					CFLAG:LOCAL:当前位置 = 移动先
+					TCVAR:LOCAL:保持不动 = 1
+				ENDIF
+			ENDIF
+		NEXT
+		;你は恋慕ならオッケー,你＋相性のいい角色が留守番、他の角色が缔め出しだと稍微地の文と龃龉があるのは仕样
+		IF 移动メッセージ && !SKIP
+			IF !TALENT:ARG:恋慕
+				PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%\@ ワンルーム人数カウント ? 他们 #  \@、在%NAME_OUTPUT_TRANSLATION("CALLNAME", ARG)%的催促下从【%NAME_FROM_PLACE(N_ID)%】往【%NAME_FROM_PLACE(移动先)%】移动了
+				CFLAG:MASTER:当前位置 = 移动先
+			ELSEIF ワンルーム人数カウント
+				PRINTFORML 在%NAME_OUTPUT_TRANSLATION("CALLNAME", ARG)%的催促下、%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%以外的人从【%NAME_FROM_PLACE(N_ID)%】往【%NAME_FROM_PLACE(移动先)%】移动了
+			ELSE
+				PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", ARG)%拜托%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%留下来看家
+			ENDIF
+		ENDIF
+	ENDIF
+ENDIF
+RESETCOLOR
+SIF 移动メッセージ
+	WAIT
+;移动处理
+CFLAG:ARG:当前位置 = 移动先
+TCVAR:ARG:保持不动 = 1
+
+;--------------------------------------------------------
+;角色(ARG)が地点(移动先)へ移动する概率／分
+;留まり率は减少补正
+;实数值は10倍したもの
+;式中函数にしたかったが…
+;--------------------------------------------------------
+@角色移动率(ARG, 移动先, 留まり率)
+#DIM 移动率
+#DIM 留まり率
+#DIM 移动先
+#DIM N_ID
+#DIM お澡堂入りたい
+#DIM 房间主
+;お澡堂入りたい度を设定
+IF TALENT:ARG:冰精
+	お澡堂入りたい = 2000
+;お澡堂が嫌いな角色(虎は泳げるけど)
+ELSEIF GROUPMATCH(ARG, [[橙]], [[星]], [[正邪]], [[阿燐]], [[三花]])
+	お澡堂入りたい = 2000
+ELSEIF TALENT:ARG:污臭耐性 == -2
+	お澡堂入りたい = 600
+ELSEIF TALENT:ARG:污臭耐性 == -1
+	お澡堂入りたい = 800
+ELSEIF TALENT:ARG:污臭耐性 == 0
+	お澡堂入りたい = 1000
+ELSEIF TALENT:ARG:污臭耐性 == 1
+	お澡堂入りたい = 1500
+ELSEIF TALENT:ARG:污臭耐性 == 2
+	お澡堂入りたい = 2000
+ENDIF
+
+N_ID = CFLAG:ARG:当前位置
+;基本移动率,1.5% / 分 = 45.0% / 30分
+移动率 = 15 + CFLAG:ARG:移动率补正
+;你が见えていたら态度でUP
+SIF CFLAG:MASTER:当前位置 == 移动先 && CAN_MOVE(N_ID, 移动先) == 3
+	移动率 += CFLAG:ARG:态度 * 2
+;扫除系は扫除中污れに影响される
+SIF TALENT:ARG:扫除系 && CFLAG:ARG:神社在住 && BETWEENTIME(720, 1080)
+	移动率 += YOGORE:移动先 / 300
+;角色ごとの移动率设定
+;addition custom code, for custom charadata movement
+CALL KOJO_CHECK(ARG, "CHARADATA", "MOVE", 4, 移动先)
+IF RESULT == -1 ;等于-1时,表明口上侧需要是结果为0
+	RESULT = 0
+	CALLFORM CHARAMOVE_DATA_{NO:ARG}(4, 移动先)
+ELSEIF RESULT ;等于其他正值时，表明口上侧有自己的值
+ELSE 
+	;addition custom code, duplicated characters
+	CALLFORM CHARAMOVE_DATA_{NO:ARG}(4, 移动先)
+ENDIF 
+移动率 = 移动率 + RESULT
+
+;お澡堂に入りたい时は入りに行く
+IF BATHCHECK(移动先) & 场所_澡堂
+	IF CFLAG:ARG:澡堂 >= お澡堂入りたい
+		移动率 = 移动率 * 10
+	ELSE
+		移动率 = 0
+	ENDIF
+ENDIF
+;引きこもり对策として、天候ダメージがない状况で屋内にいる场合屋外へ行きたがるように
+SIF INROOM(N_ID) && !INROOM(移动先) && 天候造成的影响(ARG, 移动先) >= 0 
+	移动率 += 15
+
+;－－－－－－－－－－－－－－－
+;移动节制によって行かない场所を设定
+;MAP住人のプライベート部位は个别に设定してください
+ ;0以上 =プライベートな场所には入らない
+;     1 =仓库や小胡同、地下室等の过疎地点には移动しない
+;    -1 =プライベートな场所でもあまり气にせず移动する
+;    -2 =ありとあらゆるところに移动する
+;－－－－－－－－－－－－－－－
+房间主 = PRIVATEROOM:(移动先 % 100)
+IF 移动先 != CFLAG:ARG:初始位置 && N_ID != MAXROOM
+	IF CFLAG:ARG:移动节制 >= 1
+		SIF ROOMDATA:(移动先 % 100) & 场所_过疎
+			移动率 = 0
+	ENDIF
+	IF CFLAG:ARG:移动节制 >= 0 && !CFLAG:ARG:神社在住
+		SIF ROOMDATA:(移动先 % 100) & 场所_プライベート && RELATION:房间主:ARG <= 100
+			移动率 = 0
+	ENDIF
+	IF CFLAG:ARG:移动节制 >= -1
+		SIF 寝てる子がいる(移动先)
+			移动率 = 移动率 * 1 / 3
+		SIF ROOMDATA:(移动先 % 100) & 场所_プライベート && !CFLAG:ARG:神社在住 && RELATION:房间主:ARG <= 100
+			移动率 = 移动率 * 2 / 3
+		SIF 天候造成的影响(ARG, 移动先) <= -1
+			移动率 = 移动率 * 1 / 3
+		SIF ROOMDATA:(移动先 % 100) & 场所_过疎
+			移动率 = 移动率 * 1 / 3
+	ENDIF
+ENDIF
+;留まり率を差し引く
+移动率 = MAX(移动率 - 留まり率, 0)
+RETURN 移动率
+
+@寝てる子がいる(ARG)
+#FUNCTION
+FOR LOCAL, 1, CHARANUM
+	SIF CFLAG:LOCAL:当前位置 == ARG && CFLAG:LOCAL:睡眠
+		RETURNF 1
+NEXT
+
+;ARG  判定角色
+@引力点发动可(ARG)
+#FUNCTION
+;引力点が无い
+SIF !TCVAR:ARG:引力点
+	RETURNF 0
+;当前位置と同じ
+SIF CFLAG:ARG:当前位置 == TCVAR:ARG:引力点
+	RETURNF 0
+;引力点が据点の外
+SIF IN_HOME(TCVAR:ARG:引力点) != 1
+	RETURNF 0
+;当前位置が据点の外
+SIF IN_HOME(CFLAG:ARG:当前位置) != 1
+	RETURNF 0
+;天候ダメージが痛い
+SIF 天候造成的影响(ARG, TCVAR:ARG:引力点) < 0
+	RETURNF 0
+RETURNF 1

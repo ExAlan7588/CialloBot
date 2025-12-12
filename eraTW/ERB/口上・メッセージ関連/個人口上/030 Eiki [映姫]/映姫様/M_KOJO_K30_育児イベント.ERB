@@ -1,0 +1,536 @@
+﻿;TW你は育儿に系わるべきではないダメ人类…というのが口上作者の脑内设定
+;なので育儿イベント内では全力でパージされています
+
+@M_KOJO_EVENT_K30_CHILD_RAISING_恢复
+SIF GETBIT(CFLAG:1804, TALENT:育儿中)
+	RETURN 
+PRINTFORML 「呼……总算恢复状态了吗…」
+PRINTFORML 「明明早就过了下床期，不能再这样一直懒散下去了呢。」
+PRINTFORMW 「%SHOW_CHILDNAME(30)%…妈妈今后会更加更加努力的哦。」
+
+@M_KOJO_EVENT_K30_CHILD_RAISING_离乳
+SIF GETBIT(CFLAG:1804, TALENT:育儿中)
+	RETURN 
+IF TALENT:母乳体质 == 2
+	PRINTFORML 「…就算奶水再怎么多，也差不多到了断奶的时候了…对吧。」
+	PRINTFORML 「%SHOW_CHILDNAME(30)%酱…对不起呢，以后就忍耐一下，不要再吸奶奶了哦。」
+	PRINTFORML 「唉…」
+	PRINTFORMDW 映姬对于授乳期即将结束感到有些寂寞…
+ELSE
+	PRINTFORML 「%SHOW_CHILDNAME(30)%、啊—…」
+	PRINTFORML 「乖乖，好好吃饭…真棒。」
+	PRINTFORML 「…已经要母乳毕业了……稍微有点寂寞呢。」
+	PRINTFORML 
+	IF TALENT:母乳体质 == 1 && EXP:喷乳经验 > 500 && EXP:分娩经验 > 1
+		PRINTFORML 「但是…吸奶的方面，完全没有要停止的迹象呢…」
+		PRINTFORMW 「这果然还是，%K30_C_NAME(MASTER)%的错…？」
+	ELSE
+		PRINTFORML 「%SHOW_CHILDNAME(30)%、你吸奶的时候那可爱的表情。」
+		PRINTFORML 「妈妈最喜欢了哦…」
+		PRINTFORMDW 映姬对于授乳期即将结束感到有些寂寞…
+	ENDIF
+ENDIF
+PRINTFORML 
+
+@M_KOJO_EVENT_K30_CHILD_RAISING_玩具
+SIF GETBIT(CFLAG:1804, TALENT:育儿中)
+	RETURN 
+PRINTFORMDL 关于%SHOW_CHILDNAME(30)%玩的玩具，映姬正在认真思考…
+PRINTFORML 
+PRINTFORML 「要%SHOW_CHILDNAME(30)%用着安全又耐用。」
+PRINTFORML 「玩着玩着还能变聪明的那种玩具…哪里有卖的呢…？」
+PRINTFORMW 「…得让小町和久侘歌也来帮忙寻找才行。」
+
+@M_KOJO_EVENT_K30_CHILD_RAISING_つかまり立ち
+IF GETBIT(CFLAG:1804, TALENT:育儿中)
+	CALL K30_CLEAR_TEXTLINE
+	RETURN 
+ENDIF
+PRINTFORML 「啊…第一次站起来的时候，错过了没看到…」
+PRINTFORMDL 映姬叹了口气，在她旁边，%SHOW_CHILDNAME(30)%抓着桌子，站起来，笑得很开心。
+PRINTFORML 「感觉稍微一没留神，就一下子长大了很多…」
+PRINTFORMW 「不过，从现在开始…真的就更加离不开眼了呢…」
+
+@M_KOJO_EVENT_K30_CHILD_RAISING_蹒跚学步
+IF GETBIT(CFLAG:1804, TALENT:育儿中)
+	CALL K30_CLEAR_TEXTLINE
+	RETURN 
+ENDIF
+PRINTFORML 「诶！？ 等等…什么时候跑到这种地方来的！？」
+PRINTFORMDL 注意到蹒跚学步的越狱犯马上就要逃出房间
+PRINTFORMDL 发出了与阎魔大人身份不符的、惊慌失措的悲鸣
+PRINTFORML 「%SHOW_CHILDNAME(30)%、有精神是很好…但不要太让妈妈吃惊了啊。」
+PRINTFORML 「唉…如果我有小町那样的能力，稍微能轻松点就好了…」
+PRINTFORMDW 抱住天真烂漫笑着的%SHOW_CHILDNAME(30)%，映姬疲惫地嘟囔着…
+
+@M_KOJO_EVENT_K30_CHILD_RAISING_会话寸前
+;3日间同じイベントは微妙なので1日のみ
+IF CFLAG:分娩经过日 > CHILD_说话 - 3 || GETBIT(CFLAG:1804, TALENT:育儿中)
+	CALL K30_CLEAR_TEXTLINE
+	RETURN
+ENDIF
+PRINTFORMDL 不愧是阎魔大人的孩子，%SHOW_CHILDNAME(30)%开始说话似乎也很早…
+PRINTFORML 
+PRINTFORML 「妈妈」
+CALL COLORMESSAGE(@"「妈妈」", K30_CHILDWORD() ,1 ,0)
+PRINTFORML 「早上好」
+CALL COLORMESSAGE(@"「早上好」", K30_CHILDWORD() ,1 ,0)
+PRINTFORML 「真乖，做得真棒♪」
+PRINTFORMDL 映姬似乎非常高兴，抚摸着%SHOW_CHILDNAME(30)%的头…
+CALL COLORMESSAGE(@"「真棒！」", K30_CHILDWORD() ,2 ,0)
+
+@M_KOJO_EVENT_K30_CHILD_RAISING_说话
+IF GETBIT(CFLAG:1804, TALENT:育儿中)
+	CALL K30_CLEAR_TEXTLINE
+	RETURN 
+ENDIF
+PRINTFORMDL 配合着聪慧的成长，%SHOW_CHILDNAME(30)%向映姬抛出了各种各样的问题…
+PRINTFORML 
+CALL COLORMESSAGE(@"「妈妈，这个是什么呀？」", K30_CHILDWORD() ,1 ,0)
+PRINTFORML 「那是花哦。为了漂亮地绽放，想让大家看到。」
+CALL COLORMESSAGE(@"「妈妈，为什么这朵花是红色的呀？」", K30_CHILDWORD() ,1 ,0)
+PRINTFORML 「呵呵，这个妈妈也不知道呢…你觉得是为什么呢？」
+PRINTFORMDL 映姬认真地对待问题的同时，也对孩子的兴趣之广泛感到惊讶。
+PRINTFORML 
+CALL COLORMESSAGE(@"「呐—呐—，妈妈！」", K30_CHILDWORD() ,1 ,0)
+CALL COLORMESSAGE(@"「为什么那个姐姐，总是在午睡呢？」", K30_CHILDWORD() ,1 ,0)
+PRINTFORMDL 在%SHOW_CHILDNAME(30)%指着的方向，小町正在呼呼大睡…
+PRINTFORML 「……真的不知道为什么呢。妈妈也完全不明白哦。」
+PRINTFORMW 「我们去好好问问那个姐姐吧—…」
+
+@M_KOJO_EVENT_K30_CHILD_RAISING_词汇
+IF GETBIT(CFLAG:1804, TALENT:育儿中)
+	CALL K30_CLEAR_TEXTLINE
+	RETURN 
+ENDIF
+PRINTFORMDL %SHOW_CHILDNAME(30)%也变得越来越有智慧，开始做出各种各样的行为。
+PRINTFORMDL 映姬觉得自己的孩子应该能理解了，开始考虑关于管教的问题…
+PRINTFORML 
+PRINTFORML 「听好了，俗话说『说谎是盗窃的开始』。」
+PRINTFORML 「如果对小小的坏事都无所谓的话，就会对非常坏的事情也毫不在意了哦。」
+PRINTFORML 「%SHOW_CHILDNAME(30)%今后也许会有害怕说『对不起』的时候。」
+PRINTFORML 「但是，如果在那个时候说谎的话…」
+PRINTFORML 
+PRINTFORMDL 映姬尽量把话说得通俗易懂，但结果还是像往常一样说教起来了。
+PRINTFORMDL 聪明的%SHOW_CHILDNAME(30)%努力跟上话题，但是
+CALL COLORMESSAGE(@"「…妈妈的话，好—长—！」", K30_CHILDWORD() ,1 ,0)
+PRINTFORMDW 看来这和能不能忍耐是两码事啊…
+
+@M_KOJO_EVENT_K30_CHILD_RAISING_管教
+IF GETBIT(CFLAG:1804, TALENT:育儿中)
+	CALL K30_CLEAR_TEXTLINE
+	RETURN 
+ENDIF
+LOCAL = FLAG:口上色 ? 0xFF003C # GETDEFCOLOR()
+LOCALS = %\@ CHILD_SEX:30:(TALENT:育儿中) == 1 ? 人家 # 我 \@%
+CALL COLORMESSAGE(@"「姐姐喜欢午睡，%LOCALS%知道哦」", K30_CHILDWORD() ,1 ,0)
+CALL COLORMESSAGE(@"「工作结束之后，就好好地午睡吧」", K30_CHILDWORD() ,1 ,0)
+CALL COLORMESSAGE(@"「但是，现在不行！ 又要被妈妈骂了哦！」", K30_CHILDWORD() ,1 ,0)
+CALL COLORMESSAGE(@"「是、是这样呢……」", LOCAL ,1 ,0)
+PRINTFORMDW ……在街道化的映姬面前，是正坐着的小町和拼命地对着她说话的%SHOW_CHILDNAME(30)%。
+PRINTFORML 
+PRINTFORMW 「呃？ %SHOW_CHILDNAME(30)%和小町…？」
+PRINTFORML 「……唉」
+PRINTFORML 「需要管教的和让人操心的… 没想到是那个孩子啊…」
+PRINTFORMDW 映姬立刻察觉到了原因，呆呆地叹了口气。
+PRINTFORML 
+PRINTFORML 「%SHOW_CHILDNAME(30)%，妈妈也和这位姐姐有『好多好多』要说的事情哦。」
+PRINTFORML 「你稍微去别的地方玩一会儿吧。」
+CALL COLORMESSAGE(@"「好—！」", K30_CHILDWORD() ,1 ,0)
+CALL COLORMESSAGE(@"「呜哇…四季大人简直变成了两个人，唠叨也要双倍了啊…」", LOCAL ,1 ,0)
+PRINTFORMDW 确定了要接受更多的说教，小町无力地垂下了肩膀…
+
+@M_KOJO_EVENT_K30_CHILD_RAISING_就学
+IF GETBIT(CFLAG:1804, TALENT:育儿中)
+	CALL K30_CLEAR_TEXTLINE
+	RETURN 
+ENDIF
+PRINTFORMDL 在去私塾的第一天，映姬送别了精神饱满出门的%SHOW_CHILDNAME(30)%。
+PRINTFORML 
+PRINTFORML 「…听好了，在私塾要好好听老师的话。」
+PRINTFORML 「还有，如果遇到有困难的朋友，要主动去帮助他们。」
+PRINTFORML 「那么，一路顺风。小心一点哦。」
+CALL COLORMESSAGE(@"「好—！ 我出门啦！！」", K30_CHILDWORD() ,1 ,0)
+PRINTFORML 
+PRINTFORMDW 映姬感慨万千地目送着精神饱满地跑出去的%SHOW_CHILDNAME(30)%的背影…
+
+@M_KOJO_EVENT_K30_CHILD_RAISING_自立前
+IF GETBIT(CFLAG:1804, TALENT:育儿中)
+	CALL K30_CLEAR_TEXTLINE
+	RETURN 
+ENDIF
+IF CHILD_SEX:30:(TALENT:育儿中) == 1
+	PRINTFORMDL %SHOW_CHILDNAME(30)%的身高也长高了，和母亲长得一模一样，美丽地成长着。
+ELSE
+	PRINTFORMDL %SHOW_CHILDNAME(30)%的身高早就超过了母亲，茁壮地成长着。
+ENDIF
+PRINTFORMDL 展望着未来，映姬正在和自己的孩子商量着…
+PRINTFORML 
+PRINTFORML 「%SHOW_CHILDNAME(30)%能帮我工作，我非常高兴。」
+PRINTFORML 「如果能一直做下去，确实会轻松很多。」
+PRINTFORML 「但是，作为母亲，我不能认同这件事。」
+PRINTFORML 「…判决罪行这件事本身也是一种罪，即使是判决的一方也无法逃脱罪恶。」
+PRINTFORML 「我不想让%SHOW_CHILDNAME(30)%背负这么沉重的负担……你明白吗？」
+CALL COLORMESSAGE(@"「………」", K30_CHILDWORD() ,1 ,0)
+PRINTFORML 
+PRINTFORMDW 映姬和%SHOW_CHILDNAME(30)%的谈话在那之后也持续到了深夜…
+
+@K30_CHILD_INDEPENDENCE
+CALL K30_D_LINE
+IF CFLAG:1805
+	PRINTFORMDL 映姬默默养育长大的孩子，终于迎来了自立的时刻。
+	PRINTFORMDL 考虑到今后的发展，%CSTR:30:83%似乎要离开幻想乡了。
+	PRINTFORMDL 悄悄地结束了告别，在只有映姬一人的注视下，%CSTR:30:83%离开了巢穴，展翅飞翔…
+	PRINTFORMDW 映姬只能默默地祈祷着自己的孩子平安无事，流下了眼泪。
+	PRINTFORML 
+	PRINTFORMDL …送走了%CSTR:30:83%之后，映姬执行了早就考虑好的对自己的惩罚。
+	CALL COLORMESSAGE, "映姬的最大体力减少了200", C_YELLOW ,1 ,1
+	CALL COLORMESSAGE, "映姬的最大气力减少了200", C_YELLOW ,2 ,1
+	PRINTFORML 
+	CALL COLORMESSAGE, "映姬再也无法怀孕了…", C_RED, 2 ,1
+	BASE:30:体力 -= 200
+	MAXBASE:30:体力 -= 200
+	BASE:30:气力 -= 200
+	MAXBASE:30:气力 -= 200
+ELSE
+	LOCALS = %\@ CHILD_SEX:30:(TALENT:育儿中) == 1 ? 女儿 # 儿子 \@%
+	PRINTFORMDL 映姬的%LOCALS%，%SHOW_CHILDNAME(30)%平安地迎来了独立的日子。
+	PRINTFORML 
+	PRINTFORML 「…你总有一天会回到我身边的吧。」
+	PRINTFORML 「到那时，作为审判者和被审判者…我会好好地让你反省%SHOW_CHILDNAME(30)%的所作所为。」
+	PRINTFORML 「但是没关系，你是我引以为豪的%LOCALS%…」
+	PRINTFORML 「%SHOW_CHILDNAME(30)%如果认真思考后再行动，肯定不会有错的。」
+	PRINTFORML 「为了我们能挺起胸膛，带着笑容再次相遇，从今以后也要多行善事哦。」
+	PRINTFORML 「好了，去吧。」
+	PRINTFORML 
+	IF CFLAG:妊娠经过日数 >= 20 && CFLAG:妊娠自觉状态
+		PRINTFORMW 映姬目送着孩子远去的背影，静静地发誓，也要平安地养育好肚子里的孩子。
+	ELSE
+		PRINTFORMW 映姬望着渐渐远去的孩子的背影，祈祷着%LOCALS%平安无事。
+	ENDIF
+	CALL 自立先选定(30, TALENT:育儿中)
+	CALL ASK_DIARY(@"%SHOW_CHILDNAME(30)%が独り立ちした。")
+	TALENT:育儿中 = 0
+	CFLAG:育儿人数 = 0
+	CFLAG:MASTER:育儿人数 -= 1
+ENDIF
+CFLAG:分娩经过日 = 0
+PRINTFORML 
+
+@M_KOJO_EVENT_K30_CHILD_RAISING_登下校(ARGS,ARG,ARG:1)
+SIF GETBIT(CFLAG:1804, TALENT:育儿中)
+	RETURN
+IF !ARG
+	PRINTDATAL
+		DATAFORM 「%SHOW_CHILDNAME(30)%，一路顺风」\n「不要太晚回家哦」
+		DATAFORM 「有没有忘记什么东西？ 没问题吗？」\n「是，那么一路顺风」
+		DATAFORM 「哎？ 今天出门有点早呢？」\n「…这样啊，有什么事情要做呢」\n「那么小心一点，一路顺风」
+	ENDDATA
+ELSE
+	PRINTDATAL
+		DATAFORM 「是，欢迎回来」\n「先去洗手吧」
+		DATAFORM 「%SHOW_CHILDNAME(30)%，欢迎回来」\n「…呵呵，看起来很开心的样子呢。发生了什么好事吗？」
+		DATAFORM 「欢迎回来，今天回来得很早呢」
+	ENDDATA
+ENDIF
+
+@M_KOJO_EVENT_K30_CHILD_RAISING_吃饭(ARGS,ARG,ARG:1)
+SIF GETBIT(CFLAG:1804, TALENT:育儿中) || CFLAG:MASTER:当前位置 != CFLAG:30:当前位置
+	RETURN
+IF ARGS == "授乳"
+	PRINTDATAL
+		DATAFORM 「真乖真乖…%SHOW_CHILDNAME(30)%酱，吃奶奶，真棒…」
+		DATAFORM 「多喝一点，快快长大…」
+		DATAFORM 「%SHOW_CHILDNAME(30)%，真乖真乖…」\n「妈妈的胸部，好好享用吧…」
+	ENDDATA
+ELSEIF ARGS == "离乳食"
+	PRINTDATAL
+		DATAFORM 「哎呀哎呀，都洒了这么多…」\n「是，再来一次，啊—…」
+		DATAFORM 「啊，不行…可能还有点烫…」\n「呼—，呼—……」\n「是，请用」
+		DATAFORM 「嗯—，现在心情不好吗…」\n「拜托了，再张一次嘴好吗？ 好吗？」
+	ENDDATA
+ELSEIF CFLAG:分娩经过日 < 75
+	PRINTDATAL
+		DATAFORM 「诶？ 想吃和妈妈一样的东西…？」\n「嗯—，%SHOW_CHILDNAME(30)%吃了的话，嘴巴会吓一跳的东西有很多哦…」\n「还是等再长大一点再说吧」
+		DATAFORM 「%SHOW_CHILDNAME(30)%，吃饭的时候要好好咀嚼哦」
+		DATAFORM 「%SHOW_CHILDNAME(30)%，不能挑食哦」
+	ENDDATA
+ELSE
+	SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 「今天准备了%SHOW_CHILDNAME(30)%喜欢的东西哦」
+			PRINTFORML 「多吃一点吧」
+			PRINTFORMDL %SHOW_CHILDNAME(30)%津津有味地吃着光是靠近都会辣到眼睛的东西…
+			PRINTFORMDL 味觉和胃肠的强韧似乎遗传了映姬。
+		CASE 1
+			PRINTFORML 「听好了，%SHOW_CHILDNAME(30)%，每一粒米饭里都住着七位神明。」
+			PRINTFORML 「如果糟蹋粮食，可是要挨鼓槌的哦… 当然，剩饭什么的更是绝对不允许的。」
+			PRINTFORML 「还有啊………」
+			PRINTFORMDL %SHOW_CHILDNAME(30)%认真听着映姬的说教，举止端正地吃饭。
+		CASE 2
+			PRINTFORML 「要表达对食材和所有参与制作的人的感谢之情，最重要的是好好吃饭哦。」
+			PRINTFORML 「%SHOW_CHILDNAME(30)%总是吃得干干净净，妈妈非常开心哦。」
+			PRINTFORMDL 映姬微笑着注视着举止优雅地吃饭的%SHOW_CHILDNAME(30)%。
+	ENDSELECT
+ENDIF
+[SKIPSTART]
+@M_KOJO_EVENT_K30_CHILD_RAISING_BATH(ARGS,ARG,ARG:1)
+IF ARGS == "幼儿期"
+
+ELSEIF ARGS == "幼少期"
+
+ELSE
+
+ENDIF
+
+@M_KOJO_EVENT_K30_CHILD_RAISING_SLEEPING(ARGS,ARG,ARG:1)
+IF ARGS == "幼儿期"
+
+ELSEIF ARGS == "幼少期"
+
+ELSE
+
+ENDIF
+
+@M_KOJO_EVENT_K30_CHILD_RAISING_OYASUMI(ARGS,ARG,ARG:1)
+
+@M_KOJO_EVENT_K30_CHILD_RAISING_TOY(ARGS,ARG,ARG:1)
+IF ARGS == "幼儿期"
+
+ELSEIF ARGS == "幼少期"
+
+ELSE
+
+ENDIF
+[SKIPEND]
+;儿童自由行动
+;同室者にあいさつをする
+@M_KOJO_EVENT_K30_CHILD_RAISING_OTHER(ARGS,ARG,ARG:1)
+#DIM CHR
+#DIM VAL
+#DIM TEMP
+#DIM L_COUNT
+#DIMS 角色名
+#DIMS あいさつ
+SIF GETBIT(CFLAG:1804, TALENT:育儿中) || !GET_TARGETNUM()
+	RETURN
+VARSET LOCAL
+VAL = 0
+TEMP = 0
+IF GET_TARGETNUM() == 1
+	CHR = TARGET
+ELSE
+	CHR = TARGET:(RAND:(GET_TARGETNUM()) + 1)
+	SIF !CHR
+		RETURN
+ENDIF
+IF ARGS == "幼儿期"
+	CHR = RAND:3 ? CHR # MASTER
+	CHR = RAND:2 ? 30 # CHR
+	PRINTDATADL
+		DATAFORM %SHOW_CHILDNAME(30)%向%CALLNAME:CHR%轻轻地挥着手。
+		DATAFORM %SHOW_CHILDNAME(30)%正一动不动地看着%CALLNAME:CHR%的脸…
+		DATAFORM %SHOW_CHILDNAME(30)%望着%CALLNAME:CHR%的脸，心情很好地笑着…
+		DATAFORM %SHOW_CHILDNAME(30)%看着%CALLNAME:CHR%的头顶上方\n看到了什么吗…？
+		DATAFORM %SHOW_CHILDNAME(30)%看着%CALLNAME:CHR%的脸，瞪大了眼睛\n在惊讶什么呢…？
+	ENDDATA
+ELSEIF CFLAG:分娩经过日 < 75
+	SELECTCASE CHR
+		CASE 23
+			角色名 = %\@ RAND:3 ? 妖梦 # 半妖的 \@%
+		CASE 24
+			角色名 = %\@ RAND:3 ? 橙 # %TEXTR("猫的/喵喵")% \@%
+		CASE 25
+			角色名 = %\@ RAND:3 ? 蓝 # %TEXTR("狐狸的/大尾巴")% \@%
+		CASE 30
+			角色名 = 妈妈
+		CASE 26
+			角色名 = %\@ RAND:3 ? 紫 # 隙间的 \@%
+		CASE 66
+			角色名 = %\@ RAND:3 ? 幽幽子 # %TEXTR("幽灵/大胃王")% \@%
+		CASE 67
+			角色名 = %\@ RAND:3 ? 慧音 # 老师 \@%
+		CASE 76
+			角色名 = %\@ RAND:2 ? 小町 # 姐姐 \@%
+		CASE 113
+			角色名 = %\@ RAND:2 ? 赫卡提亚 # 漂亮的 \@%
+		CASE 127
+			角色名 = %\@ RAND:3 ? 璎花 # %TEXTR("水母/堆石")% \@%
+		CASE 128
+			角色名 = %\@ RAND:3 ? 润美 # %TEXTR("哞哞/鱼店的")% \@%
+		CASE 129
+			角色名 = %\@ RAND:2 ? 久侘歌 # 姐姐 \@%
+		CASE 130
+			角色名 = %\@ RAND:3 ? 八千慧 # 乌龟 \@%
+		CASE 131
+			角色名 = %\@ RAND:3 ? 磨弓 # 埴轮 \@%
+		CASE 132
+			角色名 = 袿姫
+		CASE 133
+			角色名 = %\@ RAND:3 ? 早鬼 # 马 \@%
+		CASE 143
+			角色名 = %\@ RAND:3 ? 尤魔 # 绵羊 \@%
+		CASEELSE
+			角色名 = 
+	ENDSELECT
+	SIF !GROUPMATCH(CHR, 30, 67, 76, 129)
+		角色名 = %角色名%姐姐
+	IF ONCE(@"幼%TOSTR(CHR)%")
+		あいさつ = %\@ INRANGE(TIME, 240, 599) ? 早上好 # %K30_GREETING_EIKI()% \@%
+		CALL COLORMESSAGE, @"「%角色名%、%あいさつ%！」", K30_CHILDWORD() ,1 ,0
+		PRINTFORMDL %SHOW_CHILDNAME(30)% %\@ CHR == 30 ? 反复向映姬打招呼 # 朝气蓬勃地向%CALLNAME:CHR%打招呼 \@%
+	ELSE
+		あいさつ = おえかきしよー/%\@ TALENT:CHR:体型 < 0 ? 一起玩吧ー # 抱抱— \@%/
+		あいさつ += @"%\@ TALENT:CHR:音乐知识 == 2 ? 一起唱歌吧！ # 一起唱歌吧！ \@%/%\@ TALENT:CHR:动物耳 ? 让我摸摸你的耳朵！ # \@%/"
+		あいさつ += @"%\@ CFLAG:CHR:妊娠经过日数 > 39 ? 肚子很大了呢！ # 身体好吗？ \@%/%\@ TALENT:CHR:心情 > 0 ? 有什么好事吗？ # \@%/"
+		あいさつ += @"%\@ K30_JOBCHECK(CHR) ? 工作很忙吗？ # \@%/%\@ BASE:CHR:酒气 <= 2 ? # 好臭的酒味！ \@%//%\@ TALENT:CHR:心情 < 0 ? 不要生气嘛！ # \@%/"
+		CALL COLORMESSAGE, @"「%角色名%、%TEXTR(あいさつ)%」", K30_CHILDWORD() ,1 ,0
+		PRINTFORMDL %SHOW_CHILDNAME(30)% 好像想让%CALLNAME:CHR%陪她玩
+	ENDIF
+ELSEIF ONCE(@"自%TOSTR(CHR)%")
+	あいさつ = %\@ INRANGE(TIME, 240, 599) ? 早上好 # %K30_GREETING_EIKI()% \@%
+	SELECTCASE CHR
+		;映姫
+		CASE 30
+			IF CHILD_SEX:30:(TALENT:育儿中) == 1
+				CALL COLORMESSAGE, @"「妈妈，跟你说哦……」", K30_CHILDWORD() ,1 ,0
+			ELSE
+				CALL COLORMESSAGE, @"「妈妈，跟你说啊……」", K30_CHILDWORD() ,1 ,0
+			ENDIF
+			PRINTFORMDL %SHOW_CHILDNAME(30)%正和映姬聊得起劲
+		;小町/久侘歌
+		CASE 76, 129
+			CALL COLORMESSAGE, @"「%CALLNAME:CHR%姐姐%あいさつ%」", K30_CHILDWORD() ,1 ,0
+			SIF K30_JOBCHECK(ARG)
+				CALL COLORMESSAGE, @"「工作加油%\@ CHR == 76 ? …会努力的吧？ # 请加油 \@%」", K30_CHILDWORD() ,1 ,0
+			PRINTDATADL
+				DATAFORM %SHOW_CHILDNAME(30)%正以%TEXTR("轻松/亲切")%的方式向%CALLNAME:CHR%打招呼
+				DATAFORM %CALLNAME:CHR%和%SHOW_CHILDNAME(30)%亲切交谈的样子，简直就像%\@ CHILD_SEX:30:(TALENT:育儿中) == 1 ? 妹妹 # 弟弟 \@%一样
+			ENDDATA
+		;赫卡提亚
+		CASE 113
+			CALL COLORMESSAGE, @"「赫卡提亚大人%あいさつ%」", K30_CHILDWORD() ,1 ,0
+			PRINTDATADL
+				DATAFORM %SHOW_CHILDNAME(30)%正恭敬地向赫卡提亚问好
+				DATAFORM 面对赫卡提亚，%SHOW_CHILDNAME(30)%似乎有些紧张
+			ENDDATA
+		;觉/阿求/幽幽子/紫/妖梦
+		CASE 49, 80, 66, 26, 23
+			CALL COLORMESSAGE, @"「%CALLNAME:CHR%先生%あいさつ%」", K30_CHILDWORD() ,1 ,0
+			SIF K30_JOBCHECK(ARG)
+				CALL COLORMESSAGE, @"「工作辛苦了」", K30_CHILDWORD() ,1 ,0
+			PRINTDATADL
+				DATAFORM %SHOW_CHILDNAME(30)%正对%CALLNAME:CHR%笑着打招呼
+				DATAFORM %CALLNAME:CHR%和%SHOW_CHILDNAME(30)%正在进行%TEXTR("礼貌的/得体的")%对话
+			ENDDATA
+		;神灵庙住人
+		CASE 56, 89 TO 92
+			CALL COLORMESSAGE, @"「%CALLNAME:CHR%先生%あいさつ%」", K30_CHILDWORD() ,1 ,0
+			PRINTFORMDL %SHOW_CHILDNAME(30)%正向%CALLNAME:CHR%打招呼
+		CASEELSE
+			角色名 = %CALLNAME:CHR%%\@ TALENT:CHR:神灵 ? 大人 # 先生 \@%
+			CALL COLORMESSAGE, @"「%角色名%%あいさつ%」", K30_CHILDWORD() ,1 ,0
+			SIF K30_JOBCHECK(ARG)
+				CALL COLORMESSAGE, @"「工作辛苦了」", K30_CHILDWORD() ,1 ,0
+			PRINTFORMDL %SHOW_CHILDNAME(30)%正以%TEXTR("彬彬有礼地/用心")%向%CALLNAME:CHR%问好
+	ENDSELECT
+ENDIF
+
+;仕事中の声挂けか判定する函数
+@K30_JOBCHECK(ARG)
+#FUNCTION
+SIF !仕事中チェック(ARG)
+	RETURNF 0
+;玩耍/宴会に参加/宴会后の醉い/女子会
+SIF GROUPMATCH(CFLAG:ARG:职业种类, 46, 49, 51, 52)
+	RETURNF 0
+;其他职业种类
+RETURNF 1
+
+;@M_KOJO_EVENT_K30_CHILD_DAIRY_口上手纸(ARG)
+
+
+;@M_KOJO_EVENT_K30_CHILD_DAIRY_共通手纸(ARG, ARGS)
+
+@M_KOJO_EVENT_K30_CHILD_DAIRY_寺子屋(ARGS,ARG,ARG:1)
+SIF GETBIT(CFLAG:1804, TALENT:育儿中)
+	RETURN
+IF ARGS == "怪我させた"
+	CALL K30_CLEAR_TEXTLINE(4)
+	PRINTFORMDL 看来是保护了被欺负的孩子，独自一人对抗欺负者们的结果……
+	PRINTFORML
+	PRINTFORML 「……是的，她挥舞着拿着的尺子，毫不留情地啪啪地打那些欺负人的孩子」
+	PRINTFORML 「据说最后还让那些孩子们全部正坐，一边训斥一边噼里啪啦地打他们……」
+	PRINTFORML 「她一边哭着道歉一边打人的样子……老师我也稍微有点退缩了」
+	PRINTFORML 「要说像我的话确实是像我……但做得太过分也不好啊……」
+	PRINTFORML
+	PRINTFORMDL 被迷你阎魔大人毫不留情地抽打，就算是大人也受不了啊
+	PRINTFORMDL 那些孩子们恐怕需要治疗和心理疏导了……
+ELSEIF ARGS == "褒められた"
+	CALL K30_CLEAR_TEXTLINE(2)
+	PRINTFORML 
+	IF RAND:2
+		PRINTFORML 「呵呵呵♪ %SHOW_CHILDNAME(30)%还叮嘱我『因为很害羞』所以不要说出去」
+		PRINTFORML 「那孩子每天早上很早就出门，为大家打扫教室」
+		PRINTFORML 「真是太好了呢，%K30_C_NAME(MASTER)%」
+		PRINTFORML 「%SHOW_CHILDNAME(30)%好好地继承了你为数不多的优点哦」
+		PRINTFORMDL …虽然映姬拐弯抹角地贬低了我，但因为是事实所以什么都说不出来
+	ELSE
+		PRINTFORML 「………大概就是这样，她好好地调解了朋友之间的争吵」
+		PRINTFORML 「%SHOW_CHILDNAME(30)%说『没什么大不了的，只是模仿妈妈而已』……」
+		PRINTFORML 「那孩子以她自己的方式思考，并做了她认为正确的行为」
+		PRINTFORML 「呵呵呵……不仅仅是身体，%SHOW_CHILDNAME(30)%正在茁壮成长呢」
+		PRINTFORMDL 映姬似乎为自己孩子的成长感到非常高兴……
+	ENDIF
+ENDIF
+
+;无自觉孕ませ关联口上
+@K30_INSENSIBLE_PREGNANCY
+#DIM NUM
+LOCAL = FLAG:立绘种类
+FLAG:立绘种类 = 1
+LOCAL:1 = CFLAG:30:应用差分替换
+CFLAG:30:应用差分替换 = 1
+IF CFLAG:妊娠经过日数 == 40
+	COM_STR = K30_无表情
+	CALL PRINT_FACE, 30, "无表情", "妊娠服"
+	PRINTFORML 「是的，这一定是哪里搞错了…一定是这样的…」
+	PRINTFORML 「肚子变大，只是因为我变胖了而已…」
+	PRINTFORML 「容易疲劳，月事不来…只是身体不舒服」
+	PRINTFORML 「是的，一定是，一定是这样的…怎么会发生这种事…！」
+	PRINTFORMDW 映姬拼命地想要欺骗自己……
+ELSEIF CFLAG:妊娠经过日数 == 60
+	CALL PRINT_FACE, 30, "绝顶", "妊娠服"
+	PRINTFORML 「怀孕…我，有了宝宝…？」
+	PRINTFORML 「为什么，为什么…我，会在这种地方…」
+	PRINTFORML 「为什么？ 为什么！？ 为什么！！！」
+	PRINTFORML 「呜…呜呜，呜……」
+	PRINTFORMDW 映姬因为受到了太大的冲击，只能哭泣……
+ELSEIF CFLAG:分娩经过日 == 1
+	COM_STR = K30_无表情
+	CALL PRINT_FACE, 30, "无表情", "服_睡衣"
+	PRINTFORML 「虽然我最终还是不知道谁是孩子的父亲」
+	PRINTFORML 「但经历痛苦生下这个孩子的是我」
+	PRINTFORML 「%SHOW_CHILDNAME(30)%的妈妈毫无疑问是我……」
+	PRINTFORML 「只有我，只有我才能保护你……」
+	PRINTFORMDW 在自己熟睡的孩子旁边，映姬独自一人下定了决心要抚养%SHOW_CHILDNAME(30)%
+	;分娩隐蔽处理
+	NUM = TALENT:育儿中
+	CSTR:30:83 = %SHOW_CHILDNAME(30)%
+	CHILDNAME:30:NUM =
+	CHILD_WEATHER:30:NUM = 
+	CHILD_AREA:30:NUM = 0
+	CHILD_SEX:30:NUM = 0
+	CHILD_BIRTHDAY:30:NUM = 0
+	CHILD_BIRTHDATE:30:NUM = 0
+	CHILD_LOVE:30:NUM = 0
+	CFLAG:育儿人数 = 0
+	CFLAG:儿童人数 --
+	CFLAG:MASTER:儿童人数 --
+	CFLAG:MASTER:育儿人数 --
+	TALENT:育儿中 = 0
+ENDIF
+FLAG:立绘种类 = LOCAL
+CFLAG:30:应用差分替换 = LOCAL:1
+COM_STR = 
+RETURN 1

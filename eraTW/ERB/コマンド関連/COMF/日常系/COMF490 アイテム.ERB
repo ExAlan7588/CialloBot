@@ -1,0 +1,781 @@
+﻿;-------------------------------------------------
+;道具画面
+;-------------------------------------------------
+@COM490
+#DIM 对象
+#DIM 全员
+#DIM CLIENT_ID
+#DIM 虚无への回归
+#DIM 使用道具
+#DIM 表示道具种别
+#DIMS 食品特征
+VARSET LOCAL
+VARSET LOCALS
+对象 = MASTER
+虚无への回归 = 0
+表示道具种别 = 0
+PRINTL 要使用什么呢？
+$LOOP
+DRAWLINE
+FOR LOCAL,120, 699
+	SIF 表示道具种别 != 0 && ITEMTYPE(LOCAL) != 表示道具种别
+		CONTINUE
+	IF 对象 != MASTER
+		IF 使用可能道具(LOCAL) == 2 && ITEM:LOCAL
+			CALL PRINT_ITEM_EXPLANATION(LOCAL)
+		ENDIF
+	ELSE
+		IF 使用可能道具(LOCAL) && ITEM:LOCAL
+			CALL PRINT_ITEM_EXPLANATION(LOCAL)
+		ENDIF
+	ENDIF
+NEXT
+PRINTL
+DRAWLINE
+CALL PRINTBUTTON_EX("[全表示]", 2000, 表示道具种别 != 0, 表示道具种别 == 0)
+CALL PRINTBUTTON_EX("[恢复药]", 2001, 表示道具种别 != 1, 表示道具种别 == 1)
+CALL PRINTBUTTON_EX("[Buff药]", 2002, 表示道具种别 != 2, 表示道具种别 == 2)
+CALL PRINTBUTTON_EX("[食　品]", 2003, 表示道具种别 != 3, 表示道具种别 == 3)
+CALL PRINTBUTTON_EX("[点心]", 2004, 表示道具种别 != 4, 表示道具种别 == 4)
+CALL PRINTBUTTON_EX("[果　物]", 2005, 表示道具种别 != 5, 表示道具种别 == 5)
+CALL PRINTBUTTON_EX("[其他]", 2006, 表示道具种别 != 6, 表示道具种别 == 6)
+RESETCOLOR
+PRINTL
+DRAWLINE
+SIF ITEM:昆虫采集套装
+	PRINTFORML [901] 确认虫笼
+PRINTFORML [900] 收集的胖次自动进入间隙的开关（现在\@ FLAG:C隙间自动配置 ? ON# OFF\@）
+IF TARGET && SHIRAHU(TARGET)
+	SIF 对象 != MASTER
+		SETCOLOR C_YELLOW
+	PRINTFORML [998] 用于%NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%
+	RESETCOLOR
+ENDIF
+
+PRINTL [999] 算了
+INPUT
+使用道具 = RESULT
+;道具以外の处理
+SELECTCASE RESULT
+	CASE 999
+		FLAG:取消修复 = 1
+		RETURN -1
+	CASE 900
+		FLAG:C隙间自动配置 = !FLAG:C隙间自动配置
+		PRINTFORMW 把自动配置设为了\@ FLAG:C隙间自动配置 ? ON# OFF\@
+		GOTO LOOP
+	CASE 901
+		;[捕虫をする]へ转送
+		CALL SHOW_MUSHI_CAGE
+		GOTO LOOP
+	CASE 998
+		IF 对象 != MASTER
+			对象 = MASTER
+		ELSEIF SHIRAHU(TARGET) && TARGET
+			对象 = TARGET
+		ENDIF
+		GOTO LOOP
+	CASE 2000 TO 2006
+		表示道具种别 = RESULT % 2000
+		GOTO LOOP
+ENDSELECT
+
+;使用可能道具以外の入力、または道具未所持の场合は再入力
+IF 使用可能道具(使用道具) == 0 || ITEM:使用道具 <= 0
+	GOTO LOOP
+ENDIF
+;相手使用时にMASTERのみ道具の选择は再入力
+IF 对象 != MASTER && 使用可能道具(使用道具) == 1
+	GOTO LOOP
+ENDIF
+;IF ITEMTYPE_DRUG(使用道具,对象) && TCVAR:(ARG:1):药
+;	PRINTL 已经服用过药了所以今天还是算了吧
+;	GOTO LOOP
+;ENDIF
+IF ITEMTYPE_FOOD(使用道具) && !TIME_PROGRESS(TCVAR:对象:空腹时刻)
+	PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", 对象)%的肚子还不饿
+	GOTO LOOP
+ENDIF
+IF ITEMTYPE_SWEETS(使用道具) && !TIME_PROGRESS(TCVAR:对象:甜点空腹时刻)
+	PRINTL 现在还不想吃零食
+	GOTO LOOP
+ENDIF
+TFLAG:193 = 使用道具
+TFLAG:194 = 对象 == MASTER ? MASTER # 1
+SELECTCASE 使用道具
+	CASE 120	;黑雷神巧克力
+		PRINTFORML 吃%ITEMNAME:使用道具%
+		SIF 对象 == MASTER
+			PRINTL ……一股廉价的味道
+		食品特征 = %ITEMNAME:使用道具%/甜/垃圾/松脆/
+		CALL RECOVER(对象, ITEM_TASTE(对象, 50, 食品特征), "体力", "巧克力的恢复")
+		CALL RECOVER(对象, ITEM_TASTE(对象, 50, 食品特征), "气力", "巧克力的恢复")
+		CALL 满腹度上升(对象, "甜点", 60)
+		LOCAL:1 ++
+	CASE 121	;巧克力
+		IF 对象 == MASTER
+			PRINTFORML 吃%ITEMNAME:使用道具%
+			食品特征 = %ITEMNAME:使用道具%/甜/
+			CALL RECOVER(MASTER, ITEM_TASTE(MASTER, 300, 食品特征), "体力", "巧克力的恢复")
+			CALL RECOVER(MASTER, ITEM_TASTE(MASTER, 300, 食品特征), "气力", "巧克力的恢复")
+			CALL 满腹度上升(对象, "甜点")
+			LOCAL:1 ++
+		ENDIF
+	CASE 122	;高级巧克力
+		IF 对象 == MASTER
+			PRINTFORML 吃%ITEMNAME:使用道具%
+			PRINTFORML 好吃！
+			食品特征 = %ITEMNAME:使用道具%/甜/上品/豪华/高级食材/
+			CALL RECOVER(MASTER, ITEM_TASTE(MASTER, 500, 食品特征), "体力", "巧克力的恢复")
+			CALL RECOVER(MASTER, ITEM_TASTE(MASTER, 500, 食品特征), "气力", "巧克力的恢复")
+			CALL 满腹度上升(对象, "甜点")
+			LOCAL:1 ++
+		ENDIF
+	CASE 123	;本命巧克力
+		IF 对象 == MASTER
+			PRINTFORML 吃%ITEMNAME:使用道具%
+			PRINTFORML 可以感受到爱！
+			食品特征 = %ITEMNAME:使用道具%/爱情/甜/
+			CALL RECOVER(MASTER, ITEM_TASTE(MASTER, 1000, 食品特征), "体力", "巧克力的恢复")
+			CALL RECOVER(MASTER, ITEM_TASTE(MASTER, 1000, 食品特征), "气力", "巧克力的恢复")
+			CALL 满腹度上升(对象, "甜点")
+			LOCAL:1 ++
+		ENDIF
+	CASE 212	;槲叶糕
+		PRINTFORML 吃%ITEMNAME:使用道具%
+		LOCAL:1 ++
+		;端午の节句は夏の季语だそうなので春物じゃなかった
+		食品特征 = %ITEMNAME:使用道具%/甜/
+		CALL RECOVER(对象, ITEM_TASTE(对象, 100, 食品特征), "体力", "槲叶糕的恢复")
+		CALL RECOVER(对象, ITEM_TASTE(对象,   0, 食品特征), "气力", "槲叶糕的恢复")
+		CALL 满腹度上升(对象, "甜点")
+	CASE 213	;冰淇淋
+		SIF TARGET && SHIRAHU(TARGET)
+			PRINT 二人坐在一起吃着
+		PRINTDATA
+			DATAFORM 『冰淇淋』
+			DATAFORM 『冷冻蜜柑』
+			DATAFORM 『带两个柄的苏打冰淇淋』
+			DATAFORM 『二个一组的蛋蛋冰淇淋』
+			DATAFORM 『棒棒冰』
+			DATAFORM 『papico冰棒』
+			DATAFORM 『涂练乳的牛奶冰棒』
+			DATAFORM 『红豆冰棒』
+			DATAFORM 『西瓜冰棒』
+			DATAFORM 『蜜柑冰棒』
+			DATAFORM 『黑雷神巧克力冰棒』
+			DATAFORM 『雪见大福』
+		ENDDATA
+		PRINTFORML 。
+		食品特征 = %ITEMNAME:使用道具%/冷/甜/
+		CALL RECOVER(MASTER, ITEM_TASTE(MASTER, 150, 食品特征), "气力", "冰淇淋的恢复")
+		CALL 满腹度上升(MASTER, "甜点")
+		IF  TARGET && SHIRAHU(TARGET)
+			CALL RECOVER(TARGET, ITEM_TASTE(TARGET, 150, 食品特征), "气力", "冰淇淋的恢复")
+			CALL 满腹度上升(TARGET, "甜点")
+		ENDIF
+		LOCAL:1 ++
+	CASE 215	;红茶
+		PRINTFORML 使用%ITEMNAME:使用道具%
+		SETBIT TCVAR:MASTER:特别的茶水, 0
+		LOCAL:1 ++
+	CASE 352	;草莓
+		PRINTFORML 吃%ITEMNAME:使用道具%
+		食品特征 = %ITEMNAME:使用道具%/野菜/果物/甜/
+		CALL RECOVER(对象, ITEM_TASTE(对象, 50, 食品特征), "气力", "草莓的恢复")
+		LOCAL:1 ++
+	CASE 364	;西瓜
+		食品特征 = %ITEMNAME:使用道具%/野菜/果物/甜/
+		IF FLAG:70 == 1
+			PRINTFORML 吃%ITEMNAME:使用道具%
+			CALL RECOVER(对象, ITEM_TASTE(对象, 100, 食品特征), "气力", "西瓜的恢复")
+		ELSE
+			IF TARGET != MASTER
+				IF GET_TARGETNUM() > 1
+					PRINTFORM 大家一起
+				ELSEIF SHIRAHU(TARGET)
+					PRINTFORM 和%NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%一起
+				ENDIF
+			ENDIF
+			PRINTFORML 吃%ITEMNAME:使用道具%
+			CALL RECOVER(MASTER, ITEM_TASTE(MASTER, 100, 食品特征), "气力", "西瓜的恢复")
+			FOR 全员, 1, GET_TARGETNUM() + 1
+				SIF TARGET:全员 <= 0
+					CONTINUE
+				SIF !SHIRAHU(TARGET:全员)
+					CONTINUE
+				CALL RECOVER(TARGET:全员, ITEM_TASTE(TARGET:全员, 100, 食品特征), "气力", "西瓜的恢复")
+			NEXT
+		ENDIF
+		LOCAL:1 ++
+	;CASE 400
+	;	;PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%は%ITEMNAME:使用道具%を开いた
+	;	PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%打开了%ITEMNAME:使用道具%
+	;	CALL COM401
+	;	LOCAL:1 ++
+	CASE 500	;青汁
+		PRINTFORML 喝%ITEMNAME:使用道具%
+		PRINTL 不好喝！再来一杯！
+		食品特征 = %ITEMNAME:使用道具%/苦い/苦い/苦い/健康/野菜/叶物/野趣/
+		CALL RECOVER(对象,100, "体力", "青汁的恢复")
+		CALL RECOVER(对象, ITEM_TASTE(对象, 200, 食品特征), "气力", "青汁的恢复")
+		LOCAL:1 ++
+	CASE 501	;营养饮料
+		PRINTFORML 喝%ITEMNAME:使用道具%
+		CALL RECOVER(对象, 药の知识(200), "体力", "营养饮料的恢复")
+		CALL RECOVER(对象, 药の知识(100), "气力", "营养饮料的恢复")
+		CFLAG:对象:清醒剂 = MAX(药の知识(20), CFLAG:对象:清醒剂)
+		TCVAR:对象:药 = 1
+		LOCAL:1 ++
+	CASE 502	;精力剂
+		IF HAS_PENIS(对象)
+			PRINTFORML 喝%ITEMNAME:使用道具%
+			CALL RECOVER(对象, 药の知识(300), "精力", "精力剂的恢复")
+			TCVAR:对象:药 = 1
+			LOCAL:1 ++
+		ELSE
+			;PRINTFORML 精力剂の使用对象外のようだ
+			PRINTFORML 好像不属于精力剂的使用对象
+			GOTO LOOP
+		ENDIF
+	CASE 503	;大恢复药
+		PRINTFORML 喝%ITEMNAME:使用道具%
+		PRINTL 干劲满满、状态十足！
+		CALL RECOVER(对象, 药の知识(500), "体力", "大恢复药的恢复")
+		CALL RECOVER(对象, 药の知识(300), "气力", "大恢复药的恢复")
+		CFLAG:对象:清醒剂 = MAX(药の知识(60), CFLAG:对象:清醒剂)
+		TCVAR:对象:药 = 1
+		LOCAL:1 ++
+	;CASE 504
+	;		IF FLAG:70
+	;			PRINTFORML 请解除时间停止后使用
+	;			GOTO LOOP
+	;		ENDIF
+	;		IF CFLAG:MASTER:当前位置 != CFLAG:MASTER:初始位置
+	;			;PRINTFORML これは自室で饮もう
+	;			PRINTFORML 这个在自己房间喝吧
+	;			GOTO LOOP
+	;		ENDIF
+	;		;PRINTFORML ストロング虚无を口にした途端、虚无の力で思考はぼやけ、全部がどうでもよくなってきた
+	;		;PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%は缶を空けながら一日を无为に过ごした…
+	;		PRINTFORML 虚无两字刚一出口、虚无的力量就让思考变得模糊，一切都变得无所谓了
+	;		PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%在空瓶子旁无所事事地度过了一天…
+	;		虚无への回归 = 1
+	CASE 505	;流星群Ｘ
+		PRINTFORML 喝%ITEMNAME:使用道具%
+		PRINTL 感觉还能再战２４小时间…！
+		CALL RECOVER(对象, 药の知识(800), "体力", "流星群Ｘ的恢复")
+		CALL RECOVER(对象, 药の知识(600), "气力", "流星群Ｘ的恢复")
+		CFLAG:对象:清醒剂 = MAX(药の知识(180), CFLAG:对象:清醒剂)
+		CFLAG:对象:彻夜 = 1
+		TCVAR:对象:药 = 1
+		LOCAL:1 ++
+	CASE 506	;精力剂『天元凸破』
+		PRINTFORML 喝%ITEMNAME:使用道具%
+		PRINTL 劳资的×××可是突破天际的！
+		CALL RECOVER(对象, 药の知识(400), "体力", "精力剂『天元凸破』的恢复")
+		CALL RECOVER(对象, 药の知识(300), "气力", "精力剂『天元凸破』的恢复")
+		CALL RECOVER(对象, 药の知识(800), "精力", "精力剂『天元凸破』的恢复")
+		TCVAR:对象:药 = 1
+		LOCAL:1 ++
+	CASE 507	;药水
+		PRINTFORML 喝%ITEMNAME:使用道具%
+		CALL RECOVER(对象, 药の知识(150), "气力", "药水的恢复")
+		CALL RECOVER(对象, 药の知识(150), "TSP", "药水的恢复")
+		TCVAR:对象:药 = 1
+		LOCAL:1 ++
+	CASE 508	;魔法药水
+		PRINTFORML 喝%ITEMNAME:使用道具%
+		PRINTL 充盈着魔力…
+		CALL RECOVER(对象, 药の知识(300), "气力", "魔法药水的恢复")
+		CALL RECOVER(对象, 药の知识(600), "TSP", "魔法药水的恢复")
+		TCVAR:对象:药 = 1
+		LOCAL:1 ++
+	CASE 509	;破眠药水
+		PRINTFORML 喝%ITEMNAME:使用道具%
+		CALL RECOVER(对象, 药の知识(200), "气力", "破眠药水的恢复")
+		CFLAG:对象:清醒剂 = MAX(药の知识(240), CFLAG:对象:清醒剂)
+		CFLAG:对象:彻夜 = 1
+		TCVAR:对象:药 = 1
+		LOCAL:1 ++
+	CASE 510	;姜黄饮料
+		PRINTFORML 喝%ITEMNAME:使用道具%
+		PRINTL 肝机能增强了、变得不容易醉了
+		TFLAG:醒酒药 = 1
+		LOCAL:1 ++
+	CASE 511	;万能药
+		PRINTFORML 喝%ITEMNAME:使用道具%
+		PRINTL 疲劳被吹飞到另一个世界了…！
+		CALL RECOVER(对象, MAX(9999, MAXBASE:对象:体力), "体力", "万能药的恢复")
+		CALL RECOVER(对象, MAX(9999, MAXBASE:对象:气力), "气力", "万能药的恢复")
+		CALL RECOVER(对象, MAX(9999, MAXBASE:对象:精力), "精力", "万能药的恢复")
+		CALL RECOVER(对象, MAX(9999, MAXBASE:对象:TSP),  "TSP",  "万能药的恢复")
+		CFLAG:对象:清醒剂 = MAX(300, CFLAG:对象:清醒剂)
+		TCVAR:对象:药 = 1
+		LOCAL:1 ++
+	CASE 512	;仙丹
+		PRINTFORML 喝%ITEMNAME:使用道具%
+		PRINTL 非同寻常的力量……！
+		CALL BUFF_BASE(对象, BASE_体力, MAX(MAXBASE:对象:体力 / 5, 500))
+		CALL BUFF_BASE(对象, BASE_气力, MAX(MAXBASE:对象:气力 / 5, 500))
+		CALL BUFF_BASE(对象, BASE_精力, MAX(MAXBASE:对象:精力 / 5, 500))
+		LOCAL:1 ++
+	CASE 514	;仙香玉兔
+		IF TFLAG:仙香玉兔 > 0
+			PRINTFORML 已经用过了
+			GOTO LOOP
+		ELSE
+			PRINTFORML 把%ITEMNAME:使用道具%插在了香炉上
+			PRINTL 周围漂浮着幻惑的薫香……
+			TFLAG:仙香玉兔 = 240
+			LOCAL:1 ++
+		ENDIF
+	CASE 515	;国士无双（药）　３回目まではBuff效果
+		PRINTFORML 喝%ITEMNAME:使用道具%
+		IF TCVAR:对象:国士无双（药） < 3
+			PRINTL 力量涌了上来……！
+			CALL BUFF_BASE(对象, BASE_体力, MAX(MAXBASE:对象:体力 / 15, 150))
+			CALL BUFF_BASE(对象, BASE_精力, MAX(MAXBASE:对象:精力 / 10, 150))
+			TCVAR:对象:国士无双（药） ++
+			LOCAL:1 ++
+		ELSE
+			;四回目で爆发、デBuffに
+			SETCOLOR C_RED
+			PRINTFORMW ！！
+			PRINTFORML ……爆发到遍体鳞伤了……是喝太多了吗……
+			RESETCOLOR
+			CALL BUFF_BASE(对象, BASE_体力, MIN((-1 * (MAXBASE:对象:体力 / 5)), -450))
+			CALL BUFF_BASE(对象, BASE_精力, MIN((-1 * (MAXBASE:对象: 精力 / 3)), -450))
+			TCVAR:对象:国士无双（药） = 0
+			LOCAL:1 ++
+		ENDIF
+	CASE 516	;毒气花园
+		IF TFLAG:GG设置位置 == CFLAG:MASTER:当前位置
+			PRINTFORMW %TEXTR(@"「是我培育出来的」（%GET_MAPNAME(MAIN_MAP)%在住　%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%氏）/本品种虽然已经考虑到了安全性的问题、但如果万一出现身体不适的话、请在保持足够远的距离的情况下好好休息。")%
+		ELSEIF TFLAG:GG设置位置
+			PRINTFORML 毒气花园是只有一天寿命的梦幻生命
+			PRINTFORMW 请陪伴这株花到它的最后吧
+			GOTO LOOP
+		ELSEIF INROOM(CFLAG:MASTER:当前位置)
+			PRINTFORMW 请种植在野外
+			GOTO LOOP
+		;目击者がいると駄目
+		ELSEIF (TARGET > 0 || DATE_HITOGOMI(CFLAG:MASTER:当前位置) > 0) && !FLAG:70
+			PRINTFORMW 这里现在有人会看到……应该悄悄地布置
+			GOTO LOOP
+		ELSE
+			PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%撒下了魔法的种子
+			PRINTFORML 魔法植物肉眼可见地开出了花朵、周围弥漫着掻动情欲的芳香……
+			TFLAG:GG设置位置 = CFLAG:MASTER:当前位置
+			LOCAL:1 ++
+		ENDIF
+	CASE 517	;剧毒身躯
+		IF TFLAG:剧毒身躯 > 0
+			;PRINTFORML これ以上摂取したら肝机能障害になる
+			PRINTFORML 再摄取的话会造成肝功能障碍
+			GOTO LOOP
+		ELSEIF HAS_PENIS(对象)
+			;PRINTFORML %ITEMNAME:使用道具%を服用した
+			;PRINTFORML ぐるぐると体内に涡卷く何かの感觉とともに、アソコが热くなってきた……
+			;PRINTFORML （%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%の精液に发情作用が付与　效果发挥中は射精时の体力・气力消费增加）
+			;PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%は头痛・眩晕・吐き气・关节痛に袭われたが、健康より大事なものもあると心を强く持って耐えた
+			PRINTFORML 服用了%ITEMNAME:使用道具%
+			PRINTFORML 伴随着一圈圈在体内盘旋的某种感觉，那里开始发热……
+			PRINTFORML （对%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%的精液赋予发情作用　效果发挥中射精时的体力・气力消耗增加）
+			PRINTFORML 虽然%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%被头痛・眩晕・恶心・关节痛侵袭着、但有些东西比健康更重要，所以毅然决然地忍耐着
+			TFLAG:剧毒身躯 = 240
+			LOCAL:1 ++
+		ELSE
+			;PRINTFORML この药は男性専用のようだ
+			PRINTFORML 这种药好像是男性专用的
+			GOTO LOOP
+		ENDIF
+	CASE 520	;绷带
+		IF !TFLAG:吻痕
+			PRINTFORML 现在使用也没有意义
+			GOTO LOOP
+		ELSE
+			PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%用%ITEMNAME:使用道具%把吻痕隐藏起来了
+			TFLAG:绷带 = 1
+			LOCAL:1 ++
+		ENDIF
+	CASE 521	;易书
+		IF FLAG:70
+			PRINTFORML 请解除时间停止后使用
+			GOTO LOOP
+		ENDIF
+		PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%打开了易书
+		PRINTFORML 易者出现了
+		PRINTFORMW 
+		IF CFLAG:[[灵梦]]:当前位置 == CFLAG:MASTER:当前位置
+			PRINTFORML 灵梦立刻就用驱魔棒敲在了易者的头上
+			PRINTFORML 可怜的易者被一分为二了
+			FOR LOCAL,1,CHARANUM
+				IF CFLAG:LOCAL:当前位置 == CFLAG:MASTER:当前位置
+					BASE:LOCAL:理性 = MAXBASE:LOCAL:理性
+					BASE:LOCAL:情绪 = 0
+				ENDIF
+			NEXT
+			LOCAL:1 ++
+		ELSE
+			PRINTFORML 「通过占卜看一下前进的道路吧」
+			$EKISYA
+			CALL ASK_M("今日的运势", !GETBIT(FLAG:999, 1), "寻找有困扰的人", 1, "剪指甲", BASE:MASTER:TSP >= 20, "解除奇迹之石(100筹码)", MONEY:2 >= 100, "点一个赞", 1, "进行供奉", 1)
+			SELECTCASE RESULT
+				CASE 0
+					SELECTCASE RAND:10
+						CASE 0
+							TFLAG:幸运补正 = 3
+							PRINTFORML 「运势绝佳、不去抽个签吗？」
+						CASE 1 TO 3
+							TFLAG:幸运补正 = 1
+							PRINTFORML 「运势良好、适合完成积压的工作」
+						CASE 4,5
+							PRINTFORML 「不好不坏」
+						CASE 6 TO 8
+							TFLAG:幸运补正 = -1
+							PRINTFORML 「要低调、不要勉强行事」
+						CASE 9
+							TFLAG:幸运补正 = -3
+							PRINTFORML 「……最糟糕的状况、老老实实的呆着吧」
+					ENDSELECT
+				CASE 1
+					CLIENT_ID = SEARCH_UNIQUE_COM_帮助别人()
+					IF !CLIENT_ID
+						PRINTFORML 「唔嗯、什么都看不见」
+						PRINTFORML 「以巫女为目标的话、对我来说太过勉强了」
+						PRINTFORML 于是没有起到任何作用
+					ELSE
+						PRINTFORML 「%NAME_OUTPUT_TRANSLATION("CALLNAME", CLIENT_ID)%正在寻求帮助」
+					ENDIF
+				CASE 2
+					PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%看到易者后显得非常焦躁
+					PRINTFORMW ……那指甲是怎么回事。
+					PRINTFORML 不知道是不是所说的已经不是人类了的关系、再怎么说那也长的太长了。
+					PRINTFORML 日常生活不会感到不便么？而且也没有想过万一不小心抓到其他人的话要怎么办么？
+					PRINTFORML 不知何时就会触碰到自己敏感的部位所以要每天好好检查啊。
+					PRINTFORML 而且在那之前要是撞到什么东西把指甲掀开了那不是会非常痛么。
+					PRINTFORMW 最重要的是还会积攒污垢变得非常的脏。
+					PRINTFORMW 忍不下去的%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%停止了时间把易者的指甲剪得齐齐整整
+					PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%感到了巨大的成就感……
+					PRINTFORML 另一方面指甲突然变短的易者显得十分困惑……
+					CALL RECOVER_PERMIL(对象,40,"气力")
+					BASE:MASTER:TSP -= 20
+				CASE 3
+					PRINTFORML 要解除谁的效果？
+					FOR LOCAL,1,CHARANUM
+						SIF CFLAG:LOCAL:以身体为目的
+							PRINTFORMLC [{LOCAL}] %NAME_OUTPUT_TRANSLATION("CALLNAME", LOCAL)%
+					NEXT
+					PRINTFORML 
+					DRAWLINE
+					PRINTFORML [999] 放弃
+					INPUT
+					IF RESULT == 999
+						GOTO EKISYA
+					ELSEIF CFLAG:RESULT:以身体为目的
+						PRINTFORML 「我觉得还是不要用这种道具比较好」
+						PRINTFORMW 易者进行了某些复杂的仪式、奇迹之石的逐渐失去了光芒、化为了飞灰
+						TIME += 25
+						CFLAG:RESULT:以身体为目的 = 0
+						MONEY:2 -= 100
+					ENDIF
+				CASE 4
+					PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%无言地注视着易者、竖起大拇指点了个赞
+					PRINTFORML 易者稍微踌躇了一下、也给你回了一个强而有力的赞
+					PRINTFORMW 好像增长了双方的友情
+					GOTO EKISYA
+				CASE 5
+					PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%停止了时间、脱掉了易者的衣服、把胖次拿走给神献上了
+					CALL BUFF_BASE(MASTER,BASE_TSP,100,1)
+					PRINTFORMW 在不知不觉间被脱掉内裤的易者看上去好像很不安
+			ENDSELECT
+			PRINTFORMW 
+			DRAWLINE
+			$EKISYA_DIVIDE
+			PRINTFORML 灵梦出现了、用驱魔棒敲在了易者的头上
+			PRINTFORML 可怜的易者被一分为二了
+			PRINTFORMW 灵梦直接离去了
+			FOR LOCAL,1,CHARANUM
+				IF CFLAG:LOCAL:当前位置 == CFLAG:MASTER:当前位置
+					BASE:LOCAL:理性 = MAXBASE:LOCAL:理性
+					BASE:LOCAL:情绪 = 0
+				ENDIF
+			NEXT
+			LOCAL:1 ++
+		ENDIF
+	CASE 530	;奇迹之石
+		CALL SET_MIRADA
+		IF RESULT == -1
+			RETURN -1
+		ELSE
+			LOCAL:1 ++
+		ENDIF
+	CASE 550	;八目鳗烤串
+		PRINTFORML 吃%ITEMNAME:使用道具%
+		CALL 满腹度上升(对象,"轻食")
+		食品特征 = %ITEMNAME:使用道具%/鱼料理/开胃/
+		CALL RECOVER_PERMIL(对象, ITEM_TASTE(对象, 40, 食品特征), "体力", 0, "八目鳗烤串的恢复")
+		CALL RECOVER_PERMIL(对象, ITEM_TASTE(对象, 80, 食品特征), "气力", 0, "八目鳗烤串的恢复")
+		CALL RECOVER_PERMIL(对象, ITEM_TASTE(对象, 50, 食品特征), "精力", 0, "八目鳗烤串的恢复")
+		LOCAL:1 ++
+	CASE 576	;(酒造パッチ)灰汁卷
+		PRINTFORML 吃%ITEMNAME:使用道具%
+		CALL 满腹度上升(对象,"主食")
+		食品特征 = %ITEMNAME:使用道具%/和食/米/团子/甜/软糯的/家庭的/春物/
+		CALL RECOVER(对象, ITEM_TASTE(对象, 150, 食品特征), "体力", "灰汁卷的恢复")
+		CALL RECOVER(对象, ITEM_TASTE(对象, 150, 食品特征), "气力", "灰汁卷的恢复")
+		LOCAL:1 ++
+	CASE 626	;木莓
+		PRINTFORML 吃%ITEMNAME:使用道具%
+		食品特征 = %ITEMNAME:使用道具%/果物/甜/酸/野趣/
+		CALL RECOVER(对象, ITEM_TASTE(对象, 50, 食品特征), "气力", "木莓的恢复")
+		LOCAL:1 ++
+	CASE 628	;木通属
+		PRINTFORML 吃%ITEMNAME:使用道具%
+		食品特征 = %ITEMNAME:使用道具%/果物/甜/野趣/
+		CALL RECOVER(对象,80, "体力", "木通属的恢复")
+		CALL RECOVER(对象, ITEM_TASTE(对象, 80, 食品特征), "气力", "木通属的恢复")
+		LOCAL:1 ++
+	CASE 630	;仙桃
+		PRINTFORML 吃%ITEMNAME:使用道具%
+		PRINTL 非同寻常的力量……！
+		CALL BUFF_BASE(对象, BASE_体力, MAX(MAXBASE:对象:体力 / 10, 500))
+		CALL BUFF_BASE(对象, BASE_气力, MAX(MAXBASE:对象:气力 / 10, 500))
+		CALL BUFF_BASE(对象, BASE_精力, MAX(MAXBASE:对象:精力 / 10, 500))
+		LOCAL:1 ++
+	CASE 665	;(酒造パッチ)山葡萄
+		PRINTFORML 吃%ITEMNAME:使用道具%
+		食品特征 = %ITEMNAME:使用道具%/果物/甜/酸/野趣/
+		CALL RECOVER(对象, ITEM_TASTE(对象, 50, 食品特征), "气力", "山葡萄的恢复")
+		LOCAL:1 ++
+	CASE 669	;(酒造パッチ)墨西哥卷饼
+		PRINTFORML 吃%ITEMNAME:使用道具%
+		CALL 满腹度上升(对象,"轻食")
+		食品特征 = 洋葱/番茄/卷心菜/洋食/野菜/野味/香料/乳酪/辣/丰盛/浓厚/机能的/野趣/新鲜/松脆/
+		CALL RECOVER(对象, ITEM_TASTE(对象, 120, 食品特征), "体力", "墨西哥卷饼的恢复")
+		CALL RECOVER(对象, ITEM_TASTE(对象, 120, 食品特征), "气力", "墨西哥卷饼的恢复")
+		LOCAL:1 ++
+	CASEELSE
+		GOTO LOOP
+ENDSELECT
+IF LOCAL:1
+	IF !FLAG:70
+		TIME += 5
+	ELSE
+		BASE:MASTER:TSP -= 5
+	ENDIF
+	ITEM:使用道具 -= 1
+	SIF 虚无への回归
+		CALL OYASUMI
+	RETURN 0
+ENDIF
+
+
+@SET_MIRADA
+PRINTFORML 请选择对象。
+PRINTFORML 黄色为已经有效、粉色为已经陷落的角色。
+SIF FLAG:排序
+	CALL CHARASORT_EX
+FOR LOCAL:1, 1, EX_CHARANUM + 1
+	IF FLAG:排序
+		LOCAL = RESULT:(LOCAL:1)
+		SIF LOCAL < 0
+			CONTINUE
+	ELSE
+		LOCAL = LOCAL:1
+		SIF LOCAL >= CHARANUM
+			BREAK
+	ENDIF
+	;SIF TALENT:LOCAL:路人
+	;	CONTINUE
+	SIF CFLAG:LOCAL:出禁
+		CONTINUE
+	SIF CFLAG:LOCAL:以身体为目的
+		SETCOLOR C_YELLOW
+	SIF TALENT:LOCAL:炮友 || TALENT:LOCAL:恋慕
+		SETCOLOR C_PINK
+	PRINTFORMLC [{LOCAL, 3}] %NAME_OUTPUT_TRANSLATION("CALLNAME", LOCAL)%
+	RESETCOLOR
+NEXT
+PRINTFORML 
+DRAWLINE
+PRINTFORML [999] 放弃
+INPUT
+SIF !INRANGE(RESULT,1,CHARANUM)
+	RETURN -1
+SIF CFLAG:RESULT:以身体为目的
+	RETURN -1
+IF TALENT:RESULT:炮友 || TALENT:RESULT:恋慕
+	TCVAR:RESULT:发情 = 1
+ELSE
+	CFLAG:RESULT:以身体为目的 = 1
+ENDIF
+PRINTFORMW 你想着%NAME_OUTPUT_TRANSLATION("CALLNAME", RESULT)%的样子用力握紧了奇迹之石、石头发出了淡淡的光芒
+RETURN 1
+
+@使用可能道具(ARG)
+;1だとMASTERのみ、2だと你以外にも使える
+#FUNCTION
+
+SIF CFLAG:MASTER:诶嘿嘿 && !ITEMTYPE_DRUG(ARG)
+	RETURNF 0
+;(酒造パッチ)灰汁卷と山葡萄、墨西哥卷饼
+;SELECTCASE ARG
+;	CASE 121 TO 123, 215, 364, 500, 510, 514, 515, 516, 517, 520, 521, 530
+;		RETURNF 1
+;	CASE 120, 212, 213, 352, 501, 503, 505 TO 509, 511, 512, 550, 576, 626, 628, 630, 665, 669
+;		RETURNF 2
+;	CASE 502
+;		SIF HAS_PENIS(TARGET)
+;			RETURNF 2
+;		RETURNF 1
+;	CASEELSE
+;		RETURNF 0
+;ENDSELECT
+SELECTCASE ITEMTYPE(ARG)
+	CASE 1, 2, 3, 4, 5
+		IF GROUPMATCH(ITEMNAME:ARG, "国士无双（药）", "巧克力", "高级巧克力", "本命巧克力", "青汁")
+			RETURNF 1
+		ENDIF
+		RETURNF 2
+	CASE 6
+		RETURNF 1
+	CASEELSE
+		RETURNF 0
+ENDSELECT
+
+;本来@ITEMDATAを使用べきだが#FUNCTIONじゃないのがなんかやだ
+@ITEMTYPE(ARG)
+#FUNCTION
+IF ITEMTYPE_DRUG(ARG)
+	RETURNF 1
+ELSEIF ITEMTYPE_BUFF(ARG)
+	RETURNF 2
+ELSEIF ITEMTYPE_FOOD(ARG)
+	RETURNF 3
+ELSEIF ITEMTYPE_SWEETS(ARG)
+	RETURNF 4
+ELSEIF ITEMTYPE_FRUIT(ARG)
+	RETURNF 5
+ELSEIF ITEMTYPE_ETCETERA(ARG)
+	RETURNF 6
+ENDIF
+RETURNF 0
+
+@ITEMTYPE_DRUG(ARG)
+#FUNCTION
+;SIF GROUPMATCH(ARG, 501, 502, 503, 505, 506, 507, 508, 509, 511)
+SIF GROUPMATCH(ITEMNAME:ARG, "营养饮料", "精力剂", "大恢复药", "流星群Ｘ", "精力剂『天元凸破』", "药水", "魔法药水", "破眠药水", "万能药")
+	RETURNF 1
+
+;BUFF_BASEを行うもの
+@ITEMTYPE_BUFF(ARG)
+#FUNCTION
+;SIF GROUPMATCH(ARG, 512, 515, 630)
+SIF GROUPMATCH(ITEMNAME:ARG, "仙丹", "国士无双（药）", "仙桃")
+	RETURNF 1
+
+;满腹度が增えるもの
+@ITEMTYPE_FOOD(ARG)
+#FUNCTION
+;SIF GROUPMATCH(ARG, 550, 576, 669)
+SIF GROUPMATCH(ITEMNAME:ARG, "八目鳗烤串", "灰汁卷", "墨西哥卷饼")
+	RETURNF 1
+
+;甜点满腹度が增えるもの
+@ITEMTYPE_SWEETS(ARG)
+#FUNCTION
+;SIF GROUPMATCH(ARG, 120, 121, 122, 123, 212, 213)
+SIF GROUPMATCH(ITEMNAME:ARG, "黑雷神巧克力", "巧克力", "高级巧克力", "本命巧克力", "槲叶糕", "冰淇淋")
+	RETURNF 1
+
+;满腹度が增えないもの
+@ITEMTYPE_FRUIT(ARG)
+#FUNCTION
+;SIF GROUPMATCH(ARG, 352, 364, 500, 626, 628, 665)
+SIF GROUPMATCH(ITEMNAME:ARG, "草莓", "西瓜", "青汁", "木莓", "木通属", "山葡萄")
+	RETURNF 1
+
+;其他のもの
+@ITEMTYPE_ETCETERA(ARG)
+#FUNCTION
+;SIF GROUPMATCH(ARG, 215, 510, 514, 516, 517, 520, 521, 530)
+SIF GROUPMATCH(ITEMNAME:ARG, "红茶", "姜黄饮料", "仙香玉兔", "毒气花园", "剧毒身躯", "绷带", "易书", "奇迹之石")
+	RETURNF 1
+
+@PRINT_ITEM_EXPLANATION(ARG)
+PRINTFORM [{ARG, 3, RIGHT}] %ITEMNAME:ARG, 18, LEFT% {ITEM:ARG, 3, RIGHT}个　
+IF INRANGE(ARG, 51,60)
+	SETCOLOR C_L_GRAY
+	PRINTFORM 喜爱程度:
+	SETCOLOR 0x66FFFF
+	PRINTFORM {ALCOHOL_TASTE(ARG),2}　
+ENDIF
+SETCOLOR C_L_GRAY
+	PRINTFORML %ITEM_EXPLANATION(ARG)%
+RESETCOLOR
+
+@药の知识(ARG)
+#FUNCTION
+#DIM 恢复量
+#DIM 强化回数
+恢复量 = ARG
+;恢复量 = 基准值 * (1.1 ^ (调合Lv + 药に关系しそうな知识))
+强化回数 = TALENT:MASTER:调合Lv + TALENT:MASTER:禁断的知识 + TALENT:MASTER:调合知识
+WHILE 强化回数 > 0
+	TIMES 恢复量, 1.1
+	强化回数 --
+WEND
+RETURNF 恢复量
+
+;味觉所获得的恢复补正
+;满腹度が上がらない食品は气力のみ补正
+@ITEM_TASTE(CHARA, 基准值, 食品特征)
+#FUNCTION
+#DIM CHARA
+#DIM 基准值
+#DIMS 食品特征
+#DIMS TASTE_CHARA_GOOD
+#DIMS TASTE_CHARA_BAD
+#DIM 恢复量
+TASTE_CHARA_GOOD = %GET_STR(, "キャラデータ", CHARA, "料理：喜欢的味道")%
+TASTE_CHARA_BAD = %GET_STR(, "キャラデータ", CHARA, "料理：讨厌的味道")%
+
+恢复量 = 基准值 + (STR_MULTI_COUNT(TASTE_CHARA_GOOD, 食品特征) - STR_MULTI_COUNT(TASTE_CHARA_BAD, 食品特征)) * 10
+
+;旬など季节に応じた补正
+SELECTCASE GET_MONTH()
+	CASE "春之月"
+		IF STRCOUNT(食品特征, "春物/") && !STRCOUNT(TASTE_CHARA_BAD, "春物/")
+			TIMES 恢复量, 1.3
+		ENDIF
+	CASE "夏之月"
+		;夏は冰淇淋が2.0倍（嫌いじゃなければ）
+		IF STRCOUNT(食品特征, "冰淇淋/") && !STRCOUNT(TASTE_CHARA_BAD, "冰淇淋/")
+			TIMES 恢复量, 2.0
+		ELSEIF STRCOUNT(食品特征, "西瓜/")
+			TIMES 恢复量, 1.3
+		ENDIF
+	CASE "秋之月"
+		IF STRCOUNT(食品特征, "木通属/")
+			TIMES 恢复量, 1.3
+		ENDIF
+	CASE "冬之月"
+		;冬は冰淇淋が0.5倍（好きじゃなければ）
+		IF STRCOUNT(食品特征, "冰淇淋/") && !STRCOUNT(TASTE_CHARA_GOOD, "冰淇淋/")
+			TIMES 恢复量, 0.5
+		ENDIF
+ENDSELECT
+
+RETURNF 恢复量
+
+;道具
+@COM_ABLE490
+;移动实行判定
+SIF !TFLAG:100
+	RETURN 0
+;批量管理
+SIF GLOBAL_COMABLE(490)
+	RETURN RESULT
+RETURN 1

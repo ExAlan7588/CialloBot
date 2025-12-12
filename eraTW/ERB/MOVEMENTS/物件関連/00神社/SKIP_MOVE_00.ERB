@@ -1,0 +1,238 @@
+﻿;-----------------------------------------------------------
+;远距离移动の设定
+;ARG     目的地
+;ARG:1   现在地
+;RETURN  次の目的地
+;-----------------------------------------------------------
+@SKIP_MOVE_0(ARG, ARG:1)
+#DIM 现在的位置
+;当前位置取得
+IF ARG:1
+	现在的位置 = ARG:1
+ELSE
+	现在的位置 = CFLAG:MASTER:当前位置
+ENDIF
+
+;目的地に直接移动できる场合そこに移动
+SIF CAN_MOVE(现在的位置, ARG) & 1
+	RETURN ARG
+
+;袋小路から行ける场所は固定なので、そこを目指す
+SELECTCASE 现在的位置
+	CASE P4本堂
+		RETURN P3功德箱
+	CASE P5净手池, P21守矢神社分社, P56阿吽的小屋
+		RETURN P2境内
+	CASE P13澡堂
+		RETURN P12更衣间
+	CASE P14厕所, P19大的仓库
+		RETURN P10走廊
+	CASE P17小的仓库, P53仓库, P55和室
+		RETURN P9起居室
+	CASE P18壁橱间
+		RETURN P15灵梦私室
+	CASE P24温泉
+		RETURN P23温泉・更衣间
+	CASE P29三妖精之家・厨房, P30三妖精之家・澡堂, P35三妖精之家・地下室
+		RETURN P27三妖精之家・大厅
+	CASE P32桑尼私室, P33露娜私室, P34斯塔私室
+		RETURN P31三妖精之家・二层走廊
+	CASE P39梦幻遗迹・浴室, P40梦幻遗迹・厕所
+		RETURN P38梦幻遗迹・盥洗间
+	CASE P42梦幻遗迹・调理室
+		RETURN P41梦幻遗迹・食堂兼会客厅
+	CASE P43梦美私室, P44千百合私室
+		RETURN P37梦幻遗迹・一层廊道
+	CASE P47梦幻遗迹・舰桥, P48梦幻遗迹・第一资料室, P49梦幻遗迹・研究室, P50梦幻遗迹・第二资料室, P51梦幻遗迹・仓库
+		RETURN P46梦幻遗迹・二层廊道
+	CASE P52别馆, P69先代巫女的小屋
+		RETURN P11庭
+;大别墅
+	CASE P57大温泉,P60大客厅,P67宴会厅
+		RETURN P68大广场
+	CASE P58大主卧,P59大厨房
+		RETURN P60大客厅
+	CASE P61地の间,P62水の间,P63火の间,P64风の间,P65光の间,P66暗の间
+		RETURN P60大客厅
+ENDSELECT
+
+;直接移动できない场合、1つ近い位置を暂定目的地に设定し直してループ
+;基本的に最短で行けるコースを设定する
+;现在地によってコースが变わることも考虑して对応する
+SELECTCASE ARG
+	CASE P1鸟居
+		SELECTCASE 现在的位置
+		CASE P23温泉・更衣间 TO P51梦幻遗迹・仓库
+			RETURN P22参道
+
+		CASE P57大温泉 TO P68大广场
+			RETURN P22参道
+
+		CASEELSE
+			RETURN P2境内
+		ENDSELECT
+	CASE P2境内
+		SELECTCASE 现在的位置
+		CASE P22参道 TO P51梦幻遗迹・仓库
+			RETURN P1鸟居
+
+		CASE P57大温泉 TO P68大广场
+			RETURN P1鸟居
+
+		CASEELSE
+			RETURN P20本殿内部
+		ENDSELECT
+	CASE P3功德箱, P5净手池, P21守矢神社分社, P56阿吽的小屋
+		RETURN P2境内
+	CASE P4本堂
+		RETURN P3功德箱
+	CASE P6库房, P16破旧小屋
+		SELECTCASE 现在的位置
+		CASE P7土间 TO P19大的仓库, P54小人的虫笼
+			RETURN P20本殿内部
+		CASEELSE
+			RETURN P2境内
+		ENDSELECT
+	CASE P7土间
+		SELECTCASE 现在的位置
+		CASE P10走廊, P12更衣间 TO P15灵梦私室, P17小的仓库 TO P19大的仓库, P54小人的虫笼
+			RETURN P9起居室
+		CASEELSE
+			RETURN P20本殿内部
+		ENDSELECT
+	CASE P8厨房
+		SELECTCASE 现在的位置
+		CASE P15灵梦私室, P54小人的虫笼
+			RETURN P9起居室
+		CASE P11庭, P12更衣间
+			RETURN P10走廊
+		CASEELSE
+			RETURN P7土间
+		ENDSELECT
+	CASE P9起居室
+		SELECTCASE 现在的位置
+		CASE P11庭, P12更衣间
+			RETURN P10走廊
+		CASEELSE
+			RETURN P7土间
+		ENDSELECT
+	CASE P10走廊
+		SELECTCASE 现在的位置
+		CASE P7土间, P15灵梦私室
+			RETURN P9起居室
+		CASEELSE
+			RETURN P11庭
+		ENDSELECT
+	CASE P11庭
+		SELECTCASE 现在的位置
+		CASE P8厨房, P9起居室, P12更衣间, P15灵梦私室, P54小人的虫笼
+			RETURN P10走廊
+		CASEELSE
+			RETURN P9起居室
+		ENDSELECT
+	CASE P12更衣间, P14厕所, P19大的仓库
+		RETURN P10走廊
+	CASE P13澡堂
+		RETURN P12更衣间
+	CASE P15灵梦私室, P17小的仓库, P53仓库, P55和室
+		RETURN P9起居室
+	CASE P18壁橱间
+		RETURN P15灵梦私室
+	CASE P20本殿内部
+		SELECTCASE 现在的位置
+		CASE P10走廊, P12更衣间
+			RETURN P11庭
+		CASE P7土间 TO P19大的仓库, P54小人的虫笼
+			RETURN P7土间
+		CASEELSE
+			RETURN P2境内
+		ENDSELECT
+	CASE P22参道
+		SELECTCASE 现在的位置
+		CASE P27三妖精之家・大厅 TO P35三妖精之家・地下室
+			RETURN P25镇守之森
+		CASE P37梦幻遗迹・一层廊道 TO P51梦幻遗迹・仓库
+			RETURN P36梦幻遗迹前
+		CASEELSE
+			RETURN P1鸟居
+		ENDSELECT
+	CASE P23温泉・更衣间
+		SELECTCASE 现在的位置
+		CASE P27三妖精之家・大厅 TO P35三妖精之家・地下室
+			RETURN P25镇守之森
+
+		CASE P57大温泉 TO P68大广场
+			RETURN P68大广场
+
+		CASEELSE
+			RETURN P22参道
+		ENDSELECT
+	CASE P24温泉
+		RETURN P23温泉・更衣间
+	CASE P25镇守之森
+		SELECTCASE 现在的位置
+		CASE P29三妖精之家・厨房 TO P35三妖精之家・地下室
+			RETURN P27三妖精之家・大厅
+		CASEELSE
+			RETURN P22参道
+		ENDSELECT
+
+	CASE P27三妖精之家・大厅
+		RETURN P25镇守之森
+	CASE P29三妖精之家・厨房, P30三妖精之家・澡堂, P31三妖精之家・二层走廊, P35三妖精之家・地下室
+		RETURN P27三妖精之家・大厅
+	CASE P32桑尼私室, P33露娜私室, P34斯塔私室
+		RETURN P31三妖精之家・二层走廊
+
+	CASE P36梦幻遗迹前
+		SELECTCASE 现在的位置
+		CASE P38梦幻遗迹・盥洗间 TO P51梦幻遗迹・仓库
+			RETURN P37梦幻遗迹・一层廊道
+		CASEELSE
+			RETURN P22参道
+		ENDSELECT
+	CASE P37梦幻遗迹・一层廊道
+		RETURN P36梦幻遗迹前
+	CASE P38梦幻遗迹・盥洗间, P41梦幻遗迹・食堂兼会客厅, P43梦美私室, P44千百合私室, P46梦幻遗迹・二层廊道
+		RETURN P37梦幻遗迹・一层廊道
+	CASE P39梦幻遗迹・浴室, P40梦幻遗迹・厕所
+		RETURN P38梦幻遗迹・盥洗间
+	CASE P42梦幻遗迹・调理室
+		RETURN P41梦幻遗迹・食堂兼会客厅
+	CASE P47梦幻遗迹・舰桥, P48梦幻遗迹・第一资料室, P49梦幻遗迹・研究室, P50梦幻遗迹・第二资料室, P51梦幻遗迹・仓库
+		RETURN P46梦幻遗迹・二层廊道
+
+	CASE P52别馆
+		RETURN P11庭
+	CASE P54小人的虫笼
+		SELECTCASE 现在的位置
+		CASE P11庭, P12更衣间
+			RETURN P10走廊
+		CASEELSE
+			RETURN P9起居室
+		ENDSELECT
+;大别墅
+	CASE P68大广场
+		SELECTCASE 现在的位置
+		CASE P58大主卧,P59大厨房
+			RETURN P60大客厅
+		CASE P61地の间,P62水の间,P63火の间,P64风の间,P65光の间,P66暗の间
+			RETURN P60大客厅
+		CASEELSE
+			RETURN P22参道
+		ENDSELECT
+	CASE P57大温泉
+		RETURN P68大广场
+	CASE P58大主卧,P59大厨房
+		RETURN P60大客厅
+	CASE P60大客厅
+		RETURN P68大广场
+	CASE P61地の间,P62水の间,P63火の间,P64风の间,P65光の间,P66暗の间
+		RETURN P60大客厅
+	CASE P67宴会厅
+		RETURN P68大广场
+;先代
+	CASE P69先代巫女的小屋
+		RETURN P11庭
+
+ENDSELECT

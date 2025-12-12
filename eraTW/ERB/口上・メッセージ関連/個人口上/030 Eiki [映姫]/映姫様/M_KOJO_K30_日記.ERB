@@ -1,0 +1,1564 @@
+﻿;日记口上＠小铃口上を参考にしてます。わかりやすい改良共々本当にありがとうございます
+
+;小铃口上にならって设定
+;映姫样は几帐面に日记をつけていて分量も多いので、你は自分に关するところを拾い读みしている
+;一人で读み进めるのではなく横に映姫样がいて一绪に思い出を见直している感じ
+;设定上ぼっち气质なので他角色との交流的なのは无し。ネタがないので泛用日记も无し
+;=============================
+@DIARY_K30_EXIST
+;存在判定
+;=============================
+RETURN 1
+
+;一日の结束时の流れの觉书
+;妊娠判定/分娩经过（育儿关联经过日数を+1） → 会ってない日数チェック（口上）→ デイリーイベント → 夜自慰（口上）
+;→ @DIARY_TEXT_KXX（日记本文）→ @DIARY_AFTER_CHECK_KXX（フラグの处理）→ 陷落・素質UPチェック → 一日の结束
+;=============================
+@DIARY_AFTER_CHECK_K30
+;=============================
+
+;=============================
+@DIARY_BEFORE_CHECK_K30
+;PAGENUM:0は使えません
+;EVENTCOMEND.ERBから当前位置に关系なく每ターン呼び出される
+;=============================
+;MAXPAGEはここで记入する
+MAX_DIARY_PAGE:30:0 = 100
+
+;ここで泛用发生条件を记入する
+;初吻		No.1
+SIF DIARY:30:1 != 0 || GETBIT(CFLAG:30:1910, 2) == 1
+	GOTO THROUGH_K
+IF TALENT:30:无接吻经验
+ELSE
+	CALL K30_WRITE_DIARY(1)
+ENDIF
+;处女丧失			No.2
+$THROUGH_K
+SIF DIARY:30:2 != 0 || GETBIT(CFLAG:30:1910, 3) == 1
+	GOTO THROUGH_V
+;TALENTで判断すると误爆するらしいのでステータス表示文で判断。空白は处女or「出会う前に～」
+IF CSTR:30:处女丧失履历 == "" 
+ELSE
+	CALL K30_WRITE_DIARY(2)
+ENDIF
+;弹幕胜负映姫样胜ち	No 3	弹幕胜负
+;弹幕胜负映姫样负け	No 4	弹幕胜负
+;お小言もらった		No 5	函数・お说教ライ罩罩リ
+;变Ｔ				No.6	金曜日に遭遇
+$THROUGH_V
+SIF DIARY:30:6 == 0 && STRCOUNT(CSTR:30:0, "变Ｔお披露目") && YOUBI_MATCH(DAY, "金")
+	CALL K30_WRITE_DIARY(6)
+;流行热潮	No.7	一日最初の挨拶
+;お说教たいむ		No.8	固有依赖
+;仕事手传った		No.9	日常指令
+;映姫样がぶん殴った	No.10	函数・お说教ライ罩罩リ
+;天气:ぱんつの日	No.11	一日の结束时
+;赠り物(GOOD)		No.12	日常指令
+;赠り物(NORMAL)		No.13	日常指令
+;赠り物(BAD)		No.14	日常指令
+;掀裙子		No.15	性骚扰指令
+;说法10回结束		No.16	函数・お说教ライ罩罩リ
+;觉からお手纸	No.17	依赖
+;ヘカ样からお手纸	No.18	依赖
+;浴室逐出		No.19	イベント口上
+
+;思慕				No.20
+SIF DIARY:30:20 == 0 && TALENT:30:思慕
+	CALL K30_WRITE_DIARY(20)
+;抱き付いた			No.21	性骚扰指令
+;何か钓れた			No.22	日常指令
+;オナネタ			No.23	一日の结束时
+;宴会のお知らせ		No.24	予告ありの宴会が映姫样参加可能な日
+SIF DIARY:30:24 == 0 && TALENT:30:思慕 && INRANGE(FLAG:宴会举办FLAG, 2, 4) && (FLAG:开始日 % 2 == 1)
+	CALL K30_WRITE_DIARY(24)
+;单薄的本见ちゃった	No.25	日常指令
+;地狱拉面传授	No.26	日常指令
+;面倒なお恼み		No.27	依赖
+
+;恋慕				No.30	一日の结束时
+;映姫样から推倒	No.31	イベント口上
+;怀孕愿望			No.32	一日の结束时
+;妊娠				No.33	怀孕口上と被るので一日ずらす
+SIF DIARY:30:33 ==0 && CFLAG:30:妊娠经过日数 >= 21 && GETBIT(CFLAG:30:1910, 5)
+	CALL K30_WRITE_DIARY(33)
+;分娩后				No.34	分娩口上と被るので一日ずらす
+SIF DIARY:30:34 ==0 && CFLAG:30:分娩经过日 >= 2 && GETBIT(CFLAG:30:1910, 5)
+	CALL K30_WRITE_DIARY(34)
+;纵割れ肛门		No.35	诶嘿嘿时Ａ性交经验100回以上でフラグ
+SIF DIARY:30:35 ==0 && GETBIT(CFLAG:30:1910, 7)
+	CALL K30_WRITE_DIARY(35)
+;小町と同时			No.36	一日の结束时
+;尻穴狂			No.37	一日の结束时
+;振动棒约会		No.38	追加シチュ
+;炮友				No.39	一日の结束时
+
+;初对面				No.50	初对面挨拶
+
+;=============================
+@DIARY_TEXT_K30, PAGENUM, MODE, PAGECOUNT
+;PAGENUM   =日记のパターン
+;MODE      =デイリー:一日结束时のデイリーイベントでの读み上げ
+;          =指令:[日记を读む]指令での读み上げ
+;PAGECOUNT =何页目に书かれているか
+;=============================
+#DIM PAGENUM
+#DIMS MODE
+#DIM PAGECOUNT
+#DIM 重复防止
+#DIM 日期
+#DIMS 表情
+#DIMS 台词
+#DIMS 服装
+#DIMS EFFECT
+VARSET LOCALS
+服装 = 服
+EFFECT =
+TFLAG:192 = 0
+SIF GETBIT(CFLAG:30:1500, 2)
+	SETANIMETIMER 50
+;口上色＠指令で呼び出された时、色を付ける
+CALL M_KOJO_COLOR_K30
+;日记内容
+;グループマッチに日记のIDを入れて、表示させたい颜绘を表示する。
+IF MODE == "デイリー"
+	;一时的に扩张颜绘に变更
+	VARSET LOCAL
+	LOCAL = FLAG:立绘种类
+	FLAG:立绘种类 = 1
+	LOCAL:1 = CFLAG:30:应用差分替换
+	CFLAG:30:应用差分替换 = 1
+	;カジュアルデーor流行热潮なら超棒的Ｔ恤衬衫
+	SIF YOUBI_MATCH(DAY, "金") || PAGENUM == 7
+		服装 = 服_变Ｔ
+	;页ごとに表情の指定
+	SELECTCASE PAGENUM
+		CASE 1, 2, 32
+			IF K30_DIARY_DATA(PAGENUM, 2) == "恋"
+				表情 = 笑颜
+				TFLAG:192 = -7
+			ELSE
+				表情 = %\@ PAGENUM == 1 ? 发情 # 睡眠 \@%
+			ENDIF
+		CASE 3, 4, 9, 11, 13, 14, 16, 17, 18, 20, 21, 22, 24, 32, 33, 36, 50
+			表情 = アニメ
+			SIF PAGENUM == 36
+				EFFECT = 照れ
+		CASE 5, 20, 25
+			表情 = 反抗
+		CASE 6, 7, 12, 26, 34
+			表情 = 笑颜
+		CASE 8, 10
+			表情 = 愤怒
+		CASE 15, 27, 31, 35
+			SELECTCASE K30_DIARY_DATA(PAGENUM, 5)
+				CASE "怒"
+					表情 = 愤怒
+				CASE "喜"
+					表情 = LOVE
+					EFFECT = 照れ
+				CASEELSE
+					表情 = 赤面
+					EFFECT = 照れ
+			ENDSELECT
+		CASE 23
+			表情 = 绝顶
+			服装 = 服_内衣
+			TFLAG:192 = -9
+		CASE 30, 37, 38
+			表情 = %\@ PAGENUM == 30 ? LOVE # 发情 \@%
+			TFLAG:192 = -7
+			SIF PAGENUM == 37
+				SETBIT CFLAG:1609, 0
+		CASE 39
+			表情 = 睡眠
+			EFFECT = 照れ
+	ENDSELECT
+	PRINTFORML 
+	CALL PRINT_FACE,30, 表情, 服装, "", EFFECT
+	;立绘种类を元に戻す
+	FLAG:立绘种类 = LOCAL
+	CFLAG:30:应用差分替换 = LOCAL:1
+ENDIF
+IF MODE == "指令"
+	;初见
+	IF !STRCOUNT(CSTR:30:0, "日记初见")
+		PRINTFORMDW 我很在意上面写了什么，于是哗啦哗啦地翻了几页
+		PRINTFORML
+		PRINTFORML ○月Ｘ日 □曜日 晴天
+		PRINTFORML
+		PRINTFORML 早上六点起床。身体状况-良好。今天休息。作为巡逻候补地是人里……
+		PRINTFORML …上午十一点。在人里附近发现了偷懒的小町。连同前几天的事情一起质问…
+		PRINTFORML ……下午一点。结束了斥责，就这样在人里巡逻………
+		PRINTFORMW ………………
+		PRINTFORMDW 与其说是日记，倒不如说是工作日报，托它的福，很容易就找到了相遇时候的事情
+		PRINTFORML
+		CALLF FIRSTTIME("日记初见")
+	;2回目以降、最初の页の前に
+	ELSEIF 重复防止 != DAY
+		;随意お说教の目标对象として名前だけ。神样に当たったら小町に
+		LOCAL = RAND(RANDOM_CHARANUM - 1) + 1
+		SIF TALENT:LOCAL:神灵
+			LOCAL = 76
+		PRINTFORMDL 总之随便翻开一页看看……
+		IF LOCAL == 76 || RAND:3 == 1
+			PRINTDATADW
+				DATAFORM 理所当然的是，小町的偷懒行为似乎都被阎魔大人掌握了
+				DATAFORM 上面写着早上、中午和深夜都对小町进行了说教
+				DATAFORM 上面写着对小町进行了长达3个小时的说教
+				DATAFORM 上面写着工作的繁忙，但似乎并没有特别的不满
+			ENDDATA
+		ELSE
+			PRINTDATADW
+				DATAFORM 上面写着对%CALLNAME:LOCAL%进行说教的事情
+				DATAFORM 上面写满了“应该对%K30_C_NAME(LOCAL,3)%说的话”
+				DATAFORM 上面依然写着像业务日报一样的日记
+				DATAFORM 上面写着去%CALLNAME:LOCAL%那里进行说教的计划
+				DATAFORM 上面写满了对部下的感谢和慰劳的话语
+			ENDDATA
+		ENDIF
+		PRINTFORMDL ―――――――――――――――――――――――――――――
+		PRINTFORMDL 再稍微往下读一点，就找到了写着关于我的地方
+		PRINTFORMW
+	ENDIF
+	重复防止 = DAY
+ENDIF
+PRINTFORMDL - %CALLNAME:30%的日记 --------------------------------------------------------------------------------------------------------
+PRINTL
+;CSTRに保存した日期を体裁整えて表示
+日期 = TOINT(K30_DIARY_DATA(PAGENUM, 0))
+IF 日期 != 0
+	SPLIT PRINT_DATE_F(日期), " ", LOCALS
+	PRINTFORML %REPLACE(LOCALS:1, "月", "月 ")% %GET_DAY(日期)%曜日　%K30_DIARY_DATA(PAGENUM, 1)%
+;不具合出たときの保险。记号バージョンも并记
+ELSE
+	LOCAL:1 = PAGENUM % 4
+	LOCAL:2 = PAGENUM % 9
+	LOCAL:3 = PAGENUM % 7
+	PRINTFORML %UNICODE(9829 + LOCAL:1)%之月 %UNICODE(9824 + LOCAL:2)%日 %UNICODE(945 + LOCAL:3)%曜日　%K30_DIARY_DATA(PAGENUM, 1)%
+ENDIF
+PRINTFORML 
+SELECTCASE PAGENUM
+	;初吻＠オプション次第でTINKOに接吻でも发生。ぼかした书き方にしておく
+	CASE 1
+		;恋慕と场所で简单な分岐
+		LOCAL = (K30_DIARY_DATA(PAGENUM, 2) == "恋")
+		PRINTFORML 对于自己\@ K30_DIARY_DATA(PAGENUM, 5) == "捧" ? 做了 # 或者被做了 \@事情的大胆，似乎还在怦怦直跳。
+		IF GROUPMATCH(K30_DIARY_DATA(PAGENUM, 4), "是非曲直厅", "自分的房间", "映姫的房间")
+			PRINTFORML 就算稍微闭上眼睛想冷静下来，那种感觉和各种各样的事情也会在脑海中盘旋
+			PRINTFORML 可是睁开眼睛看周围的话，又会随着风景清晰地回忆起做过的事情
+			PRINTFORML 这样下去感觉今天晚上都没法入睡了。
+		ELSE
+			PRINTFORML %K30_DIARY_DATA(PAGENUM, 4)%。在一段时间内，每次经过那里，都会想起很多事情吧。
+			PRINTFORML 暂时还是避免在那一带进行教诲吧。完全没有自信能像平常一样说话。
+			PRINTFORML 从没想过自己竟然会有这么动摇的时候。
+		ENDIF
+		PRINTFORML
+		PRINTFORML 从拘谨的阎魔\@ LOCAL ? 到终于在别馆变得坦率 # 或是仍然迷茫的 \@我，%K30_DIARY_DATA(PAGENUM, 3)%会怎么想呢。
+		PRINTFORM 不会觉得我不端庄吧。
+		IF LOCAL
+			PRINTFORML 还是说会回应我的心意呢。
+		ELSE
+			PRINTFORML 如果幻灭了该怎么办呢。
+		ENDIF
+		PRINTFORMW 总觉得有点怨恨自己无论什么事情都会想很多的性格。
+		IF MODE == "指令"
+			表情 = 赤面
+			TFLAG:192 = -6
+			台词 = 「…………………………」/「…………………………」
+		ENDIF
+	;处女丧失
+	CASE 2
+		;陷落、积极具合で简单な分岐。思慕以下は中止口上前提
+		LOCALS = %K30_DIARY_DATA(PAGENUM, 2)%
+		SELECTCASE LOCALS
+			CASE "无"
+				PRINTFORML 果然我还是不需要肉体吧。
+				PRINTFORMW 这么痛苦，一定是因为我拥有了与我不相称的东西。
+			CASE "思"
+				PRINTFORML 我的第一次被%K30_DIARY_DATA(PAGENUM, 3)%夺走了。
+				PRINTFORML 跨越了作为阎魔不能逾越的界限。
+				PRINTFORML 但是明明是被那样夺走的，现在的我却无法从心底否定那个人。
+				PRINTFORMW 好痛苦。非常、非常痛苦。
+			CASE "恋"
+				PRINTFORML 终于能和%K30_DIARY_DATA(PAGENUM, 3)%结合在一起了。
+				PRINTFORML 想想，我让那个人等了很久。竟然没有被抛弃，真是太好了。
+				PRINTFORML 今天也是，我只顾着自己的事情，%K30_DIARY_DATA(PAGENUM, 3)%怎么样了，我都记不清了。
+				PRINTFORML
+				PRINTFORML 从今以后，我会更加更加地在心灵和身体上都依偎在那个人身边。
+				PRINTFORML 我想找到%K30_DIARY_DATA(PAGENUM, 3)%想要的事情，会开心的事情。
+				PRINTFORMW 为TA做这些事情，会让我觉得很开心
+		ENDSELECT
+		IF MODE == "指令"
+			IF LOCALS == "恋" 
+				TFLAG:192 = -6
+				表情 = LOVE
+				台词 = 「…………………………」/「………………正如上面写的一样，哦」
+			ELSE
+				表情 = 睡眠
+				{
+				台词 = 「…我并不是没有想说的话」
+					/「但是…如果%K30_C_NAME(MASTER)%能对现在的我的心意保持真诚的话」
+					/「那样就足够了。我可以原谅你的罪过」
+				}
+			ENDIF
+		ENDIF
+	;弹幕胜负映姫样胜ち
+	CASE 3
+		PRINTFORML 今天在%K30_DIARY_DATA(PAGENUM, 4)%被%K30_DIARY_DATA(PAGENUM, 3)%挑战了弹幕胜负。
+		IF GETBIT(CFLAG:30:1910, 0)
+			PRINTFORML 本来只是想测试一下实力，没想到竟然被逼到了差点输掉的地步。
+			PRINTFORML 我并没有疏忽锻炼，但是作为阎魔，这样实在太没用了。
+		ELSE
+			PRINTFORML 虽然总算是没有落后，但也几次险象环生。
+			PRINTFORML 如果继续锻炼的话，肯定还会进步。不能因为赢了就得意忘形。
+		ENDIF
+		PRINTFORMW 我也需要更加精进才行。
+		IF MODE == "指令"
+			PRINTFORML
+			PRINTFORMDL 之后也密密麻麻地写满了弹幕胜负的反省和分析
+			PRINTFORMDW 阎魔大人的强大秘诀一定就是这份认真…
+			表情 = アニメ
+			IF RAND:2 == 1
+				{
+				台词 = 「在胜负中全力以赴是彼此理所当然的事情」
+				/「那么就只能在事前的准备和战术上拉开差距了」
+				/「做这些是理所当然的事情」
+				}
+			ELSE
+				{
+				台词 = 「%\@ GETBIT(CFLAG:1910, 0) ? 第一次比试就被逼到那种程度 # 结果我并不觉得是轻松获胜 \@%所以」
+				/「我根本没想过要放水」
+				/%\@ CFLAG:30:弹幕胜负胜利 ? 「而且结果我还是输给了你…」/「看来我还是不够成熟啊」
+				#「首先，如果我输了，那会关系到阎魔的威严」/「我会一次又一次地击退你的挑战的」 \@%
+				}
+			ENDIF
+		ENDIF
+	;弹幕胜负映姫样负け
+	CASE 4
+		LOCAL = GETBIT(CFLAG:30:1910, 1)
+		PRINTFORML 今天是和%K30_DIARY_DATA(PAGENUM, 3)%的弹幕胜负。
+		PRINTFORM 我原本就觉得TA拥有非凡的力量，
+		IF LOCAL
+			PRINTFORML 但能战胜阎魔，一雪前耻，这确实是出乎意料。
+		ELSE
+			PRINTFORML 竟然能直接战胜阎魔，真是深不可测。
+		ENDIF
+		PRINTFORML 我也因为工作繁忙而疏于修炼了。
+		PRINTFORMW 必须想办法抽出时间来进行训练。
+		表情 = アニメ
+		IF MODE == "指令"
+			PRINTFORML 
+			PRINTFORMDW 阎魔大人的上进心真是令人钦佩…
+			IF RAND:2 == 1
+				{
+				台词 = 「既然您能打败我」
+				/「那下次挑战的，果然还是赫卡提亚大人吗？」
+				/%\@ CFLAG:113:弹幕胜负胜利
+				?「诶…！？ 已经赢了吗…？」
+				/「真是非常强大的力量啊……」
+				#「那位大人真的非常强」
+				/「如果即便如此您也要挑战的话」
+				/「特训，我也奉陪吧」 \@%
+				}
+			ELSE
+				{
+				台词 = 「真没想到%\@ LOCAL ? 您竟然能提升到这种程度 # 会被那么轻易地击破 \@%」
+				/「下次就轮到我作为挑战者向您挑战了」
+				/「……下次决胜负的时候，要不要稍微改变一下规则呢」
+				/「不是一对一的对战，而是把妖精和亡灵、莉莉白也卷进来的形式」
+				/「我比较熟悉这种形式，感觉可以作为对您比较合适的让步」
+				}
+			ENDIF
+		ENDIF
+	;お小言もらった
+	CASE 5
+		LOCAL:0 = (TOINT(K30_DIARY_DATA(PAGENUM, 2))) / 1000
+		LOCAL:1 = (TOINT(K30_DIARY_DATA(PAGENUM, 2))) % 1000 
+		IF LOCAL:1 <= 60
+			LOCALS = 才说了一个小时
+		ELSEIF LOCAL:1 <= 90
+			LOCALS = 才说了一个半小时
+		ELSE
+			LOCALS = 聊了大约两个小时，明明接下来才是正题
+		ENDIF
+		PRINTFORML 虽然从相遇的时候就觉得TA是个会惹事的人，但是没想到比预想的还要早，自己也吓了一跳。
+		SELECTCASE LOCAL:0
+			CASE 0
+				PRINTFORML 偶然看到%K30_DIARY_DATA(PAGENUM, 3)%的样子稍微有些奇怪
+				PRINTFORML 稍微调查了一下，令人无语的是，TA竟然把女性的内衣塞进了怀里。
+			CASE 1
+				PRINTFORML 我不知道%K30_DIARY_DATA(PAGENUM, 3)%是怎么长大的，但是明显和人之间的距离感有问题。
+				PRINTFORML TA竟然对我这个并不怎么亲近的人进行过度的身体接触，或者说是更过分的事情。
+			CASE 2
+				PRINTFORML 看来%K30_DIARY_DATA(PAGENUM, 3)%不太理解常识这种东西。
+				PRINTFORML 竟然当着别人的面，把手伸向了我重要的地方。
+		ENDSELECT
+		PRINTFORML 这种事情当然是黑色的，黑透了。我立刻让TA坐下，向TA讲述了关于正确的人生道路的教诲。
+		PRINTFORML
+		PRINTFORML %LOCALS%%K30_DIARY_DATA(PAGENUM, 3)%似乎快要受不了了，所以没办法，我只好尽快结束谈话。
+		PRINTFORML 但是我完全不觉得%K30_DIARY_DATA(PAGENUM, 3)%有好好反省。
+		PRINTFORML 总觉得TA是和小町同一种类的人类。
+		PRINTFORMW 看来要像对小町一样，多次敦促TA反省了。
+		IF MODE == "指令"
+			PRINTFORML
+			PRINTFORMDL 拜托饶了我吧，说什么提前结束了谈话…
+			IF TALENT:30:恋慕
+				PRINTFORMDW 但是，最近说教好像变少了…？
+			ELSE
+				WAIT
+			ENDIF
+			表情 = LOVE
+			TFLAG:192 = -7
+			台词 = 「说教的次数减少了…？」/「这…也许是这样」/「因为……你看，现在…」/
+			SELECTCASE LOCAL:0
+				CASE 0
+					LOCALS = %TEXTR("「我也…对您的内衣，感兴趣了……♥」/「如果是我的，想让您…拿着呢……♥」")%
+				CASE 1
+					LOCALS = %TEXTR("「如果能和您接触…我…无论何时…♥」/「现在已经…我想从我这里，和您…接触了呢……♥」")%
+				CASE 2
+					LOCALS = %TEXTR("「这里…已经，是我和您重要的地方了…♥」/「我也想…把您重要的地方，变成我的…♥」")%
+			ENDSELECT
+			台词 =%台词%%LOCALS%
+		ENDIF
+	;变Ｔ
+	CASE 6
+		PRINTFORML 为什么会变成这样。
+		PRINTFORMW 为什么我会遇到这种事。
+		IF MODE == "指令"
+			PRINTFORML
+			PRINTFORMDW 日记到这里就中断了…
+			IF RAND:2 == 1
+				表情 = 反抗
+				台词 = 「…需要说明吗？」
+			ELSE
+				表情 = 睡眠
+				台词 = 「…我没有什么好说的」
+			ENDIF
+		ENDIF
+	;流行热潮
+	CASE 7
+		PRINTFORML 终于，今天结束了。
+		PRINTFORMW 现在只想对此表示感谢。
+		IF MODE == "指令"
+			PRINTFORML
+			PRINTFORMDW 日记到这里就结束了…
+			表情 = 反抗
+			IF FLAG:ファッション == 62
+				表情 = 笑颜
+				台词 = 「真没想到，竟然还有第二次」/「世上的事情，我也有很多不明白的……」
+			ELSEIF RAND:2 == 1
+				台词 = 「…都已经结束了的事情了」
+			ELSE
+				台词 = 「…虽然记录下来了，但是不想触碰」
+			ENDIF
+		ENDIF
+	;お说教たいむ
+	CASE 8
+		PRINTFORML 从%K30_DIARY_DATA(PAGENUM, 3)%那里收到信的小町，当天就来我这里露面了。
+		PRINTFORML 本人说在%K30_DIARY_DATA(PAGENUM, 4)%只是偶然，并不是偷懒。
+		PRINTFORML 为什么非要说这种阎魔一眼就能看穿的谎言呢。看不出任何反省之色，所以姑且先敲了一下。
+		PRINTFORML 总之，就这样放任不管对小町来说不是什么好事。
+		PRINTFORMW 在TA理解之前，必须反复地进行说教。
+		IF MODE == "指令"
+			PRINTFORML
+			PRINTFORMDL 剩下的页面上密密麻麻地写满了说教的内容
+			PRINTFORMDW 明明已经听过这么多遍了，但还是偷懒的小町真是…
+			IF RAND:2 == 1
+				表情 = アニメ
+				{
+				台词 = 「每次说教的内容我都会记录下来哦」
+				/「如果总是说同样的事情，听的人也会听不进去的」
+				/「……没有取得相应的效果，果然还是我做得不够好啊」
+				}
+			ELSE
+				表情 = 反抗
+				{
+				台词 = 「那孩子在关键时刻真的很可靠」
+				/「只要平时稍微注意一下，应该就能更上一层楼了…」
+				/「遗憾的是，以现在的状态无法让TA离开我的身边」
+				/「为什么不为了追求结果而更加努力呢…」
+				}
+			ENDIF
+		ENDIF
+	;事务仕事手传い
+	CASE 9
+		PRINTFORML 今天让%K30_DIARY_DATA(PAGENUM, 3)%来帮忙工作。
+		PRINTFORML 意外的是，TA作为工作助手非常能干。
+		PRINTFORML 真没想到TA竟然能像御阿礼之子一样胜任工作。
+		PRINTFORMW 虽然只能给出微薄的工资，很抱歉，但是如果以后有机会，还想请TA帮忙。
+		IF MODE == "指令"
+			PRINTFORML
+			PRINTFORMDW 既然是一个人胜任了那么多工作，如果能帮上忙就再好不过了…
+			IF RAND:2 == 1
+				表情 = 笑颜
+				{
+				台词 = 「能有%K30_C_NAME(MASTER)%来帮忙，真是帮大忙了」
+				/「工作倒是不苦，但是一个人做和两个人做完全不一样」
+				/「而且…能和您在一起，我非常开心……♥」
+				}
+			ELSE
+				表情 = 笑颜
+				台词 = 「工作日一整天都埋头在办公桌前…」/「但是如果能和您一起度过，那也像是奖励一样吧」/
+				IF DAY % 2 == 1
+					台词 = %台词%「所以明天下午也等着您哦。拜托了」
+				ELSEIF TIME < 550
+					台词 = %台词%「对了…今天下午有时间吗？」/「稍微来一下就好，我想见您」
+				ELSEIF TCVAR:30:帮忙工作量
+					台词 = %台词%「今天也谢谢您的帮忙」/「以后也请多多关照」
+				ELSEIF STRFIND(CSTR:30:1, "工作拝见") > -1
+					台词 = %台词%「您能来看我，我真的非常欢迎」/「下次也拜托您了」
+				ELSE
+					表情 = 反抗
+					台词 = %台词%「……所以今天才这么寂寞吗？」/「作为补偿，之后要好好陪我哦」
+				ENDIF
+			ENDIF
+		ENDIF
+	;映姫样がぶん殴った
+	CASE 10
+		PRINTFORML 做了不该做的事。因为愤怒，最终还是打了%K30_DIARY_DATA(PAGENUM, 3)%。
+		PRINTFORML 平时我都会以镜子里映出的身影为原型，写下罪状，但那个时候我完全凭着冲动，甚至不记得写了什么。
+		PRINTFORM 所以才揍了TA。
+		IF K30_DIARY_DATA(PAGENUM, 2) == "倒"
+			PRINTFORML 没有稍微控制力度，%K30_DIARY_DATA(PAGENUM, 3)%一下子就倒下了。
+			PRINTFORML 虽然觉得做得太过分了，但TA摇摇晃晃地自己站了起来。
+		ELSE
+			PRINTFORML 应该相当疼吧。打下去的声音也是我至今为止从未听过的那么响。
+			PRINTFORML 可是%K30_DIARY_DATA(PAGENUM, 3)%只是皱了皱眉头，之后还像平常一样行动。
+		ENDIF
+		PRINTFORMW 真不知道该怎么说，真是个结实的人啊。
+		IF MODE == "指令"
+			PRINTFORML
+			PRINTFORMDW 看来TA并不是一直都用那种气势来敲打罪人的…
+			IF RAND:2 == 1
+				表情 = アニメ
+				台词 = 「%\@ LOCAL ? 哎呀，第二天就 # 被那样对待 \@%完全没事了」/「您真是个结实的人啊…」
+			ELSE
+				表情 = 反抗
+				{
+				台词 = 「我知道%K30_C_NAME(MASTER)%很结实了」
+				/「我还知道另一件事」
+				/「您真是个记吃不记打的人，对吧……」
+				}
+			ENDIF
+		ENDIF
+	;天气:ぱんつの日
+	CASE 11
+		PRINTFORML 真是奇怪的天气啊。
+		PRINTFORML 从未听说过内衣被风吹起在空中飞舞的。
+		PRINTFORML 从某种意义上来说，这也算是异变的一种吧。
+		PRINTFORML 如果真是这样，那么幕后黑手一定是像欲望集合体一样的人物。
+		PRINTFORML
+		PRINTFORML 这么一想，有一个作为首谋者嫌疑的人浮现在我的脑海里。
+		IF GETBIT(CFLAG:1910, 4)
+			PRINTFORML TA是那种被发现可疑迹象后，会从怀里掏出别人的内衣的人。
+			PRINTFORM 几乎可以断定是黑幕了。
+		ELSE
+			PRINTFORML 虽然没有确凿的证据，但是不怀疑那么一个对欲望忠实的人反而更难。
+		ENDIF
+		PRINTFORMW 今后还是不要掉以轻心比较好。
+		IF MODE == "指令"
+			PRINTFORML
+			PRINTFORMDW 虽然没有指名道姓，但似乎是被扣上了一顶很冤枉的帽子…
+			表情 = 反抗
+			IF RAND:2 == 1
+				台词 = 「……从平时的行为来考虑，这样想也是理所当然的」
+			ELSE
+				{
+				台词 = 「…内衣在空中飞舞的景象真是让人提不起劲啊」
+				/「事态变得奇怪是毫无疑问的」
+				/「您真的没有参与其中吗…？」
+				}
+			ENDIF
+		ENDIF
+	;赠り物(GOOD)
+	CASE 12
+		IF K30_DIARY_DATA(PAGENUM, 5) == "恋"
+			PRINTFORML 又多了一件宝物。
+			PRINTFORML %K30_DIARY_DATA(PAGENUM, 2)%。仅仅是收到%K30_DIARY_DATA(PAGENUM, 3)%的礼物就已经很开心了，
+			PRINTFORML 竟然还送我这么棒的东西，简直像做梦一样。
+			PRINTFORMW 连脑袋里都软绵绵的。今天恐怕睡不着了。
+		ELSE
+			PRINTFORML 今天被%K30_DIARY_DATA(PAGENUM, 3)%吓了一跳。
+			IF K30_DIARY_DATA(PAGENUM, 4) == "香霖堂"
+				IF GIFTSHOP_NAME(5) == "香霖堂"
+					PRINTFORM 香霖堂
+				ELSE
+					PRINTFORM 魔法之森店
+				ENDIF
+			ELSE
+				PRINTFORM %K30_DIARY_DATA(PAGENUM, 4)%店
+			ENDIF
+			PRINTFORML 因为TA把一见钟情的%K30_DIARY_DATA(PAGENUM, 2)%当场送给了我。
+			PRINTFORML 太开心了，一直兴高采烈地看着礼物，结果完全到了这个时间。明明还有要做的事。
+			PRINTFORML 我自己也觉得作为阎魔这样好吗，但是开心的事就是没办法。
+			PRINTFORMW 以后要一点一点地回报%K30_DIARY_DATA(PAGENUM, 3)%。
+		ENDIF
+		IF MODE == "指令"
+			PRINTFORML
+			PRINTFORMDW 如果能让TA这么高兴，送礼物的人也会很开心的…
+			IF RAND:2 == 1
+				表情 = 笑颜
+				{
+				台词 = 「和您在一起，真的宝物会越来越多」
+				/「要重新说一次感谢才行」
+				//「谢谢您，%K30_C_NAME(MASTER)%」
+				}
+			ELSE
+				表情 = アニメ
+				{
+				台词 = 「我一直都在从您那里获得各种各样的东西」
+				/「我有没有好好地回报您呢…？」
+				/「总觉得好像积攒了很多想为您做的事情」
+				/「%K30_C_NAME(MASTER)%有什么想让我做的事情吗？」
+				}
+			ENDIF
+		ENDIF
+	;赠り物(NORMAL)
+	CASE 13
+		PRINTFORML 从%K30_DIARY_DATA(PAGENUM, 3)%那里收到了很棒的%K30_DIARY_DATA(PAGENUM, 2)%
+		PRINTFORML 考虑到我的喜好，饱含心意的礼物。果然还是坦率地感到高兴。
+		PRINTFORMW 姑且先好好地收藏起来吧。也必须考虑一下回礼才行。
+		IF MODE == "指令"
+			PRINTFORML
+			PRINTFORMDW 虽然是选择了比较稳妥的东西，但没选错真是太好了…
+			表情 =アニメ
+			IF RAND:2 == 1
+				{
+				台词 = 「那个%K30_DIARY_DATA(PAGENUM, 2)%啊」
+				/「当然现在也好好地收藏着哦」
+				/「但是每次和您见面，都好像收到了比那个更好的东西」
+				/「几乎都没有拿出来过…总觉得有点抱歉」
+				}
+			ELSE
+				TFLAG:192 = -6
+				表情 = 笑颜
+				{
+				台词 = 「礼物也好，回忆也好…真的收到了各种各样的东西呢」
+				/「必须要一点一点地回报才行」
+				/「所以…如果今后也能和我在一起，我会很开心的…♥」
+				}
+			ENDIF
+		ENDIF
+	;赠り物(BAD)
+	CASE 14
+		IF K30_DIARY_DATA(PAGENUM, 4) == "香霖堂"
+			IF GIFTSHOP_NAME(5) == "香霖堂"
+				PRINTFORM 香霖堂
+			ELSE
+				PRINTFORM 魔法之森店
+			ENDIF
+		ELSE
+			PRINTFORM %K30_DIARY_DATA(PAGENUM, 4)%店
+		ENDIF
+		PRINTFORML 该如何处理TA送的%K30_DIARY_DATA(PAGENUM, 2)%呢。
+		PRINTFORML 因为我知道%K30_DIARY_DATA(PAGENUM, 3)%并没有恶意，所以反而更不知所措。
+		PRINTFORML 说起来，以前我还是地藏的时候，曾经收到过附近孩子们供奉的祭品。
+		PRINTFORML 我还记得，当时我微笑着看着他们模仿大人，供奉石头和虫子。
+		PRINTFORMW 看到这个%K30_DIARY_DATA(PAGENUM, 2)%，我无论如何都会想起那时候的事情。
+		IF MODE == "指令"
+			PRINTFORML
+			PRINTFORMDW 没想到TA竟然那么不喜欢那个%K30_DIARY_DATA(PAGENUM, 2)%…稍微有点沮丧…
+			IF RAND:2 == 1
+				表情 = 反抗
+				{
+				台词 = 「确实，打个比方可能稍微有点过分了」
+				/「就算礼物包含着赠送者的心意，但困扰的东西就是困扰的…」
+				/「请好好观察一下赠送对象的喜好」
+				}
+			ELSE
+				表情 = 赤面
+				{
+				台词 = 「那个%K30_DIARY_DATA(PAGENUM, 2)%最后怎么样了，是吗？」
+				/「嗯，那个…那个……」
+				/「……对不起，我拿到当铺换钱了」
+				/「用来充实修缮是非曲直厅的费用…」
+				}
+			ENDIF
+		ENDIF
+	;掀裙子
+	CASE 15
+		LOCALS = %K30_DIARY_DATA(PAGENUM, 2)%
+		IF K30_DIARY_DATA(PAGENUM, 5) == "怒"
+			PRINTFORML 难以置信。他到底在想什么啊。
+			IF GROUPMATCH(K30_DIARY_DATA(PAGENUM, 4), "是非曲直厅", "自分的房间")
+				PRINTFORML 话说回来，从见到TA的时候就觉得TA的态度很奇怪，
+			ELSE
+				PRINTFORML 在像%K30_DIARY_DATA(PAGENUM, 4)%这样谁都能看到的地方，
+			ENDIF
+			PRINTFORML 竟然突然掀起我的裙子，真是令人难以置信。简直是奇耻大辱。
+			PRINTFORML 我早就知道%K30_DIARY_DATA(PAGENUM, 3)%是个怪人，但看来我还是低估TA了。
+			PRINTFORML
+			PRINTFORML 还是说外面的世界到处都是这样的人类呢？
+			PRINTFORML 这么一想，我就能理解那边的阎魔大人为什么那么忙了。
+			PRINTFORMW 如果可以的话，我真不想和TA们扯上关系。
+		ELSEIF K30_DIARY_DATA(PAGENUM, 5) == "照"
+			PRINTFORML 难以置信。TA到底在想什么啊。
+			PRINTFORML 我不该因为习惯了和%K30_DIARY_DATA(PAGENUM, 3)%见面就放松警惕。
+			PRINTFORMW 平时一直表现得很正常，却突然掀起我的裙子，真是令人难以置信。
+			PRINTFORML
+			PRINTFORML 可是我却不知为何生气不起来。明明%LOCALS%被TA看光了。
+			PRINTFORML 现在回想起来，涌上心头的与其说是愤怒，不如说是羞耻。
+			PRINTFORMW 我难道也被TA带得变得奇怪了吗？
+		ELSE
+			PRINTFORML 现在回想起来还是觉得很羞耻。我竟然真的做了那种事。
+			PRINTFORML 主动把裙子里的东西展示给别人看，我真是疯了。
+			IF GROUPMATCH(K30_DIARY_DATA(PAGENUM, 4), "是非曲直厅", "自分的房间")
+				PRINTFORML 万一被部下看到，我到底该怎么办啊。
+			ELSE
+				PRINTFORML %K30_DIARY_DATA(PAGENUM, 4)%这种地方，谁看到都不奇怪啊。
+			ENDIF
+			PRINTFORML
+			IF LOCALS == "没穿の"
+				PRINTFORML 但是被%K30_DIARY_DATA(PAGENUM, 3)%看到我真正羞耻的地方时，
+			ELSE
+				PRINTFORML 但是被%K30_DIARY_DATA(PAGENUM, 3)%仔细地观察着%LOCALS%时，
+			ENDIF
+			PRINTFORML 从后背涌上来的那种颤抖、那种战栗的感觉。至今都无法忘记。
+			PRINTFORML 如果%K30_DIARY_DATA(PAGENUM, 3)%再次拜托我，我大概是无法拒绝的吧。
+			PRINTFORMW 甚至有种我会欣然接受的预感。
+		ENDIF
+		IF MODE == "指令"
+			PRINTFORML
+			IF LOCALS == "怒"
+				PRINTFORMDW 嘛，这是理所当然的反应。还记得之后为了平复TA的心情费了不少功夫…
+			ELSE
+				PRINTFORMDW 虽然预想过TA会做出意外的反应，但这还真是…
+			ENDIF
+			IF LOCALS == "怒"
+				表情 = 反抗
+				{
+				台词 = 「嗯，我也记得很清楚哦」
+				/「在那种情况下，我没有任由愤怒摆布而挥舞悔悟棒」
+				/「我觉得我能在最后关头保持理智真是太好了」
+				/「……不然的话，就糟糕了」
+				}
+			ELSEIF LOCALS == "照"
+				TFLAG:192 = -6
+				表情 = 赤面
+				{
+				台词 = 「啊…那里……」
+				/「被您读出来了，是吗…」
+				/「……您可以……当做什么都没发生吗？」
+				}
+			ELSE
+				表情 = LOVE
+				TFLAG:192 = -7
+				IF K30_BE_SEEN() == 0
+					台词 = 「……接下来的事情，现在开始做…我没问题哦♥」
+				ELSE
+					台词 = 「……只要是在%K30_C_NAME(K30_FIND_AROUND(),2)%看不到的地方…就可以哦♥」
+				ENDIF
+			ENDIF
+		ENDIF
+	;说法10回结束
+	CASE 16
+		LOCALS = %K30_DIARY_DATA(PAGENUM, 4)%
+		PRINTFORML %K30_DIARY_DATA(PAGENUM, 3)%经常来我这里听我说教。
+		PRINTFORML 我还以为TA听一次就会像其他人一样逃走，真是出乎意料。
+		IF GROUPMATCH(LOCALS, "是非曲直厅", "白玉楼", "畜生界", "三途之川")
+			PRINTFORML TA难不成是为了听阎魔的故事特意搬到彼岸居住的吗？我不太明白。
+		ELSE
+			PRINTFORML 特意从%LOCALS%渡过三途之川来听阎魔的故事，真是个很闲的人。
+		ENDIF
+		PRINTFORML 总之，应该被监视的对象主动靠近，也省去了不少麻烦，并不是坏事。
+		PRINTFORMW 每次说教时TA泡的茶，也渐渐地符合我的喜好了，这一点也值得肯定。
+		IF MODE == "指令"
+			PRINTFORML
+			PRINTFORMDW 原来每次都认真地听我讲话，是出于这种原因啊…
+			表情 = 笑颜
+			IF RAND:2 == 1
+				{
+				台词 = 「虽然当时我是这么写的」
+				/「现在回想起来，是啊…」
+				/「%K30_C_NAME(MASTER)%主动来听我讲故事…我很高兴」
+				/「我要讲什么，我从前一天就开始一直在想了」
+				}
+			ELSE
+				{
+				台词 = 「……虽然找了个像模像样的理由」
+				/「但至今为止，还没有人特意来向阎魔请教」
+				/「%K30_C_NAME(MASTER)%不来的日子…我有点寂寞哦」
+				}
+			ENDIF
+		ENDIF
+	;觉からお手纸
+	CASE 17
+		PRINTFORML 收到了觉的定期报告。
+		PRINTFORML 和往常一样，TA并没有让自己的宠物来，不知为何让%K30_DIARY_DATA(PAGENUM, 3)%跑腿。
+		PRINTFORML 我稍微担心是不是发生了像以前那样的异变，但似乎并没有。
+		PRINTFORML 地底大致和平，只是出现了一些令人在意的传闻。
+		PRINTFORMW 将应对的方针交给TA负责就没问题。我只需要拜托TA报告情况就可以了。
+		IF MODE == "指令"
+			PRINTFORML
+			PRINTFORMDL 阎魔大人似乎对觉评价很高啊…
+			IF RAND:2 == 1
+				表情 = アニメ
+				{
+				台词 = 「揭露罪行的阎魔和看透内心的觉」
+				/「真是相似的人啊。无论人还是妖，都被人敬而远之这一点也一样」
+				/「从这个意义上来说，我对她抱有亲近感」
+				/「…还有她内心毫不动摇的坚定以及对自己评价之高」
+				/「那个是不得不加以肯定的」
+				}
+			ELSE
+				TFLAG:192 = -2
+				{
+				LOCALS = 「我听觉也说过我是个容易相处的人」
+				/「据说是因为我不会毫无意义地戒备被人读心，也不会奇怪地奉承别人」
+				/「确实，我没有什么需要隐瞒的事情，所以大概就是这样吧」
+				}
+				台词 = 「…………」/「只是，最近…只有和你在一起的时候…」/「我稍微…有点害怕她…」
+				表情 = 赤面
+			ENDIF
+		ENDIF
+	;ヘカ样からお手纸
+	CASE 18
+		LOCAL = (K30_DIARY_DATA(PAGENUM, 2) == "变Ｔ")
+		PRINTFORML 我读了%K30_DIARY_DATA(PAGENUM, 3)%送来的信，
+		IF LOCAL
+			PRINTFORML 这个指示到底是什么意思。
+			PRINTFORML 为什么要换制服呢。
+			PRINTFORMW 希望这只是个错误或者噩梦。
+		ELSE
+			PRINTFORML 赫卡提亚大人的指示又一次和期待的有所不同。
+			PRINTFORMW 这样的日子到底还要持续到什么时候呢。
+		ENDIF
+		IF MODE == "指令"
+			PRINTFORML
+			PRINTFORMW ……阎魔大人，您辛苦了
+			表情 = アニメ
+			IF LOCAL && RAND:2 == 1
+				台词 = 「看来这既不是玩笑也不是噩梦了呢…」
+			ELSEIF RAND:2 == 1
+				台词 = 「总有一天会传来好消息的…」/「总有一天…一定会的…」
+			ELSE
+				台词 = 「已经，无力回天了吗…」
+			ENDIF
+		ENDIF
+	;浴室逐出
+	CASE 19
+		PRINTFORML 确实%K30_DIARY_DATA(PAGENUM, 4)%的澡堂很难知道是谁在里面。
+		PRINTFORML 但是像那样堂堂正正地闯进来，实在让人无语。
+		PRINTFORML 怎么想都是故意的。真是个无聊的人
+		PRINTFORML 我本想认真地击中TA，展开了弹幕，却还是被%K30_DIARY_DATA(PAGENUM, 3)%逃掉了。
+		PRINTFORML
+		PRINTFORML 下次再遇到这种情况，是不是应该拿着符卡一起进澡堂，对此我感到很犹豫。
+		PRINTFORMW 要是能在不宣告的情况下击中TA，说不定TA就能稍微长点记性。
+		IF MODE == "指令"
+			PRINTFORML
+			PRINTFORMW 在没有预告的情况下使用阎魔大人的符卡，是不是有点太危险了…要注意啊
+			表情 = アニメ
+			IF RAND:2 == 1
+				台词 = 「嘛，当时我是觉得，这样做才能给TA一个教训……」
+			ELSE
+				{
+				台词 = 「有时候我很难判断您是认真的还是在开玩笑…」
+				/「如果是我那时候的话，毫不留情地把您当成黑幕来处理也是很正常的」
+				/「实际上，我那时候是拿着符卡进澡堂的…」
+				/「现在想想，真庆幸当时没有真的展开符卡并直接命中您」
+				}
+			ENDIF
+		ENDIF
+	;思慕
+	CASE 20
+		PRINTFORML 一想到%K30_DIARY_DATA(PAGENUM, 3)%的事情，工作就完全无法集中精力。
+		PRINTFORMW 虽然有点早，但今天还是早点睡吧。
+		IF MODE == "指令"
+			IF RAND:2 == 1
+				表情 = アニメ
+				{
+				台词 = 「……那时候我总是犹豫不决」
+				/「第一次经历这样的事情，而且还是无法明确区分黑白的事情」
+				/「真是让人感到焦躁」
+				}
+			ELSE
+				表情 = 赤面
+				TFLAG:192 = -6
+				台词 = 「不知道我说的是什么吗？」/「也不是什么大不了的事情，不用在意哦」
+			ENDIF
+		ENDIF
+	;抱き付いた
+	CASE 21
+		PRINTFORML 被%K30_DIARY_DATA(PAGENUM, 3)%抱住，总会产生一种不可思议的感觉。
+		PRINTFORML 如果是稍微往前一段时间的话，我肯定会推开TA并拒绝TA，为什么现在会这样呢。
+		PRINTFORML 连自己的事情都不明白的阎魔，真是可悲至极
+		PRINTFORMW 我到底是怎么了。
+		IF MODE == "指令"
+			表情 = アニメ
+			IF RAND:2 == 1
+				{
+				台词 = 「我一直以为自己什么都明白」
+				/「现在这样重新读一遍，发现自己对没有经历过的事情还是会感到不知所措呢…」
+				/「真是让人感到羞愧」
+				}
+			ELSE
+				{
+				台词 = 「原来阎魔也会因为思考不明白的事情而感到不安啊」
+				/「直到最近我才终于意识到了这一点」
+				/「即使能冷静地应对镜子里映出的他人的身影」
+				/「一旦涉及到自己的事情…就总是无法顺利解决」
+				}
+			ENDIF
+		ENDIF
+	;何か钓れた
+	CASE 22
+		LOCALS = %K30_DIARY_DATA(PAGENUM, 2)%
+		PRINTFORML 今天特意去了%K30_DIARY_DATA(PAGENUM, 4)%，和%K30_DIARY_DATA(PAGENUM, 3)%一起钓鱼。
+		IF STRCOUNT(LOCALS, "鱼")
+			PRINTFORML 虽然几乎都是第一次做的事情，但是在%K30_DIARY_DATA(PAGENUM, 3)%的帮助下，我钓到了%LOCALS%。
+			PRINTFORML 虽然不是我一个人的成果，但我非常高兴。但是不仅仅如此，
+			PRINTFORML 或许更让我高兴的是，能和%K30_DIARY_DATA(PAGENUM, 3)%一起做些什么。
+		ELSEIF LOCALS == "素材"
+			PRINTFORML 几乎都是第一次体验的事情，我战战兢兢地放下鱼线，不知为何钓上来珍贵的调合素材。
+			PRINTFORML 我有点苦恼，这也算是钓鱼的成果吗？不过%K30_DIARY_DATA(PAGENUM, 3)%也喜欢调合，所以我就把素材送给TA了。
+			PRINTFORML TA非常感谢我，也很高兴。仅仅是因为这样，就觉得今天去钓鱼真是太值了。
+		ELSE
+			PRINTFORML 刚开始感受到拉扯时的兴奋感，然后我把鱼线拉了上来，可惜钓上来的却是%LOCALS%。
+			IF LOCALS == "ただの青蛙"
+				PRINTFORML 我本想失望地把它放回去，但是%K30_DIARY_DATA(PAGENUM, 3)%想要，我就让给TA了。
+				PRINTFORML 似乎TA既能用来做料理也能用来调合。这是我所不具备的知识。
+				PRINTFORML 说到不具备的，如果不是被邀请的话，我是绝对不会去钓鱼的。
+				PRINTFORML 和%K30_DIARY_DATA(PAGENUM, 3)%在一起，我真的能体验到各种各样的事情。
+			ELSE
+				PRINTFORML 我被%K30_DIARY_DATA(PAGENUM, 3)%嘲笑了，真是丢人至极。
+				PRINTFORML 到底是谁扔了那种东西啊。
+				PRINTFORML 我气愤地把TA强塞给了%K30_DIARY_DATA(PAGENUM, 3)%，TA却很平常地对我说谢谢。
+				PRINTFORML 我也觉得一直赌气很傻，就和TA一起笑了起来。
+
+				PRINTFORML 说起来，这好像还是我第一次和别人笑着化解自己的失败。
+				PRINTFORML 有点痒痒的，一种不可思议的心情。这应该也是托%K30_DIARY_DATA(PAGENUM, 3)%的福吧。
+			ENDIF
+		ENDIF
+		PRINTFORMW 如果还有机会再去钓鱼的话，就两个人并排悠闲地度过吧。就算什么都钓不到，那也一定很快乐。
+		IF MODE == "指令"
+			PRINTFORML
+			PRINTFORMDW 钓鱼约会意外地很受欢迎呢…
+			表情 = 笑颜
+			IF RAND:2 == 1
+				{
+				台词 = 「如果是以前的我，根本不会想去钓鱼」
+				/「一边放下鱼线一边悠闲地度过…绝对不可能」
+				/「肯定会一直神经紧绷地想着工作的事情，鱼都会被我吓跑」
+				/「认识您之后，我真的改变了很多哦」
+				}
+			ELSE
+				TFLAG:192 = -2
+				{
+				LOCALS = 「说实话，%K30_C_NAME(MASTER)%喜欢钓鱼这件事让我感到很意外」
+				/「我完全无法想象您能静下心来，专心致志地钓鱼的样子」
+				/「难道您不是在钓鱼的时候也在想着女孩子的事情吗？」
+				}
+				表情 = 赤面
+				{
+				台词 = 「…诶？　我？」
+				/「我，我呀…要说想的事情嘛…那个…果然还是…」
+				/「一直…都在想着%K30_C_NAME(MASTER)%的事情，是吗……」
+				}
+			ENDIF
+		ENDIF
+	;オナネタ
+	CASE 23
+		PRINTFORML 虽然是很羞耻的事情，但我无论如何都想记录下来。
+		PRINTFORML 平常一样令人烦恼的性欲处理，应该只是像往常一样随便抚弄一遍就能结束的作业。
+		PRINTFORML 但是今天不知为何，中途我突然想到了%K30_DIARY_DATA(PAGENUM, 3)%的事情。
+
+		PRINTFORML 一瞬间身体变得燥热，蜜汁也随之溢了出来，连我自己都吓了一跳。
+		PRINTFORML 平时因为害怕而不敢触碰的深处，现在手指也能轻易地进入，但我终究没有鼓起那样的勇气。
+		PRINTFORML 在此期间，身体也越来越兴奋，最后被至今从未感受过的感觉所包围。
+
+		PRINTFORML 身体仍然软绵绵的。虽然也有疲惫感，但是现在就连这种感觉都非常舒适。
+		PRINTFORML 虽然也有点对%K30_DIARY_DATA(PAGENUM, 3)%感到抱歉，
+		PRINTFORMW 但就当做是对总是黏着我的那个人的一点报复吧。
+		IF MODE == "指令"
+			PRINTFORML
+			PRINTFORMDW 看起来阎魔大人其实是个闷骚…？
+			表情 = 赤面
+			TFLAG:192 = -6
+			IF RAND:2 == 1
+				{
+				台词 = 「闷，闷骚是什么意思！！」
+				/「这种程度的事情，谁，谁都会做的好吗！」
+				}
+			ELSE
+				{
+				台词 = 「请，请不要说奇怪的事情！！」
+				/「好色的是，你！　是你啊！！」
+				/「这全部都是你的错啊！！」
+				}
+			ENDIF
+		ENDIF
+	;宴会のお知らせ
+	CASE 24
+		PRINTFORML 收到了来自%K30_DIARY_DATA(PAGENUM, 4)%的关于%K30_DIARY_DATA(PAGENUM, 2)%的通知。
+		PRINTFORML 大部分日子都和工作冲突，所以我几乎没有参加过。
+		PRINTFORML 但是，这次似乎正好是在休息日举办。
+
+		PRINTFORML %K30_DIARY_DATA(PAGENUM, 3)%会怎么做呢。果然还是会为了看女孩子而参加吗。
+		PRINTFORML 如果我能邀请TA一起去，我会很高兴的，但是完全不知道该如何自然地邀请TA。
+		PRINTFORML 作为一直被TA邀请的回礼，还是去听TA说教的陪伴？总觉得都不太对劲。
+		PRINTFORML 明明应该尽快约定的，为什么我会为了这种事情烦恼呢
+		PRINTFORMW 我开始担心自己是否能好好地邀请TA。
+		IF MODE == "指令"
+			PRINTFORML
+			PRINTFORMDW 原来宴会那天突然被邀请是因为这个原因啊…
+			IF RAND:2 == 1
+				表情 = 赤面
+				TFLAG:192 =-6
+				{
+				台词 = 「说起来，写这篇日记的时候的我…」
+				/「明明如果能被您邀请的话，就会立刻跟您走」
+				/「但是自己却很难主动行动…」
+				/「………」
+				/「总觉得我那时候真是太糟糕了…」
+				}
+			ELSE
+				表情 = アニメ
+				{
+				台词 = 「诶？　到当天才邀请的原因吗？」
+				/「因为…难得的休息日，难道不想和%K30_C_NAME(MASTER)%两个人一起度过吗」
+				/「我尽量安排行程，想着不去参加…」
+				/「只有实在没办法，才会邀请您」
+				}
+			ENDIF
+		ENDIF
+	;单薄的本见ちゃった
+	CASE 25
+		LOCAL = (K30_DIARY_DATA(PAGENUM, 5) == "有")
+		PRINTFORML 一旦放松对%K30_DIARY_DATA(PAGENUM, 3)%的警惕，TA就会做一些奇怪的事情，真是老样子
+		PRINTFORML 明明今天应该是两个人一起读书的，结果TA却趁我不注意，偷偷地开始读起了奇怪的单薄的本子。
+		PRINTFORML 我好奇地凑过去看了一眼，似乎是来自外界的，非常下流的书籍。
+		IF LOCAL
+			IF K30_DIARY_DATA(PAGENUM, 2) == "惨"
+				PRINTFORML 而且里面的内容，竟然是一个和我长得一模一样的女性，正在遭受着残酷的凌辱。
+				PRINTFORML TA睁大了眼睛，脸上露出了痛苦和快乐交织在一起的表情，这一幕给我留下了深刻的印象。
+			ELSE
+				PRINTFORML 而且里面的内容，竟然是一个和我长得一模一样的女性，沉溺于淫乱的行为之中。
+				PRINTFORML TA兴高采烈地接受着这些行为，脸颊染成朱红色，在快感中喘息的样子还依然萦绕在我的脑海里。
+			ENDIF
+		ELSE
+			PRINTFORML 虽然我没有看得很清楚，但是大概是讲述对一个和我长得很像的女性做色情的事情的内容。
+		ENDIF
+
+		PRINTFORML 总之，我先把书夺了过来，然后狠狠地训斥了TA一顿。真不知道这种东西是从哪里流传过来的。
+		PRINTFORMW 如果这种东西是从外界废弃然后流传到这里来的话，那必须要在某个地方阻止，否则就太糟糕了。
+		IF MODE == "指令"
+			PRINTFORML
+			PRINTFORMDW ……印刷的书籍一下子涌入幻想乡，确实是有可能的
+			SIF LOCAL
+				PRINTFORMDW 而且明明只是瞥了一眼，却记得这么清楚里面的内容…？
+			IF LOCAL
+				表情 = 赤面
+				TFLAG:192 =-6
+				台词 = 「！！」/「那，那个……」/「……………………」/「我也稍微有一点…感兴趣…」
+			ELSE
+				表情 = 反抗
+				{
+				台词 = 「说实话，把我当做那种事情的对象…」
+				/「嗯，这非常出乎我的意料，而且我也难以接受」
+				/「…………」
+				/「难道说…在外面的世界里，其他各位也……」
+				/「…………」
+				/「我害怕听到答案。我们还是别再聊这个话题了吧…」
+				}
+			ENDIF
+		ENDIF
+	;地狱拉面传授
+	CASE 26
+		PRINTFORML %K30_DIARY_DATA(PAGENUM, 3)%似乎对我想出来的料理很感兴趣。
+		PRINTFORML 我分给部下们吃，不知为何他们都很避讳，所以我坦率地感到很高兴。
+		PRINTFORML 小町和久侘歌她们甚至抱怨说第二天上厕所会很痛苦，
+		PRINTFORML 真不知道她们在说什么。在美味的吃饭时间听到这种话，我也会很困扰的。
+
+		PRINTFORML 相比之下，%K30_DIARY_DATA(PAGENUM, 3)%是不是对外界的料理很了解呢。
+		PRINTFORML 我想听听TA的意见，看看能不能做出比现在更刺激的味道。
+		PRINTFORMW 我希望能成功推广这种料理，哪怕能稍微改善一下中有之道的情况也好。
+		IF MODE == "指令"
+			PRINTFORML
+			PRINTFORMDW 无论如何，再比那个还辣要怎么办啊…
+			IF RAND:2 == 1
+				表情 = 笑颜
+				{
+				台词 = 「我觉得要标榜为名产，果然第一印象是很重要的」
+						/「如果能用一种让人吃过一次就无法忘记的味道，让吃过的人都变成它的俘虏就好了…」
+						/「……或许，我说错了吗？」
+				}
+			ELSE
+				表情 = 反抗
+				{
+				台词 = 「我现在正在寻找实际制作并提供这种料理的店铺」
+						/「但是，这很难找到…」
+						/「经常被人以『料理的时候眼睛会痛』为理由而敬而远之…」
+						/「难道说，我做得太过分了吗…？」
+				}
+			ENDIF
+		ENDIF
+	;面倒なお恼み
+	CASE 27
+		PRINTFORML 虽然回忆起来很羞耻，但为了自我警诫，还是记录下来吧。
+		PRINTFORML 今天我不小心对%K30_DIARY_DATA(PAGENUM, 3)%说漏了嘴。
+		PRINTFORML 虽然我原本打算伪装成不经意的咨询，但现在想想，这只能被看作是为了引起%K30_DIARY_DATA(PAGENUM, 3)%注意的提问。
+		PRINTFORML 本来，所有事情都要分清黑白的阎魔，提出那种问题，并对得到的答案感到时喜时忧，这件事本身就很奇怪，不是吗。
+
+		PRINTFORML %K30_DIARY_DATA(PAGENUM, 3)%是不是已经察觉到我咨询的意图了呢。
+		PRINTFORML 还是说，如果我重复提出类似的问题，TA会认为我只是在找话题呢。
+		PRINTFORMW 总觉得脑子里乱糟糟的，今天晚上可能睡不着了。
+		IF MODE == "指令"
+			PRINTFORML
+			PRINTFORMDW 虽然我觉得您的问题很奇怪，但似乎是在为一些奇怪的事情烦恼…
+			表情 = 发情
+			IF RAND:2 == 1
+				台词 = 「啊啊…现在回想起来」/「果然…还是很羞耻…」
+			ELSE
+				台词 = 「我为什么会突然问那种事情呢」/「我真的搞不懂自己…」
+			ENDIF
+		ENDIF
+	;恋慕
+	CASE 30
+		SELECTCASE K30_DIARY_DATA(PAGENUM, 2)
+			;恋慕后未会话
+			CASE "1"
+				PRINTFORML 我必须停止继续欺骗自己了。
+				PRINTFORML 我喜欢TA。已经无法再隐藏，也无法再欺骗自己了。
+				PRINTFORML 下次见面的时候，我要告诉%K30_DIARY_DATA(PAGENUM, 3)%，TA对我来说是一个特别的人。
+				PRINTFORML 试着问问TA，我能不能叫只有在两人独处时才能叫的名字。
+
+				PRINTFORML 如果能创造更多只有我们两个人才知道的秘密，只有我们两个人才拥有的回忆，
+				PRINTFORML 总有一天，%K30_DIARY_DATA(PAGENUM, 3)%或许也会对我另眼相看。
+			;呼び名未变更
+			CASE "2"
+				PRINTFORML 刚刚决定要坦率面对自己的感情，结果就遇到了这种事情，真是让我有点沮丧。
+				PRINTFORML 我向TA提议用亲昵的名字称呼TA，却被轻易地拒绝了。
+				PRINTFORML 最终，称呼方式还是没有改变，仍然是%K30_DIARY_DATA(PAGENUM, 3)%。
+				PRINTFORMW 我最喜欢的%K30_DIARY_DATA(PAGENUM, 3)%。
+				PRINTFORML 我每次叫TA的名字的时候，TA是否能察觉到我的心情呢？
+			;呼び名变更
+			CASEELSE
+				PRINTFORML 今天，我和%K30_DIARY_DATA(PAGENUM, 5)%之间又多了一个秘密。
+				PRINTFORML 我不想让其他人听到，这是只有我和TA才能使用的秘密称呼。
+				PRINTFORMW %K30_DIARY_DATA(PAGENUM, 3)%。我最喜欢您了。
+		ENDSELECT
+		IF MODE == "指令"
+			表情 = LOVE
+			TFLAG:192 = -7
+			IF RAND:2 == 1
+				台词 = 「…重新看一遍，果然还是觉得很羞耻」/「但是这毫无虚假，这就是我真实的心情…♥」
+			ELSE
+				台词 = 「现在也没有什么需要对您隐瞒的了」/「这就是变得坦率之后的我的心情…♥」
+			ENDIF
+		ENDIF
+	;映姫样から推倒
+	CASE 31
+		PRINTFORML 从今以后，我可能不需要在%K30_DIARY_DATA(PAGENUM, 3)%面前继续伪装成死板的阎魔大人了。
+		PRINTFORML 那些不想让别人看到的事情，如果是TA的话，我就可以不在意。
+		PRINTFORML 就像%K30_DIARY_DATA(PAGENUM, 3)%需要我一样，我也想和%K30_DIARY_DATA(PAGENUM, 3)%肌肤相亲。
+		PRINTFORMW 虽然有点担心TA是否能接受这样的我，但我感觉自己已经无法停止了。
+		IF MODE == "指令"
+			PRINTFORML
+			PRINTFORMDW 确实，最近阎魔大人变得特别激烈，或者说，变得非常色情……？
+			表情 = LOVE
+			TFLAG:192 = -7
+			IF RAND:2 == 1
+				台词 = 「…真是失礼的说法」/「………………」/「但是没有说错呢…♥」
+			ELSE
+				台词 = 「多亏了您，我才能变得这么坦率」/「会做这种事情也是因为您哦…♥」
+			ENDIF
+		ENDIF
+	;怀孕愿望
+	CASE 32
+		PRINTFORML TA似乎很早以前就对制造我们两个人的孩子这件事很积极
+		PRINTFORML 每次被%K30_DIARY_DATA(PAGENUM, 3)%推着前进时，我的内心都会动摇，但我始终没有鼓起勇气迈出那一步。
+		PRINTFORML 但是我已经不再犹豫了。这是我经过仔细考虑后做出的决定。
+		PRINTFORML 从今以后，我会为了拥有我们两个人的孩子而尽自己所能。
+		PRINTFORMW 总有一天，如果我能用双手拥抱我和%K30_DIARY_DATA(PAGENUM, 3)%的宝宝，那该是多么幸福的事情啊。
+		IF MODE == "指令"
+			IF GETBIT(CFLAG:1910, 5)
+				表情 = 笑颜
+				IF EXP:分娩经验
+					{
+					台词 = 「那个时候我还什么都不明白」
+					/「第一次抱起%K30_DIARY_DATA(34, 2)%时的那种感动…」
+					/「比我自己的想象还要…幸福得多」
+					/「是啊，真的…很幸福……」
+					}
+				ELSE
+					台词 = 「我焦急地等待着…」
+				ENDIF
+			ELSE
+				表情 = アニメ
+				{
+				台词 = 「种族差异和作为阎魔的立场…」
+				/「我们之间存在各种各样的难题」
+				/「没关系，如果是和您在一起的话，我一定能克服」
+				/「%K30_C_NAME(MASTER)%，让我们一起努力吧」
+				}
+			ENDIF
+		ENDIF
+	;妊娠
+	CASE 33
+		;愿望あり
+		IF GETBIT(CFLAG:1502, 3)
+			PRINTFORML 我们终于怀上了我们的宝宝。
+			PRINTFORML 我有时会想，以我这阎魔的身体或许很难怀上，
+			PRINTFORML 但最终这个孩子还是选择了我作为TA的母亲。
+			PRINTFORML 我很高兴。真的很高兴。
+			PRINTFORML 即使现在稍微冷静下来，只要一放松，还是会突然想哭。
+			PRINTFORMW 我要尽快和%K30_DIARY_DATA(PAGENUM, 3)%一起，成为出色的父亲和母亲。
+		ELSE
+			PRINTFORML 我终于怀上了和%K30_DIARY_DATA(PAGENUM, 3)%的宝宝。
+			PRINTFORML 明明原本的工作就是守护和爱护孩子，
+			PRINTFORML 但我至今也不能断言自己有信心成为一名母亲。
+			PRINTFORML 尽管如此，这个孩子还是选择了我作为TA的母亲。
+			PRINTFORML 在感到高兴的同时，我也快要被更大的不安所压垮。
+			PRINTFORMW 为了这个孩子，我也要尽快成为坚强的母亲。
+		ENDIF
+		IF MODE == "指令"
+			IF EXP:分娩经验
+				表情 = アニメ
+				{
+				台词 =「身体的变化，以及对生下宝宝的喜悦和不安」
+				/「我一直以为这些都和我无缘，但现在这些都一下子降临了…」
+				/「现在回过头来看那个时候的我，总感觉很让人担心」
+				/「多亏了%K30_C_NAME(MASTER)%的支持，我才能坚持下来吧」
+				}
+			ELSE
+				表情 = 睡眠
+				台词 = 「%K30_C_NAME(MASTER)%，拜托您了」/「请您好好地支持我…」
+			ENDIF
+		ENDIF
+	;分娩后
+	CASE 34
+		PRINTFORML 沉浸在梦乡中的%K30_DIARY_DATA(PAGENUM, 2)%，在TA的身边，我终于真切地感受到自己成为了一位母亲。
+		PRINTFORML 望着TA那小小的手，平静的睡容，爱意满溢，无法抑制。
+		IF GETBIT(CFLAG:1502, 3)
+			PRINTFORML 或许我一直都期盼着能和这个孩子一起度过每一天。
+		ELSE
+			PRINTFORML 曾经感受到的那些不安，也因为这个孩子而全部烟消云散。
+		ENDIF
+		PRINTFORMW %K30_DIARY_DATA(PAGENUM, 2)%，谢谢你降生到这个世界。
+		IF MODE == "指令"
+			PRINTFORML
+			表情 = 笑颜
+			LOCAL = DAY - (TOINT(K30_DIARY_DATA(PAGENUM, 0)))
+			SELECTCASE LOCAL
+				CASE IS < 60
+					{
+					台词 = 「孩子的成长真的是转瞬即逝」
+					/「虽然这是理所当然的，但是TA们不会一直保持年幼的模样」
+					/「所以说，多和%K30_DIARY_DATA(PAGENUM, 2)%玩耍吧」
+					}
+				CASE 60 TO 120
+					表情 = アニメ
+					{
+					台词 = 「直到不久之前，我们还像这样，一整天都待在一起呢」
+					/「但是TA们会慢慢地从我的手中离开」
+					/「现在%K30_DIARY_DATA(PAGENUM, 2)%已经可以独自前行了」
+					/「或许有点寂寞呢…」
+					}
+				CASEELSE
+					{
+					台词 = 「TA已经离巢飞走了…」
+					/「但是当我第一次将%K30_DIARY_DATA(PAGENUM, 2)%抱在怀里时的心情」
+					/「那份喜悦和幸福至今我都还清晰地记得」
+					/「希望下次见面的时候，能用笑容迎接TA」
+					}
+			ENDSELECT
+		ENDIF
+	;纵割れ肛门
+	CASE 35
+		PRINTFORML 和%K30_DIARY_DATA(PAGENUM, 3)%爱爱时，TA说的话我无论如何都无法忽视。
+		PRINTFORML 我一直很注意保持清洁，但是没有机会看到自己的蜜穴，所以也没办法。
+		PRINTFORML 虽然非常羞耻，但我还是鼓起勇气，用镜子亲眼确认了一下。
+
+		PRINTFORML 正如TA所说的那样。
+		PRINTFORML 稍微庆幸的是，那里不是给别人看的地方。
+		PRINTFORMW 如果这件事被其他人知道，我可能会羞愧而死。
+		IF MODE == "指令"
+			PRINTFORML
+			PRINTFORMDW 阎魔大人，您也没必要把这种事情都老老实实地记录在日记里吧…
+			表情 = 赤面
+			TFLAG:192 = -6
+			IF RAND:2 == 1
+				{
+				台词 = 「……记录下来我才能整理好思绪，才能平静下来」
+				/「总，总之，这件事，绝对！绝对！要对任何人保密哦！」
+				/「这可是和阎魔之间的约定！！」
+				}
+			ELSE
+				{
+				台词 = 「……只是顺便写下来的而已」
+				/「写到一半就停止也会让我感到不安」
+				/「这也是没办法的事情」
+				/「而且……」
+				/「不，不是，没什么…」
+				}
+			ENDIF
+		ELSE
+			PRINTFORML
+			CALL K30_D_LINE
+			PRINTFORML 「唉……为什么会变成这样呢…」
+			PRINTFORML 「阎魔竟然有不能告诉别人的秘密，这真是个糟糕的玩笑……」
+			PRINTFORMDW 写完日记的映姬正在重新观察自己那变得细长的蜜穴…
+			PRINTFORML
+			PRINTFORML 「真是的…这不都怪%K30_C_NAME(MASTER)%吗」
+			PRINTFORML 「那个人竟然那么……」
+			PRINTFORML （那么…用小弟弟，让我的蜜唇，那么舒服…）
+			PRINTFORMDW 映姬回想起自己在肛门性交中被彻底玩弄的样子，脸颊发红
+			PRINTFORML
+			PRINTFORML 「不过…」
+			PRINTFORMDW 映姬仿佛要确认一般，用手指开始抚摸自己的蜜穴
+			PRINTFORML （这…非常，色情的感觉…）
+			PRINTFORML （我的蜜唇真的…变成了%K30_C_NAME(MASTER)%的形状…）
+			PRINTFORMW （变成了为了让%K30_C_NAME(MASTER)%的小弟弟，进入的形状…）
+			PRINTFORMDL 可以清楚地看到，映姬的肛门横向的皱纹完全展开，越来越接近漂亮的纵向条纹
+			PRINTFORMDL 和光滑的臀部相比，色素已经沉淀，但这也更加突出了外观的妖艳感
+			CALL K30_PRINT_BUTT_IMAGE(-1, 1, 0, 2, 1, 0)
+			WAIT
+			PRINTFORMDL 当用指尖拨弄蜜唇时，不知不觉间，蜜壶里溢出了淫汁，变得湿漉漉的
+			PRINTFORMDW 映姬再次意识到，自己的身体已经完全接受了蜜穴带来的快感…
+			CALL HPH_PRINT, @"「……哈啊哈啊哈啊」", "L"
+			PRINTFORMDW 映姬用自己的手指舀起爱液，毫不犹豫地开始挖蜜穴…
+			PRINTFORML
+			CALL PrintOnanismImage(30)
+			PRINTFORMDL 映姬无法抑制蜜穴的刺痛，用自己的手指激烈地抚弄着纵向裂开的肛门…
+			CALL HPH_PRINT, @"「蜜唇啊啊哈啊 好舒服…哈啊 好舒服啊哈啊哈啊」", "L"
+			CALL HPH_PRINT, @"「蜜唇啊哈啊 小穴啊哈啊 比小穴……哈啊」", "L"
+			CALL HPH_PRINT, @"「比小穴，更舒服啊哈啊哈啊」", "L"
+			EXP:自慰经验 += ABL:Ａ感觉
+			CALL COLORMESSAGE(@"自慰经验＋{ABL:Ａ感觉}", C_PINK, 1)
+			;Ｃ自慰
+			CALL JUEL_UP_SPECIAL(30, "快Ｃ", "Ｃ感觉", 1, 1)
+			;Ａ自慰
+			CALL JUEL_UP_SPECIAL(30, "快Ａ", "Ａ感觉", 5, 1)
+			;羞耻
+			CALL JUEL_UP_SPECIAL(30, "羞耻", "自慰中毒", 6, 1)
+			;情欲
+			CALL JUEL_UP_SPECIAL(30, "情欲", "欲望", 3, 1)
+		ENDIF
+	;小町と同时
+	CASE 36
+		LOCALS = %K30_DIARY_DATA(PAGENUM, 2)%
+		PRINTFORM 我和小町是上司和部下的关系。
+		SELECTCASE LOCALS
+			CASE "小町"
+				PRINTFORML 而我却是对她的恋人依依不舍的绊脚石。
+			CASE "映姫"
+				PRINTFORML 只是，她也一直对%K30_DIARY_DATA(PAGENUM, 3)%抱有好感，这件事我一直没有注意到。
+			CASEELSE
+				PRINTFORML 并且最近还成为了围绕%K30_DIARY_DATA(PAGENUM, 3)%的恋爱互动对象。
+		ENDSELECT
+		PRINTFORML 但是，我感觉今后那种关系可能会稍微发生一些变化。
+		PRINTFORML 因为我和她一起被%K30_DIARY_DATA(PAGENUM, 3)%抱了，甚至彼此都看到了那种表情。
+
+		PRINTFORML 但是小町在那之后，仍然像往常一样满嘴玩笑。那种干脆的态度是我学不来的，所以有点羡慕。
+		PRINTFORML 只是希望她能稍微自重一下，比如说什么“让我们做一对快乐的竿姐妹吧”、“四季大人比想象中还要好色”之类的话。
+		PRINTFORML 实在是听得我这边都觉得不好意思了。
+		PRINTFORML 总之我先敲了她一下，但这或许也是她表达害羞和对我体贴的一种方式。
+
+		PRINTFORML 被小町看到会感到羞耻，我也希望%K30_DIARY_DATA(PAGENUM, 3)%只看着我。
+		IF LOCALS == "小町"
+			PRINTFORML 但是更重要的是，她能像对我一样疼爱小町，这让我感到安心。
+			PRINTFORML 说实话，如果比较作为女性的魅力，我根本无法和小町相比。
+			PRINTFORML 只要看看她的胸部，就一目了然了。
+			PRINTFORMW 我真的要感谢向我伸出援手的她们。
+		ELSE
+			PRINTFORML 但是更重要的是，%K30_DIARY_DATA(PAGENUM, 3)%能像对我一样疼爱小町，这让我感到安心。
+			PRINTFORML 作为一个争夺同一个男人的女人，这话说起来很奇怪，但不知为何现在我的内心充满了满足感，而不是嫉妒。
+
+			PRINTFORML 说实话，如果比较作为女性的魅力，我根本无法和小町相比。
+			PRINTFORML 只要看看她的胸部，就一目了然了。
+			PRINTFORMW 我要用我的方式，努力让%K30_DIARY_DATA(PAGENUM, 3)%感到高兴。
+		ENDIF
+		IF MODE == "指令"
+			PRINTFORML 
+			PRINTFORMDW 如果她们两个都不抵抗的话，今后也可以一起做了…
+			IF !TALENT:MASTER:恋人
+				表情 = 笑颜
+				{
+				台词 = 「%K30_C_NAME(MASTER)%，您现在…是不是在想一些对自己有利的事情？」
+				/「对于您来说，是我还是小町…」
+				/「我会尽快让您做出明确的选择…♥」
+				}
+			ELSE
+				表情 = 睡眠
+				{
+				台词 = 「…我们都知道这种关系是不正常的」
+				/「但是，这是和小町商量后彼此都认可的事情」
+				/「%K30_C_NAME(MASTER)%，请就这样…」
+				/「请就这样继续疼爱我和小町两个人」
+				}
+			ENDIF
+		ENDIF
+	;尻穴狂
+	CASE 37
+		PRINTFORML 最近一直感觉思维被快感所引导，欲望变得没有止境。
+		PRINTFORML 只是坐在那里，都会在意臀部接触到的感觉。
+		PRINTFORML 甚至会看着大小合适的东西，想着要用那个来搅动蜜唇。
+		PRINTFORML 这样下去，恐怕会影响到工作。
+
+		IF K30_DIARY_DATA(PAGENUM, 2) == "有"
+			PRINTFORML 不过仔细想想，我原本就具备这样的资质吧。
+			PRINTFORML 否则不可能这么舒服，
+			PRINTFORML 也不可能说出“即使在约会中也想把东西插进蜜唇”这种脑子有问题的话。
+		ELSE
+			PRINTFORML 这样的话，下次约会时就坦白我一直以来的想法吧。
+			PRINTFORML 让我体会到蜜唇带来的快感的%K30_DIARY_DATA(PAGENUM, 3)%，肯定会很乐意配合我的。
+			PRINTFORML 虽然的确很害羞，但如果这样能发泄出来，或许就能集中精力工作了。
+		ENDIF
+
+		PRINTFORML 已经承认了，就轻松一点吧。
+		PRINTFORM 我的价值在于履行阎魔的职责。我所需要的是
+		PRINTFORML %K30_DIARY_DATA(PAGENUM, 3)%\@ K30_DIARY_DATA(PAGENUM, 5) == "恋" ? 爱我所有的身体 # 让我的蜜唇感到舒服 \@。
+		PRINTFORMW 对于现在的我来说，除此之外，其他的事情都已经无所谓了。
+		IF MODE == "指令"
+			PRINTFORML
+			PRINTFORMDW 我听说越是认真的人，一旦沉迷于某件事就会很糟糕，没想到竟然会到这种程度…
+			TFLAG:192 = -6
+			表情 = 睡眠
+			{
+			台词 = %\@ RAND:2 ? 「是的，您说得对」/「或许我已经…无可救药了呢…♥」
+					# 「把我变成这样的，是您…」/「您要好好负责哦…♥」 \@%
+			}
+		ENDIF
+	;震动棒约会
+	CASE 38
+		PRINTFORML 今天是和%K30_DIARY_DATA(PAGENUM, 3)%的秘密约会。
+		PRINTFORML 在蜜唇里插入玩具，一边享受着快感，一边出门。
+		PRINTFORML 但是说实话，我只清楚一开始去了%K30_DIARY_DATA(PAGENUM, 4)%，
+		PRINTFORML 到这里为止我还记得很清楚，之后的事情我就记不太清了。
+		PRINTFORML 记忆中只有在路途中达到高潮，到达目的地后达到高潮，在某人面前达到高潮，
+		PRINTFORML 以及为了不让声音和表情表现出来，用蜜唇达到高潮这件事，只是觉得非常舒服。
+
+		PRINTFORML 知道了这些之后，我真的觉得我已经回不到以前的自己了。
+		PRINTFORML 我似乎陷入%K30_DIARY_DATA(PAGENUM, 3)%，堕落到无法挽回的地步了。
+		PRINTFORMW 但是，这样就好。虽然对%K30_DIARY_DATA(PAGENUM, 3)%感到抱歉，但下次还要拜托TA。
+		IF MODE == "指令"
+			PRINTFORML
+			PRINTFORMDW 我觉得你走了一座相当危险的桥，但你还是想继续走下去吗…
+			IF GETBIT(CFLAG:1609, 2)
+				表情 = アニメ
+				台词 = /「…我还是应该控制一下吗？」
+			ELSE
+				表情 = LOVE
+				TFLAG:192 = -7
+				台词 = /「…………………」/「………%\@ RAND:2 ? 您，讨厌吗… # 嗯，当然了 \@%♥」
+			ENDIF
+		ENDIF
+	;炮友
+	CASE 39
+		IF K30_DIARY_DATA(PAGENUM, 2) == "契约"
+			PRINTFORML 我从未想过自己的内心竟然如此脆弱。
+			PRINTFORML %K30_DIARY_DATA(PAGENUM, 3)%带着坏笑提出的荒唐提议。
+			SELECTCASE K30_DIARY_DATA(PAGENUM, 5)
+				CASE "前世"
+					PRINTFORML 如果是普通情况，被说了那样的话理应生气才对，但我却接受了。
+					PRINTFORML 我无论如何都无法违背%K30_DIARY_DATA(PAGENUM, 3)%的话。
+					PRINTFORML 就像第一次被TA拥抱时那样，不知为何服从TA的话语会像理所当然的事情一样在我的脑海中回响。
+				CASE "Ａ调教"
+					PRINTFORML 作为阎魔，我应该当场斥责TA，给予应有的惩罚，并促使TA反省。
+					PRINTFORML 但我却首先考虑的是让自己感到舒服。
+					PRINTFORML 竟然会输给肉欲，而且还是输给不洁之穴的快感，我真的觉得自己很可悲。
+				CASE "无意识"
+					PRINTFORML 当然应该拒绝，我头脑中明白这一点。
+					PRINTFORML 但是从身体深处，从蜜唇涌上来的那种奇妙的刺痛。
+					PRINTFORML 它让我发狂，等我回过神来的时候，我已经听从了%K30_DIARY_DATA(PAGENUM, 3)%的话。
+			ENDSELECT
+
+			PRINTFORML 至少为了稍作报复，我只是冷淡地回复TA，但效果令人怀疑。
+			PRINTFORML 我总觉得%K30_DIARY_DATA(PAGENUM, 3)%看穿了我的虚张声势。
+			PRINTFORML 事实上，即使是正在写日记的现在，我的身体依然隐隐作痛，感到一种无法独自满足的渴望。
+			PRINTFORML 我已经开始期待着明天能再做了。
+			PRINTFORMW 我似乎真的已经堕落到了谷底。
+		ELSE
+			PRINTFORML 我到底在做什么啊。
+			PRINTFORML 只是和连心意都没有确认过的人肌肤相亲，就已经犯下了很大的罪过，
+			PRINTFORML 但%K30_DIARY_DATA(PAGENUM, 3)%给予我的快感却无时无刻不在我的脑海中盘旋。
+			PRINTFORML 我都快要失去作为阎魔的自尊了，明明被那个人玩弄于股掌之间，却还是想要TA一次又一次地满足我。
+
+			PRINTFORML 我知道%K30_DIARY_DATA(PAGENUM, 3)%的心意并不在我身上。
+			PRINTFORML 我能做的就是献出我这寒酸的身体，稍微地将TA束缚住而已。
+			PRINTFORMW 我真的觉得自己很浅薄，但现在的我或许只配做出这种程度的行为吧。
+		ENDIF
+	;初对面
+	CASE 50
+		IF CFLAG:30:1900 % 3 == 1
+			PRINTFORML 在%K30_DIARY_DATA(PAGENUM, 4)%与%NAME:MASTER%先生初次见面。
+			PRINTFORML 是明明是生者，却装作若无其事地居住在彼岸的外来人。
+			PRINTFORML 可疑至极。如果不是什么异变的前兆就好了。
+		ELSEIF CFLAG:30:1900 % 3 == 2
+			PRINTFORML 在%K30_DIARY_DATA(PAGENUM, 4)%与%CALLNAME:MASTER%先生相遇。
+			PRINTFORML 是能够以肉身自由往来于彼岸，非常可疑的外来人。
+			PRINTFORML 虽说巫女也曾来调查异变，但这和那个完全不同。
+			PRINTFORML TA不借助任何人的帮助就能渡过三途之川。简直难以置信。
+			PRINTFORML 为了以防万一，我也向小町确认过了，当然TA并没有参与其中。
+		ELSE
+			PRINTFORML 在%K30_DIARY_DATA(PAGENUM, 4)%发现了%CALLNAME:MASTER%先生。
+			PRINTFORML 不知何时居住在幻想乡的，在传闻中很可疑的外来人。
+			PRINTFORML %K30_C_NAME(CFLAG:1901)%为什么会让TA居住在这里呢。
+			PRINTFORML 我很担心TA是不是被抓住了什么把柄，受到了威胁。
+		ENDIF
+
+		PRINTFORML 而且最重要的是，阎魔的力量对%CALLNAME:MASTER%先生不起作用。
+		PRINTFORML 我从未想过竟然会有无法映照在净琉璃之镜上的人类。
+		PRINTFORML 说实话，我甚至怀疑TA是否真的是人类。我应该亲自好好地监视TA。
+		PRINTFORMW 如果TA做出什么恶行，就必须让TA接受应有的惩罚。
+		IF MODE == "指令"
+			PRINTFORML
+			PRINTFORMDW 虽然并非毫无头绪…但这也写得太糟糕了吧…
+			表情 = 笑颜
+			IF RAND:2 == 1
+				{
+				台词 = 「诶，即便如此，这还是我手下留情写出来的呢」
+				/「因为没办法啊。第一印象，太糟糕了嘛…」
+				/「无法被净琉璃之镜看穿的人类，警戒TA是理所当然的吧？」
+				}
+			ELSE
+				{
+				台词 = 「是吗？至少我觉得这个时候的评价还算公正吧」
+				/「……%K30_C_NAME(MASTER)%搬到幻想乡的时候」
+				/「稍微回忆一下你当时的心情和想要做的事情」
+				/「你看，我说得没错吧？」
+				}
+			ENDIF
+		ENDIF
+ENDSELECT
+IF SHIRAHU(30) && MODE == "指令" && CFLAG:30:当前位置 == CFLAG:MASTER:当前位置
+	;一时的に扩张颜绘に变更
+	VARSET LOCAL
+	LOCAL = FLAG:立绘种类
+	FLAG:立绘种类 = 1
+	LOCAL:1 = CFLAG:30:应用差分替换
+	CFLAG:30:应用差分替换 = 1
+	IF GROUPMATCH(PAGENUM, 17, 22) && TFLAG:192 == -2
+		PRINTFORML 
+		CALL K30_SPTALK, "アニメ", LOCALS
+		WAIT
+		TFLAG:192 = -6
+	ENDIF
+	PRINTFORML 
+	CALL K30_SPTALK, 表情, 台词
+	;元に戻す
+	FLAG:立绘种类 = LOCAL
+	CFLAG:30:应用差分替换 = LOCAL:1
+ENDIF
+;デイリーイベントで呼び出されてた时、元街道にする
+RESETCOLOR
+SETANIMETIMER 32627
+
+;=============================
+;==================================================
+;Optional: Determines if the standard description should be skipped.
+;Return 0 if description and KOJO should be shown, 1 if description should be hidden and KOJO shown, 2 if description should be shown and KOJO hidden, and 3 if both description and KOJO should be hidden.
+;==================================================
+@M_KOJO_MESSAGE_MESSAGECHECK_COM_K30_406
+RETURN 1
+
+@M_KOJO_MESSAGE_COM_K30_406
+;=============================
+;CALL M_KOJO_MESSAGE_COM_K30_406_1
+RETURN 1
+
+;=============================
+@M_KOJO_MESSAGE_COM_K30_406_1
+;=============================
+

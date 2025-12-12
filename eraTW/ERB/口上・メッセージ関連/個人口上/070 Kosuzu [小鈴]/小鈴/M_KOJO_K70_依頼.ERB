@@ -1,0 +1,1294 @@
+﻿;==================================================
+;依赖口上・各依赖で共通の口上
+;==================================================
+@M_KOJO_IRAI_K70(ROLE, SCENE, IRAI_ID)
+#DIMS ROLE     ;角色の立场、依赖者かそうでないか
+#DIMS SCENE    ;セリフの表示されるタイミング
+#DIM  IRAI_ID  ;依赖自体のID
+#DIM  CLIENT_ID;依赖者IDだけ抜き出したもの
+#DIM  CHK_ID   ;依赖IDだけ抜き出したもの
+#DIMS IRAI_NAME;依赖名
+CHK_ID    = IRAI_ID % 1000
+CLIENT_ID = IRAI_ID_TO_CLIENT(IRAI_ID)
+IRAI_NAME = STR_DATA_IRAI(IRAI_ID, "依赖名", CLIENT_ID)
+RESULT = 0
+IF CHK_ID > 100
+	TRYCALLFORM M_KOJO_IRAI_%IRAI_NAME%_K70(ROLE, SCENE, CLIENT_ID)
+ELSE
+	TRYCALLFORM M_KOJO_IRAI_{CHK_ID}_K70(ROLE, SCENE, CLIENT_ID)
+ENDIF
+SIF RESULT
+	RETURN 1
+;--------------------------------------------------
+;ここにあるのは各依赖で共通の口上です
+;依赖ごとの口上を表示した场合は共通の口上は表示されません
+;【】で囲ってあるのは口上前后の地の文や发生する处理です
+;WAITをするか等の目安にしてください（L,WはそれぞれPRINTFORML,PRINTFORMWの略）
+;--------------------------------------------------
+SELECTCASE SCENE
+CASE "依赖提示时"
+;●依赖を持ち矿物碎片れる时
+;【W どうやら［彼女］は［你］に赖み事があるようだ】
+;【◆口上】
+;【依赖データ表示】
+;【INPUT（受托するかY/N）】
+	IF TALENT:70:恋慕
+		PRINTFORMW 「那个ー、想拜托%CALLNAME:MASTER%先生……」
+	ELSEIF TALENT:70:思慕
+		PRINTFORMW 「那个ー、有点事想拜托你……」
+	ELSE
+		PRINTFORMW 「那个……、可以的话……」
+	ENDIF
+CASE "依赖非受托时"
+;●内容だけ见て受托しなかった时
+;【L ［你］は丁重にお断りした】
+;【◆口上】
+;【W ［彼女］は残念そうな颜をしている】
+	IF TALENT:70:恋慕
+		PRINTFORMW 「您看起来很忙啊……对不起……」
+	ELSEIF TALENT:70:思慕
+		PRINTFORMW 「我、我知道了……」
+	ELSE
+		PRINTFORMW 「是吗……」
+	ENDIF
+CASE "依赖受托时"
+;●依赖を受托した时
+;【W ［你］は［彼女］の依赖を受けた】
+;【◆口上】
+	PRINTFORMW 「太好了！ 那么拜托了！」
+CASE "依赖确认时"
+;●[366]で依赖内容を依赖人に确认した时
+;【◆口上】
+;【依赖データ表示】
+;【INPUT（破弃するかY/N）】
+	PRINTFORML 「这个就拜托了ー」
+CASE "依赖破弃时"
+;●受托した依赖を破弃する时
+;【◆口上】
+;【W 依赖を破弃しました。】
+	IF TALENT:70:恋慕
+		PRINTFORMW 「您、您看起来很忙啊……」
+	ELSEIF TALENT:70:思慕
+		PRINTFORMW 「我、我知道了……」
+	ELSE
+		PRINTFORMW 「是吗……」
+	ENDIF
+CASE "依赖实行直前"
+;●[367]で依赖を实行する时、实行处理の前に呼び出される
+;※依赖によって状况が大きく异なるので共通口上は非推奖
+;【◆口上】
+;【实行时の地の文・ソース等】
+;【▼下の口上に续く】
+	IF ROLE == "CLIENT"
+	;（共通）CLIENT：依赖实行の对象と依赖主（口上主）が同一の场合（主に特训系ですが一绪に捜索等をした场合も含まれます）
+		
+	ELSEIF ROLE == "TARGET"
+	;（共通）TARGET：口上主が依赖实行の对象である场合（主に配达系ですが捜索等をした际、TARGETにしていた场合も含まれます）
+		
+	ENDIF
+CASE "依赖实行直后"
+;●[367]で依赖を实行する时、实行处理の后に呼び出される
+;※依赖によって状况が大きく异なるので共通口上は非推奖
+;【▲上の口上から续き】
+;【◆口上】
+;【达成时・CLIENT：▼下の口上に续く】
+;【达成时・TARGET：忘れずに［依赖主］に报告しよう】
+	IF ROLE == "CLIENT"
+	;（共通）CLIENT：依赖实行の对象と依赖主（口上主）が同一の场合（主に特训系ですが一绪に捜索等をした场合も含まれます）
+		SELECTCASE CFLAG:CLIENT_ID:依赖状况
+		CASE 2
+		;实行后未解决
+			
+		CASE 3
+		;实行后达成
+			
+		CASE 6
+		;实行后失败（现在「06_谁来告诉我！」のみ）
+			
+		ENDSELECT
+	ELSEIF ROLE == "TARGET"
+	;（共通）TARGET：口上主が依赖实行の对象である场合（主に配达系ですが捜索等をした际、TARGETにしていた场合も含まれます）
+		SELECTCASE CFLAG:CLIENT_ID:依赖状况
+		CASE 2
+		;实行后未解决
+			
+		CASE 3
+		;实行后达成
+			
+		CASE 6
+		;实行后失败（现在「06_谁来告诉我！」のみ）
+			
+		ENDSELECT
+	ENDIF
+CASE "成功报告时"
+;●报告时（成功）
+;【依赖实行と报告が同时の时：▲上の口上から续き】
+;【◆口上】
+;【ソースの入手・道具等の报酬获得】
+	IF TALENT:70:恋慕
+		PRINTFORMW 「不愧是%CALLNAME:MASTER%先生！ 值得信赖ー！」
+	ELSEIF TALENT:70:思慕
+		PRINTFORMW 「十分感谢！ 帮了大忙～！」
+	ELSE
+		PRINTFORMW 「哇ー！ 十分感谢！」
+	ENDIF
+CASE "失败报告时"
+;○直接失败报告は现在「06_谁来告诉我！」のみ
+;●报告忘れ・期限切れになった际、遭遇时の最后に呼び出される
+;（遭遇时）【挨拶等】→【心情の良し恶し】→【色欲察觉】→【祭日イベント】→【◆ココ！】（尚、依赖失败判定があると约会のお诱いは发生しません）
+;【◆口上】
+;○心情の变化や追加のペナルティ等は口上侧で处理してください
+	IF TALENT:70:恋慕
+		PRINTFORMW 「啊ー！ %CALLNAME:MASTER%先生忘了吗ー！？」
+	ELSEIF TALENT:70:思慕
+		PRINTFORMW 「%CALLNAME:MASTER%先生、拜托您的事、忘记了吧……？」
+	ELSE
+		PRINTFORMW 「%CALLNAME:MASTER%先生、违反契约 信赖度降低了！」
+	ENDIF
+	TALENT:70:心情 = MIN(TALENT:70:心情, 0)
+CASE "依赖报告不要"
+;○一般依赖では现在「02_给花浇水」「09_谁的遗失物」のみ
+;●起床时、报告不要依赖を达成していた场合に呼ばれる口上
+;（起床时）【起床メッセージ】→【X时间寝た等】→【◆ココ！】→【神签・补充等】→【一日开始】
+;○地の文はありません
+;○口上主がその场にいなくても表示されます（MASTERが寝る时のイベント口上と同じタイプ）
+	
+ENDSELECT
+RETURN 1
+;
+;;==================================================
+;;依赖口上・一般依赖01：帮忙做扫除
+;;==================================================
+;@M_KOJO_IRAI_1_K70(ROLE, SCENE, CLIENT_ID)
+;#DIMS ROLE     ;角色の立场、依赖者かそうでないか
+;#DIMS SCENE    ;セリフの表示されるタイミング
+;#DIM  CLIENT_ID;依赖者IDだけ抜き出したもの
+;;--------------------------------------------------
+;;RETURN 0 の部分は共通の口上が表示されます
+;;依赖ごとの口上を表示する部分は RETURN 0 を RETURN 1 にしてください
+;;--------------------------------------------------
+;SELECTCASE SCENE
+;CASE "依赖提示时"
+;	
+;	RETURN 0
+;CASE "依赖非受托时"
+;	
+;	RETURN 0
+;CASE "依赖受托时"
+;	
+;	RETURN 0
+;CASE "依赖确认时"
+;	
+;	RETURN 0
+;CASE "依赖破弃时"
+;	
+;	RETURN 0
+;CASE "依赖实行直前"
+;;○この依赖は依赖主がTARGETです
+;	IF YOGORE:(GET_CHARAHOME(TARGET)) < 1000
+;	;先に扫除してしまっていた场合
+;	;【◆口上】
+;	;【W ［彼女］的房间は十分にきれいだ】
+;	;【▼そのまま下の口上へ】
+;		
+;		RETURN 0
+;	ELSE
+;	;一绪に扫除场合
+;	;【◆口上】
+;	;【W ［你］は［彼女］と协力して房间の扫除を行なった】
+;	;【▼そのまま下の口上へ】
+;		
+;		RETURN 0
+;	ENDIF
+;CASE "依赖实行直后"
+;;○この依赖は必ず实行后达成します
+;;【▲上の口上から续き】
+;;【◆口上】
+;;【▼そのまま下の口上へ】
+;	
+;	RETURN 0
+;CASE "成功报告时"
+;;报酬：低级素材
+;;【▲上の口上から续き】
+;;【◆口上】
+;;【报酬获得】
+;	
+;	RETURN 0
+;CASE "失败报告时"
+;	
+;	RETURN 0
+;;CASE "依赖报告不要"
+;;＜この依赖にはありません＞
+;;	RETURN 0
+;ENDSELECT
+;
+;;==================================================
+;;依赖口上・一般依赖02：给花浇水
+;;==================================================
+;@M_KOJO_IRAI_2_K70(ROLE, SCENE, CLIENT_ID)
+;#DIMS ROLE     ;角色の立场、依赖者かそうでないか
+;#DIMS SCENE    ;セリフの表示されるタイミング
+;#DIM  CLIENT_ID;依赖者IDだけ抜き出したもの
+;;--------------------------------------------------
+;;RETURN 0 の部分は共通の口上が表示されます
+;;依赖ごとの口上を表示する部分は RETURN 0 を RETURN 1 にしてください
+;;--------------------------------------------------
+;SELECTCASE SCENE
+;CASE "依赖提示时"
+;	
+;	RETURN 0
+;CASE "依赖非受托时"
+;	
+;	RETURN 0
+;CASE "依赖受托时"
+;	
+;	RETURN 0
+;CASE "依赖确认时"
+;	
+;	RETURN 0
+;CASE "依赖破弃时"
+;	
+;	RETURN 0
+;CASE "依赖实行直前"
+;;【◆口上】
+;;【W ［你］は［依赖主］的家の鉢植えや植木に水をあげた】
+;;【▼そのまま下の口上へ】
+;	IF ROLE == "CLIENT"
+;	;浇水した时、依赖主である口上主がTARGETの场合
+;		
+;		RETURN 0
+;	ELSEIF ROLE == "TARGET"
+;	;浇水した时、依赖主ではない口上主がTARGETの场合
+;		
+;		RETURN 0
+;	ENDIF
+;CASE "依赖实行直后"
+;;○この依赖は必ず实行后达成します
+;;【▲上の口上から续き】
+;;【◆口上】
+;	IF ROLE == "CLIENT"
+;	;浇水した时、依赖主である口上主がTARGETの场合
+;	;この场合はそのまま下の口上へ续きます
+;		
+;		RETURN 0
+;	ELSEIF ROLE == "TARGET"
+;	;浇水した时、依赖主ではない口上主がTARGETの场合
+;		
+;		RETURN 0
+;	ENDIF
+;CASE "成功报告时"
+;;报酬：\500
+;	
+;	RETURN 0
+;CASE "失败报告时"
+;	
+;	RETURN 0
+;CASE "依赖报告不要"
+;	
+;	RETURN 0
+;ENDSELECT
+;
+;;==================================================
+;;依赖口上・一般依赖03：一起玩吧
+;;※この依赖は[幼稚]を持っている角色のみ发生します
+;;==================================================
+;@M_KOJO_IRAI_3_K70(ROLE, SCENE, CLIENT_ID)
+;#DIMS ROLE     ;角色の立场、依赖者かそうでないか
+;#DIMS SCENE    ;セリフの表示されるタイミング
+;#DIM  CLIENT_ID;依赖者IDだけ抜き出したもの
+;;--------------------------------------------------
+;;RETURN 0 の部分は共通の口上が表示されます
+;;依赖ごとの口上を表示する部分は RETURN 0 を RETURN 1 にしてください
+;;--------------------------------------------------
+;SELECTCASE SCENE
+;CASE "依赖提示时"
+;	
+;	RETURN 0
+;CASE "依赖非受托时"
+;	
+;	RETURN 0
+;CASE "依赖受托时"
+;	
+;	RETURN 0
+;CASE "依赖确认时"
+;	
+;	RETURN 0
+;CASE "依赖破弃时"
+;	
+;	RETURN 0
+;CASE "依赖实行直前"
+;;○この依赖は依赖主がTARGETです
+;;【◆口上】
+;;【W ［你］は［彼女］と游んだ】
+;;【▼そのまま下の口上へ】
+;	
+;	RETURN 0
+;CASE "依赖实行直后"
+;;○この依赖は必ず实行后达成します
+;;【▲上の口上から续き】
+;;【◆口上】
+;;【▼そのまま下の口上へ】
+;	
+;	RETURN 0
+;CASE "成功报告时"
+;;报酬：好感度と信赖度のみ（心情が良くなる）
+;;【▲上の口上から续き】
+;;【◆口上】
+;	
+;	RETURN 0
+;CASE "失败报告时"
+;	
+;	RETURN 0
+;;CASE "依赖报告不要"
+;;＜この依赖にはありません＞
+;;	RETURN 0
+;ENDSELECT
+
+;==================================================
+;依赖口上・一般依赖04：想要学习料理
+;==================================================
+@M_KOJO_IRAI_4_K70(ROLE, SCENE, CLIENT_ID)
+#DIMS ROLE     ;角色の立场、依赖者かそうでないか
+#DIMS SCENE    ;セリフの表示されるタイミング
+#DIM  CLIENT_ID;依赖者IDだけ抜き出したもの
+;--------------------------------------------------
+;RETURN 0 の部分は共通の口上が表示されます
+;依赖ごとの口上を表示する部分は RETURN 0 を RETURN 1 にしてください
+;--------------------------------------------------
+SELECTCASE SCENE
+CASE "依赖提示时"
+	
+	RETURN 0
+CASE "依赖非受托时"
+	
+	RETURN 0
+CASE "依赖受托时"
+	
+	RETURN 0
+CASE "依赖确认时"
+	
+	RETURN 0
+CASE "依赖破弃时"
+	
+	RETURN 0
+CASE "依赖实行直前"
+;○この依赖は依赖主がTARGETです
+;【◆口上】
+;【L ［你］は［彼女］と一绪に料理をした】
+;【W ［料理名］を作ります】
+;【▼そのまま下の口上へ】
+	IF TALENT:70:恋慕
+		PRINTFORMW 「先生、请多关照！」
+	ELSEIF TALENT:70:思慕
+		PRINTFORML 「我、我预习了！」
+		PRINTFORMW （……虽然是在脑内！）
+	ELSE
+		PRINTFORMW 「我、我会加油的！」
+	ENDIF
+	RETURN 1
+CASE "依赖实行直后"
+;○この依赖は必ず实行后达成します
+;【▲上の口上から续き】
+;【◆口上】
+;【▼そのまま下の口上へ】
+	IF TALENT:70:恋慕
+		SELECTCASE RAND:4
+		CASE 1
+			PRINTFORML 「%CALLNAME:MASTER%先生、尝尝看！」
+			PRINTFORMW 「啊、啊ー嗯……%UNICODE(0x2764)%」
+		CASE 2
+			PRINTFORMW 「哇啊、好棒的刀法！ 很帅气！」
+		CASE 3
+			PRINTFORMW 「这、这也是新娘的修行……随意……\/\/\/」
+		CASEELSE
+			PRINTFORMW 「嗯～、真香。 肚子饿了呢ー」
+		ENDSELECT
+	ELSEIF TALENT:70:思慕
+		PRINTFORMW 「那ー个、接下来是……」
+	ELSE
+		PRINTFORMW 「呼呼、原来如此！」
+	ENDIF
+	RETURN 1
+CASE "成功报告时"
+;报酬：\500
+;【▲上の口上から续き】
+;【◆口上】
+;【报酬获得】
+;【L できた料理は二人いっしょに顶いた】
+;【吃饭效果（料理打分）】
+	IF ABL:[[小铃]]:料理技能 >= 2
+		CALL M_KOJO_K70_COOKSET("完成：良好")
+	ELSE
+		CALL M_KOJO_K70_COOKSET("完成：微妙")
+	ENDIF
+	RETURN 1
+CASE "失败报告时"
+	
+	RETURN 0
+;CASE "依赖报告不要"
+;＜この依赖にはありません＞
+;	RETURN 0
+ENDSELECT
+;
+;;==================================================
+;;依赖口上・一般依赖05：关于特训
+;;==================================================
+;@M_KOJO_IRAI_5_K70(ROLE, SCENE, CLIENT_ID)
+;#DIMS ROLE     ;角色の立场、依赖者かそうでないか
+;#DIMS SCENE    ;セリフの表示されるタイミング
+;#DIM  CLIENT_ID;依赖者IDだけ抜き出したもの
+;;--------------------------------------------------
+;;RETURN 0 の部分は共通の口上が表示されます
+;;依赖ごとの口上を表示する部分は RETURN 0 を RETURN 1 にしてください
+;;--------------------------------------------------
+;SELECTCASE SCENE
+;CASE "依赖提示时"
+;	
+;	RETURN 0
+;CASE "依赖非受托时"
+;	
+;	RETURN 0
+;CASE "依赖受托时"
+;	
+;	RETURN 0
+;CASE "依赖确认时"
+;	
+;	RETURN 0
+;CASE "依赖破弃时"
+;	
+;	RETURN 0
+;CASE "依赖实行直前"
+;;○この依赖は依赖主がTARGETです
+;;【◆口上】
+;;【W ［你］は［彼女］と弹幕ごっこの特训をした】
+;;【▼そのまま下の口上へ】
+;	
+;	RETURN 0
+;CASE "依赖实行直后"
+;;○この依赖は必ず实行后达成します
+;;【▲上の口上から续き】
+;;【◆口上】
+;;【▼そのまま下の口上へ】
+;	
+;	RETURN 0
+;CASE "成功报告时"
+;;报酬：\500
+;;【▲上の口上から续き】
+;;【◆口上】
+;;【报酬获得】
+;	
+;	RETURN 0
+;CASE "失败报告时"
+;	
+;	RETURN 0
+;;CASE "依赖报告不要"
+;;＜この依赖にはありません＞
+;;	RETURN 0
+;ENDSELECT
+
+;==================================================
+;依赖口上・一般依赖06：谁来告诉我！
+;==================================================
+@M_KOJO_IRAI_6_K70(ROLE, SCENE, CLIENT_ID)
+#DIMS ROLE     ;角色の立场、依赖者かそうでないか
+#DIMS SCENE    ;セリフの表示されるタイミング
+#DIM  CLIENT_ID;依赖者IDだけ抜き出したもの
+;--------------------------------------------------
+;RETURN 0 の部分は共通の口上が表示されます
+;依赖ごとの口上を表示する部分は RETURN 0 を RETURN 1 にしてください
+;--------------------------------------------------
+SELECTCASE SCENE
+CASE "依赖提示时"
+	IF TALENT:70:恋慕
+		PRINTFORMW 「啊、%CALLNAME:MASTER%先生的话能分辨呢！」
+	ELSEIF TALENT:70:思慕
+		PRINTFORMW 「那个、%CALLNAME:MASTER%先生能分辨？」
+	ELSE
+		PRINTFORMW 「那个、%CALLNAME:MASTER%先生知道吗……？」
+	ENDIF
+	RETURN 1
+CASE "依赖非受托时"
+	
+	RETURN 0
+CASE "依赖受托时"
+	;表示させない
+	RETURN 1
+CASE "依赖确认时"
+	
+	RETURN 0
+CASE "依赖破弃时"
+	
+	RETURN 0
+CASE "依赖实行直前"
+	IF IS_LIBRARY(CFLAG:MASTER:当前位置) && TARGET == CLIENT_ID
+	;［查资料］と［进行解答］が重なっている场合
+	;【◆口上】
+	;【L ［你］は［彼女］の疑问に答えるために［现在地］を访れた】
+	;【L ここなら役に立つ资料が见つかりそうだ】
+	;【INPUT（查资料/进行解答）】
+	;【查资料＞［你］と［彼女］は［现在地］で调べ物をした】
+	;【▼そのまま下の口上へ】
+	;【进行解答＞［进行解答］へジャンプ】
+		
+		RETURN 0
+	ELSEIF IS_LIBRARY(CFLAG:MASTER:当前位置)
+	;［查资料］をした时、依赖主ではない口上主がTARGETの场合
+	;【◆口上】
+	;【［你］は［现在地］で调べ物をした】
+	;【▼そのまま下の口上へ】
+		
+		RETURN 0
+	ELSE
+	;［进行解答］时（依赖主がTARGET）
+	;【◆口上】
+	;【L ［你］は［彼女］の疑问に答えた】
+	;【成功：［彼女］の疑问は冰解した！】
+	;【失败：［彼女］は纳得できなかったようだ……】
+	;【▼そのまま下の口上へ】
+		
+		RETURN 0
+	ENDIF
+CASE "依赖实行直后"
+	;【▲上の口上から续き】
+	;【◆口上】
+	SELECTCASE CFLAG:CLIENT_ID:依赖状况
+	CASE 2
+	;［查资料］をした时
+		IF ROLE == "CLIENT"
+		;一绪に［查资料］をした时
+			
+			RETURN 0
+		ELSEIF ROLE == "TARGET"
+		;依赖主ではない口上主の前で［查资料］をした时
+			
+			RETURN 0
+		ENDIF
+	CASE 3
+	;成功した时
+	;【▼そのまま下の口上へ】
+		SELECTCASE RAND:3
+		CASE 1
+			PRINTFORMW 「嘿～、那样啊～」
+		CASE 2
+			PRINTFORMW 「什么、是那么回事吗～」
+		CASEELSE
+			PRINTFORMW 「原来如此！ 完全理解了！」
+		ENDSELECT
+		RETURN 1
+	CASE 6
+	;失败した时
+	;【▼そのまま失败报告时の口上へ】
+		SELECTCASE RAND:3
+		CASE 1
+			PRINTFORMW 「诶诶…、感觉好像不对……」
+		CASE 2
+			PRINTFORMW 「诶？ 那不奇怪吗……？」
+		CASEELSE
+			PRINTFORMW 「唔、唔～嗯……？」
+		ENDSELECT
+		RETURN 1
+	ENDSELECT
+CASE "成功报告时"
+;报酬：\500
+	IF TALENT:70:恋慕
+		SELECTCASE RAND:3
+		CASE 1
+			PRINTFORMW 「啊ー真痛快！  十分感谢！」
+		CASE 2
+			PRINTFORMW 「十分感谢！ %CALLNAME:MASTER%先生真是学识渊博啊～」
+		CASEELSE
+			PRINTFORMW 「十分感谢！ 这样就不会被阿求愚弄了！」
+		ENDSELECT
+	ELSE
+		PRINTFORMW 「真痛快ー！ 十分感谢！」
+	ENDIF
+	RETURN 1
+CASE "失败报告时"
+	IF TALENT:70:恋慕
+		PRINTFORMW 「哈啊……%CALLNAME:MASTER%先生居然也无法分辨……」
+	ELSEIF TALENT:70:思慕
+		PRINTFORMW 「对不起、问了奇怪的问题……」
+	ELSE
+		PRINTFORMW 「%CALLNAME:MASTER%先生、不懂装懂可不好哦……？」
+	ENDIF
+	RETURN 1
+;CASE "依赖报告不要"
+;＜この依赖にはありません＞
+;	RETURN 0
+ENDSELECT
+;
+;;==================================================
+;;依赖口上・一般依赖07：大扫除还没结束
+;;==================================================
+;@M_KOJO_IRAI_7_K70(ROLE, SCENE, CLIENT_ID)
+;#DIMS ROLE     ;角色の立场、依赖者かそうでないか
+;#DIMS SCENE    ;セリフの表示されるタイミング
+;#DIM  CLIENT_ID;依赖者IDだけ抜き出したもの
+;;--------------------------------------------------
+;;RETURN 0 の部分は共通の口上が表示されます
+;;依赖ごとの口上を表示する部分は RETURN 0 を RETURN 1 にしてください
+;;--------------------------------------------------
+;SELECTCASE SCENE
+;CASE "依赖提示时"
+;	
+;	RETURN 0
+;CASE "依赖非受托时"
+;	
+;	RETURN 0
+;CASE "依赖受托时"
+;	
+;	RETURN 0
+;CASE "依赖确认时"
+;	
+;	RETURN 0
+;CASE "依赖破弃时"
+;	
+;	RETURN 0
+;CASE "依赖实行直前"
+;;○この依赖は依赖主がTARGETです
+;	IF YOGORE:(GET_CHARAHOME(TARGET)) < 1000
+;	;先に扫除してしまっていた场合
+;	;【◆口上】
+;	;【W ［彼女］的房间は十分にきれいだ】
+;	;【▼そのまま下の口上へ】
+;		
+;		RETURN 0
+;	ELSE
+;	;一绪に扫除场合
+;	;【◆口上】
+;	;【W ［你］は［彼女］と协力して彻底的に房间を扫除した】
+;	;【▼そのまま下の口上へ】
+;		
+;		RETURN 0
+;	ENDIF
+;CASE "依赖实行直后"
+;;○この依赖は必ず实行后达成します
+;;【▲上の口上から续き】
+;;【◆口上】
+;;【▼そのまま下の口上へ】
+;	
+;	RETURN 0
+;CASE "成功报告时"
+;;报酬：\1500
+;;【▲上の口上から续き】
+;;【◆口上】
+;;【报酬获得】
+;	
+;	RETURN 0
+;CASE "失败报告时"
+;	
+;	RETURN 0
+;;CASE "依赖报告不要"
+;;＜この依赖にはありません＞
+;;	RETURN 0
+;ENDSELECT
+;
+;;==================================================
+;;依赖口上・一般依赖08：送信
+;;※この依赖は角色によっては发生しません
+;;==================================================
+;@M_KOJO_IRAI_8_K70(ROLE, SCENE, CLIENT_ID)
+;#DIMS ROLE     ;角色の立场、依赖者かそうでないか
+;#DIMS SCENE    ;セリフの表示されるタイミング
+;#DIM  CLIENT_ID;依赖者IDだけ抜き出したもの
+;;--------------------------------------------------
+;;RETURN 0 の部分は共通の口上が表示されます
+;;依赖ごとの口上を表示する部分は RETURN 0 を RETURN 1 にしてください
+;;--------------------------------------------------
+;SELECTCASE SCENE
+;CASE "依赖提示时"
+;	
+;	RETURN 0
+;CASE "依赖非受托时"
+;	
+;	RETURN 0
+;CASE "依赖受托时"
+;	
+;	RETURN 0
+;CASE "依赖确认时"
+;	
+;	RETURN 0
+;CASE "依赖破弃时"
+;	
+;	RETURN 0
+;CASE "依赖实行直前"
+;;○この依赖では手纸を渡される侧の口上です
+;;【◆口上】
+;;【W ［你］は［彼女］に预かっていた手纸を渡した】
+;;【▼そのまま下の口上へ】
+;	
+;	RETURN 0
+;CASE "依赖实行直后"
+;;○この依赖は必ず实行后达成します
+;;【▲上の口上から续き】
+;;【◆口上】
+;	
+;	RETURN 0
+;CASE "成功报告时"
+;;报酬：素材4つ
+;	
+;	RETURN 0
+;CASE "失败报告时"
+;	
+;	RETURN 0
+;;CASE "依赖报告不要"
+;;＜この依赖にはありません＞
+;;	RETURN 0
+;ENDSELECT
+
+;==================================================
+;依赖口上・一般依赖09：谁的遗失物
+;==================================================
+@M_KOJO_IRAI_9_K70(ROLE, SCENE, CLIENT_ID)
+#DIMS ROLE     ;角色の立场、依赖者かそうでないか
+#DIMS SCENE    ;セリフの表示されるタイミング
+#DIM  CLIENT_ID;依赖者IDだけ抜き出したもの
+;--------------------------------------------------
+;RETURN 0 の部分は共通の口上が表示されます
+;依赖ごとの口上を表示する部分は RETURN 0 を RETURN 1 にしてください
+;--------------------------------------------------
+SELECTCASE SCENE
+CASE "依赖提示时"
+	IF TALENT:70:恋慕 || TALENT:70:思慕
+		PRINTFORMW 「啊、%CALLNAME:MASTER%先生、我捡到了这个……」
+	ELSE
+		PRINTFORMW 「我捡到了遗失物……」
+	ENDIF
+	RETURN 1
+CASE "依赖非受托时"
+	PRINTFORMW 「呼唔……先保管起来吧」
+	RETURN 1
+CASE "依赖受托时"
+	IF TALENT:70:恋慕 || TALENT:70:思慕
+		PRINTFORMW 「能帮我找吗？ 帮了大忙啊ー！」
+	ELSE
+		PRINTFORMW 「能帮我找吗？ 拜托了」
+	ENDIF
+	RETURN 1
+CASE "依赖确认时"
+	
+	RETURN 0
+CASE "依赖破弃时"
+	PRINTFORMW 「呼唔……先保管起来吧」
+	RETURN 1
+CASE "依赖实行直前"
+;○この依赖では落とし物を渡される侧の口上です
+;【◆口上】
+;【W ［你］は［彼女］に预かっていた落とし物を返した】
+;【▼そのまま下の口上へ】
+	PRINTFORML 「あっ！ それ私のです！」
+	IF TALENT:70:恋慕
+		PRINTFORMW 「啊ー太好了…！ %CALLNAME:MASTER%先生、十分感谢ー！」
+	ELSEIF TALENT:70:思慕
+		PRINTFORMW 「帮了大忙ー！ 十分感谢！」
+	ELSE
+		PRINTFORMW 「您捡到了吗？ 十分感谢！」
+	ENDIF
+	RETURN 1
+CASE "依赖实行直后"
+;○この依赖は必ず实行后达成します
+;【▲上の口上から续き】
+;【◆口上】
+	
+	RETURN 0
+CASE "成功报告时"
+;报酬：上级素材
+	IF TALENT:70:恋慕 || TALENT:70:思慕
+		PRINTFORMW 「找到失主了吗？ 太好了、这下放心了呢」
+	ELSE
+		PRINTFORMW 「找到失主了吗？ 辛苦了ー」
+	ENDIF
+	RETURN 1
+CASE "失败报告时"
+	PRINTFORMW 「啊ー、那个失主、我找到了……」
+	RETURN 1
+CASE "依赖报告不要"
+	
+	RETURN 0
+ENDSELECT
+
+;==================================================
+;依赖口上・一般依赖10：怎么也找不到（场所探しパターン）
+;==================================================
+@M_KOJO_IRAI_10_K70(ROLE, SCENE, CLIENT_ID)
+#DIMS ROLE     ;角色の立场、依赖者かそうでないか
+#DIMS SCENE    ;セリフの表示されるタイミング
+#DIM  CLIENT_ID;依赖者IDだけ抜き出したもの
+;--------------------------------------------------
+;RETURN 0 の部分は共通の口上が表示されます
+;依赖ごとの口上を表示する部分は RETURN 0 を RETURN 1 にしてください
+;--------------------------------------------------
+SELECTCASE SCENE
+CASE "依赖提示时"
+	
+	RETURN 0
+CASE "依赖非受托时"
+	
+	RETURN 0
+CASE "依赖受托时"
+	
+	RETURN 0
+CASE "依赖确认时"
+	
+	RETURN 0
+CASE "依赖破弃时"
+	
+	RETURN 0
+CASE "依赖实行直前"
+;【◆口上】
+;【W 中奖了を探していた［你］はついに探していた落とし物を发见した】
+;【▼そのまま下の口上へ】
+	IF ROLE == "CLIENT"
+	;依赖主である口上主と一绪に发见した场合
+		PRINTFORMW 「啊！ 有了！！ 是这个！」
+		RETURN 1
+	ELSEIF ROLE == "TARGET"
+	;发见した时、依赖主ではない口上主がTARGETの场合
+		
+		RETURN 0
+	ENDIF
+CASE "依赖实行直后"
+;○この依赖は必ず实行后达成します
+;【▲上の口上から续き】
+;【◆口上】
+	IF ROLE == "CLIENT"
+	;依赖主である口上主と一绪に发见した场合
+		PRINTFORML 「为什么在这……？」
+		PRINTFORMW 「不、不要、还是别想太多了……」
+		RETURN 1
+	ELSEIF ROLE == "TARGET"
+	;发见した时、依赖主ではない口上主がTARGETの场合
+		
+		RETURN 0
+	ENDIF
+CASE "成功报告时"
+;报酬：上级素材2つ
+	
+	RETURN 0
+CASE "失败报告时"
+	
+	RETURN 0
+;CASE "依赖报告不要"
+;＜この依赖にはありません＞
+;	RETURN 0
+ENDSELECT
+
+;==================================================
+;依赖口上・一般依赖11：怎么也找不到（人物探しパターン）
+;==================================================
+@M_KOJO_IRAI_11_K70(ROLE, SCENE, CLIENT_ID)
+#DIMS ROLE     ;角色の立场、依赖者かそうでないか
+#DIMS SCENE    ;セリフの表示されるタイミング
+#DIM  CLIENT_ID;依赖者IDだけ抜き出したもの
+;--------------------------------------------------
+;RETURN 0 の部分は共通の口上が表示されます
+;依赖ごとの口上を表示する部分は RETURN 0 を RETURN 1 にしてください
+;--------------------------------------------------
+SELECTCASE SCENE
+CASE "依赖提示时"
+	
+	RETURN 0
+CASE "依赖非受托时"
+	
+	RETURN 0
+CASE "依赖受托时"
+	
+	RETURN 0
+CASE "依赖确认时"
+	
+	RETURN 0
+CASE "依赖破弃时"
+	
+	RETURN 0
+CASE "依赖实行直前"
+;○この依赖では失くしもの持っていた侧の口上です
+;【◆口上】
+;【W 闻き込みを续けていた［你］はついに探していた落とし物を发见した】
+;【▼そのまま下の口上へ】
+	PRINTFORML 「落とし物ですか？ そういえば……」
+	RETURN 0
+CASE "依赖实行直后"
+;○この依赖は必ず实行后达成します
+;【▲上の口上から续き】
+;【◆口上】
+	IF TALENT:70:恋慕
+		PRINTFORML 「找到失主太好了～」
+		PRINTFORMW （%CALLNAME:MASTER%先生真亲切啊……）
+	ELSEIF TALENT:70:思慕
+		PRINTFORMW 「没有没有、我就是想找失主来着」
+	ELSE
+		PRINTFORMW 「给您添麻烦了真对不起……」
+	ENDIF
+	RETURN 1
+CASE "成功报告时"
+;报酬：\3200
+	
+	RETURN 0
+CASE "失败报告时"
+	
+	RETURN 0
+;CASE "依赖报告不要"
+;＜この依赖にはありません＞
+;	RETURN 0
+ENDSELECT
+
+;==================================================
+;依赖口上・一般依赖12：惩らしめて！
+;==================================================
+@M_KOJO_IRAI_12_K70(ROLE, SCENE, CLIENT_ID)
+#DIMS ROLE     ;角色の立场、依赖者かそうでないか
+#DIMS SCENE    ;セリフの表示されるタイミング
+#DIM  CLIENT_ID;依赖者IDだけ抜き出したもの
+;--------------------------------------------------
+;RETURN 0 の部分は共通の口上が表示されます
+;依赖ごとの口上を表示する部分は RETURN 0 を RETURN 1 にしてください
+;--------------------------------------------------
+SELECTCASE SCENE
+CASE "依赖提示时"
+	IF TALENT:70:恋慕
+		PRINTFORMW 「最近好像起了骚动、被通缉了呢……！」
+	ELSEIF TALENT:70:思慕
+		PRINTFORMW 「最近好像起了骚动、有不少谣言呢……！」
+	ELSE
+		PRINTFORMW 「最近里有谣言呢……」
+	ENDIF
+	RETURN 1
+CASE "依赖非受托时"
+	
+	RETURN 0
+CASE "依赖受托时"
+	IF TALENT:70:恋慕
+		SELECTCASE RAND:4
+		CASE 1
+			PRINTFORMW 「战斗……！」
+		CASE 2
+			PRINTFORMW 「祈、祈祷奋斗……！」
+		CASE 3
+			PRINTFORMW 「请加油……！」
+		CASEELSE
+			PRINTFORMW 「不愧是%CALLNAME:MASTER%先生、真可靠……！」
+		ENDSELECT
+	ELSEIF TALENT:70:思慕
+		PRINTFORMW 「祈、祈祷奋斗……！」
+	ELSE
+		PRINTFORMW 「请、请小心……」
+	ENDIF
+	RETURN 1
+CASE "依赖确认时"
+	
+	RETURN 0
+CASE "依赖破弃时"
+	
+	RETURN 0
+CASE "依赖实行直前"
+;○この依赖では讨伐される侧の口上です
+	IF CANNOT_DANMAKU() == 1
+	;屋内のとき（胜负できない）
+	;【◆口上】
+	;【W 屋外で挑もう…】
+		
+		RETURN 0
+	ELSEIF CANNOT_DANMAKU() == 2
+	;仕事中（胜负できない）
+	;【◆口上】
+	;【W お取り込み中だ…】
+		
+		RETURN 0
+	ELSEIF CANNOT_DANMAKU() == 3
+	;你が疲劳中（胜负できない）
+	;【◆口上】
+	;【W 今は疲れている…】
+		
+		RETURN 0
+	ELSEIF CANNOT_DANMAKU() == 4
+	;口上主が疲劳竜（胜负できない）
+	;【◆口上】
+	;【W 今挑むのはフェアじゃない…】
+		
+		RETURN 0
+	ELSEIF CANNOT_DANMAKU() == 5
+	;既に今日一度弹幕胜负をしている（胜负できない）
+	;【◆口上】
+	;【W 今日はもう挑めない…】
+		
+		RETURN 0
+	ELSE
+	;【◆口上】
+	;【W 胜负开始！！】
+	;【以降はそのまま弹幕口上が呼ばれます】
+		
+		RETURN 0
+	ENDIF
+	;【▼そのまま下の口上へ】
+CASE "依赖实行直后"
+;○この依赖では讨伐される侧の口上です
+	IF CFLAG:CLIENT_ID:依赖状况 == 2
+		IF CANNOT_DANMAKU() == 0
+			;败犬
+			;【▲上の口上から续き】
+			;【L ［彼女］の讨伐に失败した……】
+			;【W ……こうなったら后日出直すしかない】
+			;【◆口上】
+			RETURN 0
+		ELSE
+			;挑めなかった场合
+			;【▲上の口上から续き】
+			;【◆口上】
+			RETURN 0
+		ENDIF
+	ELSEIF CFLAG:CLIENT_ID:依赖状况 == 3
+	;胜利
+	;【▲上の口上から续き】
+	;【W ［彼女］を惩らしめた！】
+	;【◆口上】
+		
+		RETURN 0
+	ENDIF
+CASE "成功报告时"
+;报酬：赏金（时价）
+	IF TALENT:70:恋慕
+		PRINTFORMW 「呀ー！ %CALLNAME:MASTER%先生好帅气～！！」
+	ELSEIF TALENT:70:思慕
+		PRINTFORMW 「不愧是%CALLNAME:MASTER%先生！ 真可靠ー！」
+	ELSE
+		PRINTFORMW 「真、真的消灭了？ 好、好厉害……！」
+	ENDIF
+	RETURN 1
+CASE "失败报告时"
+	
+	RETURN 0
+;CASE "依赖报告不要"
+;＜この依赖にはありません＞
+;	RETURN 0
+ENDSELECT
+
+;==================================================
+;依赖口上・一般依赖13：好吃的鱼が食べたいなぁ
+;==================================================
+@M_KOJO_IRAI_13_K70(ROLE, SCENE, CLIENT_ID)
+#DIMS ROLE     ;角色の立场、依赖者かそうでないか
+#DIMS SCENE    ;セリフの表示されるタイミング
+#DIM  CLIENT_ID;依赖者IDだけ抜き出したもの
+;--------------------------------------------------
+;RETURN 0 の部分は共通の口上が表示されます
+;依赖ごとの口上を表示する部分は RETURN 0 を RETURN 1 にしてください
+;--------------------------------------------------
+SELECTCASE SCENE
+CASE "依赖提示时"
+	PRINTFORMW 「可能最近看了外面的美食书籍……」
+	RETURN 1
+CASE "依赖非受托时"
+	PRINTFORMW 「啊哈哈……好奢侈啊……」
+	RETURN 1
+CASE "依赖受托时"
+	PRINTFORMW 「真的吗！？ 拜托了！」
+	RETURN 1
+CASE "依赖确认时"
+	
+	RETURN 0
+CASE "依赖破弃时"
+	PRINTFORMW 「啊哈哈……好奢侈啊……」
+	RETURN 1
+CASE "依赖实行直前"
+;○この依赖は依赖主がTARGETです
+;【◆口上】
+;【L ［你］は［彼女］に好吃的鱼を渡した】
+;【L 何だか生きる希望がわいてきたよ。】
+;【▼そのまま下の口上へ】
+	PRINTFORMW 「哇、真厉害！ 跟在书上看到的一样！」
+	RETURN 1
+CASE "依赖实行直后"
+;○この依赖は必ず实行后达成します
+;【▲上の口上から续き】
+;【◆口上】
+;【▼そのまま下の口上へ】
+	PRINTFORML 「十分感谢！」
+	RETURN 1
+CASE "成功报告时"
+;报酬：白米３个
+	PRINTFORMW 「这是回礼」
+	RETURN 1
+CASE "失败报告时"
+	
+	RETURN 0
+;CASE "依赖报告不要"
+;＜この依赖にはありません＞
+;	RETURN 0
+ENDSELECT
+
+;==================================================
+;依赖口上・一般依赖16：お恼み相谈
+;==================================================
+@M_KOJO_IRAI_16_K70(ROLE, SCENE, CLIENT_ID)
+#DIMS ROLE     ;キャラの立场、依赖者かそうでないか
+#DIMS SCENE    ;セリフの表示されるタイミング
+#DIM  CLIENT_ID;依赖者IDだけ抜き出したもの
+;--------------------------------------------------
+;RETURN 0 の部分は共通の口上が表示されます
+;依赖ごとの口上を表示する部分は RETURN 0 を RETURN 1 にしてください
+;--------------------------------------------------
+SELECTCASE SCENE
+CASE "依赖提示时"
+	PRINTFORML 「%CALLNAME:MASTER%先生,能听我说句话吗？」
+	RETURN 1
+CASE "依赖非受托时"
+	PRINTFORML 「是吗......真遗憾呢......」
+	RETURN 1
+CASE "依赖受托时"
+	PRINTFORML 「太谢谢您了ー!」
+	RETURN 1
+CASE "依赖确认时"
+	
+	RETURN 0
+CASE "依赖破弃时"
+	
+	RETURN 0
+CASE "依赖实行直前"
+    PRINTFORML 「那么就是说呢――」 
+    RETURN 1
+CASE "依赖实行直后"
+    IF TFLAG:193 == 1
+        ;正确的选择
+        PRINTFORML 「问了%CALLNAME:MASTER%先生真是太好了!」
+    ELSEIF TFLAG:193 == 2 
+        ;误选但结果正解
+        PRINTFORML 「诶!?%CALLNAME:MASTER%先生,那个非常棒!」
+    ELSEIF TFLAG:193 == -1
+        ;误选
+        PRINTFORML 「嗯~......那个怎么样呢......」
+    ELSEIF TFLAG:193 == -2
+        ;正确选项却反而错误
+        PRINTFORML 「嗯~......那个有点太老套了呢......」
+    ENDIF 
+    RETURN 1
+CASE "成功报告时"
+;报酬:蔬菜或水果
+    PRINTFORML 「非常感谢您!」
+    RETURN 1 
+CASE "失败报告时"
+    PRINTFORML 「真是麻烦您了......」
+    RETURN 1
+;CASE "依赖报告不要"
+;＜この依赖にはありません＞
+;	RETURN 0
+CASE "口上委托率"
+;＜この依赖特有の分岐です。(RESULT:100の值)％の概率で"口上専用"が发生します＞
+	RESULT:100 = 0
+
+;＜RESULT:YYに0以外の数值を入れると、该当のお恼みを发生させなくできます（詳しくは一般依赖16_お恼み相谈参照）＞
+;1,2:弹幕ごっこの恼み 3,4:晩酌の恼み 5,6:本の恼み 7,8:香料の恼み
+;9,10:音乐の恼み 11,12:服の恼み 13:发型の恼み 14:参拝の恼み 15:ダイエットの恼み
+;16,17:菜园の恼み 18:休日の恼み 19:人气の恼み 20:集中力の恼み 21:御三家の恼み 22:进化の恼み
+	RESULT:1 = 0
+	RESULT:2 = 0
+	RETURN 1
+CASE "口上専用"
+;＜この依赖特有の分岐です。(口上委托率)％の概率で发生します＞
+;16,お恼み相谈 の场合
+;RESULT        发生判定,0だと发生しません
+;RESULT:1      正解の选择肢（ただしRESULT:2が0だと、一定概率で逆にハズレる）
+;RESULT:2      逆张り正解／ハズレ判定の消去,1だと逆张りが无くなります
+;RESULTS:0     お恼み文章（自动で『』で囲まれます）
+;RESULTS:1～3  选择肢１～３
+;何も发生しない状态になると无限ループになるので注意してください
+;●追记メモ
+;RESULT:1を4～6にするとそれぞれ1～3がハズレ（残り2つが正解）になります
+;RESULT:1を7にするとどれも正解になります
+;RESULT:1を8にするとどれもハズレになります
+;1～3以外の场合は逆张り判定が自动で无くなります
+	RESULT = 0
+ENDSELECT
+
+;==================================================
+;依赖口上・固有依赖101：
+;固有依赖の仕样は角色によって异なりますが依赖番号は101～で共通です
+;"依赖名"部分に依赖名を入れて下さい
+;==================================================
+@M_KOJO_IRAI_依赖名_K70(ROLE, SCENE, CLIENT_ID)
+#DIMS ROLE     ;角色の立场、依赖者かそうでないか
+#DIMS SCENE    ;セリフの表示されるタイミング
+#DIM  CLIENT_ID;依赖者IDだけ抜き出したもの
+;--------------------------------------------------
+;RETURN 0 の部分は共通の口上が表示されます
+;依赖ごとの口上を表示する部分は RETURN 0 を RETURN 1 にしてください
+;--------------------------------------------------
+SELECTCASE SCENE
+CASE "依赖提示时"
+	
+	RETURN 0
+CASE "依赖非受托时"
+	
+	RETURN 0
+CASE "依赖受托时"
+	
+	RETURN 0
+CASE "依赖确认时"
+	
+	RETURN 0
+CASE "依赖破弃时"
+	
+	RETURN 0
+CASE "依赖实行直前"
+	
+	RETURN 0
+CASE "依赖实行直后"
+	
+	RETURN 0
+CASE "成功报告时"
+;报酬：
+	
+	RETURN 0
+CASE "失败报告时"
+	
+	RETURN 0
+CASE "依赖报告不要"
+	
+	RETURN 0
+ENDSELECT
+
+;＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+;依赖口上テンプレのテンプレ
+;==================================================
+;依赖口上・一般依赖Y：
+;==================================================
+@M_KOJO_IRAI_Y_K70(ROLE, SCENE, CLIENT_ID)
+#DIMS ROLE     ;角色の立场、依赖者かそうでないか
+#DIMS SCENE    ;セリフの表示されるタイミング
+#DIM  CLIENT_ID;依赖者IDだけ抜き出したもの
+;--------------------------------------------------
+;RETURN 0 の部分は共通の口上が表示されます
+;依赖ごとの口上を表示する部分は RETURN 0 を RETURN 1 にしてください
+;--------------------------------------------------
+SELECTCASE SCENE
+CASE "依赖提示时"
+	
+	RETURN 0
+CASE "依赖非受托时"
+	
+	RETURN 0
+CASE "依赖受托时"
+	
+	RETURN 0
+CASE "依赖确认时"
+	
+	RETURN 0
+CASE "依赖破弃时"
+	
+	RETURN 0
+CASE "依赖实行直前"
+	
+	RETURN 0
+CASE "依赖实行直后"
+	
+	RETURN 0
+CASE "成功报告时"
+;报酬：
+	
+	RETURN 0
+CASE "失败报告时"
+	
+	RETURN 0
+;CASE "依赖报告不要"
+;＜この依赖にはありません＞
+;	RETURN 0
+ENDSELECT

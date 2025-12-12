@@ -1,0 +1,97 @@
+﻿;-------------------------------------------------
+;听课
+;日常系指令、レベル1
+;-------------------------------------------------
+@COM441
+DOWNBASE:MASTER:体力 = 50
+DOWNBASE:MASTER:气力 = 200
+
+IF TARGET > 0 && !CFLAG:睡眠
+	;固定で获得するソース
+	SOURCE:欢乐 = 200
+
+	;信赖
+	TFLAG:98 = 3
+	SIF ABL:MASTER:教养 > 2
+		TFLAG:98 ++ 
+	IF ABL:MASTER:教养 > ABL:教养
+		TFLAG:98 ++ 
+		EXP:学习经验 += 2
+	ENDIF
+	SIF ABL:MASTER:教养 < ABL:教养 - 2
+		EXP:MASTER:学习经验 ++
+	;ABL:顺从をみる
+	IF ABL:顺从 <= 1
+		SOURCE:欢乐 += (ABL:顺从 * 60)
+	ELSEIF ABL:顺从 <= 3
+		SOURCE:欢乐 += 200 + (ABL:顺从 * 60)
+	ELSEIF ABL:顺从 <= 5
+		SOURCE:欢乐 += 500 + (ABL:顺从 * 60)
+	ELSEIF ABL:顺从 <= 8
+		SOURCE:欢乐 += 750 + (ABL:顺从 * 75)
+	ELSEIF ABL:顺从 <= 11
+		SOURCE:欢乐 += 1000 + (ABL:顺从 * 75)
+	ELSE
+		SOURCE:欢乐 += 2000 + (ABL:顺从 * 30)
+	ENDIF
+	
+;授业を受けたら回数をカウント
+SIF CFLAG:当前位置 == 寺子屋 && CFLAG:67:行动 == 5
+	TCVAR:67:特殊事件 ++
+	
+	;好感度をみる
+	IF CFLAG:2 <= 500
+		SOURCE:欢乐 += CFLAG:2
+	ELSEIF CFLAG:2 <= 5000
+		SOURCE:欢乐 += 500 + (CFLAG:2 - 500) / 3
+	ELSE
+		SOURCE:欢乐 += 2000 + (CFLAG:2 - 5000) / 5
+	ENDIF
+	SIF SOURCE:欢乐 < 0
+		SOURCE:欢乐 = 0
+	EXP:MASTER:学习经验 ++
+	EXP:学习经验 ++
+ENDIF
+
+TIME += 60
+EXP:MASTER:学习经验 ++
+SIF ITEM:103 && !RAND:2
+	EXP:MASTER:学习经验 ++
+RETURN 1
+
+;-------------------------------------------------
+;实行判定
+;-------------------------------------------------
+;听课
+@COM_ABLE441
+;扫除实行判定
+SIF !TFLAG:100
+	RETURN 0
+;批量管理
+SIF GLOBAL_COMABLE(441)
+	RETURN RESULT
+;停止中は不可
+SIF FLAG:70 == 1
+	RETURN 0
+;寺子屋以外不可
+SIF CFLAG:MASTER:当前位置 != 240
+	RETURN 0
+;慧音の居る所
+SIF CFLAG:MASTER:当前位置 != CFLAG:67:当前位置
+	RETURN 0
+;仕事中以外不可
+SIF CFLAG:行动 != 5
+	RETURN 0
+;お昼休み中は不可
+SIF TIME >= 720 && TIME <= 780
+	RETURN 0
+;授业时间后は不可
+SIF TIME >= 840
+	RETURN 0
+;气力0
+SIF BASE:MASTER:气力 <= 0
+	RETURN 0
+SIF CFLAG:诶嘿嘿 == 2
+	RETURN 0
+RETURN 1
+

@@ -1,0 +1,285 @@
+﻿;-------------------------------------------------
+;扩张气球
+;ハードな调教指令、レベル4
+;-------------------------------------------------
+@COM147
+;着脱の处理
+TEQUIP:扩张气球 = !TEQUIP:扩张气球
+
+CSTR:TARGET:10 += @"{PLAYER}/"
+;TCVAR:2 射精部位フラグ（-1=避孕套 1=膣内 2=肛门 3=手淫 4=口淫 5=乳交 6=素股 7=足交 8=体表 9=肛门侍奉 10=道具 11=触手 12=Ａ调教 13=Ｖ调教）
+TCVAR:TARGET:2 = 12
+;强度
+TCVAR:TARGET:4 = 1200
+
+;-------------------------------------------------
+;COM别FLAGの设定
+;-------------------------------------------------
+;行为者
+TCVAR:116 = PLAYER
+;-------------------------------------------------
+;ソース追加处理
+;-------------------------------------------------
+;消费体力、气力
+IF FLAG:70 == 1
+	BASE:MASTER:TSP -= 150
+	SOURCE:快Ａ = 200
+	SOURCE:苦痛 = 400
+
+	;Aへの苦痛は先に处理しておく
+	;EXP:Ａ经验をみる
+	IF EXP:Ａ经验 < EXPLV:1
+		TIMES SOURCE:苦痛 , 3.00
+	ELSEIF EXP:Ａ经验 < EXPLV:2
+		TIMES SOURCE:苦痛 , 1.20
+	ELSEIF EXP:Ａ经验 < EXPLV:3
+		TIMES SOURCE:苦痛 , 0.80
+	ELSEIF EXP:Ａ经验 < EXPLV:4
+		TIMES SOURCE:苦痛 , 0.60
+	ELSEIF EXP:Ａ经验 < EXPLV:5
+		TIMES SOURCE:苦痛 , 0.40
+	ELSEIF EXP:Ａ经验 >= EXPLV:5
+		TIMES SOURCE:苦痛 , 0.20
+	ENDIF
+
+	;PALAM:润滑をみる
+	IF PALAM:润滑 < PALAMLV:1
+		TIMES SOURCE:苦痛 , 1.20
+	ELSEIF PALAM:润滑 < PALAMLV:2
+		TIMES SOURCE:苦痛 , 1.00
+	ELSEIF PALAM:润滑 < PALAMLV:3
+		TIMES SOURCE:苦痛 , 0.60
+	ELSEIF PALAM:润滑 < PALAMLV:4
+		TIMES SOURCE:苦痛 , 0.30
+	ELSEIF PALAM:润滑 >= PALAMLV:4
+		TIMES SOURCE:苦痛 , 0.20
+	ENDIF
+
+ELSE
+
+	DOWNBASE:体力 += 150
+	DOWNBASE:气力 += 200
+
+	SOURCE:快Ａ = 200
+	SOURCE:苦痛 = 800
+	SOURCE:露出 = 300
+	SOURCE:屈从 = 400
+	SOURCE:偏离正轨 = 700
+	SOURCE:反感 = 700
+
+
+	;-------------------------------------------------
+	;特殊ソース处理
+	;-------------------------------------------------
+	;圧抑、抵抗持ちには、抑郁ソース追加
+	SIF TALENT:自己爱 < 0 || TALENT:抵抗
+		SOURCE:郁闷 += 700
+
+	;Aへの苦痛は先に处理しておく
+	;EXP:Ａ经验をみる
+	IF EXP:Ａ经验 < EXPLV:1
+		TIMES SOURCE:苦痛 , 3.00
+		TIMES SOURCE:反感 , 3.00
+	ELSEIF EXP:Ａ经验 < EXPLV:2
+		TIMES SOURCE:苦痛 , 1.20
+		TIMES SOURCE:反感 , 2.00
+	ELSEIF EXP:Ａ经验 < EXPLV:3
+		TIMES SOURCE:苦痛 , 0.80
+		TIMES SOURCE:反感 , 1.50
+	ELSEIF EXP:Ａ经验 < EXPLV:4
+		TIMES SOURCE:苦痛 , 0.60
+		TIMES SOURCE:反感 , 1.20
+	ELSEIF EXP:Ａ经验 < EXPLV:5
+		TIMES SOURCE:苦痛 , 0.40
+	ELSEIF EXP:Ａ经验 >= EXPLV:5
+		TIMES SOURCE:苦痛 , 0.20
+	ENDIF
+
+	;PALAM:润滑をみる
+	IF PALAM:润滑 < PALAMLV:1
+		TIMES SOURCE:苦痛 , 1.20
+		TIMES SOURCE:反感 , 2.00
+	ELSEIF PALAM:润滑 < PALAMLV:2
+		TIMES SOURCE:苦痛 , 1.00
+		TIMES SOURCE:反感 , 1.50
+	ELSEIF PALAM:润滑 < PALAMLV:3
+		TIMES SOURCE:苦痛 , 0.60
+	ELSEIF PALAM:润滑 < PALAMLV:4
+		TIMES SOURCE:苦痛 , 0.30
+	ELSEIF PALAM:润滑 >= PALAMLV:4
+		TIMES SOURCE:苦痛 , 0.20
+	ENDIF
+ENDIF
+;-------------------------------------------------
+;污れの处理
+;-------------------------------------------------
+STAIN:7 |= STAIN:4
+STAIN:4 |= STAIN:7
+;-------------------------------------------------
+;経験の处理
+;-------------------------------------------------
+EXP:Ａ经验 += 4
+
+IF !EXP:Ｖ扩张经验 && !EXP:Ａ扩张经验 && !GETBIT(CFLAG:3,5)
+	EXP:异常经验 += 1
+	SETBIT CFLAG:3,5
+ENDIF
+
+EXP:Ａ扩张经验 += 1
+;同性爱　レズなら返回值1ゲイなら返回值2
+IF FLAG:70 == 1
+	IF HETEROSEX(TARGET,PLAYER)
+		EXP:PLAYER:(50 + HETEROSEX(TARGET,PLAYER)) += 1
+	ENDIF
+ELSE
+	IF HETEROSEX(TARGET,PLAYER)
+		EXP:(50 + HETEROSEX(TARGET,PLAYER)) += 1
+		EXP:PLAYER:(50 + HETEROSEX(TARGET,PLAYER)) += 1
+	ENDIF
+ENDIF
+RETURN 1
+;-------------------------------------------------
+;装着继续の处理
+;-------------------------------------------------
+@EQUIP_COM147(ARG)
+;扩张气球
+
+PRINTL ＜扩张气球插入中＞
+
+CSTR:TARGET:10 += @"{PLAYER}/"
+;TCVAR:2 射精部位フラグ（-1=避孕套 1=膣内 2=肛门 3=手淫 4=口淫 5=乳交 6=素股 7=足交 8=体表 9=肛门侍奉 10=道具 11=触手 12=Ａ调教 13=Ｖ调教）
+TCVAR:TARGET:2 = 12
+;强度
+TCVAR:TARGET:4 = 600
+
+IF FLAG:70 == 1
+	BASE:MASTER:TSP -= 70
+	SOURCE:ARG:快Ａ += 100
+
+	;Aへの苦痛は先に处理しておく
+	;EXP:Ａ经验をみる
+	LOCAL = 400
+	IF EXP:ARG:Ａ经验 < EXPLV:1
+		TIMES LOCAL , 3.00
+	ELSEIF EXP:ARG:Ａ经验 < EXPLV:2
+		TIMES LOCAL , 1.20
+	ELSEIF EXP:ARG:Ａ经验 < EXPLV:3
+		TIMES LOCAL , 0.80
+	ELSEIF EXP:ARG:Ａ经验 < EXPLV:4
+		TIMES LOCAL , 0.60
+	ELSEIF EXP:ARG:Ａ经验 < EXPLV:5
+		TIMES LOCAL , 0.40
+	ELSEIF EXP:ARG:Ａ经验 >= EXPLV:5
+		TIMES LOCAL , 0.20
+	ENDIF
+
+	;PALAM:润滑をみる
+	IF PALAM:ARG:润滑 < PALAMLV:1
+		TIMES LOCAL , 1.20
+	ELSEIF PALAM:ARG:润滑 < PALAMLV:2
+		TIMES LOCAL , 1.00
+	ELSEIF PALAM:ARG:润滑 < PALAMLV:3
+		TIMES LOCAL , 0.60
+	ELSEIF PALAM:ARG:润滑 < PALAMLV:4
+		TIMES LOCAL , 0.30
+	ELSEIF PALAM:ARG:润滑 >= PALAMLV:4
+		TIMES LOCAL , 0.20
+	ENDIF
+	SOURCE:ARG:苦痛 += LOCAL
+
+ELSE
+
+
+	DOWNBASE:ARG:体力 += 75
+	DOWNBASE:ARG:气力 += 100
+
+	SOURCE:ARG:快Ａ += 100
+	SOURCE:ARG:露出 += 150
+	SOURCE:ARG:屈从 += 200
+	SOURCE:ARG:偏离正轨 += 350
+
+	;-------------------------------------------------
+	;特殊ソース处理
+	;-------------------------------------------------
+	;圧抑、抵抗持ちには、抑郁ソース追加
+	SIF TALENT:ARG:自己爱 < 0 || TALENT:ARG:抵抗
+		SOURCE:ARG:郁闷 += 350
+
+	;Aへの苦痛は先に处理しておく
+	;EXP:Ａ经验をみる
+	LOCAL = 400
+	LOCAL:1 = 350
+	IF EXP:ARG:Ａ经验 < EXPLV:1
+		TIMES LOCAL , 3.00
+		TIMES LOCAL:1 , 3.00
+	ELSEIF EXP:ARG:Ａ经验 < EXPLV:2
+		TIMES LOCAL , 1.20
+		TIMES LOCAL:1 , 2.00
+	ELSEIF EXP:ARG:Ａ经验 < EXPLV:3
+		TIMES LOCAL , 0.80
+		TIMES LOCAL:1 , 1.50
+	ELSEIF EXP:ARG:Ａ经验 < EXPLV:4
+		TIMES LOCAL , 0.60
+		TIMES LOCAL:1 , 1.20
+	ELSEIF EXP:ARG:Ａ经验 < EXPLV:5
+		TIMES LOCAL , 0.40
+	ELSEIF EXP:ARG:Ａ经验 >= EXPLV:5
+		TIMES LOCAL , 0.20
+	ENDIF
+
+	;PALAM:润滑をみる
+	IF PALAM:ARG:润滑 < PALAMLV:1
+		TIMES LOCAL , 1.20
+		TIMES LOCAL:1 , 2.00
+	ELSEIF PALAM:ARG:润滑 < PALAMLV:2
+		TIMES LOCAL , 1.00
+		TIMES LOCAL:1 , 1.50
+	ELSEIF PALAM:ARG:润滑 < PALAMLV:3
+		TIMES LOCAL , 0.60
+	ELSEIF PALAM:ARG:润滑 < PALAMLV:4
+		TIMES LOCAL , 0.30
+	ELSEIF PALAM:ARG:润滑 >= PALAMLV:4
+		TIMES LOCAL , 0.20
+	ENDIF
+	SOURCE:ARG:苦痛 += LOCAL
+	SOURCE:ARG:反感 += LOCAL:1
+ENDIF
+;-------------------------------------------------
+;経験の处理
+;-------------------------------------------------
+EXP:ARG:Ａ经验 += 1
+EXP:ARG:Ａ扩张经验 += 1
+
+;-------------------------------------------------
+;实行判定
+;-------------------------------------------------
+@COM_ABLE147
+;扩张气球实行判定
+SIF !TFLAG:100
+	RETURN 0
+;批量管理
+SIF GLOBAL_COMABLE(147)
+	RETURN RESULT
+;下半身着衣
+SIF TEQUIP:0 > 1
+	RETURN 0
+;解除是つでも可能
+SIF TEQUIP:22
+	RETURN 1
+;道具を持っているか、道具无设定でないとダメ
+SIF ITEM:8 == 0 && NOITEM == 0
+	RETURN 0
+;肛用振动棒使用中は不可
+SIF TEQUIP:14
+	RETURN 0
+;后庭拉珠使用中は不可
+SIF TEQUIP:15
+	RETURN 0
+;普通の浣肠使用中は不可
+SIF TEQUIP:21
+	RETURN 0
+;电极使用中は不可
+SIF TEQUIP:23
+	RETURN 0
+RETURN 1
+

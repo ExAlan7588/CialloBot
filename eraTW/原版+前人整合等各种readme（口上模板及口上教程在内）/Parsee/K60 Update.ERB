@@ -1,0 +1,476 @@
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+;settings
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+
+;TODO
+;Option for Parsee seeing you as 勇仪 even if you aren't playing as her
+;Option for Parsee going full yandere if you NTR her
+
+@K60_CONFIGURE
+#DIM nLineCnt_Head
+;FOR LOCAL, 0, 100
+;PRINTL
+;NEXT
+LOADGLOBAL
+;set character update version
+nCharaSaveUp:60:0:21 = VAR_OR_DEFAULT("K60EN_VER")
+nLineCnt_Head = LINECOUNT
+REDRAW 0
+	SIF LINECOUNT - nLineCnt_Head > 0
+		CLEARLINE LINECOUNT - nLineCnt_Head
+
+;config menu
+{
+CALL KOJO_CONFIGURE(
+	[[帕露西]],
+	"MENTAL/PHYSICAL/YURI/PURITY",
+	"",
+	@"「朋友们都没空。（或者是在躲着我。感觉后者的可能性比较大……）」\n「酒也喝完了，想去买也没钱，但又睡不着。」\n「要画点什么吗。」",60
+	)
+}
+;「All my friends are busy (or deliberately avoiding me, more likely)...」
+;「I'm out of alcohol, I can't afford to buy any more, and I'm not tired enough to sleep.」
+;「I might as well paint something.」
+
+@K60_SETTING_MENTAL
+IF !nCharaSaveUp:60:0:20
+	{
+		CALL KOJO_SETTING(
+			[[帕露西]], 0, "Abilities",
+			@"%CALLNAME:60%开始画桥。那些木材已经老旧，饱经风霜...", -1,
+			@"但是很漂亮，有修缮过的痕迹 [根据口上内容变更%CALLNAME:60%的能力]",
+			@"需要修缮 [%CALLNAME:60%的能力不变更]"
+			)
+	}
+	;@"%CALLNAME:60% begins by painting the bridge. Its wood is old and weather-beaten, and...",
+	;@"It's clean and shows signs of repair [Change %CALLNAME:60%'s abilities to match the dialogue]",
+	;@"It's clean, but needs repairs [Leave %CALLNAME:60%'s abilities alone]"
+
+		;Todo: tweak her likes and dislikes (can you even do this from a dialogue?)
+
+	{
+		CALL KOJO_SETTING(
+			[[帕露西]], 1, "Affinities",
+			@"接着在桥上画人物。首先添加的是...", -1,
+			@"%NAME:37% [根据口上内容变更%CALLNAME:60%的相性]",
+			@"%NAME:64% [不变更]"
+			)
+	}
+	;@"Next she paints some people on the bridge. First, she adds...", -1,
+	;@"%NAME:37% [change %CALLNAME:60%'s affinities to match the dialogue]",
+	;@"%NAME:64% [leave %CALLNAME:60%'s affinities alone]"
+
+
+	{
+		CALL KOJO_SETTING(
+			[[帕露西]], 2, "Jealousy",
+			@"然后在桥上画一对情侣。\n%CALLNAME:[[帕露西]]%凝视着那对情侣。她的表情是…:", -1,
+			@"普通 [就算和其他人在面前约会，%CALLNAME:60%也不会有反应]",
+			@"愤怒 [如果和其他人在面前约会，%CALLNAME:60%会进入愤怒状态，好感度下降]",
+			@"愤怒 [如果和其他人在面前约会，%CALLNAME:60%会获得反抗刻印，进入愤怒状态，好感度下降]",
+			@"错乱 [如果和其他人在面前约会，%CALLNAME:60%会获得反抗刻印，进入愤怒状态，好感度下降，病娇值上升(未实装)]"
+			)
+	}
+	;@"After that, she paints a couple crossing the bridge. \n%CALLNAME:[[帕露西]]% is staring at the couple, and her expression is:", -1,
+	;@"Neutral [%CALLNAME:60% will not react to you dating other people in front of her]",
+	;@"Angry [%CALLNAME:60% will get angry and lose Favor if you date other people in front of her]",
+	;@"Furious [%CALLNAME:60% will get Hate Marks, get angry, and lose Favor if you date other people in front of her]",
+	;@"Unhinged [%CALLNAME:60% will get Hate Marks, get angry, lose Favor, and gain yandere points (Not yet implemented)]"
+
+	{
+		CALL KOJO_SETTING(
+			[[帕露西]], 3, "Talents",
+			@"最后，%CALLNAME:60%让她拿着的是…", -1,
+			@"酒瓶 [根据口上内容变更素质]",
+			@"木槌 [素质不变更]"
+			)
+	}
+	;Finally, %CALLNAME:60% adds something in one of her hands. It's a...
+ENDIF
+
+@K60_SETTING_PHYSICAL
+IF !nCharaSaveUp:60:0:20
+
+	{
+		CALL KOJO_SETTING_SEX(
+			[[帕露西]], 5,
+			@"%CALLNAME:[[帕露西]]%在最后完成的画上签名，然后晾干。\n然后将新的画布固定在画架上，开始创作新的作品。\n\n是自画像。\n画中的帕露西是...", -1
+			)
+	}
+	;%CALLNAME:[[帕露西]]% adds her signature to her finished painting and sets it aside to dry.
+	;Then she places a new blank canvas on her easel and begins work on another painting.
+	;
+	;%CALLNAME:60% starts by painting HERSELF.
+	;she is a...
+
+	{
+		CALL KOJO_SETTING_SIZE(
+			[[帕露西]], 6,
+			@"帕露西是...", -1,
+			"小人级别",
+			"儿童水平",
+			"矮小",
+			"平均 [default]",
+			"高挑",
+			"巨汉",
+			"巨人级别",
+			@"和默认一样 [%CALLNAME:[[帕露西]]%的尺寸不变更]"
+			)
+	}
+	;@"Also, she is...", -1,
+	;"Inchling-sized",
+	;"Child-sized",
+	;"Short",
+	;"Of average height [default]",
+	;"Tall",
+	;"Extremely tall",
+	;"Giant-sized",
+	;@"The same height she always is [do not change %CALLNAME:[[帕露西]]%'s size]"
+
+	{
+		CALL KOJO_SETTING(
+			[[帕露西]], 7, "Pubic Hair",
+			@"接下来%CALLNAME:[[帕露西]]%开始画衣服。\n她提起裙子，拉开内裤…:", -1,
+			@"能看到阴毛[启用阴毛描写]",
+			@"光溜溜的 [禁用阴毛描写]"
+			)
+	}
+	;@"Next, %CALLNAME:[[帕露西]]% starts painting her clothes. \n%HES_SHES(TARGET,1)% lifting her skirt and tugging down the front of her underwear, revealing:", -1,
+	;@"Some pubic hair [Enables description of %CALLNAME:60%'s pubic hair]",
+	;"Smooth skin [Disable pubic hair related content]"
+
+	{
+		CALL KOJO_SETTING_BREASTS(
+			[[帕露西]], 8, @"接下来转到上半身。\n和平常一样的外套和黑色内衬。\n她的胸部是...", -1,
+			"平坦",
+			"非常小",
+			"小",
+			"平均 (default)",
+			"丰满",
+			@"双乳比脸还大"
+			)
+	}
+	;[[帕露西]], 8, @"Then she moves onto her top. \n%HES_SHES([[帕露西]],1)% wearing her usual jacket and bodysuit. \nAnd her chest is...", -1,
+	;"Flat",
+	;"Very small",
+	;"Small",
+	;"Of average size (default)",
+	;"Well-endowed",
+	;@"Bigger than her head, each"
+
+		; {
+	; 	CALL KOJO_SETTING_BREASTS(
+	; 		[[帕露西]], 8, @"Then she moves onto her top. \n%HES_SHES([[帕露西]],1)% wearing her usual jacket and bodysuit. \nAnd her chest is...", -1,
+	; 		"Flat",
+	; 		"Very small",
+	; 		"Small",
+	; 		"Of average size (default)",
+	; 		"Well-endowed",
+	; 		@"Bigger than her head, each",
+	; 		@"More than twice as big as her head, each"
+	; 		@"Big enough to touch the ground even when she's standing"
+	; 		)
+	; }
+
+	{
+		CALL KOJO_SETTING(
+			[[帕露西]], 9, "Lactation",
+			@"帕露西用空着的一只手挤压乳房，结果... ", -1,
+			@"有少量母乳滴落 [根据B经验和B绝顶，%CALLNAME:[[帕露西]]%会获得[母乳体质]和[B敏感]]",
+			@"只是变形，什么也挤不出来"
+			)
+	}
+	;@"%HES_SHES([[帕露西]],1)% squeezing one of her breasts with her free hand, and... ", -1,
+	;@"A little milk is dribbling out [When %CALLNAME:[[帕露西]]% has enough B Exp and B Orgasms, she will gain [Lactating] and [B Sensitive]]",
+	;"It squishes, but nothing comes out",
+
+	{
+		CALL KOJO_SETTING(
+			[[帕露西]], 10, "Dominance",
+			@"画完自画像后，在脚边添加了倒伏在地的人。\n帕露西带着下流的笑容踩着那个男人的胯间。\n男人说: \n(Note: 可以从桥姬服务菜单中更改\n但是，即使选择了下面的选项，傲娇状态时也总是会变得施虐)", -1,
+			@"“请调教我” [像Reverse一样激烈的责罚，没有舔脚和温柔的善后]",
+			@"“抱抱我，摸摸头...” [温柔的责罚]"
+			)
+	}
+	;@"Now that %CALLNAME:[[帕露西]]% is done painting herself, she paints a man lying down near her. \n%HES_SHES([[帕露西]],1)%'s pressing her foot into his groin with a lewd grin on her face. \nThe man is saying: \n(Note: You can unlock the ability to change this in the Hashihime Services menu. \nHowever, even if you pick the bottom option, [[帕露西]] will always be sadistic when in the Tsundere attitude.)", -1,
+	;@"「I want to be trained」 [rough dominance- like Reverse, but without the footlicking and with lovey-dovey aftercare]",
+	;@"「I want %PRINT_MALE("Daddy:Mommy",60)%, I want milk, I want to be held, I want to be comforted...」 [gentle \@ IS_MALE([[帕露西]]) ? dominance # femdom\@]"
+
+ENDIF
+
+@K60_SETTING_YURI
+IF !nCharaSaveUp:60:0:20
+	{
+		CALL KOJO_SETTING(
+			[[帕露西]], 11, "Fandom Shipping",
+			@"%CALLNAME:[[帕露西]]%把画挪到一边，拿起昨晚完成的作品。\n已经干透了，准备收进衣柜里。\n和其他画一样，她没有给别人看的打算。\n帕露西和%CALLNAME:64%...", -1,
+			@"在亲吻的画 [%CALLNAME:[[帕露西]]%单恋%CALLNAME:64%。没有出轨事件之类的，只是个花絮]",
+			@"一起喝酒的画 [%CALLNAME:64%是%CALLNAME:[[帕露西]]%的挚友]",
+			)
+	}
+	;@"%CALLNAME:[[帕露西]]% sets the painting aside and picks up a third painting she worked on the night before. \nIt's dry, so she places it in her wardrobe for safe keeping. \nLike most of her paintings, she doesn't want to show it to anyone else. \nIt's a picture of her and %CALLNAME:64%...", -1,
+	;@"Kissing [%CALLNAME:[[帕露西]]% has a crush on %CALLNAME:64%. she won't cheat on you or anything, it's just there for flavor]",
+	;@"Enjoying a drink together [%CALLNAME:64% is just %CALLNAME:[[帕露西]]%'s best friend]",
+ENDIF
+
+@K60_SETTING_PURITY
+IF !nCharaSaveUp:60:0:20
+	{
+		CALL KOJO_SETTING_PURITY(
+			[[帕露西]], 12,
+			@"在收起自画像的时候，另一幅画引起了帕露西的注意。\n帕露西把它撕下来，毫不掩饰厌恶地扔进了灶里。\n在那幅画中...（注：这是设定性经验）", -1,
+			@"%CALLNAME:[[帕露西]]%在酒馆里烂醉如泥 (default)",
+			@"%CALLNAME:[[帕露西]]% 让 \@ !nCharaUpdate:[[帕露西]]:0:11 ? %CALLNAME:64% # %PRINT_MALE("男", MASTER)% 侍奉着自己 \@",
+			@"%CALLNAME:[[帕露西]]%在桥上自慰",
+			@"%CALLNAME:[[帕露西]]%在乱交",
+			@"%CALLNAME:[[帕露西]]%在自己的房间里自慰"
+			)
+	}
+	;@"While stashing her painting of her and %CALLNAME:64%, another painting catches her eye. \nshe yanks it out with a look of disgust and tosses it in her fireplace. \nIt was a painting of...", -1,
+	;@"%CALLNAME:[[帕露西]]% passed out drunk at a bar",
+	;@"%CALLNAME:[[帕露西]]% getting \@ HAS_PENIS([[帕露西]]) ? a blowjob from # eaten out by \@ \@ !nCharaUpdate:[[帕露西]]:0:11 ? %CALLNAME:64% # a man\@",
+	;@"%CALLNAME:[[帕露西]]% masturbating on her bridge",
+	;@"%CALLNAME:[[帕露西]]% in the middle of an orgy",
+	;@"%CALLNAME:[[帕露西]]% masturbating in her room"
+
+	{
+		CALL KOJO_SETTING(
+			[[帕露西]], 13, "Clonecest",
+			@"在那幅画的背面...", -1,
+			@"有一幅%CALLNAME:[[帕露西]]%让分身口交侍奉自己的画[在自慰描写中，%CALLNAME:[[帕露西]]%会召唤分身来侍奉自己。分身没有自我意识，只是本体的延伸]",
+			@"什么也没有 [不显示分身自慰]",
+			)
+	}
+	;@"On the back of the painting, there's...", -1,
+	;@"A doodle of %CALLNAME:[[帕露西]]% getting \@ HAS_PENIS([[帕露西]]) ? sucked off # eaten out\@ by her clone [%CALLNAME:[[帕露西]]% will summon a clone and receive oral sex from it in one of her masturbation scenes. The clone has no will of its own, it's just an extension of %CALLNAME:[[帕露西]]%]",
+	;@"Nothing [The clonecest masturbation scene is disabled]",
+ENDIF
+
+@K60_Defaults
+#FUNCTION
+#DIM C_ID
+#DIM D_ID
+REGEXPMATCH  GETDOINGFUNCTION(), @"K(\\d+)_", RESULT, RESULTS
+C_ID = TOINT(RESULTS:1)
+D_ID = CFLAG:C_ID:口上セレクタ
+
+nCharaUpdate:C_ID:D_ID:0 = 0
+nCharaUpdate:C_ID:D_ID:1 = 0
+nCharaUpdate:C_ID:D_ID:2 = 2
+nCharaUpdate:C_ID:D_ID:3 = 0
+nCharaUpdate:C_ID:D_ID:4 = 7
+nCharaUpdate:C_ID:D_ID:5 = 1
+nCharaUpdate:C_ID:D_ID:6 = 3
+nCharaUpdate:C_ID:D_ID:7 = 0
+nCharaUpdate:C_ID:D_ID:8 = 3
+nCharaUpdate:C_ID:D_ID:9 = 0
+nCharaUpdate:C_ID:D_ID:10 = 1
+nCharaUpdate:C_ID:D_ID:11 = 0
+nCharaUpdate:C_ID:D_ID:12 = 0
+nCharaUpdate:C_ID:D_ID:13 = 0
+
+@K60_SETTING_SUBMIT
+
+
+SELECTCASE nCharaUpdate:[[帕露西]]:0:0
+	CASE 0
+		;PRINTFORMDW %CALLNAME:[[帕露西]]% 的能力将会被改变。
+		PRINTFORMDW 正在变更能力
+		CALL K60_SET_ABILITIES(1)
+	CASE 1
+		;PRINTFORMDW %CALLNAME:[[帕露西]]% 将会保留her CSV文件中的默认能力。
+		PRINTFORMDW 将会维持CSV文件中默认的能力
+ENDSELECT
+
+PRINTFORMDL 
+
+SELECTCASE nCharaUpdate:[[帕露西]]:0:1
+	CASE 0
+		;PRINTFORMDW %CALLNAME:[[帕露西]]%'s affinities will be changed.
+		PRINTFORMDW 正在变更相性
+		CALL K60_SET_AFFINITIES(1)
+	CASE 1
+		;PRINTFORMDW 帕露西将会在her的CSV文件中保留默认相性。
+		PRINTFORMDW 将会维持CSV文件中默认的相性
+ENDSELECT
+
+PRINTFORMDL 
+
+SELECTCASE nCharaUpdate:[[帕露西]]:0:2
+	CASE 0
+		;PRINTFORMDW Really? A hashihime handling her emotions in a healthy way? You might as well ask a fairy to do calculus.
+		;PRINTFORMDW But if you insist... %CALLNAME:[[帕露西]]% will not get upset if she sees you on a date.
+		PRINTFORMDW 真的吗？让桥姬控制情绪，就像让妖精做微积分一样？
+		PRINTFORMDW 但是，如果你坚持... %CALLNAME:[[帕露西]]%即使目击到约会现场也不会生气
+		CFLAG:K60ENC_SETTING_JEALOUSY_PENALTY = 2
+	CASE 1
+		;PRINTFORMDW %CALLNAME:[[帕露西]]% will get angry and lose Favor if she sees you on a date.
+		;PRINTFORMDW You might not want to bring dates to the Underworld.
+		PRINTFORMDW 如果目击到约会现场，%CALLNAME:[[帕露西]]%会生气并降低好感度
+		PRINTFORMDW 最好不要去地底约会哦
+		CFLAG:K60ENC_SETTING_JEALOUSY_PENALTY = 1
+	CASE 2
+		;PRINTFORMDW %CALLNAME:[[帕露西]]% will get angry, lose Favor, and get Hate Marks if she sees you on a date.
+		;PRINTFORMDW I hope you like getting cursed!
+		PRINTFORMDW 如果目击到约会现场，%CALLNAME:[[帕露西]]%会生气，降低好感度，并获得反抗刻印
+		PRINTFORMDW 希望你喜欢被诅咒！
+		CFLAG:K60ENC_SETTING_JEALOUSY_PENALTY = 0
+	CASE 3
+		;PRINTFORML So you enjoy the thrill of danger, then? Or are you looking for a challenge?
+		;CALL PRINT_STRL, @"「Or maybe you @ITALIC@want@ %CALLNAME:[[帕露西]]% to snap...」"
+		;PRINTFORMW Well, I won't judge. After all: "Any choice you make will be accepted, that's the kind of world this is."
+		PRINTFORML 看来你喜欢刺激？或者是在寻找需要克服的困难？
+		CALL PRINT_STRL, @"「或者你想@ITALIC@毁掉@ %CALLNAME:[[帕露西]]%...」"
+		PRINTFORMW 嘛，好吧。: "你的任何选择都会被接受，这个世界就是如此。"
+		CFLAG:K60ENC_SETTING_JEALOUSY_PENALTY = 3
+ENDSELECT
+
+PRINTFORMDL 
+
+SELECTCASE nCharaUpdate:[[帕露西]]:0:3
+	CASE 0
+		;PRINTFORMDW %CALLNAME:[[帕露西]]%'s talents will change.
+		PRINTFORMDW 正在变更素质
+		CALL K60_SET_TRAITS(1)
+	CASE 1
+		;PRINTFORMDW %CALLNAME:[[帕露西]]% 将会在her的CSV文件中保留默认天赋。
+		PRINTFORMDW 将会维持CSV文件中的原有素质
+ENDSELECT
+
+CALL KOJO_SUBMIT_SEX([[帕露西]], 5)
+
+PRINTFORMDL 
+
+{
+	CALL KOJO_SUBMIT_SIZE(
+		[[帕露西]], 6, -1,
+		@"%CALLNAME:[[帕露西]]%变成了小人尺寸。嫉妒普通的身材。",
+		@"%CALLNAME:[[帕露西]]%变成了儿童尺寸。嫉妒普通的身材。",
+		@"%CALLNAME:[[帕露西]]%变成了娇小体型。嫉妒普通的身材。",
+		@"%CALLNAME:[[帕露西]]%变成了普通体格。嫉妒高挑的身材。",
+		@"%CALLNAME:[[帕露西]]%变成了高挑身材。嫉妒普通的身材。",
+		@"%CALLNAME:[[帕露西]]%变成了巨躯。嫉妒普通的身材。",
+		@"%CALLNAME:[[帕露西]]%变成了巨人。嫉妒身体进入酒馆的家伙们。",
+		@"%CALLNAME:[[帕露西]]%的体格保持不变。"
+	)
+}
+;@"%CALLNAME:[[帕露西]]% is now inchling-sized. \n%HES_SHES([[帕露西]],1)% jealous of people who are of normal height.",
+;@"%CALLNAME:[[帕露西]]% is now child-sized. \n%HES_SHES([[帕露西]],1)% jealous of people who are of normal height.",
+;@"%CALLNAME:[[帕露西]]% is now short. \n%HES_SHES([[帕露西]],1)% jealous of people who are of normal height.",
+;@"%CALLNAME:[[帕露西]]% is now of average height. \n%HES_SHES([[帕露西]],1)% jealous of people who are tall.",
+;@"%CALLNAME:[[帕露西]]% is now tall. \n%HES_SHES([[帕露西]],1)% jealous of people who are of normal height.",
+;@"%CALLNAME:[[帕露西]]% is now extremely tall. \n%HES_SHES([[帕露西]],1)% jealous of people who are of normal height.",
+;@"%CALLNAME:[[帕露西]]% is now a %PRINT_MALE("giant:giantess", [[帕露西]])%. \n%HES_SHES([[帕露西]],1)% jealous of people who can fit their whole bodies into bars.",
+;@"%CALLNAME:[[帕露西]]%'s height was left alone."
+
+PRINTFORMDL 
+
+SELECTCASE nCharaUpdate:[[帕露西]]:0:7
+	CASE 0
+		;PRINTFORMDW %CALLNAME:[[帕露西]]%'s pubic hair will be described. (As it should be.)
+		PRINTFORMDW 现在有阴毛描写
+	CASE 1
+		;PRINTFORMDW %CALLNAME:[[帕露西]]%'s pubic hair will not be described.
+		PRINTFORMDW 现在没有阴毛描写
+		CFLAG:[[帕露西]]:K60ENC_SETTING_PUBIC_HAIR = -1
+ENDSELECT
+
+PRINTFORMDL 
+
+{
+	CALL KOJO_SUBMIT_BREASTS(
+		[[帕露西]], 8, -1,
+		@"%CALLNAME:[[帕露西]]%变成了飞机场。\n 嫉妒的种子增加了呢。",
+		@"%CALLNAME:[[帕露西]]%变成了[贫乳]。\n 嫉妒的种子增加了呢。",
+		@"%CALLNAME:[[帕露西]]%变成了[普乳]。\n 即使如此她还是会嫉妒比自己大的对象吧。即使尺寸相同。",
+		@"%CALLNAME:[[帕露西]]%变成了[巨乳]。\n 她会用外套遮住，嫉妒比自己小的对象吧…因为觉得太大了。",
+		@"%CALLNAME:[[帕露西]]%变成了[爆乳]。\n 她会用外套遮住，嫉妒比自己小的对象吧…因为觉得太大了。",
+	)
+}
+;@"%CALLNAME:[[帕露西]]% is now flat as a board. \nAnother thing for her to be jealous about.",
+;@"%CALLNAME:[[帕露西]]% has [Small Breasts]. \nAnother thing for her to be jealous about.",
+;@"%CALLNAME:[[帕露西]]% has [Normal Breasts]. \nshe will still get jealous of being flatter than other %PRINT_MALE("men", [[帕露西]])%, even if their busts are the same size.",
+;@"%CALLNAME:[[帕露西]]% has [Big Breasts]. \nI guess she was hiding them under that jacket of %HIS_HERS([[帕露西]])%... \nshe will get jealous of %PRINT_MALE("men", [[帕露西]])% flatter than her, because she thinks her breasts are too big.",
+;@"%CALLNAME:[[帕露西]]% has [Huge Breasts]. \nI guess she was hiding them under that jacket of %HIS_HERS([[帕露西]])%... \nshe will get jealous of %PRINT_MALE("men", [[帕露西]])% flatter than her, because she thinks her breasts are too big.",
+
+; {
+; 	CALL KOJO_SUBMIT_BREASTS(
+; 		[[帕露西]], 8, -1,
+; 		@"%CALLNAME:[[帕露西]]% is now flat as a board. \nAnother thing for her to be jealous about.",
+; 		@"%CALLNAME:[[帕露西]]% has [Tiny Breasts]. \nAnother thing for her to be jealous about.",
+; 		@"%CALLNAME:[[帕露西]]% has [Small Breasts]. \nAnother thing for her to be jealous about.",
+; 		@"%CALLNAME:[[帕露西]]% has [Normal Breasts]. \nshe will still get jealous of being flatter than other %PRINT_MALE("men", [[帕露西]])%, even if their busts are the same size.",
+; 		@"%CALLNAME:[[帕露西]]% has [Big Breasts]. \nI guess she was hiding them under that jacket of %HIS_HERS([[帕露西]])%... \nshe will get jealous of %PRINT_MALE("men", [[帕露西]])% flatter than her, because she thinks her breasts are too big.",
+; 		@"%CALLNAME:[[帕露西]]% has [Huge Breasts]. \nI guess she was hiding them under that jacket of %HIS_HERS([[帕露西]])%... \nshe will get jealous of %PRINT_MALE("men", [[帕露西]])% flatter than her, because she thinks her breasts are too big.",
+; 		@"%CALLNAME:[[帕露西]]% has [Gigantic Breasts]. \nI guess she borrowed some spatial compression device from the kappa... \nshe will get jealous of %PRINT_MALE("men", [[帕露西]])% with normal-sized breasts, because her breasts are way too big.",
+; 		@"%CALLNAME:[[帕露西]]% has [Mystifying Breasts]. \nI guess she borrowed some spatial compression device from the kappa... \nshe's jealous of people who don't have to use magic to get around.",
+; 		)
+; }
+
+PRINTFORMDL 
+
+SELECTCASE nCharaUpdate:[[帕露西]]:0:9
+	CASE 0
+		CFLAG:[[帕露西]]:K60ENC_SETTING_LACTATION = 1
+		;PRINTFORMW 为 %CALLNAME:[[帕露西]]% 增加了产生母乳的可能性。
+		PRINTFORMW %CALLNAME:[[帕露西]]% 有可能会分泌母乳了。
+	CASE 1
+		;PRINTFORMW 仅靠胸部刺激，%CALLNAME:[[帕露西]]% 不会开始分泌乳汁。
+		PRINTFORMW 仅仅刺激胸部是不会分泌母乳的。
+ENDSELECT
+
+PRINTFORMDL 
+
+SELECTCASE nCharaUpdate:[[帕露西]]:0:10
+	CASE 0
+		PRINTFORMDW 帕露西会是个粗暴的支配者。别忘了安全词！
+		CFLAG:K60ENC_SETTING_DOMINANCE = 2
+	CASE 1
+		PRINTFORMDW 帕露西会是个温柔的支配者。看来您是个有品位的man。
+		CFLAG:K60ENC_SETTING_DOMINANCE = 1
+		CFLAG:[[帕露西]]:性格倾向 = 2
+ENDSELECT
+
+PRINTFORMDL 
+
+SELECTCASE nCharaUpdate:[[帕露西]]:0:11
+	CASE 0
+		CFLAG:[[帕露西]]:K60ENC_SETTING_YUUPARU_CRUSH = 1
+		;PRINTFORMDW Parsee has a crush on 勇仪. Bring on the fandom shipping!
+		PRINTFORMDW 帕露西单恋着勇仪。来吧，踏上CP之路！
+	CASE 1
+		CFLAG:[[帕露西]]:K60ENC_SETTING_YUUPARU_CRUSH = 2
+		;PRINTFORMW Parsee and 勇仪 are just good friends. (Canonically we don't know if they've even met...)
+		PRINTFORMW 帕露西和勇仪是好朋友。（原作中她们是否认识都还不清楚…）
+ENDSELECT
+
+PRINTFORMDL 
+
+{
+	CALL KOJO_SUBMIT_PURITY(
+		[[帕露西]], 12, -1,
+		@"不改变%CALLNAME:[[帕露西]]%的性经验",
+		@"%CALLNAME:[[帕露西]]%有经验，但最后一次行为是几百年前",
+		@"%CALLNAME:[[帕露西]]%是个性欲极度扭曲的处女 \n为了消除欲望经常自慰",
+		@"%CALLNAME:[[帕露西]]%是个货真价实的公交车。她是怎样找到喜欢和桥姬OOXX的家伙的？",
+		@"%CALLNAME:[[帕露西]]%是处女，并且对此感到非常羞耻"
+		)
+}
+;@"%CALLNAME:[[帕露西]]%'s sexual experience has been left alone.",
+;@"%CALLNAME:[[帕露西]]% has had sex before, but it's been centuries since the last time she got laid.",
+;@"%CALLNAME:[[帕露西]]% is a virgin with a sky-high libido. \nshe frequently masturbates to deal with her sexual frustration.",
+;@"%CALLNAME:[[帕露西]]% is a total slut. How did she manage to find so many people willing to fuck a hashihime?",
+;@"%CALLNAME:[[帕露西]]% is a virgin, and very ashamed of it."
+
+PRINTFORMDL 
+
+SELECTCASE nCharaUpdate:[[帕露西]]:0:13
+	CASE 0
+		CFLAG:[[帕露西]]:K60ENC_SETTING_CLONECEST = 1
+		;PRINTFORMDW When %CALLNAME:[[帕露西]]% gets horny, sometimes she'll summon a clone and have it suck her off.
+		PRINTFORMDW 欲望高涨的时候会召唤分身来做。
+	CASE 1
+		CFLAG:[[帕露西]]:K60ENC_SETTING_CLONECEST = 2
+		;PRINTFORMW %CALLNAME:[[帕露西]]% 会像其他人一样用her的手指来解决。
+		PRINTFORMW %CALLNAME:[[帕露西]]%会普通地用手指解决。
+ENDSELECT

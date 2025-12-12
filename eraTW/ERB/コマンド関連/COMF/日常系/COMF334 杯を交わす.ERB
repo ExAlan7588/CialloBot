@@ -1,0 +1,178 @@
+﻿;-------------------------------------------------
+;碰杯
+;日常系指令、レベル1
+;-------------------------------------------------
+@COM334
+SELECTCASE TFLAG:192
+	;通常
+	CASE 0
+		;成否の判定
+		LOCAL = RAND:100
+		LOCAL:1 = 90 + GET_SUCCESS_RATE() / 5
+		SIF LOCAL:1 > 99
+			LOCAL:1 = 99
+		IF LOCAL <= 9
+			;10％で大成功
+			TFLAG:193 = 1
+			TFLAG:98 = 2
+			LOCAL:2 = 80
+			EXP:MASTER:会话经验 ++
+		ELSEIF LOCAL >= LOCAL:1
+			;10～1％で失败
+			TFLAG:193 = -1
+			TFLAG:98 = -1
+			LOCAL:2 = 20
+		ELSE
+			;残りは成功
+			TFLAG:193 = 0
+			TFLAG:98 = 0
+			LOCAL:2 = 60
+		ENDIF
+	;强制成功or大成功
+	CASE 1
+		IF RAND:100 <= 9
+			;10％で大成功
+			TFLAG:193 = 1
+			TFLAG:98 = 2
+			LOCAL:2 = 80
+			EXP:MASTER:会话经验 ++
+		ELSE
+			;残りは成功
+			TFLAG:193 = 0
+			TFLAG:98 = 0
+			LOCAL:2 = 60
+		ENDIF
+	;强制失败
+	CASE -1
+		TFLAG:193 = -1
+		TFLAG:98 = -1
+		LOCAL:2 = 20
+	;指令结束
+	CASE -2
+		TFLAG:193 = -1
+		RETURN 0
+ENDSELECT
+
+
+EXP:MASTER:会话经验 ++
+
+IF !(TALENT:酒耐性 == -2 || CFLAG:妊娠自觉状态 == 1)
+	LOCAL:3 = (MAXBASE:酒气 + MAXBASE:MASTER:酒气) * (LOCAL:2 + RAND:41) / 2000
+	LOCAL:4 = (MAXBASE:酒气 + MAXBASE:MASTER:酒气) * (LOCAL:2 + RAND:41) / 2000
+	BASE:酒气 += LOCAL:3
+	BASE:MASTER:酒气 += LOCAL:4
+
+	;酒を劝めるほど早く满足して去って行っちゃうのは寂しいのでコメントアウト
+	;BASE:工作量 = BASE:工作量 - LOCAL:3
+ENDIF
+
+DOWNBASE:MASTER:体力 += 20
+DOWNBASE:MASTER:气力 += 100
+
+;所要时间
+TIME += 30
+
+DOWNBASE:气力 += 10
+
+;信赖
+TFLAG:98 += 4
+
+;固定で获得するソース
+SOURCE:欢乐 = 700
+
+;ABL:顺从をみる
+IF ABL:顺从 <= 1
+	SOURCE:欢乐 += (ABL:顺从 * 50)
+ELSEIF ABL:顺从 <= 3
+	SOURCE:欢乐 += 100 + (ABL:顺从 * 40)
+ELSEIF ABL:顺从 <= 5
+	SOURCE:欢乐 += 200 + (ABL:顺从 * 50)
+ELSEIF ABL:顺从 <= 8
+	SOURCE:欢乐 += 400 + (ABL:顺从 * 70)
+ELSEIF ABL:顺从 <= 11
+	SOURCE:欢乐 += 500 + (ABL:顺从 * 60)
+ELSE
+	SOURCE:欢乐 += 800 + (ABL:顺从 * 40)
+ENDIF
+
+;ABL:亲密チェック
+IF ABL:亲密 <= 1
+	SOURCE:欢乐 += (ABL:亲密 * 60)
+ELSEIF ABL:亲密 <= 3
+	SOURCE:欢乐 += 120 + (ABL:亲密 * 60)
+ELSEIF ABL:亲密 <= 5
+	SOURCE:欢乐 += 300 + (ABL:亲密 * 60)
+ELSEIF ABL:亲密 <= 8
+	SOURCE:欢乐 += 600 + (ABL:亲密 * 50)
+ELSEIF ABL:亲密 <= 11
+	SOURCE:欢乐 += 900 + (ABL:亲密 * 50)
+ELSE
+	SOURCE:欢乐 += 1400 + (ABL:亲密 * 30)
+ENDIF
+
+;好感度をみる
+IF CFLAG:2 <= 500
+	SOURCE:欢乐 += CFLAG:2
+ELSEIF CFLAG:2 <= 5000
+	SOURCE:欢乐 += 500 + (CFLAG:2 - 500) / 3
+ELSE
+	SOURCE:欢乐 += 2000 + (CFLAG:2 - 5000) / 5
+ENDIF
+
+SIF SOURCE:欢乐 < 0
+	SOURCE:欢乐 = 0
+
+SOURCE:被动 = 150 + 150 * ABL:顺从
+SOURCE:征服 = 150 + 150 * ABL:施虐属性
+
+SELECTCASE ABL:MASTER:话术技能
+	CASE 0
+		TIMES SOURCE:欢乐 , 0.60
+		TIMES SOURCE:征服 , 0.60
+		TIMES SOURCE:被动 , 0.60
+	CASE 1
+		TIMES SOURCE:欢乐 , 0.70
+		TIMES SOURCE:征服 , 0.70
+		TIMES SOURCE:被动 , 0.70
+	CASE 2
+		TIMES SOURCE:欢乐 , 0.85
+		TIMES SOURCE:征服 , 0.85
+		TIMES SOURCE:被动 , 0.85
+	CASE 3
+		TIMES SOURCE:欢乐 , 1.00
+		TIMES SOURCE:征服 , 1.00
+		TIMES SOURCE:被动 , 1.00
+	CASE 4
+		TIMES SOURCE:欢乐 , 1.10
+		TIMES SOURCE:征服 , 1.10
+		TIMES SOURCE:被动 , 1.10
+	CASEELSE
+		TIMES SOURCE:欢乐 , 1.20
+		TIMES SOURCE:征服 , 1.20
+		TIMES SOURCE:被动 , 1.20
+ENDSELECT
+RETURN 1
+
+;-------------------------------------------------
+;实行判定
+;-------------------------------------------------
+@COM_ABLE334
+;碰杯实行判定
+SIF !TFLAG:100
+	RETURN 0
+;批量管理
+SIF GLOBAL_COMABLE(334)
+	RETURN RESULT
+;仕事内容が宴会以外
+SIF CFLAG:职业种类 != JOB_宴会参加
+	RETURN 0
+;工作量(宴会で饮む残り量)がゼロ
+SIF BASE:工作量 <= 0
+	RETURN 0
+;气力0
+SIF BASE:MASTER:气力 <= 0
+	RETURN 0
+;时间停止中
+SIF FLAG:70
+	RETURN 0
+RETURN 1

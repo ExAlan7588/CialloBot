@@ -1,0 +1,109 @@
+﻿;-------------------------------------------------
+;玩弄乳头
+;爱抚系指令、レベル1
+;-------------------------------------------------
+@COM7
+;-------------------------------------------------
+;COM别FLAGの设定
+;-------------------------------------------------
+;行为者
+TCVAR:116 = PLAYER
+;侍奉快乐
+TCVAR:PLAYER:108 = 1
+
+;-------------------------------------------------
+;ソース追加处理
+;-------------------------------------------------
+;消费体力、气力
+IF FLAG:70 == 1
+	BASE:MASTER:TSP -= 10
+	SOURCE:快Ｂ = 80
+	SOURCE:苦痛 = 5
+	SOURCE:快Ｂ += ABL:PLAYER:指 * 12
+
+ELSE
+
+	DOWNBASE:体力 += 5
+	DOWNBASE:气力 += 30
+
+	SOURCE:快Ｂ = 80
+	SOURCE:情爱 = 30
+	SOURCE:苦痛 = 10
+	SOURCE:露出 = 10
+	SOURCE:不洁 = 10
+	SOURCE:反感 = 10
+
+	SIF TALENT:PLAYER:灵活手指
+		SOURCE:快Ｂ += 15
+	IF ABL:受虐属性 > 2
+		SOURCE:快Ｂ += ABL:受虐属性 * 5
+		SOURCE:情爱 += ABL:受虐属性 * 5
+	ENDIF
+	SOURCE:快Ｂ += ABL:PLAYER:指 * 12
+
+	;-------------------------------------------------
+	;特殊ソース处理
+	;-------------------------------------------------
+	;圧抑、抵抗持ちには、抑郁ソース追加
+	SIF TALENT:自己爱 < 0 || TALENT:抵抗
+		SOURCE:郁闷 += 10
+ENDIF
+;-------------------------------------------------
+;污れの处理
+;-------------------------------------------------
+;奴隷のＢ⇔调教者の指的污垢が移动
+STAIN:5 |= STAIN:PLAYER:1
+STAIN:PLAYER:1 |= STAIN:5
+;-------------------------------------------------
+;経験の处理
+;-------------------------------------------------
+;同性爱　レズなら返回值1ゲイなら返回值2
+IF FLAG:70 == 1
+	IF HETEROSEX(TARGET,PLAYER)
+		EXP:PLAYER:(50 + HETEROSEX(TARGET,PLAYER)) += 5
+	ENDIF
+ELSE
+	IF HETEROSEX(TARGET,PLAYER)
+		EXP:(50 + HETEROSEX(TARGET,PLAYER)) += 5
+		EXP:PLAYER:(50 + HETEROSEX(TARGET,PLAYER)) += 5
+	ENDIF
+ENDIF
+EXP:PLAYER:手淫经验 ++
+RETURN 1
+
+;-------------------------------------------------
+;实行判定
+;-------------------------------------------------
+@COM_ABLE7
+;玩弄乳头
+SIF !TFLAG:100
+	RETURN 0
+;批量管理
+SIF GLOBAL_COMABLE(7)
+	RETURN RESULT
+;紧身内衣以外上半身着衣无しでも玩弄乳头出来るようにしたかったけど条件がわかんねー…と思ったけどできたー
+;上身衣服着衣していて上半身内衣はだけ可と紧身内衣着ていない
+IF (EQUIP:上半身内衣１ || EQUIP:连体内衣 || EQUIP:上身衣服１ || EQUIP:上身衣服２ || EQUIP:连衣裙 || EQUIP:和服)
+	IF (!EQUIP:上半身内衣２ || !EQUIP:紧身内衣)
+		;上半身着衣判定
+		IF (TEQUIP:1 & 2) && TEQUIP:3 == 0
+			RETURN 0
+		ENDIF
+	ELSE
+		;上半身着衣判定
+		IF (TEQUIP:1 & 2) && TEQUIP:3 == 0
+			RETURN 0
+		ENDIF
+	ENDIF
+ENDIF
+;乳头夹使用中は不可
+SIF TEQUIP:16
+	RETURN 0
+;搾乳机使用中は不可
+SIF TEQUIP:17
+	RETURN 0
+;乳房电极装着中はダメ
+SIF TEQUIP:24
+	RETURN 0
+RETURN 1
+

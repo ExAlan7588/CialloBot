@@ -1,0 +1,519 @@
+
+;��������������������������������������������������
+;�n�[�h�Ȓ����R�}���h
+;��������������������������������������������������
+;==================================================
+;140,�C���}�`�I
+;==================================================
+@M_KOJO_MESSAGE_COM_K109_140
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K109_140_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K109_140_1
+;-------------------------------------------------
+;�L���`�F�b�N�i=0, ��\���A1, �\���j
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;������
+	;-------------------------------------------------
+	;���߂�
+	;�L���`�F�b�N
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;�T�O���Ȃ肫�莞
+		IF FLAG:�Ȃ肫�� == 110
+		ELSEIF FLAG:70
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORML �u�A�̉��܂łȂ�āc����Ȃ́c���I�J�G�b�I�H�v
+			PRINTFORMDW %CALLNAME:MASTER%�͗L�������킹���A���ɓ˂����ꂽ
+		ENDIF
+		RETURN 1
+	ENDIF
+	;��{�Z�b�g
+	;�T�O���Ȃ肫�莞
+	IF FLAG:�Ȃ肫�� == 110
+	;������
+	ELSEIF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;�o�����O
+	ELSEIF BASE:PLAYER:2 > 8000
+		SELECTCASE RAND:3
+		CASE 0
+			CALL HPH_PRINT,@"�u���J�b�c�����J�bHPH�v","L"
+			PRINTFORMDL �ː����ߕt���A�A���ɓ˂�����鑬�x���オ���Ă���ƃh���~�[�͗܂ƕ@���Ŋ�������Ⴎ����ɂ��Ȃ���q�f��
+			PRINTFORMDW %CALLNAME:MASTER%�����낻��ː������Ɛ錾����ƁA�h���~�[�͑S�g�̗͂𔲂��󂯓���Ԑ��ɓ�����
+		CASE 1
+			CALL HPH_PRINT,@"�u���J�فJ�bHPH�����bHPH�񂮂����b�cHPH�v","L"
+			PRINTFORMDL �h���~�[���C�����]�T�̖����Ȃ���%CALLNAME:MASTER%�́A�����Ђ�����ɍA���ւƓ��_��˂������
+			PRINTFORMDW �݂��Ђ�����Ԃ�悤�Ȋ��o�̘A���Ƀh���~�[�͂����ς��邱�Ƃ����ł��Ȃ��c
+		CASE 2
+			CALL HPH_PRINT,@"�u���b�A���J�G�J�b�c��J���J�b�c����HPH�v","L"
+			PRINTFORMDL ���ۂ��A���ۂ��A�Ƃ܂�ŃI�i�z�̂悤�Ƀh���~�[�̍A��Ƃ��Ă���
+			PRINTFORMDW �ː����߂��Ȃ���%CALLNAME:MASTER%�́A�r���Ɍ����č���U�鑬�x���グ��
+		ENDSELECT
+	;����
+	ELSEIF TALENT:���� || TALENT:���~ || TALENT:�Z�t�� || TALENT:�����}��
+		SELECTCASE RAND:3
+		CASE 0
+			CALL HPH_PRINT,@"�u�ԃbHPH�c�ӂ��J���J�c�����bHPH�v","L"
+			PRINTFORMDL �h���~�[�͂܂�ŕ��̂悤�Ɉ����邱�Ƃɕs�v�c�ȍV�g���������Ă���
+			PRINTFORMDW ����ȗl�q��m���Ă��m�炸���A%CALLNAME:MASTER%�̓h���~�[�Ɏ����������邱�ƂȂ��Ђ�����ɍA���ɓ˂�����
+		CASE 1
+			CALL HPH_PRINT,@"�u���J�ԃb�I�H�c�t�[�bHPH�c���b�c�t�[�bHPH�v","L"
+			PRINTFORMDL %CALLNAME:MASTER%�̓h���~�[�������|���Ɗ�ʂɌׂ�A�܂�ŏ��I�i�����邩�̂悤�ɍA���ɓ��_��˂����ꂽ
+			PRINTFORMDW �h���~�[�͍ŏ��̓���%CALLNAME:MASTER%�̐K��͂ݖ\��Ă������A�₪�đ�l�����Ȃ����c
+		CASE 2
+			CALL HPH_PRINT,@"�u���A��J���b�c���J�b�A���b�A�����bHPH�v","L"
+			PRINTFORMDL %CALLNAME:MASTER%�̓h���~�[�̓����K�b�`���ƃz�[���h����ƁA�����������C�����ǂ��Ȃ�ׂɍA��Ƃ��Ă���
+			PRINTFORMDW �C�����ǂ������ɟ��𐂂炷%CALLNAME:MASTER%�̎p�����āA�h���~�[�͌҂�G�炵�q�{���u�������c
+		ENDSELECT
+	;����3
+	ELSEIF MARK:�s������ == 3
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML �u�b�b�c�����A���Ղ��A�I�J�G�b�c�v
+			PRINTFORMDL �A����Ƃ���Ă���h���~�[���q�f�����A�H�录�̓�����͓��_���s�b�`���ƍǂ��݉t�̈�H����ʂ錄�Ԃ͂Ȃ�
+			PRINTFORMDW %CALLNAME:MASTER%�̓h���~�[�̓��𕏂ŉA�s�����������ƁA��C�ɓ˂�����
+		CASE 1
+			PRINTFORML �u��J��J�b�c�G�J�b�c�S�A�G�J�b�c�v
+			PRINTFORMDL �h���~�[�ׂ͒ꂽ�J�G���̂悤�ș���グ�Ȃ���A�����ɗ^������\�͂ɑς��Ă���
+			PRINTFORMDW ���܂肪�ア�Ǝv����%CALLNAME:MASTER%���A���O�b�ƒ͂ނƁA�h���~�[�͔������ڂ𔍂���������Ɛ��炵��
+		CASE 2
+			PRINTFORML �u�b�b�c�c�c�v
+			PRINTFORMDL �h���~�[�͍A�ɓ˂������ꂽ���_�̏Ռ��ɖڂ����J���d�����Ă���
+			PRINTFORMDW �n�s�S���N����%CALLNAME:MASTER%���@��E�܂ނƁA�ċz�𕕂���ꂽ�h���~�[�̓o�^�o�^�Ɩ\�ꂽ
+		ENDSELECT
+	;����ȊO
+	ELSE
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML �u���A���c�c�ԁA�ӂ��c�v
+			PRINTFORMDL �h���~�[�͍A���ɓ˂������ꂽ���_�ɖڂ𔒍������Ă���
+			PRINTFORMDW %CALLNAME:MASTER%�͂���ȃh���~�[�̗l�q�����ď����y�[�X���ɂ߂�
+		CASE 1
+			PRINTFORML �u�Ԃ��J�b�c�񂲂��c�񂭁c�v
+			PRINTFORMDL �s�ӂɃY���b�ƍA�ɓ˂������ƁA�h���~�[�͓؂̂悤�Ȑ����グ�r�N���Ɛg�̂𒵂˂�����
+			PRINTFORMDW %CALLNAME:MASTER%�͂��̗l�q�ɖ��������ɔ��΂ނƁA�s�X�g�����ĊJ�����c
+		CASE 2
+			PRINTFORML �u���J���b�c����c�������c�v
+			PRINTFORMDL ���\�Ȓ��}�ɍR�c�̐����グ�悤�Ƃ����h���~�[�̐H���ɉA�s��˂����ꕕ�E����
+			PRINTFORMDW �H���ǂɋT�����C�����悤�Ɉ��������ƁA�h���~�[�͕@���𐂂炵�Ȃ���q�f����
+		ENDSELECT
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;141,�t�B�X�g�t�@�b�N
+;==================================================
+@M_KOJO_MESSAGE_COM_K109_141
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K109_141_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K109_141_1
+;-------------------------------------------------
+;�L���`�F�b�N�i=0, ��\���A1, �\���j
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;������
+	;-------------------------------------------------
+	;���߂�
+	;�L���`�F�b�N
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;��{�Z�b�g
+	;����
+	IF TALENT:����
+		PRINTFORMW 
+		RETURN 1
+	;����3
+	ELSEIF MARK:�s������ == 3
+		PRINTFORMW 
+		RETURN 1
+	;����ȊO
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;142,�A�i���t�B�X�g
+;==================================================
+@M_KOJO_MESSAGE_COM_K109_142
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K109_142_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K109_142_1
+;-------------------------------------------------
+;�L���`�F�b�N�i=0, ��\���A1, �\���j
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;������
+	;-------------------------------------------------
+	;���߂�
+	;�L���`�F�b�N
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;��{�Z�b�g
+	;����
+	IF TALENT:����
+		PRINTFORMW 
+		RETURN 1
+	;����3
+	ELSEIF MARK:�s������ == 3
+		PRINTFORMW 
+		RETURN 1
+	;����ȊO
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;143,�����t�B�X�g
+;==================================================
+@M_KOJO_MESSAGE_COM_K109_143
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K109_143_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K109_143_1
+;-------------------------------------------------
+;�L���`�F�b�N�i=0, ��\���A1, �\���j
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;������
+	;-------------------------------------------------
+	;���߂�
+	;�L���`�F�b�N
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;��{�Z�b�g
+	;����
+	IF TALENT:����
+		PRINTFORMW 
+		RETURN 1
+	;����3
+	ELSEIF MARK:�s������ == 3
+		PRINTFORMW 
+		RETURN 1
+	;����ȊO
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;144,���A
+;==================================================
+@M_KOJO_MESSAGE_COM_K109_144
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K109_144_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K109_144_1
+;-------------------------------------------------
+;�L���`�F�b�N�i=0, ��\���A1, �\���j
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;������
+	;-------------------------------------------------
+	;���߂�
+	;�L���`�F�b�N
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;��{�Z�b�g
+	;����
+	IF TALENT:����
+		PRINTFORMW 
+		RETURN 1
+	;����3
+	ELSEIF MARK:�s������ == 3
+		PRINTFORMW 
+		RETURN 1
+	;����ȊO
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;145,�A�i����d����
+;==================================================
+@M_KOJO_MESSAGE_COM_K109_145
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K109_145_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K109_145_1
+;-------------------------------------------------
+;�L���`�F�b�N�i=0, ��\���A1, �\���j
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;������
+	;-------------------------------------------------
+	;���߂�
+	;�L���`�F�b�N
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;��{�Z�b�g
+	;����
+	IF TALENT:����
+		PRINTFORMW 
+		RETURN 1
+	;����3
+	ELSEIF MARK:�s������ == 3
+		PRINTFORMW 
+		RETURN 1
+	;����ȊO
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;146,������{�v���O
+;==================================================
+@M_KOJO_MESSAGE_COM_K109_146
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K109_146_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K109_146_1
+;-------------------------------------------------
+;�L���`�F�b�N�i=0, ��\���A1, �\���j
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;������
+	;-------------------------------------------------
+	;���߂�
+	;�L���`�F�b�N
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;��{�Z�b�g
+	;�����t����
+	IF TEQUIP:����
+		;����
+		IF TALENT:����
+			PRINTFORMW 
+			RETURN 1
+		;����3
+		ELSEIF MARK:�s������ == 3
+			PRINTFORMW 
+			RETURN 1
+		;����ȊO
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	;����
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;147,�g���o���[��
+;==================================================
+@M_KOJO_MESSAGE_COM_K109_147
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K109_147_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K109_147_1
+;-------------------------------------------------
+;�L���`�F�b�N�i=0, ��\���A1, �\���j
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;������
+	;-------------------------------------------------
+	;���߂�
+	;�L���`�F�b�N
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;��{�Z�b�g
+	;����
+	IF TEQUIP:�g���o���[��
+		;����
+		IF TALENT:����
+			PRINTFORMW 
+			RETURN 1
+		;����3
+		ELSEIF MARK:�s������ == 3
+			PRINTFORMW 
+			RETURN 1
+		;����ȊO
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	;����
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;148,�A�i���d��
+;==================================================
+@M_KOJO_MESSAGE_COM_K109_148
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K109_148_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K109_148_1
+;-------------------------------------------------
+;�L���`�F�b�N�i=0, ��\���A1, �\���j
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;������
+	;-------------------------------------------------
+	;���߂�
+	;�L���`�F�b�N
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;��{�Z�b�g
+	;����
+	IF TEQUIP:�A�i���d��
+		;����
+		IF TALENT:����
+			PRINTFORMW 
+			RETURN 1
+		;����3
+		ELSEIF MARK:�s������ == 3
+			PRINTFORMW 
+			RETURN 1
+		;����ȊO
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	;����
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;150,���̒J�Ԃ�Ƃ�
+;==================================================
+@M_KOJO_MESSAGE_COM_K109_150
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K109_150_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K109_150_1
+;-------------------------------------------------
+;�L���`�F�b�N�i=0, ��\���A1, �\���j
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;������
+	;-------------------------------------------------
+	;���߂�
+	;�L���`�F�b�N
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;��{�Z�b�g
+	;����
+	IF TALENT:���� || TALENT:���~ || TALENT:�Z�t�� || TALENT:�����}��
+		SELECTCASE RAND:3
+		CASE 0
+			CALL HPH_PRINT,@"�u����HPH����ȁA���\�Ɂc��HPH�v","L"
+			PRINTFORMDL %CALLNAME:MASTER%�̓h���~�[�̋����񂹏グ��悤�ɒ͂ނƁA�p���p���ƍ���ł��t����
+			PRINTFORMDW �����Ɏw�œ�������ˉ񂵂Ă��ƁA�h���~�[�͗��\�ɋ���Ƃ���Ă���ɂ��ւ�炸�g������N���w�g����x�K���ɑł��k����
+		CASE 1
+			CALL HPH_PRINT,@"�u������HPH��l�������ĂȂ���_������Ȃ��ł���HPH�v","L"
+			PRINTFORMDL �h���~�[�͂܂�ł���������q���z�߂�悤�Ȍ����ŕ�d�𑱂��Ă���
+			PRINTFORMDW �^�Ƃ΂���Ƀh���~�[�������M���E�b�Ɖ����グ��ƁA�ƑS�̂����̊C�Ɉ�������������%CALLNAME:MASTER%�͎v�킸����グ��
+		CASE 2
+			CALL HPH_PRINT,@"�u�񂣂�HPH�����ς������͂񂶂�_���ł���c��HPH�v","L"
+			PRINTFORMDL ���œ��_�������������Ɏv�킸�h���~�[�̋���h�݂͂ɂ��Ă��܂�
+			PRINTFORMDL �h���~�[�͌��ł͒�R���Ă��邪�A�ǂ������������ɂ��Ă���c
+			CALL HPH_PRINT,@"�u�w�R�w�R���U��Ȃ��玄�̂����ς��ɃJ�E�p�[�C��t���āc���傤���Ȃ��l�ł��˂��cHPH�v","L"
+		ENDSELECT
+		RETURN 1
+	;����ȊO
+	ELSE
+		CALL AUTO_AEGI(NO:TARGET)
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1

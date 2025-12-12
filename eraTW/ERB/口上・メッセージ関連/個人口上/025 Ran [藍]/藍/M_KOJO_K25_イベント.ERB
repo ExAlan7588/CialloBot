@@ -1,0 +1,3239 @@
+﻿;-------------------------------------------------
+; eraTheWorld proto4.13用 八云蓝口上
+;-------------------------------------------------
+;
+;
+;试しに书いてみる蓝样口上
+;人类に优しめで寛容なお人柄。でも实际は外面がいいだけで、结局は紫样＆橙が第一な感じを出したい
+;という译で素質に”难以越过的底线”を追加。难易度急上升
+;素質に”妖狐”が无かったので追加。问题あったら消します
+;式になる前から九尾の狐で、昔は色々やんちゃしてた系蓝样
+;多分あんまり原作には沿ってません
+;もふるもふればもふるとき
+;
+;
+;※文体などについて
+;地の文は末尾に”。”を付けない方向
+;”――”はゲーム中だと线が途切れて见えるので不使用。一つだけだと物足りないし
+;”……”は二つ一组。个人的な见た目の好み
+;PRINTFORML を多用してクリック数削减。PRINTFORMWは段落の最后やイベントの长文などにのみ使用。スムーズに台词が流れるように
+;うちの你はショタっ子だ。动物耳生えてる人外だ。いやいや种付けおじさんだ。などプレイヤーごとに色々あると思うので、性格や容姿を特定する表现はなるべく控えます
+;けど女性你だけは想定してません。申し译ない
+;それと蓝样处女プレイも对応しておりません
+;改变追加修正いずれも欢迎
+;
+;
+;※其他について
+;灵梦口上、影狼口上、针妙丸口上、美铃口上など皆样の构文を参考にさせて顶きました。礼物を申し上げます
+;当口上に追加を考えて下さる方、被りなどはお气になさらずご自由にどうぞ。更新の际に文章をそのまま组み込ませて顶きます
+;
+;
+;------ ｷﾘﾄﾘ ｶｲｼ -----------
+;eraTheWorld proto4.07パッチ取り込み用 Ver1.13
+;テンプレートの使い方
+;初めに置换指令等により K25 を K(角色No) に变更して下さい  
+;角色NoはCSVフォルダのCharaファイルを参照　例(雾雨 魔理沙の场合)：K25 =置换=> K11
+;
+;------ ｷﾘﾄﾘ ｵﾜﾘ -----------
+
+;**** Copyright ****************************************************************
+;本口上の修正について（许可する行为のみ残してください）
+;【误字・脱字修正】【分岐条件・erb构文に关する修正】【本体Ver・Rev变更对応】【フラグの管理・修正】
+
+;本口上の追加・改变について（许可する行为のみ残してください）
+;【未记入部位追加】【随机分岐追加】【记入済部位追加】【记入済部位削除】【记入済部位コメントアウト】
+
+;本口上に对する保养禁止时限について
+;【无】
+;******************************************************************************
+;**** FlagManagement **********************************************************
+;本口上にて使用しているCFLAG・TCVAR等
+;
+;CFLAG:25:1001	:胖次盗まれた回数
+;CFLAG:25:1002	:时间停止中に绝顶した合计回数
+;CFLAG:25:1003	:时间停止奸で陷落したかどうか
+;CFLAG:25:1004	:时间停止中に膣内射精された回数
+;CFLAG:25:1005	:约会后告白されたかどうか
+;CFLAG:25:1006	:お澡堂场身体接触で剃毛したかどうか
+;CFLAG:25:1007	:妊娠回数
+;TCVAR:25:350	:”房间で遭遇”时に挨拶したか
+;TCVAR:25:351	:胖次を盗んだか
+;TCVAR:25:352	:选择肢付き会说着话か
+;TCVAR:25:353   :祈愿制限
+;
+;******************************************************************************
+
+;PS 寅の人
+;原创作者と联络が取れない场合、上记Copyrightに从い追加改变を行って下さい
+;また本体处理・他口上处理等に干渉する异常处理がある场合で原创作者による修正が
+;行われない・もしくは困难な场合、Copyrightに关わらず有志による修正を许可します
+;その际は元处理を削除せずコメントアウトし修正处理を插入して下さい
+
+;### 口上存在判定 ###################################
+@M_KOJO_K25(ARG)
+;别人版を作成する际はこのテンプレではなく别人版用口上テンプレをご利用ください
+
+;口上存在判定です、けしてコメントアウトしないでください
+;他の处理は一切行わないように
+RETURN 1
+
+;### 口上基本フラグ设定 #############################
+@M_KOJO_FLAGSETTING_K25
+;基本フラグ设定はここで行ってください
+;共通の口上フラグは必要な部位のコメントアウトを外してご利用ください
+;口上専用フラグはご自由に
+;Xには角色番号を入れてください
+
+;眠奸口上有、时间停止口上有、扮演に1を入れると、それぞれ时间停止时、眠奸时、扮演时に指令口上が读み込まれるように
+;入れないと时间停止时、眠奸时、扮演时は一切喋りません
+;CFLAG:X:眠奸口上有 = 0
+CFLAG:25:时间停止口上有 = 1
+;CFLAG:X:扮演口上有 = 0
+
+;破瓜中止口上有に1を入れると、@M_KOJO_EVENT_KX_LOST_VIRGIN_STOPで中止の成否を操作できます
+;CFLAG:X:破瓜中止口上有 = 0
+
+;口上内抱き寄せ判定_初回と口上内抱き寄せ判定_通常に1を入れると、M_KOJO_EVENT_KX_PERMISSIONで推倒の成否を操作できます
+;CFLAG:X:口上内抱き寄せ判定_初回 = 0
+;CFLAG:X:口上内抱き寄せ判定_通常 = 0
+
+;推倒禁止に1を入れると、主动推倒てこなくなります
+;以下は恋慕か炮友がつくまで推倒てこなくなる使用例
+;IF !TALENT:X:恋慕 && !TALENT:X:炮友
+;	CFLAG:X:推倒禁止 = 1
+;ELSE
+;	CFLAG:X:推倒禁止 = 0
+;ENDIF
+
+;来访不能に1を入れると、来访してこなくなります
+;以下は认识があるまで来访してこなくなる使用例
+;IF !CFLAG:X:认识
+;	CFLAG:X:来访不能 = 1
+;ELSE
+;	CFLAG:X:来访不能 = 0
+;ENDIF
+
+;### 口上色判定 ###################################
+@M_KOJO_COLOR_K25
+;ここでSETCOLORすることで口上に色を付けられます
+
+;蓝色にしてみたら大变读み辛かった。なので藤紫色
+SETCOLOR 0x9883C9
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+;"UPDATE判定"
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+@M_KOJO_UPDATE_K25
+;口上独自のUPDATE用
+;ENCOUNTER専用に独自分岐フラグを仕込んだ场合等にどうぞ
+;UPDATE判定でCFLAGを使用场合、角色番号の指定が必要になります
+RETURN 1
+
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+;"ENCOUNTER"系イベント（エクストラ构文）
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+@M_KOJO_ENCOUNTER_K25
+;初对面、挨拶のタイミング
+;TALENTの变更はここでどうぞ。
+PRINTL 
+PRINTFORMW 「我明白了、你是传言中的那个人吧」
+PRINTL 
+PRINTFORMW 正思考些事情，被突然冒出的言语吓一跳
+PRINTFORMW 女人侧着脸感兴趣的朝我望着
+PRINTL 
+PRINTFORMW 「突然开口吓到你了吗？抱歉呢」
+PRINTL 
+PRINTFORMW 瞇着眼睛，脸上有种魅惑般笑容不带恶意地挥手金发金眼美女
+PRINTFORMW 她的背后有九个金色艳丽的巨大尾巴
+PRINTL 
+PRINTFORMW 「我是八云蓝，身份乃侍奉某位大人的式神」
+PRINTFORMW 「因为工作的关系经常往返神社跟人之里、相遇的时间也会变多吧」
+PRINTFORMW 「这样说起来、今后也请多多关照」
+PRINTL 
+PRINTFORMW 这样说着的九尾狐狸，有礼貌的低下了头
+PRINTFORMW 唉呀，唉呀。跟冷艳的美貌及存在感相反，感觉是个非常好亲近的妖怪……
+PRINTFORMW 我也礼貌的回礼，隐隐有种被她金色的瞳孔凝视着的感觉
+PRINTL 
+;妖狐
+TALENT:25:25 = 1
+TALENT:25:91 = 1
+RETURN 1
+
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+;"SP_EVENT"系イベント
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+;==================================================
+;约会归りにファーストKISS（合意も付く）
+;==================================================
+@M_KOJO_SPEVENT_K25_1(ARG,ARG:1)
+;口上主はTARGET
+;地の文表示
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------
+IF LOCAL
+	PRINTFORML  
+	;接吻を中止したい场合は以下を开放
+	;TCVAR:中止接吻 = 1
+ENDIF
+RETURN 1
+
+;==================================================
+;约会归りに告白（恋人が付く）
+;==================================================
+;==================================================
+;Optional: Determines if the standard description should be skipped.
+;Return 0 if description and KOJO should be shown, 1 if description should be hidden and KOJO shown, 2 if description should be shown and KOJO hidden, and 3 if both description and KOJO should be hidden.
+;==================================================
+@M_KOJO_SPEVENT_MESSAGECHECK_K25_2
+RETURN 1
+
+@M_KOJO_SPEVENT_K25_2(ARG,ARG:1)
+;口上主はTARGET
+;地の文表示
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL && !FLAG:70 && TALENT:恋慕
+	PRINTL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;告白内容
+	;この告白内容表示后に接受かどうかの选择分が表示されます
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 0
+		;初回
+		IF FIRSTTIME(1025)
+			PRINTL
+			PRINTFORMW 「在任何时代、外貌优秀的男人都受到吹捧」
+			PRINTL
+			PRINTFORMW 归途的路上。走在身旁的蓝自言自语般的说着
+			PRINTL
+			PRINTFORMW 「强壮的男人、聪明的男人都被女人喜爱。阿、不过这并非是不尊重」
+			PRINTL
+			PRINTFORMW 恶作剧似的笑着、也只能苦笑看着她
+			PRINTFORMW 容貌，实力，头脑，无轮哪一样她都非常出色
+			PRINTFORMW 走在她身旁的话，无论多优秀的男人都会显的逊色吧。
+			PRINTFORMW 八云蓝就是如此的像幅完美的画
+			PRINTL
+			PRINTFORMW 「温柔，诚实，勇敢，或权或财..人的魅力有各式各样」
+			PRINTFORMW 「但是、对我来说没什么差别。转眼间、只是变幻万千数值而已」
+			PRINTFORMW 「客套地万物无常……」
+			PRINTL
+			PRINTFORMW 虚幻的声音响起、望像蓝的表情
+			PRINTFORMW 一瞬间，她的身影消失了
+			PRINTL
+			PRINTFORMW 正惊讶之时。突然身体被紧紧抱住
+			PRINTFORMW 九条艳丽的尾巴跟双手、从背后紧紧的纠缠
+			PRINTL
+			PRINTFORMW 「呼、%CALLNAME:MASTER%。做我的东西好吗？」
+			PRINTL
+			PRINTFORMW 耳边传来香甜的低语
+			PRINTFORMW 身体被紧紧的拥抱
+			PRINTFORMW 全身感觉软绵绵的、动弹不得
+			PRINTL
+			PRINTFORMW 「不会束缚你。和谁在恋爱、朝着哪旅行、只要最后回到我的身边」
+			PRINTFORMW 「这样就好了。只要这样」
+			PRINTFORMW 「用其一生、让我看着你」
+			PRINTL
+			PRINTFORMW ……在那、恳求般的诱惑、像儿时母亲般的温暖
+			PRINTFORMW 低下头、深深的吸了一口气
+			PRINTFORMW %CALLNAME:MASTER%将大量精力投入到笨拙的脑袋中、深吸了一口气
+		ELSE
+			PRINTL
+			PRINTFORMW 两人漫步的走在归途
+			PRINTFORMW 忽然想起了以前的事情、又被毛茸茸的尾巴缠住
+			PRINTFORMW 脚浮在空中。跟之前不同、从正面紧紧抱着
+			PRINTL
+			PRINTFORMW 「已经差不多了吧？」
+			PRINTFORMW 「讨厌的事情先不说。像我这么善解人意的主人不常见阿」
+			PRINTFORMW 「当然不是娇养。会严厉的锻炼你、成为名叫好男人的东西」
+			PRINTL
+			PRINTFORMW 一副轻松的样子、声音跟表情也都很清爽
+			PRINTFORMW 『拜托了』不知不觉就想这么说……
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;告白オッケー（恋人が付く）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		PRINTL
+		PRINTFORMW 我清楚的像她表明
+		PRINTFORMW 『不会成为妳的东西』、果断的像她回复
+		PRINTL
+		PRINTFORMW 尾巴上的毛轻轻地飘动、搔弄着皮肤痒痒的
+		PRINTFORMW 紧紧抱住的手在颤抖
+		PRINTL
+		PRINTFORMW 「真自信……」
+		PRINTL
+		PRINTFORMW 用力的朝%CALLNAME:MASTER%头揉着、蓝沉默的紧抱
+		PRINTL
+		PRINTFORMW 「……什么话都说不出来。真为难」
+		PRINTL
+		PRINTFORMW 感受得到她的心跳增快。身体都在微微的颤抖
+		PRINTFORMW 被她拥抱着的我注意到了
+		PRINTFORMW 八云蓝在强也只是一个女人、也是会有这样的时候
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;告白失败
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		PRINTL
+		PRINTFORMW 「是、是这样啊」
+		PRINTL
+		PRINTFORMW 如果不喜欢的话也没办法
+		PRINTFORMW 虽然有所觉悟、但还是有点想逃避
+		PRINTL
+		PRINTFORMW 「哈哈…、是吗…」
+		PRINTFORMW 「我不会放弃…」
+		PRINTFORMW 「总有一天一定会让你点头。魅惑什么的是妖狐最拿手的」
+		PRINTL
+		PRINTFORMW 蓝带着挑衅的微笑。被纵长的瞳孔锐利的盯着
+		PRINTFORMW 好吧，看来事到如今
+		PRINTFORMW 意外的让对方认真了……
+		RETURN 1
+	ENDIF
+	PRINTL 
+ENDIF
+RETURN 1
+
+;==================================================
+;约会归り
+;==================================================
+@M_KOJO_SPEVENT_K25_3(ARG,ARG:1)
+;口上主はTARGET
+;地の文表示
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;通常回家
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 0
+		PRINTL
+		IF TALENT:恋人
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 「今天也过的很开心。谢谢你、我可爱的老公」
+				PRINTFORMW 蓝调皮的笑着、隐约有些脸红的样子
+			CASE 1
+				PRINTFORML 「总觉得、对我们来说已经算是夫妻了、对吧」
+				PRINTFORML 当然、像今后这样在一起的日子也会不断增加
+				PRINTFORMW 想把如此可爱的蓝攔在怀中好好疼爱
+			CASE 2
+				PRINTFORML 愉快的约会后、在归途的坡道上，两人望着幻想乡的风景相互靠在一起
+				PRINTFORML 「……原来是这样阿、紫大人……」
+				PRINTFORMW 嘟哝着什么没听清楚、感到疑惑的望向她。
+			ENDSELECT
+		ELSEIF TALENT:恋慕
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 「走了段路。有点累了吗、%CALLNAME:MASTER%」
+				PRINTFORMW %CALLNAME:MASTER%点了点头、像妻子般的蓝温柔的笑着
+			CASE 1
+				PRINTFORML 「下次我们要去哪里呢？ 幻想乡可大的呢……」
+				PRINTFORMW 十指紧扣着、娴静的气氛让人觉得甜蜜
+			CASE 2
+				PRINTFORML 「下次在迷途之家度过一天如何。晚了就住在下来就好了」
+				PRINTFORMW 愉悦的提案、心里开心的想着
+			ENDSELECT
+		ELSEIF TALENT:思慕
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 「……算是悠闲的一天。我是这样觉得、%CALLNAME:MASTER%」
+				PRINTFORMW 看起来、蓝对这次的约会还算满意
+			CASE 1
+				PRINTFORML 「我的立场你知道的吧。平时都在忙着、好不容易才出来的喔」
+				PRINTFORMW 蓝俏皮的说着、这是要平时常去帮忙的意思吧
+			CASE 2
+				PRINTFORML 「哈哈，玩得很开心」
+				PRINTFORMW 看着蓝开心笑着的脸庞
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 「呵呵、还可以。请你再邀请我吧」
+				PRINTFORMW 看不出来是不是真心话、%CALLNAME:MASTER%有些困惑
+			CASE 1
+				PRINTFORML 「下次约会就不一定能出来。毕竟我也是有各种工作要忙」
+				PRINTFORMW 跟蓝似乎还是有段距离……
+			CASE 2
+				PRINTFORML 「你要是能开心的话就好了」
+				PRINTFORMW 蓝自己到底是怎么想的呢、%CALLNAME:MASTER%思考着
+			ENDSELECT
+		ENDIF
+		PRINTL 
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;反抗刻印消去イベント
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;反抗刻印2>1レベルダウンイベント
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;反抗刻印3>2レベルダウンイベント
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	PRINTFORML
+ENDIF
+RETURN 1
+
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+;"EVENT"系イベント
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+;==================================================
+;房间で遭遇
+;==================================================
+@M_KOJO_EVENT_K25_1(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;MASTERが入ってきた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	;四季ごとに朝昼晩
+	IF LOCAL:1 && ARG == 1
+		PRINTL
+		;一日一回
+		SIF TCVAR:25:350 == 1
+			RETURN 1
+		IF TALENT:恋慕
+			;DAY:2で季节を选择
+			SELECTCASE DAY:2
+			;春
+			CASE 1
+				;TIME:2で朝昼晩を选择
+				SELECTCASE TIME:2
+				;朝
+				CASE 1,2
+					PRINTFORML 「%CALLNAME:MASTER%样。早上好」
+					PRINTFORML 「讨厌死板的问候？」
+					PRINTFORMW 被尾巴搔弄着，似乎玩得很开心
+				;昼
+				CASE 3,4
+					PRINTFORML 「呵呵、%CALLNAME:MASTER%」
+					PRINTFORMW 「在这季节。选这时间出门最适合呢」
+				;夜
+				CASE 5,6,7
+					PRINTFORML 「晚上好、%CALLNAME:MASTER%」
+					PRINTFORMW 「就算是春分、晚上还是会冷。注意身体别着凉了」
+				ENDSELECT
+			;夏
+			CASE 2
+				SELECTCASE TIME:2
+				;朝
+				CASE 1,2
+					PRINTFORML 「早上好、%CALLNAME:MASTER%」
+					PRINTFORML 「现在可是无论早晚都很炎热的季节呢。昨晚睡的好吗？」
+					PRINTFORMW 蓝看起来一直都是很清爽的样子
+				;昼
+				CASE 3,4
+					PRINTFORML 「真是。今天也很热呢、%CALLNAME:MASTER%」
+					PRINTFORML 「哎呀、流了好多汗。我帮你擦去吧」
+					PRINTFORMW 蓝贴了上来将额头上的汗水抚去
+				;夜
+				CASE 5,6,7
+					PRINTFORML 「%CALLNAME:MASTER%。就算是夏季的夜晚」
+					PRINTFORML 「气温也会降低呢。要温暖一下吗？」
+					PRINTFORMW 将头紧紧埋入蓝的怀里
+				ENDSELECT
+			;秋
+			CASE 3
+				SELECTCASE TIME:2
+				;朝
+				CASE 1,2
+					PRINTFORML 「脸红通通的呢、%CALLNAME:MASTER%」
+					PRINTFORMW 「是不是感冒了。要不要去见见竹林的医生？」
+				;昼
+				CASE 3,4
+					PRINTFORML 「嗯嗯、风里带着银杏的气味」
+					PRINTFORML 「果然厌倦了。哎……」
+					PRINTFORMW 蓝把脸贴过来、微微抽着鼻子
+				;夜
+				CASE 5,6,7
+					PRINTFORML 「呵、%CALLNAME:MASTER%」
+					PRINTFORML 「你听、在那里有铃虫的声音」
+					PRINTFORMW 二人依偎着倾听铃鸣声
+				ENDSELECT
+			;冬
+			CASE 4
+				SELECTCASE TIME:2
+				;朝
+				CASE 1,2
+					PRINTFORML 「早上好、%CALLNAME:MASTER%感到冷吗……？」
+					PRINTFORML 「来吧、我来暖暖你」
+					PRINTFORMW 冻僵的手被蓝松软的尾巴包敷着
+				;昼
+				CASE 3,4
+					PRINTFORML 「不冷吗、%CALLNAME:MASTER%？」
+					PRINTFORML 「那么、到我身边来吧。我很暖呼呼的喔」
+					PRINTFORMW 蓝的尾巴像围巾一样覆盖在我的脖子
+				;夜
+				CASE 5,6,7
+					PRINTFORML 「嗯、突然变好冷阿」
+					PRINTFORML 「连毛皮在这温度都承受不住」
+					PRINTFORMW 「在这时候就要相互依偎在一起。对吧？」
+				ENDSELECT
+			ENDSELECT
+		ELSEIF TALENT:思慕
+			PRINTFORML 「%CALLNAME:MASTER%。你好阿」
+			PRINTFORMW 蓝亲切的笑着问候我
+		ELSE
+			PRINTFORML 「呵呵」
+			PRINTFORMW 蓝朝向我挥了挥手
+		ENDIF
+		TCVAR:25:350 = 1
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;TARGETが入ってきた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		PRINTL
+		IF TALENT:恋慕
+			PRINTFORML 「你在这阿、%CALLNAME:MASTER%」
+			PRINTFORML 「没想到会在这见到呢」
+			PRINTFORMW 蓝开心的语气朝我接近
+		ELSEIF TALENT:思慕
+			PRINTFORML 「哎阿、是%CALLNAME:MASTER%」
+			PRINTFORMW 刚到这里、蓝的表情一下子放晴
+		ELSE
+			PRINTFORML 「哎，前些时候的人」
+			PRINTFORMW 蓝随意的打招呼
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;TARGETが澡堂に入ってきて一绪に入る
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		PRINTL
+		IF TALENT:恋慕
+			PRINTFORML 「哎、%CALLNAME:MASTER%」
+			PRINTFORML 将拉门打开、手上拿着毛巾的蓝进来了
+			PRINTFORML 脸上露出快乐的笑容。每走一步乳房都在晃动着蓝一点掩盖的意思都没有
+			PRINTFORML 「好不容易碰到了就一起吧。可别说不愿意喔？」
+			PRINTFORMW 盯着洁白丰满肉体的%CALLNAME:MASTER%点点头
+		ELSE
+			PRINTFORML 「哎呀、有客人先到了阿」
+			PRINTFORML 打开门走进来的是蓝
+			PRINTFORML 丰满的裸体连毛巾都不能完全缠上、摇晃着硕大的乳房朝这走来
+			PRINTFORML 「看到门是开着、进来打扰没有关系吧？」
+			PRINTFORMW 说着当然的%CALLNAME:MASTER%鉴赏着蓝的肉体
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;TARGETが澡堂に入ってきて出て行った
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 4
+		PRINTL
+			PRINTFORML 把门打开、有人走进了浴室
+			PRINTFORML 那是用小小的毛巾捂住胸口的蓝
+			PRINTFORML 丰满凹凸有致的身材完全掩盖不住、乳房的尖端及阴部皆露出在外……
+			PRINTFORML 「正在洗澡吗。失礼了」
+			PRINTFORMW 一点动摇也没有、蓝用尾巴把门闭上了
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;TARGETが澡堂に入ってきて追い出された
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 5
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;外出先で遭遇した
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 6
+		PRINTFORML 
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;他角色と约会中に遭遇した
+	;ARG:1に约会的对象
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 6
+		PRINTFORML 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;朝起きたとき（おはよう口上）
+;==================================================
+@M_KOJO_EVENT_K25_2(ARG,ARG:1)
+CALL MESSAGE_GOODMONING(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;非同栖かつ相手が先に起きてる
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		;-------------------------------------------------
+		;TARGET私室にMASTERが入っている（恋慕时陪睡中就寝时のみ？
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 0
+		;-------------------------------------------------
+		IF LOCAL:1 && !ARG:1
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;MASTER私室にTARGETが入ってきてる(恋慕无しでも入ってくる可能性有り
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 0
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 1
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+		;共通
+		IF TALENT:恋慕 
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 「哎呀，起来了」
+				PRINTFORML 张开眼、蓝贴着脸偷偷的笑着
+				PRINTFORML 「呵呵，有点恶作剧的太多了？」
+				PRINTFORMW 自己在睡觉的时候到底发生了什么
+			;朝口交をやってみたかった
+			CASE 1
+				SIF TALENT:MASTER:性别 != 2
+					RETURN 1
+				PRINTFORML 有什么、奇怪的感觉朝脊梁爬了上来
+				PRINTFORML 噗滋噗滋噗滋的水声。有人在%CALLNAME:MASTER%的两腿间舔舐着龟头
+				PRINTFORML 「早上好、%CALLNAME:MASTER%。有做了美梦吗？」
+				PRINTFORML 吸吮着肉棒的蓝、舔着侧杆抬头望着
+				PRINTFORMW 在我睡着的时间被吸了多久呢。不久%CALLNAME:MASTER%睡醒的第一发在蓝的嘴里射了出来
+				BASE:MASTER:精力 -= 100
+			;玉舐めもあるぞ
+			CASE 2
+				SIF TALENT:MASTER:性别 != 2
+					RETURN 1
+				PRINTFORML 要起床时%CALLNAME:MASTER%扭动了下身体
+				PRINTFORML 突然意识清醒、注意到有人在股间恶作剧
+				PRINTFORML 「唔，草肮。」
+				PRINTFORML 蓝口齿不清的说着、将右边的阴囊含在口内
+				PRINTFORML 汁液从高耸的肉棒前端滴下、牵着丝线落在蓝的鼻梁上
+				PRINTFORML 看来蓝闭掉闹钟之后就一直对%CALLNAME:MASTER%的股间玩弄着……
+				PRINTFORMW 在最后、把积存在睾丸的精液朝蓝的喉咙深处灌下
+				BASE:MASTER:精力 -= 100
+			ENDSELECT
+		ELSE
+			PRINTFORML 「早上好，睡的还好吗？%CALLNAME:MASTER%」
+			PRINTFORMW 醒来就看到正坐着的蓝
+		ENDIF
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;同栖かつ相手が起きている
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		IF TALENT:恋慕 
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 「哎呀，起来了」
+				PRINTFORML 张开眼、蓝贴着脸偷偷的笑着
+				PRINTFORML 「呵呵，有点恶作剧的太多了？」
+				PRINTFORMW 自己在睡觉的时候到底发生了什么
+			;朝口交をやってみたかった
+			CASE 1
+				SIF TALENT:MASTER:性别 != 2
+					RETURN 1
+				PRINTFORML 有什么、奇怪的感觉朝脊梁爬了上来
+				PRINTFORML 噗滋噗滋噗滋的水声。有人在%CALLNAME:MASTER%的两腿间舔舐着龟头
+				PRINTFORML 「早上好、%CALLNAME:MASTER%。有做了美梦吗？」
+				PRINTFORML 吸吮着肉棒的蓝、舔着侧杆抬头望着
+				PRINTFORMW 在我睡着的时间被吸了多久呢。不久%CALLNAME:MASTER%睡醒的第一发在蓝的嘴里射了出来
+				BASE:MASTER:精力 -= 100
+			;玉舐めもあるぞ
+			CASE 2
+				SIF TALENT:MASTER:性别 != 2
+					RETURN 1
+				PRINTFORML 要起床时%CALLNAME:MASTER%扭动了下身体
+				PRINTFORML 突然意识清醒、注意到有人在股间恶作剧
+				PRINTFORML 「唔，草肮。」
+				PRINTFORML 蓝口齿不清的说着、将右边的阴囊含在口内
+				PRINTFORML 汁液从高耸的肉棒前端滴下、牵着丝线落在蓝的鼻梁上
+				PRINTFORML 看来蓝闭掉闹钟之后就一直对%CALLNAME:MASTER%的股间玩弄着……
+				PRINTFORMW 在最后、把积存在睾丸的精液朝蓝的喉咙深处灌下
+				BASE:MASTER:精力 -= 100
+			ENDSELECT
+		ELSE
+			PRINTFORML 「早上好，睡的还好吗？%CALLNAME:MASTER%」
+			PRINTFORMW 醒来就看到正坐着的蓝
+		ENDIF
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;同栖かつ相手が寝ている
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;MASTERが起きていて、相手が起きてきた
+	;添い寝时TARGET起床はこちら（TARGET衰弱or陪睡中TARGET睡魔负け后そのままMASTERが起き续けた上で相手が起床した场合限定
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 4
+		;-------------------------------------------------
+		;非同栖
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 0
+		;-------------------------------------------------
+		IF LOCAL:1 && !ARG:1
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;同栖中
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 0
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 1
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+		;共通
+		IF TALENT:恋慕
+			PRINTFORML 「唔……」
+			PRINTFORML 睡醒的蓝、刚醒来思绪还很迟钝
+			PRINTFORMW 往轻轻摇晃狐耳的头摸着
+		ELSE
+			PRINTFORML 「……早上好。你起得真早啊」
+			PRINTFORML 「难道看到我的睡脸了吗……啊、没什么」
+			PRINTFORMW 蓝移开视綫、兴冲冲地开始打扮
+		ENDIF
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;其他
+	PRINTFORML  
+ENDIF
+RETURN 1
+
+
+;==================================================
+;夜寝るとき（おやすみ口上）
+;==================================================
+@M_KOJO_EVENT_K25_3(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	PRINTL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;自室に返回（定时になって寝る）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		;神社住宿时専用と想定して记述
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML 「可要好好休息。%CALLNAME:MASTER%一直熬夜可不行」
+			PRINTFORMW 蓝躺下轻轻说
+		CASE 1
+			PRINTFORML 「那么、亲爱的。晚安」
+			PRINTFORMW 说完缓缓进入梦乡
+		CASE 2
+			PRINTFORML 「那么。明天见」
+			PRINTFORMW 亲吻过后、蓝缓缓闭上双眼
+		ENDSELECT
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;眠そうにしている
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		IF TALENT:恋慕 || TALENT:思慕
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 「……………」
+				PRINTFORMW 「抱歉。意思有点模糊」
+			CASE 1
+				PRINTFORML 乍看之下跟平常一样、但身体似乎提不起劲
+				PRINTFORMW 就算是女狐也战胜不了睡意
+			CASE 2
+				PRINTFORMW 蓝的尾巴缓缓的降下。看来昏昏欲睡了
+			ENDSELECT
+		ELSE
+			PRINTFORML 「唔嗯，嗯」
+			PRINTFORMW 随便附和着。似乎到了发困的时候
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;睡眠中（起きていないので会话というよりは寝言？）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		IF TALENT:恋慕 || TALENT:思慕
+		ELSE
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;恶作剧中
+	;记入チェック（=0, 非表示、1, 表示）
+	;LOCAL:1 = 0
+	;-------------------------------------------------
+	;IF LOCAL:1 && ARG == 4
+		;PRINTFORMW 
+		;RETURN 1
+	;ENDIF
+	;-------------------------------------------------
+	;衰弱中
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 5
+		IF TALENT:恋慕 || TALENT:思慕
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 蓝无力的倒在在%CALLNAME:MASTER%怀里
+				PRINTFORMW 看来她到了体力的极限了
+			CASE 1
+				PRINTFORML 絨毛有些萎靡、尾巴的角度也跟往常不同
+				PRINTFORMW 今天的蓝看了就明白累坏了。我扶着疲劳的她
+			CASE 2
+				PRINTFORML 「嗯，累了。让我休息一回」
+				PRINTFORMW 这样的蓝可不常见、%CALLNAME:MASTER%觉得有些新奇
+			ENDSELECT
+		ELSE
+			PRINTFORMW 「……唔。就到这吧」
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;MASTERがダウン（房间まで运ばれる）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 6
+		IF TALENT:恋人
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 「晚安、%CALLNAME:MASTER%」
+				PRINTFORMW 扛不住睡魔了、倒在蓝的怀里
+			CASE 1
+				PRINTFORML 「没问题。之后就交给我」
+				PRINTFORMW 听着就放心的把眼闭上
+			CASE 2
+				PRINTFORML 「辛苦了」
+				PRINTFORMW 紧拥着背部的手、额头传来嘴唇的触感
+			ENDSELECT
+		ELSEIF TALENT:恋慕
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 「好了好了。乖乖喔」
+				PRINTFORMW 蓝小心的将%CALLNAME:MASTER%背在背上
+			CASE 1
+				PRINTFORML 「让你太勉强了吗。真过意不去」
+				PRINTFORMW 眼看就要失去意识。%CALLNAME:MASTER%被众多的尾巴轻飘飘的抬起
+			CASE 2
+				PRINTFORML 「你很努力了」
+				PRINTFORMW 失去意识前、蓝温柔的微笑印在眼睛里
+			ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;其他
+	PRINTFORML  
+ENDIF
+RETURN 1
+
+;==================================================
+;移动时すれちがい
+;==================================================
+@M_KOJO_EVENT_K25_4(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;立ち止まった
+	;この后遭遇口上に接续
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;轻轻地会釈して街道过ぎた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;无视して街道过ぎた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;其他
+	PRINTFORML  
+ENDIF
+RETURN 1
+
+;==================================================
+;他者介入で情绪变化
+;==================================================
+@M_KOJO_EVENT_K25_5(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	PRINTL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;紫样が入ってきた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 26
+		IF TALENT:恋慕
+			;紫样が恋慕持ち
+			IF TALENT:26:恋慕
+				SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 「紫大人。在说我的事吗？」
+					PRINTFORML 「还是%CALLNAME:MASTER%呢？」
+					PRINTFORMW 相互点点头后、二人一起向这边露出温暖的笑容
+				CASE 1
+					PRINTFORML 「正等着您呢、紫大人」
+					PRINTFORML %CALLNAME:MASTER%看到有什么弹在紫的面前
+					PRINTFORMW 同时浮现可疑的微笑，美女二人发动攻势
+				CASE 2
+					PRINTFORML 正面袭来隙间的妖怪。背后则是朝%CALLNAME:MASTER%扑来九尾式神
+					PRINTFORML 「邪恶%CALLNAME:MASTER%。紫大人命令是最优先的」
+					PRINTFORMW 主从两人玩得很开心的样子……
+				ENDSELECT
+			ELSE
+				SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 「紫大人」
+					PRINTFORML 「……好的，明白了。像这样那样」
+					PRINTFORMW 那两人不知道在说什么、%CALLNAME:MASTER%从外面望着
+				CASE 1
+					PRINTFORML 「这样那样的事情可没有。我可是紫大人的式神」
+					PRINTFORMW 再被蓝跟紫戏弄着
+				CASE 2
+					PRINTFORML 「呵，呵。不让我看。哦，到底是什么呢」
+					PRINTFORMW 蓝跟紫说着%CALLNAME:MASTER%各种糗事让、感到无奈
+				ENDSELECT
+			ENDIF
+		ELSEIF TALENT:思慕
+			PRINTFORML 「啊、紫大人。找我有事吗」
+			PRINTFORMW 难得看到蓝动摇的样子
+		ELSE
+			PRINTFORML 「紫大人。您在这里吗」
+			PRINTFORMW 蓝的态度完全改变。展现对主人的忠诚跟敬意
+		ENDIF
+		PRINTL 
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;橙が入ってきた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 24
+		IF TALENT:恋慕
+			;橙が恋慕持ち
+			IF TALENT:24:恋慕
+				SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 「来吧、橙！」
+					PRINTFORMW 蓝朝%CALLNAME:MASTER%笑了笑、抱着橙来回转动着
+				CASE 1
+					PRINTFORML 「哎阿、橙。来得正好」
+					PRINTFORMW 橙跑向两人之间开心的表示欢迎
+				CASE 2
+					PRINTFORML 「橙、在这喔」
+					PRINTFORMW 看着橙小跑得接近、%CALLNAME:MASTER%跟蓝都笑了起来
+				ENDSELECT
+			ELSE
+				SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 「做、做什么、橙？ 我什么都没做喔..」
+					PRINTFORMW 罕见的看到蓝如此动摇
+				CASE 1
+					PRINTFORML 「什、怎么会在这！？」
+					PRINTFORMW 忽然瞄到、橙朝这边默默的注视着
+				CASE 2
+					PRINTFORML 「%CALLNAME:MASTER%。看那边」
+					PRINTFORMW 橙对自己偷看被发现感到苦恼
+				ENDSELECT
+			ENDIF
+		ELSEIF TALENT:思慕
+			PRINTFORML 「哎呀，哎呀。怎么了？、橙？」
+			PRINTFORMW 橙将蓝的手紧紧抱住、湿漉漉的眼睛朝这盯着
+		ELSE
+			PRINTFORML 「噢、橙」
+			PRINTFORMW 蓝将%CALLNAME:MASTER%放在一边跟自己的式神说起话来
+		ENDIF
+		PRINTL 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;情事を目击した
+;==================================================
+@M_KOJO_EVENT_K25_6(ARG,ARG:1)
+;口上主はTARGET
+;ARGに情事相手
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	PRINTL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;情事を目击した（亲热度:低）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 1
+		;お相手が紫样
+		IF ARG == 26
+			PRINTFORML 「实、实在失礼了……」
+			PRINTFORML 看着%CALLNAME:MASTER%跟主人突然理解的瞬间、蓝意识到自己妨碍到到并道歉
+		;お相手が橙
+		ELSEIF ARG == 24
+			PRINTFORML 「什么！」
+			PRINTFORML 蓝迅速的拉近距离。用离心力使用尾巴将橙包起来并将%CALLNAME:MASTER%撞飞
+		ELSEIF TALENT:恋慕
+			PRINTFORML 「哎呀」
+			PRINTFORML 「打搅了，呵呵。请继续下去」
+			PRINTFORML 一边继续的看着%CALLNAME:MASTER%和%CALLNAME:ARG%慌慌张张地整理了衣服
+		ELSE
+			PRINTFORML 「……失礼。我什么都没有发现喔」
+			PRINTFORML 把头低下的蓝、%CALLNAME:MASTER%也把脑袋低下
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;负けじと参加（亲热度:高）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 2
+		;お相手が紫样
+		IF ARG == 26
+			PRINTFORML 「紫大人……可以吗？」
+			PRINTFORML 微笑的紫招了招手、怯生生的蓝慢慢的靠近
+			PRINTFORML 紫双手牵着蓝引导她
+		;お相手が橙
+		ELSEIF ARG == 24
+			PRINTFORML 蓝悄悄的隐藏着脚步声、橙从后面紧紧的抱住不放
+			PRINTFORML 「沉迷于这种事情真是个坏孩子..」
+			PRINTFORML 揉着颤抖的橙的头，眼中尽是满满的疼爱
+		ELSEIF TALENT:恋慕
+			PRINTFORML 「呃。做着快乐的事呢」
+			PRINTFORML 「如果可以的话、我也陪伴你一起如何？」
+			PRINTFORML 说着好的%CALLNAME:ARG%、%CALLNAME:MASTER%就这样被两个美女式神逆推
+		ELSE
+			PRINTFORML 「不要露出那样的表情。只是想一起享受而已」
+			PRINTFORML 蓝眼中满是情欲的笑着参加了
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;气まずそうに立ち去る
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 3
+		;お相手が紫样
+		IF ARG == 26
+			PRINTFORML 互相拥抱着的紫忽然将视线转到别处
+			PRINTFORML 虽然只有一瞬间、似乎见到有金色的身影在暗处
+		;お相手が橙
+		ELSEIF ARG == 24
+			PRINTFORML 双手从橙的后脑绕过、强行夺走她的嘴唇
+			PRINTFORML 离开唇边之前貌似瞄到蓝的身影在看着%CALLNAME:MASTER%
+		ELSEIF TALENT:恋慕
+			PRINTFORML 「请慢慢来」
+			PRINTFORML 在我打算说些什么之前，蓝就快步离去了
+		ELSE
+			PRINTFORML %CALLNAME:MASTER%看到了蓝、只能摸摸鼻子无言的离开
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;MASTERに诱われて参加　现在は表示されない？
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 4
+		;お相手が紫样
+		IF ARG == 26
+			PRINTFORML 
+			PRINTFORML 
+		;お相手が橙
+		ELSEIF ARG == 24
+			PRINTFORML 
+			PRINTFORML 
+		ELSEIF TALENT:恋慕
+			PRINTFORML 
+			PRINTFORML 
+		ELSE
+			PRINTFORML 
+			PRINTFORML 
+		ENDIF
+		RETURN 1
+	ENDIF
+	;其他
+	PRINTW
+ENDIF
+RETURN 1
+
+;==================================================
+;情事を见られた
+;==================================================
+@M_KOJO_EVENT_K25_7(ARG,ARG:1)
+;口上主はTARGET
+;ARGに目击者
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	PRINTL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;情事を见られた（目击者の亲热度:低）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 1
+		;お相手が紫样
+		IF ARG == 26
+			PRINTFORML 「紫大人。请尽管使唤我」
+			PRINTFORML 快速的整理着身姿的蓝端起认真的表情
+			PRINTFORML 但是耳边传来、紫偷偷窃笑的声音
+		;お相手が橙
+		ELSEIF ARG == 24
+			PRINTFORML 「啊！ ……怎么了吗、橙」
+			PRINTFORML 以惊人速度整理着错乱的衣服的蓝说着
+			PRINTFORML 感到遗憾的同时、看到橙羞红的脸就知道一切都暴露了
+		ELSEIF TALENT:恋慕
+			PRINTFORML 歇……歇一会儿吧、这样说着的蓝开始穿上道士服
+			PRINTFORML 因为有人碍事，所以有些苦闷
+		ELSE
+			PRINTFORML 惊讶看着的%CALLNAME:ARG%、而蓝在别处静静的把凌乱的衣服整理好了
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;目击者が负けじと参加（目击者の亲热度:高）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 2
+		;お相手が紫样
+		IF ARG == 26
+			PRINTFORML 「同时拥有紫大人跟我。可别说不愿意喔？」
+			PRINTFORML 妖艳的主从二人靠了过来紧扣着双臂
+		;お相手が橙
+		ELSEIF ARG == 24
+			PRINTFORML 「来吧、橙。一点都不恐怖喔」
+			PRINTFORML 扭扭捏捏害羞的橙、朝着蓝飞扑过来
+		ELSEIF TALENT:恋慕
+			PRINTFORML 「要一起黏呼呼吗？ 不要客气喔」
+			PRINTFORML 蓝像接受挑战的女王似的抿嘴一笑
+			PRINTFORML 像是下定决心一样的%CALLNAME:ARG%参战！
+		ELSE
+			PRINTFORML 「『要选哪一个呢』就别想这种无聊的事了」
+			PRINTFORML 「给我像个男人一样让我们满足」
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;目击者が立ち去る
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 3
+		;お相手が紫样
+		IF ARG == 26
+			PRINTFORML 请慢慢享用、紫愉悦的说着并跳入隙间消失
+			PRINTFORML 蓝害羞的脸红了
+		;お相手が橙
+		ELSEIF ARG == 24
+			PRINTFORML 「啊，等，这是……等等阿、橙！」
+			PRINTFORML 吓呆的橙用猛烈的速度逃跑了
+			PRINTFORML 「啊啊啊啊啊啊、为什么偏偏是被橙看到！」
+		ELSEIF TALENT:恋慕
+			PRINTFORML 「真是、时间不对呢」
+			PRINTFORML %CALLNAME:MASTER%在撒娇的时后被看到了、蓝好像很羞耻的样子
+		ELSE
+			PRINTFORML 「嗯……怎么办、还要继续吗？」
+			PRINTFORML 感觉气氛降下来了、跟蓝互相看了一下
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;MASTERに诱われて目击者も参加
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	;IF LOCAL:1 && ARG:1 == 4
+		;PRINTFORML
+		;RETURN 1
+	;ENDIF
+	;其他
+	PRINTW
+ENDIF
+RETURN 1
+
+;==================================================
+;目击した情事を诘问
+;==================================================
+@M_KOJO_EVENT_K25_8(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;MASTERだけ诘问
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 1
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;二人とも说教
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 2
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;其他
+	PRINTFORML  
+ENDIF
+RETURN 1
+
+;==================================================
+;胖次没收された
+;==================================================
+@M_KOJO_EVENT_K25_9(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	PRINTL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;同じ场所に居て胖次を回收された
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 1
+		IF TALENT:恋慕
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 「雌性的气味……可骗不了我」
+				PRINTFORML 「来、交出来」
+				PRINTFORMW 已经到这种地步。%CALLNAME:MASTER%只好老实的把怀里的内裤交出
+			CASE 1
+				PRINTFORML 「为什么男人要冒险到这样的东西都要偷」
+				PRINTFORML 「想欺骗我的眼睛的话、可是会眼睛痛的喔」
+				PRINTFORMW 发现的是蓝算是幸运吗、%CALLNAME:MASTER%垂着头装作忏悔样
+			CASE 2
+				PRINTFORML 「真是……、嗅觉敏锐的人不一定只有我哦」
+				PRINTFORML 「至少也藏的仔细点。这次作为代价没收。」
+				PRINTFORMW 说着再也不会做了、之后无耻的埋在蓝的怀抱里
+			ENDSELECT
+		ELSEIF TALENT:思慕
+			PRINTFORML 「等等%CALLNAME:MASTER%。这个味道是什么？」
+			PRINTFORML 「没收……我等等会悄悄的放回去。」
+			PRINTFORMW 看来抗辩也没用、%CALLNAME:MASTER%默默点头
+		ELSE
+			PRINTFORML 「嗯？喂，等一下。有不相配的味道。」
+			PRINTFORML 「……这是、我会拿去还给原主」
+			PRINTFORMW 蓝傻眼的看着。这种程度就让她惊讶成这样
+		ENDIF
+		PRINTL 
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;远距离移动中に胖次を回收された
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 2
+		IF TALENT:恋慕
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 「雌性的气味……可骗不了我」
+				PRINTFORML 「来、交出来」
+				PRINTFORMW 已经到这种地步。%CALLNAME:MASTER%只好老实的把怀里的内裤交出
+			CASE 1
+				PRINTFORML 「为什么男人要冒险到这样的东西都要偷」
+				PRINTFORML 「想欺骗我的眼睛的话、可是会眼睛痛的喔」
+				PRINTFORMW 发现的是蓝算是幸运吗、%CALLNAME:MASTER%垂着头装作忏悔样
+			CASE 2
+				PRINTFORML 「真是……、嗅觉敏锐的人不一定只有我哦」
+				PRINTFORML 「至少也藏的仔细点。这次作为代价没收。」
+				PRINTFORMW 说着再也不会做了、之后无耻的埋在蓝的怀抱里
+			ENDSELECT
+		ELSEIF TALENT:思慕
+			PRINTFORML 「等等%CALLNAME:MASTER%。这个味道是什么？」
+			PRINTFORML 「没收……我等等会悄悄的放回去。」
+			PRINTFORMW 看来抗辩也没用、%CALLNAME:MASTER%默默点头
+		ELSE
+			PRINTFORML 「嗯？喂，等一下。有不相配的味道。」
+			PRINTFORML 「……这是、我会拿去还给原主」
+			PRINTFORMW 蓝傻眼的看着。这种程度就让她惊讶成这样
+		ENDIF
+		PRINTL 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;推倒た
+;==================================================
+@M_KOJO_EVENT_K25_10(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	PRINTL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;MASTERを推倒た（开始时）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		IF TALENT:恋慕
+			SELECTCASE RAND:5
+			CASE 0
+				PRINTFORML 「好想要」
+				PRINTFORML 手臂跟尾巴伸张开来、吃惊的%CALLNAME:MASTER%被轻松打翻在地
+				PRINTFORMW 蓝扑了上来。满脸喜悦和微笑、慢慢的把自己的衣服脱了
+			CASE 1
+				PRINTFORML 「呵呵呵……讨厌？」
+				PRINTFORML 蓝轻轻的靠在%CALLNAME:MASTER%肩膀上吹气
+				PRINTFORMW 被这样妖魅的邀请不可能拒绝。就这样跟着蓝的节奏
+			CASE 2
+				PRINTFORML 「今日人家想在上面、你在下面」
+				PRINTFORMW %CALLNAME:MASTER%把肩膀放在地板上、看的蓝的笑容，正是女狐的姿态
+			CASE 3
+				PRINTFORML 注意到的时候，已经在仰望着天花板
+				PRINTFORMW 蓝跨坐在腹部用柔软的手指朝%CALLNAME:MASTER%脸颊轻轻刮着
+			CASE 4
+				PRINTFORML 「要～吃～啰」
+				PRINTFORMW 这样说着的蓝、伸出舌头妖艳的笑了
+			ENDSELECT
+		ELSEIF CFLAG:掌握把柄
+			PRINTFORML 「那件事、我可还记得」
+			PRINTFORML 「我就委屈点。给你像奖赏似的东西如何？」
+			PRINTFORMW 看到蓝的金眼、瞳孔带点嗜虐的竖起
+		ENDIF
+		PRINTL 
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;なだめられた（结束时）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		PRINTL 
+		RETURN 1
+	ENDIF
+	;其他
+	PRINTFORML  
+ENDIF
+RETURN 1
+
+;==================================================
+;浴场で遭遇
+;==================================================
+@M_KOJO_EVENT_K25_11(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	PRINTL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;追い出された
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		IF TALENT:思慕
+			PRINTFORML 「啊啊、%CALLNAME:MASTER%。要一起入浴吗？？」
+			PRINTFORML 「开玩笑的。别当真阿」
+			PRINTFORMW 被赶了出去、但看到了蓝的丰满肉体跟微微露出的乳头
+		ELSEIF ABL:9 >= 4
+			PRINTFORML 「不好意思、我在入浴中」
+			PRINTFORMW 朝蓝的肌肤看了一眼、就被蓝给赶了出来
+		ELSE
+			PRINTFORML 「马上出去。不然我就要动怒了」
+			PRINTFORML %CALLNAME:MASTER%即使离开时、眼睛也是盯着蓝的肌肤
+			PRINTFORMW 立刻转身的判断无疑是正确的
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;目が合った（追い出されない）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		IF TALENT:恋慕
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 「欢迎呢、%CALLNAME:MASTER%。真是奇遇啊」
+				PRINTFORML 看着蓝笑着。慢慢的从浴池中起来、水滴沿着妖魅的身体曲线滴落
+				PRINTFORMW 「那、帮我擦擦背吧」
+			CASE 1
+				PRINTFORML 「啊？难道是%CALLNAME:MASTER%吗」
+				PRINTFORML 「很抱歉、现在眼睛有点打不开呢」
+				PRINTFORML 先入浴中的蓝、正好是在洗头的时候
+				PRINTFORMW %CALLNAME:MASTER%不客气的朝旁边坐下盯着蓝的乳头
+			CASE 2
+				PRINTFORML 拉开门看到蓝在入浴中、说着自己有得到入浴的许可
+				PRINTFORML 「这样阿。我有多一份毛巾拿给你吧」
+				PRINTFORMW 一边摇晃着硕大的乳房、一边高兴的靠了过来
+			ENDSELECT
+		ELSEIF TALENT:思慕
+			PRINTFORML 「是%CALLNAME:MASTER%吗」
+			PRINTFORML 「要到我身边来吗」
+			PRINTFORMW 浴池中的蓝裸着身体、%CALLNAME:MASTER%愉悦的靠近并装作无意间触碰到蓝的身体
+		ENDIF
+		RETURN 1
+	ENDIF
+	;其他
+	PRINTFORML  
+ENDIF
+RETURN 1
+
+;==================================================
+;寝床に忍び込み
+;==================================================
+@M_KOJO_EVENT_K25_12(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;追い出される（愤怒）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;寝床に侵入
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 1
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;寝床に侵入（相手が恋慕）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 2
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;寝床に侵入（相手が恋慕・衰弱）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 3
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;追い出される
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 4
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;追い出される（衰弱）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 5
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;其他
+	PRINTFORML  
+ENDIF
+RETURN 1
+
+;==================================================
+;工作中
+;==================================================
+@M_KOJO_EVENT_K25_13(ARG,ARG:1)
+;口上主はTARGET
+;ARG:1に残っている工作量
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;工作开始（职场へ移动する）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;业务中
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;工作结束
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;其他
+	PRINTFORML  
+ENDIF
+RETURN 1
+
+;==================================================
+;吃饭系
+;==================================================
+@M_KOJO_EVENT_K25_14(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;持っていた食物を食べられた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == -1
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;其他
+	PRINTFORML  
+ENDIF
+RETURN 1
+
+;==================================================
+;MASTERが推倒た
+;==================================================
+@M_KOJO_EVENT_K25_15(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;未实装（推倒指令に统合？
+	;MASTERが推倒た（ウフフ开始时）
+	;记入チェック（=0, 非表示、1, 表示）
+	;LOCAL:1 = 0
+	;-------------------------------------------------
+	;IF LOCAL:1 && ARG == 1
+		;PRINTFORML
+		;RETURN 1
+	;ENDIF
+	;-------------------------------------------------
+	;逢濑结束（ウフフ结束时）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;其他
+	PRINTFORML  
+ENDIF
+RETURN 1
+
+;==================================================
+;陪睡
+;==================================================
+@M_KOJO_EVENT_K25_16(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;添い寝を始めた（开始时）(存在せず
+	;记入チェック
+	;LOCAL:1 = 0
+	;-------------------------------------------------
+	;IF LOCAL:1 && ARG == 1
+		;PRINTFORML
+		;RETURN 1
+	;ENDIF
+	;-------------------------------------------------
+	;添い寝を结束した（结束时）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;其他
+	PRINTFORML  
+ENDIF
+RETURN 1
+;==================================================
+;时止め结束时
+;==================================================
+@M_KOJO_EVENT_K25_17(ARG,ARG:1)
+;口上主はTARGET
+;排他と明记されていないモノは状况によっては连续で表示されるので注意
+;ARGに射精状况
+;ARG:1に射精状态
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+;以下、美铃口上を参考にさせて顶いております。というかフラグなどほぼそのまんま
+
+IF LOCAL
+	PRINTL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;ARG=1～3は排他
+	;谜の快感	%CALLNAME:LOCAL%は、谜の快感にびくりと身を强张らせた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		;绝顶回数カウント
+		LOCAL:4 = 0
+		LOCAL:4 += EX:25:50
+		LOCAL:4 += EX:25:51
+		LOCAL:4 += EX:25:52
+		LOCAL:4 += EX:25:53
+		;绝顶部位判定
+		LOCAL:5 = 0
+		SIF EX:25:50 > 0
+			LOCAL:5 += 1
+		SIF EX:25:51 > 0
+			LOCAL:5 += 1
+		SIF EX:25:52 > 0
+			LOCAL:5 += 1
+		SIF EX:25:53 > 0
+			LOCAL:5 += 1
+		;时间停止して恶戏したのが初めて
+		IF CFLAG:25:1002 == 0
+			PRINTFORML 「等等！？ …………为何！」
+			PRINTFORML 时间停止解除的瞬间、风中蕴含着妖力
+			PRINTFORML 蓝紧绷着表情一脸警惕四周。完全是临战状态……
+			;胖次を盗んで没穿内裤だった场合
+			IF CFLAG:25:291 == 1
+				;一日一回
+				IF TCVAR:25:351 == 0
+					IF CFLAG:25:1001 == 0
+						PRINTFORML 「果然、有什么人在……！」
+						PRINTFORML 虽然不知道用的是巧妙的手法、但内裤的消失事实确信有人在搞怪
+					ELSEIF CFLAG:25:1001 > 1
+						PRINTFORML 「可恶的家伙、终于对身体出手了吗……！」
+						PRINTFORML 搞不明白原因、但对偷内裤的小偷表现出满满敌意
+					ENDIF
+					TCVAR:25:351 = 1
+					CFLAG:25:1001 += 1
+					CFLAG:25:1002 += LOCAL:4
+					RETURN 1
+				ENDIF
+			ENDIF
+			PRINTFORML 一般来说、首先应该先检查自己身上发生了什么事情才对吧
+			PRINTFORMW 看蓝先全力搜查犯人的样子让%CALLNAME:MASTER%的背后一片冷汗
+		ELSEIF CFLAG:25:1002 < 350
+			PRINTFORML 「阿、又来……！」
+			PRINTFORML 「下次一定会找到的」
+			PRINTFORML 蓝忍受着身体产生的快感、朝周围放出了符牌警戒
+			IF CFLAG:25:291 == 1
+				;一日一回
+				IF TCVAR:25:351 == 0
+					IF CFLAG:25:1001 == 0
+						PRINTFORML 「该死……就不要让我做到记号」
+						PRINTFORML 内裤被偷的事情让她怒火中烧
+					ELSEIF CFLAG:25:1001 < 30
+						PRINTFORML 「哼、看来只偷内裤已经没办法满足了……」
+						PRINTFORML 那锐利的眼神让我连靠近都踌躇
+					ELSE
+						PRINTFORML 「放任着不管就开始得意忘形了吗」
+						PRINTFORML 内裤的事情被放一边、看来是不容许色狼的行为
+					ENDIF
+					TCVAR:25:351 = 1
+					CFLAG:25:1001 += 1
+					CFLAG:25:1002 += LOCAL:4
+					RETURN 1
+				ENDIF
+			ENDIF
+			PRINTFORML 原本一脸沉着冷静的样子被强制绝顶而微微颤抖着
+			PRINTFORMW %CALLNAME:MASTER%装作不知情的样子从旁边经过
+		ELSEIF CFLAG:25:1002 < 500
+			PRINTFORML 「阿……！」
+			PRINTFORML 「可恶、今天果然」
+			PRINTFORML 像往常拿出符牌的手在微微的颤抖着
+			PRINTFORML 就像是被按下了快感按钮般
+			IF CFLAG:25:291 == 1
+				;一日一回
+				IF TCVAR:25:351 == 0
+					IF CFLAG:25:1001 == 0
+						PRINTFORML 「被当做搜集战利品了吗……！」
+						PRINTFORML 蓝因为内裤消失而羞红着脸
+					ELSEIF CFLAG:25:1001 < 30
+						PRINTFORML 「已经、唔……不行在这样下去」
+						PRINTFORML 下体失去覆盖物的异常感扭着腰
+					ELSE
+						PRINTFORML 「如果再不快点想办法……」
+						PRINTFORML 事到如今内裤消失的事情怎样都好了
+					ENDIF
+					TCVAR:25:351 = 1
+					CFLAG:25:1001 += 1
+					CFLAG:25:1002 += LOCAL:4
+					RETURN 1
+				ENDIF
+			ENDIF
+			PRINTFORML 蓝的肉体逐渐被异常的绝顶体验紧逼着
+			PRINTFORMW 只差一步就要到达的同时、%CALLNAME:MASTER%装作无意相遇似的朝她打招呼
+		;蓝样陷落
+		ELSEIF CFLAG:25:1003 == 0
+			PRINTFORML 「啊真是、呜、哈……」
+			PRINTFORML 蓝将自己的身体紧紧抱住。到现在为止没看过这么大的反应。
+			PRINTFORML 望向躲在暗处观察的%CALLNAME:MASTER%看着、嘟嘟哝哝几句，没听懂
+			PRINTFORML 「……好吧、知道了。用这身体、想要玩弄这身体吧……？」
+			PRINTFORMW 「喜欢这样的话也行……」
+				IF CFLAG:25:291 == 1
+					PRINTFORML 「把偷走的内裤收集起来吗……」
+					TCVAR:25:351 = 1
+					CFLAG:25:1001 += 1
+				ENDIF
+			PRINTFORML 「必须去厕所把精液弄出来……」
+			PRINTFORML 「……这个色狼、就这么喜欢玩弄我吗……」
+			PRINTFORML 脸颊染成妖艳的红色。蓝摇晃着站起来
+			PRINTFORMW 看着那神情、%CALLNAME:MASTER%确信蓝迷失在时间停止累积的快感中
+			CFLAG:25:1003 = 1
+		;陷落済み
+		ELSE
+			PRINTFORML 「呼……来了吗……」
+			PRINTFORML 时间开始的瞬间。蓝抱住身体浑身发抖
+			PRINTFORML 脸上浮现淫靡的微笑、像往常那样寻找嫌犯
+				IF CFLAG:25:291 == 1
+					PRINTFORML 大腿上都是从阴部流下的蜜汁、衣裙上也沾湿了一大片污渍
+					TCVAR:25:351 = 1
+					CFLAG:25:1001 += 1
+				ENDIF
+			PRINTFORML 「……唔……、%CALLNAME:MASTER%。我……没事……没什么」
+			PRINTFORMW 散发着强烈的淫靡气息、蓝朝着这边笑了
+		ENDIF
+		PRINTL 
+		CFLAG:25:1002 += LOCAL:4
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;绝顶（绝顶合计３０回以上）	突然激しい绝顶に袭われた%CALLNAME:LOCAL%は、甜发出了娇声その场にへたり込んでしまった
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		;绝顶回数カウント
+		LOCAL:4 = 0
+		LOCAL:4 += EX:25:50
+		LOCAL:4 += EX:25:51
+		LOCAL:4 += EX:25:52
+		LOCAL:4 += EX:25:53
+		IF CFLAG:25:1002 == 0
+			PRINTFORML 「啊……唔……」
+			PRINTFORML 低声发出色气的声音、蓝抱着身体颤抖着
+			PRINTFORML 突然袭来的巨大快感就算是女狐也是混乱不堪的样子
+			IF CFLAG:25:291 == 1
+				;一日一回
+				IF TCVAR:25:351 == 0
+					IF CFLAG:25:1001 == 0
+						PRINTFORML 「到……到底、到底是谁做的……？」
+						PRINTFORML 发现内裤消失了、阴部暴露在空气中的事实让她动摇
+					ELSEIF CFLAG:25:1001 > 1
+						PRINTFORML 「难道是……他吗、但是……？」
+						PRINTFORML 研判着手法、好像已经在怀疑内裤小偷是谁了
+					ENDIF
+					TCVAR:25:351 = 1
+					CFLAG:25:1001 += 1
+					CFLAG:25:1002 += LOCAL:4
+					RETURN 1
+				ENDIF
+			ENDIF
+			PRINTFORML 「啊……必须赶快寻找……！」
+			PRINTFORMW 施放搜查小偷的符牌、但是颤抖的膝盖似乎暂时不能动
+		ELSEIF CFLAG:25:1002 < 350
+			PRINTFORML 「唔唔！ 啊啊啊啊啊啊啊」
+			PRINTFORML 掩饰不了声音、蓝苦恼的抱着身体扭动
+			PRINTFORML 抖动的肩膀、脸上明显是进入了发情的状态
+			IF CFLAG:291 == 1
+				;一日一回
+				IF TCVAR:25:351 == 0
+					PRINTFORML 在身体受到残酷激烈绝顶时、内裤消失这种琐碎小事已经不在意的样子
+					TCVAR:25:351 = 1
+					CFLAG:25:1001 += 1
+					CFLAG:25:1002 += LOCAL:4
+					RETURN 1
+				ENDIF
+			ENDIF
+			PRINTFORML 「该……该死……竟敢、让我……」
+			PRINTFORMW 看来要等到下次才有余力寻找小偷、蓝的手抖动的连符牌都抓不稳
+		ELSEIF CFLAG:25:1002 < 500
+			PRINTFORML 「啊呜……、不行、不要啊啊啊……！」
+			PRINTFORML 一只手遮住胸部一只手按住阴部、蓝跌坐在地板上
+			PRINTFORML 脸朝下似乎忍耐着、拼命想压低音量但耳边还是传来呻吟的娇喘声
+			IF CFLAG:25:291 == 1
+				;一日一回
+				IF TCVAR:25:351 == 0
+					PRINTFORML 就算还有内裤这大量外泻的爱液估计也遮挡不住吧
+					TCVAR:25:351 = 1
+					CFLAG:25:1001 += 1
+					CFLAG:25:1002 += LOCAL:4
+					RETURN 1
+				ENDIF
+			ENDIF
+			PRINTFORML 「想看、就看吧……」
+			PRINTFORMW 被任何术式都无法抵抗的超强绝顶袭击、蓝只能含泪喘息着
+		;蓝样陷落
+		ELSEIF CFLAG:25:1003 == 0
+			PRINTFORML 「啊……啊 啊 啊 要…… 要去了……！！」
+			PRINTFORML 时间启动的瞬间、蓝无力的跪坐下去
+			PRINTFORML 全身都在颤抖、色气抖动的声音、屁股下面满是从阴部流出的淫液及尿液
+			PRINTFORML 最强的九尾女狐式神在一瞬间屈服在多重绝顶之下、盛大的潮吹失禁了
+			PRINTFORML 「……好吧、知道了。用这身体、想要玩弄这身体吧……？」
+			PRINTFORMW 「喜欢这样的话也行……」
+				IF CFLAG:25:291 == 1
+					PRINTFORML 「把偷走的内裤收集起来吗……」
+					TCVAR:25:351 = 1
+					CFLAG:25:1001 += 1
+				ENDIF
+			PRINTFORML 「必须去厕所把精液弄出来……」
+			PRINTFORML 「……这个色狼、就这么喜欢玩弄我吗……」
+			PRINTFORML 脸颊染成妖艳的红色。蓝摇晃着站起来
+			PRINTFORMW 看着那神情、%CALLNAME:MASTER%确信蓝迷失在时间停止累积的快感中
+			CFLAG:25:1003 = 1
+		;陷落済み强绝顶
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 「啊、来了……」
+				PRINTFORML 「呜 啊啊啊啊啊啊啊」
+				PRINTFORML 蓝弓起身体、以怒濤气势逼近的大绝顶让蓝的金瞳都流出泪水了
+				PRINTFORML 以无上愉悦的淫荡表情、股间隐隐传出阴部潮吹淫液喷洒的声音
+					IF CFLAG:25:291 == 1
+						PRINTFORML 盖在腿上的衣服、已经完全变了颜色……
+						TCVAR:25:351 = 1
+						CFLAG:25:1001 += 1
+					ENDIF
+				PRINTFORML 「哈…哈…不知道什么时候、已经迷上了……」
+				PRINTFORMW 沉迷于快乐的蓝、已经完全没有一开始寻找犯人的意思了
+			CASE 1
+				PRINTFORML 「等、等等、现在不行……！」
+				PRINTFORML 「呜 要出来了、啊啊啊啊啊啊」
+				PRINTFORML 蓝双手盖住股间阴部、眼泪混杂着淫荡的呻吟绝顶了
+				PRINTFORML 衣服的下面、传来噗滋噗滋的水声
+					IF CFLAG:25:291 == 1
+						PRINTFORML 没有了遮档阴部的内裤、淫液一瞬间朝着衣服蔓延开来……
+						TCVAR:25:351 = 1
+						CFLAG:25:1001 += 1
+					ENDIF
+				PRINTFORMW 一边高潮一边失禁着、蓝连人在大庭广众下的事也忘了
+			CASE 2
+				PRINTFORML 时间启动、停止中累积的快感一口气从蓝的背脊爬了上来
+				PRINTFORML 「啊 不 不 不要……！！」
+				PRINTFORML 已经完全控制不住了。毫无心理准备
+				PRINTFORML 屹立的乳头和阴蒂哆嗦着、股穴想是要大口吞食般的淫乱蠢动着
+				PRINTFORMW 像毒药般的剧烈绝顶、让蓝的理性完全丧失了
+					IF CFLAG:25:291 == 1
+						PRINTFORMW 赤裸的阴唇在阴道口抖动的同时、持续不断的潮吹着……
+						TCVAR:25:351 = 1
+						CFLAG:25:1001 += 1
+					ENDIF
+			ENDSELECT
+		ENDIF
+		PRINTL 
+		CFLAG:25:1002 += LOCAL:4
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;胖次遗失	知らぬ间に胖次を脱がされた%CALLNAME:LOCAL%は落ち着かなさそうだ
+	;主に盗られた回数で分岐。疑われてもバレない方向で
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		;一日一回
+		SIF TCVAR:25:351 == 1
+			RETURN 1
+		;陷落済みなら犯人を探さない
+		IF CFLAG:25:1003 == 1
+			SELECTCASE RAND:5
+			CASE 0
+				PRINTFORML 虽然发现内裤湿了、蓝却毫无动摇
+				PRINTFORML 「嗯……今天就这样？」
+				PRINTFORMW 感到很可惜似的自言自语
+			CASE 1
+				PRINTFORML 「哎呀。哎呀、不…没事」
+				PRINTFORML 蓝只是小小的吃惊一下而已、还是一脸坦然的样子
+				PRINTFORMW 即使突然内裤消失了，连一点害羞的样子都没有
+			CASE 2
+				PRINTFORML 「……话说%CALLNAME:MASTER%、喜欢什么款式的女姓内裤？」
+				PRINTFORML 蓝突然说着这样的话题
+				PRINTFORMW 被察觉到的样子、看她艳红的双颊就知道她的目的了
+			CASE 3
+				PRINTFORML 「最近啊、在人之里的女性内裤销售的非常热烈呢」
+				PRINTFORML 「根据传言、有个性质恶劣的内裤小偷不分人跟妖都偷呢」
+				PRINTFORMW 「说不定会有囊中羞涩的受害者只好不穿内裤过生活。真可怜阿」
+			CASE 4
+				PRINTFORML 「实际上、%CALLNAME:MASTER%。今天的我可没有穿喔」
+				PRINTFORML 「呵呵呵……要不要掀裙子确认一下呢？」
+				PRINTFORMW 蛊惑般的微笑、蓝突然把裙子翻了开来
+			ENDSELECT
+			CFLAG:25:1001 += 1
+		ELSEIF CFLAG:25:1001 == 0
+			PRINTFORML 「……什么？」
+			PRINTFORML 时间启动的瞬间、蓝皱着眉头进入战斗状态
+			PRINTFORML 快速的朝四周望去视线瞄到%CALLNAME:MASTER%之后，就朝其他方向看去
+			PRINTFORML 『居然不是先注意自己的内裤被偷走』这么想着
+			PRINTFORMW %CALLNAME:MASTER%觉得有趣在心里笑了笑
+			CFLAG:25:1001 += 1
+		ELSEIF CFLAG:25:1001 < 3
+			PRINTFORML 「……又来。这种恶作剧」
+			PRINTFORML 装作听不清楚的%CALLNAME:MASTER%侧过头去、蓝神色不变的笑着改变话题
+			PRINTFORML 只是被偷走内裤。认为是在挑衅吧
+			PRINTFORMW 她悄悄地把符牌散在四周、寻找可疑的家伙被、但都被%CALLNAME:MASTER%察觉到了
+			CFLAG:25:1001 += 1
+		ELSEIF CFLAG:25:1001 < 6
+			PRINTFORML 「混蛋……」
+			PRINTFORML 愤怒的蓝低声怒骂被%CALLNAME:MASTER%听到
+			PRINTFORML 好几次都被偷走内裤、这种难以相信的事情会感到愤怒也是正常
+			PRINTFORMW 内裤中还写入了发送位址的术式、看来今后要小心注意点了……
+			CFLAG:25:1001 += 1
+		ELSEIF CFLAG:25:1001 < 10
+			PRINTFORML 「……啊啊啊啊。刚买的内裤……」
+			PRINTFORML 蓝仰望着天空、深深的叹一口气
+			PRINTFORML 在%CALLNAME:MASTER%身边半睁着眼似乎在思考着
+			PRINTFORML 以自己的身体跟内裤为目的的人、也就是说只把男性考虑在内的话
+			PRINTFORMW 有信心断绝追踪的%CALLNAME:MASTER%假装什么都不知道一脸纳闷
+			CFLAG:25:1001 += 1
+		ELSEIF CFLAG:25:1001 < 20
+			PRINTFORML 「难以置信、居然失败了」
+			PRINTFORML 跟预想的发展结果不同的蓝厌恶的说着
+			PRINTFORML 最近的蓝经常在身边放监视的术式
+			PRINTFORMW 但还是毫无用处、内裤依然被盗走了
+			CFLAG:25:1001 += 1
+		ELSEIF CFLAG:25:1001 == 30
+			PRINTFORML 「非常喜欢而特地穿上的内裤……」
+			PRINTFORML 被偷走的内裤终于超过30件了、蓝一脸厌烦的样子
+			PRINTFORML 能逃过自己追踪的技术、想不到会用在这无聊目的的犯人是谁
+			PRINTFORML 「好吧。无所谓了」
+			PRINTFORMW 蓝终于放弃追踪小偷的样子
+			CFLAG:25:1001 += 1
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 「………」
+				PRINTFORML 内裤消失的事情应该瞬间就注意到了
+				PRINTFORMW 蓝还是平时的样子、只是轻微的扭了下腰
+			CASE 1
+				PRINTFORML 已经将内裤自己消失的异常现象当成日常生活的一部份了
+				PRINTFORMW 一点动摇都没有、虽然没穿内裤但蓝的行为举止跟平时一样
+			CASE 2
+				PRINTFORML 「哎。又……」
+				PRINTFORML 蓝的怀里暗藏着替代用的内裤
+				PRINTFORMW 只是、叹息一下后、还是没有去穿上
+			ENDSELECT
+			CFLAG:25:1001 += 1
+		ENDIF
+		PRINTL 
+		TCVAR:25:351 = 1
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;【无自觉口内射精】
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 4
+		;精液中毒低精饮
+		IF ARG:1 == 1
+			;陷落してるかどうかで分岐
+			IF CFLAG:25:1003 == 1
+				SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 「唔」
+					PRINTFORML 口腔里蔓延着雄性黏液的味道。蓝在一瞬间就意识到了这是某个人的精液
+					PRINTFORMW 觉得真是恶劣的恶作剧的同时、一口气就把精液给吞咽下去了
+				CASE 1
+					PRINTFORML 「咦、唔」
+					PRINTFORML 蓝把突然出现在口腔里的精液好不容易吞下去
+					PRINTFORMW 「……调皮的恶作剧。真没办法…………」
+				CASE 2
+					PRINTFORML 「………………」
+					PRINTFORML 蓝鼓着脸颊、想着口腔内的精液该怎么办
+					PRINTFORML 虽然应该偷偷的吐出来、但还是很犹豫
+					PRINTFORMW 想着反正谁也不知道就一脸美味的饮下了
+				ENDSELECT
+			ELSE
+				SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 「唔」
+					PRINTFORML 蓝呻吟了一下、僵直着身体
+					PRINTFORMW 面无表情的将精液吞了下去
+				CASE 1
+					PRINTFORML 应该是从喉咙射出精液的，但没有什么反应
+					PRINTFORML 只是像吞了些什么、蓝小小地皱了眉头
+					PRINTFORMW 「……把我、当成玩具对待吗」
+				CASE 2
+					PRINTFORML 时间启动的瞬间蓝吞了下去、%CALLNAME:MASTER%想看着蓝表情
+					PRINTFORML 不过、有可能被蓝看到正一脸兴奋的样子
+					PRINTFORMW 「……这屈辱、等着……」
+				ENDSELECT
+			ENDIF
+		;精液中毒低吐き出し
+		ELSEIF ARG:1 == 2
+			IF CFLAG:25:1003 == 1
+				SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 「……唔唔」
+					PRINTFORML 「真是、难以忍受……」
+					PRINTFORMW 想着被神秘人玩弄了、把嘴像便器一样的对待
+				CASE 1
+					PRINTFORML 时间开始的瞬间、蓝紧皱着眉
+					PRINTFORML 若无其事的往隐蔽处走去、将口中的精液吐了出来
+					PRINTFORMW 「……只敢偷偷摸摸的吗。蠢货」
+				CASE 2
+					PRINTFORML 「咳咳」
+					PRINTFORML 蓝快步的离去。远处传来咳嗽的声音
+					PRINTFORMW 看来刚刚的精液跑进呼吸道了
+				ENDSELECT
+			ELSE
+				SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 唔 咳、咳咳……！」
+					PRINTFORML 突然出现的精液进入了奇怪的地方、蓝激烈的咳嗽着
+					PRINTFORMW 眼睛浮现了些泪水的蓝、愤怒着散布着妖力
+				CASE 1
+					PRINTFORML 「唔怎……！」
+					PRINTFORML 正体不明的腥臭黏液出现在口内、蓝反射性的吐了出来
+					PRINTFORMW 「混蛋、到底是谁这样做……！」
+				CASE 2
+					PRINTFORML 「……唔」
+					PRINTFORML 一瞬间、舌头上感觉到了什么、蓝背过脸把精液吐了出来
+					PRINTFORMW 相当愤怒的气息朝四周弥漫
+				ENDSELECT
+			ENDIF
+		;精液中毒低手で覆う
+		ELSEIF ARG:1 == 3
+			IF CFLAG:25:1003 == 1
+				SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 「唔？」
+					PRINTFORML 脸颊微微膨胀的蓝把指尖塞入口中
+					PRINTFORMW 耳边听到、兮兮漱漱向在漱口一样的声音
+				CASE 1
+					PRINTFORML 用手捂住嘴、蓝在归途的路上陶醉在雄性的气味中
+					PRINTFORML 齿间渗透着大量的精液、嘴唇跟舌头感觉着阴茎的依恋
+					PRINTFORMW 想像着自己的嘴被陌生人肆意玩弄着、更加的兴奋了
+				CASE 2
+					PRINTFORML 把精液吐到手掌上、蓝观察着浓度跟品质
+					PRINTFORML 一番鉴赏后、一点犹豫也没有的吸回了口腔
+					PRINTFORMW 因为自己这样的行为、被精液的腥味苦皱着脸……
+				ENDSELECT
+			ELSE
+				SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 「…………唔」
+					PRINTFORML 蓝一瞬间用手捂住嘴、像是什么事都没发生的吐到手上藏在袖口
+					PRINTFORMW 浓烈腥臭的精液、现在也还在蓝的手掌上吧
+				CASE 1
+					PRINTFORML 蓝遮住嘴、敏锐的金眼环顾下四周
+					PRINTFORMW 往某个方向快步走去
+				CASE 2
+					PRINTFORML 遮住嘴的蓝视线四处扫去、附近%CALLNAME:MASTER%印入眼中
+					PRINTFORML 吃了这东西到底会怎样呢、在心里觉得有趣
+					PRINTFORMW 一瞬间看到蓝的喉咙吞了下去
+				ENDSELECT
+			ENDIF
+		;精液中毒高精饮
+		ELSEIF ARG:1 == 4
+			IF CFLAG:25:1003 == 1
+				SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 把嘴遮住的蓝、从鼻子缓缓的吐出气息
+					PRINTFORML 喉咙动了动。虽然面无表情但双颊浮现着艳红
+					PRINTFORMW 「……谢谢招待」
+				CASE 1
+					PRINTFORML 「唔、唔唔……」
+					PRINTFORML 鼻子抽了抽、蓝把口内的精液吞了下去
+					PRINTFORMW 腥臭的黏液布满喉咙、舌头上还有男根气味、蓝出神的舔着嘴角
+				CASE 2
+					PRINTFORML 「唔？」
+					PRINTFORML 现在蓝对突然在舌头上出现大量的精液也毫无惊慌
+					PRINTFORMW 愉悦的瞇着双眼、唾液夹杂着精液咀嚼着、一点一点的吞下去
+				ENDSELECT
+			ELSE
+				SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 「……唔」
+					PRINTFORML 没有任何征兆、雄性的腥臭味弥漫在蓝的口中
+					PRINTFORMW 感受到被谁玩弄的同时、蓝犹豫着把精液给吞了下去
+				CASE 1
+					PRINTFORML 蓝对口里出现的精液、发现其中混杂着异物
+					PRINTFORML 陌生人的浓烈精液。在舌头上还沾上几根阴毛
+					PRINTFORMW 本应该感到不快的蓝、却表现得很自然的吞了下去
+				CASE 2
+					PRINTFORML 口中有什么跟唾液黏在一起、舌头搅动着混合在一起
+					PRINTFORML 像是感受着是谁的精液似的、蓝轻轻的吞了下去
+					PRINTFORMW 「……嘛，精液是无罪的」
+				ENDSELECT
+			ENDIF
+		ENDIF
+		PRINTL 
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;【无自觉颜面射精】
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 5
+		;精液经验ありぬぐい取り
+		IF ARG:1 == 1
+			;陷落済み
+			IF CFLAG:25:1003 == 1
+				SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 「……饶了我吧……」
+					PRINTFORML 刘海黏在额头、长长的睫毛上有精液的硬块。眼睛都快睁不开
+					PRINTFORMW 美貌被糟蹋的一塌糊涂、蓝小心的擦去
+				CASE 1
+					PRINTFORML 「呼，呼。啊、什么！？」
+					PRINTFORML 似乎是颜射的时候有些精液射进鼻腔里了
+					PRINTFORMW 蓝多次擤着鼻涕、跟不会消失的精液臭味搏斗着
+				CASE 2
+					PRINTFORML 隐藏在阴暗处、%CALLNAME:MASTER%观察着蓝脸上涂满精液的情况
+					PRINTFORML 把衬托美貌的淡妆糟蹋了、她无语的望着空地
+					PRINTFORML 「………………」
+					PRINTFORMW 总觉得有点恐怖
+				ENDSELECT
+			ELSE
+				SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 「啊，这是……？什么！」
+					PRINTFORML 用手指擦去脸上的不明黏液、蓝察觉到黏液是什么
+					PRINTFORMW 一脸厌恶的表情擦拭着脸
+				CASE 1
+					PRINTFORML 「唔、有什么跑到眼睛」
+					PRINTFORML 眼皮垂下的黏液落在蓝的左眼上、用袖子擦了几次
+					PRINTFORMW 看到了四处散落的精液、阴暗处的%CALLNAME:MASTER%悄悄的浮起了笑容
+				CASE 2
+					PRINTFORML 蓝美艳的脸上满是白浊精液
+					PRINTFORMW 领悟到这是什么、一脸厌恶的表情、%CALLNAME:MASTER%细心鉴赏着表情变化
+				ENDSELECT
+			ENDIF
+		;精液经验无ぬぐい取り
+		ELSEIF ARG:1 == 2
+		;颜射精液舐めとり
+		ELSEIF ARG:1 == 3
+			;陷落済み
+			IF CFLAG:25:1003 == 1
+				SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 「啊……唔、好浪费」
+					PRINTFORML 领悟到脸上挂着满满的精液的蓝、毫无犹豫的一点一点送入嘴里
+					PRINTFORML 吸吮着指尖、神情愉悦的表情淫靡的品尝着
+					PRINTFORMW 「这次的味道呢、舔起来有点辛辣……」
+				CASE 1
+					PRINTFORML 「唔。蛤、鼻子里面……」
+					PRINTFORML 应该是不经意从尿道射到蓝的鼻孔内、沉浸在颜射中完全没注意到
+					PRINTFORML 她一直咳嗽着、边流着眼泪边擤着鼻涕
+					PRINTFORMW 「混、混蛋……真是讨厌……」
+				CASE 2
+					PRINTFORML 往艳丽的美颜四处涂抹精液、精液面膜完成
+					PRINTFORML 时间开始后蓝意识到自己的状况小声嘟哝着
+					PRINTFORML 「……这可真是、不错呢……」
+					PRINTFORMW 蓝用手指压了压脸颊
+				ENDSELECT
+			ELSE
+				SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 「……这是征服欲的表现吗？」
+					PRINTFORML 鼻子到脸上沾着满满精液的蓝嘟哝着
+					PRINTFORML 不经意的伸出舌头、舔着嘴角的精液
+					PRINTFORMW 「真是……。反正都要进到嘴里……」
+				CASE 1
+					PRINTFORML %CALLNAME:MASTER%偷偷的观察着、蓝用手指把鼻梁上的精液擦去
+					PRINTFORML 看了一回叹气、一脸嫌弃的样子吸吮着手指上的精液
+					PRINTFORMW 看来蓝已经变成的精液中毒者了
+				CASE 2
+					PRINTFORML 「……这愤怒、谁知道……」
+					PRINTFORML 看来是精液颜射后涂的脸上都是做的太超过了
+					PRINTFORML 蓝特别细心的擦拭着唇边、鲜红的舌头舔了舔精液
+					PRINTFORMW 「欺人太甚了。这样怎么品味」
+				ENDSELECT
+			ENDIF
+		ENDIF
+		PRINTL 
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;【无自觉手淫射精】
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 6
+		;ぬぐい取り
+		IF ARG:1 == 1
+			;陷落済み
+			IF CFLAG:25:1003 == 1
+				SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 蓝发现有什么东西袖子里面
+					PRINTFORML 在洁白的手掌上、黏糊糊的精液附着在上面
+					PRINTFORML 「特意在手上？ 嗯、也不错」
+					PRINTFORMW 只是感有点讶异般眉毛轻轻翘起而已、蓝拿着手巾擦拭
+				CASE 1
+					PRINTFORML 「啊？哎呀……」
+					PRINTFORML 忽然感觉到手上满满是腥臭的白色黏液
+					PRINTFORMW 对蓝来说这种异常现象也习惯了、毫不动摇的擦拭掉
+				CASE 2
+					PRINTFORML 察觉到手指间似乎黏黏的
+					PRINTFORML 将手举到眼前、蓝手背上满是涂抹均匀的精液
+					PRINTFORML 「在这里射出的吗？ 真可爱呢」
+					PRINTFORMW 眺望了一下四周、蓝往水池边走去
+				ENDSELECT
+			ELSE
+				SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 「难以置信、令人作恶……！」
+					PRINTFORML 手发现手上黏在一块的精液、蓝作势抖落下来
+					PRINTFORMW 浓密的精液、甩到地上响起声音
+				CASE 1
+					PRINTFORML 忽然蓝一脸厌恶。望着自己的双手、皱着眉头
+					PRINTFORMW 不知道是哪个男人的浓稠精液、胡乱的甩落
+				CASE 2
+					PRINTFORML 从袖子里抽出双手
+					PRINTFORML 蓝细长的手指。左右两只手都被新鲜的精液像软膏似的涂抹着
+					PRINTFORML 「……唔！ 死变态。总有一天会折断你的命根」
+					PRINTFORMW 蓝焦躁的快步寻找水源
+				ENDSELECT
+			ENDIF
+		;舐めとり
+		ELSEIF ARG:1 == 2
+			IF CFLAG:25:1003 == 1
+				SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 「啊、是用我的手出来的吗…」
+					PRINTFORML 没有讨厌的表情、蓝看着被弄脏的手嘟哝着
+					PRINTFORML 然后一滴也不让他落下似的用舌尖舔舐着、较大片的黏渍就用嘴唇吸吮
+					PRINTFORMW 「唔……好可惜。直接中出不就好了……」
+				CASE 1
+					PRINTFORML 伸出隐藏在长袖中的手、布满黄色的种汁
+					PRINTFORML 「在袖子上垂着……好浪费……」
+					PRINTFORML 抱怨着得蓝一脸痴态像吃果冻似的，吸吮着袖子上的精液
+					PRINTFORMW 用舌尖搅动着、让其满布在口腔四周、享受着这腥臭的味道
+				CASE 2
+					PRINTFORML 将手指张开又合上、肮脏的白浊精液牵引着丝线
+					PRINTFORML 蓝把精液弄得更黏呼呼的、然后往嘴里送去
+					PRINTFORML 「唔唔……这苦涩有点像谁泡出来的茶味？ 意外的迷人……」
+					PRINTFORMW 用舌头美艳的舔着的同时、蓝开始分析起精液的味道
+				ENDSELECT
+			ELSE
+				SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 「……唔、射在这真浪费。变态强奸魔」
+					PRINTFORML 手掌正中间被装着满满的精液、蓝冷酷的看着
+					PRINTFORML 然后慢慢的把手靠近脸、伸出舌头舔舐了起来
+					PRINTFORMW 「哦、这……精液的品质、还不错值得表扬」
+				CASE 1
+					PRINTFORML 蓝把手靠近唇边、吸吮着手指
+					PRINTFORML 不知道是哪个男人的精液，但蓝并不讨厌
+					PRINTFORML 这腥臭味。黏稠的浓度。让她忍不住的品尝起来
+					PRINTFORMW 「呵……唔。好呛鼻的苦味……」
+				CASE 2
+					PRINTFORML 伸出袖子的手指上每一根都被精液涂的均匀透彻
+					PRINTFORML 「真低级。活着就只会做这种事？」
+					PRINTFORML 虽然嘟哝着侮蔑的话、蓝像狗一样舔着自己的手
+					PRINTFORMW 一股腥臭、面无表情的享受着
+				ENDSELECT
+			ENDIF
+		ENDIF
+		PRINTL 
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;【无自觉肛门射精】
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 7
+		IF ARG:1 == 1
+			IF CFLAG:25:1003 == 1
+				PRINTFORML 「唔，哎，这是……？」
+				PRINTFORML 肛门突然产生灼热的感觉、有什么东西要出来似的让蓝一瞬间有些慌了
+				PRINTFORML 不过、貌似有点习惯这种事情发生的蓝轻轻的说着
+				PRINTFORMW 「呵呵、这次是这里的开发吗。让我好好享受吧……」
+			ELSE
+				PRINTFORML 「唔？ 什、什么？」
+				PRINTFORML 突然肛门产生的不适感让蓝发出惊讶的声音
+				PRINTFORMW 误认是突然产生的便意、蓝有点慌乱的按着臀部
+			ENDIF
+		ELSEIF ARG:1 == 2
+			IF CFLAG:25:1003 == 1
+				SELECTCASE RAND:3
+				CASE 0
+					IF EX:肛门内精液 > 500
+						PRINTFORML 时间运转后、注入蓝直肠内的大量精液一口气从最深处逆流
+						PRINTFORML 「……唔、今天是玩弄这边吗……总是在这时间、呜，肚子好痛……」
+						PRINTFORML 微微向前倾抱着肚子颤抖着。被浣肠似的感觉朝她袭来、让她急着走到隐蔽处
+						PRINTFORML %CALLNAME:MASTER%偷偷摸摸的进入暗处观察
+						PRINTFORMW 利用能力潜伏着、%CALLNAME:MASTER%鉴赏着蓝的肛门排泄着白浊的精液 
+					ELSE
+						PRINTFORML 「唔唔、屁股好灼热……！」
+						PRINTFORML 看来射精前的高速抽插相当有效果、蓝悲鸣着按着臀部
+						PRINTFORML 突然传来细微泄漏着什么的声音。被肉棒疯狂抽插后的肛门看来是闭不起来了
+						PRINTFORMW 「啊…唔…要小心一点、快从洞里出来了……」
+					ENDIF
+				CASE 1
+					IF EX:肛门内精液 > 500
+						PRINTFORML 噗滋、感受到肠内被填的满满的、蓝的表情变了
+						PRINTFORML 「为什么会射在那里……！」
+						PRINTFORML 摸着被浓烈黏液填满微微涨起的肚子。产生的便意越来越高、快要忍耐不住似的
+						PRINTFORML 「厕、厕所……哪里有没使用的厕所……」
+						PRINTFORMW %CALLNAME:MASTER%发动时间停止率先进入厕所、并从里面锁上
+					ELSE
+						PRINTFORML 「唔、是打算开发那里吗……？」
+						PRINTFORML 肛门游走着残留的灼热苦闷感、蓝的嘴角微微扬起
+						PRINTFORML 「有点疼……唔、要忍住。快出来了」
+						PRINTFORMW 为了防止精液泄漏出来、调整了姿势往括约肌微微使力
+					ENDIF
+				CASE 2
+					PRINTFORML 「这感觉、有不得了的东西在……」
+					PRINTFORML 被多次压迫式抽插的肛门、感受到肠黏膜传来的疼痛、便意源源不绝的传来
+					PRINTFORML 蓝的肛门或紧缩或松懈、可能会泄露出来的焦躁感让她享受着
+					PRINTFORMW 「期待之后。还会往那里注入多少呢……」
+				ENDSELECT
+			ELSE
+				SELECTCASE RAND:3
+				CASE 0
+					IF EX:肛门内精液 > 500
+						PRINTFORML 噗滋噗滋噗滋……
+						PRINTFORML 「唔、啊啊啊……肚子……！」
+						PRINTFORML 猛烈传来的排泄欲望袭击着蓝、蓝不安的摇晃着臀部
+						PRINTFORML 大量注入的浓精刺激着肛门、眼看着就要泄出来了
+						PRINTFORML 「唔、唔……这是、要不行了……！」
+						PRINTFORML 蓝瞬间往远处移动。%CALLNAME:MASTER%使用时间停止跟上
+						PRINTFORMW 在隐蔽处露出洁白的臀部、鉴赏着羞红着脸在排泄精液的蓝
+					ELSE
+						PRINTFORML 「唔唔！」
+						PRINTFORML 肠内传来黏稠精液的感触让蓝哀鸣着
+						PRINTFORML 肛门被肉棒多次抽插后的灼热感、给予了深深的疼痛
+						PRINTFORMW 「被……唔…比之前侵犯的方式更激烈……！」
+					ENDIF
+				CASE 1
+					IF EX:肛门内精液 > 500
+						PRINTFORML 蓝浑身颤抖着。脸上浮现一片潮红
+						PRINTFORML 「这是、难道。啊啊 、又来了……！」
+						PRINTFORML 直到肠内深处都被大量精液注入、产生强烈便意也是理所当然
+						PRINTFORML 应该说差不多就要泄出来了……
+						PRINTFORML 带着邪恶想法的%CALLNAME:MASTER%视线前方、蓝往隐蔽处消失
+						PRINTFORML 使用时间停止、在其背后悠闲着窥视排泄的瞬间
+						PRINTFORML 「何等屈辱……居然对我做这种事……」
+						PRINTFORMW 轻手轻脚的观察、蓝耻辱的排泄行为持续了数分钟
+					ELSE
+						PRINTFORML 「这灼热感！」
+						PRINTFORML 就像屁股后面被什么冲击着似的
+						PRINTFORML 在时间停止的时候被进行了强力抽插、被肠内射精的感觉一次一次朝蓝袭来
+						PRINTFORMW 咬着嘴唇、微微的颤抖、蓝的眼睛浮起了泪水
+					ENDIF
+				CASE 2
+					PRINTFORML 「唔！」
+					PRINTFORML 发出跟平时不会听到的声音、蓝从衣服上紧紧压住屁股
+					PRINTFORML 知道平时冷静温和的她屁穴却很弱。%CALLNAME:MASTER%在隐蔽处偷偷笑着
+					PRINTFORMW 「唔唔……到底是谁、给我记住……！」
+				ENDSELECT
+			ENDIF
+		ENDIF
+		PRINTL 
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;【无自觉处女丧失】
+	;蓝样なら再生处女前提か？ 今のところ思いつかず
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 8
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;【无自觉膣内射精】
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 9
+		;非处女嫩穴内射精口服避孕药无 これをすると口服避孕药を饮む仕样にしたので、口服避孕药ありと合并
+		IF ARG:1 == 1 || ARG:1 == 2
+			;时间停止奸では避孕をする、という设定だけのフラグ
+			TCVAR:25:口服避孕药 = 1
+			;陷落済み
+			IF CFLAG:25:1003 == 1
+				IF CFLAG:25:1004 == 0
+					PRINTFORML 「唔、果然、呵呵……」
+					PRINTFORML 下腹传来的感触、蓝的脸上洋溢着淫荡的笑容
+					PRINTFORML 沿着阴道传来一阵阵温热的黏液感触
+					PRINTFORMW 一瞬间她知道自己被膣内射精了
+				ELSE
+					SELECTCASE RAND:4
+					CASE 0
+						IF EX:膣内精液 > 500
+							PRINTFORML 「唔唔、这是什么数量。真的是一个人射的吗……？」
+							PRINTFORML 蓝惊讶一瞬间子宫被灌的满满而传来沉重的重量
+							PRINTFORML 这夸张的数量。难道犯人不止一个、她会这样想也不奇怪
+							PRINTFORMW 想到毫无抵抗的自己被轮奸的身姿、扭动着身体慢慢发热了起来
+						ELSE
+							PRINTFORML 「唔、唔、啊……」
+							PRINTFORML 时间运转的瞬间、蓝阴道深处里的精液黏块裂开
+							PRINTFORML 像是水球在在体内破裂的独特感。她看起来很中意的样子
+							PRINTFORMW 「呵呵……感觉很舒服……？」
+						ENDIF
+					CASE 1
+						IF EX:膣内精液 > 500
+							PRINTFORML 「唔、啊啊啊……！」
+							PRINTFORML 一瞬间感受到子宫被灌的满满的、连阴道也都是灼热的精液
+							PRINTFORML 完全不明白被谁灌入精液。蓝苦苦的忍受着
+							PRINTFORMW 被突然高潮所支配的蓝、连面前还有其他人都忘了、膝盖缓缓的向下跪坐颤抖着
+							;危险日の场合
+							SIF CFLAG:25:900 == 7
+								PRINTFORML 「唔、这家伙……难道知道今天是我的危险日吗……？」
+								PRINTFORMW 不只恶作剧还被播种般的狠很强奸、嘴角挂着着愉悦的弧线
+						ELSE
+							PRINTFORML 「哼。又被中出了啊……？」
+							PRINTFORML 蓝脸上露出喜悦的微笑
+							PRINTFORML 被用各种方式狠很的强奸后、已经完全迷上毫无抗拒
+							PRINTFORMW 用手指沾了沾遗漏在外阴的精液、偷偷的含入口中品味着
+						ENDIF
+					CASE 2
+						IF EX:膣内精液 > 500
+							PRINTFORML 「唔……这是、糟糕……」
+							PRINTFORML 蓝注意到的时候已经晚了。数量众多精液从子宫逆流到阴道、往阴道口溢出
+							PRINTFORML 衣服下面传来黏液滴落到地面上的声音、还有从阴部沿着大腿往下流着的浊精
+							PRINTFORML 虽然努力清理着但数量实在太多了、蓝凝视着脚边的精液
+							PRINTFORMW 「……不行啊。子宫已经被当成精液槽……」
+						ELSE
+							PRINTFORML 在路中央、突然感受到腹部深处有灼热感在蔓延
+							PRINTFORML 「唔……又来了、又被灌进满满的精液……」
+							PRINTFORML 普通男人不射个三发以上都达不到的数量、跟异常的黏稠度、蓝感受着并分析
+							PRINTFORMW 「认真的话应该还能更厉害吧？ 有点期待下次……」
+						ENDIF
+					CASE 3
+						IF EX:膣内精液 > 500
+							PRINTFORML 「唔！！ …………唔」
+							PRINTFORML 突然阴部感到灼热、下腹部传来的压迫感使蓝瞪圆了眼睛
+							PRINTFORML 阴道四周的肌肉开始痉挛、反复传来绝顶的感觉
+							PRINTFORML 「唔、停止不了高潮……泄了要泄了……！」
+							PRINTFORMW 用手紧紧压住阴部也毫无作用。大量的精液从阴道口溢出并产生下流的水渍声音
+						ELSE
+							PRINTFORML 「疑、唔。怎么突然……」
+							PRINTFORML 阴道传来有液体渗透流动的感觉、蓝将大腿合并
+							PRINTFORML 好不容易才将快要从阴道泄漏出来的精液止住
+							PRINTFORMW 但随着重力的影响越来越多累积在洞口、终究还是溢出了
+						ENDIF
+					ENDSELECT
+				ENDIF
+			ELSE
+				IF CFLAG:25:1004 == 0
+					PRINTFORML 「唔、什么？」
+					PRINTFORML 蓝呆着脸摸了摸下腹部
+					PRINTFORML 有一种莫名的沉重感。到现在已经有好几次这种感觉了
+					PRINTFORML 身体还有些残存着的快感、自己被做了什么事已经不言而喻
+					PRINTFORMW 蓝愤怒的咬着牙
+				ELSEIF CFLAG:25:1004 < 10
+					PRINTFORML 「又擅自……！」
+					PRINTFORML 从阴道深处跟阴道口传来黏液的感触
+					PRINTFORML 某个男人把睾丸里的存精完全注入进去
+					PRINTFORML 「绝对会报仇……」
+					PRINTFORMW 狠很嘟哝着的同时、蓝介意着别人的目光偷偷的对括约肌使力
+				ELSEIF CFLAG:25:1004 < 25
+					PRINTFORML 「这感觉……又是那家伙」
+					PRINTFORML 愤怒夹杂着叹气的蓝取出一枚符牌
+					PRINTFORML 精液流下来的话会弄脏衣服、被人看到的话也不知道该用什么借口
+					PRINTFORMW 压抑着屈辱、蓝无奈的把强奸魔的精液封印在阴道内
+				ELSE
+					IF EX:膣内精液 > 500
+						PRINTFORML 突然、感受到腹部的膨胀感
+						PRINTFORML 「唔……什么、这、这数量」
+						PRINTFORML 跨张的精液数量在子宫内出现、因压力而流向阴道
+						PRINTFORML 这绝对不止射一发而已。蓝意识到不知道什么时候被人反复侵犯好几次
+						PRINTFORML 虽然做的到防止怀孕、但这种意图让人怀孕的行为让蓝脸色发青
+						PRINTFORMW 「……想让我怀上孩子吗……。这种事情……！」
+					ELSE
+						PRINTFORML 「……唔」
+						PRINTFORML 事到如今蓝对突然出现在阴道的精液也习惯了
+						PRINTFORML 看不见的强奸魔又在阴道深处射精、子宫里面也都是满满的精液
+						PRINTFORML 蓝已经觉得把精液弄出来已经毫无意义、为了不漏到外面脏了衣服、就将精液封在阴道理
+						PRINTFORMW 「之后又会在次中出吧……就这么想让我怀孕吗……」
+					ENDIF
+				ENDIF
+			ENDIF
+		;非处女嫩穴内射精口服避孕药あり 现在コメントアウトして口服避孕药无と统合
+;		ELSEIF ARG:1 == 2
+		;处女嫩穴内射精
+		ELSEIF ARG:1 == 3
+		ENDIF
+		CFLAG:25:1004 += 1
+		PRINTL 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;ナマでやらせろ时
+;==================================================
+@M_KOJO_EVENT_K25_18(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	PRINTL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;避孕要求台词
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		PRINTFORML 「等等、避孕怎么办」
+		PRINTFORMW 「口服避孕药也好，请准备吧」
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;断った
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		PRINTFORML 「不行。我还不打算怀上你的孩子」
+		PRINTFORMW 「为了不要怀孕……那么、用别的地方也好？」
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;断ったのに粘られて切れた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		PRINTFORML 「说过不行了」
+		PRINTFORMW 「真没办法。今天就到这」
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;危险日以外许可
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 4
+		PRINTFORML 「好吧……许可了。但还是要小心不要让我怀孕喔」
+		PRINTFORML 危险日外解禁让%CALLNAME:MASTER%握住了拳头
+		PRINTFORMW 「那个……你有在听吗？」
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;危险日许可
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 5
+		PRINTFORMW 「……这样啊。唔、已经没有拒绝的理由了」
+		PRINTL 
+		PRINTFORMW 蓝的脸上带着慈爱的微笑
+		PRINTFORMW %CALLNAME:MASTER%打开双腿、用双手轻抚着阴唇
+		PRINTL 
+		PRINTFORMW 「狠很的扑上来吧、拿出让我怀上孩子的气势」
+		PRINTFORMW 「已经不想再忍耐了。未来的危险日也允许啰」
+		PRINTFORMW 「当然、就算这次就怀孕了也没关系哟」
+		PRINTL 
+		PRINTFORMW 蓝拨开樱色的阴道口、妩媚的看着
+		PRINTL 
+		PRINTFORML 爱情经验＋30
+		EXP:TARGET:爱情经验 += 30
+		PRINTL 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;神社暮らしを承认して贳う
+;==================================================
+@M_KOJO_EVENT_K25_19(ARG,ARG:1)
+;口上主はARG
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+IF LOCAL
+	PRINTL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;认められる
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		PRINTFORML 「谢谢你。那么从今天承蒙关照。」
+		PRINTFORML 刚搞定事情后、蓝就像变戏法一样把行李搬进新住所
+		PRINTFORML 「工作的场所也离你很近。」
+		PRINTFORML 「啊，对了。如果没看到我就应该在迷途之家。或在其他地方呢……」
+		PRINTFORMW 见蓝开心的样子貌似都无所谓了
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;认められない
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		PRINTFORML 
+		RETURN 1
+	ENDIF
+	PRINTL
+ENDIF
+RETURN 1
+;==================================================
+;回家时
+;==================================================
+@M_KOJO_EVENT_K25_20(ARG,ARG:1)
+;口上主はLOCALS or RESULT
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;通常回家
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;约会中回家
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		PRINTFORML
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;陷落素質取得时
+;==================================================
+@M_KOJO_EVENT_K25_21(ARG,ARG:1)
+;口上主はARG
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;恋慕取得
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		PRINTL
+		PRINTFORMW 深深叹了一口气
+		PRINTFORMW 皱着眉头、蓝独自苦恼着
+		PRINTL
+		PRINTFORMW 「我是式神。遵从紫大人的命令、是这样的存在……」
+		PRINTL
+		PRINTFORMW 想着跟男人不会有任何亲密关系、但最终还是深深的爱上了
+		PRINTFORMW 是自己懈怠了、做出不符合自己地位的事情、蓝的骄傲被深深的击败
+		PRINTFORMW 自己的弱点居然是爱情实在太荒谬了
+		PRINTFORMW 身陷在泥濘中、想干脆的排除掉原因、但还是非常思恋
+		PRINTL
+		PRINTFORMW 「『有什么不好呢』、紫大人怎么说的这么轻松。万一我工作偷懒了怎么办」
+		PRINTL
+		PRINTFORMW 主人一脸轻松的就下了许可、蓝傻眼感到无力
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;思慕取得
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		PRINTL
+		PRINTFORML 蓝是式神的缘故、自己的感情、精神上的动摇都能好好掌握
+		PRINTFORML 好感、厌恶、反感、信赖。无论是好是坏、都该避免偏袒特定人物
+		PRINTFORMW 她是这样想的、应该妥善的管理好所有的人际关系但是……
+		PRINTL
+		PRINTFORMW 「……%CALLNAME:MASTER%、唔。到底该怎么办……」
+		PRINTL
+		PRINTFORMW 一个微不足道的男人、却是另最强的式神烦恼的根源
+		PRINTL
+		PRINTFORMW 「干脆将感情封上枷锁？ 不、还是不行。那家伙才没…没让我做到这种地步的价值…」
+		PRINTL
+		PRINTFORML 即使拼命的研究也想不出解决方法
+		PRINTFORMW 在意识到自己依然思念着对方的瞬间、蓝羞耻的扭动着身体及尾巴
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;爱欲取得
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		PRINTL
+		PRINTFORML 「呼呼。%CALLNAME:MASTER%吗、真有趣」
+		PRINTFORML 「至今为止可没多少男人让我感兴趣……」
+		PRINTFORML 「很久没那么让人感到愉悦了。不知道还有几年的时间可以让我玩弄呢？」
+		PRINTL
+		PRINTFORML 蓝的瞳孔闪烁着淫欲
+		PRINTFORML 多次的碰面、刺激起妖狐交配的本能
+		PRINTFORML 蓝认真的想把%CALLNAME:MASTER%魅惑过来
+		PRINTFORMW 而自己着迷上对方的可能性、则完全没考虑过
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;爱人取得
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 4
+		PRINTL
+		PRINTFORML 「呵呵、真是可爱。让人难以忍受」
+		PRINTL
+		PRINTFORML 蓝想着%CALLNAME:MASTER%轻轻的抚弄着尾巴露出妖魅的笑容
+		PRINTFORML 将尾巴缠绕在手上躺在床上思考着
+		PRINTL
+		PRINTFORML 「下次做些什么呢」
+		PRINTL
+		PRINTFORMW 蓝愉悦的脸上在低声细语着
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;炮友取得
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 5
+		PRINTL
+		PRINTFORML 在迷途之家。蓝一个人对着桌子上移动的笔停下、撑着下巴
+		PRINTFORML 摆着认真的表情、思考着前几天的情景、脑中浮现某个男人的身影
+		PRINTFORML 左手忽然往下摸去。翻起衣服看向自己的阴部、想着
+		PRINTL
+		PRINTFORML 「……那么就。适当的跟他玩玩吧」
+		PRINTL
+		PRINTFORMW 甩了甩头、蓝回到工作上
+		RETURN 1
+	ENDIF
+	PRINTL
+ENDIF
+RETURN 1
+;==================================================
+;调教结束时に自慰
+;==================================================
+@M_KOJO_EVENT_K25_22(ARG,ARG:1)
+;口上主はARG
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+;恋慕だと激しいのが解禁、まだいくつかの重复有り。古めかしいアダルトグッズを登场させてみる
+;そこそこ长くなったけれど、何度も见るのでクリック数削减
+IF LOCAL
+	PRINTL
+	SELECTCASE RAND:5
+		CASE 0
+			IF TALENT:恋慕
+				PRINTFORML 进入浴室的蓝将偷偷带进来的淫具拿在手上
+				PRINTFORML 螺纹状的人造阴茎。龟头圆形膨胀的跟金平糖一样
+				PRINTFORML 蓝把弄着淫具、深吸一口气的同时、深深的塞进
+				PRINTFORML 「到深处了、深、唔……」
+				PRINTFORML 来回好几次的抽插后、蓝摇摇晃晃的从浴室走了出来
+				PRINTL 
+				EXP:TARGET:自慰经验 += 2
+				PRINTFORML 自慰经验＋2
+			ELSE
+				PRINTFORML 穿着白色透明的衬衣、蓝的手指抚弄着尖挺的乳头
+				PRINTFORML 另一只手往阴唇伸去
+				PRINTFORML 两根手指深入雌穴淫荡的来回搅动、大拇指纠缠抚摸着阴蒂
+				PRINTFORML 蓝绷紧身体、紧闭着嘴不发出声音的达到高潮
+				PRINTL 
+				EXP:TARGET:自慰经验 += 1
+				PRINTFORML 自慰经验＋1
+			ENDIF
+		CASE 1
+			IF TALENT:恋慕
+				PRINTFORML 蓝把阴部往桌边摩擦着角落的粗实木纹
+				PRINTFORML 尖端的周围还有些许凹凸微微刺激着蓝的阴唇
+				PRINTFORML 拿起桌上笔往蜜洞抽插着、抽插的速度使爱液四处喷溅
+				PRINTFORML 嘴巴咬着布不发出声音、蓝安静的激烈自慰着……
+				PRINTL 
+				EXP:TARGET:自慰经验 += 2
+				PRINTFORML 自慰经验＋2
+			ELSE
+				PRINTFORML 穿着白色透明的衬衣、蓝的手指抚弄着尖挺的乳头
+				PRINTFORML 另一只手往阴唇伸去
+				PRINTFORML 两根手指深入雌穴淫荡的来回搅动、大拇指纠缠抚摸着阴蒂
+				PRINTFORML 蓝绷紧身体、紧闭着嘴不发出声音的达到高潮
+				PRINTL 
+				EXP:TARGET:自慰经验 += 1
+				PRINTFORML 自慰经验＋1
+			ENDIF
+		CASE 2
+			IF TALENT:恋慕
+				PRINTFORML 横躺着窝在棉被里、蓝悄悄的抚弄着阴部
+				PRINTFORML 运用自己灵巧的手指、来让高潮持续不断
+				PRINTFORML 过了几分钟、叹了口气躺了回去
+				PRINTFORML 「……好讨厌。只有自己再弄」
+				PRINTL 
+				EXP:TARGET:自慰经验 += 2
+				PRINTFORML 自慰经验＋2
+			ELSE
+				PRINTFORML 横躺着窝在棉被里、蓝悄悄的抚弄着阴部
+				PRINTFORML 运用自己灵巧的手指、来让高潮持续不断
+				PRINTFORML 过了几分钟、叹了口气躺了回去
+				PRINTL 
+				EXP:TARGET:自慰经验 += 1
+				PRINTFORML 自慰经验＋1
+			ENDIF
+		CASE 3
+			IF TALENT:恋慕
+				PRINTFORML 「被橙看到的话都不知道该怎么解释……」
+				PRINTFORML 凝视着被温水泡着的自己、蓝无法控制想自慰的冲动
+				PRINTFORML 看着从袖子取出、像是晒干的芋头形状的自慰棒
+				PRINTFORML 被温泉浸泡过后变的更有弹性。滑润的凹凸感及有点刺激的尺寸
+				PRINTFORML 「……嗯、准备好了、唔」
+				PRINTFORML 小声的嘟哝着、蓝将芋头状自慰棒塞入蜜洞
+				PRINTL 
+				EXP:TARGET:自慰经验 += 2
+				PRINTFORML 自慰经验＋2
+			ELSE
+				PRINTFORML 赤裸的蓝摆动着尾巴、抚摸着肌肤
+				PRINTFORML 再轻微的刺激的情绪越来越兴奋、空着的双手手指往阴部及肛门伸去
+				PRINTFORML 颤抖后弓着背、蓝充分享受了高潮……
+				PRINTFORML 「唔、我到底再做什么啊…真是」
+				PRINTL 
+				EXP:TARGET:自慰经验 += 1
+				PRINTFORML 自慰经验＋1
+			ENDIF
+		CASE 4
+			IF TALENT:恋慕
+				PRINTFORML 「唔、哈……、嗯、嗯……」
+				PRINTFORML 紧闭着嘴唇、蓝忍耐的表情半蹲着扭动着腰
+				PRINTFORML 椅子的正中间有个肤色的人造阴茎。湿润的膣穴随着来回扭动噗滋噗滋的发出声音
+				PRINTFORML 手撑着把头靠在桌上激烈的摆动臀部、每一次的摆动就有透明的淫液四处飞溅
+				PRINTL 
+				EXP:TARGET:自慰经验 += 2
+				PRINTFORML 自慰经验＋2
+			ELSE
+				PRINTFORML 在房间结束书写的蓝、稍微弯着腰将椅角朝向自己的阴部用力摩擦着
+				PRINTFORML 这是思春期的幼童在尝试错误的幼稚自慰、蓝想着偶尔试试也是一种乐趣
+				PRINTFORML 隔着衣服抓住剧烈晃动的乳房、蓝沉醉在欢乐中
+				PRINTL 
+				EXP:TARGET:自慰经验 += 1
+				PRINTFORML 自慰经验＋1
+			ENDIF
+	ENDSELECT
+	PRINTW
+ENDIF
+RETURN 1
+;==================================================
+;浴场连れだし
+;==================================================
+@M_KOJO_EVENT_K25_23(ARG,ARG:1)
+;口上主はLOCAL
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	PRINTL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;断られた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		IF TALENT:思慕
+			PRINTFORML 「不行。浴室只能一个人进去吧？」
+			PRINTFORML %CALLNAME:MASTER%望着蓝丰满的身体的想着
+			PRINTFORMW 看来这样的邀请还太早了
+		ELSE
+			PRINTFORML 「比起我，应该邀请恋人才对吧」
+			PRINTFORML 试着开玩笑的邀请、蓝笑笑的拒绝了
+			PRINTFORMW 看来还要加把力
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;一绪に入ってくれた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		IF TALENT:恋慕
+			PRINTFORML 「呵呵。既然都这样邀请我了」
+			PRINTFORML 蓝像是诱惑般的笑着取下帽子
+			PRINTFORML %CALLNAME:MASTER%在身边盯着也不在、将道士服一件一件缓慢的取下
+			PRINTFORML 雪白的肌肤丰满妖魅的裸体。淡浅色的乳头朝着这里
+			PRINTFORMW 「怎么？傻呆在那、不是你约我的吗？」
+		ELSE
+			PRINTFORML 「一起吗？、唔。好吧」
+			PRINTFORML 蓝苦笑着点了点头、然后准备脱下道士服
+			PRINTFORML 那么大的尾巴到底要怎么脱衣服、感到好奇的盯着蓝脱衣
+			PRINTFORML 「呵。真是失礼呢……你先进去我才要脱喔」
+			PRINTFORMW 无奈往浴场走去、%CALLNAME:MASTER%想着只好放弃……
+		ENDIF
+		RETURN 1
+	ENDIF
+	;其他
+	PRINTL
+ENDIF
+RETURN 1
+;==================================================
+;怀孕
+;==================================================
+@M_KOJO_EVENT_K25_24(ARG,ARG:1)
+;口上主はLOCAL
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	PRINTL 
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;恋慕
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		IF CFLAG:25:1007 == 0
+			PRINTFORML 「……呵呵、终于。比想像中的还要难呢……」
+			PRINTFORML 蓝慈爱的摸着小腹
+			PRINTFORML 跟%CALLNAME:MASTER%肉体关系缠绵了好几次
+			PRINTFORML 即使生为长生者、她也是第一次
+			PRINTFORMW 「该怎么告诉他呢？总之、先跟紫大人报告吧」
+		ELSEIF CFLAG:25:1007 == 1
+			PRINTFORML 看到到怀上第二胎的报告
+			PRINTFORML 「真让人惊讶。在这短短的时间又怀上了」
+			PRINTFORML 「虽然还没考虑过会有第二个孩子、从现在开始想名字也很开心」
+			PRINTFORML 反正%CALLNAME:MASTER%知道了也会很高兴吧
+			PRINTFORMW 满是喜悦的蓝抚摸着小腹、要叫什么呢？找紫大人商谈吧
+		ELSEIF CFLAG:25:1007 >= 2
+			PRINTFORML 又怀上了。这样说着的蓝满脸喜悦
+			PRINTFORML 「呵呵、已经生好几胎了呢」
+			PRINTFORML 「不需要担心。无论哪个孩子我都会给予最优秀的教育」
+			PRINTFORML 蓝完全沉浸在育儿的喜悦里
+			PRINTFORML 母亲这么溺爱的话、孩子们不知道会不会忘了父亲……
+			PRINTFORMW 不知道%CALLNAME:MASTER%会不会感到苦恼
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;思慕
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		PRINTFORML 这天、蓝注意到自己的身体变化了
+		PRINTFORML 身为妖狐的式神。跟疾病什么的应该毫无关系、但是……
+		PRINTFORML 仔细的检查了下、她意识到事实时铁青着脸
+		PRINTFORML 「有点……太快了吗。突然就怀孕了、紫大人会说什么呢……」
+		PRINTFORMW 微微颤抖的手、摸着寄宿着新生命的小腹
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;陷落素質无し
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		PRINTFORML 这天、蓝注意到自己的身体变化了
+		PRINTFORML 身为妖狐的式神。跟疾病什么的应该毫无关系、但是……
+		PRINTFORML 仔细的检查了下、她意识到事实时铁青着脸
+		PRINTFORML 「……太愚蠢了。都已经认真处理善后了还……！」
+		PRINTFORMW 微微颤抖的手、摸着寄宿着新生命的小腹
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;无自觉
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 4
+		RETURN 1
+	ENDIF
+	;其他
+	PRINTL 
+	;妊娠した回数をカウント
+	CFLAG:25:1007 += 1
+ENDIF
+RETURN 1
+;==================================================
+;出产
+;==================================================
+@M_KOJO_EVENT_K25_25(ARG,ARG:1)
+;口上主はLOCAL
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	PRINTL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;恋慕
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		IF CFLAG:25:1007 == 0
+			PRINTFORML %CALLNAME:MASTER%握着刚分娩结束的蓝、将额头手的汗水拭去
+			PRINTFORML 「谢谢……真、真是辛苦呢……」
+			PRINTFORML 「想拜托你一下……脐带、帮我处理吗？」
+			PRINTFORML 被这样拜托了将脐带剪掉、处理起胎盘血渍
+			PRINTFORMW 为了不再给蓝增加负担、%CALLNAME:MASTER%忙碌的看护奔走……
+		ELSEIF CFLAG:25:1007 == 1
+			PRINTFORML 「别担心。已经有第一次的经验、不会有危险的」
+			PRINTFORML 虽然才刚产下第二胎、但抱着婴儿的蓝脸上满是从容的脸色
+			PRINTFORML %CALLNAME:MASTER%剪断脐带、将胎盘从扩大的阴道抽出没有大出血
+			PRINTFORML 「……不过、子宫收缩的时候还是很疼。请多多爱护我喔」
+			PRINTFORMW 说着交给我的%CALLNAME:MASTER%将蓝跟孩子抱在怀中
+		ELSEIF CFLAG:25:1007 >= 2
+			PRINTFORML 经过几次的生产经验后、蓝已经驾轻就熟仿佛感觉不到阵痛似的
+			PRINTFORML 几乎没有出血、她用发明的术式轻松的辅助生产
+			PRINTFORML 「呵、跟我长的好像呢」
+			PRINTFORML 「前几个孩子也都像我？ 而且都是女儿、作为父亲不寂寞吗？」
+			PRINTFORMW 蓝抱着婴儿调皮的说着
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;思慕
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		PRINTFORML 「唔……真是、大工程呢……」
+		PRINTFORML 忍受着肚子还传来微微阵痛的同时、蓝擦拭着孩子
+		PRINTFORMW 「呼呼、长的跟我一模一样呢」
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;陷落素質无し
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		PRINTFORML 在产婆的帮助下独自分娩后、蓝像松一口气似的叹气
+		PRINTFORML 「……嘛。平安的生了下来」
+		PRINTFORMW 「会认真的好好养育。不要像父亲那样」
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;无自觉
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 4
+		RETURN 1
+	ENDIF
+	;其他
+	PRINTFORML  
+ENDIF
+RETURN 1

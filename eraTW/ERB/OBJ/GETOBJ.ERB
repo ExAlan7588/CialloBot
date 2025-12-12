@@ -1,0 +1,134 @@
+﻿;-----------------------------------------------
+;オブジェクト参照函数群
+;-----------------------------------------------
+;OBJのINT情报の参照函数
+@GET_INT(ARG, CLASS_NAME, O_ID, O_DATA)
+#FUNCTION
+#DIMS CLASS_NAME  ;OBJの名前（例：WEAPON）
+#DIM  O_ID        ;参照するOBJのID（例：1）
+#DIMS O_DATA      ;参照したい情报の名前（例：价格）
+;DEBUGPRINTFORML GET_INT ARG：{ARG}, CLASS_NAME：%CLASS_NAME%, O_ID：{O_ID}, O_DATA：%O_DATA%
+LOCALS = %GET_OBJ(ARG, CLASS_NAME, O_ID, O_DATA)%
+;DEBUGPRINTFORML GET_INT LOCALS：%LOCALS%
+SIF !STRLENS(LOCALS)
+	RETURNF 0
+SIF !ISNUMERIC(LOCALS)
+	RETURNF 0
+RETURNF TOINT(LOCALS)
+
+;OBJのSTR情报の参照函数
+@GET_STR(ARG, CLASS_NAME, O_ID, O_DATA)
+#FUNCTIONS
+#DIMS CLASS_NAME  ;OBJの名前（例：WEAPON）
+#DIM  O_ID        ;参照するOBJのID（例：1）
+#DIMS O_DATA      ;参照したい情报の名前（例：名前）
+;DEBUGPRINTFORML GET_STR ARG：{ARG}, CLASS_NAME：%CLASS_NAME%, O_ID：{O_ID}, O_DATA：%O_DATA%
+RETURNF GET_OBJ(ARG, CLASS_NAME, O_ID, O_DATA)
+
+
+;-----------------------------------------------
+;OBJ参照函数
+;-----------------------------------------------
+;この函数は直接呼ばずにGET_INT/GET_STRを介して参照すること
+;GET_INT侧でTOINTしとけば参照元での手间が省けるってしょーもない理由
+@GET_OBJ(ARG, CLASS_NAME, O_ID, O_DATA)
+#FUNCTIONS
+#DIMS CLASS_NAME    ;CLASSの名前（例：WEAPON）
+#DIM  O_ID          ;参照するOBJのID（例：1）
+#DIMS O_DATA        ;参照したい情报の名前（例：价格）
+#DIM  STACK         ;呼び出しOBJのスタックカウンタ
+#DIMS V_NAME , 100  ;VAR变量名の保持
+#DIMS T_NAME        ;TEMP、初期化の都合上退避の必要があるので
+
+;全OBJのIDの范围外である
+SIF !INRANGE(O_ID, OBJ_ID_FIRST, OBJ_ID_LAST)
+	RETURNF
+;OBJにそのIDが存在しない
+SIF !GET_EXIST(CLASS_NAME, O_ID)
+	RETURNF
+
+STACK ++
+V_NAME:STACK = VAR{STACK}_%CLASS_NAME%{O_ID}_%O_DATA%
+CALLFORMF %CLASS_NAME%{O_ID}(ARG, O_DATA, V_NAME:STACK)
+T_NAME = %V_NAME:STACK%
+V_NAME:STACK =
+STACK --
+;DEBUGPRINTFORML GET_OBJ T_NAME＝%T_NAME%
+
+;变量が作成されなかった时は弹く
+SIF TEMP_GET("GET_ID", T_NAME) == "0"
+	RETURNF
+
+RETURNF TEMP_RE_STR(T_NAME)
+
+
+;-----------------------------------------------
+;OBJのID取得函数
+;-----------------------------------------------
+;ARGは登录番号想定
+;CLASSの要素名からIDを取得する（存在しない场合は-1、要素0を缚ってなかったせい）
+;启动时にCLASS_NAMEごとにRESETをかける必要があるほか、
+;使えるようにするにはCLASSごとに専用の函数が必要
+;一元管理していないのはFINDELEMENTが1次元变量でしか使えないため
+;このほか、状况によって名前が变化するようなCLASSの名前の变换には向かない
+;
+;ERB文法に惯れているために伪のときに-1は不具合の温床になりかねんと思ったが
+;中途の自作システムで要素0を使いたいためやむ无
+@OBJNAME_TO_ID(ARG, COMMAND, CLASS_NAME, KEY)
+#FUNCTION
+#DIMS COMMAND     ;处理内容
+#DIMS CLASS_NAME  ;对象のCLASS名
+#DIMS KEY         ;検索する文字列
+#DIM  STACK       ;呼び出しスタック
+#DIMS V_NAME, 100 ;与える变量名
+#DIMS T_NAME      ;退避用
+SELECTCASE COMMAND
+;@SETLIST_EXIST以外からRESETをかけないこと
+CASE "RESET"
+	CALLFORMF %CLASS_NAME%_ID(ARG, COMMAND)
+CASE "GET"
+	STACK ++
+	V_NAME:STACK = %CLASS_NAME%{STACK}_%COMMAND%
+	CALLFORMF %CLASS_NAME%_ID(ARG, KEY, V_NAME:STACK)
+	T_NAME = %V_NAME:STACK%
+	V_NAME:STACK =
+	STACK --
+	RETURNF TEMP_RE_INT(T_NAME)
+ENDSELECT
+
+
+
+;-----------------------------------------------
+;全てのクラス函数の存否を设定する
+;ロード/ニューゲーム时に必ず一回は设定する必要があるが
+;一回以上设定する必要はない
+;-----------------------------------------------
+@MAKE_ALL_CLASS_LIST
+SIF LOCAL
+	RETURN
+CALL SETLIST_EXIST("キャラデータ", 0, 人物数量上限)
+CALL SETLIST_EXIST("角色列表", 0, OBJ_ID_LAST)
+CALL SETLIST_EXIST("衣装セット", 0, OBJ_ID_LAST)
+CALL SETLIST_EXIST("腕部装束", 0, OBJ_ID_LAST)
+CALL SETLIST_EXIST("头装备", 0, OBJ_ID_LAST)
+CALL SETLIST_EXIST("和服", 0, OBJ_ID_LAST)
+CALL SETLIST_EXIST("上身衣服_はだけ不可", 0, OBJ_ID_LAST)
+CALL SETLIST_EXIST("上身衣服_はだけ可能", 0, OBJ_ID_LAST)
+CALL SETLIST_EXIST("上半身内衣_はだけ不可", 0, OBJ_ID_LAST)
+CALL SETLIST_EXIST("上半身内衣_はだけ可能", 0, OBJ_ID_LAST)
+CALL SETLIST_EXIST("袜子", 0, OBJ_ID_LAST)
+CALL SETLIST_EXIST("靴", 0, OBJ_ID_LAST)
+CALL SETLIST_EXIST("外衣", 0, OBJ_ID_LAST)
+CALL SETLIST_EXIST("下半身内衣_ずらし不可", 0, OBJ_ID_LAST)
+CALL SETLIST_EXIST("下半身内衣_ずらし可能", 0, OBJ_ID_LAST)
+CALL SETLIST_EXIST("连衣裙", 0, OBJ_ID_LAST)
+CALL SETLIST_EXIST("紧身内衣", 0, OBJ_ID_LAST)
+CALL SETLIST_EXIST("连体内衣", 0, OBJ_ID_LAST)
+CALL SETLIST_EXIST("其他衣装", 0, OBJ_ID_LAST)
+CALL SETLIST_EXIST("裤子", 0, OBJ_ID_LAST)
+CALL SETLIST_EXIST("裙子", 0, OBJ_ID_LAST)
+CALL SETLIST_EXIST("饰品", 0, OBJ_ID_LAST)
+CALL SETLIST_EXIST("一般依赖", 0, OBJ_ID_LAST)
+CALL SETLIST_EXIST("FreeAct", 0, OBJ_ID_LAST)
+CALL SETLIST_EXIST("酒データ", 0, OBJ_ID_LAST)
+LOCAL ++

@@ -1,0 +1,1095 @@
+﻿;FileName_催眠发动.ERB ------------------------------ Rev1.00
+;催眠发动
+;CALL		USER
+;ARG		VOID
+;RETURN		VOID
+;COMMENT	
+;-----------------------------------------------------------
+@催眠发动
+#DIM 催眠タイプ
+#DIM 催眠判定
+#DIM 催眠结果
+#DIM DYNAMIC _SELECT
+
+IF HYGOD == 1
+;IF FLAG:催眠强度
+;	FLAG:催眠强度 = 0
+;	PRINTW 你解除了广域催眠
+;ELSE
+	PRINTL 请选择催眠的种类
+;	SIF GET_TARGETNUM() > 1 || !TARGET
+	SIF !TARGET || BASE:MASTER:TSP < 0
+		SETCOLOR C_L_GRAY
+	PRINTL [0] - 反抗抑制 (催眠大师无需TSP  立即生效)
+	RESETCOLOR
+
+;	SIF GET_TARGETNUM() > 1 || TALENT:合意误认 || !TARGET
+	SIF TALENT:合意误认 || !TARGET || BASE:MASTER:TSP < 0
+		SETCOLOR C_L_GRAY
+	PRINTL [1] - 合意误认 催眠大师无需TSP  当日有效)
+	RESETCOLOR
+
+;	SIF GET_TARGETNUM() > 1 || !TARGET
+	SIF !TARGET || BASE:MASTER:TSP < 0
+		SETCOLOR C_L_GRAY
+	IF TCVAR:发情 == 1
+		PRINTL [2] - 发情抑制 (催眠大师无需TSP  可反转)
+	ELSE
+		PRINTL [2] - 强制发情 (催眠大师无需TSP  可反转)
+	ENDIF
+	RESETCOLOR
+
+	IF FLAG:催眠强度
+		PRINTL [3] - 常识正常 (无消耗 广域)			----广域催眠发动中
+		;（一日限一次）
+	ELSE
+		SIF BASE:MASTER:TSP < 0
+		SETCOLOR C_L_GRAY
+		PRINTL [3] - 常识改变 (催眠大师无需TSP 全体效果)
+	ENDIF
+	RESETCOLOR
+	PRINTL [9] - 返回
+	
+ELSE
+;IF FLAG:催眠强度
+;	FLAG:催眠强度 = 0
+;	PRINTW 你解除了广域催眠
+;ELSE
+	PRINTL 请选择催眠的种类
+;	SIF GET_TARGETNUM() > 1 || !TARGET
+	SIF !TARGET || BASE:MASTER:TSP < 500
+		SETCOLOR C_L_GRAY
+	PRINTL [0] - 反抗抑制 (TSP500  立即生效)
+	RESETCOLOR
+
+;	SIF GET_TARGETNUM() > 1 || TALENT:合意误认 || !TARGET
+	SIF TALENT:合意误认 || !TARGET || BASE:MASTER:TSP < 500
+		SETCOLOR C_L_GRAY
+	PRINTL [1] - 合意误认 (TSP500  当日有效)
+	RESETCOLOR
+
+;	SIF GET_TARGETNUM() > 1 || !TARGET
+	SIF !TARGET || BASE:MASTER:TSP < 500
+		SETCOLOR C_L_GRAY
+	IF TCVAR:发情 == 1
+		PRINTL [2] - 发情抑制 (TSP500  可反转)
+	ELSE
+		PRINTL [2] - 强制发情 (TSP500  可反转)
+	ENDIF
+	RESETCOLOR
+
+	IF FLAG:催眠强度
+		PRINTL [3] - 常识正常 (无消耗 广域)			----广域催眠发动中
+		;（一日限一次）
+	ELSE
+		SIF BASE:MASTER:TSP < 1000
+		SETCOLOR C_L_GRAY
+		PRINTL [3] - 常识改变 (TSP1000 全体效果)
+	ENDIF
+	RESETCOLOR
+	PRINTL [9] - 返回
+	
+ENDIF
+$HYPNO_SELECT
+INPUT
+_SELECT = RESULT
+IF HYGOD == 1
+	IF (GROUPMATCH(RESULT, 0, 2) && BASE:MASTER:TSP >= 0 && TARGET) || (RESULT == 1 && TARGET && BASE:MASTER:TSP >= 0 && TALENT:合意误认 == 0) || (RESULT == 3 && (FLAG:催眠强度 > 0 || BASE:MASTER:TSP >= 0))
+		催眠タイプ = RESULT + 1
+		
+		IF RESULT == 3
+			IF FLAG:催眠强度 == 0
+				
+				LOCAL:0 = 1 + RAND:100
+				LOCAL:1 = 0
+			
+				FOR LOCAL:2,1,GET_TARGETNUM() + 1
+					LOCAL:1 += 1 + MARK:(TARGET:(LOCAL:2)):反抗刻印 * 2
+					REPEAT MAX(6 - GET_TARGETNUM() * 2 - GET_TARGETNUM() == 1, 1)
+						LOCAL:1 += RAND:(1 + TALENT:(TARGET:(LOCAL:2)):禁断的知识 + ABL:(TARGET:(LOCAL:2)):教养)
+						SIF LOCAL:2 == 1 && GET_TARGETNUM() == 3
+							LOCAL:1 += RAND:(1 + TALENT:(TARGET:(LOCAL:2)):禁断的知识 + ABL:(TARGET:(LOCAL:2)):教养)
+						SIF TALENT:(TARGET:(LOCAL:2)):神灵
+							LOCAL:1 += 1
+						;蓬莱人
+						SIF TALENT:(TARGET:(LOCAL:2)):追加种族 == 4
+							LOCAL:1 += 1
+						SIF LOCAL:1 > 1 && CFLAG:(TARGET:(LOCAL:2)):诶嘿嘿
+							LOCAL:1 -= 1
+						SIF LOCAL:1 > 1 && TALENT:(TARGET:(LOCAL:2)):恋慕 && RAND:3
+							LOCAL:1 -= 1
+						SIF LOCAL:1 > 1 && TALENT:(TARGET:(LOCAL:2)):爱欲 && RAND:3
+							LOCAL:1 -= 1
+						SIF LOCAL:1 > 1 && TALENT:(TARGET:(LOCAL:2)):风骚 && RAND:3
+							LOCAL:1 -= 1
+						SIF LOCAL:1 > 1 && ABL:(TARGET:(LOCAL:2)):亲密 >= 5 && RAND:3
+							LOCAL:1 -= 1
+						SIF LOCAL:1 > 1 && ABL:(TARGET:(LOCAL:2)):顺从 >= 5 && RAND:3
+							LOCAL:1 -= 1
+						SIF LOCAL:1 > 1 && ABL:(TARGET:(LOCAL:2)):欲望 >= 5 && RAND:3
+							LOCAL:1 -= 1
+						SIF LOCAL:1 > 1 && TALENT:MASTER:禁断的知识 && RAND:3
+							LOCAL:1 -= 1
+					REND
+				NEXT
+			
+				LOCAL:2 = LOCAL:0 - LOCAL:1
+			
+				PRINTFORM %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%的常识改变强度：
+				PRINTFORM 1D100 - {LOCAL:1} = {LOCAL:0} - {LOCAL:1} = 
+				SIF LOCAL:0 >= 5 && LOCAL:2 > 0
+					FONTBOLD
+				PRINTFORM {LOCAL:2}
+				FONTREGULAR
+			
+
+				FONTBOLD
+				SETCOLOR C_AQUA
+				PRINTFORMW   大成功！（强度＋{LOCAL:1}）
+				RESETCOLOR
+				FONTREGULAR
+				FLAG:催眠强度 = LOCAL:0
+				FLAG:催眠强度 = 999
+				催眠结果 = 2
+				PRINTL 
+			
+				CALL 催眠发动の呪文(RESULT)
+			
+				PRINTL 
+			
+				IF 颜绘付きメッセージ
+					FOR LOCAL,1,GET_TARGETNUM() + 1
+						角色画像表示尺寸比 = 100
+						CALL GET_BASE_RESOURCE(TARGET:LOCAL, "颜绘", , "发情")
+						SIF FLAG:多尺寸
+							默认角色画像横幅 = SPRITEHEIGHT(RESULTS)
+						CALL 画像セット(RESULTS, 0, 0, 角色画像表示尺寸比, 0)
+						CALL 画像一斉表示(0, 0, 1, -1)
+						CALL KOJO_MESSAGE_SEND("EVENT",666,TARGET:LOCAL,催眠タイプ,催眠结果)
+						IF RESULT > 0
+							PRINTL 
+						ELSE
+							PRINTW 
+						ENDIF
+					NEXT
+				ELSE
+					FOR LOCAL,1,GET_TARGETNUM() + 1
+						CALL KOJO_MESSAGE_SEND("EVENT",666,TARGET:LOCAL,催眠タイプ,催眠结果)
+					NEXT
+				ENDIF
+
+;				PRINTW ……催 眠 完 了。
+			
+				TFLAG:Info表示中 = 0
+				RETURN 0
+			ELSEIF FLAG:催眠强度 > 0
+				FLAG:催眠强度 = 0
+				IF TALENT:MASTER:形状 == 4
+					PRINTL
+					CALL COLORMESSAGE(@"%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%的小兄弟不再闪耀",C_RED,1,1)
+					PRINTL
+					ENDIF
+				PRINTW 你解除了广域催眠	
+			ENDIF
+		ELSEIF RESULT >= 0 && RESULT <= 2
+			BASE:MASTER:TSP -= 500
+			催眠判定 = 0
+			
+			IF !CFLAG:睡眠
+				;对抗
+				$HYPNO_CHECK_1
+				LOCAL:0 = 1 + RAND:100
+				LOCAL:1 = 1 + RAND:100
+				
+				LOCAL:2 = 0
+				LOCAL:3 = 0
+				
+				SIF TALENT:MASTER:禁断的知识
+					LOCAL:2 += 20
+				SIF CFLAG:诶嘿嘿
+					LOCAL:2 += 30
+				
+				SIF TALENT:禁断的知识
+					LOCAL:3 += 20
+				SIF TALENT:淫乱
+					LOCAL:3 -= 20
+				SIF TALENT:服从
+					LOCAL:3 -= 20
+				SIF TALENT:迷信
+					LOCAL:3 -= 20
+				SIF TALENT:妄想的产物
+					LOCAL:3 -= 100
+				
+				SELECTCASE TALENT:人类
+					;仙人
+					CASE 2
+						LOCAL:3 += 30
+					;天人
+					CASE 3
+						LOCAL:3 += 30
+					;月人
+					CASE 4
+						LOCAL:3 += 20
+					;魔界人
+					CASE 5
+						LOCAL:3 += 10
+				ENDSELECT
+				SIF TALENT:妖怪
+					LOCAL:3 += 30
+				SIF TALENT:妖精
+					LOCAL:3 += 10
+				SIF TALENT:神灵
+					LOCAL:3 += 50
+				SIF TALENT:幽灵
+					LOCAL:3 += 30
+				SIF TALENT:付丧神
+					LOCAL:3 += 30
+				SIF TALENT:人形
+					LOCAL:3 += 30
+				SELECTCASE TALENT:追加种族
+					;巫女
+					CASE 1
+						LOCAL:3 += 20
+					;蓬莱人
+					CASE 4
+						LOCAL:3 += 20
+				ENDSELECT
+				
+				LOCAL:2 = MAX(0, LOCAL:2 + (50 * BASE:MASTER:体力) / MAXBASE:MASTER:体力 + (75 * BASE:MASTER:气力) / MAXBASE:MASTER:气力 - (100 * BASE:MASTER:酒气) / MAXBASE:MASTER:酒气 + ABL:MASTER:技巧 * 15 + ABL:MASTER:教养 * 15)
+				LOCAL:3 = MAX(0, LOCAL:3 + MARK:反抗刻印 * 30 + (50 * BASE:体力) / MAXBASE:体力 + (75 * BASE:气力) / MAXBASE:气力 - (75 * BASE:情绪) / MAXBASE:情绪 + (100 * BASE:理性) / MAXBASE:理性 + (100 * BASE:愤怒) / MAXBASE:愤怒 - (100 * BASE:酒气) / MAXBASE:酒气 - CFLAG:信赖度 / 10 - ABL:亲密 * 3 - ABL:顺从 * 5 - ABL:欲望 * 7 + MIN(ABL:技巧, 10) * 10 + ABL:教养 * 15)
+				
+				LOCAL:4 = LOCAL:0 + LOCAL:2
+				LOCAL:5 = LOCAL:1 + LOCAL:3
+				
+				PRINTFORM %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%的能力：
+				PRINTFORM 1D100 + {LOCAL:2} = {LOCAL:0} + {LOCAL:2} = 
+				SIF LOCAL:4 > LOCAL:5 && (LOCAL:0 >= 5 || LOCAL:1 < 5)
+					FONTBOLD
+				PRINTFORM {LOCAL:4}
+				FONTREGULAR
+
+				FONTBOLD
+				SETCOLOR C_AQUA
+				PRINTL   大成功！
+				RESETCOLOR
+				FONTREGULAR
+				催眠判定 += 1
+
+				PRINTFORM %NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%的抵抗：
+				PRINTFORM 1D100 + {LOCAL:3} = {LOCAL:1} + {LOCAL:3} = 
+				SIF LOCAL:5 > LOCAL:4 && (LOCAL:1 >= 5 || LOCAL:0 < 5)
+					FONTBOLD
+				PRINTFORM {LOCAL:5}
+				FONTREGULAR
+				FONTBOLD
+				SETCOLOR 255,0,0
+				PRINTL   大失败！
+				RESETCOLOR
+				FONTREGULAR
+				催眠判定 += 1
+				PRINTL 
+
+				
+		PRINTL
+		SETCOLOR 255,0,0
+		PRINTFORMW 催 眠 能 力
+		PRINTL
+		SETCOLOR 255,100,255
+		PRINTFORMW    发动！
+		RESETCOLOR
+		PRINTL
+		
+				IF 催眠判定 > 0
+					IF 催眠判定 > 1
+						PRINT 对抗结果：
+						FONTBOLD
+						SETCOLOR C_AQUA
+						PRINTW 二重大成功！
+						RESETCOLOR
+						FONTREGULAR
+						催眠判定 = 1
+						催眠结果 = 3
+					ELSE
+						PRINT 对抗结果：
+						FONTBOLD
+						SETCOLOR C_AQUA
+						PRINTW 大成功！
+						RESETCOLOR
+						FONTREGULAR
+						催眠判定 = 0
+						催眠结果 = 2
+					ENDIF
+				ELSEIF 催眠判定 < 0
+					IF 催眠判定 < -1
+						PRINT 对抗结果：
+						FONTBOLD
+						SETCOLOR 255,0,0
+						PRINTW 二重大失败！
+						RESETCOLOR
+						FONTREGULAR
+						PRINTL 
+						PRINTW ……糟了！暴露了！
+						PRINTW ……被愤怒的瞪着！！！
+						CFLAG:心情不快 = 1
+						CFLAG:勃然大怒 = 1
+							IF MARK:TARGET:反抗刻印 < 3
+								MARK:TARGET:反抗刻印 = 3
+								MARK:TARGET:反抗取得履历 = 3
+							ENDIF
+						PRINTL 
+						催眠结果 = -3
+						CALL KOJO_MESSAGE_SEND("EVENT",666,TARGET,催眠タイプ,催眠结果)
+						SIF CFLAG:2 >= 20
+							CALL CHANGE_CFLAG(2,TARGET,MAX(CFLAG:2 / 20 * -1, -80) )
+						SIF CFLAG:4 >= 5
+							CALL CHANGE_CFLAG(4,TARGET,MAX(CFLAG:4 /  5 * -1, -40) )
+						BASE:愤怒 += 400
+					ELSE
+						PRINT 对抗结果：
+						FONTBOLD
+						SETCOLOR 255,0,0
+						PRINTW 大失败！
+						RESETCOLOR
+						FONTREGULAR
+						PRINTL 
+						PRINTW ……催眠失败了
+						PRINTW 被十分怀疑的看着……
+						PRINTL 
+						SIF MARK:TARGET:反抗刻印 < 3
+							MARK:TARGET:反抗刻印 ++		
+							MARK:TARGET:反抗取得履历 = MAX(MARK:TARGET:反抗刻印 , 0)
+						催眠结果 = -2
+						CALL KOJO_MESSAGE_SEND("EVENT",666,TARGET,催眠タイプ,催眠结果)
+						SIF CFLAG:2 >= 30
+							CALL CHANGE_CFLAG(2,TARGET,MAX(CFLAG:2 / 30 * -1, -50) )
+						SIF CFLAG:4 >= 10
+							CALL CHANGE_CFLAG(4,TARGET,MAX(CFLAG:4 / 10 * -1, -20) )
+						BASE:愤怒 += 200
+					ENDIF
+					
+		
+					
+					催眠判定 = 0
+					TFLAG:Info表示中 = 0
+					RETURN 0
+				ELSEIF LOCAL:4 > LOCAL:5
+					FONTBOLD
+					PRINTFORM {LOCAL:4}
+					FONTREGULAR
+					PRINTFORMW  > {LOCAL:5}
+					催眠结果 = 1
+				ELSEIF LOCAL:4 == LOCAL:5
+					PRINTFORMW {LOCAL:4} = {LOCAL:5}
+					PRINTL 
+					GOTO HYPNO_CHECK_2
+				ELSE
+					PRINTFORM {LOCAL:4} < 
+					FONTBOLD
+					PRINTFORMW {LOCAL:5}
+					FONTREGULAR
+					PRINTL 
+					PRINTW ……催眠失败。
+					PRINTL 
+					催眠结果 = -1
+					CALL KOJO_MESSAGE_SEND("EVENT",666,TARGET,催眠タイプ,催眠结果)
+					SIF CFLAG:2 >= 30
+						CALL CHANGE_CFLAG(2,TARGET,MAX(CFLAG:2 / 30 * -1, -50) )
+					SIF CFLAG:4 >= 10
+						CALL CHANGE_CFLAG(4,TARGET,MAX(CFLAG:4 / 10 * -1, -20) )
+					
+					催眠判定 = 0
+					TFLAG:Info表示中 = 0
+					RETURN 0
+				ENDIF
+				PRINTL 
+			ENDIF
+		ENDIF
+		
+		
+
+		IF RESULT == 0
+			PRINTL 
+			PRINTW 用催眠术操控着少女对自己的感情
+			PRINTL 
+			CALL PrintOnanismImage(TARGET)
+			PRINTL 
+			TALENT:反抗抑制 = 1
+			
+				IF 催眠判定 > 0
+					TALENT:心情 = 1
+					MARK:反抗刻印 = 0
+					MARK:TARGET:反抗取得履历 = 0
+					PRINTL 
+					PRINTW 看到脸就感到十分幸福，曾经的所有不愉快统统烟消云散了！
+					PRINTL
+				ELSE
+					SIF TALENT:心情 < 0
+						TALENT:心情 = 0
+					SIF MARK:反抗刻印 > 0
+						MARK:反抗刻印 -= 1
+						MARK:TARGET:反抗取得履历 = MAX(MARK:TARGET:反抗取得履历 - 1, 0)
+					PRINTL 
+					PRINTW 感觉平静祥和，曾经的不愉快消失了许多~
+					PRINTL
+				ENDIF
+			BASE:愤怒 = 0
+			CFLAG:心情不快 = 0
+			CFLAG:勃然大怒 = 0
+			TCVAR:插入拒绝 = 0
+			PALAM:反感 = 0
+			PALAM:不快 = 0
+			PALAM:抑郁 = 0
+		ELSEIF RESULT == 1
+			TALENT:合意误认 = 1
+			BASE:情绪 = MAX(300 + 100 * 催眠判定, BASE:情绪)
+			BASE:理性 = MIN(300 - 100 * 催眠判定, BASE:理性)
+			PRINTL 
+			PRINTW 用催眠术添加了少女跟自己海誓山盟的虚假记忆！
+			PRINTL 
+			CALL PrintOnanismImage(TARGET)
+			PRINTL 
+		ELSEIF RESULT == 2
+			IF TCVAR:发情 == 1
+				TCVAR:发情 = 0
+				BASE:情绪 = MIN(200, BASE:情绪)
+				BASE:理性 = MAX(400, BASE:理性)
+				PRINTL 
+				PRINTW 催眠术让发情的少女平静如水！
+				PRINTL 
+				IF 催眠判定 > 0
+					CFLAG:积攒度 /= 4
+					SIF PALAM:情欲 >= 30000
+						PALAM:情欲 /= 4
+				ELSE
+					CFLAG:积攒度 /= 3
+					SIF PALAM:情欲 >= 10000
+						PALAM:情欲 /= 3
+				ENDIF
+			ELSE
+				TCVAR:发情 = 1
+				BASE:情绪 = MAX(MAXBASE:情绪 * (2 + 催眠判定 * 2) / 4, BASE:情绪)
+				BASE:理性 = MIN(250 * (2 - 催眠判定), BASE:理性)
+				PRINTL 
+				PRINTW 催眠术让少女的身体擅自兴奋了起来！
+				PRINTL 
+				CALL PrintOnanismImage(TARGET)
+				PRINTL
+				IF 催眠判定 > 0
+					CFLAG:积攒度 += 600
+					SIF PALAM:情欲 < 30000
+						PALAM:情欲 += 30000
+				ELSE
+					CFLAG:积攒度 += 300
+					SIF PALAM:情欲 < 10000
+						PALAM:情欲 += 10000
+				ENDIF
+			ENDIF
+		ENDIF
+		
+		PRINTL 
+		
+		IF 颜绘付きメッセージ
+			角色画像表示尺寸比 = 100
+			IF _SELECT == 0
+				CALL GET_BASE_RESOURCE(TARGET, "颜绘", , "笑颜")
+				SIF !RESULT
+					CALL GET_BASE_RESOURCE(TARGET, "颜绘", , "通常")
+			ELSEIF _SELECT == 1 || _SELECT == 2
+				IF TCVAR:发情 == 1
+					CALL GET_BASE_RESOURCE(TARGET, "颜绘", "裸", "发情")
+					SIF !RESULT
+						CALL GET_BASE_RESOURCE(TARGET, "颜绘", , "通常")
+				ELSE
+					CALL GET_BASE_RESOURCE(TARGET, "颜绘", , "发情")
+				ENDIF
+			ENDIF
+			SIF FLAG:多尺寸
+				默认角色画像横幅 = SPRITEHEIGHT(RESULTS)
+			CALL 画像セット(RESULTS, 0, 0, 角色画像表示尺寸比, 0)
+			CALL 画像一斉表示(0, 0, 1, -1)
+		ENDIF
+		CALL KOJO_MESSAGE_SEND("EVENT",666,TARGET,催眠タイプ,催眠结果)
+		IF RESULT > 0
+			PRINTL 
+		ELSEIF 颜绘付きメッセージ
+			PRINTW 
+		ENDIF
+		
+;		PRINTW ……催眠结束。
+		
+		催眠判定 = 0
+	ELSEIF RESULT == 9
+		催眠タイプ = 0
+		催眠结果 = 0
+		CALL KOJO_MESSAGE_SEND("EVENT",666,TARGET,催眠タイプ,催眠结果)
+	ELSE
+		CLEARLINE 1
+		GOTO HYPNO_SELECT
+	ENDIF
+ELSE
+	IF (GROUPMATCH(RESULT, 0, 2) && BASE:MASTER:TSP >= 500 && TARGET) || (RESULT == 1 && TARGET && BASE:MASTER:TSP >= 500 && TALENT:合意误认 == 0) || (RESULT == 3 && (FLAG:催眠强度 > 0 || BASE:MASTER:TSP >= 1000))
+		催眠タイプ = RESULT + 1
+		
+		IF RESULT == 3
+			IF FLAG:催眠强度 == 0
+				BASE:MASTER:TSP -= 1000
+				
+				LOCAL:0 = 1 + RAND:100
+				LOCAL:1 = 0
+			
+				FOR LOCAL:2,1,GET_TARGETNUM() + 1
+					LOCAL:1 += 1 + MARK:(TARGET:(LOCAL:2)):反抗刻印 * 2
+					REPEAT MAX(6 - GET_TARGETNUM() * 2 - GET_TARGETNUM() == 1, 1)
+						LOCAL:1 += RAND:(1 + TALENT:(TARGET:(LOCAL:2)):禁断的知识 + ABL:(TARGET:(LOCAL:2)):教养)
+						SIF LOCAL:2 == 1 && GET_TARGETNUM() == 3
+							LOCAL:1 += RAND:(1 + TALENT:(TARGET:(LOCAL:2)):禁断的知识 + ABL:(TARGET:(LOCAL:2)):教养)
+						SIF TALENT:(TARGET:(LOCAL:2)):神灵
+							LOCAL:1 += 1
+						;蓬莱人
+						SIF TALENT:(TARGET:(LOCAL:2)):追加种族 == 4
+							LOCAL:1 += 1
+						SIF LOCAL:1 > 1 && CFLAG:(TARGET:(LOCAL:2)):诶嘿嘿
+							LOCAL:1 -= 1
+						SIF LOCAL:1 > 1 && TALENT:(TARGET:(LOCAL:2)):恋慕 && RAND:3
+							LOCAL:1 -= 1
+						SIF LOCAL:1 > 1 && TALENT:(TARGET:(LOCAL:2)):爱欲 && RAND:3
+							LOCAL:1 -= 1
+						SIF LOCAL:1 > 1 && TALENT:(TARGET:(LOCAL:2)):风骚 && RAND:3
+							LOCAL:1 -= 1
+						SIF LOCAL:1 > 1 && ABL:(TARGET:(LOCAL:2)):亲密 >= 5 && RAND:3
+							LOCAL:1 -= 1
+						SIF LOCAL:1 > 1 && ABL:(TARGET:(LOCAL:2)):顺从 >= 5 && RAND:3
+							LOCAL:1 -= 1
+						SIF LOCAL:1 > 1 && ABL:(TARGET:(LOCAL:2)):欲望 >= 5 && RAND:3
+							LOCAL:1 -= 1
+						SIF LOCAL:1 > 1 && TALENT:MASTER:禁断的知识 && RAND:3
+							LOCAL:1 -= 1
+					REND
+				NEXT
+			
+				LOCAL:2 = LOCAL:0 - LOCAL:1
+			
+				PRINTFORM %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%的常识改变强度：
+				PRINTFORM 1D100 - {LOCAL:1} = {LOCAL:0} - {LOCAL:1} = 
+				SIF LOCAL:0 >= 5 && LOCAL:2 > 0
+					FONTBOLD
+				PRINTFORM {LOCAL:2}
+				FONTREGULAR
+			
+				IF LOCAL:0 >= 5 && LOCAL:2 > 0
+					IF LOCAL:0 > 95
+						FONTBOLD
+						SETCOLOR C_AQUA
+						PRINTFORMW   大成功！（强度＋{LOCAL:1}）
+						RESETCOLOR
+						FONTREGULAR
+						FLAG:催眠强度 = LOCAL:0
+						催眠结果 = 2
+					ELSE
+						PRINTW 
+						FLAG:催眠强度 = LOCAL:2
+						催眠结果 = 1
+					ENDIF
+				
+					PRINTL 
+				
+					CALL 催眠发动の呪文(RESULT)
+				
+					PRINTL 
+				
+					IF 颜绘付きメッセージ
+						FOR LOCAL,1,GET_TARGETNUM() + 1
+							角色画像表示尺寸比 = 100
+							CALL GET_BASE_RESOURCE(TARGET:LOCAL, "颜绘", , "发情")
+							SIF FLAG:多尺寸
+								默认角色画像横幅 = SPRITEHEIGHT(RESULTS)
+							CALL 画像セット(RESULTS, 0, 0, 角色画像表示尺寸比, 0)
+							CALL 画像一斉表示(0, 0, 1, -1)
+							CALL KOJO_MESSAGE_SEND("EVENT",666,TARGET:LOCAL,催眠タイプ,催眠结果)
+							IF RESULT > 0
+								PRINTL 
+							ELSE
+								PRINTW 
+							ENDIF
+						NEXT
+					ELSE
+						FOR LOCAL,1,GET_TARGETNUM() + 1
+							CALL KOJO_MESSAGE_SEND("EVENT",666,TARGET:LOCAL,催眠タイプ,催眠结果)
+						NEXT
+					ENDIF
+				
+;					PRINTW ……催 眠 完 了。
+				ELSE
+					IF LOCAL:0 < 5
+						FONTBOLD
+						SETCOLOR 255,0,0
+						PRINTW   大失败！
+						RESETCOLOR
+						FONTREGULAR
+					
+						PRINTL 
+						PRINTW ……糟了！暴露了！
+						PRINTW ……被愤怒的瞪着！！！
+						PRINTL 
+						CFLAG:心情不快 = 1
+						CFLAG:勃然大怒 = 1
+							IF MARK:TARGET:反抗刻印 < 3
+								MARK:TARGET:反抗刻印 = 3
+								MARK:TARGET:反抗取得履历 = 3
+							ENDIF
+						FLAG:催眠强度 = 0
+						催眠结果 = -2
+						FOR LOCAL,1,GET_TARGETNUM() + 1
+							CALL KOJO_MESSAGE_SEND("EVENT",666,TARGET:LOCAL,催眠タイプ,催眠结果)
+							BASE:(TARGET:LOCAL):愤怒 += 200
+							
+						NEXT
+					ELSE
+						IF LOCAL:2 == 0
+							PRINT  = 
+						ELSE
+							PRINT  < 
+						ENDIF
+						FONTBOLD
+						PRINTW 0
+						FONTREGULAR
+					
+						PRINTL 
+						PRINTW ……催眠失败了
+						PRINTW 被十分怀疑的看着……
+						PRINTL 
+						SIF MARK:TARGET:反抗刻印 < 3
+							MARK:TARGET:反抗刻印 ++	
+						
+						MARK:TARGET:反抗取得履历 = MAX(MARK:TARGET:反抗刻印 , 0)							
+						FLAG:催眠强度 = 0
+						催眠结果 = -1
+						FOR LOCAL,1,GET_TARGETNUM() + 1
+							CALL KOJO_MESSAGE_SEND("EVENT",666,TARGET:LOCAL,催眠タイプ,催眠结果)
+							BASE:(TARGET:LOCAL):愤怒 += 100
+						NEXT
+					ENDIF
+				ENDIF
+			
+				TFLAG:Info表示中 = 0
+				RETURN 0
+			ELSEIF FLAG:催眠强度 > 0
+				FLAG:催眠强度 = 0
+				IF TALENT:MASTER:形状 == 4
+					PRINTL
+					CALL COLORMESSAGE(@"%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%的小兄弟不再闪耀",C_RED,1,1)
+					PRINTL
+					ENDIF
+				PRINTW 你解除了广域催眠	
+			ENDIF
+		ELSEIF RESULT >= 0 && RESULT <= 2
+			BASE:MASTER:TSP -= 500
+			催眠判定 = 0
+			
+			IF !CFLAG:睡眠
+				;对抗
+				$HYPNO_CHECK_2
+				
+				LOCAL:0 = 1 + RAND:100
+				LOCAL:1 = 1 + RAND:100
+				
+				LOCAL:2 = 0
+				LOCAL:3 = 0
+				
+				SIF TALENT:MASTER:禁断的知识
+					LOCAL:2 += 20
+				SIF CFLAG:诶嘿嘿
+					LOCAL:2 += 30
+				
+				SIF TALENT:禁断的知识
+					LOCAL:3 += 20
+				SIF TALENT:淫乱
+					LOCAL:3 -= 20
+				SIF TALENT:服从
+					LOCAL:3 -= 20
+				SIF TALENT:迷信
+					LOCAL:3 -= 20
+				SIF TALENT:妄想的产物
+					LOCAL:3 -= 100
+				
+				SELECTCASE TALENT:人类
+					;仙人
+					CASE 2
+						LOCAL:3 += 30
+					;天人
+					CASE 3
+						LOCAL:3 += 30
+					;月人
+					CASE 4
+						LOCAL:3 += 20
+					;魔界人
+					CASE 5
+						LOCAL:3 += 10
+				ENDSELECT
+				SIF TALENT:妖怪
+					LOCAL:3 += 30
+				SIF TALENT:妖精
+					LOCAL:3 += 10
+				SIF TALENT:神灵
+					LOCAL:3 += 50
+				SIF TALENT:幽灵
+					LOCAL:3 += 30
+				SIF TALENT:付丧神
+					LOCAL:3 += 30
+				SIF TALENT:人形
+					LOCAL:3 += 30
+				SELECTCASE TALENT:追加种族
+					;巫女
+					CASE 1
+						LOCAL:3 += 20
+					;蓬莱人
+					CASE 4
+						LOCAL:3 += 20
+				ENDSELECT
+				
+				LOCAL:2 = MAX(0, LOCAL:2 + (50 * BASE:MASTER:体力) / MAXBASE:MASTER:体力 + (75 * BASE:MASTER:气力) / MAXBASE:MASTER:气力 - (100 * BASE:MASTER:酒气) / MAXBASE:MASTER:酒气 + ABL:MASTER:技巧 * 15 + ABL:MASTER:教养 * 15)
+				LOCAL:3 = MAX(0, LOCAL:3 + MARK:反抗刻印 * 30 + (50 * BASE:体力) / MAXBASE:体力 + (75 * BASE:气力) / MAXBASE:气力 - (75 * BASE:情绪) / MAXBASE:情绪 + (100 * BASE:理性) / MAXBASE:理性 + (100 * BASE:愤怒) / MAXBASE:愤怒 - (100 * BASE:酒气) / MAXBASE:酒气 - CFLAG:信赖度 / 10 - ABL:亲密 * 3 - ABL:顺从 * 5 - ABL:欲望 * 7 + MIN(ABL:技巧, 10) * 10 + ABL:教养 * 15)
+				
+				LOCAL:4 = LOCAL:0 + LOCAL:2
+				LOCAL:5 = LOCAL:1 + LOCAL:3
+				
+				PRINTFORM %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%的能力：
+				PRINTFORM 1D100 + {LOCAL:2} = {LOCAL:0} + {LOCAL:2} = 
+				SIF LOCAL:4 > LOCAL:5 && (LOCAL:0 >= 5 || LOCAL:1 < 5)
+					FONTBOLD
+				PRINTFORM {LOCAL:4}
+				FONTREGULAR
+				IF LOCAL:0 > 95
+					FONTBOLD
+					SETCOLOR C_AQUA
+					PRINTL   大成功！
+					RESETCOLOR
+					FONTREGULAR
+					催眠判定 += 1
+				ELSEIF LOCAL:0 < 5
+					FONTBOLD
+					SETCOLOR 255,0,0
+					PRINTL   大失败！
+					RESETCOLOR
+					FONTREGULAR
+					催眠判定 -= 1
+				ELSE
+					PRINTL 
+				ENDIF
+				
+				PRINTFORM %NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%的抵抗：
+				PRINTFORM 1D100 + {LOCAL:3} = {LOCAL:1} + {LOCAL:3} = 
+				SIF LOCAL:5 > LOCAL:4 && (LOCAL:1 >= 5 || LOCAL:0 < 5)
+					FONTBOLD
+				PRINTFORM {LOCAL:5}
+				FONTREGULAR
+				IF LOCAL:1 > 95
+					FONTBOLD
+					SETCOLOR C_AQUA
+					PRINTL   大成功！
+					RESETCOLOR
+					FONTREGULAR
+					催眠判定 -= 1
+				ELSEIF LOCAL:1 < 5
+					FONTBOLD
+					SETCOLOR 255,0,0
+					PRINTL   大失败！
+					RESETCOLOR
+					FONTREGULAR
+					催眠判定 += 1
+				ELSE
+					PRINTL 
+				ENDIF
+				
+		PRINTL
+		SETCOLOR 255,0,0
+		PRINTFORMW 催 眠 能 力
+		PRINTL
+		SETCOLOR 255,100,255
+		PRINTFORMW    发动！
+		RESETCOLOR
+		PRINTL
+		
+				IF 催眠判定 > 0
+					IF 催眠判定 > 1
+						PRINT 对抗结果：
+						FONTBOLD
+						SETCOLOR C_AQUA
+						PRINTW 二重大成功！
+						RESETCOLOR
+						FONTREGULAR
+						催眠判定 = 1
+						催眠结果 = 3
+					ELSE
+						PRINT 对抗结果：
+						FONTBOLD
+						SETCOLOR C_AQUA
+						PRINTW 大成功！
+						RESETCOLOR
+						FONTREGULAR
+						催眠判定 = 0
+						催眠结果 = 2
+					ENDIF
+				ELSEIF 催眠判定 < 0
+					IF 催眠判定 < -1
+						PRINT 对抗结果：
+						FONTBOLD
+						SETCOLOR 255,0,0
+						PRINTW 二重大失败！
+						RESETCOLOR
+						FONTREGULAR
+						PRINTL 
+						PRINTW ……糟了！暴露了！
+						PRINTW ……被愤怒的瞪着！！！
+						CFLAG:心情不快 = 1
+						CFLAG:勃然大怒 = 1
+							IF MARK:TARGET:反抗刻印 < 3
+								MARK:TARGET:反抗刻印 = 3
+								MARK:TARGET:反抗取得履历 = 3
+							ENDIF
+						PRINTL 
+						催眠结果 = -3
+						CALL KOJO_MESSAGE_SEND("EVENT",666,TARGET,催眠タイプ,催眠结果)
+						SIF CFLAG:2 >= 20
+							CALL CHANGE_CFLAG(2,TARGET,MAX(CFLAG:2 / 20 * -1, -80) )
+						SIF CFLAG:4 >= 5
+							CALL CHANGE_CFLAG(4,TARGET,MAX(CFLAG:4 /  5 * -1, -40) )
+						BASE:愤怒 += 400
+					ELSE
+						PRINT 对抗结果：
+						FONTBOLD
+						SETCOLOR 255,0,0
+						PRINTW 大失败！
+						RESETCOLOR
+						FONTREGULAR
+						PRINTL 
+						PRINTW ……催眠失败了
+						PRINTW 被十分怀疑的看着……
+						PRINTL 
+						SIF MARK:TARGET:反抗刻印 < 3
+							MARK:TARGET:反抗刻印 ++		
+							MARK:TARGET:反抗取得履历 = MAX(MARK:TARGET:反抗刻印 , 0)
+						催眠结果 = -2
+						CALL KOJO_MESSAGE_SEND("EVENT",666,TARGET,催眠タイプ,催眠结果)
+						SIF CFLAG:2 >= 30
+							CALL CHANGE_CFLAG(2,TARGET,MAX(CFLAG:2 / 30 * -1, -50) )
+						SIF CFLAG:4 >= 10
+							CALL CHANGE_CFLAG(4,TARGET,MAX(CFLAG:4 / 10 * -1, -20) )
+						BASE:愤怒 += 200
+					ENDIF
+					
+					催眠判定 = 0
+					TFLAG:Info表示中 = 0
+					RETURN 0
+				ELSEIF LOCAL:4 > LOCAL:5
+					FONTBOLD
+					PRINTFORM {LOCAL:4}
+					FONTREGULAR
+					PRINTFORMW  > {LOCAL:5}
+					催眠结果 = 1
+				ELSEIF LOCAL:4 == LOCAL:5
+					PRINTFORMW {LOCAL:4} = {LOCAL:5}
+					PRINTL 
+					GOTO HYPNO_CHECK_1
+				ELSE
+					PRINTFORM {LOCAL:4} < 
+					FONTBOLD
+					PRINTFORMW {LOCAL:5}
+					FONTREGULAR
+					PRINTL 
+					PRINTW ……催眠失败。
+					PRINTL 
+					催眠结果 = -1
+					CALL KOJO_MESSAGE_SEND("EVENT",666,TARGET,催眠タイプ,催眠结果)
+					SIF CFLAG:2 >= 30
+						CALL CHANGE_CFLAG(2,TARGET,MAX(CFLAG:2 / 30 * -1, -50) )
+					SIF CFLAG:4 >= 10
+						CALL CHANGE_CFLAG(4,TARGET,MAX(CFLAG:4 / 10 * -1, -20) )
+					
+					催眠判定 = 0
+					TFLAG:Info表示中 = 0
+					RETURN 0
+				ENDIF
+				PRINTL 
+			ENDIF
+		ENDIF
+		
+		
+
+		IF RESULT == 0
+			PRINTL 
+			PRINTW 用催眠术操控着少女对自己的感情
+			PRINTL 
+			CALL PrintOnanismImage(TARGET)
+			PRINTL 
+			TALENT:反抗抑制 = 1
+			
+				IF 催眠判定 > 0
+					TALENT:心情 = 1
+					MARK:反抗刻印 = 0
+					MARK:TARGET:反抗取得履历 = 0
+					PRINTL 
+					PRINTW 看到脸就感到十分幸福，曾经的所有不愉快统统烟消云散了！
+					PRINTL
+				ELSE
+					SIF TALENT:心情 < 0
+						TALENT:心情 = 0
+					SIF MARK:反抗刻印 > 0
+						MARK:反抗刻印 -= 1
+						MARK:TARGET:反抗取得履历 = MAX(MARK:TARGET:反抗取得履历 - 1, 0)
+					PRINTL 
+					PRINTW 感觉平静祥和，曾经的不愉快消失了许多~
+					PRINTL
+				ENDIF
+			BASE:愤怒 = 0
+			CFLAG:心情不快 = 0
+			CFLAG:勃然大怒 = 0
+			TCVAR:插入拒绝 = 0
+			PALAM:反感 = 0
+			PALAM:不快 = 0
+			PALAM:抑郁 = 0
+		ELSEIF RESULT == 1
+			TALENT:合意误认 = 1
+			BASE:情绪 = MAX(300 + 100 * 催眠判定, BASE:情绪)
+			BASE:理性 = MIN(300 - 100 * 催眠判定, BASE:理性)
+			PRINTL 
+			PRINTW 用催眠术添加了少女跟自己海誓山盟的虚假记忆！
+			PRINTL 
+			CALL PrintOnanismImage(TARGET)
+			PRINTL 
+		ELSEIF RESULT == 2
+			IF TCVAR:发情 == 1
+				TCVAR:发情 = 0
+				BASE:情绪 = MIN(200, BASE:情绪)
+				BASE:理性 = MAX(400, BASE:理性)
+				PRINTL 
+				PRINTW 催眠术让发情的少女平静如水！
+				PRINTL 
+				IF 催眠判定 > 0
+					CFLAG:积攒度 /= 4
+					SIF PALAM:情欲 >= 30000
+						PALAM:情欲 /= 4
+				ELSE
+					CFLAG:积攒度 /= 3
+					SIF PALAM:情欲 >= 10000
+						PALAM:情欲 /= 3
+				ENDIF
+			ELSE
+				TCVAR:发情 = 1
+				BASE:情绪 = MAX(MAXBASE:情绪 * (2 + 催眠判定 * 2) / 4, BASE:情绪)
+				BASE:理性 = MIN(250 * (2 - 催眠判定), BASE:理性)
+				PRINTL 
+				PRINTW 催眠术让少女的身体擅自兴奋了起来！
+				PRINTL 
+				CALL PrintOnanismImage(TARGET)
+				PRINTL
+				IF 催眠判定 > 0
+					CFLAG:积攒度 += 600
+					SIF PALAM:情欲 < 30000
+						PALAM:情欲 += 30000
+				ELSE
+					CFLAG:积攒度 += 300
+					SIF PALAM:情欲 < 10000
+						PALAM:情欲 += 10000
+				ENDIF
+			ENDIF
+		ENDIF
+		
+		PRINTL 
+		
+		IF 颜绘付きメッセージ
+			角色画像表示尺寸比 = 100
+			IF RESULT == 0
+				CALL GET_BASE_RESOURCE(TARGET, "颜绘", , "笑颜")
+				SIF !RESULT
+					CALL GET_BASE_RESOURCE(TARGET, "颜绘", , "通常")
+			ELSEIF RESULT == 1 || RESULT == 2
+				IF TCVAR:发情 == 1
+					CALL GET_BASE_RESOURCE(TARGET, "颜绘", "裸", "发情")
+					SIF !RESULT
+						CALL GET_BASE_RESOURCE(TARGET, "颜绘", , "通常")
+				ELSE
+					CALL GET_BASE_RESOURCE(TARGET, "颜绘", , "发情")
+				ENDIF
+			ENDIF
+			SIF FLAG:多尺寸
+				默认角色画像横幅 = SPRITEHEIGHT(RESULTS)
+			CALL 画像セット(RESULTS, 0, 0, 角色画像表示尺寸比, 0)
+			CALL 画像一斉表示(0, 0, 1, -1)
+		ENDIF
+		CALL KOJO_MESSAGE_SEND("EVENT",666,TARGET,催眠タイプ,催眠结果)
+		IF RESULT > 0
+			PRINTL 
+		ELSEIF 颜绘付きメッセージ
+			PRINTW 
+		ENDIF
+		
+;		PRINTW ……催眠结束。
+		
+		催眠判定 = 0
+	ELSEIF RESULT == 9
+		催眠タイプ = 0
+		催眠结果 = 0
+		CALL KOJO_MESSAGE_SEND("EVENT",666,TARGET,催眠タイプ,催眠结果)
+	ELSE
+		CLEARLINE 1
+		GOTO HYPNO_SELECT
+	ENDIF
+ENDIF
+
+;FileName_催眠发动.ERB ------------------------------ Rev1.00
+;催眠发动の呪文
+;CALL		USER
+;ARG		RESULT
+;RETURN		ARG
+;COMMENT	
+;-----------------------------------------------------------
+@催眠发动の呪文(ARG)
+FONTBOLD
+IF TALENT:MASTER:形状 == 4
+	PRINTL
+	CALL COLORMESSAGE(@"%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%的小兄弟闪闪发光",C_RED,1,1)
+	CALL COLORMESSAGE(@"一 闪 一 闪",C_ORANGE,1,1)
+	CALL COLORMESSAGE(@" 亮 鸡 鸡",C_YELLOW,1,1)
+	PRINTL
+ENDIF
+
+IF ARG == -1
+	;雰囲气が传わらない
+		PRINTL
+		SETCOLOR 255,0,0
+		PRINTFORMW 催 眠 能 力
+		PRINTL
+		SETCOLOR 255,100,255
+		PRINTFORMW    发动！
+		RESETCOLOR
+		PRINTL
+	ELSE
+		;《BLOODLINE》の魔眼能力
+		SETCOLOR 255,0,0
+		PRINTFORMW Elune-odor el elune
+		SETCOLOR 255,100,255
+		PRINTFORMW 在 吾 眼 中 ， 汝 为 从 者
+		RESETCOLOR
+		PRINTL
+		SETCOLOR 255,0,0
+		PRINTFORMW  感觉……
+		PRINTL
+		IF FLAG:催眠强度 > 94
+			PRINTFORMW  能随心所欲了……
+		ELSEIF FLAG:催眠强度 > 74
+			PRINTFORMW  很容易就能H了……
+		ELSEIF FLAG:催眠强度 > 49
+			PRINTFORMW  一起洗澡什么的应该能做到了……
+		ELSEIF FLAG:催眠强度 > 24
+			PRINTFORMW  可以让别人把内衣给你了……
+		ELSEIF FLAG:催眠强度 > 4
+			PRINTFORMW  好像发动成功了……
+		ELSE
+			PRINTFORMW  一切恢复正常了……
+		ENDIF
+		PRINTL
+ENDIF
+RESETCOLOR
+FONTREGULAR
+RETURN ARG

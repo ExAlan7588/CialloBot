@@ -1,0 +1,3048 @@
+﻿;-------------------------------------------------
+;赠り物の形容词のデータを设定・出力する函数
+;GIFT_ID   XX.YY
+;          XX=カテゴリ
+;          YY=形容词
+;RESULT        1=出现する 2=出现しない
+;RESULTS:0     名称
+;MAGNIF_PRICE  值段の倍率(RESULT:1)
+;SELL_AREA     出现する地域(RESULT:2)
+;SENSE         形容词のGIFTSENSE(RESTLTS:1)
+;-------------------------------------------------
+@GIFTDATA_ADJECT(GIFT_ADJECT, NOW_AREA, SENSE_MAIN)
+#DIM NOW_AREA
+#DIM GIFT_ADJECT
+#DIM MAGNIF_PRICE
+#DIMS NAME_ADJECT
+#DIM SELL_AREA
+#DIMS SENSE_MAIN
+#DIMS SENSE
+MAGNIF_PRICE = 100
+SELL_AREA = 0
+SENSE = 
+
+SELECTCASE GIFT_ADJECT
+CASE 101
+	NAME_ADJECT = 朴素的
+	MAGNIF_PRICE = 100
+	SENSE = 朴素/朴素/朴素/朴素/朴素/别致/
+	SELL_AREA = AREA_SETBIT("全て")
+CASE 102
+	NAME_ADJECT = 可爱的
+	MAGNIF_PRICE = 100
+	SENSE = 粉色/可爱的/可爱的/可爱的/活泼/夸张/洛丽塔/洛丽塔/洛丽塔/
+	SELL_AREA = AREA_SETBIT("里湖森山麓山顶")
+CASE 103
+	NAME_ADJECT = 古旧的
+	MAGNIF_PRICE = 150
+	SENSE = 茶/怀旧/怀旧/怀旧/怀旧/怀旧/别致/知的/
+	SELL_AREA = AREA_SETBIT("神社寺竹林冥界地底")
+CASE 104
+	NAME_ADJECT = 哥特的
+	MAGNIF_PRICE = 130
+	SENSE = 黑/帅气的/艺术的/洋风/洋风/洋风/洋风/洋风/别致/
+	SELL_AREA = AREA_SETBIT("湖森山麓地底")
+CASE 105
+	NAME_ADJECT = 流行的
+	MAGNIF_PRICE = 120
+	SENSE = 黄/可爱的/活泼/活泼/活泼/活泼/活泼/夸张/洛丽塔/
+	SELL_AREA = AREA_SETBIT("湖竹林山麓地底月")
+CASE 106
+	NAME_ADJECT = 现代的
+	MAGNIF_PRICE = 100
+	SENSE = 茶/朴素/朴素/朴素/活泼/别致/别致/别致/
+	SELL_AREA = AREA_SETBIT("寺湖森山麓山顶月")
+CASE 107
+	NAME_ADJECT = 怀旧的
+	MAGNIF_PRICE = 80
+	SENSE = 灰/怀旧/怀旧/怀旧/怀旧/怀旧/别致/
+	SELL_AREA = AREA_SETBIT("神社里竹林冥界地底")
+CASE 108
+	NAME_ADJECT = 神秘的
+	MAGNIF_PRICE = 130
+	SENSE = 紫/帅气的/不思议/不思议/不思议/不思议/不思议/
+	SELL_AREA = AREA_SETBIT("神社竹林森冥界地底")
+CASE 109
+	NAME_ADJECT = 东方风格的
+	MAGNIF_PRICE = 120
+	SENSE = 赤/朴素/大陆风/大陆风/大陆风/和风/和风/和风/别致/
+	SELL_AREA = AREA_SETBIT("寺里森山麓山顶月")
+CASE 110
+	NAME_ADJECT = 独特的
+	MAGNIF_PRICE = 130
+	SENSE = 奇妙/奇妙/奇妙/活泼/活泼/活泼/夸张/夸张/夸张/
+	SELL_AREA = AREA_SETBIT("神社寺湖森地底")
+CASE 111
+	NAME_ADJECT = 高级的
+	MAGNIF_PRICE = 500
+	SENSE = 黑/美的/时尚/时尚/时尚/时尚/时尚/威严/
+	SELL_AREA = AREA_SETBIT("里湖山顶月")
+CASE 112
+	NAME_ADJECT = 华丽的
+	MAGNIF_PRICE = 250
+	SENSE = 金/美的/夸张/夸张/夸张/夸张/夸张/威严/
+	SELL_AREA = AREA_SETBIT("寺湖冥界山顶月")
+CASE 113
+	NAME_ADJECT = 空想的
+	MAGNIF_PRICE = 100
+	SENSE = 粉色/可爱的/可爱的/可爱的/活泼/活泼/活泼/洛丽塔/洛丽塔/洛丽塔/
+	SELL_AREA = AREA_SETBIT("神社里森地底月")
+CASE 114
+	NAME_ADJECT = 恐怖的
+	MAGNIF_PRICE = 100
+	SENSE = 黑/可怕的/可怕的/可怕的/可怕的/可怕的/活泼/
+	SELL_AREA = AREA_SETBIT("寺竹林森冥界地底")
+CASE 115
+	NAME_ADJECT = 梦境的
+	MAGNIF_PRICE = 120
+	SENSE = 粉色/可爱的/可爱的/可爱的/活泼/活泼/活泼/洛丽塔/洛丽塔/洛丽塔/
+	SELL_AREA = AREA_SETBIT("神社里冥界地底")
+CASE 116
+	NAME_ADJECT = 可爱黑暗的
+	MAGNIF_PRICE = 120
+	SENSE = 粉色/毒/可爱的/可爱的/可爱的/活泼/活泼/活泼/
+	SELL_AREA = AREA_SETBIT("里竹森地底")
+
+CASE 201
+	NAME_ADJECT = 中世风の
+	MAGNIF_PRICE = 120
+	SENSE = 洋风/洋风/洋风/洋风/洋风/威严/
+	SELL_AREA = AREA_SETBIT("湖森山麓地底")
+CASE 202
+	NAME_ADJECT = 和风の
+	MAGNIF_PRICE = 120
+	SENSE = 朴素/和风/和风/和风/和风/和风/纤细/
+	SELL_AREA = AREA_SETBIT("神社里竹林冥界山顶")
+CASE 203
+	NAME_ADJECT = 南国风の
+	MAGNIF_PRICE = 120
+	SENSE = 水/洋风/洋风/洋风/洋风/洋风/夸张/
+	SELL_AREA = AREA_SETBIT("寺湖森山麓月")
+CASE 204
+	NAME_ADJECT = 民族风の
+	MAGNIF_PRICE = 120
+	SENSE = 大陆风/大陆风/大陆风/大陆风/大陆风/夸张/
+	SELL_AREA = AREA_SETBIT("神社里竹林山顶地底月")
+CASE 205
+	NAME_ADJECT = 大陆风の
+	MAGNIF_PRICE = 120
+	SENSE = 火/大陆风/大陆风/大陆风/大陆风/大陆风/充满力量/
+	SELL_AREA = AREA_SETBIT("寺竹林月")
+CASE 206
+	NAME_ADJECT = 北欧风の
+	MAGNIF_PRICE = 130
+	SENSE = 冰/洋风/洋风/洋风/洋风/洋风/充满力量/
+	SELL_AREA = AREA_SETBIT("湖山麓地底")
+CASE 207
+	NAME_ADJECT = 异国风の
+	MAGNIF_PRICE = 130
+	SENSE = 风/奇妙/大陆风/大陆风/大陆风/大陆风/大陆风/
+	SELL_AREA = AREA_SETBIT("寺森冥界地底月")
+
+CASE 301
+	NAME_ADJECT = 美的
+	MAGNIF_PRICE = 120
+	SENSE = 美的/美的/美的/美的/朴素/
+	SELL_AREA = AREA_SETBIT("全て")
+CASE 302
+	NAME_ADJECT = 美丽な
+	MAGNIF_PRICE = 130
+	SENSE = 美的/美的/美的/美的/美的/朴素/
+	SELL_AREA = AREA_SETBIT("竹林冥界月")
+CASE 303
+	NAME_ADJECT = 潇洒な
+	MAGNIF_PRICE = 140
+	SENSE = 秩序/美的/美的/美的/朴素/朴素/朴素/别致/别致/别致/知的/
+	SELL_AREA = AREA_SETBIT("湖")
+CASE 304
+	NAME_ADJECT = 幽玄な
+	MAGNIF_PRICE = 150
+	SENSE = 美的/美的/美的/和风/和风/和风/纤细/威严/
+	SELL_AREA = AREA_SETBIT("神社冥界")
+CASE 305
+	NAME_ADJECT = 侘寂な
+	MAGNIF_PRICE = 90
+	SENSE = 灰/美的/艺术的/艺术的/艺术的/和风/和风/和风/纤细/纤细/纤细/
+	SELL_AREA = AREA_SETBIT("神社冥界山麓")
+CASE 306
+	NAME_ADJECT = 魅惑の
+	MAGNIF_PRICE = 220
+	SENSE = 粉色/美的/美的/美的/时尚/时尚/时尚/夸张/
+	SELL_AREA = AREA_SETBIT("里湖森地底")
+CASE 307
+	NAME_ADJECT = 妖艳な
+	MAGNIF_PRICE = 240
+	SENSE = 紫/美的/美的/美的/时尚/时尚/时尚/夸张/威严/
+	SELL_AREA = AREA_SETBIT("寺竹林冥界")
+CASE 308
+	NAME_ADJECT = 时髦的
+	MAGNIF_PRICE = 140
+	SENSE = 帅气的/时尚/时尚/时尚/时尚/时尚/活泼/活泼/活泼/夸张/洛丽塔/
+	SELL_AREA = AREA_SETBIT("神社寺里山顶")
+CASE 309
+	NAME_ADJECT = 时尚的
+	MAGNIF_PRICE = 140
+	SENSE = 可爱的/时尚/时尚/时尚/时尚/时尚/活泼/
+	SELL_AREA = AREA_SETBIT("里湖竹林冥界")
+CASE 310
+	NAME_ADJECT = 前卫的
+	MAGNIF_PRICE = 110
+	SENSE = 时尚/时尚/时尚/活泼/狂热/狂热/狂热/
+	SELL_AREA = AREA_SETBIT("寺里森山顶地底")
+CASE 311
+	NAME_ADJECT = 神秘的
+	MAGNIF_PRICE = 150
+	SENSE = 美的/美的/美的/别致/不思议/不思议/不思议/
+	SELL_AREA = AREA_SETBIT("神社竹林森冥界山麓山顶月")
+CASE 312
+	NAME_ADJECT = 艺术的な
+	MAGNIF_PRICE = 130
+	SENSE = 美的/艺术的/艺术的/艺术的/艺术的/艺术的/夸张/夸张/夸张/知的/
+	SELL_AREA = AREA_SETBIT("里竹林冥界山麓")
+CASE 313
+	NAME_ADJECT = 绚烂华丽の
+	MAGNIF_PRICE = 200
+	SENSE = 金/美的/艺术的/夸张/夸张/夸张/夸张/夸张/充满力量/威严/
+	SELL_AREA = AREA_SETBIT("湖山顶地底月")
+CASE 314
+	NAME_ADJECT = 奇妙な
+	MAGNIF_PRICE = 125
+	SENSE = 帅气的/奇妙/奇妙/奇妙/奇妙/奇妙/不思议/
+	SELL_AREA = AREA_SETBIT("里森冥界地底")
+CASE 315
+	NAME_ADJECT = 怪奇な
+	MAGNIF_PRICE = 135
+	SENSE = 混沌/可怕的/可怕的/可怕的/奇妙/奇妙/奇妙/不思议/
+	SELL_AREA = AREA_SETBIT("寺里竹林森地底")
+CASE 316
+	NAME_ADJECT = 令人害怕の
+	MAGNIF_PRICE = 125
+	SENSE = 紫/可怕的/可怕的/可怕的/可怕的/可怕的/纤细/不思议/
+	SELL_AREA = AREA_SETBIT("里森冥界地底")
+CASE 317
+	NAME_ADJECT = 不思议な
+	MAGNIF_PRICE = 135
+	SENSE = 紫/可爱的/不思议/不思议/不思议/不思议/不思议/
+	SELL_AREA = AREA_SETBIT("神社里森山顶月")
+CASE 318
+	NAME_ADJECT = 黑暗な
+	MAGNIF_PRICE = 125
+	SENSE = 黑/黑/黑/暗/可怕的/活泼/别致/
+	SELL_AREA = AREA_SETBIT("湖竹林森冥界地底")
+CASE 319
+	NAME_ADJECT = 愉快な
+	MAGNIF_PRICE = 110
+	SENSE = 可爱的/奇妙/活泼/活泼/活泼/洛丽塔/
+	SELL_AREA = AREA_SETBIT("神社寺里湖山麓山顶地底")
+CASE 320
+	NAME_ADJECT = 前卫的な
+	MAGNIF_PRICE = 125
+	SENSE = 未来/活泼/活泼/活泼/夸张/夸张/夸张/狂热/狂热/狂热/
+	SELL_AREA = AREA_SETBIT("寺里森山麓月")
+CASE 321
+	NAME_ADJECT = 朋克な
+	MAGNIF_PRICE = 130
+	SENSE = 黑/暗/音乐/混沌/可怕的/时尚/活泼/夸张/夸张/夸张/充满力量/充满力量/充满力量/狂热/
+	SELL_AREA = AREA_SETBIT("寺冥界地底")
+CASE 322
+	NAME_ADJECT = 宇宙感な
+	MAGNIF_PRICE = 140
+	SENSE = 青/星/帅气的/活泼/活泼/活泼/夸张/狂热/
+	SELL_AREA = AREA_SETBIT("森山顶地底月")
+CASE 323
+	NAME_ADJECT = 复古未来な
+	MAGNIF_PRICE = 160
+	SENSE = 茶/金属/帅气的/怀旧/怀旧/怀旧/未来/未来/未来/狂热/
+	SELL_AREA = AREA_SETBIT("神社竹林山麓地底月")
+CASE 324
+	NAME_ADJECT = 近未来风の
+	MAGNIF_PRICE = 180
+	SENSE = 银/金属/帅气的/奇妙/未来/未来/未来/不思议/
+	SELL_AREA = AREA_SETBIT("冥界山麓月")
+CASE 325
+	NAME_ADJECT = 超自然な
+	MAGNIF_PRICE = 150
+	SENSE = 混沌/可怕的/活泼/不思议/狂热/狂热/狂热/
+	SELL_AREA = AREA_SETBIT("神社寺森月")
+CASE 326
+	NAME_ADJECT = 疯狂な
+	MAGNIF_PRICE = 222
+	SENSE = 混沌/混沌/混沌/可怕的/奇妙/活泼/夸张/夸张/夸张/充满力量/狂热/
+	SELL_AREA = AREA_SETBIT("湖竹林地底月")
+CASE 327
+	NAME_ADJECT = 万魔殿な
+	MAGNIF_PRICE = 260
+	SENSE = 赤/暗/混沌/混沌/混沌/混沌/混沌/可怕的/奇妙/活泼/充满力量/充满力量/充满力量/狂热/
+	SELL_AREA = AREA_SETBIT("月")
+CASE 328
+	NAME_ADJECT = Enigmaticな
+	MAGNIF_PRICE = 260
+	SENSE = 黑/暗/混沌/混沌/混沌/奇妙/奇妙/奇妙/不思议/不思议/不思议/知的/
+	SELL_AREA = AREA_SETBIT("神社森")
+CASE 329
+	NAME_ADJECT = 高贵な
+	MAGNIF_PRICE = 200
+	SENSE = 紫/美的/艺术的/夸张/威严/威严/威严/
+	SELL_AREA = AREA_SETBIT("寺里湖竹冥界月")
+CASE 330
+	NAME_ADJECT = 狂热な
+	MAGNIF_PRICE = 160
+	SENSE = 帅气的/狂热/狂热/狂热/狂热/狂热/
+	SELL_AREA = AREA_SETBIT("月以外")
+CASE 331
+	NAME_ADJECT = 闪闪发光的
+	MAGNIF_PRICE = 180
+	SENSE = 光/秩序/美的/夸张
+	SELL_AREA = AREA_SETBIT("神社寺山顶月")
+CASE 332
+	NAME_ADJECT = 好厉害的
+	MAGNIF_PRICE = 130
+	SENSE = 毒/混沌/可怕的/奇妙/夸张/狂热/
+	SELL_AREA = AREA_SETBIT("森冥界地底")
+CASE 333
+	NAME_ADJECT = 流行りの
+	MAGNIF_PRICE = 125
+	SENSE = 时尚/时尚/时尚/时尚/时尚/活泼/别致/
+	SELL_AREA = AREA_SETBIT("神社寺里湖竹林森山麓山顶")
+CASE 334
+	NAME_ADJECT = 上品な
+	MAGNIF_PRICE = 130
+	SENSE = 美的/时尚/别致/知的/
+	SELL_AREA = AREA_SETBIT("全て")
+CASE 335
+	NAME_ADJECT = 超现实主义的
+	MAGNIF_PRICE = 120
+	SENSE = 可怕的/奇妙/奇妙/奇妙/不思议/
+	SELL_AREA = AREA_SETBIT("湖森冥界")
+CASE 336
+	NAME_ADJECT = 虚幻的
+	MAGNIF_PRICE = 130
+	SENSE = 死生/美的/艺术的/纤细/纤细/纤细/
+	SELL_AREA = AREA_SETBIT("神社里冥界月")
+CASE 337
+	NAME_ADJECT = 狂野的
+	MAGNIF_PRICE = 115
+	SENSE = 动物/混沌/帅气的/充满力量/充满力量/
+	SELL_AREA = AREA_SETBIT("竹林森冥界山麓山顶地底")
+CASE 338
+	NAME_ADJECT = 金属风格的
+	MAGNIF_PRICE = 120
+	SENSE = 银/金属/帅气的/未来/
+	SELL_AREA = AREA_SETBIT("山麓山顶月")
+
+CASE 401
+	NAME_ADJECT = 单色の
+	MAGNIF_PRICE = 80
+	SENSE = 灰/灰/灰/朴素/怀旧/别致/别致/别致/别致/别致/知的/
+	SELL_AREA = AREA_SETBIT("寺里冥界月")
+CASE 402
+	NAME_ADJECT = 多彩な
+	MAGNIF_PRICE = 100
+	SENSE = 虹/虹/朴素/活泼/活泼/活泼/夸张/洛丽塔/
+	SELL_AREA = AREA_SETBIT("湖森山麓山顶")
+CASE 403
+	NAME_ADJECT = 深褐の
+	MAGNIF_PRICE = 80
+	SENSE = 茶/茶/茶/茶/茶/朴素/怀旧/怀旧/怀旧/别致/知的/
+	SELL_AREA = AREA_SETBIT("神社竹林地底")
+CASE 404
+	NAME_ADJECT = 透明な
+	MAGNIF_PRICE = 120
+	SENSE = 未来/未来/未来/纤细/不思议/不思议/不思议/
+	SELL_AREA = AREA_SETBIT("山麓山顶月")
+CASE 405
+	NAME_ADJECT = 真红の
+	MAGNIF_PRICE = 110
+	SENSE = 火/赤/赤/赤/赤/赤/帅气的/朴素/充满力量/
+	SELL_AREA = AREA_SETBIT("神社湖山麓地底")
+CASE 406
+	NAME_ADJECT = 漆黑の
+	MAGNIF_PRICE = 120
+	SENSE = 黑/黑/黑/黑/黑/暗/帅气的/朴素/充满力量/
+	SELL_AREA = AREA_SETBIT("森冥界月")
+CASE 407
+	NAME_ADJECT = 纯白の
+	MAGNIF_PRICE = 120
+	SENSE = 光/白/白/白/白/白/美的/朴素/别致/纤细/
+	SELL_AREA = AREA_SETBIT("寺山顶月")
+CASE 408
+	NAME_ADJECT = 白银の
+	MAGNIF_PRICE = 130
+	SENSE = 冰/白/白/银/银/美的/别致/纤细/
+	SELL_AREA = AREA_SETBIT("神社湖森月")
+CASE 409
+	NAME_ADJECT = 暗黑の
+	MAGNIF_PRICE = 130
+	SENSE = 黑/黑/黑/暗/可怕的/别致/
+	SELL_AREA = AREA_SETBIT("森冥界地底月")
+CASE 410
+	NAME_ADJECT = 瑠璃色の
+	MAGNIF_PRICE = 110
+	SENSE = 水/青/青/青/可爱的/纤细/
+	SELL_AREA = AREA_SETBIT("湖山顶月")
+CASE 411
+	NAME_ADJECT = 浅葱色の
+	MAGNIF_PRICE = 105
+	SENSE = 风/青/青/可爱的/纤细/
+	SELL_AREA = AREA_SETBIT("山麓山顶月")
+CASE 412
+	NAME_ADJECT = 橘色の
+	MAGNIF_PRICE = 105
+	SENSE = 土/朱/朱/可爱的/纤细/
+	SELL_AREA = AREA_SETBIT("山麓山顶月")
+CASE 413
+	NAME_ADJECT = 七色の
+	MAGNIF_PRICE = 140
+	SENSE = 虹/虹/虹/美的/洋风/夸张/
+	SELL_AREA = AREA_SETBIT("竹林森")
+CASE 414
+	NAME_ADJECT = 极彩の
+	MAGNIF_PRICE = 160
+	SENSE = 虹/虹/虹/美的/艺术的/大陆风/夸张/充满力量/
+	SELL_AREA = AREA_SETBIT("湖山顶月")
+CASE 415
+	NAME_ADJECT = 永远鲜红の
+	MAGNIF_PRICE = 333
+	SENSE = 赤/赤/赤/赤/赤/可爱的/洋风/夸张/
+	SELL_AREA = AREA_SETBIT("湖")
+CASE 416
+	NAME_ADJECT = 灰の
+	MAGNIF_PRICE = 105
+	SENSE = 灰/灰/灰/灰/灰/可怕的/朴素/怀旧/别致/纤细/
+	SELL_AREA = AREA_SETBIT("寺竹森冥界地底月")
+CASE 417
+	NAME_ADJECT = 大理石纹的
+	MAGNIF_PRICE = 100
+	SENSE = 虹/可爱的/时尚/活泼/活泼/活泼/
+	SELL_AREA = AREA_SETBIT("神社寺里湖森山麓")
+CASE 418
+	NAME_ADJECT = 空色の
+	MAGNIF_PRICE = 110
+	SENSE = 风/青/青/青/青/青/可爱的/朴素/夸张/
+	SELL_AREA = AREA_SETBIT("里湖山麓山顶")
+CASE 419
+	NAME_ADJECT = 深绿の
+	MAGNIF_PRICE = 110
+	SENSE = 土/绿/绿/绿/绿/绿/美的/朴素/别致/
+	SELL_AREA = AREA_SETBIT("神社寺竹森山麓地底")
+CASE 420
+	NAME_ADJECT = 山吹の
+	MAGNIF_PRICE = 120
+	SENSE = 土/黄/黄/黄/黄/黄/植物/美的/朴素/和风/别致/纤细/
+	SELL_AREA = AREA_SETBIT("里竹森山麓山顶")
+CASE 421
+	NAME_ADJECT = 深紫の
+	MAGNIF_PRICE = 120
+	SENSE = 紫/紫/紫/紫/紫/美的/朴素/和风/别致/威严/
+	SELL_AREA = AREA_SETBIT("神社寺里冥界月")
+CASE 422
+	NAME_ADJECT = 粉色の
+	MAGNIF_PRICE = 120
+	SENSE = 粉色/粉色/粉色/粉色/粉色/可爱的/朴素/活泼/夸张/狂热/
+	SELL_AREA = AREA_SETBIT("里湖冥界地底")
+CASE 423
+	NAME_ADJECT = 游戏的
+	MAGNIF_PRICE = 170
+	SENSE = 虹/虹/虹/帅气的/奇妙/未来/夸张/狂热/狂热/狂热/狂热/狂热/
+	SELL_AREA = AREA_SETBIT("里山麓山顶")
+
+CASE 501
+	NAME_ADJECT = 心形の
+	MAGNIF_PRICE = 100
+	SENSE = 型/粉色/粉色/粉色/精神/可爱的/可爱的/可爱的/朴素/活泼/活泼/活泼/夸张/洛丽塔/洛丽塔/洛丽塔/
+	SELL_AREA = AREA_SETBIT("地底")
+CASE 502
+	NAME_ADJECT = 音符の
+	MAGNIF_PRICE = 100
+	SENSE = 型/音乐/音乐/音乐/可爱的/朴素/活泼/
+	SELL_AREA = AREA_SETBIT("里冥界")
+CASE 503
+	NAME_ADJECT = 十字型の
+	MAGNIF_PRICE = 100
+	SENSE = 型/秩序/秩序/秩序/帅气的/朴素/活泼/别致/
+	SELL_AREA = AREA_SETBIT("湖冥界地底")
+CASE 504
+	NAME_ADJECT = 星型の
+	MAGNIF_PRICE = 100
+	SENSE = 型/星/星/星/可爱的/朴素/活泼/夸张/
+	SELL_AREA = AREA_SETBIT("里森月")
+CASE 505
+	NAME_ADJECT = 漩涡の
+	MAGNIF_PRICE = 100
+	SENSE = 型/水/可爱的/朴素/活泼/
+	SELL_AREA = AREA_SETBIT("湖竹山顶")
+CASE 506
+	NAME_ADJECT = 几何学模样の
+	MAGNIF_PRICE = 111
+	SENSE = 型/帅气的/艺术的/艺术的/艺术的/纤细/知的/知的/知的/
+	SELL_AREA = AREA_SETBIT("寺森山麓月")
+CASE 507
+	NAME_ADJECT = 水玉の
+	MAGNIF_PRICE = 100
+	SENSE = 型/水/可爱的/朴素/活泼/活泼/活泼/
+	SELL_AREA = AREA_SETBIT("神社湖山麓山顶")
+CASE 508
+	NAME_ADJECT = 糖果の
+	MAGNIF_PRICE = 110
+	SENSE = 型/可爱的/时尚/活泼/活泼/活泼/洛丽塔/洛丽塔/洛丽塔/
+	SELL_AREA = AREA_SETBIT("里湖森")
+CASE 509
+	NAME_ADJECT = 骷髅の
+	MAGNIF_PRICE = 110
+	SENSE = 型/暗/骨/骨/骨/可怕的/可怕的/可怕的/时尚/活泼/夸张/
+	SELL_AREA = AREA_SETBIT("森冥界地底")
+CASE 510
+	NAME_ADJECT = 瞳の
+	MAGNIF_PRICE = 110
+	SENSE = 型/帅气的/别致/知的/知的/知的/
+	SELL_AREA = AREA_SETBIT("森地底")
+CASE 511
+	NAME_ADJECT = 蛋の
+	MAGNIF_PRICE = 100
+	SENSE = 型/黄/鸟/可爱的/可爱的/可爱的/朴素/活泼/别致/纤细/
+	SELL_AREA = AREA_SETBIT("竹森山顶地底")
+CASE 512
+	NAME_ADJECT = 翼の
+	MAGNIF_PRICE = 110
+	SENSE = 型/风/白/鸟/鸟/帅气的/
+	SELL_AREA = AREA_SETBIT("竹山麓山顶")
+CASE 513
+	NAME_ADJECT = 锚の
+	MAGNIF_PRICE = 120
+	SENSE = 型/水/青/帅气的/别致/
+	SELL_AREA = AREA_SETBIT("寺湖月")
+CASE 514
+	NAME_ADJECT = 鬼形の
+	MAGNIF_PRICE = 160
+	SENSE = 型/妖怪/混沌/混沌/混沌/可怕的/艺术的/充满力量/充满力量/充满力量/威严/
+	SELL_AREA = AREA_SETBIT("冥界")
+
+CASE 601
+	NAME_ADJECT = 角色の
+	MAGNIF_PRICE = 150
+	SENSE = 角色/朴素/活泼/夸张/洛丽塔/
+	SELL_AREA = AREA_SETBIT("里")
+CASE 602
+	NAME_ADJECT = 吉祥物の
+	MAGNIF_PRICE = 130
+	SENSE = 角色/可爱的/朴素/活泼/别致/洛丽塔/狂热/
+	SELL_AREA = AREA_SETBIT("里")
+CASE 603
+	NAME_ADJECT = 怪兽の
+	MAGNIF_PRICE = 150
+	SENSE = 角色/帅气的/活泼/充满力量/洛丽塔/狂热/
+	SELL_AREA = AREA_SETBIT("里")
+CASE 604
+	NAME_ADJECT = 怪物の
+	MAGNIF_PRICE = 150
+	SENSE = 角色/帅气的/活泼/充满力量/洛丽塔/
+	SELL_AREA = AREA_SETBIT("里")
+CASE 605
+	NAME_ADJECT = 魔法少女の
+	MAGNIF_PRICE = 175
+	SENSE = 角色/魔法/秩序/秩序/秩序/可爱的/活泼/夸张/洛丽塔/狂热/
+	SELL_AREA = AREA_SETBIT("森")
+CASE 606
+	NAME_ADJECT = 英雄の
+	MAGNIF_PRICE = 175
+	SENSE = 角色/秩序/秩序/秩序/帅气的/活泼/夸张/洛丽塔/狂热/
+	SELL_AREA = AREA_SETBIT("寺")
+CASE 607
+	NAME_ADJECT = 雪人の
+	MAGNIF_PRICE = 120
+	SENSE = 冰/白/角色/可爱的/活泼/洛丽塔/
+	SELL_AREA = AREA_SETBIT("湖")
+CASE 608
+	NAME_ADJECT = 埴轮の
+	MAGNIF_PRICE = 110
+	SENSE = 土/黄/角色/可爱的/艺术的/活泼/怀旧/别致/洛丽塔/
+	SELL_AREA = AREA_SETBIT("冥界")
+
+CASE 701
+	NAME_ADJECT = 传说の
+	MAGNIF_PRICE = 500
+	SENSE = 帅气的/帅气的/帅气的/怀旧/充满力量/威严/壮大/壮大/壮大/
+	SELL_AREA = AREA_SETBIT("湖森")
+CASE 702
+	NAME_ADJECT = 古の
+	MAGNIF_PRICE = 200
+	SENSE = 帅气的/帅气的/帅气的/怀旧/怀旧/怀旧/别致/别致/别致/知的/
+	SELL_AREA = AREA_SETBIT("寺冥界")
+CASE 703
+	NAME_ADJECT = 太古の
+	MAGNIF_PRICE = 200
+	SENSE = 帅气的/帅气的/帅气的/怀旧/怀旧/怀旧/别致/知的/壮大/壮大/
+	SELL_AREA = AREA_SETBIT("山麓地底")
+CASE 704
+	NAME_ADJECT = 始原の
+	MAGNIF_PRICE = 250
+	SENSE = 帅气的/帅气的/帅气的/怀旧/充满力量/充满力量/充满力量/威严/威严/威严/壮大/壮大/壮大/
+	SELL_AREA = AREA_SETBIT("神社")
+CASE 705
+	NAME_ADJECT = 令人怀念の
+	MAGNIF_PRICE = 120
+	SENSE = 茶/美的/美的/美的/朴素/怀旧/怀旧/怀旧/怀旧/怀旧/和风/纤细/知的/
+	SELL_AREA = AREA_SETBIT("里")
+CASE 706
+	NAME_ADJECT = 神圣庄严の
+	MAGNIF_PRICE = 250
+	SENSE = 美的/美的/美的/怀旧/怀旧/怀旧/和风/和风/和风/别致/威严/威严/威严/
+	SELL_AREA = AREA_SETBIT("山顶")
+CASE 707
+	NAME_ADJECT = 千年の
+	MAGNIF_PRICE = 600
+	SENSE = 美的/美的/美的/怀旧/充满力量/知的/威严/壮大/壮大/壮大/
+	SELL_AREA = AREA_SETBIT("竹")
+CASE 708
+	NAME_ADJECT = 神代の
+	MAGNIF_PRICE = 500
+	SENSE = 美的/美的/美的/怀旧/别致/威严/威严/威严/壮大/
+	SELL_AREA = AREA_SETBIT("竹月")
+CASE 709
+	NAME_ADJECT = 过去の
+	MAGNIF_PRICE = 200
+	SENSE = 灰/帅气的/帅气的/帅气的/怀旧/怀旧/怀旧/别致/知的/
+	SELL_AREA = AREA_SETBIT("神社寺里冥界")
+CASE 710
+	NAME_ADJECT = 被遗忘的
+	MAGNIF_PRICE = 140
+	SENSE = 美的/美的/美的/怀旧/怀旧/怀旧/纤细/纤细/纤细/狂热/
+	SELL_AREA = AREA_SETBIT("神社里森冥界地底")
+CASE 711
+	NAME_ADJECT = 逝去的
+	MAGNIF_PRICE = 220
+	SENSE = 美的/美的/美的/怀旧/怀旧/怀旧/别致/不思议/不思议/不思议/壮大/
+	SELL_AREA = AREA_SETBIT("神社竹山麓地底")
+CASE 712
+	NAME_ADJECT = 神话の
+	MAGNIF_PRICE = 550
+	SENSE = 帅气的/帅气的/帅气的/怀旧/充满力量/知的/威严/威严/威严/壮大/壮大/壮大/
+	SELL_AREA = AREA_SETBIT("神社山顶月")
+CASE 713
+	NAME_ADJECT = 秘密の
+	MAGNIF_PRICE = 132
+	SENSE = 帅气的/别致/知的/知的/知的/狂热/
+	SELL_AREA = AREA_SETBIT("神社森冥界地底")
+
+
+CASE 801
+	NAME_ADJECT = 木の
+	MAGNIF_PRICE = 50
+	SENSE = 矿物/茶/植物/朴素/朴素/朴素/别致/
+	SELL_AREA = AREA_SETBIT("竹地底月以外")
+CASE 802
+	NAME_ADJECT = 竹の
+	MAGNIF_PRICE = 80
+	SENSE = 矿物/绿/植物/朴素/朴素/朴素/和风/别致/纤细/
+	SELL_AREA = AREA_SETBIT("竹月")
+CASE 803
+	NAME_ADJECT = 石の
+	MAGNIF_PRICE = 30
+	SENSE = 矿物/土/灰/朴素/朴素/朴素/别致/
+	SELL_AREA = AREA_SETBIT("全て")
+CASE 804
+	NAME_ADJECT = 青铜の
+	MAGNIF_PRICE = 50
+	SENSE = 矿物/绿/金属/朴素/朴素/朴素/别致/
+	SELL_AREA = AREA_SETBIT("全て")
+CASE 805
+	NAME_ADJECT = 鉄の
+	MAGNIF_PRICE = 60
+	SENSE = 黑/矿物/金属/朴素/朴素/朴素/别致/
+	SELL_AREA = AREA_SETBIT("全て")
+CASE 806
+	NAME_ADJECT = 银の
+	MAGNIF_PRICE = 170
+	SENSE = 银/银/银/银/银/矿物/金属/朴素/洋风/别致/
+	SELL_AREA = AREA_SETBIT("全て")
+CASE 807
+	NAME_ADJECT = 黄金の
+	MAGNIF_PRICE = 550
+	SENSE = 矿物/金/金/金/金/金/宝石/金属/朴素/夸张/充满力量/威严/
+	SELL_AREA = AREA_SETBIT("寺月")
+CASE 808
+	NAME_ADJECT = 翠玉の
+	MAGNIF_PRICE = 640
+	SENSE = 矿物/风/绿/绿/绿/宝石/别致/
+	SELL_AREA = AREA_SETBIT("里山麓")
+CASE 809
+	NAME_ADJECT = 红玉の
+	MAGNIF_PRICE = 820
+	SENSE = 矿物/火/赤/赤/赤/宝石/夸张/
+	SELL_AREA = AREA_SETBIT("神社湖")
+CASE 810
+	NAME_ADJECT = 青玉の
+	MAGNIF_PRICE = 770
+	SENSE = 矿物/冰/青/青/青/宝石/别致/知的/
+	SELL_AREA = AREA_SETBIT("竹冥界")
+CASE 811
+	NAME_ADJECT = 金刚石の
+	MAGNIF_PRICE = 980
+	SENSE = 矿物/光/白/白/白/宝石/夸张/威严/
+	SELL_AREA = AREA_SETBIT("森地底")
+CASE 812
+	NAME_ADJECT = 翡翠の
+	MAGNIF_PRICE = 175
+	SENSE = 矿物/水/绿/绿/绿/宝石/别致/
+	SELL_AREA = AREA_SETBIT("山麓山顶")
+CASE 813
+	NAME_ADJECT = 黄玉の
+	MAGNIF_PRICE = 320
+	SENSE = 矿物/雷/黄/黄/黄/宝石/夸张/
+	SELL_AREA = AREA_SETBIT("山顶")
+CASE 814
+	NAME_ADJECT = 琥珀の
+	MAGNIF_PRICE = 240
+	SENSE = 矿物/土/朱/朱/朱/宝石/植物/别致/纤细/
+	SELL_AREA = AREA_SETBIT("森")
+CASE 815
+	NAME_ADJECT = 绀珠の
+	MAGNIF_PRICE = 360
+	SENSE = 矿物/水/青/青/青/宝石/夸张/
+	SELL_AREA = AREA_SETBIT("月")
+CASE 816
+	NAME_ADJECT = 白金の
+	MAGNIF_PRICE = 720
+	SENSE = 矿物/光/银/银/银/宝石/金属/别致/充满力量/
+	SELL_AREA = AREA_SETBIT("神社")
+CASE 817
+	NAME_ADJECT = 猫目石の
+	MAGNIF_PRICE = 210
+	SENSE = 矿物/黄/黄/黄/宝石/动物/别致/
+	SELL_AREA = AREA_SETBIT("冥界")
+CASE 818
+	NAME_ADJECT = 黑曜石の
+	MAGNIF_PRICE = 220
+	SENSE = 矿物/暗/黑/黑/黑/宝石/别致/
+	SELL_AREA = AREA_SETBIT("地底")
+CASE 819
+	NAME_ADJECT = 黑玉の
+	MAGNIF_PRICE = 340
+	SENSE = 矿物/暗/黑/黑/黑/宝石/别致/充满力量/知的/
+	SELL_AREA = AREA_SETBIT("山麓")
+CASE 820
+	NAME_ADJECT = 白垩
+	MAGNIF_PRICE = 160
+	SENSE = 矿物/白/白/白/宝石/别致/
+	SELL_AREA = AREA_SETBIT("月")
+CASE 821
+	NAME_ADJECT = 玛瑙の
+	MAGNIF_PRICE = 215
+	SENSE = 矿物/粉色/粉色/粉色/紫/紫/紫/宝石/别致/知的/
+	SELL_AREA = AREA_SETBIT("神社")
+CASE 822
+	NAME_ADJECT = 黄铜
+	MAGNIF_PRICE = 215
+	SENSE = 矿物/金/金/金/宝石/别致/
+	SELL_AREA = AREA_SETBIT("寺")
+CASE 823
+	NAME_ADJECT = 电气石の
+	MAGNIF_PRICE = 205
+	SENSE = 矿物/雷/绿/宝石/别致/
+	SELL_AREA = AREA_SETBIT("山麓")
+CASE 824
+	NAME_ADJECT = 石榴石の
+	MAGNIF_PRICE = 205
+	SENSE = 矿物/紫/宝石/别致/
+	SELL_AREA = AREA_SETBIT("湖")
+CASE 825
+	NAME_ADJECT = 萤石の
+	MAGNIF_PRICE = 205
+	SENSE = 矿物/绿/宝石/别致/
+	SELL_AREA = AREA_SETBIT("竹")
+CASE 826
+	NAME_ADJECT = 月长石の
+	MAGNIF_PRICE = 215
+	SENSE = 矿物/月/青/银/宝石/别致/
+	SELL_AREA = AREA_SETBIT("月")
+CASE 827
+	NAME_ADJECT = 太阳石の
+	MAGNIF_PRICE = 250
+	SENSE = 矿物/日/朱/朱/朱/宝石/夸张/
+	SELL_AREA = AREA_SETBIT("地底")
+CASE 828
+	NAME_ADJECT = 宝石の
+	MAGNIF_PRICE = 300
+	SENSE = 矿物/宝石/朴素/夸张/
+	SELL_AREA = AREA_SETBIT("全て")
+CASE 829
+	NAME_ADJECT = 骨の
+	MAGNIF_PRICE = 50
+	SENSE = 矿物/骨/骨/骨/骨/骨/灰/可怕的/纤细/
+	SELL_AREA = AREA_SETBIT("寺森冥界地底")
+CASE 830
+	NAME_ADJECT = 钢鉄の
+	MAGNIF_PRICE = 150
+	SENSE = 矿物/银/银/金属/朴素/充满力量/
+	SELL_AREA = AREA_SETBIT("山顶地底月")
+CASE 831
+	NAME_ADJECT = 塑料の
+	MAGNIF_PRICE = 30
+	SENSE = 矿物/朴素/朴素/朴素/洛丽塔/
+	SELL_AREA = AREA_SETBIT("里山麓")
+CASE 832
+	NAME_ADJECT = 玻璃の
+	MAGNIF_PRICE = 120
+	SENSE = 矿物/美的/时尚/纤细/纤细/纤细/
+	SELL_AREA = AREA_SETBIT("里湖冥界地底")
+CASE 833
+	NAME_ADJECT = 水晶の
+	MAGNIF_PRICE = 700
+	SENSE = 矿物/冰/宝石/纤细/纤细/纤细/
+	SELL_AREA = AREA_SETBIT("湖山麓")
+CASE 834
+	NAME_ADJECT = 山铜の
+	MAGNIF_PRICE = 850
+	SENSE = 矿物/宝石/金属/洋风/夸张/纤细/充满力量/
+	SELL_AREA = AREA_SETBIT("竹冥界")
+CASE 835
+	NAME_ADJECT = 陨石の
+	MAGNIF_PRICE = 450
+	SENSE = 矿物/星/宝石/金属/充满力量/
+	SELL_AREA = AREA_SETBIT("森月")
+CASE 836
+	NAME_ADJECT = 陶瓷の
+	MAGNIF_PRICE = 110
+	SENSE = 矿物/土/怀旧/别致/别致/别致/
+	SELL_AREA = AREA_SETBIT("冥界")
+CASE 837
+	NAME_ADJECT = 秘银の
+	MAGNIF_PRICE = 320
+	SENSE = 矿物/银/银/银/金属/魔法/洋风/别致/充满力量/
+	SELL_AREA = AREA_SETBIT("寺地底")
+CASE 838
+	NAME_ADJECT = 精灵银の
+	MAGNIF_PRICE = 380
+	SENSE = 矿物/银/银/银/自然/金属/魔法/洋风/别致/纤细/知的/
+	SELL_AREA = AREA_SETBIT("神社山顶")
+CASE 839
+	NAME_ADJECT = 魔石の
+	MAGNIF_PRICE = 250
+	SENSE = 矿物/魔法/魔法/洋风/
+	SELL_AREA = AREA_SETBIT("湖森")
+CASE 840
+	NAME_ADJECT = 要石の
+	MAGNIF_PRICE = 240
+	SENSE = 矿物/土/灰/神灵/巫术/和风/充满力量/
+	SELL_AREA = AREA_SETBIT("山顶")
+CASE 841
+	NAME_ADJECT = 珊瑚の
+	MAGNIF_PRICE = 110
+	SENSE = 矿物/水/粉色/自然/可爱的/活泼/纤细/
+	SELL_AREA = AREA_SETBIT("里")
+CASE 842
+	NAME_ADJECT = 贝壳の
+	MAGNIF_PRICE = 80
+	SENSE = 矿物/水/白/自然/可爱的/纤细/
+	SELL_AREA = AREA_SETBIT("神社里")
+CASE 843
+	NAME_ADJECT = 真珠の
+	MAGNIF_PRICE = 385
+	SENSE = 矿物/水/白/白/白/自然/宝石/别致/纤细/
+	SELL_AREA = AREA_SETBIT("湖月")
+CASE 844
+	NAME_ADJECT = 软乎乎の
+	MAGNIF_PRICE = 70
+	SENSE = 矿物/可爱的/奇妙/活泼/活泼/活泼/纤细/洛丽塔/
+	SELL_AREA = AREA_SETBIT("寺里冥界月")
+CASE 845
+	NAME_ADJECT = 滑溜溜の
+	MAGNIF_PRICE = 90
+	SENSE = 矿物/可爱的/活泼/活泼/活泼/洛丽塔/
+	SELL_AREA = AREA_SETBIT("里冥界山麓")
+CASE 846
+	NAME_ADJECT = 绯绯色金の
+	MAGNIF_PRICE = 680
+	SENSE = 矿物/日/赤/赤/赤/朱/朱/朱/宝石/金属/帅气的/和风/夸张/威严/
+	SELL_AREA = AREA_SETBIT("神社山顶月")
+CASE 847
+	NAME_ADJECT = 大马士革的
+	MAGNIF_PRICE = 250
+	SENSE = 矿物/银/金属/帅气的/洋风/别致/不思议/
+	SELL_AREA = AREA_SETBIT("湖森山麓山顶地底")
+CASE 848
+	NAME_ADJECT = レアメタルの
+	MAGNIF_PRICE = 200
+	SENSE = 矿物/金属/帅气的/未来/狂热/
+	SELL_AREA = AREA_SETBIT("山麓山顶地底月")
+CASE 849
+	NAME_ADJECT = 龙珠の
+	MAGNIF_PRICE = 280
+	SENSE = 矿物/神灵/巫术/怀旧/怀旧/怀旧/和风/和风/和风/别致/不思议/
+	SELL_AREA = AREA_SETBIT("山麓山顶")
+CASE 850
+	NAME_ADJECT = 胖乎乎的
+	MAGNIF_PRICE = 125
+	SENSE = 矿物/可爱的/活泼/活泼/活泼/纤细/洛丽塔/
+	SELL_AREA = AREA_SETBIT("里湖冥界月")
+
+CASE 901
+	NAME_ADJECT = 木绵の
+	MAGNIF_PRICE = 100
+	SENSE = 纤维/植物/朴素/朴素/朴素/别致/
+	SELL_AREA = AREA_SETBIT("神社竹森山顶")
+CASE 902
+	NAME_ADJECT = 绢の
+	MAGNIF_PRICE = 100
+	SENSE = 纤维/朴素/朴素/朴素/别致/
+	SELL_AREA = AREA_SETBIT("湖地底月")
+CASE 903
+	NAME_ADJECT = 麻の
+	MAGNIF_PRICE = 100
+	SENSE = 纤维/植物/朴素/朴素/朴素/别致/
+	SELL_AREA = AREA_SETBIT("寺里冥界山麓")
+CASE 904
+	NAME_ADJECT = 蜘蛛丝の
+	MAGNIF_PRICE = 115
+	SENSE = 纤维/虫/朴素/别致/
+	SELL_AREA = AREA_SETBIT("森地底")
+CASE 905
+	NAME_ADJECT = 注连绳の
+	MAGNIF_PRICE = 320
+	SENSE = 纤维/茶/神灵/巫术/和风/夸张/充满力量/
+	SELL_AREA = AREA_SETBIT("神社山顶")
+CASE 906
+	NAME_ADJECT = 费米纤维の
+	MAGNIF_PRICE = 680
+	SENSE = 纤维/月/银/未来/未来/未来/未来/未来/别致/纤细/不思议/
+	SELL_AREA = AREA_SETBIT("月")
+CASE 907
+	NAME_ADJECT = 锁の
+	MAGNIF_PRICE = 110
+	SENSE = 纤维/黑/金属/帅气的/夸张/充满力量/狂热/
+	SELL_AREA = AREA_SETBIT("湖冥界地底")
+CASE 908
+	NAME_ADJECT = 茨の
+	MAGNIF_PRICE = 120
+	SENSE = 纤维/绿/植物/帅气的/充满力量/
+	SELL_AREA = AREA_SETBIT("湖山麓地底")
+CASE 909
+	NAME_ADJECT = 蓬蓬鼓鼓の
+	MAGNIF_PRICE = 120
+	SENSE = 纤维/鸟/可爱的/活泼/活泼/活泼/纤细/洛丽塔/
+	SELL_AREA = AREA_SETBIT("神社里山麓")
+CASE 910
+	NAME_ADJECT = 蓬蓬松松の
+	MAGNIF_PRICE = 120
+	SENSE = 纤维/鸟/可爱的/活泼/活泼/活泼/纤细/洛丽塔/
+	SELL_AREA = AREA_SETBIT("神社さと山顶")
+CASE 911
+	NAME_ADJECT = 毛茸茸の
+	MAGNIF_PRICE = 120
+	SENSE = 纤维/动物/可爱的/活泼/活泼/活泼/纤细/洛丽塔/
+	SELL_AREA = AREA_SETBIT("里湖山麓地底")
+CASE 912
+	NAME_ADJECT = 浓密の
+	MAGNIF_PRICE = 120
+	SENSE = 纤维/动物/可爱的/活泼/活泼/活泼/纤细/洛丽塔/
+	SELL_AREA = AREA_SETBIT("里竹山麓地底")
+CASE 913
+	NAME_ADJECT = 松松软软の
+	MAGNIF_PRICE = 120
+	SENSE = 纤维/动物/可爱的/活泼/活泼/活泼/纤细/洛丽塔/
+	SELL_AREA = AREA_SETBIT("里竹山麓地底")
+CASE 914
+	NAME_ADJECT = 蜿蜿蜒蜒的の
+	MAGNIF_PRICE = 90
+	SENSE = 纤维/可爱的/活泼/活泼/活泼/纤细/洛丽塔/
+	SELL_AREA = AREA_SETBIT("寺里森山顶")
+CASE 915
+	NAME_ADJECT = 毛皮の
+	MAGNIF_PRICE = 120
+	SENSE = 纤维/动物/可爱的/时尚/时尚/时尚/威严/
+	SELL_AREA = AREA_SETBIT("里湖竹森山麓山顶")
+
+CASE 1001
+	NAME_ADJECT = 兽の
+	MAGNIF_PRICE = 105
+	SENSE = 动物/动物/充满力量/充满力量/充满力量/
+	SELL_AREA = AREA_SETBIT("神社寺里竹山麓地底")
+CASE 1002
+	NAME_ADJECT = 鸟の
+	MAGNIF_PRICE = 105
+	SENSE = 风/鸟/鸟/活泼/
+	SELL_AREA = AREA_SETBIT("里竹森山顶地底")
+CASE 1003
+	NAME_ADJECT = 鱼の
+	MAGNIF_PRICE = 105
+	SENSE = 水/青/鱼/鱼/活泼/纤细/
+	SELL_AREA = AREA_SETBIT("里湖冥界山顶")
+CASE 1004
+	NAME_ADJECT = 犬の
+	MAGNIF_PRICE = 110
+	SENSE = 动物/活泼/活泼/可爱的/
+	SELL_AREA = AREA_SETBIT("神社寺湖竹山顶地底")
+CASE 1005
+	NAME_ADJECT = 猫の
+	MAGNIF_PRICE = 110
+	SENSE = 动物/活泼/活泼/可爱的/
+	SELL_AREA = AREA_SETBIT("神社里冥界山麓地底")
+CASE 1006
+	NAME_ADJECT = 虎の
+	MAGNIF_PRICE = 110
+	SENSE = 黄/动物/活泼/活泼/充满力量/帅气的/
+	SELL_AREA = AREA_SETBIT("寺里竹山麓地底")
+CASE 1007
+	NAME_ADJECT = 鼠の
+	MAGNIF_PRICE = 110
+	SENSE = 灰/动物/活泼/活泼/纤细/可爱的/
+	SELL_AREA = AREA_SETBIT("寺里森地底")
+CASE 1008
+	NAME_ADJECT = 牛の
+	MAGNIF_PRICE = 110
+	SENSE = 白/黑/动物/活泼/活泼/可爱的/
+	SELL_AREA = AREA_SETBIT("里竹地底")
+CASE 1009
+	NAME_ADJECT = 兔の
+	MAGNIF_PRICE = 110
+	SENSE = 粉色/动物/活泼/活泼/纤细/可爱的/
+	SELL_AREA = AREA_SETBIT("竹地底月")
+CASE 1010
+	NAME_ADJECT = 熊の
+	MAGNIF_PRICE = 110
+	SENSE = 茶/动物/活泼/活泼/可爱的/
+	SELL_AREA = AREA_SETBIT("森山麓山顶地底")
+CASE 1011
+	NAME_ADJECT = 羊の
+	MAGNIF_PRICE = 110
+	SENSE = 白/动物/活泼/活泼/纤细/可爱的/
+	SELL_AREA = AREA_SETBIT("神社里地底月")
+CASE 1012
+	NAME_ADJECT = 狐の
+	MAGNIF_PRICE = 110
+	SENSE = 朱/动物/活泼/活泼/可爱的/
+	SELL_AREA = AREA_SETBIT("神社冥界山麓地底")
+CASE 1013
+	NAME_ADJECT = 狸の
+	MAGNIF_PRICE = 110
+	SENSE = 茶/动物/活泼/活泼/可爱的/
+	SELL_AREA = AREA_SETBIT("寺森山麓地底")
+CASE 1014
+	NAME_ADJECT = 狼の
+	MAGNIF_PRICE = 110
+	SENSE = 赤/动物/活泼/活泼/充满力量/帅气的/
+	SELL_AREA = AREA_SETBIT("竹冥界山顶地底")
+CASE 1015
+	NAME_ADJECT = 马の
+	MAGNIF_PRICE = 110
+	SENSE = 茶/动物/活泼/活泼/充满力量/帅气的/
+	SELL_AREA = AREA_SETBIT("里冥界地底")
+CASE 1016
+	NAME_ADJECT = 貘の
+	MAGNIF_PRICE = 110
+	SENSE = 白/黑/动物/活泼/活泼/不思议/可爱的/
+	SELL_AREA = AREA_SETBIT("地底月")
+CASE 1017
+	NAME_ADJECT = 水獭の
+	MAGNIF_PRICE = 110
+	SENSE = 茶/绿/水/动物/活泼/活泼/知的/可爱的/
+	SELL_AREA = AREA_SETBIT("湖冥界山麓地底")
+CASE 1018
+	NAME_ADJECT = 蛙の
+	MAGNIF_PRICE = 110
+	SENSE = 水/绿/动物/活泼/活泼/纤细/可爱的/
+	SELL_AREA = AREA_SETBIT("湖山麓山顶地底")
+CASE 1019
+	NAME_ADJECT = 蛇の
+	MAGNIF_PRICE = 110
+	SENSE = 绿/动物/毒/活泼/活泼/可怕的/
+	SELL_AREA = AREA_SETBIT("山麓山顶地底")
+CASE 1020
+	NAME_ADJECT = 蝠の
+	MAGNIF_PRICE = 110
+	SENSE = 暗/黑/动物/血/活泼/活泼/可怕的/
+	SELL_AREA = AREA_SETBIT("湖森地底")
+CASE 1021
+	NAME_ADJECT = 雀の
+	MAGNIF_PRICE = 110
+	SENSE = 茶/鸟/活泼/活泼/纤细/可爱的/
+	SELL_AREA = AREA_SETBIT("神社竹地底")
+CASE 1022
+	NAME_ADJECT = 鸦の
+	MAGNIF_PRICE = 110
+	SENSE = 暗/黑/鸟/活泼/活泼/知的/帅气的/
+	SELL_AREA = AREA_SETBIT("湖森山顶地底")
+CASE 1023
+	NAME_ADJECT = 鹫の
+	MAGNIF_PRICE = 110
+	SENSE = 风/茶/紫/鸟/活泼/活泼/充满力量/帅气的/
+	SELL_AREA = AREA_SETBIT("神社冥界山麓地底")
+CASE 1024
+	NAME_ADJECT = 鹰の
+	MAGNIF_PRICE = 110
+	SENSE = 风/灰/鸟/活泼/活泼/充满力量/帅气的/
+	SELL_AREA = AREA_SETBIT("山麓山顶地底")
+CASE 1025
+	NAME_ADJECT = 鸡の
+	MAGNIF_PRICE = 110
+	SENSE = 白/鸟/活泼/活泼/纤细/可爱的/
+	SELL_AREA = AREA_SETBIT("神社寺里冥界山顶地底")
+CASE 1026
+	NAME_ADJECT = 枭の
+	MAGNIF_PRICE = 110
+	SENSE = 鸟/茶/活泼/活泼/知的/可爱的/
+	SELL_AREA = AREA_SETBIT("寺森山麓地底")
+CASE 1027
+	NAME_ADJECT = 龟の
+	MAGNIF_PRICE = 110
+	SENSE = 水/绿/动物/活泼/活泼/纤细/可爱的/
+	SELL_AREA = AREA_SETBIT("神社山麓山顶地底月")
+CASE 1028
+	NAME_ADJECT = 水母の
+	MAGNIF_PRICE = 110
+	SENSE = 水/青/鱼/毒/活泼/活泼/纤细/可爱的/
+	SELL_AREA = AREA_SETBIT("冥界月")
+CASE 1029
+	NAME_ADJECT = 海豚の
+	MAGNIF_PRICE = 110
+	SENSE = 水/青/动物/鱼/活泼/活泼/可爱的/
+	SELL_AREA = AREA_SETBIT("月")
+CASE 1030
+	NAME_ADJECT = 鲸の
+	MAGNIF_PRICE = 110
+	SENSE = 水/青/动物/鱼/活泼/活泼/充满力量/帅气的/
+	SELL_AREA = AREA_SETBIT("里月")
+CASE 1031
+	NAME_ADJECT = 扬羽蝶の
+	MAGNIF_PRICE = 120
+	SENSE = 风/黄/虫/美的/活泼/活泼/夸张/
+	SELL_AREA = AREA_SETBIT("神社竹森山顶")
+CASE 1032
+	NAME_ADJECT = 莲花蝶の
+	MAGNIF_PRICE = 255
+	SENSE = 赤/虫/巫术/秩序/秩序/秩序/美的/美的/美的/艺术的/艺术的/艺术的/和风/夸张/
+	SELL_AREA = AREA_SETBIT("神社")
+CASE 1033
+	NAME_ADJECT = 黑死蝶の
+	MAGNIF_PRICE = 255
+	SENSE = 暗/黑/紫/虫/毒/死生/妖术/混沌/混沌/混沌/美的/美的/美的/艺术的/艺术的/艺术的/和风/夸张/
+	SELL_AREA = AREA_SETBIT("冥界")
+CASE 1034
+	NAME_ADJECT = 魔界蝶の
+	MAGNIF_PRICE = 255
+	SENSE = 光/紫/虫/魔法/美的/美的/美的/艺术的/艺术的/艺术的/洋风/夸张/
+	SELL_AREA = AREA_SETBIT("寺森")
+CASE 1035
+	NAME_ADJECT = 蜘蛛の
+	MAGNIF_PRICE = 100
+	SENSE = 黑/虫/毒/可怕的/活泼/别致/
+	SELL_AREA = AREA_SETBIT("冥界地底")
+CASE 1036
+	NAME_ADJECT = 毒蛾の
+	MAGNIF_PRICE = 110
+	SENSE = 暗/紫/虫/毒/可怕的/夸张/
+	SELL_AREA = AREA_SETBIT("竹冥界")
+CASE 1037
+	NAME_ADJECT = 深海鱼の
+	MAGNIF_PRICE = 130
+	SENSE = 水/灰/白/鱼/可怕的/奇妙/纤细/不思议/狂热/
+	SELL_AREA = AREA_SETBIT("冥界月")
+CASE 1038
+	NAME_ADJECT = 古代鱼の
+	MAGNIF_PRICE = 150
+	SENSE = 水/黑/鱼/帅气的/怀旧/知的/
+	SELL_AREA = AREA_SETBIT("冥界月")
+CASE 1039
+	NAME_ADJECT = 熊猫の
+	MAGNIF_PRICE = 110
+	SENSE = 白/黑/动物/活泼/活泼/可爱的/
+	SELL_AREA = AREA_SETBIT("湖竹")
+CASE 1040
+	NAME_ADJECT = 猴子の
+	MAGNIF_PRICE = 110
+	SENSE = 茶/动物/可爱的/活泼/活泼/夸张/
+	SELL_AREA = AREA_SETBIT("山麓山顶")
+CASE 1041
+	NAME_ADJECT = チュパカブラの
+	MAGNIF_PRICE = 130
+	SENSE = 白/血/可爱的/活泼/活泼/狂热/狂热/
+	SELL_AREA = AREA_SETBIT("里地底")
+
+CASE 1101
+	NAME_ADJECT = 樱花の
+	MAGNIF_PRICE = 120
+	SENSE = 粉色/植物/美的/和风/纤细/
+	SELL_AREA = AREA_SETBIT("神社冥界")
+CASE 1102
+	NAME_ADJECT = 蔷薇の
+	MAGNIF_PRICE = 120
+	SENSE = 赤/植物/美的/洋风/充满力量/
+	SELL_AREA = AREA_SETBIT("地底")
+CASE 1103
+	NAME_ADJECT = 向日葵の
+	MAGNIF_PRICE = 120
+	SENSE = 日/黄/植物/可爱的/充满力量/
+	SELL_AREA = AREA_SETBIT("竹")
+CASE 1104
+	NAME_ADJECT = 堇の
+	MAGNIF_PRICE = 120
+	SENSE = 紫/植物/可爱的/纤细/
+	SELL_AREA = AREA_SETBIT("神社里森")
+CASE 1105
+	NAME_ADJECT = 百合の
+	MAGNIF_PRICE = 120
+	SENSE = 白/植物/美的/纤细/
+	SELL_AREA = AREA_SETBIT("神社里山麓月")
+CASE 1106
+	NAME_ADJECT = 菊の
+	MAGNIF_PRICE = 120
+	SENSE = 黄/植物/美的/和风/纤细/
+	SELL_AREA = AREA_SETBIT("寺里山顶月")
+CASE 1107
+	NAME_ADJECT = 绣球花の
+	MAGNIF_PRICE = 120
+	SENSE = 水/紫/植物/可爱的/纤细/
+	SELL_AREA = AREA_SETBIT("寺里森山麓")
+CASE 1108
+	NAME_ADJECT = 铃兰の
+	MAGNIF_PRICE = 120
+	SENSE = 白/植物/毒/可爱的/纤细/
+	SELL_AREA = AREA_SETBIT("湖竹冥界")
+CASE 1109
+	NAME_ADJECT = 枫叶の
+	MAGNIF_PRICE = 120
+	SENSE = 风/朱/植物/美的/和风/
+	SELL_AREA = AREA_SETBIT("山麓山顶")
+CASE 1110
+	NAME_ADJECT = 蘑菇の
+	MAGNIF_PRICE = 120
+	SENSE = 赤/植物/毒/可爱的/活泼/
+	SELL_AREA = AREA_SETBIT("竹森地底")
+CASE 1111
+	NAME_ADJECT = 苹果の
+	MAGNIF_PRICE = 120
+	SENSE = 赤/植物/果实/可爱的/活泼/知的/
+	SELL_AREA = AREA_SETBIT("里森山麓")
+CASE 1112
+	NAME_ADJECT = 桃の
+	MAGNIF_PRICE = 120
+	SENSE = 粉色/植物/果实/可爱的/活泼/
+	SELL_AREA = AREA_SETBIT("里山顶月")
+CASE 1113
+	NAME_ADJECT = 橙子の
+	MAGNIF_PRICE = 120
+	SENSE = 朱/朱/朱/朱/朱/植物/果实/可爱的/活泼/
+	SELL_AREA = AREA_SETBIT("里湖冥界")
+CASE 1114
+	NAME_ADJECT = 草莓の
+	MAGNIF_PRICE = 120
+	SENSE = 赤/植物/果实/可爱的/活泼/纤细/洛丽塔/
+	SELL_AREA = AREA_SETBIT("里湖山顶")
+CASE 1115
+	NAME_ADJECT = 葡萄の
+	MAGNIF_PRICE = 120
+	SENSE = 紫/植物/果实/可爱的/活泼/
+	SELL_AREA = AREA_SETBIT("寺里山麓")
+CASE 1116
+	NAME_ADJECT = 樱桃の
+	MAGNIF_PRICE = 120
+	SENSE = 赤/植物/果实/可爱的/活泼/洛丽塔/
+	SELL_AREA = AREA_SETBIT("神社里冥界")
+CASE 1117
+	NAME_ADJECT = 西瓜の
+	MAGNIF_PRICE = 120
+	SENSE = 水/绿/植物/果实/可爱的/活泼/
+	SELL_AREA = AREA_SETBIT("神社里山麓")
+CASE 1118
+	NAME_ADJECT = 黄瓜の
+	MAGNIF_PRICE = 120
+	SENSE = 水/绿/植物/果实/可爱的/活泼/
+	SELL_AREA = AREA_SETBIT("里湖山麓")
+CASE 1119
+	NAME_ADJECT = 四叶の
+	MAGNIF_PRICE = 120
+	SENSE = 绿/植物/可爱的/洋风/纤细/
+	SELL_AREA = AREA_SETBIT("神社里森")
+CASE 1120
+	NAME_ADJECT = 红叶の
+	MAGNIF_PRICE = 120
+	SENSE = 土/朱/植物/自然/美的/和风/
+	SELL_AREA = AREA_SETBIT("山麓山顶")
+CASE 1121
+	NAME_ADJECT = 叶子の
+	MAGNIF_PRICE = 90
+	SENSE = 土/绿/绿/植物/可爱的/纤细/
+	SELL_AREA = AREA_SETBIT("寺森山麓山顶")
+
+CASE 1201
+	NAME_ADJECT = 妖精の
+	MAGNIF_PRICE = 155
+	SENSE = 自然/可爱的/洛丽塔/洛丽塔/洛丽塔/
+	SELL_AREA = AREA_SETBIT("神社湖竹森")
+CASE 1202
+	NAME_ADJECT = 妖怪の
+	MAGNIF_PRICE = 180
+	SENSE = 妖怪/妖怪/可怕的/
+	SELL_AREA = AREA_SETBIT("寺森山麓山顶地底")
+CASE 1203
+	NAME_ADJECT = 妖魔の
+	MAGNIF_PRICE = 185
+	SENSE = 妖怪/妖怪/可怕的/
+	SELL_AREA = AREA_SETBIT("湖竹冥界")
+CASE 1204
+	NAME_ADJECT = 幻兽の
+	MAGNIF_PRICE = 210
+	SENSE = 动物/动物/帅气的/
+	SELL_AREA = AREA_SETBIT("神社寺月")
+CASE 1205
+	NAME_ADJECT = 河童の
+	MAGNIF_PRICE = 190
+	SENSE = 水/绿/妖怪/可爱的/纤细/狂热/
+	SELL_AREA = AREA_SETBIT("山麓")
+CASE 1206
+	NAME_ADJECT = 天狗の
+	MAGNIF_PRICE = 270
+	SENSE = 风/妖怪/帅气的/和风/和风/和风/
+	SELL_AREA = AREA_SETBIT("山顶")
+CASE 1207
+	NAME_ADJECT = 鬼の
+	MAGNIF_PRICE = 350
+	SENSE = 赤/妖怪/可怕的/和风/充满力量/充满力量/充满力量/
+	SELL_AREA = AREA_SETBIT("地底")
+CASE 1208
+	NAME_ADJECT = 人鱼の
+	MAGNIF_PRICE = 270
+	SENSE = 水/妖怪/可爱的/洋风/纤细/纤细/纤细/
+	SELL_AREA = AREA_SETBIT("湖")
+CASE 1209
+	NAME_ADJECT = 小人の
+	MAGNIF_PRICE = 270
+	SENSE = 妖怪/可爱的/纤细/纤细/纤细/
+	SELL_AREA = AREA_SETBIT("神社")
+CASE 1210
+	NAME_ADJECT = 冰精の
+	MAGNIF_PRICE = 180
+	SENSE = 冰/青/自然/可爱的/洛丽塔/洛丽塔/洛丽塔/
+	SELL_AREA = AREA_SETBIT("湖")
+CASE 1211
+	NAME_ADJECT = 白蛇の
+	MAGNIF_PRICE = 180
+	SENSE = 白/动物/美的/知的/威严/威严/
+	SELL_AREA = AREA_SETBIT("山顶")
+CASE 1212
+	NAME_ADJECT = 狮子の
+	MAGNIF_PRICE = 210
+	SENSE = 动物/帅气的/大陆风/充满力量/充满力量/充满力量/
+	SELL_AREA = AREA_SETBIT("山麓")
+CASE 1213
+	NAME_ADJECT = 麒麟の
+	MAGNIF_PRICE = 270
+	SENSE = 雷/金/动物/酒/帅气的/大陆风/
+	SELL_AREA = AREA_SETBIT("月")
+CASE 1214
+	NAME_ADJECT = 凤凰の
+	MAGNIF_PRICE = 390
+	SENSE = 火/赤/鸟/帅气的/大陆风/充满力量/
+	SELL_AREA = AREA_SETBIT("竹")
+CASE 1215
+	NAME_ADJECT = 天马の
+	MAGNIF_PRICE = 270
+	SENSE = 风/白/动物/鸟/秩序/美的/洋风/
+	SELL_AREA = AREA_SETBIT("山顶")
+CASE 1216
+	NAME_ADJECT = 龙の
+	MAGNIF_PRICE = 390
+	SENSE = 神灵/秩序/帅气的/和风/大陆风/威严/
+	SELL_AREA = AREA_SETBIT("神社湖森山顶")
+CASE 1217
+	NAME_ADJECT = 海神の
+	MAGNIF_PRICE = 450
+	SENSE = 水/青/神灵/秩序/帅气的/威严/
+	SELL_AREA = AREA_SETBIT("月")
+CASE 1218
+	NAME_ADJECT = 水神の
+	MAGNIF_PRICE = 450
+	SENSE = 水/青/神灵/秩序/帅气的/威严/
+	SELL_AREA = AREA_SETBIT("湖山麓月")
+CASE 1219
+	NAME_ADJECT = 龙神の
+	MAGNIF_PRICE = 450
+	SENSE = 神灵/秩序/帅气的/和风/大陆风/充满力量/威严/威严/威严/
+	SELL_AREA = AREA_SETBIT("神社里山顶")
+CASE 1220
+	NAME_ADJECT = 天使の
+	MAGNIF_PRICE = 180
+	SENSE = 光/白/神灵/秩序/秩序/秩序/美的/洋风/
+	SELL_AREA = AREA_SETBIT("山顶")
+CASE 1221
+	NAME_ADJECT = 恶魔の
+	MAGNIF_PRICE = 180
+	SENSE = 暗/黑/妖怪/混沌/混沌/混沌/可怕的/洋风/
+	SELL_AREA = AREA_SETBIT("湖冥界地底")
+CASE 1222
+	NAME_ADJECT = 西方龙の
+	MAGNIF_PRICE = 180
+	SENSE = 火/动物/混沌/帅气的/洋风/洋风/洋风/充满力量/充满力量/充满力量/
+	SELL_AREA = AREA_SETBIT("湖森山麓")
+CASE 1223
+	NAME_ADJECT = 亡灵の
+	MAGNIF_PRICE = 210
+	SENSE = 幽灵/混沌/可怕的/可怕的/可怕的/
+	SELL_AREA = AREA_SETBIT("寺冥界")
+CASE 1224
+	NAME_ADJECT = 死灵の
+	MAGNIF_PRICE = 210
+	SENSE = 暗/幽灵/混沌/可怕的/可怕的/可怕的/
+	SELL_AREA = AREA_SETBIT("寺冥界地底")
+CASE 1225
+	NAME_ADJECT = 地灵の
+	MAGNIF_PRICE = 170
+	SENSE = 幽灵/混沌/可怕的/可怕的/
+	SELL_AREA = AREA_SETBIT("地底")
+CASE 1226
+	NAME_ADJECT = 死神の
+	MAGNIF_PRICE = 270
+	SENSE = 暗/黑/幽灵/骨/混沌/可怕的/可怕的/可怕的/
+	SELL_AREA = AREA_SETBIT("冥界")
+CASE 1227
+	NAME_ADJECT = 魔女の
+	MAGNIF_PRICE = 270
+	SENSE = 黑/妖怪/魔法/混沌/可怕的/奇妙/洋风/洋风/洋风/知的/
+	SELL_AREA = AREA_SETBIT("湖森")
+CASE 1228
+	NAME_ADJECT = 红魔の
+	MAGNIF_PRICE = 230
+	SENSE = 赤/妖怪/血/魔法/混沌/洋风/洋风/洋风/
+	SELL_AREA = AREA_SETBIT("湖")
+CASE 1229
+	NAME_ADJECT = 神灵の
+	MAGNIF_PRICE = 230
+	SENSE = 神灵/神灵/神灵/
+	SELL_AREA = AREA_SETBIT("神社寺山顶月")
+CASE 1230
+	NAME_ADJECT = 风神の
+	MAGNIF_PRICE = 390
+	SENSE = 风/神灵/帅气的/和风/威严/
+	SELL_AREA = AREA_SETBIT("山顶")
+CASE 1231
+	NAME_ADJECT = 雷神の
+	MAGNIF_PRICE = 390
+	SENSE = 雷/神灵/帅气的/和风/威严/
+	SELL_AREA = AREA_SETBIT("山顶")
+CASE 1232
+	NAME_ADJECT = 魔神の
+	MAGNIF_PRICE = 390
+	SENSE = 神灵/魔法/混沌/帅气的/充满力量/威严/
+	SELL_AREA = AREA_SETBIT("寺森地底")
+CASE 1233
+	NAME_ADJECT = 仙人の
+	MAGNIF_PRICE = 270
+	SENSE = 秩序/帅气的/大陆风/知的/知的/知的/
+	SELL_AREA = AREA_SETBIT("寺山麓")
+CASE 1234
+	NAME_ADJECT = 天人の
+	MAGNIF_PRICE = 270
+	SENSE = 白/秩序/帅气的/知的/知的/知的/
+	SELL_AREA = AREA_SETBIT("山顶")
+CASE 1235
+	NAME_ADJECT = 天女の
+	MAGNIF_PRICE = 270
+	SENSE = 风/白/秩序/美的/美的/美的/
+	SELL_AREA = AREA_SETBIT("山顶")
+CASE 1236
+	NAME_ADJECT = 女神の
+	MAGNIF_PRICE = 330
+	SENSE = 白/神灵/秩序/秩序/秩序/美的/威严/威严/威严/
+	SELL_AREA = AREA_SETBIT("月")
+CASE 1237
+	NAME_ADJECT = 冥王の
+	MAGNIF_PRICE = 330
+	SENSE = 黑/神灵/帅气的/充满力量/威严/威严/威严/
+	SELL_AREA = AREA_SETBIT("冥界")
+CASE 1238
+	NAME_ADJECT = 女仆的
+	MAGNIF_PRICE = 160
+	SENSE = 黑/银/秩序/秩序/秩序/美的/洋风/洋风/洋风/别致/
+	SELL_AREA = AREA_SETBIT("湖竹")
+CASE 1239
+	NAME_ADJECT = 骑士の
+	MAGNIF_PRICE = 170
+	SENSE = 秩序/秩序/秩序/秩序/帅气的/洋风/别致/
+	SELL_AREA = AREA_SETBIT("湖")
+CASE 1240
+	NAME_ADJECT = 王女の
+	MAGNIF_PRICE = 350
+	SENSE = 粉色/可爱的/洋风/纤细/活泼/威严/威严/威严/
+	SELL_AREA = AREA_SETBIT("湖")
+CASE 1241
+	NAME_ADJECT = 女王の
+	MAGNIF_PRICE = 390
+	SENSE = 金/美的/洋风/充满力量/威严/威严/威严/威严/威严/
+	SELL_AREA = AREA_SETBIT("湖")
+CASE 1242
+	NAME_ADJECT = 王者の
+	MAGNIF_PRICE = 310
+	SENSE = 金/帅气的/充满力量/充满力量/充满力量/威严/威严/威严/威严/威严/
+	SELL_AREA = AREA_SETBIT("里")
+CASE 1243
+	NAME_ADJECT = 醉神の
+	MAGNIF_PRICE = 280
+	SENSE = 金/神灵/酒/酒/酒/奇妙/威严/
+	SELL_AREA = AREA_SETBIT("神社")
+CASE 1244
+	NAME_ADJECT = 豪饮の
+	MAGNIF_PRICE = 190
+	SENSE = 酒/酒/混沌/混沌/混沌/奇妙/狂热/
+	SELL_AREA = AREA_SETBIT("神社")
+CASE 1245
+	NAME_ADJECT = 醉人の
+	MAGNIF_PRICE = 210
+	SENSE = 酒/酒/奇妙/
+	SELL_AREA = AREA_SETBIT("冥界山麓地底")
+CASE 1246
+	NAME_ADJECT = 贤者の
+	MAGNIF_PRICE = 270
+	SENSE = 秩序/帅气的/别致/知的/知的/知的/知的/知的/威严/
+	SELL_AREA = AREA_SETBIT("湖竹月")
+CASE 1247
+	NAME_ADJECT = 巫女の
+	MAGNIF_PRICE = 250
+	SENSE = 赤/神灵/秩序/秩序/秩序/可爱的/和风/和风/和风/
+	SELL_AREA = AREA_SETBIT("神社山顶")
+CASE 1248
+	NAME_ADJECT = 式神の
+	MAGNIF_PRICE = 190
+	SENSE = 妖怪/秩序/和风/大陆风/
+	SELL_AREA = AREA_SETBIT("冥界")
+CASE 1249
+	NAME_ADJECT = 主役の
+	MAGNIF_PRICE = 170
+	SENSE = 神灵/秩序/秩序/和风/别致/
+	SELL_AREA = AREA_SETBIT("冥界")
+
+CASE 1301
+	NAME_ADJECT = 火の
+	MAGNIF_PRICE = 120
+	SENSE = 火/火/赤/朱/自然/帅气的/朴素/
+	SELL_AREA = AREA_SETBIT("竹森地底")
+CASE 1302
+	NAME_ADJECT = 水の
+	MAGNIF_PRICE = 120
+	SENSE = 水/水/青/自然/可爱的/朴素/
+	SELL_AREA = AREA_SETBIT("湖山麓月")
+CASE 1303
+	NAME_ADJECT = 土の
+	MAGNIF_PRICE = 120
+	SENSE = 土/土/黄/茶/自然/美的/朴素/
+	SELL_AREA = AREA_SETBIT("寺山顶地底")
+CASE 1304
+	NAME_ADJECT = 风の
+	MAGNIF_PRICE = 120
+	SENSE = 风/风/绿/自然/美的/朴素/
+	SELL_AREA = AREA_SETBIT("神社冥界山顶")
+CASE 1305
+	NAME_ADJECT = 冰の
+	MAGNIF_PRICE = 120
+	SENSE = 冰/冰/青/自然/美的/
+	SELL_AREA = AREA_SETBIT("湖冥界")
+CASE 1306
+	NAME_ADJECT = 炎の
+	MAGNIF_PRICE = 120
+	SENSE = 火/火/赤/朱/自然/帅气的/
+	SELL_AREA = AREA_SETBIT("竹地底")
+CASE 1307
+	NAME_ADJECT = 大地の
+	MAGNIF_PRICE = 125
+	SENSE = 土/土/绿/茶/自然/美的/
+	SELL_AREA = AREA_SETBIT("神社山麓")
+CASE 1308
+	NAME_ADJECT = 天空の
+	MAGNIF_PRICE = 125
+	SENSE = 风/风/青/自然/美的/
+	SELL_AREA = AREA_SETBIT("冥界山顶")
+CASE 1309
+	NAME_ADJECT = 光の
+	MAGNIF_PRICE = 125
+	SENSE = 光/光/白/白/白/自然/帅气的/朴素/
+	SELL_AREA = AREA_SETBIT("神社月")
+CASE 1310
+	NAME_ADJECT = 暗の
+	MAGNIF_PRICE = 125
+	SENSE = 暗/暗/黑/黑/黑/自然/帅气的/朴素/
+	SELL_AREA = AREA_SETBIT("冥界地底")
+CASE 1311
+	NAME_ADJECT = 太阳の
+	MAGNIF_PRICE = 125
+	SENSE = 日/日/白/朱/自然/帅气的/
+	SELL_AREA = AREA_SETBIT("地底月")
+CASE 1312
+	NAME_ADJECT = 星の
+	MAGNIF_PRICE = 125
+	SENSE = 星/星/黄/自然/可爱的/
+	SELL_AREA = AREA_SETBIT("森月")
+CASE 1313
+	NAME_ADJECT = 月の
+	MAGNIF_PRICE = 125
+	SENSE = 月/月/黄/银/自然/美的/
+	SELL_AREA = AREA_SETBIT("竹月")
+CASE 1314
+	NAME_ADJECT = 云の
+	MAGNIF_PRICE = 120
+	SENSE = 风/风/白/自然/可爱的/活泼/
+	SELL_AREA = AREA_SETBIT("寺山顶")
+CASE 1315
+	NAME_ADJECT = 雨の
+	MAGNIF_PRICE = 120
+	SENSE = 水/水/青/自然/可爱的/纤细/
+	SELL_AREA = AREA_SETBIT("寺竹山麓")
+CASE 1316
+	NAME_ADJECT = 霞の
+	MAGNIF_PRICE = 120
+	SENSE = 风/灰/自然/美的/纤细/纤细/纤细/
+	SELL_AREA = AREA_SETBIT("冥界山麓")
+CASE 1317
+	NAME_ADJECT = 雾の
+	MAGNIF_PRICE = 120
+	SENSE = 水/灰/自然/美的/纤细/纤细/纤细/
+	SELL_AREA = AREA_SETBIT("湖森")
+CASE 1318
+	NAME_ADJECT = 雪の
+	MAGNIF_PRICE = 120
+	SENSE = 冰/冰/白/自然/可爱的/纤细/
+	SELL_AREA = AREA_SETBIT("神社湖地底")
+CASE 1319
+	NAME_ADJECT = 雷の
+	MAGNIF_PRICE = 120
+	SENSE = 雷/雷/黄/自然/帅气的/夸张/
+	SELL_AREA = AREA_SETBIT("寺山顶")
+CASE 1320
+	NAME_ADJECT = 岚の
+	MAGNIF_PRICE = 125
+	SENSE = 风/雷/自然/帅气的/充满力量/
+	SELL_AREA = AREA_SETBIT("寺森")
+CASE 1321
+	NAME_ADJECT = 虹の
+	MAGNIF_PRICE = 125
+	SENSE = 光/虹/虹/虹/虹/虹/自然/可爱的/夸张/
+	SELL_AREA = AREA_SETBIT("寺森山顶")
+CASE 1322
+	NAME_ADJECT = 森の
+	MAGNIF_PRICE = 120
+	SENSE = 土/绿/绿/自然/植物/植物/可爱的/别致/
+	SELL_AREA = AREA_SETBIT("森山麓")
+CASE 1323
+	NAME_ADJECT = 花の
+	MAGNIF_PRICE = 120
+	SENSE = 土/粉色/赤/黄/自然/植物/植物/可爱的/别致/
+	SELL_AREA = AREA_SETBIT("里竹冥界")
+CASE 1324
+	NAME_ADJECT = 华の
+	MAGNIF_PRICE = 125
+	SENSE = 土/赤/自然/植物/植物/美的/夸张/
+	SELL_AREA = AREA_SETBIT("寺山麓")
+CASE 1325
+	NAME_ADJECT = 海の
+	MAGNIF_PRICE = 120
+	SENSE = 水/水/青/自然/可爱的/
+	SELL_AREA = AREA_SETBIT("月")
+CASE 1326
+	NAME_ADJECT = 山の
+	MAGNIF_PRICE = 120
+	SENSE = 土/土/绿/自然/美的/
+	SELL_AREA = AREA_SETBIT("山麓山顶")
+CASE 1327
+	NAME_ADJECT = 冻结の
+	MAGNIF_PRICE = 120
+	SENSE = 冰/冰/青/自然/美的/奇妙/纤细/不思议/
+	SELL_AREA = AREA_SETBIT("湖冥界月")
+CASE 1328
+	NAME_ADJECT = 燃烧の
+	MAGNIF_PRICE = 120
+	SENSE = 火/火/赤/朱/自然/帅气的/奇妙/充满力量/不思议/
+	SELL_AREA = AREA_SETBIT("竹地底")
+CASE 1329
+	NAME_ADJECT = 深海の
+	MAGNIF_PRICE = 125
+	SENSE = 水/水/青/黑/自然/可怕的/别致/
+	SELL_AREA = AREA_SETBIT("月")
+CASE 1330
+	NAME_ADJECT = 业火の
+	MAGNIF_PRICE = 125
+	SENSE = 火/火/赤/黑/自然/帅气的/充满力量/
+	SELL_AREA = AREA_SETBIT("地底")
+CASE 1331
+	NAME_ADJECT = 核热の
+	MAGNIF_PRICE = 125
+	SENSE = 火/火/赤/朱/自然/帅气的/充满力量/
+	SELL_AREA = AREA_SETBIT("地底")
+CASE 1332
+	NAME_ADJECT = 疾风の
+	MAGNIF_PRICE = 125
+	SENSE = 风/风/白/绿/自然/帅气的/
+	SELL_AREA = AREA_SETBIT("山顶")
+CASE 1333
+	NAME_ADJECT = 神风の
+	MAGNIF_PRICE = 125
+	SENSE = 风/风/自然/帅气的/
+	SELL_AREA = AREA_SETBIT("山顶")
+CASE 1334
+	NAME_ADJECT = 萤火の
+	MAGNIF_PRICE = 125
+	SENSE = 光/黄/自然/虫/美的/纤细/纤细/纤细/
+	SELL_AREA = AREA_SETBIT("竹森")
+CASE 1335
+	NAME_ADJECT = 新绿の
+	MAGNIF_PRICE = 125
+	SENSE = 土/绿/绿/自然/植物/植物/可爱的/纤细/
+	SELL_AREA = AREA_SETBIT("神社竹山麓山顶")
+CASE 1336
+	NAME_ADJECT = 冰结の
+	MAGNIF_PRICE = 125
+	SENSE = 冰/冰/青/自然/帅气的/
+	SELL_AREA = AREA_SETBIT("湖")
+CASE 1337
+	NAME_ADJECT = 冰河の
+	MAGNIF_PRICE = 125
+	SENSE = 冰/冰/青/自然/美的/
+	SELL_AREA = AREA_SETBIT("湖")
+CASE 1338
+	NAME_ADJECT = 闪电の
+	MAGNIF_PRICE = 125
+	SENSE = 雷/雷/黄/自然/帅气的/充满力量/
+	SELL_AREA = AREA_SETBIT("山顶")
+CASE 1339
+	NAME_ADJECT = 晴天の
+	MAGNIF_PRICE = 125
+	SENSE = 日/风/青/自然/可爱的/
+	SELL_AREA = AREA_SETBIT("神社")
+CASE 1340
+	NAME_ADJECT = 暁の
+	MAGNIF_PRICE = 135
+	SENSE = 日/日/朱/朱/自然/美的/别致/
+	SELL_AREA = AREA_SETBIT("寺")
+CASE 1341
+	NAME_ADJECT = 日轮の
+	MAGNIF_PRICE = 135
+	SENSE = 日/日/白/自然/帅气的/
+	SELL_AREA = AREA_SETBIT("寺")
+CASE 1342
+	NAME_ADJECT = 幻日の
+	MAGNIF_PRICE = 135
+	SENSE = 日/白/自然/美的/纤细/纤细/纤细/
+	SELL_AREA = AREA_SETBIT("竹")
+CASE 1343
+	NAME_ADJECT = 极光の
+	MAGNIF_PRICE = 145
+	SENSE = 日/星/自然/美的/充满力量/充满力量/充满力量/
+	SELL_AREA = AREA_SETBIT("山顶")
+CASE 1344
+	NAME_ADJECT = 阳光の
+	MAGNIF_PRICE = 145
+	SENSE = 日/日/光/白/自然/美的/
+	SELL_AREA = AREA_SETBIT("竹")
+CASE 1345
+	NAME_ADJECT = 黄昏の
+	MAGNIF_PRICE = 145
+	SENSE = 日/暗/朱/自然/美的/纤细/
+	SELL_AREA = AREA_SETBIT("冥界")
+CASE 1346
+	NAME_ADJECT = 宵暗の
+	MAGNIF_PRICE = 145
+	SENSE = 暗/暗/黑/自然/可怕的/
+	SELL_AREA = AREA_SETBIT("寺森")
+CASE 1347
+	NAME_ADJECT = 夜の
+	MAGNIF_PRICE = 125
+	SENSE = 暗/黑/黑/黑/自然/可怕的/
+	SELL_AREA = AREA_SETBIT("湖竹月")
+CASE 1348
+	NAME_ADJECT = 夜帐の
+	MAGNIF_PRICE = 135
+	SENSE = 暗/黑/黑/黑/自然/美的/
+	SELL_AREA = AREA_SETBIT("竹冥界")
+CASE 1349
+	NAME_ADJECT = 永夜の
+	MAGNIF_PRICE = 165
+	SENSE = 暗/暗/黑/自然/美的/别致/
+	SELL_AREA = AREA_SETBIT("竹")
+CASE 1350
+	NAME_ADJECT = 星空の
+	MAGNIF_PRICE = 135
+	SENSE = 星/星/黄/黑/自然/美的/
+	SELL_AREA = AREA_SETBIT("森月")
+CASE 1351
+	NAME_ADJECT = 星光の
+	MAGNIF_PRICE = 125
+	SENSE = 星/星/光/黄/白/自然/可爱的/
+	SELL_AREA = AREA_SETBIT("神社月")
+CASE 1352
+	NAME_ADJECT = 七星の
+	MAGNIF_PRICE = 165
+	SENSE = 星/星/黄/白/自然/美的/夸张/
+	SELL_AREA = AREA_SETBIT("寺冥界")
+CASE 1353
+	NAME_ADJECT = 彗星の
+	MAGNIF_PRICE = 135
+	SENSE = 星/星/赤/青/绿/自然/帅气的/充满力量/
+	SELL_AREA = AREA_SETBIT("森")
+CASE 1354
+	NAME_ADJECT = 星座の
+	MAGNIF_PRICE = 125
+	SENSE = 星/星/黄/黑/自然/美的/
+	SELL_AREA = AREA_SETBIT("山麓月")
+CASE 1355
+	NAME_ADJECT = 星屑の
+	MAGNIF_PRICE = 125
+	SENSE = 星/星/黄/银/自然/可爱的/
+	SELL_AREA = AREA_SETBIT("森月")
+CASE 1356
+	NAME_ADJECT = 客星の
+	MAGNIF_PRICE = 135
+	SENSE = 星/光/白/自然/帅气的/夸张/充满力量/
+	SELL_AREA = AREA_SETBIT("山顶")
+CASE 1357
+	NAME_ADJECT = 星降の
+	MAGNIF_PRICE = 155
+	SENSE = 星/星/黄/自然/可爱的/
+	SELL_AREA = AREA_SETBIT("森")
+CASE 1358
+	NAME_ADJECT = 三日月の
+	MAGNIF_PRICE = 125
+	SENSE = 月/月/黄/自然/可爱的/
+	SELL_AREA = AREA_SETBIT("神社冥界")
+CASE 1359
+	NAME_ADJECT = 满月の
+	MAGNIF_PRICE = 135
+	SENSE = 月/月/黄/自然/美的/充满力量/
+	SELL_AREA = AREA_SETBIT("湖竹月")
+CASE 1360
+	NAME_ADJECT = 月轮の
+	MAGNIF_PRICE = 125
+	SENSE = 月/月/黄/银/自然/帅气的/
+	SELL_AREA = AREA_SETBIT("竹月")
+CASE 1361
+	NAME_ADJECT = 月光の
+	MAGNIF_PRICE = 125
+	SENSE = 月/月/光/黄/银/自然/美的/
+	SELL_AREA = AREA_SETBIT("湖竹月")
+CASE 1362
+	NAME_ADJECT = 月影の
+	MAGNIF_PRICE = 125
+	SENSE = 月/月/暗/黄/黑/自然/帅气的/纤细/
+	SELL_AREA = AREA_SETBIT("竹月")
+CASE 1363
+	NAME_ADJECT = 四季の
+	MAGNIF_PRICE = 145
+	SENSE = 风/土/虹/自然/自然/自然/可爱的/
+	SELL_AREA = AREA_SETBIT("里冥界山麓")
+CASE 1364
+	NAME_ADJECT = 春の
+	MAGNIF_PRICE = 125
+	SENSE = 风/粉色/自然/自然/可爱的/
+	SELL_AREA = AREA_SETBIT("神社冥界")
+CASE 1365
+	NAME_ADJECT = 夏の
+	MAGNIF_PRICE = 125
+	SENSE = 火/绿/自然/自然/可爱的/
+	SELL_AREA = AREA_SETBIT("寺竹")
+CASE 1366
+	NAME_ADJECT = 秋の
+	MAGNIF_PRICE = 125
+	SENSE = 风/朱/自然/自然/可爱的/
+	SELL_AREA = AREA_SETBIT("山麓山顶")
+CASE 1367
+	NAME_ADJECT = 冬の
+	MAGNIF_PRICE = 125
+	SENSE = 冰/青/白/自然/自然/可爱的/
+	SELL_AREA = AREA_SETBIT("森地底")
+CASE 1368
+	NAME_ADJECT = 沉眠の
+	MAGNIF_PRICE = 155
+	SENSE = 土/土/茶/自然/混沌/可怕的/奇妙/
+	SELL_AREA = AREA_SETBIT("冥界")
+CASE 1369
+	NAME_ADJECT = 星砂の
+	MAGNIF_PRICE = 120
+	SENSE = 星/土/黄/自然/可爱的/纤细/
+	SELL_AREA = AREA_SETBIT("湖森山麓月")
+CASE 1370
+	NAME_ADJECT = 白雪の
+	MAGNIF_PRICE = 125
+	SENSE = 冰/冰/白/自然/美的/纤细/
+	SELL_AREA = AREA_SETBIT("里湖森山麓地底")
+CASE 1371
+	NAME_ADJECT = 紫电の
+	MAGNIF_PRICE = 125
+	SENSE = 雷/雷/紫/自然/帅气的/充满力量/
+	SELL_AREA = AREA_SETBIT("里山麓山顶地底")
+CASE 1372
+	NAME_ADJECT = 大树の
+	MAGNIF_PRICE = 125
+	SENSE = 土/绿/茶/自然/植物/植物/美的/别致/
+	SELL_AREA = AREA_SETBIT("神社里森冥界山麓山顶")
+CASE 1373
+	NAME_ADJECT = 沙漠の
+	MAGNIF_PRICE = 120
+	SENSE = 风/黄/自然/帅气的/大陆风/大陆风/大陆风/别致/
+	SELL_AREA = AREA_SETBIT("寺湖森月")
+CASE 1374
+	NAME_ADJECT = 闪光の
+	MAGNIF_PRICE = 125
+	SENSE = 光/光/白/自然/帅气的/夸张/
+	SELL_AREA = AREA_SETBIT("神社寺森山麓山顶")
+CASE 1375
+	NAME_ADJECT = 赏月の
+	MAGNIF_PRICE = 125
+	SENSE = 月/月/黄/自然/美的/和风/
+	SELL_AREA = AREA_SETBIT("神社寺里湖竹冥界")
+CASE 1376
+	NAME_ADJECT = 真夜中の
+	MAGNIF_PRICE = 130
+	SENSE = 暗/暗/黑/自然/可怕的/
+	SELL_AREA = AREA_SETBIT("寺里湖竹森冥界月")
+CASE 1377
+	NAME_ADJECT = 夜空の
+	MAGNIF_PRICE = 135
+	SENSE = 暗/星/黑/自然/美的/
+	SELL_AREA = AREA_SETBIT("湖竹森月")
+CASE 1378
+	NAME_ADJECT = 夕霞の
+	MAGNIF_PRICE = 125
+	SENSE = 火/赤/朱/自然/美的/怀旧/夸张/
+	SELL_AREA = AREA_SETBIT("神社寺里山麓山顶")
+CASE 1379
+	NAME_ADJECT = 春风の
+	MAGNIF_PRICE = 135
+	SENSE = 风/粉色/自然/可爱的/活泼/
+	SELL_AREA = AREA_SETBIT("神社冥界")
+CASE 1380
+	NAME_ADJECT = 秋风の
+	MAGNIF_PRICE = 135
+	SENSE = 风/朱/自然/美的/怀旧/
+	SELL_AREA = AREA_SETBIT("山麓山顶")
+CASE 1381
+	NAME_ADJECT = 麻痺的
+	MAGNIF_PRICE = 120
+	SENSE = 雷/雷/黄/自然/帅气的/时尚/奇妙/不思议/
+	SELL_AREA = AREA_SETBIT("森山麓山顶地底")
+CASE 1381
+	NAME_ADJECT = 麻痺的
+	MAGNIF_PRICE = 120
+	SENSE = 雷/雷/黄/自然/帅气的/时尚/奇妙/不思议/
+	SELL_AREA = AREA_SETBIT("森山麓山顶地底")
+CASE 1382
+	NAME_ADJECT = 烟の
+	MAGNIF_PRICE = 120
+	SENSE = 火/灰/自然/帅气的/和风/纤细/
+	SELL_AREA = AREA_SETBIT("竹森山顶地底")
+CASE 1383
+	NAME_ADJECT = 月虹の
+	MAGNIF_PRICE = 135
+	SENSE = 月/光/虹/自然/美的/夸张/
+	SELL_AREA = AREA_SETBIT("湖竹山顶月")
+CASE 1384
+	NAME_ADJECT = 夜明けの
+	MAGNIF_PRICE = 125
+	SENSE = 日/日/紫/自然/美的/纤细/
+	SELL_AREA = AREA_SETBIT("里山麓山顶")
+
+
+
+CASE 1401
+	NAME_ADJECT = 东方の
+	MAGNIF_PRICE = 120
+	SENSE = 美的/和风/和风/和风/和风/和风/
+	SELL_AREA = AREA_SETBIT("神社里")
+CASE 1402
+	NAME_ADJECT = 乐园の
+	MAGNIF_PRICE = 210
+	SENSE = 巫术/秩序/秩序/秩序/可爱的/
+	SELL_AREA = AREA_SETBIT("神社月")
+CASE 1403
+	NAME_ADJECT = 故乡の
+	MAGNIF_PRICE = 100
+	SENSE = 美的/和风/和风/怀旧/怀旧/别致/
+	SELL_AREA = AREA_SETBIT("里")
+CASE 1404
+	NAME_ADJECT = 圣域の
+	MAGNIF_PRICE = 320
+	SENSE = 秩序/秩序/秩序/秩序/秩序/帅气的/
+	SELL_AREA = AREA_SETBIT("神社寺山麓月")
+CASE 1405
+	NAME_ADJECT = 世界の
+	MAGNIF_PRICE = 400
+	SENSE = 帅气的/壮大/壮大/壮大/壮大/壮大/
+	SELL_AREA = AREA_SETBIT("山顶")
+CASE 1406
+	NAME_ADJECT = 地上の
+	MAGNIF_PRICE = 150
+	SENSE = 土/帅气的/怀旧/别致/别致/别致/
+	SELL_AREA = AREA_SETBIT("里竹林山麓")
+CASE 1407
+	NAME_ADJECT = 冥界の
+	MAGNIF_PRICE = 350
+	SENSE = 死生/混沌/可怕的/可怕的/可怕的/
+	SELL_AREA = AREA_SETBIT("冥界")
+CASE 1408
+	NAME_ADJECT = 灵界の
+	MAGNIF_PRICE = 200
+	SENSE = 死生/幽灵/混沌/可怕的/可怕的/
+	SELL_AREA = AREA_SETBIT("冥界")
+CASE 1409
+	NAME_ADJECT = 冥府の
+	MAGNIF_PRICE = 220
+	SENSE = 死生/幽灵/混沌/可怕的/可怕的/可怕的/
+	SELL_AREA = AREA_SETBIT("冥界地底")
+CASE 1410
+	NAME_ADJECT = 彼岸の
+	MAGNIF_PRICE = 260
+	SENSE = 赤/死生/秩序/美的/和风/别致/
+	SELL_AREA = AREA_SETBIT("冥界")
+CASE 1411
+	NAME_ADJECT = 幽明の
+	MAGNIF_PRICE = 240
+	SENSE = 死生/美的/和风/和风/别致/
+	SELL_AREA = AREA_SETBIT("冥界")
+CASE 1412
+	NAME_ADJECT = 天界の
+	MAGNIF_PRICE = 300
+	SENSE = 日/秩序/秩序/秩序/帅气的/威严/
+	SELL_AREA = AREA_SETBIT("山顶月")
+CASE 1413
+	NAME_ADJECT = 绯想の
+	MAGNIF_PRICE = 580
+	SENSE = 秩序/美的/壮大/壮大/壮大/
+	SELL_AREA = AREA_SETBIT("山顶")
+CASE 1414
+	NAME_ADJECT = 非想非非想の
+	MAGNIF_PRICE = 640
+	SENSE = 秩序/美的/壮大/壮大/壮大/壮大/壮大/
+	SELL_AREA = AREA_SETBIT("山顶")
+CASE 1415
+	NAME_ADJECT = 星界の
+	MAGNIF_PRICE = 220
+	SENSE = 星/帅气的/洋风/洋风/洋风/
+	SELL_AREA = AREA_SETBIT("森")
+CASE 1416
+	NAME_ADJECT = 蓬莱の
+	MAGNIF_PRICE = 820
+	SENSE = 月/秩序/美的/美的/美的/大陆风/大陆风/大陆风/威严/威严/威严/
+	SELL_AREA = AREA_SETBIT("竹林月")
+CASE 1417
+	NAME_ADJECT = 地狱の
+	MAGNIF_PRICE = 330
+	SENSE = 火/骨/混沌/混沌/混沌/混沌/可怕的/可怕的/可怕的/夸张/
+	SELL_AREA = AREA_SETBIT("冥界地底月")
+CASE 1418
+	NAME_ADJECT = 废狱の
+	MAGNIF_PRICE = 280
+	SENSE = 火/骨/骨/骨/混沌/可怕的/
+	SELL_AREA = AREA_SETBIT("地底")
+CASE 1419
+	NAME_ADJECT = 地底の
+	MAGNIF_PRICE = 240
+	SENSE = 土/土/骨/混沌/可怕的/别致/别致/别致/
+	SELL_AREA = AREA_SETBIT("地底")
+CASE 1420
+	NAME_ADJECT = 深渊の
+	MAGNIF_PRICE = 380
+	SENSE = 暗/暗/混沌/混沌/混沌/可怕的/可怕的/壮大/
+	SELL_AREA = AREA_SETBIT("冥界地底月")
+CASE 1421
+	NAME_ADJECT = 魔界の
+	MAGNIF_PRICE = 400
+	SENSE = 魔法/魔法/混沌/混沌/混沌/可怕的/洋风/洋风/洋风/夸张/
+	SELL_AREA = AREA_SETBIT("竹林森")
+CASE 1422
+	NAME_ADJECT = 法界の
+	MAGNIF_PRICE = 330
+	SENSE = 魔法/魔法/秩序/美的/大陆风/大陆风/大陆风/
+	SELL_AREA = AREA_SETBIT("寺")
+CASE 1423
+	NAME_ADJECT = 后户の
+	MAGNIF_PRICE = 360
+	SENSE = 混沌/混沌/混沌/可怕的/和风/不思议/
+	SELL_AREA = AREA_SETBIT("神社")
+CASE 1424
+	NAME_ADJECT = 异界の
+	MAGNIF_PRICE = 220
+	SENSE = 混沌/混沌/混沌/可怕的/奇妙/夸张/不思议/
+	SELL_AREA = AREA_SETBIT("神社冥界月")
+CASE 1425
+	NAME_ADJECT = 外界の
+	MAGNIF_PRICE = 180
+	SENSE = 帅气的/活泼/狂热/狂热/狂热/
+	SELL_AREA = AREA_SETBIT("神社")
+CASE 1426
+	NAME_ADJECT = 镜之国の
+	MAGNIF_PRICE = 240
+	SENSE = 混沌/混沌/混沌/可爱的/可爱的/奇妙/奇妙/洋风/洋风/洋风/不思议/不思议/不思议/洛丽塔/洛丽塔/洛丽塔/
+	SELL_AREA = AREA_SETBIT("森山麓")
+CASE 1427
+	NAME_ADJECT = 畜生界の
+	MAGNIF_PRICE = 310
+	SENSE = 动物/幽灵/混沌/混沌/混沌/可怕的/活泼/充满力量/
+	SELL_AREA = AREA_SETBIT("冥界")
+CASE 1428
+	NAME_ADJECT = 黄泉の
+	MAGNIF_PRICE = 350
+	SENSE = 死生/混沌/可怕的/和风/和风/纤细/
+	SELL_AREA = AREA_SETBIT("冥界")
+
+CASE 1501
+	NAME_ADJECT = 博灵の
+	MAGNIF_PRICE = 230
+	SENSE = 巫术/巫术/赤/秩序/秩序/秩序/可爱的/和风/和风/和风/不思议/
+	SELL_AREA = AREA_SETBIT("神社")
+CASE 1502
+	NAME_ADJECT = 守矢の
+	MAGNIF_PRICE = 250
+	SENSE = 巫术/巫术/绿/秩序/秩序/秩序/可爱的/和风/和风/和风/威严/
+	SELL_AREA = AREA_SETBIT("山顶")
+CASE 1503
+	NAME_ADJECT = 魔法の
+	MAGNIF_PRICE = 250
+	SENSE = 魔法/魔法/魔法/可爱的/洋风/洋风/洋风/
+	SELL_AREA = AREA_SETBIT("湖森")
+CASE 1504
+	NAME_ADJECT = 阴阳の
+	MAGNIF_PRICE = 230
+	SENSE = 巫术/巫术/帅气的/大陆风/大陆风/大陆风/
+	SELL_AREA = AREA_SETBIT("神社寺冥界")
+CASE 1505
+	NAME_ADJECT = 魔力の
+	MAGNIF_PRICE = 210
+	SENSE = 魔法/魔法/帅气的/朴素/
+	SELL_AREA = AREA_SETBIT("湖森")
+CASE 1506
+	NAME_ADJECT = 灵力の
+	MAGNIF_PRICE = 210
+	SENSE = 巫术/巫术/帅气的/朴素/
+	SELL_AREA = AREA_SETBIT("湖森以外")
+CASE 1507
+	NAME_ADJECT = 妖力の
+	MAGNIF_PRICE = 250
+	SENSE = 妖怪/妖术/妖术/妖术/混沌/可怕的/朴素/
+	SELL_AREA = AREA_SETBIT("神社里湖竹林月以外")
+CASE 1508
+	NAME_ADJECT = 灵气の
+	MAGNIF_PRICE = 210
+	SENSE = 巫术/巫术/帅气的/朴素/
+	SELL_AREA = AREA_SETBIT("竹林山麓山顶地底以外")
+CASE 1509
+	NAME_ADJECT = 幽灵の
+	MAGNIF_PRICE = 230
+	SENSE = 幽灵/幽灵/幽灵/妖术/可怕的/朴素/
+	SELL_AREA = AREA_SETBIT("寺冥界地底")
+CASE 1510
+	NAME_ADJECT = 鬼力の
+	MAGNIF_PRICE = 450
+	SENSE = 妖怪/妖术/可怕的/充满力量/充满力量/充满力量/充满力量/
+	SELL_AREA = AREA_SETBIT("神社山麓地底")
+CASE 1511
+	NAME_ADJECT = 七曜の
+	MAGNIF_PRICE = 390
+	SENSE = 星/虹/虹/魔法/魔法/美的/
+	SELL_AREA = AREA_SETBIT("湖")
+CASE 1512
+	NAME_ADJECT = 魔彩光の
+	MAGNIF_PRICE = 300
+	SENSE = 虹/魔法/魔法/美的/洋风/洋风/洋风/
+	SELL_AREA = AREA_SETBIT("森")
+CASE 1513
+	NAME_ADJECT = 符文の
+	MAGNIF_PRICE = 340
+	SENSE = 魔法/魔法/帅气的/洋风/洋风/洋风/知的/
+	SELL_AREA = AREA_SETBIT("湖森")
+CASE 1514
+	NAME_ADJECT = 风水の
+	MAGNIF_PRICE = 230
+	SENSE = 自然/巫术/可爱的/和风/大陆风/不思议/
+	SELL_AREA = AREA_SETBIT("寺")
+CASE 1515
+	NAME_ADJECT = 呪术の
+	MAGNIF_PRICE = 210
+	SENSE = 妖术/妖术/妖术/混沌/可怕的/
+	SELL_AREA = AREA_SETBIT("寺冥界")
+CASE 1516
+	NAME_ADJECT = 光辉の
+	MAGNIF_PRICE = 240
+	SENSE = 光/光/白/魔法/美的/
+	SELL_AREA = AREA_SETBIT("山顶月")
+CASE 1517
+	NAME_ADJECT = 神秘の
+	MAGNIF_PRICE = 215
+	SENSE = 魔法/美的/别致/不思议/不思议/不思议/
+	SELL_AREA = AREA_SETBIT("神社里月")
+CASE 1518
+	NAME_ADJECT = 神圣の
+	MAGNIF_PRICE = 330
+	SENSE = 光/魔法/秩序/秩序/秩序/秩序/秩序/美的/纤细/不思议/
+	SELL_AREA = AREA_SETBIT("神社月")
+CASE 1519
+	NAME_ADJECT = 被祝福の
+	MAGNIF_PRICE = 355
+	SENSE = 巫术/巫术/秩序/秩序/秩序/美的/夸张/
+	SELL_AREA = AREA_SETBIT("神社山顶")
+CASE 1520
+	NAME_ADJECT = 丰穣の
+	MAGNIF_PRICE = 295
+	SENSE = 土/土/绿/植物/巫术/秩序/可爱的/夸张/
+	SELL_AREA = AREA_SETBIT("山麓山顶")
+CASE 1521
+	NAME_ADJECT = 封魔の
+	MAGNIF_PRICE = 270
+	SENSE = 巫术/巫术/秩序/秩序/秩序/帅气的/
+	SELL_AREA = AREA_SETBIT("神社寺")
+CASE 1522
+	NAME_ADJECT = 封呪の
+	MAGNIF_PRICE = 270
+	SENSE = 巫术/巫术/秩序/秩序/秩序/帅气的/
+	SELL_AREA = AREA_SETBIT("神社寺月")
+CASE 1523
+	NAME_ADJECT = 幸运の
+	MAGNIF_PRICE = 300
+	SENSE = 黄/金/魔法/秩序/秩序/秩序/可爱的/
+	SELL_AREA = AREA_SETBIT("神社竹林")
+CASE 1524
+	NAME_ADJECT = 退魔の
+	MAGNIF_PRICE = 270
+	SENSE =  巫术/巫术/秩序/秩序/秩序/帅气的/
+	SELL_AREA = AREA_SETBIT("神社")
+CASE 1525
+	NAME_ADJECT = 守护の
+	MAGNIF_PRICE = 290
+	SENSE = 魔法/魔法/秩序/秩序/秩序/帅气的/
+	SELL_AREA = AREA_SETBIT("神社寺森月")
+CASE 1526
+	NAME_ADJECT = 不灭の
+	MAGNIF_PRICE = 980
+	SENSE = 秩序/秩序/秩序/帅气的/帅气的/帅气的/壮大/壮大/壮大/壮大/壮大/
+	SELL_AREA = AREA_SETBIT("竹林月")
+CASE 1527
+	NAME_ADJECT = 完全の
+	MAGNIF_PRICE = 1280
+	SENSE = 秩序/秩序/秩序/秩序/秩序/美的/美的/美的/美的/美的/壮大/壮大/壮大/壮大/壮大/
+	SELL_AREA = AREA_SETBIT("冥界")
+CASE 1528
+	NAME_ADJECT = 无秽の
+	MAGNIF_PRICE = 640
+	SENSE = 巫术/秩序/秩序/秩序/秩序/秩序/美的/美的/美的/美的/美的/别致/威严/威严/威严/威严/威严/
+	SELL_AREA = AREA_SETBIT("月")
+CASE 1529
+	NAME_ADJECT = 纯粹の
+	MAGNIF_PRICE = 770
+	SENSE = 秩序/秩序/秩序/秩序/秩序/美的/美的/美的/美的/美的/朴素/朴素/朴素/朴素/朴素/朴素/朴素/朴素/朴素/朴素/
+	SELL_AREA = AREA_SETBIT("月")
+CASE 1530
+	NAME_ADJECT = 灵天の
+	MAGNIF_PRICE = 240
+	SENSE = 魔法/魔法/美的/不思议/不思议/不思议/
+	SELL_AREA = AREA_SETBIT("竹森山麓山顶")
+CASE 1531
+	NAME_ADJECT = 反射の
+	MAGNIF_PRICE = 250
+	SENSE = 魔法/魔法/帅气的/奇妙/奇妙/奇妙/不思议/
+	SELL_AREA = AREA_SETBIT("湖森山麓地底月")
+CASE 1532
+	NAME_ADJECT = 神速の
+	MAGNIF_PRICE = 240
+	SENSE = 风/魔法/帅气的/朴素/充满力量/
+	SELL_AREA = AREA_SETBIT("森山顶")
+CASE 1533
+	NAME_ADJECT = 感谢的
+	MAGNIF_PRICE = 180
+	SENSE = 巫术/巫术/秩序/可爱的/别致/狂热/
+	SELL_AREA = AREA_SETBIT("神社寺山顶")
+
+CASE 1601
+	NAME_ADJECT = 邪恶の
+	MAGNIF_PRICE = 333
+	SENSE = 黑/妖术/混沌/混沌/混沌/可怕的/可怕的/可怕的/可怕的/可怕的/
+	SELL_AREA = AREA_SETBIT("寺森")
+CASE 1602
+	NAME_ADJECT = 不吉の
+	MAGNIF_PRICE = 444
+	SENSE = 赤/妖术/混沌/混沌/混沌/可怕的/可怕的/可怕的/
+	SELL_AREA = AREA_SETBIT("神社里山麓")
+CASE 1603
+	NAME_ADJECT = 厄の
+	MAGNIF_PRICE = 444
+	SENSE = 黑/妖术/妖术/混沌/混沌/混沌/可怕的/
+	SELL_AREA = AREA_SETBIT("山麓山顶")
+CASE 1604
+	NAME_ADJECT = 危险の
+	MAGNIF_PRICE = 222
+	SENSE = 赤/毒/毒/毒/妖术/混沌/混沌/混沌/可怕的/可怕的/可怕的/
+	SELL_AREA = AREA_SETBIT("山顶地底")
+CASE 1605
+	NAME_ADJECT = 血の
+	MAGNIF_PRICE = 222
+	SENSE = 赤/赤/赤/血/血/血/血/血/妖术/混沌/混沌/混沌/可怕的/可怕的/可怕的/
+	SELL_AREA = AREA_SETBIT("湖山麓地底")
+CASE 1606
+	NAME_ADJECT = 毒の
+	MAGNIF_PRICE = 222
+	SENSE = 紫/毒/毒/毒/毒/毒/妖术/混沌/可怕的/可怕的/可怕的/
+	SELL_AREA = AREA_SETBIT("竹林森冥界地底")
+CASE 1607
+	NAME_ADJECT = 被诅咒の
+	MAGNIF_PRICE = 444
+	SENSE = 黑/妖术/妖术/混沌/混沌/混沌/可怕的/可怕的/可怕的/
+	SELL_AREA = AREA_SETBIT("里冥界山麓")
+CASE 1608
+	NAME_ADJECT = 诅咒の
+	MAGNIF_PRICE = 333
+	SENSE = 紫/妖术/妖术/混沌/混沌/混沌/可怕的/可怕的/可怕的/
+	SELL_AREA = AREA_SETBIT("森山麓")
+CASE 1609
+	NAME_ADJECT = 杀意の
+	MAGNIF_PRICE = 222
+	SENSE = 赤/精神/妖术/混沌/可怕的/可怕的/可怕的/可怕的/可怕的/可怕的/可怕的/可怕的/可怕的/可怕的/充满力量/充满力量/充满力量/充满力量/充满力量/威严/
+	SELL_AREA = AREA_SETBIT("竹林月")
+CASE 1610
+	NAME_ADJECT = 带来死亡の
+	MAGNIF_PRICE = 444
+	SENSE = 死生/死生/妖术/混沌/混沌/混沌/可怕的/纤细/纤细/纤细/
+	SELL_AREA = AREA_SETBIT("神社冥界")
+CASE 1611
+	NAME_ADJECT = 渴血の
+	MAGNIF_PRICE = 333
+	SENSE = 血/血/血/妖术/混沌/可怕的/可怕的/可怕的/可怕的/可怕的/可怕的/可怕的/可怕的/可怕的/可怕的/充满力量/充满力量/充满力量/
+	SELL_AREA = AREA_SETBIT("神社竹林")
+CASE 1612
+	NAME_ADJECT = 禁断の
+	MAGNIF_PRICE = 666
+	SENSE = 赤/妖术/妖术/妖术/混沌/混沌/混沌/混沌/混沌/混沌/混沌/混沌/混沌/混沌/可怕的/可怕的/可怕的/充满力量/充满力量/充满力量/
+	SELL_AREA = AREA_SETBIT("湖月地底")
+CASE 1613
+	NAME_ADJECT = 禁忌の
+	MAGNIF_PRICE = 555
+	SENSE = 妖术/妖术/妖术/混沌/混沌/混沌/混沌/混沌/混沌/混沌/混沌/混沌/混沌/可怕的/可怕的/可怕的/纤细/纤细/纤细/
+	SELL_AREA = AREA_SETBIT("湖山顶月")
+CASE 1614
+	NAME_ADJECT = 被封印の
+	MAGNIF_PRICE = 555
+	SENSE = 妖术/妖术/混沌/混沌/混沌/混沌/混沌/可怕的/可怕的/可怕的/威严/威严/威严/
+	SELL_AREA = AREA_SETBIT("寺地底")
+CASE 1615
+	NAME_ADJECT = 怨みの
+	MAGNIF_PRICE = 333
+	SENSE = 黑/精神/妖术/妖术/混沌/混沌/可怕的/可怕的/可怕的/
+	SELL_AREA = AREA_SETBIT("森冥界地底")
+
+CASE 1701
+	NAME_ADJECT = 机械装置の
+	MAGNIF_PRICE = 220
+	SENSE = 技术/银/帅气的/奇妙/奇妙/奇妙/
+	SELL_AREA = AREA_SETBIT("山麓")
+CASE 1702
+	NAME_ADJECT = 最先进の
+	MAGNIF_PRICE = 240
+	SENSE = 技术/银/帅气的/时尚/时尚/时尚/
+	SELL_AREA = AREA_SETBIT("里山麓")
+CASE 1703
+	NAME_ADJECT = 机关の
+	MAGNIF_PRICE = 125
+	SENSE = 技术/茶/可爱的/奇妙/怀旧/怀旧/怀旧/和风/纤细/
+	SELL_AREA = AREA_SETBIT("寺里")
+CASE 1704
+	NAME_ADJECT = 传来の
+	MAGNIF_PRICE = 100
+	SENSE = 赤/技术/美的/大陆风/大陆风/大陆风/
+	SELL_AREA = AREA_SETBIT("寺里")
+CASE 1705
+	NAME_ADJECT = 变形型
+	MAGNIF_PRICE = 130
+	SENSE = 技术/帅气的/奇妙/奇妙/奇妙/
+	SELL_AREA = AREA_SETBIT("山麓")
+CASE 1706
+	NAME_ADJECT = 光学技术の
+	MAGNIF_PRICE = 360
+	SENSE = 技术/帅气的/未来/未来/未来/知的/
+	SELL_AREA = AREA_SETBIT("山麓")
+CASE 1707
+	NAME_ADJECT = 造形术の
+	MAGNIF_PRICE = 280
+	SENSE = 技术/美的/美的/美的/艺术的/艺术的/艺术的/艺术的/艺术的/
+	SELL_AREA = AREA_SETBIT("冥界")
+CASE 1708
+	NAME_ADJECT = 电子工学の
+	MAGNIF_PRICE = 310
+	SENSE = 技术/银/帅气的/知的/知的/知的/
+	SELL_AREA = AREA_SETBIT("山麓")
+CASE 1709
+	NAME_ADJECT = 纳米技术の
+	MAGNIF_PRICE = 380
+	SENSE = 技术/银/帅气的/未来/未来/未来/知的/
+	SELL_AREA = AREA_SETBIT("月")
+CASE 1710
+	NAME_ADJECT = 遗失技术の
+	MAGNIF_PRICE = 440
+	SENSE = 技术/帅气的/怀旧/怀旧/怀旧/知的/不思议/不思议/不思议/
+	SELL_AREA = AREA_SETBIT("神社")
+CASE 1711
+	NAME_ADJECT = 量子の
+	MAGNIF_PRICE = 690
+	SENSE = 技术/帅气的/奇妙/奇妙/奇妙/奇妙/奇妙/未来/未来/未来/未来/未来/未来/未来/未来/未来/未来/纤细/知的/知的/知的/不思议/不思议/不思议/
+	SELL_AREA = AREA_SETBIT("月")
+CASE 1712
+	NAME_ADJECT = 内藏暗器の
+	MAGNIF_PRICE = 215
+	SENSE = 技术/可怕的/可怕的/可怕的/纤细/
+	SELL_AREA = AREA_SETBIT("里竹林")
+CASE 1713
+	NAME_ADJECT = 蒸汽朋克の
+	MAGNIF_PRICE = 180
+	SENSE = 技术/茶/金属/帅气的/知的/怀旧/洋风/活泼/狂热/
+	SELL_AREA = AREA_SETBIT("湖山麓")
+CASE 1714
+	NAME_ADJECT = 手工剪裁的
+	MAGNIF_PRICE = 200
+	SENSE = 技术/美的/美的/艺术的/艺术的/怀旧/纤细/狂热/
+	SELL_AREA = AREA_SETBIT("寺里冥界地底")
+CASE 1715
+	NAME_ADJECT = 世上唯一的
+	MAGNIF_PRICE = 250
+	SENSE = 技术/帅气的/活泼/壮大/壮大/壮大/
+	SELL_AREA = AREA_SETBIT("神社寺里")
+
+CASE 1801
+	NAME_ADJECT = 步行の
+	MAGNIF_PRICE = 150
+	SENSE = 付丧神/可爱的/奇妙/奇妙/奇妙/不思议/
+	SELL_AREA = AREA_SETBIT("神社寺里森")
+CASE 1802
+	NAME_ADJECT = 运动の
+	MAGNIF_PRICE = 150
+	SENSE = 付丧神/可爱的/奇妙/奇妙/奇妙/不思议/
+	SELL_AREA = AREA_SETBIT("神社寺里森")
+CASE 1803
+	NAME_ADJECT = 蠢动の
+	MAGNIF_PRICE = 150
+	SENSE = 付丧神/可怕的/奇妙/奇妙/奇妙/不思议/
+	SELL_AREA = AREA_SETBIT("里森")
+CASE 1804
+	NAME_ADJECT = 歌唱の
+	MAGNIF_PRICE = 180
+	SENSE = 付丧神/音乐/可爱的/奇妙/奇妙/奇妙/不思议/
+	SELL_AREA = AREA_SETBIT("寺里")
+CASE 1805
+	NAME_ADJECT = 舞蹈の
+	MAGNIF_PRICE = 180
+	SENSE = 付丧神/音乐/可爱的/奇妙/奇妙/奇妙/不思议/
+	SELL_AREA = AREA_SETBIT("神社里")
+CASE 1806
+	NAME_ADJECT = 演奏の
+	MAGNIF_PRICE = 180
+	SENSE = 付丧神/音乐/可爱的/奇妙/奇妙/奇妙/不思议/
+	SELL_AREA = AREA_SETBIT("里冥界")
+CASE 1807
+	NAME_ADJECT = 漂浮の
+	MAGNIF_PRICE = 180
+	SENSE = 付丧神/可爱的/奇妙/奇妙/奇妙/不思议/
+	SELL_AREA = AREA_SETBIT("神社里")
+CASE 1808
+	NAME_ADJECT = 回る
+	MAGNIF_PRICE = 150
+	SENSE = 付丧神/可爱的/奇妙/奇妙/奇妙/不思议/
+	SELL_AREA = AREA_SETBIT("里湖")
+CASE 1809
+	NAME_ADJECT = 消える
+	MAGNIF_PRICE = 180
+	SENSE = 付丧神/可爱的/奇妙/奇妙/奇妙/奇妙/奇妙/不思议/
+	SELL_AREA = AREA_SETBIT("里月")
+CASE 1810
+	NAME_ADJECT = 说话
+	MAGNIF_PRICE = 180
+	SENSE = 付丧神/可爱的/奇妙/奇妙/奇妙/不思议/
+	SELL_AREA = AREA_SETBIT("里山顶")
+CASE 1811
+	NAME_ADJECT = 发光する
+	MAGNIF_PRICE = 180
+	SENSE = 光/付丧神/帅气的/奇妙/奇妙/奇妙/未来/夸张/不思议/
+	SELL_AREA = AREA_SETBIT("湖地底月")
+
+CASE 1901
+	NAME_ADJECT = 幻想の
+	MAGNIF_PRICE = 250
+	SENSE = 美的/美的/美的/纤细/不思议/不思议/不思议/
+	SELL_AREA = AREA_SETBIT("全て")
+CASE 1902
+	NAME_ADJECT = 永远の
+	MAGNIF_PRICE = 450
+	SENSE = 美的/美的/美的/壮大/壮大/壮大/壮大/壮大/
+	SELL_AREA = AREA_SETBIT("神社湖竹林")
+CASE 1903
+	NAME_ADJECT = 悠久の
+	MAGNIF_PRICE = 350
+	SENSE = 美的/美的/美的/壮大/壮大/壮大/壮大/壮大/
+	SELL_AREA = AREA_SETBIT("神社竹林山顶")
+CASE 1904
+	NAME_ADJECT = 梦幻の
+	MAGNIF_PRICE = 280
+	SENSE = 美的/美的/美的/纤细/纤细/纤细/不思议/不思议/不思议/
+	SELL_AREA = AREA_SETBIT("神社竹林月")
+CASE 1905
+	NAME_ADJECT = 音の
+	MAGNIF_PRICE = 150
+	SENSE = 音乐/可爱的/纤细/
+	SELL_AREA = AREA_SETBIT("寺冥界")
+CASE 1906
+	NAME_ADJECT = 旋律の
+	MAGNIF_PRICE = 200
+	SENSE = 音乐/美的/纤细/夸张/
+	SELL_AREA = AREA_SETBIT("寺冥界")
+CASE 1907
+	NAME_ADJECT = 舞踊の
+	MAGNIF_PRICE = 200
+	SENSE = 音乐/美的/纤细/夸张/
+	SELL_AREA = AREA_SETBIT("神社冥界")
+CASE 1908
+	NAME_ADJECT = 知惠の
+	MAGNIF_PRICE = 180
+	SENSE = 秩序/帅气的/别致/知的/知的/知的/知的/知的/
+	SELL_AREA = AREA_SETBIT("里竹林月")
+CASE 1909
+	NAME_ADJECT = 知识の
+	MAGNIF_PRICE = 180
+	SENSE = 秩序/美的/别致/知的/知的/知的/知的/知的/
+	SELL_AREA = AREA_SETBIT("里湖")
+CASE 1910
+	NAME_ADJECT = 记忆の
+	MAGNIF_PRICE = 180
+	SENSE = 秩序/帅气的/别致/知的/知的/知的/知的/知的/
+	SELL_AREA = AREA_SETBIT("神社里森月")
+CASE 1911
+	NAME_ADJECT = 谜の
+	MAGNIF_PRICE = 150
+	SENSE = 混沌/混沌/混沌/可怕的/奇妙/奇妙/奇妙/不思议/不思议/不思议/
+	SELL_AREA = AREA_SETBIT("寺森")
+CASE 1912
+	NAME_ADJECT = 未知の
+	MAGNIF_PRICE = 180
+	SENSE = 混沌/可爱的/奇妙/奇妙/奇妙/知的/知的/知的/
+	SELL_AREA = AREA_SETBIT("月")
+CASE 1913
+	NAME_ADJECT = 魅知の
+	MAGNIF_PRICE = 240
+	SENSE = 混沌/美的/美的/美的/不思议/不思议/不思议/知的/知的/知的/
+	SELL_AREA = AREA_SETBIT("神社")
+CASE 1914
+	NAME_ADJECT = 灵知の
+	MAGNIF_PRICE = 280
+	SENSE = 帅气的/夸张/知的/知的/知的/威严/威严/威严/
+	SELL_AREA = AREA_SETBIT("地底")
+CASE 1915
+	NAME_ADJECT = 自由の
+	MAGNIF_PRICE = 300
+	SENSE = 帅气的/朴素/朴素/朴素/朴素/朴素/
+	SELL_AREA = AREA_SETBIT("神社寺里月")
+CASE 1916
+	NAME_ADJECT = 平和の
+	MAGNIF_PRICE = 150
+	SENSE = 秩序/秩序/秩序/秩序/秩序/可爱的/朴素/别致/纤细/纤细/纤细/
+	SELL_AREA = AREA_SETBIT("神社寺里月")
+CASE 1917
+	NAME_ADJECT = 时の
+	MAGNIF_PRICE = 180
+	SENSE = 秩序/美的/朴素/别致/知的/知的/知的/
+	SELL_AREA = AREA_SETBIT("湖竹林")
+CASE 1918
+	NAME_ADJECT = 时空の
+	MAGNIF_PRICE = 210
+	SENSE = 美的/知的/知的/知的/不思议/不思议/不思议/
+	SELL_AREA = AREA_SETBIT("神社湖")
+CASE 1919
+	NAME_ADJECT = 刹那の
+	MAGNIF_PRICE = 280
+	SENSE = 帅气的/和风/和风/和风/纤细/纤细/纤细/纤细/纤细/
+	SELL_AREA = AREA_SETBIT("神社冥界")
+CASE 1920
+	NAME_ADJECT = 须臾の
+	MAGNIF_PRICE = 360
+	SENSE = 美的/大陆风/大陆风/大陆风/纤细/纤细/纤细/纤细/纤细/壮大/
+	SELL_AREA = AREA_SETBIT("竹林月")
+CASE 1921
+	NAME_ADJECT = 力の
+	MAGNIF_PRICE = 150
+	SENSE = 金/帅气的/朴素/充满力量/充满力量/充满力量/充满力量/充满力量/
+	SELL_AREA = AREA_SETBIT("神社山麓地底")
+CASE 1922
+	NAME_ADJECT = 肉体の
+	MAGNIF_PRICE = 180
+	SENSE = 朱/帅气的/充满力量/充满力量/充满力量/充满力量/充满力量/
+	SELL_AREA = AREA_SETBIT("寺冥界地底")
+CASE 1923
+	NAME_ADJECT = 心の
+	MAGNIF_PRICE = 255
+	SENSE = 粉色/精神/精神/可爱的/纤细/纤细/纤细/
+	SELL_AREA = AREA_SETBIT("寺地底")
+CASE 1924
+	NAME_ADJECT = 精神の
+	MAGNIF_PRICE = 200
+	SENSE = 青/精神/精神/美的/纤细/
+	SELL_AREA = AREA_SETBIT("神社地底月")
+CASE 1925
+	NAME_ADJECT = 魂の
+	MAGNIF_PRICE = 300
+	SENSE = 紫/精神/精神/帅气的/充满力量/充满力量/充满力量/
+	SELL_AREA = AREA_SETBIT("神社冥界")
+CASE 1926
+	NAME_ADJECT = 爱の
+	MAGNIF_PRICE = 365
+	SENSE = 赤/精神/精神/可爱的/纤细/纤细/纤细/
+	SELL_AREA = AREA_SETBIT("神社里森地底")
+CASE 1927
+	NAME_ADJECT = 泪の
+	MAGNIF_PRICE = 185
+	SENSE = 水/青/精神/可爱的/纤细/纤细/纤细/
+	SELL_AREA = AREA_SETBIT("寺里湖")
+CASE 1928
+	NAME_ADJECT = 运命の
+	MAGNIF_PRICE = 420
+	SENSE = 赤/混沌/美的/威严/威严/威严/壮大/壮大/壮大/壮大/壮大/
+	SELL_AREA = AREA_SETBIT("湖月")
+CASE 1929
+	NAME_ADJECT = 理の
+	MAGNIF_PRICE = 210
+	SENSE = 秩序/秩序/秩序/帅气的/别致/知的/知的/知的/知的/知的/
+	SELL_AREA = AREA_SETBIT("里湖竹林森月")
+CASE 1930
+	NAME_ADJECT = 梦の
+	MAGNIF_PRICE = 300
+	SENSE = 粉色/精神/混沌/可爱的/不思议/不思议/不思议/
+	SELL_AREA = AREA_SETBIT("神社月")
+CASE 1931
+	NAME_ADJECT = 睡眠の
+	MAGNIF_PRICE = 160
+	SENSE = 精神/混沌/可爱的/别致/别致/别致/纤细/纤细/纤细/
+	SELL_AREA = AREA_SETBIT("寺冥界月")
+CASE 1932
+	NAME_ADJECT = 生命の
+	MAGNIF_PRICE = 240
+	SENSE = 死生/死生/秩序/美的/充满力量/
+	SELL_AREA = AREA_SETBIT("冥界地底月以外")
+CASE 1933
+	NAME_ADJECT = 死の
+	MAGNIF_PRICE = 240
+	SENSE = 死生/死生/混沌/可怕的/充满力量/
+	SELL_AREA = AREA_SETBIT("冥界地底")
+CASE 1934
+	NAME_ADJECT = 生と死の
+	MAGNIF_PRICE = 480
+	SENSE = 死生/死生/死生/美的/艺术的/
+	SELL_AREA = AREA_SETBIT("冥界")
+CASE 1935
+	NAME_ADJECT = 无の
+	MAGNIF_PRICE = 300
+	SENSE = 秩序/帅气的/朴素/朴素/朴素/朴素/朴素/别致/别致/别致/别致/别致/不思议/
+	SELL_AREA = AREA_SETBIT("冥界山麓月")
+CASE 1936
+	NAME_ADJECT = 虚空の
+	MAGNIF_PRICE = 285
+	SENSE = 混沌/帅气的/别致/别致/别致/不思议/不思议/不思议/
+	SELL_AREA = AREA_SETBIT("冥界月")
+CASE 1937
+	NAME_ADJECT = 幻の
+	MAGNIF_PRICE = 285
+	SENSE = 帅气的/纤细/纤细/纤细/纤细/纤细/威严/威严/威严/
+	SELL_AREA = AREA_SETBIT("神社湖山顶")
+CASE 1938
+	NAME_ADJECT = 幻影の
+	MAGNIF_PRICE = 180
+	SENSE = 帅气的/奇妙/纤细/纤细/纤细/纤细/纤细/纤细/纤细/纤细/纤细/纤细/不思议/不思议/不思议/
+	SELL_AREA = AREA_SETBIT("寺森冥界月")
+CASE 1939
+	NAME_ADJECT = 蜃气楼の
+	MAGNIF_PRICE = 245
+	SENSE = 水/美的/奇妙/奇妙/奇妙/大陆风/纤细/纤细/纤细/不思议/不思议/不思议/
+	SELL_AREA = AREA_SETBIT("神社湖森")
+CASE 1940
+	NAME_ADJECT = 欢愉の
+	MAGNIF_PRICE = 140
+	SENSE = 朱/精神/秩序/可爱的/活泼/充满力量/
+	SELL_AREA = AREA_SETBIT("全て")
+CASE 1941
+	NAME_ADJECT = 愤怒の
+	MAGNIF_PRICE = 140
+	SENSE = 赤/精神/混沌/帅气的/充满力量/充满力量/充满力量/充满力量/充满力量/
+	SELL_AREA = AREA_SETBIT("全て")
+CASE 1942
+	NAME_ADJECT = 恐怖の
+	MAGNIF_PRICE = 140
+	SENSE = 黑/精神/混沌/可怕的/可怕的/可怕的/可怕的/可怕的/
+	SELL_AREA = AREA_SETBIT("全て")
+CASE 1943
+	NAME_ADJECT = 欲望の
+	MAGNIF_PRICE = 140
+	SENSE = 金/精神/混沌/可怕的/奇妙/充满力量/
+	SELL_AREA = AREA_SETBIT("全て")
+CASE 1944
+	NAME_ADJECT = 温暖の
+	MAGNIF_PRICE = 140
+	SENSE = 朱/精神/秩序/可爱的/活泼/
+	SELL_AREA = AREA_SETBIT("全て")
+CASE 1945
+	NAME_ADJECT = 悲伤の
+	MAGNIF_PRICE = 140
+	SENSE = 青/精神/秩序/美的/纤细/
+	SELL_AREA = AREA_SETBIT("全て")
+CASE 1946
+	NAME_ADJECT = 心安の
+	MAGNIF_PRICE = 140
+	SENSE = 粉色/精神/秩序/秩序/秩序/可爱的/活泼/纤细/
+	SELL_AREA = AREA_SETBIT("全て")
+CASE 1947
+	NAME_ADJECT = 幸福の
+	MAGNIF_PRICE = 140
+	SENSE = 黄/精神/秩序/可爱的/朴素/活泼/
+	SELL_AREA = AREA_SETBIT("全て")
+CASE 1948
+	NAME_ADJECT = 狂气の
+	MAGNIF_PRICE = 180
+	SENSE = 赤/精神/混沌/混沌/混沌/可怕的/夸张/夸张/夸张/
+	SELL_AREA = AREA_SETBIT("湖竹林森冥界地底月")
+CASE 1949
+	NAME_ADJECT = 丧心の
+	MAGNIF_PRICE = 180
+	SENSE = 灰/精神/混沌/可怕的/别致/
+	SELL_AREA = AREA_SETBIT("神社寺里山麓山顶地底")
+CASE 1950
+	NAME_ADJECT = 嫉妒の
+	MAGNIF_PRICE = 160
+	SENSE = 绿/混沌/精神/可怕的/纤细/充满力量/
+	SELL_AREA = AREA_SETBIT("地底")
+CASE 1951
+	NAME_ADJECT = 忘却の
+	MAGNIF_PRICE = 210
+	SENSE = 灰/混沌/可怕的/别致/纤细/
+	SELL_AREA = AREA_SETBIT("寺里地底")
+CASE 1952
+	NAME_ADJECT = 忧郁の
+	MAGNIF_PRICE = 210
+	SENSE = 精神/混沌/可怕的/别致/纤细/
+	SELL_AREA = AREA_SETBIT("湖森冥界")
+CASE 1953
+	NAME_ADJECT = 秩序の
+	MAGNIF_PRICE = 250
+	SENSE = 秩序/秩序/秩序/秩序/秩序/帅气的/朴素/别致/
+	SELL_AREA = AREA_SETBIT("神社寺里山麓山顶月")
+CASE 1954
+	NAME_ADJECT = 混沌の
+	MAGNIF_PRICE = 250
+	SENSE = 混沌/混沌/混沌/混沌/混沌/可怕的/奇妙/夸张/
+	SELL_AREA = AREA_SETBIT("湖竹林森冥界地底")
+CASE 1955
+	NAME_ADJECT = 天轮の
+	MAGNIF_PRICE = 220
+	SENSE = 日/日/自然/秩序/美的/充满力量/
+	SELL_AREA = AREA_SETBIT("寺山顶")
+CASE 1956
+	NAME_ADJECT = 希望の
+	MAGNIF_PRICE = 285
+	SENSE = 光/精神/秩序/秩序/秩序/美的/夸张/
+	SELL_AREA = AREA_SETBIT("神社湖山麓")
+CASE 1957
+	NAME_ADJECT = 勇气の
+	MAGNIF_PRICE = 285
+	SENSE = 精神/秩序/秩序/秩序/帅气的/充满力量/
+	SELL_AREA = AREA_SETBIT("里森冥界山顶")
+CASE 1958
+	NAME_ADJECT = 慈爱の
+	MAGNIF_PRICE = 285
+	SENSE = 精神/秩序/秩序/秩序/可爱的/纤细/
+	SELL_AREA = AREA_SETBIT("寺竹林地底")
+CASE 1959
+	NAME_ADJECT = 奇迹の
+	MAGNIF_PRICE = 450
+	SENSE = 秩序/秩序/秩序/可爱的/充满力量/壮大/壮大/壮大/
+	SELL_AREA = AREA_SETBIT("山顶")
+CASE 1960
+	NAME_ADJECT = 正义の
+	MAGNIF_PRICE = 300
+	SENSE = 秩序/秩序/秩序/秩序/秩序/帅气的/充满力量/威严/
+	SELL_AREA = AREA_SETBIT("神社寺里山麓山顶月")
+CASE 1961
+	NAME_ADJECT = 救世の
+	MAGNIF_PRICE = 245
+	SENSE = 光/秩序/秩序/秩序/秩序/秩序/帅气的/和风/威严/
+	SELL_AREA = AREA_SETBIT("寺里森山顶")
+CASE 1962
+	NAME_ADJECT = 恶梦の
+	MAGNIF_PRICE = 300
+	SENSE = 暗/混沌/混沌/混沌/混沌/混沌/可怕的/可怕的/可怕的/可怕的/可怕的/不思议/
+	SELL_AREA = AREA_SETBIT("湖竹林森冥界地底月")
+CASE 1963
+	NAME_ADJECT = 绝望の
+	MAGNIF_PRICE = 350
+	SENSE = 暗/精神/混沌/混沌/混沌/混沌/混沌/可怕的/可怕的/可怕的/可怕的/可怕的/充满力量/威严/
+	SELL_AREA = AREA_SETBIT("寺冥界山麓地底月")
+CASE 1964
+	NAME_ADJECT = 背叛の
+	MAGNIF_PRICE = 175
+	SENSE = 混沌/混沌/混沌/混沌/混沌/可怕的/可怕的/可怕的/奇妙/
+	SELL_AREA = AREA_SETBIT("里森")
+CASE 1965
+	NAME_ADJECT = 孤独の
+	MAGNIF_PRICE = 125
+	SENSE = 精神/混沌/混沌/混沌/可怕的/可怕的/可怕的/别致/纤细/
+	SELL_AREA = AREA_SETBIT("湖竹林")
+CASE 1966
+	NAME_ADJECT = 破灭の
+	MAGNIF_PRICE = 265
+	SENSE = 混沌/混沌/混沌/混沌/混沌/可怕的/可怕的/可怕的/可怕的/可怕的/充满力量/充满力量/充满力量/
+	SELL_AREA = AREA_SETBIT("地底月")
+CASE 1967
+	NAME_ADJECT = 万物の
+	MAGNIF_PRICE = 320
+	SENSE = 帅气的/知的/知的/知的/壮大/壮大/壮大/壮大/壮大/
+	SELL_AREA = AREA_SETBIT("里森月")
+CASE 1968
+	NAME_ADJECT = 真实の
+	MAGNIF_PRICE = 980
+	SENSE = 秩序/秩序/秩序/美的/别致/知的/知的/知的/知的/知的/知的/知的/知的/知的/知的/壮大/壮大/壮大/
+	SELL_AREA = AREA_SETBIT("里")
+CASE 1969
+	NAME_ADJECT = 究极の
+	MAGNIF_PRICE = 850
+	SENSE = 帅气的/充满力量/充满力量/充满力量/充满力量/充满力量/壮大/壮大/壮大/壮大/壮大/壮大/壮大/壮大/壮大/壮大/
+	SELL_AREA = AREA_SETBIT("寺冥界山顶")
+CASE 1970
+	NAME_ADJECT = 最后の
+	MAGNIF_PRICE = 770
+	SENSE = 帅气的/威严/威严/威严/威严/威严/壮大/壮大/壮大/壮大/壮大/壮大/壮大/壮大/壮大/壮大/
+	SELL_AREA = AREA_SETBIT("神社竹林山麓")
+CASE 1971
+	NAME_ADJECT = 终末の
+	MAGNIF_PRICE = 640
+	SENSE = 混沌/混沌/混沌/混沌/混沌/可怕的/可怕的/可怕的/可怕的/可怕的/别致/壮大/壮大/壮大/壮大/壮大/
+	SELL_AREA = AREA_SETBIT("湖地底月")
+CASE 1972
+	NAME_ADJECT = 千里の
+	MAGNIF_PRICE = 140
+	SENSE = 帅气的/知的/知的/知的/壮大/
+	SELL_AREA = AREA_SETBIT("寺山麓山顶月")
+CASE 1973
+	NAME_ADJECT = 感情の
+	MAGNIF_PRICE = 150
+	SENSE = 精神/精神/美的/纤细/
+	SELL_AREA = AREA_SETBIT("神社寺地底")
+CASE 1974
+	NAME_ADJECT = 幼心地の
+	MAGNIF_PRICE = 130
+	SENSE = 精神/可爱的/活泼/洛丽塔/洛丽塔/洛丽塔/
+	SELL_AREA = AREA_SETBIT("里湖山顶")
+CASE 1975
+	NAME_ADJECT = 无间の
+	MAGNIF_PRICE = 400
+	SENSE = 死生/可怕的/和风/奇妙/壮大/壮大/壮大/
+	SELL_AREA = AREA_SETBIT("神社寺冥界地底")
+CASE 1976
+	NAME_ADJECT = 强欲な
+	MAGNIF_PRICE = 180
+	SENSE = 金/精神/混沌/可怕的/奇妙/充满力量/充满力量/
+	SELL_AREA = AREA_SETBIT("全て")
+CASE 1977
+	NAME_ADJECT = 刚欲な
+	MAGNIF_PRICE = 260
+	SENSE = 金/金/精神/混沌/可怕的/奇妙/充满力量/充满力量/充满力量/
+	SELL_AREA = AREA_SETBIT("全て")
+CASE 1978
+	NAME_ADJECT = 最强の
+	MAGNIF_PRICE = 555
+	SENSE = 帅气的/帅气的/帅气的/朴素/充满力量/充满力量/充满力量/充满力量/充满力量/充满力量/充满力量/充满力量/威严/威严/壮大/壮大/狂热/狂热/狂热/
+	SELL_AREA = AREA_SETBIT("全て")
+CASE 1979
+	NAME_ADJECT = 胜利の
+	MAGNIF_PRICE = 200
+	SENSE = 秩序/秩序/秩序/帅气的/充满力量/充满力量/充满力量/威严/威严/威严/
+	SELL_AREA = AREA_SETBIT("寺冥界山顶地底")
+CASE 1980
+	NAME_ADJECT = 寂静の
+	MAGNIF_PRICE = 130
+	SENSE = 秩序/美的/朴素/朴素/纤细/
+	SELL_AREA = AREA_SETBIT("森冥界")
+CASE 1981
+	NAME_ADJECT = 虚无の
+	MAGNIF_PRICE = 350
+	SENSE = 秩序/帅气的/朴素/朴素/朴素/朴素/朴素/别致/别致/别致/别致/别致/不思议/威严/
+	SELL_AREA = AREA_SETBIT("冥界月")
+
+CASE 2001
+	NAME_ADJECT = 弹幕の
+	MAGNIF_PRICE = 200
+	SENSE = 美的/美的/美的/时尚/时尚/时尚/艺术的/艺术的/艺术的/艺术的/艺术的/充满力量/充满力量/充满力量/
+	SELL_AREA = AREA_SETBIT("全て")
+CASE 2002
+	NAME_ADJECT = 恋色の
+	MAGNIF_PRICE = 250
+	SENSE = 粉色/精神/精神/魔法/魔法/可爱的/可爱的/可爱的/时尚/活泼/
+	SELL_AREA = AREA_SETBIT("森")
+CASE 2003
+	NAME_ADJECT = 境界の
+	MAGNIF_PRICE = 300
+	SENSE = 巫术/美的/不思议/不思议/不思议/
+	SELL_AREA = AREA_SETBIT("神社冥界")
+CASE 2004
+	NAME_ADJECT = 隙间の
+	MAGNIF_PRICE = 300
+	SENSE = 紫/妖术/可怕的/奇妙/奇妙/奇妙/不思议/不思议/不思议/
+	SELL_AREA = AREA_SETBIT("冥界")
+CASE 2005
+	NAME_ADJECT = 幻葬の
+	MAGNIF_PRICE = 350
+	SENSE = 紫/死生/妖术/妖术/可怕的/艺术的/艺术的/艺术的/别致/
+	SELL_AREA = AREA_SETBIT("冥界")
+CASE 2006
+	NAME_ADJECT = 本我の
+	MAGNIF_PRICE = 250
+	SENSE = 粉色/精神/精神/可爱的/洋风/纤细/
+	SELL_AREA = AREA_SETBIT("地底")
+CASE 2007
+	NAME_ADJECT = 自我の
+	MAGNIF_PRICE = 250
+	SENSE = 绿/精神/精神/可爱的/洋风/充满力量/
+	SELL_AREA = AREA_SETBIT("地底")
+CASE 2008
+	NAME_ADJECT = 小小の
+	MAGNIF_PRICE = 50
+	SENSE = 灰/可爱的/可爱的/可爱的/朴素/纤细/纤细/纤细/纤细/纤细/
+	SELL_AREA = AREA_SETBIT("寺")
+CASE 2009
+	NAME_ADJECT = 威严の
+	MAGNIF_PRICE = 200
+	SENSE = 金/帅气的/充满力量/威严/威严/威严/威严/威严/威严/威严/威严/威严/威严/
+	SELL_AREA = AREA_SETBIT("寺")
+CASE 2010
+	NAME_ADJECT = 正体不明の
+	MAGNIF_PRICE = 135
+	SENSE = 黑/妖术/混沌/混沌/混沌/混沌/混沌/可怕的/奇妙/奇妙/奇妙/狂热/
+	SELL_AREA = AREA_SETBIT("寺")
+CASE 2011
+	NAME_ADJECT = 逆转の
+	MAGNIF_PRICE = 185
+	SENSE = 赤/妖术/混沌/混沌/混沌/混沌/混沌/帅气的/奇妙/奇妙/奇妙/充满力量/不思议/
+	SELL_AREA = AREA_SETBIT("山麓")
+CASE 2012
+	NAME_ADJECT = 三位一体の
+	MAGNIF_PRICE = 333
+	SENSE = 赤/青/黄/美的/美的/美的/帅气的/帅气的/帅气的/可爱的/可爱的/可爱的/夸张/夸张/夸张/夸张/夸张/
+	SELL_AREA = AREA_SETBIT("月")
+CASE 2013
+	NAME_ADJECT = 隐匿の
+	MAGNIF_PRICE = 300
+	SENSE = 神灵/混沌/混沌/混沌/美的/知的/知的/知的/不思议/不思议/不思议/
+	SELL_AREA = AREA_SETBIT("神社")
+CASE 2014
+	NAME_ADJECT = 众神眷恋的
+	MAGNIF_PRICE = 500
+	SENSE = 美的/美的/美的/美的/美的/美的/美的/美的/美的/美的/艺术的/艺术的/艺术的/艺术的/艺术的/充满力量/壮大/壮大/壮大/
+	SELL_AREA = AREA_SETBIT("山麓")
+CASE 2015
+	NAME_ADJECT = 梦与现实の
+	MAGNIF_PRICE = 400
+	SENSE = 可怕的/奇妙/不思议/不思议/不思议/不思议/不思议/不思议/不思议/不思议/不思议/不思议/
+	SELL_AREA = AREA_SETBIT("冥界")
+
+CASE 2101
+	NAME_ADJECT = 俗气の
+	MAGNIF_PRICE = 70
+	SENSE = 粗恶/活泼/夸张/狂热/
+	SELL_AREA = AREA_SETBIT("月以外")
+CASE 2102
+	NAME_ADJECT = 破烂の
+	MAGNIF_PRICE = 30
+	SENSE = 粗恶/
+	SELL_AREA = AREA_SETBIT("月以外")
+CASE 2103
+	NAME_ADJECT = 古旧の
+	MAGNIF_PRICE = 50
+	SENSE = 粗恶/怀旧/纤细/
+	SELL_AREA = AREA_SETBIT("月以外")
+CASE 2104
+	NAME_ADJECT = 粗陋の
+	MAGNIF_PRICE = 10
+	SENSE = 粗恶/
+	SELL_AREA = AREA_SETBIT("月以外")
+CASE 2105
+	NAME_ADJECT = 有缺口の
+	MAGNIF_PRICE = 50
+	SENSE = 粗恶/纤细/
+	SELL_AREA = AREA_SETBIT("月以外")
+CASE 2106
+	NAME_ADJECT = 弯曲の
+	MAGNIF_PRICE = 60
+	SENSE = 粗恶/
+	SELL_AREA = AREA_SETBIT("月以外")
+CASE 2107
+	NAME_ADJECT = 伪物の
+	MAGNIF_PRICE = 50
+	SENSE = 粗恶/
+	SELL_AREA = AREA_SETBIT("月以外")
+CASE 2108
+	NAME_ADJECT = 颠倒の
+	MAGNIF_PRICE = 50
+	SENSE = 粗恶/奇妙/
+	SELL_AREA = AREA_SETBIT("月以外")
+CASE 2109
+	NAME_ADJECT = 锈迹の
+	MAGNIF_PRICE = 60
+	SENSE = 矿物/粗恶/怀旧/纤细/
+	SELL_AREA = AREA_SETBIT("月以外")
+CASE 2110
+	NAME_ADJECT = 损坏の
+	MAGNIF_PRICE = 10
+	SENSE = 技术/粗恶/
+	SELL_AREA = AREA_SETBIT("月以外")
+CASE 2111
+	NAME_ADJECT = 玩具の
+	MAGNIF_PRICE = 20
+	SENSE = 技术/粗恶/可爱的/活泼/洛丽塔/洛丽塔/洛丽塔/洛丽塔/洛丽塔/
+	SELL_AREA = AREA_SETBIT("月以外")
+CASE 2112
+	NAME_ADJECT = 脆い
+	MAGNIF_PRICE = 80
+	SENSE = 粗恶/纤细/
+	SELL_AREA = AREA_SETBIT("月以外")
+
+CASE 9999
+	MAGNIF_PRICE = 300
+	SENSE = 
+	SELL_AREA = AREA_SETBIT("")
+[SKIPSTART]
+CASE 
+	NAME_ADJECT = 
+	MAGNIF_PRICE = 
+	SENSE = 
+	SELL_AREA = AREA_SETBIT("")
+[SKIPEND]
+CASEELSE
+	VARSET RESULTS
+	VARSET RESULT
+	RETURN 0
+ENDSELECT
+
+VARSET RESULTS
+VARSET RESULT
+;分布
+IF INRANGE(NOW_AREA, 0, 10) && GETBIT(SELL_AREA, NOW_AREA)
+	RESULT:0 = 1
+;分布无视
+ELSEIF NOW_AREA == 99
+	RESULT:0 = 1
+ENDIF
+
+;布制品は矿物・技术がかからない
+SIF STRFIND(SENSE_MAIN, "布制") >= 0 && STRFIND(SENSE, "矿物") + STRFIND(SENSE, "技术") >= -1
+	RESULT:0 = 0
+;矿制品は纤维がかからない
+SIF STRFIND(SENSE_MAIN, "矿制") >= 0 && STRFIND(SENSE, "纤维") >= 0
+	RESULT:0 = 0
+;肖像物は矿物、纤维、技术がかからない
+SIF STRFIND(SENSE_MAIN, "肖像") >= 0 && STRFIND(SENSE, "矿物") + STRFIND(SENSE, "纤维") + STRFIND(SENSE, "技术") >= -2
+	RESULT:0 = 0
+;香水専用
+SIF STRFIND(SENSE_MAIN, "香水") >= 0 && STRFIND(SENSE, "矿物") + STRFIND(SENSE, "纤维") + STRFIND(SENSE, "技术") + STRFIND(SENSE, "型") >= -3
+	RESULT:0 = 0
+;生体品は植物がかからない
+SIF STRFIND(SENSE_MAIN, "生体品") >= 0 && STRFIND(SENSE, "植物") >= 0
+	RESULT:0 = 0
+
+SENSE += NAME_ADJECT + "/"
+
+RESULT:1 = MAGNIF_PRICE
+RESULT:2 = SELL_AREA
+RESULTS:0 = %NAME_ADJECT%
+RESULTS:1 = %SENSE%
+RETURN RESULT:0

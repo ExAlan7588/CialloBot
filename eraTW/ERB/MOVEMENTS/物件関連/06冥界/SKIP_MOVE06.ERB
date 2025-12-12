@@ -1,0 +1,188 @@
+﻿;-----------------------------------------------------------
+;远距离移动の设定
+;ARG     目的地
+;ARG:1   现在地
+;RETURN  次の目的地
+;-----------------------------------------------------------
+@SKIP_MOVE_6(ARG, ARG:1)
+#DIM 现在的位置
+;当前位置取得
+IF ARG:1
+	现在的位置 = ARG:1
+ELSE
+	现在的位置 = CFLAG:MASTER:当前位置
+ENDIF
+
+;目的地に直接移动できる场合そこに移动
+SIF CAN_MOVE(现在的位置, ARG) & 1
+	RETURN ARG
+
+;袋小路から行ける场所は固定なので、そこを目指す
+SELECTCASE 现在的位置
+CASE P608润美的家
+	RETURN P602赛河原
+CASE P609璎花的家
+	RETURN P603积石冢
+CASE P615映姫的房间
+	RETURN P614是非曲直厅等候室
+CASE P616小町的房间, P617澡堂, P618空的房间
+	RETURN P613是非曲直厅走廊
+CASE P624妖梦私室, P625空室, P627澡堂
+	RETURN P622走廊
+CASE P636八云邸澡堂, P637八云邸厨房
+	RETURN P631八云邸走廊
+CASE P643灵长园的澡堂, P644袿姫的房间, P645磨弓的房间
+	RETURN P642灵长园
+CASE P646八千慧宅的澡堂, P648八千慧宅的寝室
+	RETURN P647八千慧宅的客厅
+CASE P651早鬼宅的寝室, P652早鬼宅的澡堂
+	RETURN P650早鬼宅的客厅
+CASE P654尤魔宅的寝室, P655尤魔宅的澡堂
+	RETURN P653尤魔宅的客厅
+CASE P606日狭美的家, P607残无的家
+	RETURN P605地狱
+ENDSELECT
+
+;直接移动できない场合、1つ近い位置を暂定目的地に设定し直してループ
+;地点追加时要フォロー（全ケース修正すること）
+SELECTCASE ARG
+CASE P601中有之道
+	RETURN P602赛河原
+CASE P602赛河原
+	SELECTCASE 现在的位置
+	CASE P631八云邸走廊 TO P639八云邸起居室
+		RETURN P630八云邸玄关
+	CASEELSE
+		RETURN P604彼岸
+	ENDSELECT
+CASE P603积石冢
+	SELECTCASE 现在的位置
+	CASE P601中有之道
+		RETURN P602赛河原
+	CASEELSE
+		RETURN P604彼岸
+	ENDSELECT
+CASE P604彼岸
+	SELECTCASE 现在的位置
+	CASE P612法庭 TO P618空的房间
+		RETURN P610是非曲直厅大堂
+	CASE P621庭 TO P629西行妖
+		RETURN P620冥界之门
+	CASE P641畜生界大都市 TO P655尤魔宅的澡堂
+		RETURN P640异界的关卡
+	CASE P606日狭美的家, P607残无的家
+		RETURN P605地狱
+	CASEELSE
+		RETURN P602赛河原
+	ENDSELECT
+CASE P605地狱
+	RETURN P604彼岸
+CASE P606日狭美的家, P607残无的家
+	RETURN P605地狱
+CASE P608润美的家
+	RETURN P602赛河原
+CASE P609璎花的家
+	RETURN P603积石冢
+
+CASE P610是非曲直厅大堂
+	SELECTCASE 现在的位置
+	CASE P612法庭 TO P618空的房间
+		RETURN P613是非曲直厅走廊
+	CASEELSE
+		RETURN P604彼岸
+	ENDSELECT
+CASE P612法庭
+	SELECTCASE 现在的位置
+	CASE P610是非曲直厅大堂 TO P618空的房间
+		RETURN P613是非曲直厅走廊
+	CASEELSE
+		RETURN P610是非曲直厅大堂
+	ENDSELECT
+CASE P613是非曲直厅走廊
+	RETURN P610是非曲直厅大堂
+CASE P614是非曲直厅等候室, P616小町的房间, P617澡堂, P618空的房间
+	RETURN P613是非曲直厅走廊
+CASE P615映姫的房间
+	RETURN P614是非曲直厅等候室
+
+CASE P620冥界之门
+	SELECTCASE 现在的位置
+	CASE P622走廊 TO P629西行妖
+		RETURN P621庭
+	CASEELSE
+		RETURN P604彼岸
+	ENDSELECT
+CASE P621庭
+	SELECTCASE 现在的位置
+	CASE P623幽幽子私室 TO P627澡堂
+		RETURN P622走廊
+	CASEELSE
+		RETURN P620冥界之门
+	ENDSELECT
+CASE P622走廊
+	RETURN P621庭
+CASE P623幽幽子私室, P624妖梦私室, P625空室, P626厨房, P627澡堂
+	RETURN P622走廊
+CASE P628起居室
+	SELECTCASE 现在的位置
+	CASE P624妖梦私室, P625空室, P627澡堂
+		RETURN P622走廊
+	CASEELSE
+		RETURN P621庭
+	ENDSELECT
+CASE P629西行妖
+	RETURN P621庭
+
+CASE P630八云邸玄关
+	SELECTCASE 现在的位置
+	CASE P633紫私室 TO P639八云邸起居室
+		RETURN P631八云邸走廊
+	CASEELSE
+		RETURN P602赛河原
+	ENDSELECT
+CASE P631八云邸走廊, P632八云邸庭
+	RETURN P630八云邸玄关
+CASE P633紫私室, P636八云邸澡堂, P637八云邸厨房, P638蓝私室, P639八云邸起居室
+	RETURN P631八云邸走廊
+CASE P634空房间, P635橙私室
+	SELECTCASE 现在的位置
+	CASE P633紫私室 TO P639八云邸起居室
+		RETURN P631八云邸走廊
+	CASEELSE
+		RETURN P630八云邸玄关
+	ENDSELECT
+
+CASE P640异界的关卡
+	SELECTCASE 现在的位置
+	CASE P642灵长园 TO P655尤魔宅的澡堂
+		RETURN P641畜生界大都市
+	CASEELSE
+		RETURN P604彼岸
+	ENDSELECT
+CASE P641畜生界大都市
+	SELECTCASE 现在的位置
+	CASE P643灵长园的澡堂, P644袿姫的房间, P645磨弓的房间
+		RETURN P642灵长园
+	CASE P646八千慧宅的澡堂, P648八千慧宅的寝室
+		RETURN P647八千慧宅的客厅
+	CASE P651早鬼宅的寝室, P652早鬼宅的澡堂
+		RETURN P650早鬼宅的客厅
+	CASE P654尤魔宅的寝室, P655尤魔宅的澡堂
+		RETURN P653尤魔宅的客厅
+	CASEELSE
+		RETURN P640异界的关卡
+	ENDSELECT
+CASE P642灵长园, P647八千慧宅的客厅, P650早鬼宅的客厅, P653尤魔宅的客厅
+	RETURN P641畜生界大都市
+CASE P643灵长园的澡堂, P644袿姫的房间, P645磨弓的房间
+	RETURN P642灵长园
+CASE P646八千慧宅的澡堂, P648八千慧宅的寝室
+	RETURN P647八千慧宅的客厅
+CASE P651早鬼宅的寝室, P652早鬼宅的澡堂
+	RETURN P650早鬼宅的客厅
+CASE P654尤魔宅的寝室, P655尤魔宅的澡堂
+	RETURN P653尤魔宅的客厅
+
+CASEELSE
+	RETURN P601中有之道
+ENDSELECT

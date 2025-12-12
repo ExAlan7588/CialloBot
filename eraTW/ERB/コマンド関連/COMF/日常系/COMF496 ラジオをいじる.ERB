@@ -1,0 +1,748 @@
+﻿;-------------------------------------------------
+;ラジオをいじる
+;日常系指令、レベル1
+;-------------------------------------------------
+@COM496
+#DIMS 大雨情报
+#DIMS 大雪情报
+#DIMS 暴风情报
+#DIMS 雷情报
+#DIMS 低温情报
+#DIMS 雪崩情报
+#DIMS 低气圧位置
+#DIMS 线状降水带位置
+#DIMS 积乱云位置
+#DIMS 台风势力
+#DIMS 早期注意情报
+
+低气圧位置 = %GET_LOCATION_LOW()%
+线状降水带位置 = %GET_LOCATION_LINER_RAINBAND()%
+积乱云位置 = %GET_LOCATION_CUMULUS()%
+
+大雨情报 = %GET_WEATHER_WARNING_HEAVY_RAIN()%
+大雪情报 = %GET_WEATHER_WARNING_HEAVY_SNOWFALL()%
+暴风情报 = %GET_WEATHER_WARNING_STORM()%
+雷情报 = %GET_WEATHER_WARNING_LIGHTNING()%
+低温情报 = %GET_WEATHER_WARNING_COLD()%
+雪崩情报 = %GET_WEATHER_WARNING_AVALANCHE()%
+早期注意情报 = %GET_WEATHER_ADVISORY_probability_subsequent_WARNING()%
+
+SELECTCASE IS_TYPHOON:1
+	CASE 5
+		台风势力 = 猛烈な
+	CASE 4
+		台风势力 = 非常に强い
+	CASE 3
+		台风势力 = 强い
+	CASEELSE
+		台风势力 = 
+ENDSELECT
+
+[IF_DEBUG]
+SELECTCASE TIME:0
+	CASE 345 TO 359, 375 TO 389, 405 TO 419, 435 TO 449, 465 TO 479, 525 TO 539, 585 TO 599, 705 TO 719, 735 TO 749, 825 TO 839, 885 TO 899, 945 TO 959, 1005 TO 1019, 1065 TO 1079, 1125 TO 1139, 1185 TO 1199, 1245 TO 1259, 1305 TO 1319, 1365 TO 1379
+	;天气予报(15分间)(05:45 06:15 06:45 07:15 07:45 08:45 09:45 11:45 12:15 13:45 14:45 15:45 16:45 17:45 18:45 19:45 20:45 21:45 22:45)
+		DEBUGPRINTFORML 现在的放送：天气予报
+	CASE 300 TO 329, 360 TO 374, 420 TO 434, 540 TO 554, 600 TO 614, 660 TO 674, 720 TO 734, 780 TO 794, 840 TO 854, 900 TO 914, 1020 TO 1034, 1140 TO 1184, 1200 TO 1214, 1260 TO 1274, 1380 TO 1394, 0 TO 14, 60 TO 74, 120 TO 134, 180 TO 194, 240 TO 254
+	;ニュース(原则15分间)(05:00~05:29 06:00 07:00 09:00 10:00 11:00 12:00 13:00 14:00 15:00 17:00 19:00~19:44 20:00 21:00 23:00 24:00 01:00 02:00 03:00 04:00)
+		DEBUGPRINTFORML 现在的放送：ニュース
+	CASE 960 TO 989
+	;气象通报(16:00~16:29)
+		DEBUGPRINTFORML 现在的放送：气象通报
+	CASEELSE
+		DEBUGPRINTFORML 现在的放送：不明
+ENDSELECT
+
+DEBUGPRINTFORML %大雨情报%
+DEBUGPRINTFORML %大雪情报%
+DEBUGPRINTFORML %暴风情报%
+DEBUGPRINTFORML %雷情报%
+DEBUGPRINTFORML %低温情报%
+DEBUGPRINTFORML %雪崩情报%
+DEBUGPRINTFORML %早期注意情报%
+
+[ENDIF]
+
+PRINTW 试着摆弄了一下收音机的旋钮
+PRINTL
+
+PRINTL ┏━━━━━━┓
+PRINT ┃电源［
+IF 大雨情报 == "大雨特别警报"
+	PRINT □□
+ELSEIF 大雨情报 == "大雨警报(泥石流灾害警戒情报)" || 大雪情报 == "大雪特别警报" || 暴风情报 == "暴风雪特别警报" || 暴风情报 == "暴风特别警报"
+	IF CONTINUOUS_RAINFALL >= 10
+		SETCOLOR C_气象_泥石流灾害警戒情报
+		PRINT ■
+		RESETCOLOR
+		PRINT □
+	ELSE
+		SETCOLOR C_气象_泥石流灾害警戒情报
+		PRINT ■■
+		RESETCOLOR
+	ENDIF
+ELSEIF 大雨情报 == "大雨警报" || 大雪情报 == "大雪警报" || 暴风情报 == "暴风雪警报" || 暴风情报 == "暴风警报" || 雷情报 == "雷警报(龙卷风注意情报)" || 雪崩情报 == "雪崩警报"
+	SETCOLOR C_气象_警报
+	PRINT ■■
+	RESETCOLOR
+ELSEIF 大雨情报 == "大雨警报" || 大雪情报 == "大雪警报" || 暴风情报 == "风雪警报" || 暴风情报 == "强风警报" || 雷情报 == "雷警报"
+	SELECTCASE 早期注意情报
+		CASE "警报级的可能性［高］"
+			SETCOLOR C_气象_早期警报
+			PRINT ■■
+			RESETCOLOR
+		CASE "警报级的可能性［中］"
+			SETCOLOR C_气象_早期警报
+			PRINT ■
+			RESETCOLOR
+			PRINT ■
+		CASEELSE
+			SETCOLOR C_气象_早期警报
+			PRINT ■
+			SETCOLOR C_GREEN
+			PRINT ■
+			RESETCOLOR
+	ENDSELECT
+ELSE
+	SELECTCASE 早期注意情报
+		CASE "警报级的可能性［高］"
+			PRINT ■■
+		CASE "警报级的可能性［中］"
+			SETCOLOR C_GREEN
+			PRINT ■
+			RESETCOLOR
+			PRINT ■
+		CASEELSE
+			SETCOLOR C_GREEN
+			PRINT ■■
+			RESETCOLOR
+	ENDSELECT
+ENDIF
+PRINTL ］┃
+PRINTL ┗━━━━━━┛
+;(天候パッチ)雷发生时はノイズが混じる
+IF GET_FRONTAL_THUNDERSTORM() == 1 && GET_HEAT_THUNDERSTORM() == 1
+	PRINT ……
+	FONTBOLD
+	PRINT 嘎吱嘎吱！
+	FONTREGULAR
+	PRINT ………
+	FONTBOLD
+	PRINT 滋滋滋
+	FONTREGULAR
+	PRINTL ……
+ELSEIF GET_FRONTAL_THUNDERSTORM() == 1 || GET_HEAT_THUNDERSTORM() == 1
+	PRINT ……
+	FONTBOLD
+	PRINT 嘎吱
+	FONTREGULAR
+	PRINTL ………　……
+ELSE
+	PRINTL ……　………　……
+ENDIF
+
+SELECTCASE TIME:0
+	CASE 345 TO 359, 375 TO 389, 405 TO 419, 435 TO 449, 465 TO 479, 525 TO 539, 585 TO 599, 705 TO 719, 735 TO 749, 825 TO 839, 885 TO 899, 945 TO 959, 1005 TO 1019, 1065 TO 1079, 1125 TO 1139, 1185 TO 1199, 1245 TO 1259, 1305 TO 1319, 1365 TO 1379
+	;天气予报(15分间)(05:45 06:15 06:45 07:15 07:45 08:45 09:45 11:45 12:15 13:45 14:45 15:45 16:45 17:45 18:45 19:45 20:45 21:45 22:45)
+		SELECTCASE 低气圧位置
+			CASE "台风远方"
+				PRINTFORML …位于…南海上，%台风势力%的台风…号……
+			CASE "台风势力圏"
+				PRINTFORML …位于…海域，%台风势力%的台风……中心气压为…hPa…
+			CASE "台风接近强风域", "台风接近暴风域"
+				PRINTFORM …%台风势力%的台风…号
+				IF 暴风情报 == "暴风特别警报"
+					PRINTFORML ……将在{TIME_CLOSEST_TYPHOON:1}日%GET_NAME_WEATHER_TIMEZOME(TIME_CLOSEST_TYPHOON:2)%以数十年一遇的强度接近…
+				ELSEIF IS_TYPHOON:1 >= 3
+					PRINTFORML ……将在{TIME_CLOSEST_TYPHOON:1}日%GET_NAME_WEATHER_TIMEZOME(TIME_CLOSEST_TYPHOON:2)%以保持原有势力的状态接近…
+				ELSE
+					PRINTFORML ……将在{TIME_CLOSEST_TYPHOON:1}日%GET_NAME_WEATHER_TIMEZOME(TIME_CLOSEST_TYPHOON:2)%接近…
+				ENDIF
+			CASE "台风最接近"
+				PRINTFORM …%台风势力%的台风…号
+				IF 暴风情报 == "暴风特别警报"
+					PRINTFORML ……以数十年一遇的强度…最接近…请严加戒备…
+				ELSEIF IS_TYPHOON:1 >= 3
+					PRINTFORML ……最接近…请严加戒备…
+				ELSE
+					PRINTFORML ……最接近…请充分戒备…
+				ENDIF
+			CASE "台风通过暴风域", "台风通过强风域"
+				PRINTFORM …%台风势力%的台风…号
+				IF 暴风情报 == "暴风特别警报"
+					PRINTFORML ……以历史性的强度…通过…请严加戒备…
+				ELSEIF IS_TYPHOON:1 >= 3
+					PRINTFORML ……以保持原有势力的状态…通过…
+				ELSE
+					PRINTFORML ……通过…
+				ENDIF
+			CASE "寒冷涡远方", "寒冷涡接近"
+				SELECTCASE DAY:2
+					CASE 1, 3, 4
+						PRINTFORML …寒冷涡正在向日本海一侧移动……
+					CASE 2
+						PRINTFORML …强烈的冷空气流入上空……
+				ENDSELECT
+			CASE "二つ玉低气圧远方", "日本海低气圧远方"
+				PRINTFORML …低气压正在…日本海一侧……
+			CASE "二つ玉低气圧接近", "疑似好天", "二つ玉低气圧通过中"
+				PRINTFORML …正在日本海一侧迅速发展的低气压……
+				PRINTFORML …山区天气容易突变……
+			CASE "日本海低气圧接近", "日本海低气圧通过中"
+				PRINTFORML …正在日本海一侧发展的低气压……
+			CASE "南岸低气圧远方"
+				PRINTFORML …低气压正在…东海……
+			CASE "南岸低气圧接近"
+				PRINTFORML …正在太平洋一侧发展的低气压……
+			CASE "温暖前线远方"
+				IF TIME_ENTER_TERRITORY_EXTRATROPICAL_LOW:0 == DAY:2 && TIME_ENTER_TERRITORY_EXTRATROPICAL_LOW:1 <= DAY:3 + 1
+					PRINTFORML …明天以后锋面将……
+				ELSE
+					PRINTFORML …本周中段低气压将……
+				ENDIF
+			CASE "温暖前线接近"
+				PRINTFORML …由于暖锋接近，从西部开始……
+			CASE "暖域"
+				PRINTFORML …寒锋通过时……
+			CASE "寒冷前线通过"
+				PRINTFORML …局部地区有阵雨……
+			CASEELSE
+				SELECTCASE DAY:2
+					CASE 1,3
+						IF IS_RAINY_SEASON1:0 == 1 || IS_RAINY_SEASON2 == 1
+							PRINTFORML …是阴沉的天气……
+						ELSE
+							PRINTFORML …是平静的天气……
+						ENDIF
+					CASE 2
+						IF POWER_WARM_AIR == 1
+							PRINTFORML …太平洋高气压的扩张减弱……
+						ELSE
+							PRINTFORML …全国都是夏日晴空……
+						ENDIF
+					CASE 4
+						PRINTFORML …西高东低…冬季型气压分布……
+				ENDSELECT
+		ENDSELECT
+		
+		SELECTCASE 大雨情报
+			CASE "大雨特别警报"
+				SELECTCASE RAND:4
+					CASE 0
+						PRINTFORML ……前所未有的大雨……
+					CASE 1
+						PRINTFORML ……该地区出现了数十年一遇的降雨量……
+					CASE 2
+						PRINTFORML ……对该地区发布了大雨特别警报……
+					CASE 3
+						PRINTFORML ……已经安全避难……为了保护生命，请采取行动……
+				ENDSELECT
+			CASE "大雨警报(泥石流灾害警戒情报)"
+				SELECTCASE RAND:2
+					CASE 0
+						PRINTFORML ……过去几年泥石流灾害风险最高……
+					CASE 1
+						PRINTFORML ……气象台发布该地区泥石流灾害风险……
+				ENDSELECT
+			CASE "大雨警报"
+				SELECTCASE RAND:3
+					CASE 0
+						PRINTFORML ……行动不便的人……
+					CASE 1
+						PRINTFORML ……在天黑之前……避难……
+					CASE 2
+						PRINTFORML ……气象台对该地区发布了大雨·洪水警报……
+				ENDSELECT
+			CASE "大雨警报"
+				SELECTCASE RAND:2
+					CASE 0
+						PRINTFORML ……请查看您所在地区的灾害地图……
+					CASE 1
+						PRINTFORML ……气象台对该地区发布了大雨警报……
+				ENDSELECT
+		ENDSELECT
+		
+		SELECTCASE 大雪情报
+			CASE "大雪特别警报"
+				SELECTCASE RAND:3
+					CASE 0
+						PRINTFORML ……是豪雪以来最大的雪……
+					CASE 1
+						PRINTFORML ……数十年一遇的大雪……
+					CASE 2
+						PRINTFORML ……对该地区发布了大雪特别警报……
+				ENDSELECT
+			CASE "大雪警报"
+				IF CONTINUOUS_SNOWFALL >= 20
+					PRINTFORML ……气象台发布关于该地区显著大雪的……
+				ELSE
+					PRINTFORML ……该地区有大雪警报……
+				ENDIF
+			CASE "大雪警报"
+				PRINTFORML ……该地区有大雪警报……
+		ENDSELECT
+		
+		SELECTCASE 暴风情报
+			CASE "暴风雪特别警报"
+				SELECTCASE RAND:4
+					CASE 0
+						PRINTFORML ……对该地区发布了暴风雪特别警报……
+					CASE 1
+						PRINTFORML ……数十年一遇的暴风雪……
+					CASE 2
+						PRINTFORML ……前所未有的暴风雪……非紧急情况请勿外出……
+					CASE 3
+						PRINTFORML ……强烈的暴风雪……随时可能发生……
+				ENDSELECT
+			CASE "暴风特别警报"
+				SELECTCASE RAND:4
+					CASE 0
+						PRINTFORML ……对该地区发布了暴风特别警报……
+					CASE 1
+						PRINTFORML ……前所未有的强烈风……
+					CASE 2
+						PRINTFORML ……自…海湾台风以来的…历史性……
+					CASE 3
+						PRINTFORML ……强烈的风……请注意自身安全……
+				ENDSELECT
+			CASE "暴风雪警报"
+				SELECTCASE RAND:2
+					CASE 0
+						PRINTFORML ……该地区有暴风雪警报……请尽量不要外出……
+					CASE 1
+						PRINTFORML ……几年一遇的暴风雪……
+				ENDSELECT
+			CASE "暴风警报"
+				PRINTFORML ……该地区有暴风警报……请尽快避难……
+			CASE "风雪警报"
+				PRINTFORML ……该地区有风雪警报……
+			CASE "强风警报"
+				PRINTFORML ……该地区有强风警报……
+		ENDSELECT
+		
+		SELECTCASE 雷情报
+			CASE "雷警报(龙卷风注意情报)"
+					PRINTFORML …大气状态非常不稳定……
+					PRINTFORML …该地区发生龙卷风的可能性很高……
+			CASE "雷警报"
+				IF DAY:2 == 2 && (IS_COLD_LOW || 低气圧位置 == "台风势力圏")
+					PRINTFORML …大气状态非常不稳定……
+				ELSE
+					PRINTFORML …大气状态不稳定……
+				ENDIF
+		ENDSELECT
+		
+		SELECTCASE 雪崩情报
+			CASE "雪崩警报"
+				PRINTFORML ……有发生雪崩的危险……
+		ENDSELECT
+		
+		SELECTCASE 低温情报
+			CASE "低温警报"
+				PRINTFORML …该地区气温低于往年平均水平……
+		ENDSELECT
+		
+	CASE 300 TO 329, 360 TO 374, 420 TO 434, 540 TO 554, 600 TO 614, 660 TO 674, 720 TO 734, 780 TO 794, 840 TO 854, 900 TO 914, 1020 TO 1034, 1140 TO 1184, 1200 TO 1214, 1260 TO 1274, 1380 TO 1394, 0 TO 14, 60 TO 74, 120 TO 134, 180 TO 194, 240 TO 254
+	;ニュース(原则15分间)(05:00~05:29 06:00 07:00 09:00 10:00 11:00 12:00 13:00 14:00 15:00 17:00 19:00~19:44 20:00 21:00 23:00 24:00 01:00 02:00 03:00 04:00)
+		SELECTCASE 低气圧位置
+			CASE "台风远方"
+				PRINTFORML …位于…南海上，%台风势力%的台风…号……
+			CASE "台风势力圏"
+				PRINTFORML …位于…海域，%台风势力%的台风……中心气压为…hPa…
+			CASE "台风接近强风域", "台风接近暴风域", "台风最接近", "台风通过暴风域", "台风通过强风域"
+				PRINTFORM …%台风势力%的台风…号
+				IF IS_TYPHOON:1 >= 3
+					PRINTFORML ……以保持原有势力的状态接近…
+				ELSE
+					PRINTFORML ……日将接近…
+				ENDIF
+			CASE "寒冷涡远方", "寒冷涡接近"
+				SELECTCASE DAY:2
+					CASE 1, 3, 4
+						PRINTFORML …寒冷涡正在向日本海一侧移动……
+					CASE 2
+						PRINTFORML …强烈的冷空气流入上空……
+				ENDSELECT
+			CASE "二つ玉低气圧接近", "疑似好天", "二つ玉低气圧通过中"
+				PRINTFORML …山区事故频发……
+		ENDSELECT
+		
+		SELECTCASE 大雨情报
+			CASE "大雨特别警报"
+				SELECTCASE RAND:5
+					CASE 0
+						PRINTFORML ……前所未有的大雨……
+					CASE 1
+						PRINTFORML ……该地区出现了数十年一遇的降雨量……
+					CASE 2
+						PRINTFORML ……对该地区发布了大雨特别警报……
+					CASE 3
+						PRINTFORML ……的警戒级别已达5……
+					CASE 4
+						PRINTFORML ……已经安全避难……为了保护生命，请采取行动……
+				ENDSELECT
+				
+				SELECTCASE CONTINUOUS_RAINFALL
+					CASE IS >= 40
+						SELECTCASE RAND:2
+							CASE 0
+								PRINTFORML …政府指定为…特大灾害……
+							CASE 1
+								PRINTFORML …各地…中断……正在救援……
+						ENDSELECT
+					CASE IS >= 20
+						SELECTCASE RAND:3
+							CASE 0
+								PRINTFORML …因泥石流滑坡…户家庭…陷入孤立……
+							CASE 1
+								PRINTFORML …部分地区已经出现历史性的大雨……
+							CASE 2
+								PRINTFORML …河流超过泛滥危险水位……
+						ENDSELECT
+					CASE IS >= 10
+						SELECTCASE RAND:2
+							CASE 0
+								PRINTFORML …对市发布了历史性的短时间强降雨信息……
+							CASE 1
+								PRINTFORML ……出现了数年一遇的大雨……
+						ENDSELECT
+				ENDSELECT
+			CASE "大雨警报(泥石流灾害警戒情报)"
+				SELECTCASE RAND:5
+					CASE 0
+						PRINTFORML ……的警戒级别已达4……
+					CASE 1
+						PRINTFORML …过去几年泥石流灾害风险最高……
+					CASE 2
+						PRINTFORML …气象台发布该地区泥石流灾害风险……
+					CASE 3
+						PRINTFORML …市对……户家庭…发布避难指示……
+					CASE 4
+						PRINTFORML …线全线停运……
+				ENDSELECT
+				
+			CASE "大雨警报"
+				SELECTCASE RAND:5
+					CASE 0
+						PRINTFORML …行动不便的人……
+					CASE 1
+						PRINTFORML …在天黑之前……避难……
+					CASE 2
+						PRINTFORML …气象台对该地区发布了大雨·洪水警报……
+					CASE 3
+						PRINTFORML …市对……户家庭…发布了老年人等避难信息……
+					CASE 4
+						PRINTFORML ……的警戒级别已达2……
+				ENDSELECT
+		ENDSELECT
+		
+		SELECTCASE 大雪情报
+			CASE "大雪特别警报"
+				SELECTCASE RAND:4
+					CASE 0
+						PRINTFORML …是豪雪以来最大的雪……
+					CASE 1
+						PRINTFORML …数十年一遇的大雪……
+					CASE 2
+						PRINTFORML …对该地区发布了大雪特别警报……
+					CASE 3
+						PRINTFORML …因历史性的大雪，各地出现…孤立……
+				ENDSELECT
+			CASE "大雪警报"
+				IF CONTINUOUS_SNOWFALL >= 20
+					SELECTCASE RAND:2
+						CASE 0
+							PRINTFORML ……气象台发布关于该地区显著大雪的……
+						CASE 1
+							PRINTFORML …大雪造成大规模交通拥堵……
+					ENDSELECT
+				ELSE
+					SELECTCASE RAND:2
+						CASE 0
+							PRINTFORML …气象台对该地区发布了大雪警报……
+						CASE 1
+							PRINTFORML …大雪影响了各地的交通……
+					ENDSELECT
+				ENDIF
+		ENDSELECT
+		
+		SELECTCASE 暴风情报
+			CASE "暴风雪特别警报"
+				SELECTCASE RAND:6
+					CASE 0
+						PRINTFORML ……对该地区发布了暴风雪特别警报……
+					CASE 1
+						PRINTFORML …数十年一遇的暴风雪……
+					CASE 2
+						PRINTFORML …前所未有的暴风雪……非紧急情况请勿外出……
+					CASE 3
+						PRINTFORML …强烈的暴风雪……随时可能发生……
+					CASE 4
+						PRINTFORML …各地…陷入孤立…请求救援……
+					CASE 5
+						PRINTFORML …高速公路上…大量汽车被困……
+				ENDSELECT
+			CASE "暴风特别警报"
+				SELECTCASE RAND:4
+					CASE 0
+						PRINTFORML ……对该地区发布了暴风特别警报……
+					CASE 1
+						PRINTFORML …前所未有的强烈风……
+					CASE 2
+						PRINTFORML …自…海湾台风以来的…历史性……
+					CASE 3
+						PRINTFORML …强烈的风……请注意自身安全……
+				ENDSELECT
+			CASE "暴风雪警报"
+				SELECTCASE RAND:2
+					CASE 0
+						PRINTFORML …该地区有暴风雪警报……请尽量不要外出……
+					CASE 1
+						PRINTFORML …几年一遇的暴风雪……
+				ENDSELECT
+			CASE "暴风警报"
+				SELECTCASE RAND:2
+					CASE 0
+						PRINTFORML …气象台对该地区发布了暴风警报……
+					CASE 1
+						PRINTFORML …来自…的暴风增加了避难的危险…请尽快避难……
+				ENDSELECT
+		ENDSELECT
+		
+		SELECTCASE 雷情报
+			CASE "雷警报(龙卷风注意情报)"
+				PRINTFORML …大气状态非常不稳定……
+				PRINTFORML …该地区发生龙卷风的可能性很高……
+			CASE "雷警报"
+				IF DAY:2 == 2 && (IS_COLD_LOW || 低气圧位置 == "台风势力圏")
+					PRINTFORML …大气状态非常不稳定……
+				ENDIF
+		ENDSELECT
+		
+		IF POSSIBLITY_AVALANCHE >= 1
+			PRINTFORML …各地因雪崩造成损失……
+		ENDIF
+		
+		SIF IS_RAINY_SEASON1:1 == 1
+			PRINTFORML …气象台宣布…西日本梅雨季节结束……
+		
+		SELECTCASE IS_COLD_CROP_DAMAGE
+			CASE IS >= 3
+				PRINTFORML …由于历史性的寒害……紧急……
+			CASE IS >= 1
+				PRINTFORML …由于天气不好，农作物受到影响……
+		ENDSELECT
+		
+		SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML …今日的日元汇率是……
+			CASE 1
+				PRINTFORML …接下来是各地的新闻……
+			CASE 2
+				PRINTFORML …据报道……
+		ENDSELECT
+		
+	CASE 960 TO 989
+	;气象通报(16:00~16:29)
+		PRINTFORML …现在发布…{DAY:3}日中午的气象通报……
+		SELECTCASE RAND:54
+			CASE 0
+				PRINTFORML ……接下来…继续为您播报…{DAY:3}日中午的天气……
+			CASE 1
+				PRINTFORML …富士山…气温……
+			CASEELSE
+				{
+				PRINTFORML …%TEXTR("/石垣岛/那霸/名濑/鹿儿岛/福江/严原/足摺岬/室户岬/松山/滨田/西乡/大阪/潮岬/
+				八丈岛/大岛/御前崎/铫子/前桥/小名浜/轮岛/相川/仙台/宫古/秋田/函馆/浦河/根室/稚内/
+				波隆纳伊斯克/谢韦罗库里尔斯克/哈巴罗夫斯克/鲁德纳亚普里斯坦/符拉迪沃斯托克/
+				首尔/郁陵岛/釜山/木浦/济州岛/台北/恒春/长春/北京/大连/青岛/
+				上海/武汉/厦门/香港/巴斯科/马尼拉/父岛/南鸟岛/
+				")%…风力……hPa……
+				}
+		ENDSELECT
+		
+		PRINTFORML …接下来是渔业气象
+		
+		SELECTCASE 低气圧位置
+			CASE "台风远方", "台风势力圏", "台风接近强风域", "台风接近暴风域", "台风最接近", "台风通过暴风域", "台风通过强风域"
+				PRINTFORML ……有…hPa的台风…号，正以…km的速度前进……
+			CASE "寒冷涡远方", "寒冷涡接近"
+				PRINTFORML ……有…hPa的低气压，几乎停滞不前……
+			CASE "二つ玉低气圧远方", "日本海低气圧远方"
+				PRINTFORML 在黄海…有…hPa的低气压，正以…km的速度前进……
+			CASE "日本海低气圧接近", "日本海低气圧通过中"
+				PRINTFORML 在日本海的…有…hPa的低气压，正以…km的速度前进……
+			CASE "二つ玉低气圧接近", "疑似好天", "二つ玉低气圧通过中"
+				PRINTFORML 在日本海的…有…hPa的低气压，正以…km的速度前进……
+				PRINTFORML 在本州的…有…hPa的低气压，正以…km的速度前进……
+			CASE "南岸低气圧远方"
+				PRINTFORML 在东海的…有…hPa的低气压，正以…km的速度前进……
+			CASE "南岸低气圧接近"
+				PRINTFORML 在本州的…有…hPa的低气压，正以…km的速度前进……
+			CASE "温暖前线远方"
+				PRINTFORML 在长江下游的…有…hPa的低气压，正以…km的速度前进……
+			CASE "温暖前线接近"
+				PRINTFORML 在西日本的…有…hPa的低气压，正以…km的速度前进……
+			CASE "暖域"
+				PRINTFORML 在北陆的…有…hPa的低气压，正以…km的速度前进……
+			CASE "寒冷前线通过"
+				PRINTFORML 在三陆冲的…有…hPa的低气压，正以…km的速度前进……
+			CASE "低气圧未发生"
+				PRINTFORML ……的…有…hPa的高气压，几乎停滞不前……
+		ENDSELECT
+	CASEELSE
+		IF GET_LOCATION_AREA_TYPHOON() == 1 && IS_TYPHOON:1 >= 5
+			SELECTCASE RAND:5
+				CASE 0
+					IF 暴风情报 == "暴风特别警报"
+						PRINTFORML …强烈的台风…号以历史性的强度接近……
+					ELSE
+						PRINTFORML …强烈的台风…号接近……
+					ENDIF
+				CASE 1
+					IF 暴风情报 == "暴风特别警报"
+						PRINTFORML …台风…号给各地造成巨大损失……
+					ELSE
+						PRINTFORML …台风…号给各地造成损失……
+					ENDIF
+				CASE 2
+					PRINTFORML …线全线停运……
+				CASE 3
+					IF 暴风情报 == "暴风特别警报"
+						PRINTFORML …自…海湾台风以来…请确保自身安全……
+					ELSE
+						PRINTFORML …请尽可能早地避难……
+					ENDIF
+				CASE 4
+					PRINTFORML …航班也受到很大影响……
+			ENDSELECT
+		ENDIF
+		SELECTCASE 大雨情报
+			CASE "大雨特别警报"
+				SELECTCASE RAND:5
+					CASE 0
+						PRINTFORML ……前所未有的大雨……
+					CASE 1
+						PRINTFORML ……该地区出现了数十年一遇的降雨量……
+					CASE 2
+						PRINTFORML ……对该地区发布了大雨特别警报……
+					CASE 3
+						PRINTFORML ……的警戒级别已达5……
+					CASE 4
+						PRINTFORML ……已经安全避难……为了保护生命，请采取行动……
+				ENDSELECT
+				
+				SELECTCASE CONTINUOUS_RAINFALL
+					CASE IS >= 40
+						SELECTCASE RAND:2
+							CASE 0
+								PRINTFORML …政府指定为…特大灾害……
+							CASE 1
+								PRINTFORML …各地…中断……正在救援……
+						ENDSELECT
+					CASE IS >= 20
+						SELECTCASE RAND:3
+							CASE 0
+								PRINTFORML …因泥石流滑坡…户家庭…陷入孤立……
+							CASE 1
+								PRINTFORML …部分地区已经出现历史性的大雨……
+							CASE 2
+								PRINTFORML …河流超过泛滥危险水位……
+						ENDSELECT
+					CASE IS >= 10
+						SELECTCASE RAND:2
+							CASE 0
+								PRINTFORML …对市发布了历史性的短时间强降雨信息……
+							CASE 1
+								PRINTFORML ……出现了数年一遇的大雨……
+						ENDSELECT
+				ENDSELECT
+			CASE "大雨警报(泥石流灾害警戒情报)"
+				SELECTCASE RAND:5
+					CASE 0
+						PRINTFORML ……的警戒级别已达4……
+					CASE 1
+						PRINTFORML …过去几年泥石流灾害风险最高……
+					CASE 2
+						PRINTFORML …气象台发布该地区泥石流灾害风险……
+					CASE 3
+						PRINTFORML …市对……户家庭…发布避难指示……
+					CASE 4
+						PRINTFORML …线全线停运……
+				ENDSELECT
+			CASEELSE
+				IF 暴风情报 == "暴风雪特别警报"
+					SELECTCASE RAND:6
+						CASE 0
+							PRINTFORML ……对该地区发布了暴风雪特别警报……
+						CASE 1
+							PRINTFORML …数十年一遇的暴风雪……
+						CASE 2
+							PRINTFORML …前所未有的暴风雪……非紧急情况请勿外出……
+						CASE 3
+							PRINTFORML …强烈的暴风雪……随时可能发生……
+						CASE 4
+							PRINTFORML …各地…陷入孤立…请求救援……
+						CASE 5
+							PRINTFORML …高速公路上…大量汽车被困……
+					ENDSELECT
+				ELSEIF 大雪情报 == "大雪特别警报"
+					SELECTCASE RAND:4
+						CASE 0
+							PRINTFORML …是豪雪以来最大的雪……
+						CASE 1
+							PRINTFORML …数十年一遇的大雪……
+						CASE 2
+							PRINTFORML …对该地区发布了大雪特别警报……
+						CASE 3
+							PRINTFORML …因历史性的大雪，各地出现…孤立……
+					ENDSELECT
+				ELSEIF 大雪情报 == "大雪警报" && CONTINUOUS_SNOWFALL >= 20
+					SELECTCASE RAND:2
+						CASE 0
+							PRINTFORML ……气象台发布关于该地区显著大雪的……
+						CASE 1
+							PRINTFORML …大雪造成大规模交通拥堵……
+					ENDSELECT
+				ELSEIF 雷情报 == "雷警报(龙卷风注意情报)"
+					SELECTCASE RAND:3
+						CASE 0
+							PRINTFORML …该地区发生龙卷风的可能性很高……
+						CASE 1
+							PRINTFORML …积雨云正在靠近…请到安全的地方……
+						CASE 2
+							PRINTFORML …各地遭受突风和冰雹灾害……
+					ENDSELECT
+				ELSEIF POSSIBLITY_AVALANCHE >= 1
+					PRINTFORML …各地因雪崩造成损失……
+				ELSE
+					PRINTFORML … ……………… ……
+				ENDIF
+		ENDSELECT
+ENDSELECT
+
+TIME += 5
+
+;-------------------------------------------------
+;实行判定
+;-------------------------------------------------
+@COM_ABLE496
+SIF !TFLAG:100
+	RETURN 0
+;停止中は不可
+SIF FLAG:70
+	RETURN 0
+;ウフフ中は不可
+SIF CFLAG:诶嘿嘿
+	RETURN 0
+;睡眠恶作剧中は不可
+SIF CFLAG:恶作剧
+	RETURN 0
+;陪睡中
+SIF CFLAG:陪睡中
+	RETURN 0
+;约会中
+;SIF CHK_DATENOW(CFLAG:约会中) && CFLAG:当前位置 != OMANEKIBEYA()
+;	RETURN 0
+
+RETURN 1

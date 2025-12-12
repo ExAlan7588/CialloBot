@@ -1,0 +1,1736 @@
+﻿;-------------------------------------------------
+;固有指令
+;日常系指令、レベルX
+;-------------------------------------------------
+@COM443
+TRYCALLFORM UNIQUE_COM_%NAME_UNIQUE_COM(TARGET)%
+SIF RESULT == -1
+	RETURN -1
+TIME += 3
+RETURN 1
+
+@COM_ABLE443
+;停止中は不可
+SIF FLAG:70 == 1
+	RETURN 0
+;实行判定
+SIF !TFLAG:100
+	RETURN 0
+;批量管理
+SIF GLOBAL_COMABLE(443)
+	RETURN RESULT
+SIF TARGET <= 0
+	RETURN 0
+SIF !SHIRAHU(TARGET)
+	RETURN 0
+SIF CFLAG:诶嘿嘿
+	RETURN 0
+SIF !ABLE_UNIQUE_COM(TARGET)
+	RETURN 0
+RETURN 1
+
+
+@NAME_UNIQUE_COM(CHARA)
+#FUNCTIONS
+#DIM CHARA
+RETURNF GET_STR(0, "キャラデータ", CHARA, "固有指令")
+
+@ABLE_UNIQUE_COM(CHARA)
+#FUNCTION
+#DIM CHARA
+RETURNF GET_INT(0, "キャラデータ", CHARA, "固有指令实行可能")
+
+
+;-------------------------------------------------
+;灵梦用
+;-------------------------------------------------
+@UNIQUE_COM_神签契约
+#DIM 神签代
+IF FLAG:神签契约
+	PRINTFORML 「不是已经签约了么」
+	RETURN -1
+ENDIF
+IF !MAIN_MAP
+	神签代 = 30
+ELSE
+	神签代 = 50
+ENDIF
+PRINTFORML 「乐园的可爱巫女每天都为你抽签」
+PRINTFORML 「一个月50筹码、够便宜吧？」
+SIF !MAIN_MAP
+	PRINTFORML 「既然是住在神社里、那么只要30就好了」
+CALL ASK_M("拜托了",MONEY:2 >= 神签代,"不用了",1)
+SIF RESULT
+	RETURN -1
+PRINTFORMW 「貌似还差一点点啊！搬家后就签约吧」
+MONEY:2 -= 神签代
+FLAG:神签契约 = 1
+
+;-------------------------------------------------
+;先代用1
+;-------------------------------------------------
+@UNIQUE_COM_特殊训练
+#DIM 训练
+IF TALENT:恋人
+    训练 = 10000
+ELSEIF TALENT:恋慕
+    训练 = 35000
+ELSEIF TALENT:思慕
+    训练 = 50000
+ELSEIF !MAIN_MAP
+	训练 = 80000
+ELSE
+	训练 = 100000
+ENDIF
+PRINTFORML 「嗯……既然是特殊训练……」
+PRINTFORML 「一次十万元、够便宜了吧？」
+PRINTFORMW 「贵？ 你在我这买不了吃亏买不了上当。」
+PRINTFORMW 「这种特殊的训练方式贵是正常的、不爽不要买。」
+SIF !MAIN_MAP
+	PRINTFORML 「既然是住在神社里的话、那么便宜点、算你八万就好了」
+SIF TALENT:恋人
+    PRINTFORMW 「但是、害、我俩谁跟谁啊、再那么黑就显得我小气了、就收你一万元吧。」
+SIF TALENT:恋慕
+    PRINTFORMW 「嗯……怎么说也……不、这次就算你三万五好了、什么？ 没听过促销啊？」
+SIF TALENT:思慕
+    PRINTFORMW 「熟客啊、%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%、这次便宜你了、五万元就行。」
+CALL ASK_M("拜托了",MONEY >= 训练,"不用了",1)
+SIF RESULT
+	RETURN -1
+PRINTFORMW 「那么……我把特殊训练的方法告诉你、你先自己练练吧。」
+MONEY -= 训练
+CALL AddEXP("战斗经验", MASTER, 50)
+CALL RECOVER(MASTER, -1200, "体力", "用先代提供的方法训练")
+
+;-------------------------------------------------
+;先代用2
+;-------------------------------------------------
+@UNIQUE_COM_寻找委托
+#DIM 寻找
+#DIM 候补番号
+#DIM 候补个数
+#DIM 卖出个数
+IF TALENT:恋人
+    寻找 = 100
+ELSEIF TALENT:恋慕
+    寻找 = 300
+ELSEIF TALENT:思慕
+    寻找 = 500
+ELSE
+	寻找 = 1000
+ENDIF
+PRINTFORML 所持金:%金额表示(MONEY)%
+DRAWLINE
+PRINTFORMW  「想要找材料吗？ 可以哦、先订购吧。」
+PRINTFORMW  「如果有什么材料的话我也会收购的」
+;所持している素材道具の卖出可能物・个数を列表化
+LOCAL:1 = 999
+FOR LOCAL:0 ,600, 700
+	SELECTCASE LOCAL:0
+		CASE 636
+			;★持っていても卖れない素材を上のCASEへ追加
+		CASEELSE
+			IF ITEM:(LOCAL:0)
+				LOCALS:0 = [{LOCAL:0}] %ITEMNAME:(LOCAL:0), 16, LEFT%×{ITEM:(LOCAL:0)}    
+				LOCAL:1 += STRLENS(LOCALS:0)
+				SIF ITEM:(LOCAL:0) < 10
+					LOCAL:1 ++
+				IF LOCAL:1 > 90
+					IF LOCAL:1 >= 999
+					;最初のみ改行しない
+					ELSE
+						PRINTL 
+					ENDIF
+					LOCAL:1 = 0
+					PRINT 　　
+				ENDIF
+				PRINTFORM [{LOCAL:0}] %ITEMNAME:(LOCAL:0), 16, LEFT%×{ITEM:(LOCAL:0)}
+				SIF ITEM:(LOCAL:0) < 10
+					PRINT  
+				PRINT 　　
+				ENDIF
+	ENDSELECT
+	PRINTFORMW  先代突然消失了、等再过了一两分钟出现时、手上提着%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%订购的材料
+	PRINTFORMW  「委托费1000元、请。」
+	SIF TALENT:恋人
+    PRINTFORMW 「但是、害、我俩谁跟谁啊、再那么黑就显得我小气了、就收你100元吧。」
+SIF TALENT:恋慕
+    PRINTFORMW 「嗯……怎么说也……不、这次就算你300好了、什么？ 没听过限时特惠啊？」
+    SIF TALENT:思慕
+    PRINTFORMW 「熟客啊、%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%、这次便宜你了、500元就行。」
+    CALL ASK_M("支付委托费",MONEY >= 寻找,"不支付委托费",1)
+    SELECTCASE RESULT
+    CASE 0
+    PRINTFORMW  「那么、下次有这种活再叫上我就是了。」
+    MONEY -= 寻找
+    CALL CHANGE_CFLAG(2, 145, 10)
+	CALL CHANGE_CFLAG(4, 145, 5)
+    CASE 1
+    PRINTFORMW  「没钱……？」
+    PRINTFORMW  「那么、就用这个抵偿好了……」
+    PRINTFORMW  %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%的腹部接了重重的一拳、痛苦地在地上蜷缩着。
+    PRINTFORMW  先代不知道在什么时候离开了。
+    CALL RECOVER(MASTER, -1000, "体力", "先代的腹击")
+    ENDSELECT
+    RETURN 1
+NEXT
+PRINTL 
+PRINTL 　　[100] 放弃
+DRAWLINE
+PRINTFORML 「要卖什么呢？」
+$INPUT_LOOP01
+INPUT
+SELECTCASE RESULT
+	CASE 100
+		RETURN -1
+	CASE 601, 603 TO 609, 612 TO 615, 617 TO 620, 622 TO 625, 632 TO 635, 637, 640 TO 643, 646
+		;★卖出可能な素材を上のCASEに追加
+		候补番号 = RESULT
+		候补个数 = ITEM:(候补番号)
+		CLEARLINE 1
+		IF 候补个数
+			PRINTFORM 　%金额表示(ITEMPRICE:(候补番号) / 2)%一个、怎么样？」
+			SETCOLOR 0x777777
+			PRINTFORML 　要卖出多少个？(输入1～{候补个数}、0为返回)
+			RESETCOLOR
+			PRINTL   
+			PRINTBUTTON "[0] 放弃", 0
+			PRINT     
+			PRINTBUTTON "[1] 1个", 1
+			PRINT     
+			IF 候补个数 >= 5
+				PRINTBUTTON "[5] 5个", 5
+				PRINT     
+			ENDIF
+			IF 候补个数 >= 10
+				PRINTBUTTON "[10] 10个", 10
+				PRINT    
+			ENDIF
+			$INPUT_LOOP02
+			INPUT
+			SELECTCASE RESULT
+				CASE 0
+					RESTART
+				CASE 1 TO 候补个数
+					CLEARLINE 2
+					卖出个数 = RESULT
+					PRINTFORMW 「这样啊、那么一共%ITEMNAME:候补番号%{卖出个数}个、总计订价\\{(ITEMPRICE:(候补番号) / 2 * 卖出个数)}……」
+					MONEY += (ITEMPRICE:(候补番号) / 2 * 卖出个数)
+					ITEM:(候补番号) -= 卖出个数
+					RESTART
+				CASEELSE
+					CLEARLINE 1
+					GOTO INPUT_LOOP02
+			ENDSELECT
+		ELSE
+			CLEARLINE 1
+			GOTO INPUT_LOOP01
+		ENDIF
+	CASEELSE
+		CLEARLINE 1
+		GOTO INPUT_LOOP01
+ENDSELECT
+RESTART
+;-------------------------------------------------
+;文用
+;-------------------------------------------------
+@UNIQUE_COM_新闻订阅
+IF FLAG:新闻订阅
+	PRINTFORML 「不是已经订阅了么」
+	RETURN -1
+ENDIF
+PRINTFORML 「%金额表示(3000)%就能了解这个月的幻想乡的时事！　文文新闻值得你订阅？」
+CALL ASK_M("不要",1,"订阅",MONEY >= 3000,"用筹码来订阅",MONEY:2 >= 10)
+SELECTCASE RESULT
+	CASE 0
+		RETURN -1
+	CASE 1
+		MONEY -= 3000
+	CASE 2
+		MONEY:2 -= 10
+ENDSELECT
+PRINTFORMW 订阅了文文。新闻。
+PRINTFORMW 好像是每月初续费。
+FLAG:新闻订阅 = 1
+
+
+
+
+;-------------------------------------------------
+;天子用
+;-------------------------------------------------
+@UNIQUE_COM_天候操作
+IF CFLAG:MASTER:当前位置 == 天界
+	PRINTFORML 「这里太勉强了」
+	RETURN -1
+ENDIF
+IF FLAG:异常气象
+	PRINTFORML 「这个天气无法改变」
+	RETURN -1
+ENDIF
+IF GETBIT(TFLAG:一日一回,6)
+	PRINTFORML 「今天已经结束了」
+	RETURN -1
+ENDIF
+PRINTFORML 「好像是因为很麻烦的样子、只是随便做了下」
+$LOOP
+CALL ASK_M("晴朗",1,"阴天",1,"雨",1, "雪", DAY:2 == 4, "内裤", 1)
+SELECTCASE RESULT
+	CASE 0
+		;雨なら低概率で虹
+		SIF INRANGE(TIME:5,4,7) && !RAND:7
+			TIME:7 = 1
+		;雪なら低概率でダイヤモンドダスト
+		SIF INRANGE(TIME:5,8,13) && !RAND:7
+			TIME:7 = 2
+		TIME:5 = RAND:2
+	CASE 1
+		TIME:5 = RAND:2 + 2
+	CASE 2
+		;晴天を变えようとすると虹
+		IF TIME:5 < 2 && !RAND:4
+			TIME:7 = 1
+		ELSE
+			TIME:5 = 4 + RAND:4
+		ENDIF
+	CASE 3
+		;晴天を变えようとするとダイヤモンドダスト
+		IF TIME:5 < 2 && !RAND:4
+			TIME:7 = 2
+		ELSE
+			TIME:5 = 8 + RAND:6
+		ENDIF
+	CASE 4
+		PRINTFORML 「你是笨蛋么？」
+		RETURN -1
+ENDSELECT
+
+DOWNBASE:气力 = 300
+SETBIT TFLAG:一日一回,6
+
+;(天候パッチ)风速を0にする
+WIND_VELOCITY = 0
+;(天候パッチ)1日が终わるまで天候变更を禁止する
+FORBIDDEN_CHANGE_WEATHER = 1
+
+
+;-------------------------------------------------
+;椛用
+;-------------------------------------------------
+@UNIQUE_COM_千里眼
+PRINTFORML 「要看哪里呢？」
+CALL BROAD_HITOSAGASI
+
+
+;-------------------------------------------------
+;琪露诺用
+;-------------------------------------------------
+;冰淇淋の值段は季节により变动する（夏が一番高い）
+@UNIQUE_COM_买冰淇淋
+#DIM 冰淇淋ねだん
+#DIM パックねだん
+SELECTCASE DAY:2
+CASE 1
+	冰淇淋ねだん = 400
+CASE 2
+	冰淇淋ねだん = 500
+CASE 3
+	冰淇淋ねだん = 300
+CASE 4
+	冰淇淋ねだん = 200
+ENDSELECT
+パックねだん = 冰淇淋ねだん * 9
+
+DRAWLINE
+PRINTL 「要冰淇淋么？」
+PRINTFORML 所持金:%金额表示(MONEY)%
+DRAWLINE
+CALL EX_SHOPPING(GETNUM(ITEM, "冰淇淋"), "冰淇淋", "又甜又好吃的冰淇淋", 冰淇淋ねだん, 1)
+CALL EX_SHOPPING(GETNUM(ITEM, "冰淇淋"), "混合装冰淇淋", "大家一起吃吧（10个）", パックねだん, 10, GETNUM(ITEM, "冰淇淋") + 1)
+DRAWLINE
+PRINTL [999] 算了
+INPUT
+
+IF RESULT == 999
+	RETURN -1
+ELSEIF RESULT == GETNUM(ITEM, "冰淇淋")
+	CALL ITEM_CARTON(GETNUM(ITEM, "冰淇淋"), 冰淇淋ねだん, 1)
+ELSEIF RESULT == GETNUM(ITEM, "冰淇淋") + 1
+	CALL ITEM_CARTON(GETNUM(ITEM, "冰淇淋"), パックねだん, 10)
+ENDIF
+RESTART
+
+;-------------------------------------------------
+;咲夜用
+;-------------------------------------------------
+@UNIQUE_COM_红魔馆出差服务
+PRINTFORML 「哎呀、有什么困难么？」
+PRINTFORML 
+CALL ASK_M("没有请求", 1, "扫除代理", !TFLAG:上门清扫, "浇水代理", ITEM:150)
+SELECTCASE RESULT
+CASE 0
+	RETURN -1
+CASE 1
+	PRINTFORML 是委托清扫%GET_MAPNAME(MAIN_MAP)%么？
+	CALL PAY_YEN_OR_CM(3000,10)
+	SIF !RESULT
+		RETURN -1
+	PRINTFORML 委托了上门清扫服务。
+	TFLAG:上门清扫 = 1
+CASE 2
+	PRINTFORML 委托家庭菜园的浇水么（这一整个月）
+	CALL PAY_YEN_OR_CM(15000,70)
+	SIF !RESULT
+		RETURN -1
+	PRINTFORML 委托了浇水。
+	FLAG:浇水代行 = 1
+ENDSELECT
+RETURN 1
+
+
+
+;-------------------------------------------------
+;纳兹琳用
+;-------------------------------------------------
+@UNIQUE_COM_灵摆查找
+#DIM DYNAMIC CNT_TALK
+#DIM DYNAMIC CNT_DOWSING
+#DIM CAN_SLOT
+#DIM CHK_SLOT
+#DIM TMP_ID
+IF !CNT_TALK
+	PRINTFORML 「嗯。想找东西么」
+	PRINTFORML 「这确实是我的专业领域」
+	PRINTFORMW 「那么、请详细的说明一下吧」
+	CNT_TALK ++
+	CAN_SLOT = CAN_DOWSING()
+	IF !CAN_SLOT
+		PRINTFORML 「喂喂、你说的真的是特别想找的东西么探测术完全没反应啊？」
+		PRINTFORMW 「不是来看笑话的吧？真是的…」
+		RETURN
+	ENDIF
+ELSE
+	PRINTFORMW 「还有什么么？」
+ENDIF
+
+FOR CHK_SLOT, 1, 10
+	SIF !GETBIT(CAN_SLOT, CHK_SLOT)
+		CONTINUE
+	SIF IRAI_EX:CHK_SLOT
+		SETCOLOR C_GRAY
+	PRINTFORML [{CHK_SLOT}] - 依赖{CHK_SLOT}　＜%STR_DATA_IRAI(IRAI_SLOT:CHK_SLOT, "依赖名", IRAI_SLOT_TO_CLIENT(CHK_SLOT))%＞
+	RESETCOLOR
+NEXT
+PRINTFORML 
+PRINTFORML [0] - 放弃
+DO
+	INPUT
+	CHK_SLOT = RESULT
+	SELECTCASE CHK_SLOT
+	CASE 1 TO 9
+		SIF !GETBIT(CAN_SLOT, CHK_SLOT)
+			CONTINUE
+		IF IRAI_EX:CHK_SLOT
+			PRINTFORML 「喂喂、这个依赖不是已经调查过了吗」
+			CONTINUE
+		ENDIF
+		PRINTFORML 「原来如此」
+		PRINTFORML 「要使用探测术的话多少需要供奉一些、没问题吧？」
+		CALL ASK_M("还是算了", 1, @"施舍%金额表示(1000)%", MONEY >= 1000, "施舍5CM", MONEY:2 >= 5)
+		SELECTCASE RESULT
+		CASE 0
+			PRINTFORMW 「哦呀、那太遗憾了」
+			BREAK
+		CASE 1
+			MONEY -= 1000
+		CASE 2
+			MONEY:2 -= 5
+		ENDSELECT
+		CNT_DOWSING ++
+		SELECTCASE IRAI_SLOT_TO_TASKNAME(CHK_SLOT)
+		CASE "捜索（人物）"
+			CNT_DOWSING ++
+			TMP_ID = IRAI_SLOT_TO_PERSON(CHK_SLOT)
+			IRAI_EX:CHK_SLOT = TMP_ID
+			IF CALLNAME:TMP_ID == "纳兹琳"
+			;ナズ口上は人物に对する反应分岐が多いがつくれない
+			;流石に自分が相手ならこんな感じになるだろう
+				PRINTFORML 「从刚才开始反应就一直摇摆不定」
+				PRINTFORML 「这个委托难道是和我有关联的东西么？」
+				PRINTFORMW 「不由得有这种感觉」
+				BREAK
+			ENDIF
+			CALL DOWSING_TSUBUYAKI
+			PRINTFORML 「得到结果了」
+			PRINTFORML 「%NAME_OUTPUT_TRANSLATION("CALLNAME", TMP_ID)%是关键人物」
+			PRINTFORML 「要顺便算出所在地么？」
+			CALL ASK_M("还是算了", 1, @"施舍%金额表示(500)%", MONEY >= 500, "施舍3CM", MONEY:2 >= 3)
+			SELECTCASE RESULT
+			CASE 0
+				PRINTFORMW 「哦呀、那太遗憾了」
+				BREAK
+			CASE 1
+				MONEY -= 500
+			CASE 2
+				MONEY:2 -= 3
+			ENDSELECT
+			IF CFLAG:TMP_ID:当前位置 == SUKIMA()
+				PRINTFORML 「嗯ー、反应不稳定啊」
+				PRINTFORMW 「现在很难马上见面啊」
+			ELSE
+				PRINTFORMW 「她现在在“%STR:(5000 + GET_MAPID(CFLAG:TMP_ID:当前位置))%”的附近」
+			ENDIF
+		CASE "捜索（场所）"
+			CNT_DOWSING ++
+			TMP_ID = IRAI_SLOT_TO_PLACE(CHK_SLOT)
+			IRAI_EX:CHK_SLOT = TMP_ID + 5000
+			CALL DOWSING_TSUBUYAKI
+			PRINTFORML 「得到结果了」
+			PRINTFORML 「你的目标场所是“%STR:(5000 + GET_MAPID(TMP_ID))%”」
+			PRINTFORML 「需要更加详细的情报么？」
+			
+			CALL ASK_M("还是算了", 1, @"施舍%金额表示(2000)%", MONEY >= 2000, "施舍10CM", MONEY:2 >= 10)
+			SELECTCASE RESULT
+			CASE 0
+				PRINTFORMW 「哦呀、那太遗憾了」
+				BREAK
+			CASE 1
+				MONEY -= 2000
+			CASE 2
+				MONEY:2 -= 10
+			ENDSELECT
+			IRAI_EX:CHK_SLOT = TMP_ID
+			PRINTFORMW 「%STR:(5000 + GET_MAPID(TMP_ID))%附近、特别是“%GET_PLACENAME(TMP_ID)%”的反应非常强」
+		CASEELSE
+			PRINTFORMW 「啊嘞？……嗯ー、读取出了问题」
+			PRINTFORML 
+			PRINTFORML 　发生错误中(请提供日志)
+			PRINTFORML 　点击生成错误记录
+			PRINTFORMW ◆从这里开始
+			PRINTFORML IRAI_SLOT:CHK_SLOT　{IRAI_SLOT:CHK_SLOT}
+			PRINTFORML IRAI_DATA:CHK_SLOT　{IRAI_DATA:CHK_SLOT}
+			CALL SHOW_IRAI_DATA(IRAI_SLOT:CHK_SLOT, CHK_SLOT)
+			PRINTFORML 
+			PRINTFORML ◆到这里结束
+			PRINTFORMW 　复制粘贴
+		ENDSELECT
+		
+	CASE 0
+		IF CNT_DOWSING
+			PRINTDATAL
+				DATA 「好像没派上用场？」
+				DATA 「祈祷自己幸运吧」
+				DATA 「已经可以了么？」
+			ENDDATA
+			PRINTFORMW 「嘛、请耐心寻找」
+		ELSE
+			PRINTFORMW 「请不要再愚弄我了」
+		ENDIF
+		RETURN
+	CASEELSE
+		$RETRY
+		PRINTFORMW 「嗯、什么？」
+		CONTINUE
+	ENDSELECT
+	BREAK
+LOOP 1
+RESTART
+
+;受托済み依赖の灵摆查找可否判定
+;返回值はBITで各依赖の灵摆查找可否
+@CAN_DOWSING()
+#FUNCTION
+#DIM CHK_SLOT
+#DIM DYNAMIC CAN_SLOT
+FOR CHK_SLOT, 1, 10
+	SIF !IRAI_SLOT_CAN_DOWSING(CHK_SLOT)
+		CONTINUE
+	SETBIT CAN_SLOT, CHK_SLOT
+NEXT
+RETURNF CAN_SLOT
+
+;个々の委托接口の灵摆查找可否判定
+@IRAI_SLOT_CAN_DOWSING(CHK_SLOT)
+#FUNCTION
+#DIM CHK_SLOT
+SIF IRAI_SLOT_TO_PROGRESS(CHK_SLOT) != "依赖中"
+	RETURNF 0
+SIF !GROUPMATCH(IRAI_SLOT_TO_TASKNAME(CHK_SLOT), "捜索（人物）", "捜索（场所）")
+	RETURNF 0
+RETURNF CHK_SLOT
+
+;灵摆查找中の独り言
+@DOWSING_TSUBUYAKI
+#DIMS COMMENT, 3
+COMMENT:0 '= "「这……这是」"
+STRDATA COMMENT:1
+	DATA 「……已经缩小了不少了啊」
+	DATA 「唔、但是这样不科学啊」
+	DATA 「哦呀、是这样吗」
+	DATA 「那么、这样做的话…………」
+ENDDATA
+STRDATA COMMENT:2
+	DATA 「……原来是这么回事啊」
+	DATA 「什么嘛、这不是很简单的吗」
+	DATA 「很好、就是这个了」
+	DATA 「是在这里吗」
+ENDDATA
+CALL PRINT_GROUP(COMMENT, 3)
+
+
+
+
+
+;-------------------------------------------------
+;斯塔用
+;-------------------------------------------------
+@UNIQUE_COM_探访迹象
+PRINTFORML 「嗯ー、在找人么？」
+PRINTFORML 「这样啊……要给我零花钱？」
+CALL ASK_M("还是算了", 1, @"给%金额表示(500)%", MONEY >= 500, "给3CM", MONEY:2 >= 3)
+SELECTCASE RESULT
+CASE 0
+	PRINTDATAW
+		DATAFORM 「呜ー、%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%真小气」
+		DATAFORM 「……哈啊」
+		DATAFORM 斯塔 萨菲雅默默地盯着这边
+	ENDDATA
+	RETURN
+CASE 1
+	MONEY -= 500
+CASE 2
+	MONEY:2 -= 3
+ENDSELECT
+PRINTDATAW
+	DATAFORM 「哇啊ー」
+	DATAFORM 「太好了ー」
+	DATAFORM 「是零花钱ー」
+	DATAFORM 「我喜欢通情达理的人」
+	DATAFORM 斯塔 萨菲雅非常开心
+ENDDATA
+PRINTFORML 「那么开始吧♪」
+PRINTFORMW 「嗯……」
+PRINTFORML 
+CALL HITOSAGASI
+PRINTFORMW 
+
+;-------------------------------------------------
+;魔理沙用
+;交友关系广そうだし、耳は早かろう
+;-------------------------------------------------
+@UNIQUE_COM_帮助别人
+#DIM PREV_DAY
+#DIM IRAI_ABLE
+#DIM CLIENT_ID
+PREV_DAY = DAY
+PRINTFORMW 「诶？“想知道正在困扰的女孩子”？」
+
+CALL CAN_IRAI_START
+IRAI_ABLE = RESULT
+IF IRAI_ABLE && IRAI_CHARA_TO_PROGRESS(TARGET) == "依赖未受托"
+	PRINTFORML 「有啊、就在你面前！」
+	CALL IRAI_START(TARGET)
+	SIF IRAI_CHARA_TO_PROGRESS(TARGET) != "依赖中"
+		PRINTFORMW 「什么啊、一般来说这个剧情走向是拒绝的么？」
+	RETURN
+ENDIF
+
+CLIENT_ID = SEARCH_UNIQUE_COM_帮助别人()
+SELECTCASE CLIENT_ID
+CASE 0
+	PRINTFORML 「嗯ー」
+	PRINTFORMW 「据我所知好像没有啊」
+CASEELSE
+	PRINTFORML 「%TEXTR("嗯——/那个——/确实……")%」
+	PRINTDATAW
+		DATAFORM 「%NAME_OUTPUT_TRANSLATION("CALLNAME", CLIENT_ID)%好像那么说过」
+		DATAFORM 「%NAME_OUTPUT_TRANSLATION("CALLNAME", CLIENT_ID)%好像说过些什么」
+		DATAFORM 「听说了%NAME_OUTPUT_TRANSLATION("CALLNAME", CLIENT_ID)%有些困扰的传闻」
+		DATAFORM 「去%NAME_OUTPUT_TRANSLATION("CALLNAME", CLIENT_ID)%的所在地看看怎么样？」
+		DATAFORM 「我觉得去见见%NAME_OUTPUT_TRANSLATION("CALLNAME", CLIENT_ID)%比较好」
+	ENDDATA
+ENDSELECT
+
+@SEARCH_UNIQUE_COM_帮助别人
+#FUNCTION
+#DIM DYNAMIC CLIENT_ID, 人物数量上限
+#DIM DYNAMIC CLIENT_CNT
+FOR LOCAL:0, 1, CHARANUM
+	SIF IRAI_CHARA_TO_PROGRESS(LOCAL:0) != "依赖未受托"
+		CONTINUE
+	CLIENT_ID:CLIENT_CNT = LOCAL:0
+	CLIENT_CNT ++
+NEXT
+SIF !CLIENT_CNT
+	RETURNF 0
+RETURNF CLIENT_ID:(RAND:CLIENT_CNT)
+
+;-------------------------------------------------
+;荷取用
+;-------------------------------------------------
+@UNIQUE_COM_购买道具
+#DIM 买うもの
+#DIM 割引
+TFLAG:194 = 1
+割引 = 66
+;购入条件设定
+FOR LOCAL, 0, 1000
+	CALL ITEMDATA(LOCAL, "SHOP:河童の道具屋")
+	IF RESULT
+		CALL ITEMDATA(LOCAL, "SALES")
+		ITEMSALES:LOCAL = RESULT
+	ENDIF
+NEXT
+DRAWLINE
+CALL LIST_ITEM("河童道具")
+DRAWLINE
+PRINTL 「今天的话有优惠哦」
+PRINTFORML 请选择要购买的道具（所持金:%金额表示(MONEY)%）
+DRAWLINE
+CALL SHOW_SHOPPING("河童の道具屋", "河童道具", 割引)
+DRAWLINE
+;未实装
+;PRINTL [990] - 道具的改造　[991] - 道具の开发
+PRINTL [990] - 道具的改造
+PRINTL [999] - 返回　　　　　
+INPUT
+
+IF RESULT == 999
+	RETURN -1
+ELSEIF RESULT == 990
+	CALL TOOL_CUSTOM
+	SIF RESULT
+		RETURN RESULT
+ELSEIF RESULT == 991
+	;未实装
+ELSE
+	买うもの = RESULT
+	CALL ITEMDATA(买うもの, "SHOP:河童の道具屋", 割引)
+	IF RESULT && ITEMSALES:买うもの >= 0 && ITEM:买うもの < 所持数制限
+		CALL ITEMDATA(买うもの, "购入", 割引)
+		SIF RESULT
+			RESTART
+	ELSE
+		RESTART
+	ENDIF
+ENDIF
+
+
+;道具改造函数
+;现状では泳池だけだが
+;改造道具が增えるとさらに肥大化するのが目に见えるので独立
+;购入でRETURN -1、购入しない时はRETURN 0
+;何もせずに末尾に到达すると购入した扱いになります
+@TOOL_CUSTOM
+#DIM 泡改造前提条件
+泡改造前提条件 = GETBIT (FLAG:泳池, 0) && GETBIT (FLAG:泳池, 1) && GETBIT (FLAG:泳池, 2)
+DRAWLINE
+PRINTFORML 请选择要改造的道具（所持金:%金额表示(MONEY)%）
+DRAWLINE
+FOR LOCAL, 0, 1000
+	CALL ITEMDATA(LOCAL, "TYPE:改造可能")
+	SIF RESULT && ITEM:LOCAL
+		PRINTFORML [{LOCAL, 3}] - %ITEMNAME:LOCAL%
+NEXT
+PRINT [999] - 果然还是放弃
+INPUT
+SELECTCASE RESULT
+CASE 999
+	RETURN
+CASE GETNUM(ITEM, "简易泳池")
+	SIF !ITEM:简易泳池
+		RETURN
+	DRAWLINE
+	PRINTL 「要怎么改造呢？」
+	PRINT 现在的状态：
+	DRAWLINE
+	SIF GETBIT (FLAG:泳池, 0)
+		PRINT [自走马达]
+	SIF GETBIT (FLAG:泳池, 1)
+		PRINT [温水机能]
+	SIF GETBIT (FLAG:泳池, 2)
+		PRINT [喷淋装置]
+	SIF GETBIT (FLAG:泳池, 3)
+		PRINT [不思议的泡]
+	PRINTL
+	
+	IF !GETBIT (FLAG:泳池, 0)
+		PRINTFORML [  1] - 马达（%金额表示(5000)%）：消除移动负担
+	ELSE
+		SETCOLOR C_GRAY
+		PRINTL [ 済] - 马达：消除移动负担
+		RESETCOLOR
+	ENDIF
+	IF !GETBIT (FLAG:泳池, 1)
+		PRINTFORML [  2] - 温水机能（%金额表示(5000)%）：在广阔的地方放松
+	ELSE
+		SETCOLOR C_GRAY
+		PRINTL [ 済] - 温水机能：在广阔的地方放松・可以玩浴室PLAY
+		RESETCOLOR
+	ENDIF
+	IF !GETBIT (FLAG:泳池, 2)
+		PRINTFORML [  3] - 淋浴（%金额表示(5000)%）：可以淋浴・也可以浇水
+	ELSE
+		SETCOLOR C_GRAY
+		PRINTL [ 済] - 淋浴：可以淋浴・也可以浇水
+		RESETCOLOR
+	ENDIF
+	IF 泡改造前提条件 == 0
+		PRINTFORML [  4] - 三个都改造（每个%金额表示(5000)%）
+		PRINTL [  ?] - ？？？？？
+	ELSEIF !GETBIT (FLAG:泳池, 3)
+		PRINTFORML [  5] - 不可思议的泡（%金额表示(5000)%）：若鹭姫可以自由移动
+	ELSE
+		SETCOLOR C_GRAY
+		PRINTL [ 済] - 不可思议的泡：若鹭姫可以自由移动
+		RESETCOLOR
+		PRINTL 　　　　无法做更进一步的改造了
+	ENDIF
+	
+	PRINTL [999] - 还是算了
+	INPUT
+	SELECTCASE RESULT
+	CASE 999
+		RETURN
+	CASE 1
+		IF !GETBIT (FLAG:泳池, 0) && MONEY >= 5000
+			PRINTL 移动的负担消失了！
+			SETBIT FLAG:泳池, 0
+			MONEY -= 5000
+		ELSE
+			RETURN
+		ENDIF
+	CASE 2
+		IF !GETBIT (FLAG:泳池, 1) && MONEY >= 5000
+			PRINTL 可以在更多的地方放松了！
+			PRINTL 可以进行浴室PLAY了！
+			SETBIT FLAG:泳池, 1
+			MONEY -= 5000
+		ELSE
+			RETURN
+		ENDIF
+	CASE 3
+		IF !GETBIT (FLAG:泳池, 2) && MONEY >= 5000
+			PRINTL 可以使用淋浴了！
+			PRINTL 灌水也变得轻松愉快了！
+			SETBIT FLAG:泳池, 2
+			MONEY -= 5000
+		ELSE
+			RETURN
+		ENDIF
+	CASE 4
+		IF 泡改造前提条件 == 0 && MONEY >= 5000 * (!GETBIT (FLAG:泳池, 0) + !GETBIT (FLAG:泳池, 1) + !GETBIT (FLAG:泳池, 2))
+			PRINTL 追加了各种各样的功能！
+			MONEY -= 5000 * (!GETBIT (FLAG:泳池, 0) + !GETBIT (FLAG:泳池, 1) + !GETBIT (FLAG:泳池, 2))
+			SETBIT FLAG:泳池, 0
+			SETBIT FLAG:泳池, 1
+			SETBIT FLAG:泳池, 2
+		ELSE
+			RETURN
+		ENDIF
+	CASE 5
+		IF !GETBIT (FLAG:泳池, 3) && 泡改造前提条件 && MONEY >= 5000
+			PRINTL 为若鹭姬购买了不可思议的泡！
+			SETBIT FLAG:泳池, 3
+			MONEY -= 5000
+		ELSE
+			RETURN
+		ENDIF
+	ENDSELECT
+CASEELSE
+	RETURN
+ENDSELECT
+RETURN -1
+
+;-------------------------------------------------
+;铃仙と帝用
+;-------------------------------------------------
+@UNIQUE_COM_买药
+#DIM 买うもの
+DRAWLINE
+CALL LIST_ITEM("うさぎ药品")
+DRAWLINE
+PRINTFORML 请选择要购买的道具 所持金:%金额表示(MONEY)%
+DRAWLINE
+PRINTL
+VARSET LOCALS
+CALL EX_SHOPPING(GETNUM(ITEM, "润滑液"), "瓶装润滑乳液", "装有润滑乳液的大瓶子。大概能用5次的样子。", 1000, 5)
+CALL EX_SHOPPING(GETNUM(ITEM, "避孕套"), "避孕套优惠包", "内有50个。", 1000, 50)
+CALL EX_SHOPPING(GETNUM(ITEM, "口服避孕药"), "口服避孕药（内有5片）", "光明的计划生育 ", 5000, 5)
+CALL ITEM_SHOPPING(GETNUM(ITEM, "催情药"), "更容易催生好感")
+CALL ITEM_SHOPPING(GETNUM(ITEM, "睡眠药"), "不要用它来做坏事情哟？")
+CALL ITEM_SHOPPING(GETNUM(ITEM, "营养饮料"), "含有1000mg牛磺酸")
+CALL ITEM_SHOPPING(GETNUM(ITEM, "精力剂"), "肮脏的有钱人专用")
+CALL ITEM_SHOPPING(GETNUM(ITEM, "姜黄饮料"), "在饮酒前服用")
+CALL ITEM_SHOPPING(GETNUM(ITEM, "绷带"), "在受伤或想隐藏的地方卷起来吧")
+CALL ITEM_SHOPPING(GETNUM(ITEM, "营养强化剂"), "混在食物中来补充不足容易缺乏的营养")
+SIF TARGET == [[帝]] && !ITEM:兔符「开运大纹」
+	CALL ITEM_SHOPPING(GETNUM(ITEM, "兔符「开运大纹」"), "会发生十分幸运的色情事件")
+DRAWLINE
+PRINTL [999] 算了
+INPUT
+
+IF RESULT == 999
+	RETURN -1
+ELSEIF RESULT == GETNUM(ITEM, "兔符「开运大纹」") && TARGET == [[帝]] && !ITEM:兔符「开运大纹」
+	CALL BOTTAKURI
+ELSEIF RESULT == GETNUM(ITEM, "润滑液")
+	CALL ITEM_CARTON(RESULT, 1000, 5)
+ELSEIF RESULT == GETNUM(ITEM, "避孕套")
+	CALL ITEM_CARTON(RESULT, 1000, 50)
+ELSEIF RESULT == GETNUM(ITEM, "口服避孕药")
+	CALL ITEM_CARTON(RESULT, 5000, 5)
+ELSE
+	买うもの = RESULT
+	CALL ITEMDATA(买うもの, "TYPE:うさぎ药品")
+	IF RESULT && ITEMSALES:买うもの >= 1 && ITEM:买うもの < 所持数制限
+		CALL ITEMDATA(买うもの, "购入")
+		SIF !RESULT
+			RESTART
+	ELSE
+		RESTART
+	ENDIF
+ENDIF
+RESTART
+
+@BOTTAKURI
+SELECTCASE FLAG:开运大纹购入回数
+CASE 0
+	LOCAL = 1000
+CASE 1 TO 3
+	LOCAL = 10000
+CASE 3 TO 10
+	LOCAL = 20000
+CASE 11 TO 20
+	LOCAL = 30000
+CASEELSE
+	LOCAL = 50000
+ENDSELECT
+SIF TALENT:TARGET:恋慕 && LOCAL >= 20000
+	LOCAL /= 2
+
+SIF !FLAG:开运大纹购入回数
+	PRINTFORML 「想要试试的话现在只需要%金额表示(LOCAL)%！就可以买走！」
+IF LOCAL <= 10000
+ELSE
+	IF TALENT:TARGET:恋慕
+		PRINTFORML 「是%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%只需要%金额表示(LOCAL)%就行」
+	ELSE
+		PRINTFORML 「如果这样的话需要%金额表示(LOCAL)%」
+	ENDIF
+	CALL ASK_M("别开玩笑了",1, "买下", MONEY >= LOCAL, "你有那么说的立场么？", CFLAG:TARGET:被掌握把柄 && !CFLAG:TARGET:掌握把柄)
+	SELECTCASE RESULT
+		CASE 0
+			RETURN
+		CASE 1
+		CASE 2
+			PRINTFORMW 利用把柄免费交换到了
+			ITEM:130 ++
+			CFLAG:TARGET:被掌握把柄 = 0
+			RETURN
+	ENDSELECT
+ENDIF
+
+IF MONEY >= LOCAL
+	ITEM:130 ++
+	MONEY -= LOCAL
+	FLAG:开运大纹购入回数 ++
+	PRINTFORMW 支付\\{LOCAL}购买了兔符「开运大纹」
+ENDIF
+
+;-------------------------------------------------
+;みすちー用
+;-------------------------------------------------
+@UNIQUE_COM_路边摊吃饭
+#DIM 同行人数カウント
+#DIM 饮酒可能人数
+#DIM ATSUKAN
+#DIM OOMORI
+#DIM KAIKEI
+#DIM KAKAKU,2
+
+同行人数カウント = 1
+饮酒可能人数 = 0
+ATSUKAN = 0
+KAIKEI = 0
+OOMORI = 0
+VARSET KAKAKU
+SIF CAN_DRINK(MASTER)
+	饮酒可能人数 = 1
+FOR LOCAL,1,CHARANUM
+	SIF !CFLAG:LOCAL:同行
+		CONTINUE
+	 SIF !TIME_PROGRESS(TCVAR:LOCAL:空腹时刻)
+	 	CONTINUE
+	同行人数カウント ++
+	SIF CAN_DRINK(LOCAL)
+		饮酒可能人数 ++
+NEXT
+PRINTFORML 「欢迎光临、{同行人数カウント}位客人」
+KAKAKU:0 = 3 * 同行人数カウント
+KAKAKU:1 = 5 * 同行人数カウント
+CALL ASK_M("烤串拼盘　每人3CM",MONEY:2 >= KAKAKU:0 && TIME_PROGRESS(TCVAR:MASTER:空腹时刻),"烤串拼盘（大）　每人5CM", MONEY:2 >= KAKAKU:1 && TIME_PROGRESS(TCVAR:MASTER:空腹时刻),"打包　5CM",MONEY:2 >= 5 && !ITEM:八目鳗烤串,"取消",1)
+IF RESULT == 3
+	PRINTFORML 「欢迎下次再来」
+	RETURN -1
+ENDIF
+IF RESULT == 2
+	ITEM:八目鳗烤串 ++
+	MONEY:2 -= 5
+	PRINTFORML 「趁着还没冷的时候吃吧」
+	SOURCE:欢乐 += 200
+	TFLAG:98 = 1
+	TIME += 5
+	RETURN 1
+ENDIF
+MONEY:2 -= KAKAKU:RESULT
+KAIKEI = KAKAKU:RESULT
+
+SIF RESULT == 1
+	OOMORI = 1
+
+IF MONEY:2 >= 2 * 饮酒可能人数
+	PRINTFORML 「要每人花2筹码烫酒么？」（酒气・气力恢复量上升）
+	CALL ASK_YN
+	IF !RESULT
+		ATSUKAN = 1
+		KAIKEI += 2 * 饮酒可能人数
+		MONEY:2 -= 2 * 饮酒可能人数
+	ENDIF
+ENDIF
+;信赖
+TFLAG:98 += 3
+;同行中全员で回す
+
+FOR LOCAL,0,CHARANUM
+	SIF !CFLAG:LOCAL:同行 && LOCAL
+		CONTINUE
+	 SIF !TIME_PROGRESS(TCVAR:LOCAL:空腹时刻)
+	 	CONTINUE
+	CALL EAT_YATSUME(LOCAL,OOMORI,ATSUKAN)
+NEXT
+
+SOURCE:欢乐 += KAIKEI * 100
+PRINTFORML 「总共{KAIKEI}筹码」
+PRINTFORML 「欢迎下次再来」
+TIME += 30
+
+@EAT_YATSUME(对象,ARG,ARG:1)
+#DIM 恢复前体力
+#DIM 恢复前气力
+#DIM 恢复前精力
+#DIM 恢复后体力
+#DIM 恢复后气力
+#DIM 恢复后精力
+#DIM 对象
+
+恢复前体力 = BASE:对象:体力
+恢复前气力 = BASE:对象:气力
+恢复前精力 = BASE:对象:精力
+
+;大盛りの场合
+IF ARG == 1
+	CALL 满腹度上升(对象,"主食")
+	CALL RECOVER_PERMIL(对象,100,"体力")
+	CALL RECOVER_PERMIL(对象,200,"气力")
+	CALL RECOVER_PERMIL(对象,100,"精力")
+ELSE
+	CALL 满腹度上升(对象,"轻食")
+	CALL RECOVER_PERMIL(对象,50,"体力")
+	CALL RECOVER_PERMIL(对象,100,"气力")
+	CALL RECOVER_PERMIL(对象,50,"精力")
+ENDIF
+IF 对象
+;固定で获得するソース
+SOURCE:对象:欢乐 = 1000
+SOURCE:对象:情爱 = 300
+
+;ABL:欲望をみる
+IF ABL:对象:欲望 <= 1
+	SOURCE:对象:欢乐 += (ABL:对象:欲望 * 60)
+ELSEIF ABL:对象:欲望 <= 3
+	SOURCE:对象:欢乐 += 400 + (ABL:对象:欲望 * 60)
+ELSEIF ABL:对象:欲望 <= 5
+	SOURCE:对象:欢乐 += 800 + (ABL:对象:欲望 * 60)
+ELSEIF ABL:对象:欲望 <= 8
+	SOURCE:对象:欢乐 += 1000 + (ABL:对象:欲望 * 75)
+ELSEIF ABL:对象:欲望 <= 11
+	SOURCE:对象:欢乐 += 1700 + (ABL:对象:欲望 * 75)
+ELSE
+	SOURCE:对象:欢乐 += 2500 + (ABL:对象:欲望 * 35)
+ENDIF
+
+;ABL:对象:侍奉精神をみる
+IF ABL:对象:侍奉精神 <= 1
+	SOURCE:对象:情爱 += (ABL:对象:侍奉精神 * 30)
+ELSEIF ABL:对象:侍奉精神 <= 3
+	SOURCE:对象:情爱 += 200 + (ABL:对象:侍奉精神 * 30)
+ELSEIF ABL:对象:侍奉精神 <= 5
+	SOURCE:对象:情爱 += 500 + (ABL:对象:侍奉精神 * 30)
+ELSEIF ABL:对象:侍奉精神 <= 8
+	SOURCE:对象:情爱 += 700 + (ABL:对象:侍奉精神 * 45)
+ELSEIF ABL:对象:侍奉精神 <= 11
+	SOURCE:对象:情爱 += 1200 + (ABL:对象:侍奉精神 * 45)
+ELSE
+	SOURCE:对象:情爱 += 1800 + (ABL:对象:侍奉精神 * 20)
+ENDIF
+
+;好感度をみる
+IF CFLAG:对象:2 <= 500
+	SOURCE:对象:欢乐 += CFLAG:对象:2
+ELSEIF CFLAG:对象:2 <= 5000
+	SOURCE:对象:欢乐 += 750 + (CFLAG:对象:2 - 500) / 3
+ELSE
+	SOURCE:对象:欢乐 += 2000 + (CFLAG:对象:2 - 5000) / 4
+ENDIF
+SIF SOURCE:对象:欢乐 < 0
+	SOURCE:对象:欢乐 = 0
+SOURCE:对象:被动 = 200 + 110 * ABL:对象:顺从
+SOURCE:对象:征服 = 200 + 110 * ABL:对象:施虐属性
+
+SIF TALENT:大胃王
+	TIMES SOURCE:对象:欢乐 , 1.50
+ENDIF
+;热燗赖んだ场合
+IF ARG:1 && CAN_DRINK(对象)
+	TIMES SOURCE:对象:欢乐 , 1.10
+	CALL RECOVER_PERMIL(对象,50,"气力")
+	SIF 对象 != MASTER
+		CALL KIGEN_CHANGE(对象,50,1)
+	CALL DRUNKEN(对象,52)
+ENDIF
+
+恢复后体力 = BASE:对象:体力
+恢复后气力 = BASE:对象:气力
+恢复后精力 = BASE:对象:精力
+
+;PRINTFORML 体力+{ABS(恢复后体力 - 恢复前体力)}（%NAME_OUTPUT_TRANSLATION("CALLNAME", 对象)%）
+;PRINTFORML 气力+{ABS(恢复后气力 - 恢复前气力)}（%NAME_OUTPUT_TRANSLATION("CALLNAME", 对象)%）
+SIF ABS(恢复后精力 - 恢复前精力) > 0
+;	PRINTFORML 精力+{ABS(恢复后精力 - 恢复前精力)}（%NAME_OUTPUT_TRANSLATION("CALLNAME", 对象)%）
+;PRINTFORMW 
+TIME += 20
+SIF ARG == 1
+	TIME += 10
+
+;-------------------------------------------------
+;小伞用
+;-------------------------------------------------
+@UNIQUE_COM_伞の修理
+PRINTFORML 小伞修理好了折叠伞
+IF ITEM:坏掉的伞
+	PRINTFORMW 「再小心一点使用呀」
+	DOWNBASE:气力 = 200
+	SOURCE:欢乐 += 1000
+	ITEM:坏掉的伞 = 0
+	ITEM:折叠伞 = 1
+	TIME += 45
+ELSE
+	PRINTFORMW 「要小心使用啊」
+	DOWNBASE:气力 = 100
+	SOURCE:欢乐 += 1000 + ABL:亲密 * 50
+	TFLAG:好感度BOUNS = FLAG:伞耐久度 / 10
+	TFLAG:98 = FLAG:伞耐久度 / 1000
+	FLAG:伞耐久度 = 0
+ENDIF
+SETBIT TFLAG:一日一回, 13
+TIME += 30
+
+;-------------------------------------------------
+;永琳用
+;-------------------------------------------------
+@UNIQUE_COM_生药を卖る
+#DIM 候补番号
+#DIM 候补个数
+#DIM 卖出个数
+
+PRINTFORML 所持金:%金额表示(MONEY)%
+DRAWLINE
+;所持している素材道具の卖出可能物・个数を列表化
+LOCAL:1 = 999
+FOR LOCAL:0 ,600, 700
+	IF UNIQUE_COM_HARBAL_SALES(LOCAL:0)
+		IF ITEM:(LOCAL:0)
+			LOCALS:0 = [{LOCAL:0}] %ITEMNAME:(LOCAL:0), 16, LEFT%×{ITEM:(LOCAL:0)}    
+			LOCAL:1 += STRLENS(LOCALS:0)
+			SIF ITEM:(LOCAL:0) < 10
+				LOCAL:1 ++
+			IF LOCAL:1 > 90
+				IF LOCAL:1 >= 999
+				;最初のみ改行しない
+				ELSE
+					PRINTL 
+				ENDIF
+				LOCAL:1 = 0
+				PRINT 　　
+			ENDIF
+			PRINTFORM [{LOCAL:0}] %ITEMNAME:(LOCAL:0), 16, LEFT%×{ITEM:(LOCAL:0)}
+			SIF ITEM:(LOCAL:0) < 10
+				PRINT  
+			PRINT 　　
+		ENDIF
+	ENDIF
+NEXT
+PRINTL 
+PRINTL 　　[100] 放弃
+DRAWLINE
+PRINTFORML 「要卖什么呢？」
+$INPUT_LOOP01
+INPUT
+候补番号 = RESULT
+
+IF 候补番号 == 100
+;100は先送り、卖出不能物、600未满および700以上の入力は无效化する
+ELSEIF UNIQUE_COM_HARBAL_SALES(候补番号) == 0 || 候补番号 < 600 || 候补番号 > 699
+	CLEARLINE 1
+	GOTO INPUT_LOOP01
+ENDIF
+SELECTCASE 候补番号
+	CASE 100
+		RETURN -1
+	CASEELSE
+		候补个数 = ITEM:(候补番号)
+		CLEARLINE 1
+		IF 候补个数
+			SELECTCASE 候补番号
+				CASE 601, 612, 635
+					PRINTFORML 「%ITEMNAME:候补番号%啊。有着强烈的毒性、所以根据使用的方法的不同……对吧。
+				CASE 603, 618
+					PRINTFORML 「%ITEMNAME:候补番号%啊。作为强壮的生药非常有名……呼呼、想用在谁身上呢？
+				CASE 605, 624
+					PRINTFORML 「%ITEMNAME:候补番号%啊。如果普通人尝了这个东西的话、会变成非常了不得的事态、所以请注意一下。
+				CASE 634
+					PRINTFORML 「%ITEMNAME:候补番号%啊。连发掘都会啊、不是挺多才多艺的嘛。
+				CASE 646
+					PRINTFORML 「%ITEMNAME:候补番号%啊。连采伐都会啊、不是挺多才多艺的嘛。
+				CASE 606, 609, 615, 625, 640, 643
+					PRINTFORML 「%ITEMNAME:候补番号%…！　真亏你能把这种东西弄到手啊。
+				CASEELSE
+					PRINTFORM 「%ITEMNAME:候补番号%啊。
+			ENDSELECT
+			PRINTFORM 　%金额表示(ITEMPRICE:(候补番号) / 2)%一个、怎么样？」
+			SETCOLOR 0x777777
+			PRINTFORML 　要卖多少个？(输入1～{候补个数}、0为返回)
+			RESETCOLOR
+			PRINTL   
+			PRINTBUTTON "[0] 放弃", 0
+			PRINT     
+			PRINTBUTTON "[1] 1个", 1
+			PRINT     
+			IF 候补个数 >= 5
+				PRINTBUTTON "[5] 5个", 5
+				PRINT     
+			ENDIF
+			IF 候补个数 >= 10
+				PRINTBUTTON "[10] 10个", 10
+				PRINT    
+			ENDIF
+			$INPUT_LOOP02
+			INPUT
+			SELECTCASE RESULT
+				CASE 0
+					RESTART
+				CASE 1 TO 候补个数
+					CLEARLINE 2
+					卖出个数 = RESULT
+					PRINTFORMW 「非常感谢。那么%ITEMNAME:候补番号%{卖出个数}个、总计花\\{(ITEMPRICE:(候补番号) / 2 * 卖出个数)}买下来了哦」
+					MONEY += (ITEMPRICE:(候补番号) / 2 * 卖出个数)
+					ITEM:(候补番号) -= 卖出个数
+					RESTART
+				CASEELSE
+					CLEARLINE 1
+					GOTO INPUT_LOOP02
+			ENDSELECT
+		ELSE
+			CLEARLINE 1
+			GOTO INPUT_LOOP01
+		ENDIF
+ENDSELECT
+RESTART
+
+;卖出列表に载せない道具を定义
+@UNIQUE_COM_HARBAL_SALES(ARG)
+#FUNCTION
+SELECTCASE ARG
+	;★ここに卖出列表に载せない道具を记入
+	CASE 600, 602, 610, 611, 616, 621, 626 TO 631, 636, 638, 639, 642, 644, 645, 647, 648, 660 TO 669
+		RETURNF 0
+	;まだ未登录の道具
+	CASE 649 TO 659, 670 TO 699
+		RETURNF 0
+	CASEELSE
+		RETURNF ARG
+ENDSELECT
+
+;-------------------------------------------------
+;润美用
+;-------------------------------------------------
+@UNIQUE_COM_鱼の交换
+#DIM PREV_DAY
+#DIM CNG_NUM
+
+IF PREV_DAY == DAY
+	PRINTFORMW 「干嘛？今天不是已经跟你交换过了吗？」
+	RETURN
+ENDIF
+CNG_NUM = GET_INT(0, "キャラデータ", TARGET, "固有指令：鱼の交换比率")
+
+PRINTFORML 「想要好吃的鱼？」
+PRINTFORML 「让我想想。有普通的鱼{CNG_NUM}尾的话跟你交换一尾也可以哟」
+PRINTFORML 「怎么样？」
+CALL ASK_M("还是算了", 1, "交换", ITEM:鱼 >= CNG_NUM)
+SELECTCASE RESULT
+CASE 0
+	PRINTFORML 「这样啊」
+CASE 1
+	PRINTFORML 「谢谢惠顾。1、2、3……嗯、确实数量没问题」
+	PRINTFORML 「来、拿着、你的鱼！」
+	PREV_DAY = DAY
+	CALL LOST_ITEM("鱼", CNG_NUM, 1)
+	CALL GET_ITEM("好吃的鱼", 1, 2)
+ENDSELECT
+
+
+@UNIQUE_COM_FISH_CHANGE_RATE
+#FUNCTION
+RETURNF 
+
+
+;-------------------------------------------------
+;璎花用
+;-------------------------------------------------
+@UNIQUE_COM_今日の叠石主题
+
+	;PRINTFORMW 「今日の积石竞赛のカップル部门のテーマが知りたいの？」
+	PRINTFORMW 「想知道今天的积石比赛情侣组的主题？」
+IF STONE_PLAYCOUNT:2 == 16 && (STONE_UKETSUKEDAY + 14 - DAY:0) > 0 && (STONE_UKETSUKEDAY + 14 - DAY:0) < 15
+	;PRINTFORMW 「残念だけど…{STONE_UKETSUKEDAY + 14 - DAY:0}日后まで积石竞赛はお休みなんだよねー」
+	;PRINTFORMW 「なんでって……それは%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%が一番よーく知っているんじゃない？」
+	PRINTFORMW 「很遗憾…积石竞赛要休息到{STONE_UKETSUKEDAY + 14 - DAY:0}日后ー」
+	PRINTFORMW 「要问为什么……%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%不该是最清楚的那个吗？」
+ELSE
+	SELECTCASE DAY:3
+		CASE 1
+			;PRINTFORMW 「今日のコンテスト名は『叠石は春风とともに』……春がテーマだね」
+			;PRINTFORML
+			;PRINTFORML 「春が好きな子が得意だよ。逆に夏秋冬が好きな子は苦手な倾向があるみたい…」
+			;PRINTFORMW 「春のイメージが强い花が好きな子も得意かも？」
+			;PRINTFORMW 「四季テーマは定期的にやってるからこの季节が苦手でも别の季节のときにチャレンジしてほしいな」
+			PRINTFORMW 「今天的比赛名为『垒石伴春风』……以春天为主题」
+			PRINTFORML
+			PRINTFORML 「喜欢春天的孩子很擅长哦。相反喜欢夏秋冬的孩子好像有不擅长的倾向…」
+			PRINTFORMW 「喜欢春天印象强烈的花的孩子可能也很擅长？」
+			PRINTFORMW 「四季主题是定期做的，即使不擅长这个季节，也希望能在别的季节挑战一下」
+		CASE 2
+			;PRINTFORMW 「今日のコンテスト名は『积み上げる皿が一枚足りない…』……お皿がテーマだね」
+			;PRINTFORML
+			;PRINTFORML 「私以外の水子はご饭を食べないから食器は积み上げるためのものでしかないんだよねー」
+			;PRINTFORMW 「食器とかお皿が好きな子が得意だね。小刀とかお皿以外の食器好きだと影响しない气がするよ」
+			;PRINTFORMW 「あと料理が得意だったりお皿をよく扱う女仆さんなんかも有利みたい」
+			PRINTFORMW 「今天的比赛名为『堆积的盘子少一个…』……以盘子为主题」
+			PRINTFORML
+			PRINTFORML 「除了我以外的水子都不吃饭，所以餐具只是用来堆积的ー」
+			PRINTFORMW 「喜欢餐具和盘子的孩子很擅长呢。喜欢小刀和盘子以外的餐具的话感觉不会有影响哦」
+			PRINTFORMW 「另外擅长料理经常端盘子的女仆之类的似乎也很有利」
+		CASE 3
+			;PRINTFORMW 「今日のコンテスト名は『こんどの叠石はこわい』……ホラーがテーマだね」
+			;PRINTFORML
+			;PRINTFORML 「こら、水子の存在がそもそもホラーとか言わない」
+			;PRINTFORMW 「まあ分かりやすく血とか暗とか血とかそういうのが好きだと得意みたい」
+			;PRINTFORMW 「ちなみに伞の妖怪がチャレンジしたことがあるんだけどその子はテーマ加点はなかったよ」
+			PRINTFORMW 「今天的比赛名为『这次的积石好可怕』……以恐怖为主题」
+			PRINTFORML
+			PRINTFORML 「嚯啦、水子的存在根本就称不上恐怖」
+			PRINTFORMW 「嘛，简单易懂，喜欢血、黑暗、类似血的东西的人好像很擅长」
+			PRINTFORMW 「顺便说一下，伞的妖怪曾经挑战过，但那个孩子没有主题加分哦」
+		CASE 4
+			;PRINTFORMW 「今日のコンテスト名は『题名のない积石竞赛』……音乐がテーマだね」
+			;PRINTFORML
+			;PRINTFORML 「叠石しながら音乐を歌ったり奏でたりしてもらうんだ」
+			;PRINTFORMW 「だから当然音乐や乐器が得意だったり、好きだと评价が上がるよー」
+			PRINTFORMW 「今天的比赛名为『无题的积石竞赛』……以音乐为主题」
+			PRINTFORML
+			PRINTFORML 「一边堆着石头一边唱歌演奏」
+			PRINTFORMW 「所以当然擅长、喜欢音乐和乐器的人评价都会上升哦ー」
+		CASE 5
+			;PRINTFORMW 「今日のコンテスト名は『ゆめかわメルヘン叠石』……メルヘンがテーマだね」
+			;PRINTFORML
+			;PRINTFORML 「可爱的ものが好きだと得意みたい。逆に帅气的ものや可怕的ものが好きだと少し苦手だね」
+			;PRINTFORMW 「可爱的ものが好きって耻ずかしくて言えない子でもハートとか粉色が好きならセーフだよ」
+			;PRINTFORMW 「细かいところだと…ゆめかわって名前の街道实は梦要素もちょっぴり加点对象だね」
+			PRINTFORMW 「今天的比赛名为『梦河童话堆石』……以童话为主题」
+			PRINTFORML
+			PRINTFORML 「喜欢可爱东西的就会很擅长。相反，喜欢帅气或恐怖的东西的话会有点不擅长呢」
+			PRINTFORMW 「即使是因为害羞不好意思说喜欢可爱东西的孩子，只要喜欢心形或者粉色也是可以算的哦」
+			PRINTFORMW 「细节上的话…就像名字一样，其实梦的要素也是加分对象」
+		CASE 6
+			;PRINTFORMW 「今日のコンテスト名は『水子にも衣装』……布饰がテーマだね」
+			;PRINTFORML
+			;PRINTFORML 「布を使って叠石を饰り立てるデコり大会だね」
+			;PRINTFORMW 「人形とか布娃娃好きだと稍微得意になるみたい」
+			;PRINTFORMW 「ちなみに针が好きでも得意になる倾向があるんだけど…その针って本当に布饰用？」
+			PRINTFORMW 「今天的比赛名为『水子也要穿衣服』……以布饰为主题」
+			PRINTFORML
+			PRINTFORML 「这是一场用布料装饰积石的装饰大会」
+			PRINTFORMW 「喜欢人偶和布娃娃的话好像会变得有点擅长」
+			PRINTFORMW 「顺便说一下，即使喜欢针也有擅长的倾向…那个针真的是布饰用的吗？」
+		CASE 7
+			;PRINTFORMW 「今日のコンテスト名は『虹色に积み上げて』……多彩がテーマだね」
+			;PRINTFORML
+			;PRINTFORML 「特定の色だけではなく多彩なのが条件だから特别な美的センスが问われると评判だよ」
+			;PRINTFORMW 「好きな色が…というよりは嫌いな色が无い人が评价上げやすい倾向にあるかな」
+			PRINTFORMW 「今天的比赛名为『堆积彩虹』……以多彩为主题」
+			PRINTFORML
+			PRINTFORML 「因为条件是多彩，不仅仅是特定的颜色，所以被认为需要特别的审美感」
+			PRINTFORMW 「与其说有喜欢的颜色…不如说没有讨厌的颜色的人更容易得到好评吧」
+		CASE 8
+			;PRINTFORMW 「今日のコンテスト名は『叠石は夏风とともに』……夏がテーマだね」
+			;PRINTFORML
+			;PRINTFORML 「夏が好きな子が得意だよ。逆に春秋冬が好きな子は苦手な倾向があるみたい…」
+			;PRINTFORMW 「夏のイメージが强い花が好きな子も得意かも？」
+			;PRINTFORMW 「四季テーマは定期的にやってるからこの季节が苦手でも别の季节のときにチャレンジしてほしいな」
+			PRINTFORMW 「今天的比赛名为『垛石伴夏风』……以夏天为主题」
+			PRINTFORML
+			PRINTFORML 「喜欢夏天的孩子很擅长哦。相反喜欢春秋冬的孩子似乎有不擅长的倾向…」
+			PRINTFORMW 「喜欢夏天印象强烈的花的孩子可能也很擅长？」
+			PRINTFORMW 「四季主题是定期做的，即使不擅长这个季节，也希望能在别的季节挑战一下」
+		CASE 9
+			;PRINTFORMW 「今日のコンテスト名は『大陆风叠石』……まんま大陆风がテーマだね」
+			;PRINTFORML
+			;PRINTFORML 「当然和风や洋风が好きだと苦手みたいだね」
+			;PRINTFORMW 「ううう…大陆风っていうと…あのこわーい邪仙のイメージが…」
+			PRINTFORMW 「今天的比赛名为『中国风积石』……就是以中国风为主题」
+			PRINTFORML
+			PRINTFORML 「当然喜欢和风和西式的话就不擅长了」
+			PRINTFORMW 「唔…说起中国风…就会想起那个可怕的邪仙…」
+		CASE 10
+			;PRINTFORMW 「今日のコンテスト名は『叠石动物园』……动物がテーマだね」
+			;PRINTFORML
+			;PRINTFORML 「动物っぽい叠石作品を作るのは分かりやすくて大人气テーマなんだよ」
+			;PRINTFORMW 「注意点としては分かりやすくアニマルイメージの四足歩行动物と鸟みたいなのと虫や鱼ではそれぞれ得点が违うって所かな」
+			;PRINTFORMW 「动物の仲间だって分かってても虫のことアニマルに入れたくなくない？」
+			PRINTFORMW 「今天的比赛名为『积石动物园』……以动物为主题」
+			PRINTFORML
+			PRINTFORML 「制作动物般的堆石作品是通俗易懂的超人气主题哦」
+			PRINTFORMW 「需要注意的是，简单易懂的四足步行动物形象、鸟之类的动物、昆虫和鱼类的得分各不相同」
+			PRINTFORMW 「即使知道都是动物伙伴，也不想把虫子归进动物一类里吗？」
+		CASE 11
+			;PRINTFORMW 「今日のコンテスト名は『叠石バトル！！』……战いがテーマだね」
+			;PRINTFORML
+			;PRINTFORML 「战いがテーマだから…战いとか刃物や铳が得意な人が得意かなー」
+			;PRINTFORMW 「逆に刃物や弹や血生臭いのが苦手な私达水子みたいなのはあんま得意なテーマじゃないかも」
+			;PRINTFORMW 「ちなみに刃物と铳のどちらかは得意だけどもう片方が苦手…みたいな子は心配しちゃうかもだけど…」
+			;PRINTFORMW 「加点と减点が合わさって得点无し！なんてことは无いから安心してね。ちゃんと加点が优先されるから」
+			PRINTFORMW 「今天的比赛名为『积石对战！！』……以战斗为主题」
+			PRINTFORML
+			PRINTFORML 「因为是以战斗为主题的…所以擅长战斗和刀枪的人比较拿手ー」
+			PRINTFORMW 「相反，像我们水子这样不喜欢刀具、子弹和血腥的人，也许就不是很擅长这种主题」
+			PRINTFORMW 「顺便说一下，只擅长刀具和火枪其中一种而不擅长另一种的…像这样的孩子可能会担心…」
+			PRINTFORMW 「不会出现加分和减分合在一起就没有得分的情况，放心吧。肯定会优先加分的」
+		CASE 12
+			;PRINTFORMW 「今日のコンテスト名は『ROCK TO THE FUTURE』……未来がテーマだね」
+			;PRINTFORML
+			;PRINTFORML 「ま、水子に未来なんてないんだけど…」
+			;PRINTFORMW 「机械仕挂けとか未来を感じさせるのが好きだと得意で、逆に怀旧好きは苦战しちゃうみたい」
+			;PRINTFORMW 「ま、水子には过去なんてのもほぼ存在して无いんだけど…」
+			PRINTFORMW 「今天的比赛名为『ROCK TO THE FUTURE』……以未来为主题」
+			PRINTFORML
+			PRINTFORML 「嘛、虽然水子没有未来…」
+			PRINTFORMW 「喜欢机械装置和未来感的很擅长、相反喜欢复古的人就会陷入苦战」
+			PRINTFORMW 「嘛、虽然对水子来说过去什么的也几乎是不存在的…」
+		CASE 13
+			;PRINTFORMW 「今日のコンテスト名は『叠石は秋风とともに』……秋がテーマだね」
+			;PRINTFORML
+			;PRINTFORML 「秋が好きな子が得意だよ。逆に春夏冬が好きな子は苦手な倾向があるみたい…」
+			;PRINTFORMW 「秋のイメージが强い叶子が好きな子も得意かも？」
+			;PRINTFORMW 「四季テーマは定期的にやってるからこの季节が苦手でも别の季节のときにチャレンジしてほしいな」
+			PRINTFORMW 「今天的比赛名为『堆石伴秋风』……以秋天为主题」
+			PRINTFORML
+			PRINTFORML 「喜欢秋天的孩子很擅长哦。相反喜欢春夏冬的孩子似乎有不擅长的倾向…」
+			PRINTFORMW 「喜欢秋天印象强烈的叶子的孩子可能也很擅长？」
+			PRINTFORMW 「四季主题是定期做的，即使不擅长这个季节，也希望能在别的季节挑战一下」
+		CASE 14
+			;PRINTFORMW 「今日のコンテスト名は『ONCE UPON TSUMIISHI』……怀旧がテーマだね」
+			;PRINTFORML
+			;PRINTFORML 「ま、水子に过去なんてほぼないんだけど…」
+			;PRINTFORMW 「逝去的とか昔を感じさせるのが好きだと得意で、逆に未来的なもの好きは苦战しちゃうみたい」
+			;PRINTFORMW 「ま、水子には未来なんてのも存在して无いんだけど…」
+			PRINTFORMW 「今天的比赛名为『ONCE UPON TSUMIISHI』……以复古为主题」
+			PRINTFORML
+			PRINTFORML 「嘛、虽然水子几乎没有过去…」
+			PRINTFORMW 「喜欢失去感或者复古感的很擅长、相反，喜欢未来事物的人就会陷入苦战」
+			PRINTFORMW 「嘛、虽然对水子来说也不存在未来什么的…」
+		CASE 15
+			;PRINTFORMW 「今日のコンテスト名は『叠石マーケット』……高级がテーマだね」
+			;PRINTFORML
+			;PRINTFORML 「叠石バイヤーが打分担当で、高值をつけてでも买いたい作品を选ぶんだ」
+			;PRINTFORMW 「やっぱり高いものを普段から好んでる人ほどうまく作れるみたい」
+			;PRINTFORMW 「あっ！高いものを好んでようが贫乏神はやめといた方が良いと思う…」
+			PRINTFORMW 「今天的比赛名为『积石市场』……以高级为主题」
+			PRINTFORML
+			PRINTFORML 「积石买家负责评分、他们会出高价挑选自己想买的作品」
+			PRINTFORMW 「果然还是平时喜欢贵东西的人能做得更好」
+			PRINTFORMW 「啊！即使很喜欢贵的东西但贫穷神还是放弃比较好…」
+		CASE 16
+			;PRINTFORMW 「今日のコンテスト名は『ウルトラスーパーデラックス叠石』……夸张がテーマだね」
+			;PRINTFORML
+			;PRINTFORML 「本来慎ましくあるべきの叠石を夸张にするというある意味喧哗を卖ってるテーマだね」
+			;PRINTFORMW 「夸张なものが好きだと得意で朴素とか纤细なのが好きだと苦手な倾向があるよ」
+			;PRINTFORMW 「あと白黑灰みたいな朴素的色が好きでも苦手みたい…」
+			PRINTFORMW 「今天的比赛名为『超级超级豪华堆积石』……以华丽为主题」
+			PRINTFORML
+			PRINTFORML 「把本来应该谨慎的砌石弄得很花哨，从某种意义上来说是在找茬的主题」
+			PRINTFORMW 「喜欢华丽东西的就比较擅长，喜欢简单细腻东西的会有不擅长的倾向」
+			PRINTFORMW 「还有就是喜欢黑白灰这样简单颜色的好像也不擅长…」
+		CASE 17
+			;PRINTFORMW 「今日のコンテスト名は『和风叠石』……そのまんま和风がテーマだね」
+			;PRINTFORML
+			;PRINTFORML 「当然大陆风や洋风が好きだと苦手みたいだね」
+			;PRINTFORMW 「三途の河も扱い的には和风…なのかなぁ」
+			PRINTFORMW 「今天的比赛名为『和风积石』……就是这样以和风为主题」
+			PRINTFORML
+			PRINTFORML 「当然喜欢中国风和西式的话就不擅长了」
+			PRINTFORMW 「三途之川也可以看作是和风…的吧」
+		CASE 18
+			;PRINTFORMW 「今日のコンテスト名は『石と仲良くなろう』……そのまんま矿石がテーマだね」
+			;PRINTFORML
+			;PRINTFORML 「叠石で扱う普通の石だけでなく、色んな石を使って叠石してもらうよ！」
+			;PRINTFORMW 「宝石盗もうとしたら地藏样に押しつぶされるからやめとくのをお劝めするね」
+			PRINTFORMW 「今天的比赛名为『和石头成为好朋友吧』……就这样以矿石为主题」
+			PRINTFORML
+			PRINTFORML 「不只是用普通的石头进行堆积、还要用各种各样的石头来积石哟！」
+			PRINTFORMW 「如果想偷宝石的话会被地藏大人压碎的，所以建议你不要做这种事」
+		CASE 19
+			;PRINTFORMW 「今日のコンテスト名は『ロジカル叠石システム』……知性がテーマだね」
+			;PRINTFORML
+			;PRINTFORML 「贤い人が本气で贤く作ったら一体どんな叠石が出来るんだろう…って发想で生まれたテーマだよ」
+			;PRINTFORMW 「贤い人は勿论、本を好んで读んでる人も得意みたい」
+			;PRINTFORMW 「私も叠石の本があったら顽张って读むんだけどなー」
+			PRINTFORMW 「今天的比赛名为『逻辑积石系统』……以智慧为主题」
+			PRINTFORML
+			PRINTFORML 「聪明人如果认真聪明地做的话，到底会做出什么样的积石呢…这是在这样的想法中诞生的主题哦」
+			PRINTFORMW 「聪明人自不必说，喜欢看书的人似乎也很擅长」
+			PRINTFORMW 「如果有积石的书，我也会努力读的ー」
+		CASE 20
+			;PRINTFORMW 「今日のコンテスト名は『叠石は冬风とともに』……夏がテーマだね」
+			;PRINTFORML
+			;PRINTFORML 「冬が好きな子が得意だよ。逆に春夏秋が好きな子は苦手な倾向があるみたい…」
+			;PRINTFORMW 「冬のイメージが强い冰とか雪が好きな子も得意かも？」
+			;PRINTFORMW 「四季テーマは定期的にやってるからこの季节が苦手でも别の季节のときにチャレンジしてほしいな」
+			PRINTFORMW 「今天的比赛名为『积石伴冬风』……以冬天为主题」
+			PRINTFORML
+			PRINTFORML 「喜欢冬天的孩子很擅长哦。相反喜欢春夏秋的孩子似乎有不擅长的倾向…」
+			PRINTFORMW 「喜欢冬季印象强烈的冰和雪的孩子可能也很擅长？」
+			PRINTFORMW 「四季主题是定期做的，即使不擅长这个季节，也希望能在别的季节挑战一下」
+		CASE 21
+			;PRINTFORMW 「今日のコンテスト名は『ツみ石こンてすトカッぷル部もん』……カオスがテーマだね」
+			;PRINTFORML
+			;PRINTFORML 「混沌な感じが好きな子が得意で逆に秩序的な感じが好きな子が苦手みたい」
+			;PRINTFORMW 「明日は秩序テーマだから、こういうのが苦手なら明日改めてってのもありかも」
+			PRINTFORMW 「今天的比赛名为『即使竟塞氢铝族』……以混沌为主题」
+			PRINTFORML
+			PRINTFORML 「喜欢混沌感的孩子很擅长，相反喜欢秩序感的孩子不擅长」
+			PRINTFORMW 「明天是秩序主题、如果不擅长这个的话明天再来吧」
+		CASE 22
+			;PRINTFORMW 「今日のコンテスト名は『积石竞赛カップル部门』……秩序がテーマだね」
+			;PRINTFORML
+			;PRINTFORML 「秩序な感じが好きな子が得意で逆に混沌的な感じが好きな子が苦手みたい」
+			;PRINTFORMW 「混沌な感じが好きな人は……昨日だったんだよねぇ残念」
+			PRINTFORMW 「今天的比赛名为『积石竞赛情侣组』……以秩序为主题」
+			PRINTFORML
+			PRINTFORML 「喜欢秩序感的孩子很擅长，相反喜欢混沌感的孩子不擅长」
+			PRINTFORMW 「喜欢混沌感的人……是昨天呢，真遗憾」
+		CASE 23
+			;PRINTFORMW 「今日のコンテスト名は『洋风叠石』……そのまんま洋风がテーマだね」
+			;PRINTFORML
+			;PRINTFORML 「当然大陆风や和风が好きだと苦手みたいだね」
+			;PRINTFORMW 「洋风叠石といえばストーンヘンジってやつだって眼镜かけた女の子が言ってたけど…」
+			;PRINTFORMW 「ストーンヘンジ…チャレンジしてみる？」
+			PRINTFORMW 「今天的比赛名为『西式积石』……就是这样以西式为主题」
+			PRINTFORML
+			PRINTFORML 「当然喜欢中国风和和风的话就不擅长了」
+			PRINTFORMW 「一个戴眼镜的女孩说过，说起西式积石就是巨石阵…」
+			PRINTFORMW 「巨石阵…想挑战一下吗？」
+		CASE 24
+			;PRINTFORMW 「今日のコンテスト名は『叠石の星になれ』……天体がテーマだね」
+			;PRINTFORML
+			;PRINTFORML 「星空がテーマなのですけど太阳が好きでも活跃できるよ」
+			;PRINTFORMW 「ただ暗は天体のイメージがありそうですけど加点も减点も无いので注意してねー」
+			PRINTFORMW 「今天的比赛名为『成为积石之星』……以天体为主题」
+			PRINTFORML
+			PRINTFORML 「虽然是以星空为主题，但喜欢太阳的也可以大显身手哦」
+			PRINTFORMW 「虽说纯粹的黑暗似乎会给人一种天体的印象，但既不是加分项也不是减分项，请注意哦ー」
+		CASE 25
+			;PRINTFORMW 「今日のコンテスト名は『水の子コンテスト』……水がテーマだね」
+			;PRINTFORML
+			;PRINTFORML 「ある意味最も身近な存在である水がテーマだよ」
+			;PRINTFORMW 「水栖生物好きが强いかも？」
+			;PRINTFORMW 「ちなみに三途の河に潜るのは绝对にやめた方が良いよ。命が惜しいならね」
+			PRINTFORMW 「今天的比赛名为『水之子竞赛』……以水为主题」
+			PRINTFORML
+			PRINTFORML 「从某种意义上来说主题是我们最亲近的水」
+			PRINTFORMW 「喜欢水栖生物的会很强吧？」
+			PRINTFORMW 「顺便说一句，要命的话千万别往三途之川里钻」
+		CASE 26
+			;PRINTFORMW 「今日のコンテスト名は『守矢プレゼンツ积石竞赛』……守矢がテーマだね」
+			;PRINTFORML
+			;PRINTFORML 「今日は守矢の方々が出资している特别回…だから会场に广告がいーっぱい！」
+			;PRINTFORMW 「守矢は范围狭窄と思いきや、风とか大地とかあと巫女とか神灵好きでも得意な倾向があるみたい」
+			;PRINTFORMW 「ちなみに青蛙と蛇のどちらかは得意だけどもう片方が苦手…みたいな子は心配しちゃうかもだけど…」
+			;PRINTFORMW 「加点と减点が合わさって得点无し！なんてことは无いから安心してね。ちゃんと加点が优先されるから」
+			PRINTFORMW 「今天的比赛名为『守矢赞助积石竞赛』……以守矢为主题」
+			PRINTFORML
+			PRINTFORML 「今天是守矢的各位出资的特别回…所以会场里广告非常多！」
+			PRINTFORMW 「原以为守矢的范围很小、没想到喜欢风、大地、巫女、神灵的都有擅长的倾向」
+			PRINTFORMW 「顺便说一下，只喜欢青蛙和蛇其中一个而不喜欢另一个的…像这样的孩子可能会担心…」
+			PRINTFORMW 「不会出现加分和减分合在一起就没有得分的情况，放心吧。肯定会优先加分的」
+		CASE 27
+			;PRINTFORMW 「今日のコンテスト名は『マジカルストーン蔷薇ンシング』……魔法使がテーマだね」
+			;PRINTFORML
+			;PRINTFORML 「そのまま魔法や魔女に精通してる人が勿论强いは强いんだけど…」
+			;PRINTFORMW 「评价するのは私达水子だからね！カラスや箒だけでも魔女扱いするよ」
+			;PRINTFORMW 「何なら书物だけでも魔法使判定しちゃうかも」
+			PRINTFORMW 「今天的比赛名为『魔法石平衡』……以魔法使为主题」
+			PRINTFORML
+			PRINTFORML 「就那样精通魔法和魔女的人当然很强，不过…」
+			PRINTFORMW 「因为评分的是我们水子！就算只有乌鸦和扫帚也会被当做魔女对待的哦」
+			PRINTFORMW 「只要有书就可能会被判定为魔法使」
+		CASE 28
+			;PRINTFORMW 「今日のコンテスト名は『兔子之日』……文字街道バニーがテーマだね」
+			;PRINTFORML
+			;PRINTFORML 「每月２８日は兔子之日！ということでそれに合わせた企画なんだけど……」
+			;PRINTFORMW 「いったい何なんだろうね兔子之日って……私も着せられてるし……」
+			;PRINTFORMW 「えーっと……とりあえずバニーに关联するものが好きな人が有利だよ」
+			;PRINTFORMW 「月とか……あと卡片とか……勋章とか……」
+			;PRINTFORMW 「あと耻ずかしい服装が苦手な人はダメみたいだね」
+			PRINTFORMW 「今天的比赛名为『兔子之日』……顾名思义，以兔子为主题」
+			PRINTFORML
+			PRINTFORML 「每个月的２８号都是兔子之日！所以才会有相应的企划……」
+			PRINTFORMW 「兔子之日到底是怎么回事呢……我也被要求穿上了……」
+			PRINTFORMW 「嗯ー……总之喜欢兔子有关东西的人比较有利哦」
+			PRINTFORMW 「月亮啦……还有卡片啦……勋章啦……」
+			PRINTFORMW 「还有，不擅长羞耻服装的人好像不行呢」
+		CASE 29
+			;PRINTFORMW 「今日のコンテスト名は『自然のマリアージュ、石と植物の调和』……植物がテーマだね」
+			;PRINTFORML
+			;PRINTFORML 「植物自体が好きだととてもうまくて、そうでなくても花や植物がなにかしら好きならって感じだね」
+			;PRINTFORMW 「ちなみに蘑菇は植物ではありません！ざんねーん！」
+			PRINTFORMW 「今天的比赛名为『自然的契合、石头和植物的协调』……以植物为主题」
+			PRINTFORML
+			PRINTFORML 「喜欢植物本身就很好，即使不是那样，如果喜欢什么花和植物的话也行」
+			PRINTFORMW 「顺便说一下，蘑菇不是植物！真遗憾！」
+		CASE 30
+			;PRINTFORMW 「今日のコンテスト名は『自然のマリアージュ、空と风の调和』……风がテーマだね」
+			;PRINTFORML
+			;PRINTFORML 「风そのものや空を飞ぶいきものが好きだと有利みたい」
+			;PRINTFORMW 「ただの风じゃなくて空って部分も重要だから地底好きな人は苦战するかもしれないね」
+			;PRINTFORMW 「天体が好きなのは别に补正かからないからそこは注意かも」
+			PRINTFORMW 「今天的比赛名为『自然的契合、天空与风的协调』……以风为主题」
+			PRINTFORML
+			PRINTFORML 「喜欢风本身或者在空中飞翔的生物的话好像很有利」
+			PRINTFORMW 「不仅仅是风，天空的部分也很重要，所以喜欢地底的人可能会陷入苦战」
+			PRINTFORMW 「喜欢天体是没有修正的，这一点可能需要注意」
+		CASE 31
+			;PRINTFORMW 「今日は何でもありの特别な日！」
+			;PRINTFORML
+			;PRINTFORML 「他の日のテーマの中から一つ选んで、そのテーマで叠石を作ることができるよ」
+			;PRINTFORMW 「优胜したらその指定した日のテーマで优胜したことになるんだよね」
+			;PRINTFORMW 「つまりうっかりやり忘れたら次は３１日后ってならないための救済处置だね！」
+			PRINTFORMW 「今天是什么都有的特别的日子！」
+			PRINTFORML
+			PRINTFORML 「你可以从其他日子的主题中选择一个、用那个主题制作积石哦」
+			PRINTFORMW 「获胜的话就等于获得了那个指定日期主题的冠军」
+			PRINTFORMW 「也就是说，这是一种补救措施，如果不小心忘记了，下次就要等到31天后了！」
+	ENDSELECT
+ENDIF
+;-------------------------------------------------
+;龙用
+;-------------------------------------------------
+@UNIQUE_COM_龙珠の取引
+#DIM ORB_PRICE
+#DIM SALES
+
+IF !ITEM:龙珠
+	;PRINTFORML 龙珠を持っていない…
+	PRINTFORML 没有龙珠…
+	RETURN -1
+ENDIF
+
+;卖价は筹码交易レート×90×√话术Lvで决定
+ORB_PRICE = CHARISMA_NOW() * 90
+SELECTCASE ABL:MASTER:话术技能
+	CASE 0
+		TIMES ORB_PRICE, 1.0
+	CASE 1
+		TIMES ORB_PRICE, 1.2
+	CASE 2
+		TIMES ORB_PRICE, 1.4
+	CASE 3
+		TIMES ORB_PRICE, 1.7
+	CASE 4
+		TIMES ORB_PRICE, 2.0
+	CASE 5
+		TIMES ORB_PRICE, 2.2
+	CASE 6
+		TIMES ORB_PRICE, 2.4
+	CASEELSE
+		TIMES ORB_PRICE, 2.6
+ENDSELECT
+
+PRINTL 
+PRINTDATAW
+	;DATAFORM 「持て余しているならその龙珠、引き取ろう。无论、それなりの对价は支払うよ」
+	;DATAFORM 「ん？　そんなものを买い取ってどうするのかって？　はてさて、どうしたものか？」
+	;DATAFORM 「どこから掘り出してきたものやら。まあ、使えるモノであることに变わりはない」
+	;DATAFORM 「それを手にしているということは、那个に见込まれたということか。いやはや、人は见かけによらないものだね」
+	;DATAFORM 「谁かにそそのかされて…というわけでもなさそうだ。では、取引といこうか」
+	;DATAFORM 「レアアースの供给元は多いに越したことはないしな。松鼠クヘッジ、というやつさ」
+	DATAFORM 「如果是多到有剩，那颗龙珠我就收下了。当然、我会支付相应的报酬的」
+	DATAFORM 「嗯？　你问我买这些东西有什么用？　哎呀哎呀、该怎么说呢？」
+	DATAFORM 「不知从哪里挖来的东西。好吧、是可以用的东西这一点是不会变的」
+	DATAFORM 「能够手拿着那个、也就是说你被它认可了吗。哎呀哎呀，人不可貌相啊」
+	DATAFORM 「好像也不是在某人的唆使下…那么、做个交易吧」
+	DATAFORM 「稀有资源的供给源越多越好。就是所谓的风险对冲」
+ENDDATA
+;PRINTFORML 「龙珠１个を%金额表示(ORB_PRICE)%で买い取ろう。どうかな？」
+PRINTFORML 「用%金额表示(ORB_PRICE)%买一个龙珠。怎么样？」
+PRINTL 
+DRAWLINE
+PRINTFORML 所持金:%金额表示(MONEY)%　　现在的￥/筹码レート:%金额表示(CHARISMA_NOW())%←→1CM
+SETCOLOR 0x777777
+;PRINTFORML 　何个卖りますか？(1～{ITEM:龙珠}の个数を入力、0で返回)
+PRINTFORML 　卖几个？(输入1～{ITEM:龙珠}的个数、0返回)
+RESETCOLOR
+PRINTL   
+PRINTBUTTON "[0] 放弃", 0
+PRINT     
+PRINTBUTTON "[1] 1个", 1
+PRINT     
+IF ITEM:龙珠 >= 5
+	PRINTBUTTON "[5] 5个", 5
+	PRINT     
+ENDIF
+IF ITEM:龙珠 >= 10
+	PRINTBUTTON "[10] 10个", 10
+	PRINT    
+ENDIF
+$INPUT_LOOP01
+INPUT
+SELECTCASE RESULT
+	CASE 0
+		CLEARLINE 2
+		;PRINTFORMW 「そうか。取引额は筹码交易レートに応じた时价だから、その气になったらまた来てくれ」
+		PRINTFORMW 「是吗。交易额是根据筹码交易汇率的时价、如果你有意的话再来吧」
+		RETURN
+	CASE 1 TO ITEM:龙珠
+		CLEARLINE 2
+		SALES = RESULT
+		;PRINTFORMW 「それでは龙珠を{SALES}つ、%金额表示(ORB_PRICE * SALES)%で买い取らせてもらおう」
+		PRINTFORMW 「那么让我以%金额表示(ORB_PRICE * SALES)%的价格买下{SALES}个龙珠吧」
+		CALL GET_MONEY_YEN(ORB_PRICE * SALES, 1)
+		CALL LOST_ITEM("龙珠", SALES, 2)
+	CASEELSE
+		CLEARLINE 1
+		GOTO INPUT_LOOP01
+ENDSELECT
+

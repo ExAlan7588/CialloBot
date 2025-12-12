@@ -1,0 +1,963 @@
+﻿;采集
+@COM445
+#DIM 采集物
+#DIM 采集パワー
+#DIM 采集パワーM
+#DIM 采集パワーT
+#DIM 土地の惠み
+#DIM CHARA
+#DIM 采集位置
+;lockpick and treasure system
+#DIM DYNAMIC TREASURE_CHEST_FIND
+;あからさまな人の敷地での无断采集は放弃、弹幕胜负で胜ってれば腕づくで
+IF FLAG:催眠强度 <= 50
+	SELECTCASE CFLAG:MASTER:当前位置
+		CASE 太阳花田, 438
+			IF ABL:[[幽香]]:亲密 < 5 && CFLAG:[[幽香]]:弹幕胜负胜利 == 0
+				DRAWLINE
+				PRINTFORML 感觉在这里擅自采集的话非常危险…
+				RETURN -1
+			ENDIF
+		;天界、桃园
+		CASE 天界, 833
+			IF ABL:[[天子]]:亲密 < 5 && CFLAG:[[天子]]:弹幕胜负胜利 == 0
+				DRAWLINE
+				PRINTFORML 感觉在这里擅自采集的话会陷入麻烦…
+				RETURN -1
+			ENDIF
+		;虹龙洞
+		CASE 虹龙洞, 855
+			IF ABL:[[百百世]]:亲密 < 5 && CFLAG:[[百百世]]:弹幕胜负胜利 == 0
+				DRAWLINE
+				PRINTFORML 感觉在这里擅自采集的话会陷入麻烦…
+				RETURN -1
+			ENDIF
+	ENDSELECT
+ENDIF
+
+采集物 = 0
+采集パワーM = 0
+采集パワーT = 0
+LOCAL:4 = 0
+
+;参加者判定
+IF FLAG:约会的对象 && !FLAG:70
+	CHARA = FLAG:约会的对象
+ELSEIF TARGET && ABL:TARGET:亲密 >= 5 && SHIRAHU(TARGET) && CFLAG:TARGET:行动 != 5
+	CHARA = TARGET
+ELSE
+	CHARA = 0
+ENDIF
+
+;土地の惠み。日替わりで-25～+25の间を随机で浮动。钓鱼を参考に。
+土地の惠み = CFLAG:MASTER:今日的运势 / 20 - 25
+
+SIF ITEM:三粒の天滴
+	土地の惠み += 5
+
+;采集パワー设定
+采集パワーM = 10 + TALENT:MASTER:采集Lv * 10 + ABL:MASTER:教养 * 5 + TFLAG:幸运补正 * 10
+SIF ITEM:108
+	采集パワーM += 10
+
+SIF CHARA && !FLAG:70
+	采集パワーT = 10 + TALENT:CHARA:采集Lv * 10 + ABL:CHARA:教养 * 5
+;参加者で最もパワーが高いものを基准に、1/2したもう１人のパワーを足す
+IF 采集パワーM >= 采集パワーT
+	采集パワー = 采集パワーM + (采集パワーT / 2)
+ELSE
+	采集パワー = 采集パワーT + (采集パワーM / 2)
+ENDIF
+采集位置 = GATHERING_SPOT(CFLAG:MASTER:当前位置)
+REPEAT 5
+	REUSELASTLINE  \@ CHARA ? 和%NAME_OUTPUT_TRANSLATION("CALLNAME", CHARA)%一起 #  \@采集中.%"." * COUNT%
+	TWAIT 150, 1
+REND
+;デ背包用
+;PRINTFORML 采集位置{采集位置}
+;PRINTFORML 采集パワー{采集パワー}
+
+IF LOCKPICK_SYSTEM > 0 && !RAND:10
+	TREASURE_CHEST_FIND = 1
+	CALL TREASURE_CHEST
+	SIF RESULT == 1
+		TFLAG:SELECTCOM的分岐 = CHEST_LOOT:0
+ELSE
+	$TREASURSARCH
+	CALL Gathering_Drawing(采集位置, 采集パワー, 土地の惠み)
+
+	采集物 = RESULT:0
+	TFLAG:194 = RESULT:1
+	VARSET RESULT
+	;试行回数を１回增やす
+	LOCAL:4 ++
+	;采集物が气に入らない场合は引き直し
+	IF 采集物 != 0
+		IF !FLAG:采集再抽选
+			CLEARLINE 3
+		ELSE
+			SETCOLOR 0x00FF00
+			PRINTFORM 发现了%ITEMNAME:(采集物)%
+			RESETCOLOR
+			PRINTFORML (所持数：{ITEM:(采集物)})。要采集吗？
+			CALL ASK_YN("采集","再次探索")
+			IF !RESULT
+				CLEARLINE 4
+			ELSE
+				CLEARLINE 4
+				采集物 = 0
+				TFLAG:194 = 0
+				REPEAT 5
+					REUSELASTLINE  \@ CHARA ? 和%NAME_OUTPUT_TRANSLATION("CALLNAME", CHARA)%一起 #  \@采集中.%"." * COUNT%
+					TWAIT 150, 1
+				REND
+			ENDIF
+		ENDIF
+	ENDIF
+
+	;试行回数３回以下で采集物が确保されていない场合はループ
+	SIF LOCAL:4 <= 3 && 采集物 == 0
+		GOTO TREASURSARCH
+
+	;道具入手处理 99个以上にならないようにする
+	IF 采集物 != 0
+		LOCALS = %ITEMNAME:采集物%
+		CALL GET_ITEM(LOCALS, TFLAG:194 , 2)
+	ENDIF
+	;フラグ引き渡し
+	TFLAG:SELECTCOM的分岐 = 采集物
+ENDIF
+
+;基本の経験
+EXP:MASTER:采集经验 ++
+SIF !采集物
+	EXP:MASTER:采集经验 += 2
+SIF CHARA
+	EXP:CHARA:采集经验 ++
+
+SIF ITEM:108 && !RAND:2
+	EXP:MASTER:采集经验 ++
+
+SIF ABL:MASTER:教养 <= 2
+	EXP:MASTER:学习经验 ++
+
+;能力差で教えてもらう・进行解答
+IF 采集パワーM >= 采集パワーT && CHARA
+	EXP:CHARA:采集经验 ++
+ELSEIF CHARA
+	EXP:MASTER:采集经验 ++
+ENDIF
+
+;约会经验
+IF CHK_DATENOW(CFLAG:CHARA:约会中) && CHARA > 0
+	EXP:MASTER:约会经验 ++
+	EXP:CHARA:约会经验 ++
+ENDIF
+
+;时间停止时はTSP减
+IF FLAG:70
+	;虹龙洞は采掘困难
+	IF 采集位置 == 68
+		BASE:MASTER:TSP -= 290
+	ELSE
+		BASE:MASTER:TSP -= 120
+	ENDIF
+	BASE:MASTER:TSP = MAX(BASE:MASTER:TSP, 0)
+ELSE
+	;时间经过
+	IF !TREASURE_CHEST_FIND
+		TIME += 60
+	ELSE
+		TIME += 20
+	ENDIF
+	;虹龙洞は空气が单薄的（无い）ので体力を余计に消耗する　ITEM:空色の勾玉の实装が待たれる
+	IF 采集位置 == 68
+		DOWNBASE:MASTER:体力 = 320 - (ABL:MASTER:战斗能力 * 10)
+		DOWNBASE:MASTER:气力 = 280
+		PRINTFORML 矿坑内空气稀薄，令人感到非常疲惫…
+	ELSE
+		;体力减少は战斗能力によって减少抑制
+		DOWNBASE:MASTER:体力 = 180 - (ABL:MASTER:战斗能力 * 15)
+		DOWNBASE:MASTER:气力 = 150 
+	ENDIF
+ENDIF
+
+;参加者のソース,同一指令制限を受けないので控えめに,见つからないと半减
+IF CHARA > 0
+	;固定で获得するソース
+	SOURCE:CHARA:欢乐 = 300
+	SOURCE:CHARA:情爱 = 50
+	
+	;ABL:顺从をみる
+	IF ABL:顺从 <= 1
+		SOURCE:CHARA:欢乐 += (ABL:顺从 * 40)
+		SOURCE:CHARA:情爱 += (ABL:亲密 * 20)
+	ELSEIF ABL:顺从 <= 3
+		SOURCE:CHARA:欢乐 += 200 + (ABL:顺从 * 40)
+		SOURCE:CHARA:情爱 += 50 + (ABL:亲密 * 30)
+	ELSEIF ABL:顺从 <= 5
+		SOURCE:CHARA:欢乐 += 500 + (ABL:顺从 * 40)
+		SOURCE:CHARA:情爱 += 200 + (ABL:亲密 * 30)
+	ELSEIF ABL:顺从 <= 8
+		SOURCE:CHARA:欢乐 += 750 + (ABL:顺从 * 60)
+		SOURCE:CHARA:情爱 += 300 + (ABL:亲密 * 40)
+	ELSEIF ABL:顺从 <= 11
+		SOURCE:CHARA:欢乐 += 1000 + (ABL:顺从 * 60)
+		SOURCE:CHARA:情爱 += 600 + (ABL:亲密 * 40)
+	ELSE
+		SOURCE:CHARA:欢乐 += 1600 + (ABL:顺从 * 30)
+		SOURCE:CHARA:情爱 += 1000 + (ABL:亲密 * 20)
+	ENDIF
+	SIF CHARA != FLAG:约会的对象 
+		SOURCE:CHARA:情爱 = 0
+	
+	;好感度はみない
+	
+	SOURCE:CHARA:被动 = 200 + 100 * ABL:CHARA:顺从
+	SOURCE:CHARA:征服 = 200 + 100 * ABL:CHARA:施虐属性
+	
+	;采集成果をみる、道具价格に応じてとりあえず设定
+	IF 采集物
+		SELECTCASE ITEMPRICE:(采集物)
+			CASE 1 TO 499
+				TIMES SOURCE:CHARA:欢乐 , 1.00
+				TIMES SOURCE:CHARA:被动 , 1.00
+				TIMES SOURCE:CHARA:征服 , 1.00
+				SOURCE:CHARA:达成 = 80
+			CASE 500 TO 999
+				TIMES SOURCE:CHARA:欢乐 , 1.10
+				TIMES SOURCE:CHARA:被动 , 1.10
+				TIMES SOURCE:CHARA:征服 , 1.10
+				SOURCE:CHARA:达成 = 115
+			CASE 1000 TO 2999
+				TIMES SOURCE:CHARA:欢乐 , 1.25
+				TIMES SOURCE:CHARA:被动 , 1.25
+				TIMES SOURCE:CHARA:征服 , 1.15
+				SOURCE:CHARA:达成 = 125
+			CASE 3000 TO 5999
+				TIMES SOURCE:CHARA:欢乐 , 1.50
+				TIMES SOURCE:CHARA:被动 , 1.50
+				TIMES SOURCE:CHARA:征服 , 1.25
+				SOURCE:CHARA:达成 = 150
+			CASE 6000 TO 9999
+				TIMES SOURCE:CHARA:欢乐 , 1.75
+				TIMES SOURCE:CHARA:被动 , 1.75
+				TIMES SOURCE:CHARA:征服 , 1.50
+				SOURCE:CHARA:达成 = 200
+			CASE 10000 TO 14999
+				TIMES SOURCE:CHARA:欢乐 , 2.00
+				TIMES SOURCE:CHARA:被动 , 2.00
+				TIMES SOURCE:CHARA:征服 , 1.75
+				SOURCE:CHARA:达成 = 300
+			CASEELSE
+				TIMES SOURCE:CHARA:欢乐 , 2.25
+				TIMES SOURCE:CHARA:被动 , 2.25
+				TIMES SOURCE:CHARA:征服 , 2.00
+				SOURCE:CHARA:达成 = 350
+		ENDSELECT
+	;见つからない
+	ELSE
+		TIMES SOURCE:CHARA:欢乐 , 0.50
+		TIMES SOURCE:CHARA:被动 , 0.50
+		TIMES SOURCE:CHARA:征服 , 0.50
+	ENDIF
+	;采集物の角色に応じた固有反应（上书き）
+	SELECTCASE 采集物
+		;青蛙
+		CASE 706
+		;琪露诺
+			IF CHARA == [[琪露诺]]
+				TIMES SOURCE:CHARA:欢乐 , 2.00
+				TIMES SOURCE:CHARA:被动 , 2.00
+				TIMES SOURCE:CHARA:征服 , 2.00
+			;诹访子
+			ELSEIF CHARA == [[诹访子]]
+				TIMES SOURCE:CHARA:欢乐 , 0.50
+				TIMES SOURCE:CHARA:被动 , 0.50
+				TIMES SOURCE:CHARA:征服 , 0.50
+			ELSE
+				TIMES SOURCE:CHARA:欢乐 , 1.25
+				TIMES SOURCE:CHARA:被动 , 1.00
+				TIMES SOURCE:CHARA:征服 , 1.00
+			ENDIF
+			SOURCE:CHARA:达成 = 110
+	ENDSELECT
+ENDIF
+
+RETURN 1
+
+;-------------------------------------------------
+;实行可能判定
+;-------------------------------------------------
+;采集
+@COM_ABLE445
+SIF !TFLAG:100
+	RETURN 0
+;批量管理
+SIF GLOBAL_COMABLE(445)
+	RETURN RESULT
+;采集できる场所である
+SIF !GATHERING_SPOT(CFLAG:MASTER:当前位置)
+	RETURN 0
+;约会中は约会的对象とだけ
+SIF FLAG:约会的对象 && TARGET != FLAG:约会的对象
+	RETURN 0
+;睡眠中
+SIF CFLAG:MASTER:睡眠
+	RETURN 0
+SIF CFLAG:诶嘿嘿
+	RETURN 0
+;体力・气力不足
+SIF BASE:MASTER:气力 < 650 || BASE:MASTER:体力 < 680
+	RETURN 0
+;时间停止中も可能（仮）
+;SIF FLAG:70
+;	RETURN 0
+SIF FLAG:70 && BASE:MASTER:TSP < 120
+	RETURN 0
+RETURN 1
+
+;-----------------------------------------------------------
+;当前位置から采集スポットを割り出す函数
+;ARG		当前位置
+;ARG:1		@ShowGatheringSpotsからの参照用
+;RETURN		0 该当无	1～30 森、草原	31～60 水系		61～ 特殊
+;COMMENT	场所を追加した场合、CASEを变更の事
+;-----------------------------------------------------------
+@GATHERING_SPOT(ARG, ARG:1)
+#FUNCTION
+IF !IN_HOME(ARG) && !ARG:1
+;サブMapなどでの判定
+	SELECTCASE ARG
+		CASE 妖精的大树
+			RETURNF 1
+		CASE 斜角的竹林
+			RETURNF 2
+		CASE 无名之丘
+			RETURNF 3
+		CASE 太阳花田
+			RETURNF 4
+		CASE 再思之道
+			RETURNF 5
+		CASE 古木的大树
+			RETURNF 6
+		CASE 迷途之家
+			RETURNF 7
+		CASE 彼岸
+			RETURNF 8
+		CASE 山麓树海
+			RETURNF 11
+		CASE 绝景之丘
+			RETURNF 12
+		CASE 天界
+			RETURNF 13
+		CASE 桃林～沙滩
+			RETURNF 14
+		;大别墅
+		CASE 大别墅
+			RETURNF 16
+		CASE 雾之湖
+			RETURNF 31
+		CASE 三途之川
+			RETURNF 32
+		CASE 玄武之泽
+			RETURNF 33
+		CASE 大蛤蟆之池
+			RETURNF 34
+		CASE 九天瀑布
+			RETURNF 35
+		CASE 山之湖
+			RETURNF 36
+		CASE 地狱的深道
+			RETURNF 37
+		CASE 墓地
+			RETURNF 61
+		CASE 无缘冢
+			RETURNF 62
+		CASE 间歇泉地下中枢
+			RETURNF 64
+		CASE 灼热地狱遗迹
+			RETURNF 65
+		CASE 幻想风穴
+			RETURNF 66
+		CASE 宁静海
+			RETURNF 67
+		CASE 虹龙洞
+			RETURNF 68
+	ENDSELECT
+ELSE
+	;メインMapでの判定
+	SELECTCASE ARG
+		;大别墅 - 广场
+		CASE P68大广场
+			RETURNF 16
+		;博灵神社
+		CASE P25镇守之森
+			RETURNF 1
+		;命莲寺
+		CASE P121墓地
+			RETURNF 61
+		;红魔馆
+		CASE P343湖畔
+			RETURNF 31
+		;永远亭
+		CASE P433斜角的竹林
+			RETURNF 2
+		CASE P436无名之丘
+			RETURNF 3
+		CASE P438太阳花田
+			RETURNF 4
+		;魔法之森
+		CASE P506无缘冢
+			RETURNF 62
+		CASE P507菌菇群生地
+			RETURNF 63
+		CASE P509再思之道
+			RETURNF 5
+		CASE P540古木的大树
+			RETURNF 6
+		;冥界
+		CASE P604彼岸
+			RETURNF 8
+		CASE P630八云邸玄关
+			RETURNF 7
+		;妖怪之山山麓
+		CASE P702山道・通往沼泽之道
+			RETURNF 9
+		CASE P703玄武之泽
+			RETURNF 33
+		CASE P705山道・中腹
+			RETURNF 10
+		CASE P708大蛤蟆之池
+			RETURNF 34
+		CASE P712间歇泉地下中枢
+			RETURNF 64
+		;妖怪之山山顶
+		CASE P805顶上
+			RETURNF 12
+		CASE P806瀑布背面
+			RETURNF 35
+		CASE P814湖畔
+			RETURNF 36
+		CASE P833桃园
+			RETURNF 13
+		CASE P855虹龙洞
+			RETURNF 68
+		;地底
+		CASE P928灼热地狱遗迹
+			RETURNF 65
+		CASE P945河岸
+			RETURNF 37
+		CASE P948竖井底部
+			RETURNF 66
+		;月
+		CASE P1014桃林, P1015沙滩
+			RETURNF 14
+		CASE P1016入海口
+			RETURNF 67
+	ENDSELECT
+ENDIF
+RETURNF 0
+
+;-------------------------------------------------
+;その采集スポットでの采集物の出现判定をする函数
+;道具番号ARG:0
+;GATHERING_SPOT(ARG)の返り值ARG:1（采集スポット）  の
+;出现可否を数字で返す 出现==1 非出现==0
+;道具を追加した场合は、GROUPMATCH内にそれぞれ追记
+;-------------------------------------------------
+@GATHERING_PRODUCT(ARG:0, ARG:1)
+#FUNCTION
+
+;(酒造パッチ)山葡萄665・发霉葡萄666を追加
+SELECTCASE ARG:1
+	;镇守之森、妖精的大树
+	CASE 1
+		SIF GROUPMATCH(ARG:0, 600, 601, 602, 607, 608, 611, 612, 616, 619, 621, 622, 626, 627, 628, 636, 665, 666)
+			RETURNF 1
+	;斜角的竹林
+	CASE 2
+		SIF GROUPMATCH(ARG:0, 607, 608, 611, 612, 613, 618, 619, 629, 635, 640)
+			RETURNF 1
+	;无名之丘
+	CASE 3
+		SIF GROUPMATCH(ARG:0, 600, 601, 602, 603, 612, 616, 620, 626, 627, 631, 636, 638, 665, 666)
+			RETURNF 1
+	;太阳花田
+	CASE 4
+		SIF GROUPMATCH(ARG:0, 612, 613, 614, 615, 617, 618, 619, 620, 623, 624, 626, 627, 665, 666)
+			RETURNF 1
+	;再思之道
+	CASE 5
+		SIF GROUPMATCH(ARG:0, 612, 614, 619, 624, 631, 632, 638)
+			RETURNF 1
+	;古木的大树
+	CASE 6
+		SIF GROUPMATCH(ARG:0, 600, 601, 602, 603, 604, 605, 607, 608, 611, 612, 616, 618, 621, 622, 623, 625, 626, 627, 628, 665, 666)
+			RETURNF 1
+	;迷途之家
+	CASE 7
+		SIF GROUPMATCH(ARG:0, 600, 601, 602, 603, 607, 608, 611, 612, 616, 617, 619, 621, 622, 626, 627, 628, 665, 666)
+			RETURNF 1
+	;彼岸
+	CASE 8
+		SIF GROUPMATCH(ARG:0, 600, 601, 607, 608, 612, 614, 620, 624, 638)
+			RETURNF 1
+	;山道・通往沼泽之道
+	CASE 9
+		SIF GROUPMATCH(ARG:0, 600, 601, 602, 607, 608, 611, 612, 616, 617, 621, 622, 626, 627, 628, 636, 665, 666)
+			RETURNF 1
+	;山道・中腹
+	CASE 10
+		SIF GROUPMATCH(ARG:0, 611, 613, 616, 619, 621, 622, 623, 633)
+			RETURNF 1
+	;山麓树海
+	CASE 11
+		SIF GROUPMATCH(ARG:0, 600, 601, 602, 607, 608, 611, 612, 613, 616, 617, 619, 621, 622, 623, 626, 627, 628, 633, 665, 666)
+			RETURNF 1
+	;绝景之丘、顶上
+	CASE 12
+		SIF GROUPMATCH(ARG:0, 602, 603, 607, 608, 611, 612, 615, 616, 619, 621, 622, 625, 626, 627, 628, 665, 666)
+			RETURNF 1
+	;天界、桃园
+	CASE 13
+		SIF GROUPMATCH(ARG:0, 617, 623, 630)
+			RETURNF 1
+	;桃林～沙滩
+	CASE 14
+		SIF GROUPMATCH(ARG:0, 607, 608, 613, 617, 618, 624, 625, 630)
+			RETURNF 1
+	;大别墅 - 广场
+	CASE 16
+		SIF GROUPMATCH(ARG:0,600,601,602,603,604,605,606,607,608,609,611,612,613,614,615,616,617,618,619,620,621,622,623,624,625,626,627,628,629,630,631,632,633,634,635,636,637,638,639,640,647,665,666,706,)
+			RETURNF 1
+	;雾之湖、湖畔(红魔馆)
+	CASE 31
+		SIF GROUPMATCH(ARG:0, 606, 607, 608, 609, 611, 612, 617, 624, 633, 706)
+			RETURNF 1
+	;三途之川
+	CASE 32
+		SIF GROUPMATCH(ARG:0, 607, 608, 612, 614, 631, 638, 706)
+			RETURNF 1
+	;玄武之泽
+	CASE 33
+		SIF GROUPMATCH(ARG:0, 606, 607, 609, 611, 612, 618, 635, 706)
+			RETURNF 1
+	;大蛤蟆之池
+	CASE 34
+		SIF GROUPMATCH(ARG:0, 604, 612, 620, 631, 636, 706)
+			RETURNF 1
+	;九天瀑布、瀑布背面
+	CASE 35
+		SIF GROUPMATCH(ARG:0, 600, 601, 602, 606, 609, 611, 613, 631, 634, 706)
+			RETURNF 1
+	;山之湖、湖畔（妖怪之山山顶）
+	CASE 36
+		SIF GROUPMATCH(ARG:0, 606, 607, 609, 611, 612, 618, 632, 706)
+			RETURNF 1
+	;地狱的深道、河岸
+	CASE 37
+		SIF GROUPMATCH(ARG:0, 600, 601, 602, 604, 606, 609, 620, 631, 633, 636, 706)
+			RETURNF 1
+	;墓地
+	CASE 61
+		SIF GROUPMATCH(ARG:0, 601, 602, 604, 614, 620, 631, 636, 638)
+			RETURNF 1
+	;无缘冢
+	CASE 62
+		SIF GROUPMATCH(ARG:0, 604, 606, 609, 631, 634, 635, 636, 638)
+			RETURNF 1
+	;菌菇群生地
+	CASE 63
+		SIF GROUPMATCH(ARG:0, 600, 601, 602, 603, 604, 605, 605, 629)
+			RETURNF 1
+	;间歇泉地下中枢
+	CASE 64
+		SIF GROUPMATCH(ARG:0, 632, 634, 637)
+			RETURNF 1
+	;灼热地狱遗迹
+	CASE 65
+		SIF GROUPMATCH(ARG:0, 631, 634, 635, 637, 638)
+			RETURNF 1
+	;幻想风穴、竖井底部
+	CASE 66
+		SIF GROUPMATCH(ARG:0, 602, 604, 631, 632)
+			RETURNF 1
+	;宁静海
+	CASE 67
+		SIF GROUPMATCH(ARG:0, 639)
+			RETURNF 1
+	;虹龙洞
+	CASE 68
+		SIF GROUPMATCH(ARG:0, 647)
+			RETURNF 1
+ENDSELECT
+RETURNF 0
+
+;-------------------------------------------------
+;采集物の季节ごとの出现判定
+;道具番号ARG:0の季节ごとの
+;出现可否を数字で返す函数 出现==1 非出现==0
+;道具を追加した场合は、CASEに追记
+;ARG:1 に采集地点を入れると、以下の列表用の式に变换 省略可
+;-------------------------------------------------
+@GATHERING_SEASON(ARG:0, ARG:1 = 0)
+#FUNCTION
+
+LOCAL = DAY:2
+SIF GatheringSeason
+	LOCAL = GatheringSeason
+
+;(酒造パッチ)山葡萄665・发霉葡萄666を追加
+SELECTCASE LOCAL
+	;春:
+	CASE 1
+		SELECTCASE ARG:0
+			CASE 600 TO 602, 604 TO 608, 610 TO 613, 616, 618 TO 627, 629, 631 TO 640, 647, 706
+				RETURNF 1
+		ENDSELECT
+	;夏
+	CASE 2
+		SELECTCASE ARG:0
+			CASE 600 TO 601, 603, 606 TO 608, 612 TO 613, 618 TO 627, 630 TO 640, 647, 665, 706
+				RETURNF 1
+		ENDSELECT
+	;秋
+	CASE 3
+		SELECTCASE ARG:0
+			CASE 600 TO 608, 611 TO 614, 616 TO 623, 625 TO 628, 631 TO 640, 647, 665, 706
+				RETURNF 1
+		ENDSELECT
+		;(酒造パッチ)(天候パッチ)发霉葡萄666は寒气の强さが5の时のみ
+		SIF ARG:0 == 666 && POWER_COLD_AIR == 5
+			RETURNF 1
+	;冬
+	CASE 4
+		;天界、地底、月と菌菇群生地、虹龙洞は夏とみ无て采集可能
+		IF ARG:1
+			LOCAL:1 =ARG:1
+		ELSE
+			LOCAL:1 = GATHERING_SPOT(CFLAG:MASTER:当前位置)
+		ENDIF
+
+		IF GROUPMATCH(LOCAL:1, 13, 14, 37, 63, 64, 65, 66, 67, 68)
+			SELECTCASE ARG:0
+				CASE 600 TO 601, 603, 606 TO 609, 612 TO 613, 618 TO 627, 630 TO 640, 647, 706
+					RETURNF 1
+			ENDSELECT
+		ELSE
+			SELECTCASE ARG:0
+				CASE 606, 609, 615, 620, 631 TO 635, 637 TO 640
+					RETURNF 1
+			ENDSELECT
+		ENDIF
+ENDSELECT
+RETURNF 0
+
+@SHOW_GATHERING_LIST
+#DIM PLACE
+PRINTFORML 采集场所一览
+CALL COLORMESSAGE(@"中级素材　",C_YELLOW)
+CALL COLORMESSAGE(@"高级素材　",C_P_GREEN)
+CALL COLORMESSAGE(@"最高级素材",C_AQUA)
+PRINTFORML 
+DRAWLINE
+FOR LOCAL,1, 90
+	IF ForagePlaceName(LOCAL) != ""
+		PRINTFORMLC [{LOCAL}] %ForagePlaceName(LOCAL)%
+	ENDIF
+NEXT
+PRINTFORML 
+DRAWLINE
+PRINTFORML [99] 返回
+INPUT
+PLACE = RESULT
+IF ForagePlaceName(PLACE) != ""
+	CALL SHOW_GATHERING_ITEM(PLACE)
+	PRINTFORMW 
+	CLEARLINE 1
+	RESTART
+ELSE	
+	RETURN -1
+ENDIF
+
+@SHOW_GATHERING_LIST_SELECT(PLACE)
+#DIM PLACE
+DRAWLINE
+PRINTFORML 采集可能物一览
+CALL COLORMESSAGE(@"中级素材　",C_YELLOW)
+CALL COLORMESSAGE(@"高级素材　",C_P_GREEN)
+CALL COLORMESSAGE(@"最高级素材",C_AQUA)
+PRINTFORML 
+DRAWLINE
+
+SELECTCASE PLACE
+	CASE 99
+		RETURN -1
+	CASEELSE
+		CALL SHOW_GATHERING_ITEM(PLACE)
+		PRINTFORML
+		DRAWLINE
+		PRINTFORMW
+ENDSELECT
+
+@SHOW_GATHERING_ITEM(PLACE)
+#DIM PLACE
+
+FOR LOCAL,600,710
+	IF GATHERING_PRODUCT(LOCAL, PLACE)
+		LOCALS = %ITEMNAME:LOCAL%
+		IF ITEMPRICE:LOCAL >= 1000
+			SETCOLOR C_YELLOW
+			SIF ABL:MASTER:教养 < 1
+				LOCALS = ？？？
+		ENDIF
+		IF ITEMPRICE:LOCAL >= 3000
+			SETCOLOR C_P_GREEN
+			SIF ABL:MASTER:教养 < 2
+				LOCALS = ？？？
+		ENDIF
+		IF ITEMPRICE:LOCAL >= 10000
+			SETCOLOR C_AQUA
+			SIF ABL:MASTER:教养 < 3
+				LOCALS = ？？？
+		ENDIF
+		;季节条件を满たしていない场合は灰色表记に
+		SIF !GATHERING_SEASON(LOCAL, PLACE)
+			SETCOLOR 0x606060
+
+		PRINTFORM %LOCALS%　
+	ENDIF
+	RESETCOLOR
+NEXT
+
+;-----------------------------
+;参数で指定した价格范围内の素材の中から随机に入手
+;-----------------------------
+@GetRandMaterial(QYT, PriceRange:0, PriceRange:1)
+#DIM PriceRange, 2
+#DIM cArray, 100
+#DIM cNumber
+#DIM Chosen
+#DIM QYT
+cNumber = 0
+FOR LOCAL, 600, 700
+	SIF ITEMNAME:LOCAL == ""
+		CONTINUE
+	;道具价格上限
+	SIF ITEMPRICE:LOCAL > PriceRange:0
+		CONTINUE
+	;下限は省略可
+	SIF ITEMPRICE:LOCAL < PriceRange:1
+		CONTINUE
+	SIF ITEM:LOCAL >= 99
+		CONTINUE
+	cArray:cNumber = LOCAL
+	cNumber ++
+NEXT
+SIF !cNumber
+	RETURN
+
+FOR LOCAL,0,QYT
+	Chosen = RAND:cNumber
+	ITEM:(cArray:Chosen) ++
+	CALL COLORMESSAGE(@"获得了%ITEMNAME:(cArray:Chosen)%",C_YELLOW,1)
+NEXT
+
+@ForagePlaceName(ARG)
+#FUNCTIONS
+SELECTCASE ARG
+CASE 1
+	IF MAIN_MAP == 0
+		LOCALS = 镇守之森
+	ELSE
+		LOCALS = 妖精的大树
+	ENDIF
+CASE 2
+	LOCALS = 斜角的竹林
+CASE 3
+	LOCALS = 无名之丘
+CASE 4
+	LOCALS = 太阳花田
+CASE 5
+	LOCALS = 再思之道
+CASE 6
+	LOCALS = 古木的大树
+CASE 7
+	IF MAIN_MAP == 6
+		LOCALS = 八云邸玄关
+	ELSE
+		LOCALS = 迷途之家
+	ENDIF
+CASE 8
+	LOCALS = 彼岸
+CASE 9
+	LOCALS = 山道・通往沼泽之道
+CASE 10
+	LOCALS = 山道・中腹
+CASE 11
+	LOCALS = 山麓树海
+CASE 12
+	IF MAIN_MAP == 8
+		LOCALS = 顶上
+	ELSE
+		LOCALS = 绝景之丘
+	ENDIF
+CASE 13
+	IF MAIN_MAP == 8
+		LOCALS = 桃园
+	ELSE
+		LOCALS = 天界
+	ENDIF
+CASE 14
+	LOCALS = 桃林～沙滩
+CASE 56
+	LOCALS = 广场
+CASE 31
+	IF MAIN_MAP == 3
+		LOCALS = 湖畔(红魔馆)
+	ELSE
+		LOCALS = 雾之湖
+	ENDIF
+CASE 32
+	LOCALS = 三途之川
+CASE 33
+	LOCALS = 玄武之泽
+CASE 34
+	LOCALS = 大蛤蟆之池
+CASE 35
+	IF MAIN_MAP == 8
+		LOCALS = 瀑布背面
+	ELSE
+		LOCALS = 九天瀑布
+	ENDIF
+CASE 36
+	IF MAIN_MAP == 8
+		LOCALS = 湖畔（妖怪之山山顶）
+	ELSE
+		LOCALS = 山之湖
+	ENDIF
+CASE 37
+	IF MAIN_MAP == 9
+		LOCALS = 河岸（地底）
+	ELSE
+		LOCALS = 地狱的深道
+	ENDIF
+CASE 61
+	LOCALS = 墓地
+CASE 62
+	LOCALS = 无缘冢
+CASE 63
+	LOCALS = 菌菇群生地
+CASE 64
+	LOCALS = 间歇泉地下中枢
+CASE 65
+	LOCALS = 灼热地狱遗迹
+CASE 66
+	IF MAIN_MAP == 9
+		LOCALS = 竖井底部
+	ELSE
+		LOCALS = 幻想风穴
+	ENDIF
+CASE 67
+	LOCALS = 宁静海
+CASE 68
+	LOCALS = 虹龙洞
+CASEELSE
+	LOCALS =
+ENDSELECT
+
+RETURNF LOCALS
+
+@Gathering_Drawing(采集位置, 采集パワー, Modification)
+;RESULT:0	采集道具
+;RESULT:1	采集量
+#DIM 采集位置
+#DIM 采集パワー
+#DIM Chosen
+#DIM QTY
+#DIM Modification
+#DIM start			;抽选开始值
+#DIM end			;抽选结束值
+#DIM difference		;加算or减算
+#DIMS 低气圧位置
+#DIMS 积乱云位置
+低气圧位置 = %GET_LOCATION_LOW()%
+积乱云位置 = %GET_LOCATION_CUMULUS()%
+Chosen = 0
+QTY = 0
+;采集物の选出
+;随机で検索斯塔ト位置をずらしたり、検索の向きを变えたりする
+SELECTCASE RAND:5
+	CASE 0
+		start = 600 + RAND:40
+		end = 707
+		difference = 1
+	CASE 1
+		start = 706
+		end = 599
+		difference = -1
+	CASE 2
+		start = 640 - RAND:40
+		end = 599
+		difference = -1
+	CASEELSE
+		start = 600 + (5 * (RAND:9))
+		end = 707
+		difference = 1
+ENDSELECT
+
+FOR LOCAL:0, start, end, difference
+	;道具が无名でなく、出现条件を满たし、所有数上限でない
+	SIF ITEMNAME:(LOCAL:0) == ""
+		CONTINUE
+	IF ITEM:(LOCAL:0) >= 999
+		DEBUGPRINTFORML 所持上限のため%ITEMNAME:(LOCAL:0)%をスキップ
+		CONTINUE
+	ENDIF
+	IF !GATHERING_SEASON(LOCAL:0)
+		DEBUGPRINTFORML 过季のため%ITEMNAME:(LOCAL:0)%をスキップ
+		CONTINUE
+	ENDIF
+	IF  GATHERING_PRODUCT(LOCAL:0, 采集位置) < 1
+		DEBUGPRINTFORML 位置が不适当なため%ITEMNAME:(LOCAL:0)%をスキップ
+		CONTINUE
+	ENDIF
+	LOCAL:5 = ITEMPRICE:(LOCAL:0) + 1000
+	;采集パワー＋补正值 が √道具费用+1000 を上回ったら入手
+	;(天候パッチ)猛烈な台风通过后・二つ玉低气圧通过后・スーパーセル通过后は、龙之爪・竜血・竜骨・龙珠の入手成功率が上升
+	IF GROUPMATCH(LOCAL:0, 606, 625, 634, 647) && ((低气圧位置 == "台风一过" && IS_TYPHOON:1 >= 5) || 低气圧位置 == "二つ玉低气圧通过" || (积乱云位置 == "积乱云通过" && CAN_CUMULUS:0 == 5))
+		DEBUGPRINTFORML %ITEMNAME:(LOCAL:0)%入手成功率上升中
+		IF 采集パワー + Modification < SQRT((LOCAL:5)/2)
+			DEBUGPRINTFORML 采集パワー不足なため%ITEMNAME:(LOCAL:0)%をスキップ
+			CONTINUE
+		ENDIF
+	;(天候パッチ)寒冷涡通过后・二つ玉低气圧通过后は、冰之鳞の入手成功率が上升
+	ELSEIF LOCAL:0 == 609 && (低气圧位置 == "寒冷涡通过" || 低气圧位置 == "二つ玉低气圧通过")
+		DEBUGPRINTFORML %ITEMNAME:(LOCAL:0)%入手成功率上升中
+		IF 采集パワー + Modification < SQRT((LOCAL:5)/2)
+			DEBUGPRINTFORML 采集パワー不足なため%ITEMNAME:(LOCAL:0)%をスキップ
+			CONTINUE
+		ENDIF
+	ELSEIF 采集パワー + Modification < SQRT(LOCAL:5)
+		DEBUGPRINTFORML 采集パワー不足なため%ITEMNAME:(LOCAL:0)%をスキップ
+		CONTINUE
+	ENDIF
+	DEBUGPRINTFORML %ITEMNAME:(LOCAL:0)%に决定
+	Chosen = LOCAL:0
+	;价格10000を超える希少道具は１つしか手に入らない、それ以下の价格带は采集パワーに応じて复数入手が可能に
+	SELECTCASE LOCAL:5
+		CASE 0 TO 2000
+			QTY = MAX((RAND:(SQRT(采集パワー)) - 1), 1)
+		CASE 2001 TO 4000
+			QTY = MAX((RAND:(SQRT(采集パワー)) - 2), 1)
+		CASE 4001 TO 7000
+			QTY = MAX((RAND:(SQRT(采集パワー)) - 3), 1)
+		CASE 7001 TO 9999
+			QTY = MAX((RAND:(SQRT(采集パワー)) - 4), 1)
+		CASEELSE
+			QTY = 1
+	ENDSELECT
+	BREAK
+NEXT
+RETURN Chosen, QTY

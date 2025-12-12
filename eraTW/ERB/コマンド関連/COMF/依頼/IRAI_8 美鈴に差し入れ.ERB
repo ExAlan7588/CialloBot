@@ -1,0 +1,73 @@
+﻿[SKIPSTART]
+;--------------------------------------------
+;基本条件いろいろ(15)
+;--------------------------------------------
+@IRAI_SETTING_8
+
+IRAI_SETTING_DEADLINE:8 = 0
+IRAI_SETTING_TARGET:8 = 58
+IRAI_SETTING_CLIENT:8 = 15
+
+IRAI_SETTING_COMMANDNAME:8 = 送出慰劳品
+
+
+;--------------------------------------------
+;依赖发生时のメッセージ
+;--------------------------------------------
+@IRAI_INITIALMESSAGE_8
+PRINTFORML 「想把慰劳品送给美铃、但是暂时脱不开身」
+PRINTFORML 「能替我把慰劳品送给那孩子么？」
+PRINTFORML 依赖内容：把慰劳品送给美铃
+
+;--------------------------------------------
+;依赖实行时のメッセージやソースなどの处理
+;--------------------------------------------
+@IRAI_CARRYOUT_8
+SOURCE:欢乐 = 500
+PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%把%NAME_OUTPUT_TRANSLATION("CALLNAME", 15)%提供的慰劳品送给了%NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%
+PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%高兴的收下了
+PRINTL
+
+CALL CHANGE_CFLAG(2,TARGET,30)
+CALL CHANGE_CFLAG(4,TARGET,15)
+TALENT:心情 = LIMIT(TALENT:心情 + 1, -1, 1)
+;--------------------------------------------
+;依赖失败时のメッセージやソースなどの处理
+;--------------------------------------------
+@IRAI_FAILED_8
+
+;--------------------------------------------
+;依赖达成时のメッセージやソースなどの处理
+;--------------------------------------------
+@IRAI_SUCCESS_8
+MONEY += 1000
+IF TALENT:恋慕
+	PRINTFORML 「谢谢。下次会给你带慰劳品的」
+ELSEIF CFLAG:时间停止暴露
+	PRINTFORML 「美铃很开心么？ 是么、那就太好了」
+ELSE
+	PRINTFORML 「辛苦了、美铃很高兴吧？」
+ENDIF
+CALL CHANGE_CFLAG(2,TARGET,20)
+CALL CHANGE_CFLAG(4,TARGET,10)
+;--------------------------------------------
+;依赖实行条件
+;--------------------------------------------
+@IRAI_ACTABLE_8
+SIF SHIRAHU(TARGET) == 1
+	RETURN 1
+
+;--------------------------------------------
+;依赖发生条件
+;--------------------------------------------
+@IRAI_HAPPEN_8
+SIF !RAND:5
+	RETURN 1
+
+
+;--------------------------------------------
+;依赖消灭条件
+;--------------------------------------------
+@IRAI_VANISH_8
+RETURN 1
+[SKIPEND]

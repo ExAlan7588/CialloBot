@@ -1,0 +1,264 @@
+﻿;-------------------------------------------------
+;双龙入穴口交(奴隷に二本舐めさせる)
+;侍奉、レズ系派生指令
+;-------------------------------------------------
+@COM511
+PRINTL 双龙入穴口交
+CALL CAN_COM511(1)
+SIF !RESULT
+	RETURN 0
+;-------------------------------------------------
+;实行决定
+;-------------------------------------------------
+STR:0 = 双龙入穴口交
+SELECTCOM = 511
+;-------------------------------------------------
+;COM别FLAGの设定
+;-------------------------------------------------
+;行为者
+TCVAR:116 = PLAYER
+;TCVAR:0 射精对象フラグ（ビット0=TARGET 1=PLAYER 2=MASTER 3=ASSI）
+;TCVAR:1 予备射精对象フラグ（ビットを使いたくない人用、CFLAG:100に翻译されます）	（1=TARGET 2=PLAYER 3=MASTER 4=ASSI 5=TARGET+ASSI 6=MASTER+ASSI）
+;TCVAR:2 射精部位フラグ（-1=避孕套 1=膣内 2=肛门 3=手淫 4=口淫 5=乳交 6=素股 7=足交 8=体表 9=肛门侍奉 10=道具 11=触手）
+
+SETBIT TCVAR:MASTER:0, 0
+TCVAR:MASTER:2 = 4
+;强度
+TCVAR:MASTER:4 = 750
+
+SETBIT TCVAR:ASSI:0, 0
+TCVAR:ASSI:2 = 4
+;强度
+TCVAR:ASSI:4 = 750
+
+;-------------------------------------------------
+;ソース追加处理
+;-------------------------------------------------
+;消费体力、气力
+DOWNBASE:体力 += 80
+DOWNBASE:气力 += 250
+
+SOURCE:情爱 = 150
+SOURCE:性行动 = 400
+SOURCE:达成 = 300
+SOURCE:屈从 = 1000
+SOURCE:偏离正轨 = 500
+SOURCE:反感 = 500
+
+
+;-------------------------------------------------
+;特殊ソース处理
+;-------------------------------------------------
+;圧抑、抵抗持ちには、抑郁ソース追加
+SIF TALENT:自己爱 < 0 || TALENT:抵抗
+	SOURCE:郁闷 += 700
+;-------------------------------------------------
+;污れの处理
+;-------------------------------------------------
+;奴隷の口⇔主人のＰ的污垢が移动
+STAIN:0 |= STAIN:MASTER:2
+STAIN:MASTER:2 |= STAIN:0
+
+;奴隷の口⇔助手のＰ的污垢が移动
+STAIN:0 |= STAIN:ASSI:2
+STAIN:ASSI:2 |= STAIN:0
+
+;-------------------------------------------------
+;経験の处理
+;-------------------------------------------------
+;口交经验
+EXP:口淫经验 += 2
+
+;同性爱　レズなら返回值1ゲイなら返回值2
+SIF HETEROSEX(TARGET,PLAYER)
+	EXP:(50 + HETEROSEX(TARGET,PLAYER)) += 5
+;同性爱　レズなら返回值1ゲイなら返回值2
+SIF HETEROSEX(TARGET,ASSI)
+	EXP:(50 + HETEROSEX(TARGET,ASSI)) += 5
+
+;奴隷が猫舌持ちの场合は、调教者に嗜虐快乐经验を追加
+SIF TALENT:TARGET:猫舌
+	EXP:嗜虐快乐经验 += 1
+TCVAR:TARGET:ＦＫ丧失 = 2
+
+RETURN 1
+
+@CAN_COM511(ARG)
+SKIPDISP ARG
+;-------------------------------------------------
+;实行判定处理
+;-------------------------------------------------
+A = 0
+S = 0
+
+;全部の命令に共通の要素を考虑
+;(顺从が高いと命令に从いやすいなど)
+CALL COM_ORDER
+
+;ABL:欲望
+IF ABL:欲望
+	SIF S
+		PRINT  + 
+	A += ABL:欲望 * 1
+	PRINT 欲望
+	PRINTV 'LV,ABL:欲望,'(,ABL:欲望 * 1,')
+	S = 1
+ENDIF
+;ABL:侍奉精神
+IF ABL:侍奉精神
+	SIF S
+		PRINT  + 
+	A += ABL:侍奉精神 * 4
+	PRINT 侍奉精神
+	PRINTV 'LV,ABL:侍奉精神,'(,ABL:侍奉精神 * 4,')
+	S = 1
+ENDIF
+;ABL:精液中毒
+IF ABL:精液中毒
+	SIF S
+		PRINT  + 
+	A += ABL:精液中毒 * 3
+	PRINT 精液中毒
+	PRINTV 'LV,ABL:精液中毒,'(,ABL:精液中毒 * 3,')
+	S = 1
+ENDIF
+
+IF MARK:快乐刻印
+	SIF S
+		PRINT  + 
+	A += MARK:快乐刻印 * 1
+	PRINT 快乐刻印
+	PRINTV 'LV,MARK:快乐刻印,'(,MARK:快乐刻印 * 1,')
+	S = 1
+ENDIF
+;PALAM:情欲
+IF GETPALAMLV(PALAM:情欲,5)
+	SIF S
+		PRINT  + 
+	A += GETPALAMLV(PALAM:情欲,5) * 1
+	PRINT 情欲
+	PRINTV 'LV,GETPALAMLV(PALAM:情欲,5),'(,GETPALAMLV(PALAM:情欲,5) * 1,')
+	S = 1
+ENDIF
+;害羞
+IF TALENT:羞耻心 > 0
+	PRINT  - 
+	A -= 1
+ 	PRINT 害羞
+ 	PRINTV '(,1,')
+	S = 1
+ENDIF
+;污臭钝感
+IF TALENT:污臭耐性 > 0
+	SIF S
+		PRINT  + 
+	A += 1
+	PRINT 污臭钝感
+	PRINTV '(,1,')
+	S = 1
+ENDIF
+;污臭敏感
+IF TALENT:污臭耐性 < 0
+	PRINT  - 
+	A -= 3
+	PRINT 污臭敏感
+	PRINTV '(,3,')
+	S = 1
+ENDIF
+;献身的
+IF TALENT:献身的
+	SIF S
+		PRINT  + 
+	A += 6
+	PRINT 献身的
+	PRINTV '(,6,')
+	S = 1
+ENDIF
+;否定快感（淫乱、娼妇で无效）
+IF TALENT:快感应答 < 0 && !TALENT:淫乱
+	PRINT  - 
+	A -= 1
+	PRINT 否定快感
+	PRINTV '(,1,')
+	S = 1
+ENDIF
+;淫乱
+IF TALENT:淫乱 && ASSIPLAY == 0
+	SIF S
+		PRINT  + 
+	A += 5
+	PRINT 淫乱
+	PRINTV '(,5,')
+	S = 5
+ENDIF
+;娼妇
+IF TALENT:淫乱 > 1 && ASSIPLAY == 0
+	SIF S
+		PRINT  + 
+	A += 5
+	PRINT 娼妇
+	PRINTV '(,5,')
+	S = 1
+ENDIF
+;调教者が扶她
+IF (TALENT:PLAYER:2 & 3) == 3
+	SIF S
+		PRINT  + 
+	A += 8
+	PRINT 扶她
+	PRINTV '(,8,')
+	S = 1
+ENDIF
+
+Y = 0
+;爱液的污垢
+SIF STAIN:PLAYER:2 & 1
+	Y += 1
+;精液的污垢
+SIF STAIN:PLAYER:2 & 4
+	Y += 3
+;肛门的污垢
+SIF STAIN:PLAYER:2 & 8
+	Y += 7
+SIF STAIN:PLAYER:2 & 16
+	Y += 15
+
+Y = Y * (2 - TALENT:污臭耐性) / 2
+
+;有污垢
+IF Y
+	PRINT  - 
+	A -= Y
+	PRINT 有污垢
+	;污臭钝感
+	IF TALENT:污臭耐性 > 0
+		PRINT 、污臭钝感
+	ELSEIF TALENT:污臭耐性 < 0
+		PRINT 、污臭敏感
+	ENDIF
+	PRINTV '(,Y,')
+	S = 1
+ENDIF
+
+
+;合计を表示(32以上で实行)
+PRINT  = 
+PRINTV A
+
+V = 32
+SIF A < V
+	PRINT  < 
+SIF A == V
+	PRINT  = 
+SIF A > V
+	PRINT  > 
+PRINT 实行值
+PRINTV V
+
+WAIT
+SKIPDISP 0
+;实行できない
+SIF A < V
+	RETURN 0
+RETURN 1
+

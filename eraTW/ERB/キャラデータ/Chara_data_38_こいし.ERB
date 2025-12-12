@@ -1,0 +1,496 @@
+﻿@CHARAMOVE_DATA_38(ARG, ARG:2)
+LOCAL = 38
+SELECTCASE ARG
+	;连动设定（RETURN=依存する角色, RESULT:1～3=对等に连动する角色）
+	CASE 1
+	;特殊生活时间设定（CFLAG:LOCAL:生活时间补正を设定する）
+	CASE 3
+	;移动倾向（±～10=行きやすい/行きにくい, -100=行かない）
+	CASE 4
+		SELECTCASE ARG:2
+			;旧血池地狱まではあんまり行かない
+			CASE P930旧血池地狱
+				RETURN -10
+		ENDSELECT
+	;出现场所
+	CASE 7
+		SELECTCASE ARG:2
+			CASE 地藏小路, 倒垂的柳树下, 命莲寺境内, 命莲寺方丈, 墓地, 神灵庙广场, 神灵庙道场
+				RETURN 1
+			CASE 广场, 商业街, 吞屋小道, 长屋街
+				RETURN 1
+			CASE 大厅, 食堂, 大图书馆, 地下室
+				RETURN 1
+			CASE 山之湖, 守矢神社境内, 守矢神社本殿
+				RETURN 1
+			CASE 幻想风穴, 地狱的深道, 旧地狱街道, 地灵殿
+				RETURN 1
+		ENDSELECT
+	;引力设定
+	CASE 8
+		;まれにお姊ちゃんにくっつく
+		IF YOUBI_MATCH(DAY, "土日") && CFLAG:LOCAL:今日的运势 % 10 == 0 && !CFLAG:[[觉]]:诶嘿嘿 && SHIRAHU([[觉]])
+			TCVAR:LOCAL:引力点 = CFLAG:[[觉]]:当前位置
+		ELSE
+			;ほぼ每ターン呼ばれるので动き出す时间がより不安定に,最大14时前まで
+			IF INRANGE(TIME, 600 + RAND:60, 700 + (CFLAG:LOCAL:今日的运势 / 8))
+				SELECTCASE CFLAG:LOCAL:今日的运势 % 6
+				CASE 1
+					TCVAR:LOCAL:引力点 = P925薔薇园
+				CASE 2
+					TCVAR:LOCAL:引力点 = P929地狱的人工太阳
+				CASE 3
+					TCVAR:LOCAL:引力点 = P933酒场
+				CASE 4
+					TCVAR:LOCAL:引力点 = P945河岸
+				CASEELSE
+					TCVAR:LOCAL:引力点 = 0
+				ENDSELECT
+			ENDIF
+		ENDIF
+ENDSELECT
+
+@EXIST_キャラデータ38
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@キャラデータ38(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "称呼"
+	CALLF MAKE_STR(V_NAME, "恋")
+;こっから衣装设定
+CASE "今天的睡衣"
+	IF !RAND:2
+		IF RAND:1000 == 514
+			CALLF MAKE_STR(V_NAME, "全裸")
+		ELSE
+			CALLF MAKE_STR(V_NAME, "针织衫")
+		ENDIF
+	ELSE
+		CALLF MAKE_STR(V_NAME, "睡衣（裤子+兜帽）套")
+	ENDIF
+
+CASE "便装：帽子"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("帽子", "帽子"))
+CASE "便装：靴"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("靴", "靴"))
+CASE "便装：袜子"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("袜子", "袜子"))
+CASE "便装：裙子"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("裙子", "裙子"))
+CASE "便装：上身衣服２"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("上身衣服２", "女式衬衫"))
+
+CASE "固有内衣形容词"
+	CALLF MAKE_STR(V_NAME, "大概不是恋恋的东西")
+CASE "固有下半身内衣名"
+	CALLF MAKE_STR(V_NAME, "性感内裤")
+CASE "固有上半身内衣"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "固有上半身内衣名"
+	CALLF MAKE_STR(V_NAME, "性感胸罩")
+CASE "固有内衣着用条件"
+	SIF !RAND:(3 - (2 * 胜负内衣判定([[恋]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "固有内衣半透明(前)"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "固有内衣半透明(后)"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "固有内衣布料厚度"
+	CALLF MAKE_INT(V_NAME, 1)
+
+;料理关联
+CASE "料理：喜欢的味道"
+	CALLF MAKE_STR(V_NAME, "香料/乳酪/洋食/油炸食品/蛋糕/垃圾/浓厚/家庭的/艺术的/扑鼻/地底风/甜/甜/辣/辣/" + "谜料理/" * 3)
+CASE "料理：讨厌的味道"
+	CALLF MAKE_STR(V_NAME, "朴素/咸/咸/野菜/野菜/野菜/")
+CASE "料理：助手效果"
+	CALLF MAKE_STR(V_NAME, "地底风/心跳味/")
+;赠り物关联
+CASE "感性：好き"
+	CALLF MAKE_STR(V_NAME, "灰/可爱的/奇妙/活泼/洛丽塔/不思议/" + "精神/" * 3 + "心形の/蔷薇の/地底の/心の/本我の/自我の/小刀/" * 5)
+CASE "感性：嫌い"
+	CALLF MAKE_STR(V_NAME, "秩序/朴素/知的/" + "护臂/" * 3 + "瞳の/" * 10)
+ENDSELECT
+
+;-------------------------------------------------
+;固有料理设定
+;DISH_NAME          料理名
+;RESULTS            料理の种类（轻食/主食/甜点）
+;CALL 材料设定("")  材料の指定。"泛用"を入れると自动で泛用食材になる
+;DISH_TASTE         味の设定
+;DISH_COMMENT       （任意）一行コメント
+;DISH_TIME          （任意）调理にかかる时间
+;DISH_MAXLIMIT      （任意）料理の持续时间
+;-------------------------------------------------
+@SPECIAL_MENU_38
+DISH_NAME = 苹果薔薇果冻
+RESULTS = 甜点
+CALL 材料设定("甜味料")
+DISH_TASTE = 洋食/甜/上品/冷/家庭的/新鲜/扑鼻/
+DISH_COMMENT =把切片的苹果做成薔薇花形,然后用它做成果冻。
+RETURN 1
+
+;IMAGE_I38_特殊服装(CHARA)-------------------------------------------------------------------
+;角色特有の服装表示条件
+;エフェクトを共有する服装差分はこちらで指定する
+;使用时注意点:
+;	RESULTSに特殊服装を格纳すること
+;	书式は %服装%%特殊服装% 适宜"_"等入れること
+;-------------------------------------------------------------------------------------------
+@IMAGE_I38_特殊服装(CHARA)
+#DIM CHARA
+VARSET RESULTS
+
+IF CFLAG:CHARA:应用差分替换
+	;替换用画像
+	IF CHECK_NUDE(CHARA)
+		;裸
+		IF FLAG:立绘种类
+			;颜绘
+		ELSE
+			;立绘
+		ENDIF
+	ELSE
+		;服
+		IF  NUDITYCHECK(CHARA) == 1
+			RESULTS = _内衣P
+			SIF FLAG:立绘种类
+				RESULTS = _半裸
+		ELSEIF NUDITYCHECK(CHARA) == 2
+			RESULTS = _内衣B
+		ELSEIF NUDITYCHECK(CHARA) == 3
+			RESULTS = _内衣
+			SIF FLAG:立绘种类
+				RESULTS = _内衣B
+		ENDIF
+	ENDIF
+ELSE
+	;通常画像
+	IF CHECK_NUDE(CHARA)
+		;裸
+		IF FLAG:立绘种类
+			;颜绘
+		ELSE
+			;立绘
+		ENDIF
+	ELSE
+		;服
+		IF FLAG:立绘种类
+			;颜绘
+		ELSE
+			;立绘
+		ENDIF
+	ENDIF
+ENDIF
+
+;IMAGE_I38_体形(CHARA)-----------------------------------------------------------------------
+;角色特有の体形表示条件
+;エフェクトを共有する体形差分はこちら
+;服装を指定しても自动で表示されるので注意
+;使用时注意点:
+;	RESULTSに体形を格纳すること
+;	书式は %体形%%服装% 适宜"_"等入れること
+;	"巨乳"は本编で实装済み %体形%巨乳%服装% で追记可能
+;-------------------------------------------------------------------------------------------
+@IMAGE_I38_体形(CHARA)
+#DIM CHARA
+VARSET RESULTS
+
+IF CFLAG:CHARA:应用差分替换
+	;替换用画像
+	SIF TALENT:CHARA:妊娠 && !(CHECK_NUDE(CHARA) && TALENT:CHARA:胸围>0 && FLAG:巨乳差分表示)
+		LOCALS = _P
+ELSE
+	;通常画像
+	IF FLAG:立绘种类
+		;颜绘
+	ELSE
+		;立绘
+	ENDIF
+ENDIF
+
+;IMAGE_I38_特殊表情(CHARA)--------------------------------------------------------------------
+;角色特有の表情表示条件
+;时间停止中でも维持する表情はこちら
+;使用时注意点:
+;	RESULTS:0に表情を格纳
+;	RESULTS:1にマウスオーバー时の表情を格纳すること
+;	"通常","笑颜","愤怒","发情","睡眠"は本编で实装済み
+;-------------------------------------------------------------------------------------------
+@IMAGE_I38_特殊表情(CHARA)
+#DIM CHARA
+
+IF CFLAG:CHARA:应用差分替换
+	;替换用画像
+	SIF MARK:CHARA:3
+		RESULTS:1 = 反抗
+ELSE
+	;通常画像
+	IF FLAG:立绘种类
+		;颜绘
+	ELSE
+		;立绘
+	ENDIF
+ENDIF
+
+;IMAGE_I38_特殊表情COM(CHARA, 指令)-------------------------------------------------------
+;直前の指令で变化する角色特有の表情表示条件
+;时间停止中は变化しない表情はこちら
+;使用时注意点:
+;	RESULTS:0に表情を格纳
+;	RESULTS:1にマウスオーバー时の表情を格纳すること
+;	"自慰","爱抚","性交"は本编で实装済み
+;-------------------------------------------------------------------------------------------
+@IMAGE_I38_特殊表情COM(CHARA, 指令)
+#DIM CHARA
+#DIM 指令
+
+IF CFLAG:CHARA:应用差分替换
+	;替换用画像
+	IF (BATHROOM(CFLAG:CHARA:当前位置) || (MARK:CHARA:快乐刻印 > 1 && (PALAM:CHARA:情欲 > 100000 || PALAM:CHARA:羞耻 > 50000)))
+		SELECTCASE RESULTS:0
+		CASE "笑颜"
+			RESULTS:0 = 耻笑颜
+		CASE "愤怒"
+			RESULTS:0 = 耻愤怒
+		CASEELSE
+			RESULTS:0 = 耻通常
+		ENDSELECT
+		SELECTCASE RESULTS:1
+		CASE "笑颜"
+			RESULTS:1 = 耻笑颜
+		CASE "愤怒"
+			RESULTS:1 = 耻愤怒
+		CASEELSE
+			RESULTS:1 = 耻通常
+		ENDSELECT
+	ENDIF
+	SELECTCASE 指令
+		;接吻系、侍奉系 恋慕时LOVE表情
+		CASE 19, 20, 80 TO 88, 312, 501, 505, 508 TO 512, 563
+			SIF TALENT:CHARA:恋慕
+				RESULTS:0 = LOVE
+		;赤面表情、开帐、摸屁股、掀起裙子
+		CASE 8, 13, 310, 330
+			RESULTS:0 = 赤面
+	ENDSELECT
+	SIF 绝顶判定(CHARA) || 绝顶判定2(CHARA)
+		RESULTS:1 = 绝顶
+	;诶嘿嘿かつ绝顶时2/3でマウスオーバーと表情交代
+	SIF RAND:3 && CFLAG:CHARA:诶嘿嘿 && 绝顶判定(CHARA)
+		SWAP RESULTS:0, RESULTS:1
+ELSE
+	;通常画像
+	IF FLAG:立绘种类
+		;颜绘
+	ELSE
+		;立绘
+	ENDIF
+ENDIF
+
+;IMAGE_I38_差分(CHARA)-----------------------------------------------------------------------
+;角色特有の差分表示条件
+;裸やエフェクトを共有しない画像はこちら
+;使用时注意点:
+;	RESULTSに差分を格纳すること
+;	书式は {CHARA}%差分% 适宜"_"等入れること
+;-------------------------------------------------------------------------------------------
+@IMAGE_I38_差分(CHARA)
+#DIM CHARA
+VARSET RESULTS
+
+IF CFLAG:CHARA:应用差分替换
+	;替换用画像
+	IF FLAG:立绘种类
+		;颜绘
+	ELSE
+		;立绘
+	ENDIF
+ELSE
+	;通常画像
+	IF FLAG:立绘种类
+		;颜绘
+	ELSE
+		;立绘
+	ENDIF
+ENDIF
+
+;IMAGE_I38_特殊照れ(CHARA)--------------------------------------------------------------------
+;角色特有の照れエフェクト表示条件
+;使用时注意点:
+;	RESULTSに特殊照れを格纳すること
+;	书式は %特殊照れ%照れ
+;	"裸"は本编で实装済み %特殊照れ%裸照れ で追记可能
+;-------------------------------------------------------------------------------------------
+@IMAGE_I38_特殊照れ(CHARA)
+#DIM CHARA
+VARSET RESULTS
+
+IF CFLAG:CHARA:应用差分替换
+	;替换用画像
+	IF FLAG:立绘种类
+		;颜绘
+	ELSE
+		;立绘
+	ENDIF
+ELSE
+	;通常画像
+	IF FLAG:立绘种类
+		;颜绘
+	ELSE
+		;立绘
+	ENDIF
+ENDIF
+
+;IMAGE_I38_特殊吐息(CHARA)--------------------------------------------------------------------
+;角色特有の吐息エフェクト表示条件
+;使用时注意点:
+;	RESULTSに特殊吐息を格纳すること
+;	书式は %特殊吐息%吐息
+;	"裸"は本编で实装済み %特殊吐息%裸吐息 で追记可能
+;-------------------------------------------------------------------------------------------
+@IMAGE_I38_特殊吐息(CHARA)
+#DIM CHARA
+VARSET RESULTS
+
+IF CFLAG:CHARA:应用差分替换
+	;替换用画像
+	IF FLAG:立绘种类
+		;颜绘
+	ELSE
+		;立绘
+	ENDIF
+ELSE
+	;通常画像
+	IF FLAG:立绘种类
+		;颜绘
+	ELSE
+		;立绘
+	ENDIF
+ENDIF
+
+;IMAGE_I38_特殊汗(CHARA)--------------------------------------------------------------------
+;角色特有の汗エフェクト表示条件
+;使用时注意点:
+;	RESULTSに特殊汗を格纳すること
+;	书式は %特殊汗%汗
+;	"裸"は本编で实装済み %特殊汗%裸汗 で追记可能
+;-------------------------------------------------------------------------------------------
+@IMAGE_I38_特殊汗(CHARA)
+#DIM CHARA
+VARSET RESULTS
+
+IF CFLAG:CHARA:应用差分替换
+	;替换用画像
+	IF FLAG:立绘种类
+		;颜绘
+	ELSE
+		;立绘
+	ENDIF
+ELSE
+	;通常画像
+	IF FLAG:立绘种类
+		;颜绘
+	ELSE
+		;立绘
+	ENDIF
+ENDIF
+
+;IMAGE_I38_特殊エフェクトチェック(CHAR, エフェクト)--------------------------------------------
+;角色特有のエフェクト判定  特殊エフェクトを直接指定したい场合に参照
+;参数 "エフェクト" に固有のエフェクトが含まれるかを判定する
+;例の街道、STRFINDを使用してください
+;-------------------------------------------------------------------------------------------
+@IMAGE_I38_特殊エフェクトチェック(CHARA, エフェクト)
+#DIM CHARA
+#DIMS エフェクト
+
+IF CFLAG:CHARA:应用差分替换
+	;替换用画像
+	SIF STRFIND(エフェクト, "愤怒") != -1
+		RETURN 1
+	SIF STRFIND(エフェクト, "ハート") != -1
+		RETURN 1
+	SIF STRFIND(エフェクト, "睡眠") != -1
+		RETURN 1
+	SIF STRFIND(エフェクト, "母乳") != -1
+		RETURN 1
+ELSE
+	;通常画像
+	;SIF STRFIND(エフェクト, "母乳") != -1
+	;	RETURN 1
+ENDIF
+
+RETURN 0
+
+;IMAGE_I38_特殊エフェクト(CHARA)--------------------------------------------------------------------
+;角色特有のエフェクト表示条件
+;使用时注意点:
+;	RESULTS配列に特殊エフェクトを格纳
+;	RETURNで追加するエフェクト数を返还すること
+;-------------------------------------------------------------------------------------------
+@IMAGE_I38_特殊エフェクト(CHARA)
+#DIM CHARA
+#DIM DYNAMIC エフェクト数 = 0
+VARSET RESULTS
+
+IF CFLAG:CHARA:应用差分替换
+	;替换用画像
+	IF TALENT:CHARA:母乳体质 && NOWEX:CHARA:喷乳 && CHECK_NUDE(CHARA)
+		RESULTS:エフェクト数 = 母乳
+		エフェクト数 += 1
+	ENDIF
+	SIF FLAG:时间停止
+		RETURN エフェクト数
+	IF BASE:CHARA:情绪 >= MAXBASE:CHARA:情绪*8/10
+		RESULTS:エフェクト数 = ハート
+		エフェクト数 += 1
+	ELSEIF MARK:CHARA:反抗刻印 > 0 || CFLAG:CHARA:勃然大怒
+		RESULTS:エフェクト数 = 愤怒
+		エフェクト数 += 1
+	ELSEIF CFLAG:CHARA:睡眠
+		RESULTS:エフェクト数 = 睡眠
+		エフェクト数 += 1
+	ENDIF
+ELSE
+	;通常画像
+	IF FLAG:立绘种类
+		;颜绘
+	ELSE
+		;立绘
+	ENDIF
+ENDIF
+
+RETURN エフェクト数
+
+;IMAGE_I38_自慰エフェクト(CHARA)--------------------------------------------------------------------
+;角色特有の自慰エフェクト表示条件
+@IMAGE_I38_自慰エフェクト(CHARA)
+#DIM CHARA
+#DIM DYNAMIC エフェクト数 = 0
+VARSET RESULTS
+
+IF CFLAG:CHARA:应用差分替换
+	;替换用画像
+	IF FLAG:立绘种类
+		;颜绘
+	ELSE
+		;立绘
+	ENDIF
+ELSE
+	;通常画像
+	IF FLAG:立绘种类
+		;颜绘
+	ELSE
+		;立绘
+	ENDIF
+ENDIF
+
+RETURN エフェクト数
+;********************************************************************************************

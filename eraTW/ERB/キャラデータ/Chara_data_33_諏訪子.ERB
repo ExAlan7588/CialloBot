@@ -1,0 +1,197 @@
+﻿@CHARAMOVE_DATA_33(ARG, ARG:2)
+LOCAL = 33
+SELECTCASE ARG
+	;连动设定（RETURN=依存する角色, RESULT:1～3=对等に连动する角色）
+	CASE 1
+		;水曜日は早苗と一绪
+		SIF YOUBI_MATCH(DAY, "水")
+			RETURN [[早苗]]
+	;特殊生活时间设定（CFLAG:LOCAL:生活时间补正を设定する）
+	CASE 3
+	;移动倾向（±～10=行きやすい/行きにくい, -100=行かない）
+	CASE 4
+		SELECTCASE ARG:2
+			;分社引かれる
+			CASE P21守矢神社分社
+				RETURN 5
+			;主に湖畔、起居室、走廊
+			CASE P814湖畔, P819起居室, P816走廊
+				RETURN 5
+			;天界には行かない
+			CASE P830玄云海 TO P842比那名居邸库房
+				RETURN -100
+			;他所的家には行かない
+			CASE P807椛宅, P808文宅, P809果宅, P851久侘歌的小屋, P852驹草的小屋, P853魅须丸的小屋, P854龙宅, P856百百世的住所
+				RETURN -100
+		ENDSELECT
+	;出现场所
+	CASE 7
+		SELECTCASE ARG:2
+			CASE 雾之湖
+				RETURN 1
+			CASE 山麓树海, 玄武之泽, 大蛤蟆之池, 间歇泉地下中枢
+				RETURN 1
+			CASE 九天瀑布, 绝景之丘, 山之湖, 守矢神社境内, 守矢神社本殿, 虹龙洞
+				RETURN 1
+		ENDSELECT
+	;引力设定（CFLAG:LOCAL:引力点を设定する）
+	CASE 8
+ENDSELECT
+
+@EXIST_キャラデータ33
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@キャラデータ33(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "称呼"
+	CALLF MAKE_STR(V_NAME, "诹访子")
+;こっから衣装设定
+CASE "今天的睡衣"
+	CALLF MAKE_STR(V_NAME, "睡衣（裤子+兜帽）套")
+
+CASE "便装：帽子"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("帽子", "帽子"))
+CASE "便装：靴"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("靴", "靴"))
+CASE "便装：袜子"
+	IF FLAG:2 > 0
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("袜子", "长筒袜"))
+	ELSE
+		CALLF MAKE_INT(V_NAME, CLOTHES_ID("袜子", "袜子"))
+	ENDIF
+CASE "便装：上半身内衣１"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("上半身内衣１", "裹胸"))
+CASE "便装：裙子"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("裙子", "裙子"))
+CASE "便装：上身衣服２"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("上身衣服２", "女式衬衫"))
+CASE "便装：上身衣服１"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("上身衣服１", "无袖外套"))
+
+CASE "固有内衣形容词"
+	CALLF MAKE_STR(V_NAME, "有少女的香气的")
+CASE "固有下半身内衣名"
+	CALLF MAKE_STR(V_NAME, "番茄胖次")
+CASE "固有上半身内衣"
+	CALLF MAKE_INT(V_NAME, 0)
+CASE "固有内衣着用条件"
+	SIF !RAND:(1 + (2 * 胜负内衣判定([[诹访子]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "固有内衣半透明(前)"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "固有内衣半透明(后)"
+	CALLF MAKE_INT(V_NAME, 1)
+
+;料理关联
+CASE "料理：喜欢的味道"
+	CALLF MAKE_STR(V_NAME, "野味/和食/汁物/甜/简易/朴素/野趣/家庭的/粘稠/妖力/美味的水/酸/酸/酸/")
+CASE "料理：讨厌的味道"
+	CALLF MAKE_STR(V_NAME, "中华/丰盛/辣/辣/" + "青蛙/" * 10)
+CASE "料理：助手效果"
+	CALLF MAKE_STR(V_NAME, "加护/美味的水/")
+;赠り物关联
+CASE "感性：好き"
+	CALLF MAKE_STR(V_NAME, "青/绿/巫术/秩序/美的/怀旧/" + "土/水/妖术/大地の/" * 3 + "翡翠の/蛙の/白蛇の/" * 5)
+CASE "感性：嫌い"
+	CALLF MAKE_STR(V_NAME, "充满力量/" + "风/刃物/护臂/" * 3 + "茨の/风神の/博灵の/" * 10)
+
+;农民关联
+;沼っぽい场所に生えるっぽいので
+;ケロケロな诹访子样に协力してもらおう
+;财力もありそうだけどそもそもの单价が安いという脑内设定
+CASE "农民：说明"
+	CALLF MAKE_STR(V_NAME, "菱农家")
+CASE "农民：作物"
+	CALLF MAKE_STR(V_NAME, "菱")
+CASE "农民：田的种类"
+	CALLF MAKE_STR(V_NAME, "蓄水池")
+CASE "农民：畑の所在地"
+	CALLF MAKE_STR(V_NAME, "妖怪之山・山麓")
+
+CASE "农民：MapID"
+	CALLF MAKE_INT(V_NAME, 7)
+CASE "农民：场所ID"
+	CALLF MAKE_INT(V_NAME, 708)
+CASE "农民：报酬"
+	CALLF MAKE_INT(V_NAME, 400)
+CASE "农民：金利"
+	CALLF MAKE_INT(V_NAME, 12)
+ENDSELECT
+
+;-------------------------------------------------
+;固有料理设定
+;DISH_NAME          料理名
+;RESULTS            料理の种类（轻食/主食/甜点）
+;CALL 材料设定("")  材料の指定。"泛用"を入れると自动で泛用食材になる
+;DISH_TASTE         味の设定
+;DISH_COMMENT       （任意）一行コメント
+;DISH_TIME          （任意）调理にかかる时间
+;DISH_MAXLIMIT      （任意）料理の持续时间
+;-------------------------------------------------
+@SPECIAL_MENU_33
+DISH_NAME = 馒饼
+RESULTS = 轻食
+CALL 材料设定("泛用")
+DISH_TASTE = 和食/米/野菜/豆/甜/简易/健康/新鲜/家庭的/
+SIF GROUPMATCH(FESTIVAL(), "盂兰盆节", "十五夜")
+	DISH_TASTE += "缘起物/"
+DISH_COMMENT = 在压扁成年糕状的米饭上、放上将煮毛豆磨成的馅、这是诹访的乡土料理。
+RETURN 1
+
+;IMAGE_I33_特殊服装(CHARA)-------------------------------------------------------------------
+;角色特有の服装表示条件
+;エフェクトを共有する服装差分はこちらで指定する
+;使用时注意点:
+;	RESULTSに特殊服装を格纳すること
+;	书式は %服装%%特殊服装% 适宜"_"等入れること
+;-------------------------------------------------------------------------------------------
+@IMAGE_I33_特殊服装(CHARA)
+#DIM CHARA
+VARSET RESULTS
+
+IF CFLAG:CHARA:应用差分替换
+	;替换用画像
+	IF CHECK_NUDE(CHARA)
+		;裸
+		IF FLAG:立绘种类
+			;颜绘
+		ELSE
+			;立绘
+		ENDIF
+	ELSE
+		;服
+		IF FLAG:立绘种类
+			;颜绘
+		ELSE
+			;立绘
+		ENDIF
+	ENDIF
+ELSE
+	;通常画像
+	IF CHECK_NUDE(CHARA)
+		;裸
+		IF FLAG:立绘种类
+			;颜绘
+		ELSE
+			;立绘
+		ENDIF
+	ELSE
+		;服
+		IF CFLAG:CHARA:衣物暂时更换 == 55 || (CFLAG:CHARA:基本服装SET == 55 && CFLAG:CHARA:衣物暂时更换==0)
+			IF FLAG:立绘种类
+				;颜绘
+				RESULTS = _バニー
+			ELSE
+				;立绘
+				RESULTS = _バニー
+			ENDIF
+		ENDIF
+	ENDIF
+ENDIF
+

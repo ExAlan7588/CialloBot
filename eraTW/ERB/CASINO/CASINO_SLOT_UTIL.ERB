@@ -1,0 +1,1955 @@
+﻿;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;红魔CASINOスロットにて用いる函数置き场;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;@SLOT_DISPLAY(绘柄,行数,暗转)…指定した"绘柄"の"行数"を文字列としてprintする
+;绘柄一览
+;1 RD7 赤7(BOUNS图柄)
+;2 BL7 青7(BOUNS图柄)
+;3 BEL ベル
+;4 CHE チェリー
+;5 MEL 西瓜
+;6 BAR BAR(BOUNS图柄)
+;7 REP 回放
+;8 NUL 未选择
+;行数
+;1～9行
+;暗转(1:YES 0:NO)
+;暗转を指定した场合该当绘柄を色_NULLで表示
+
+@SLOT_DISPLAY(绘柄,行数,暗转)
+#DIM REF 绘柄
+#DIM REF 行数
+#DIM REF 暗转
+#DIM 色_RED7
+#DIM 色_BLUE7
+#DIM 色_BELL
+#DIM 色_CHERRY茎
+#DIM 色_CHERRY果实
+#DIM 色_MELON果实
+#DIM 色_MELON皮
+#DIM 色_BAR
+#DIM 色_REPLAY
+#DIM 色_NULL
+
+IF 暗转
+	 色_RED7 = 0x404040
+	 色_BLUE7 = 0x404040
+	 色_BELL = 0x404040
+	 色_CHERRY茎 = 0x404040
+	 色_CHERRY果实 = 0x404040
+	 色_MELON果实 = 0x404040
+	 色_MELON皮 = 0x404040
+	 色_BAR = 0x404040
+	 色_REPLAY = 0x404040
+	 色_NULL = 0x000000
+ELSE
+	 色_RED7 = 0xFF0000
+	 色_BLUE7 = 0x66FFFF
+	 色_BELL = 0xFFFF00
+	 色_CHERRY茎 = 0x00FF00
+	 色_CHERRY果实 = 0xFF0000
+	 色_MELON果实 = 0xFF0000
+	 色_MELON皮 = 0x00FF00
+	 色_BAR = 0xFFFFFF
+	 色_REPLAY = 0xCCFFFF
+	 色_NULL = 0x404040
+ENDIF
+;########################################################
+;赤7(斯卡雷特BB)
+;BOUNS图柄
+;
+;1 ;;;;;;;;;;;;;;;;;;;;;;;;;
+;2 ;;;                   ;;;
+;3 ;;;                   ;;;
+;4 ;;;                   ;;;
+;5 ;;;;;;;;;;;;;;;      ;;;;
+;6 ;;;;;;;;;;;        ;;;;;;
+;7 ;;;;;;;;      Scarlet;;;;
+;8 ;;;;;;            ;;;;;;;
+;9 ;;;;;;;;;;;;;;;;;;;;;;;;;
+;########################################################
+IF 绘柄 == 1
+	FONTSTYLE 1
+	SELECTCASE 行数
+	CASE 1,9
+		PRINTFORM ;;;;;;;;;;;;;;;;;;;;;;;;;
+	CASE 2,3,4
+		PRINT ;;;
+		SETCOLOR 色_RED7
+		PRINTFORM %UNICODE(0x2589)*19%
+		RESETCOLOR
+		PRINT ;;;
+	CASE 5
+		PRINT ;;;;;;;;;;;;;;;
+		SETCOLOR 色_RED7
+		PRINTFORM %UNICODE(0x2589)*6%
+		RESETCOLOR
+		PRINT ;;;;
+	CASE 6
+		PRINT ;;;;;;;;;;;
+		SETCOLOR 色_RED7
+		PRINTFORM %UNICODE(0x2589)*8%
+		RESETCOLOR
+		PRINT ;;;;;;
+	CASE 7
+		PRINT ;;;;;;;;
+		SETCOLOR 色_RED7
+		PRINTFORM %UNICODE(0x2589)*6%
+		FONTSTYLE 3
+		PRINT Scarlet
+		RESETCOLOR
+		FONTSTYLE 1
+		PRINT ;;;;
+	CASE 8
+		PRINT ;;;;;;
+		SETCOLOR 色_RED7
+		PRINTFORM %UNICODE(0x2589)*12%
+		RESETCOLOR
+		PRINT ;;;;;;;
+	CASEELSE
+		PRINTL ERROR 被指定了不存在的行数(RED7)
+	ENDSELECT
+	FONTREGULAR
+
+;########################################################
+;青7(十六夜BB)
+;BOUNS图柄
+;
+;1 ;;;;;;;;;;;;;;;;;;;;;;;;;
+;2 ;;;                   ;;;
+;3 ;;;                   ;;;
+;4 ;;;                   ;;;
+;5 ;;;;;;;;;;;;;;;      ;;;;
+;6 ;;;;;;;;;;;        ;;;;;;
+;7 ;;;;;;;;       Sakuya;;;;
+;8 ;;;;;;            ;;;;;;;
+;9 ;;;;;;;;;;;;;;;;;;;;;;;;;
+;########################################################
+ELSEIF 绘柄 == 2
+	FONTSTYLE 1
+	SELECTCASE 行数
+	CASE 1,9
+		PRINTFORM ;;;;;;;;;;;;;;;;;;;;;;;;;
+	CASE 2,3,4
+		PRINT ;;;
+		SETCOLOR 色_BLUE7
+		PRINTFORM %UNICODE(0x2589)*19%
+		RESETCOLOR
+		PRINT ;;;
+	CASE 5
+		PRINT ;;;;;;;;;;;;;;;
+		SETCOLOR 色_BLUE7
+		PRINTFORM %UNICODE(0x2589)*6%
+		RESETCOLOR
+		PRINT ;;;;
+	CASE 6
+		PRINT ;;;;;;;;;;;
+		SETCOLOR 色_BLUE7
+		PRINTFORM %UNICODE(0x2589)*8%
+		RESETCOLOR
+		PRINT ;;;;;;
+	CASE 7
+		PRINT ;;;;;;;;
+		SETCOLOR 色_BLUE7
+		PRINTFORM %UNICODE(0x2589)*7%
+		FONTSTYLE 3
+		PRINT Sakuya
+		RESETCOLOR
+		FONTSTYLE 1
+		PRINT ;;;;
+	CASE 8
+		PRINT ;;;;;;
+		SETCOLOR 色_BLUE7
+		PRINTFORM %UNICODE(0x2589)*12%
+		RESETCOLOR
+		PRINT ;;;;;;;
+	CASEELSE
+		PRINTL ERROR 被指定了不存在的行数(BLUE7)
+	ENDSELECT
+	FONTREGULAR
+
+;########################################################
+;ベル(8枚役)
+;小役
+;
+;1 ;;;;;;;;;;;;;;;;;;;;;;;;;
+;2 ;;;;;;;;;;;   ;;;;;;;;;;;
+;3 ;;;;;;;           ;;;;;;;
+;4 ;;;;;               ;;;;;
+;5 ;;;;                 ;;;;
+;6 ;;; ;;;;;;;;;;;;;;;;; ;;;
+;7 ;;;        ;;;        ;;;
+;8 ;;;;;;;;;;;   ;;;;;;;;;;;
+;9 ;;;;;;;;;;;;;;;;;;;;;;;;;
+;########################################################
+ELSEIF 绘柄 == 3
+	FONTSTYLE 1
+	SELECTCASE 行数
+	CASE 1,9
+		PRINTFORM ;;;;;;;;;;;;;;;;;;;;;;;;;
+	CASE 2
+		PRINT ;;;;;;;;;;;
+		SETCOLOR 色_BELL
+		PRINTFORM %UNICODE(0x2589)*3%
+		RESETCOLOR
+		PRINT ;;;;;;;;;;;
+	CASE 3
+		PRINT ;;;;;;;
+		SETCOLOR 色_BELL
+		PRINTFORM %UNICODE(0x2589)*11%
+		RESETCOLOR
+		PRINT ;;;;;;;
+	CASE 4
+		PRINT ;;;;;
+		SETCOLOR 色_BELL
+		PRINTFORM %UNICODE(0x2589)*15%
+		RESETCOLOR
+		PRINT ;;;;;
+	CASE 5
+		PRINT ;;;;
+		SETCOLOR 色_BELL
+		PRINTFORM %UNICODE(0x2589)*17%
+		RESETCOLOR
+		PRINT ;;;;
+	CASE 6
+		PRINT ;;;
+		SETCOLOR 色_BELL
+		PRINTFORM %UNICODE(0x2589)*1%
+		PRINT ;;;;;;;;;;;;;;;;;
+		PRINTFORM %UNICODE(0x2589)*1%
+		RESETCOLOR
+		PRINT ;;;
+	CASE 7
+		PRINT ;;;
+		SETCOLOR 色_BELL
+		PRINTFORM %UNICODE(0x2589)*8%
+		PRINT ;;;
+		PRINTFORM %UNICODE(0x2589)*8%
+		RESETCOLOR
+		PRINT ;;;
+	CASE 8
+		PRINT ;;;;;;;;;;;
+		SETCOLOR 色_BELL
+		PRINTFORM %UNICODE(0x2589)*3%
+		RESETCOLOR
+		PRINT ;;;;;;;;;;;
+	CASEELSE
+		PRINTL ERROR 被指定了不存在的行数(BELL)
+	ENDSELECT
+	FONTREGULAR
+
+;########################################################
+;チェリー(3枚役)
+;
+;1 ;;;;;;;;;;;;;;;;;;;;;;;;;
+;2 ;;;;;;;;;1__;;;;;;;;;;;;;
+;3 ;;;;;;;;;1;;1___;;;;;;;;;
+;4 ;;;;;;;;1;;;;;;;1;;;;;;;;
+;5 ;;;;;;_1;;;;;;;;;1_;;;;;;
+;6 ;;;;;;  ;;;;;;;;;  ;;;;;;
+;7 ;;;;;    ;;;;;;;    ;;;;;
+;8 ;;;;;;  ;;;;;;;;;  ;;;;;;
+;9 ;;;;;;;;;;;;;;;;;;;;;;;;;
+;########################################################
+ELSEIF 绘柄 == 4
+	FONTSTYLE 1
+	SELECTCASE 行数
+	CASE 1,9
+		PRINTFORM ;;;;;;;;;;;;;;;;;;;;;;;;;
+	CASE 2
+		PRINT ;;;;;;;;;
+		SETCOLOR 色_CHERRY茎
+		PRINT 1__
+		RESETCOLOR
+		PRINT ;;;;;;;;;;;;;
+	CASE 3
+		PRINT ;;;;;;;;;
+		SETCOLOR 色_CHERRY茎
+		PRINT 1
+		RESETCOLOR
+		PRINT ;;
+		SETCOLOR 色_CHERRY茎
+		PRINT 1___
+		RESETCOLOR
+		PRINT ;;;;;;;;;
+	CASE 4
+		PRINT ;;;;;;;;
+		SETCOLOR 色_CHERRY茎
+		PRINT 1
+		RESETCOLOR
+		PRINT ;;;;;;;
+		SETCOLOR 色_CHERRY茎
+		PRINT 1
+		RESETCOLOR
+		PRINT ;;;;;;;;
+	CASE 5
+		PRINT ;;;;;;
+		SETCOLOR 色_CHERRY茎
+		PRINT _1
+		RESETCOLOR
+		PRINT ;;;;;;;;;
+		SETCOLOR 色_CHERRY茎
+		PRINT 1_
+		RESETCOLOR
+		PRINT ;;;;;;
+	CASE 6,8
+		PRINT ;;;;;;
+		SETCOLOR 色_CHERRY果实
+		PRINTFORM %UNICODE(0x2589)*2%
+		RESETCOLOR
+		PRINT ;;;;;;;;;
+		SETCOLOR 色_CHERRY果实
+		PRINTFORM %UNICODE(0x2589)*2%
+		RESETCOLOR
+		PRINT ;;;;;;
+	CASE 7
+		PRINT ;;;;;
+		SETCOLOR 色_CHERRY果实
+		PRINTFORM %UNICODE(0x2589)*4%
+		RESETCOLOR
+		PRINT ;;;;;;;
+		SETCOLOR 色_CHERRY果实
+		PRINTFORM %UNICODE(0x2589)*4%
+		RESETCOLOR
+		PRINT ;;;;;
+	CASEELSE
+		PRINTL ERROR 被指定了不存在的行数(CHERRY)
+	ENDSELECT
+	FONTREGULAR
+;########################################################
+;西瓜(5枚役)
+;
+;1 ;;;;;;;;;;;;;;;;;;;;;;;;;
+;2 ;;;;;;;;;;            ;;;
+;3 ;;;;            ______;;;
+;4 ;;;;___________/;;    ;;;
+;5 ;;;;;   ;;;     ;;   ;;;;
+;6 ;;;;;;;  ;;;   ;;  ;;;;;;
+;7 ;;;;;;;;  ;;  ;;  ;;;;;;;
+;8 ;;;;;;;;;; ;  ; ;;;;;;;;;
+;9 ;;;;;;;;;;;;;;;;;;;;;;;;;
+;########################################################
+ELSEIF 绘柄 == 5
+	FONTSTYLE 1
+	SELECTCASE 行数
+	CASE 1,9
+		PRINTFORM ;;;;;;;;;;;;;;;;;;;;;;;;;
+	CASE 2
+		PRINT ;;;;;;;;;;
+		SETCOLOR 色_MELON果实
+		PRINTFORM %UNICODE(0x2589)*12%
+		RESETCOLOR
+		PRINT ;;;
+	CASE 3
+		PRINT ;;;;
+		SETCOLOR 色_MELON果实
+		PRINTFORM %UNICODE(0x2589)*12%
+		SETCOLOR 色_MELON皮
+		PRINT ______
+		RESETCOLOR
+		PRINT ;;;
+	CASE 4
+		PRINT ;;;;
+		SETCOLOR 色_MELON皮
+		PRINT ___________/
+		RESETCOLOR
+		PRINT   
+		SETCOLOR 色_MELON皮
+		PRINTFORM %UNICODE(0x2589)*4%
+		RESETCOLOR
+		PRINT ;;;
+	CASE 5
+		PRINT ;;;;;
+		SETCOLOR 色_MELON皮
+		PRINTFORM %UNICODE(0x2589)*3%
+		RESETCOLOR
+		PRINT    
+		SETCOLOR 色_MELON皮
+		PRINTFORM %UNICODE(0x2589)*5%
+		RESETCOLOR
+		PRINT   
+		SETCOLOR 色_MELON皮
+		PRINTFORM %UNICODE(0x2589)*3%
+		RESETCOLOR
+		PRINT ;;;;
+	CASE 6
+		PRINT ;;;;;;;
+		SETCOLOR 色_MELON皮
+		PRINTFORM %UNICODE(0x2589)*2%
+		RESETCOLOR
+		PRINT    
+		SETCOLOR 色_MELON皮
+		PRINTFORM %UNICODE(0x2589)*3%
+		RESETCOLOR
+		PRINT   
+		SETCOLOR 色_MELON皮
+		PRINTFORM %UNICODE(0x2589)*2%
+		RESETCOLOR
+		PRINT ;;;;;;
+	CASE 7
+		PRINT ;;;;;;;;
+		SETCOLOR 色_MELON皮
+		PRINTFORM %UNICODE(0x2589)*2%
+		RESETCOLOR
+		PRINT   
+		SETCOLOR 色_MELON皮
+		PRINTFORM %UNICODE(0x2589)*2%
+		RESETCOLOR
+		PRINT   
+		SETCOLOR 色_MELON皮
+		PRINTFORM %UNICODE(0x2589)*2%
+		RESETCOLOR
+		PRINT ;;;;;;;
+	CASE 8
+		PRINT ;;;;;;;;;;
+		SETCOLOR 色_MELON皮
+		PRINTFORM %UNICODE(0x2589)*1%
+		RESETCOLOR
+		PRINT  
+		SETCOLOR 色_MELON皮
+		PRINTFORM %UNICODE(0x2589)*2%
+		RESETCOLOR
+		PRINT  
+		SETCOLOR 色_MELON皮
+		PRINTFORM %UNICODE(0x2589)*1%
+		RESETCOLOR
+		PRINT ;;;;;;;;;
+	CASEELSE
+		PRINTL ERROR 被指定了不存在的行数(MELON)
+	ENDSELECT
+	FONTREGULAR
+;########################################################
+;BAR(REG)
+;BOUNS图柄
+;1 ;;;;;;;;;;;;;;;;;;;;;;;;;
+;2 ;;;;                 ;;;;
+;3 ;;; ;;             ;; ;;;
+;4 ;; ;;               ;; ;;
+;5 ;; ;;;;;;B  A  R;;;;;; ;;
+;6 ;; ;;               ;; ;;
+;7 ;;; ;;             ;; ;;;
+;8 ;;;;                 ;;;;
+;9 ;;;;;;;;;;;;;;;;;;;;;;;;;
+;########################################################
+ELSEIF 绘柄 == 6
+	FONTSTYLE 1
+	SELECTCASE 行数
+	CASE 1,9
+		PRINTFORM ;;;;;;;;;;;;;;;;;;;;;;;;;
+	CASE 2,8
+		PRINT ;;;;
+		SETCOLOR 色_BAR
+		PRINTFORM %UNICODE(0x2589)*17%
+		RESETCOLOR
+		PRINT ;;;;
+	CASE 3,7
+		PRINT ;;;
+		SETCOLOR 色_BAR
+		PRINTFORM %UNICODE(0x2589)*1%
+		RESETCOLOR
+		PRINT ;;             ;;
+		SETCOLOR 色_BAR
+		PRINTFORM %UNICODE(0x2589)*1%
+		RESETCOLOR
+		PRINT ;;;
+	CASE 4,6
+		PRINT ;;
+		SETCOLOR 色_BAR
+		PRINTFORM %UNICODE(0x2589)*1%
+		RESETCOLOR
+		PRINT ;; 
+		PRINT              
+		PRINT  ;;
+		SETCOLOR 色_BAR
+		PRINTFORM %UNICODE(0x2589)*1%
+		RESETCOLOR
+		PRINT ;;
+	CASE 5
+		PRINT ;;
+		SETCOLOR 色_BAR
+		PRINTFORM %UNICODE(0x2589)*1%
+		RESETCOLOR
+		PRINT ;;;;;;
+		PRINT B  A  R
+		PRINT ;;;;;;
+		SETCOLOR 色_BAR
+		PRINTFORM %UNICODE(0x2589)*1%
+		RESETCOLOR
+		PRINT ;;
+	CASEELSE
+		PRINTL ERROR 被指定了不存在的行数(BAR)
+	ENDSELECT
+	FONTREGULAR
+;########################################################
+;REPLAY(回放)
+;
+;1 ;;;;;;;;;;;;;;;;;;;;;;;;;
+;2 ;;;;;;;;;;;;;;;;;;;;;;;;;
+;3 ;;;;;;;;;;      ;;;;;;;;;
+;4 ;;;;;   ;        ;   ;;;;
+;5 ;;;;   ; Re-      ;   ;;;
+;6 ;;;;   ;     play ;   ;;;
+;7 ;;;;;   ;        ;   ;;;;
+;8 ;;;;;;;;;;      ;;;;;;;;;
+;9 ;;;;;;;;;;;;;;;;;;;;;;;;;
+;########################################################
+ELSEIF 绘柄 == 7
+	FONTSTYLE 1
+	SELECTCASE 行数
+	CASE 1,2,9
+		PRINTFORM ;;;;;;;;;;;;;;;;;;;;;;;;;
+	CASE 3,8
+		PRINT ;;;;;;;;;;
+		SETCOLOR 色_REPLAY
+		PRINTFORM %UNICODE(0x2589)*6%
+		RESETCOLOR
+		PRINT ;;;;;;;;;
+	CASE 4,7
+		PRINT ;;;;;
+		SETCOLOR 色_REPLAY
+		PRINTFORM %UNICODE(0x2589)*3%
+		RESETCOLOR
+		PRINT ;
+		SETCOLOR 色_REPLAY
+		PRINTFORM %UNICODE(0x2589)*8%
+		RESETCOLOR
+		PRINT ;
+		SETCOLOR 色_REPLAY
+		PRINTFORM %UNICODE(0x2589)*3%
+		RESETCOLOR
+		PRINT ;;;;
+	CASE 5
+		PRINT ;;;;
+		SETCOLOR 色_REPLAY
+		PRINTFORM %UNICODE(0x2589)*3%
+		RESETCOLOR
+		PRINT ;
+		SETCOLOR 色_REPLAY
+		PRINTFORM %UNICODE(0x2589)*1%
+		RESETCOLOR
+		SETCOLOR 色_REPLAY
+		PRINT Re-
+		RESETCOLOR
+		SETCOLOR 色_REPLAY
+		PRINTFORM %UNICODE(0x2589)*6%
+		RESETCOLOR
+		PRINT ;
+		SETCOLOR 色_REPLAY
+		PRINTFORM %UNICODE(0x2589)*3%
+		RESETCOLOR
+		PRINT ;;;
+	CASE 6
+		PRINT ;;;;
+		SETCOLOR 色_REPLAY
+		PRINTFORM %UNICODE(0x2589)*3%
+		RESETCOLOR
+		PRINT ;
+		SETCOLOR 色_REPLAY
+		PRINTFORM %UNICODE(0x2589)*5%
+		RESETCOLOR
+		SETCOLOR 色_REPLAY
+		PRINT play
+		RESETCOLOR
+		SETCOLOR 色_REPLAY
+		PRINTFORM %UNICODE(0x2589)*1%
+		RESETCOLOR
+		PRINT ;
+		SETCOLOR 色_REPLAY
+		PRINTFORM %UNICODE(0x2589)*3%
+		RESETCOLOR
+		PRINT ;;;
+	CASEELSE
+		PRINTL ERROR 指定了不存在的行数(REPLAY)
+	ENDSELECT
+	FONTREGULAR
+;########################################################
+;NULL(未选择)
+;
+;1 ;;;;;;;;;;;;;;;;;;;;;;;;;
+;2 ;;;;;;;;;;;;;;;;;;;;;;;;;
+;3 ;;;;;;;;;;;;;;;;;;;;;;;;;
+;4 ;;;;;;;;;;;;;;;;;;;;;;;;;
+;5 ;;;;;;;;;;;;;;;;;;;;;;;;;
+;6 ;;;;;;;;;;;;;;;;;;;;;;;;;
+;7 ;;;;;;;;;;;;;;;;;;;;;;;;;
+;8 ;;;;;;;;;;;;;;;;;;;;;;;;;
+;9 ;;;;;;;;;;;;;;;;;;;;;;;;;
+;########################################################
+ELSEIF 绘柄 == 8
+	FONTSTYLE 1
+	SELECTCASE 行数
+	CASE 1 TO 9
+		SETCOLOR 色_NULL
+		PRINTFORM ;;;;;;;;;;;;;;;;;;;;;;;;;
+		RESETCOLOR
+	CASEELSE
+		PRINTL ERROR 指定了不存在的行数(NULL)
+	ENDSELECT
+	FONTREGULAR
+ELSE
+	PRINTFORML ERROR 指定了不存在的图案{绘柄}
+ENDIF
+
+;########################################################
+;@SLOT_全体表示(色_框,绘柄_左上,绘柄_左中,绘柄_左下,绘柄_中上,绘柄_中中,绘柄_中下,绘柄_右上,绘柄_右中,绘柄_右下,暗转_左上,暗转_左中,暗转_左下,暗转_中上,暗转_中中,暗转_中下,暗转_右上,暗转_右中,暗转_右下)
+;SLOT_DISPLAYを3つつなげて全体を表示させる
+;变量19个是れすぎぃ
+
+;绘柄一览
+;1 RD7 赤7(BOUNS图柄)
+;2 BL7 青7(BOUNS图柄)
+;3 BEL ベル
+;4 CHE チェリー
+;5 MEL 西瓜
+;6 BAR BAR(BOUNS图柄)
+;7 REP 回放
+;8 NUL 未选择
+
+
+;暗转(1:YES 0:NO)值で指定
+@SLOT_全体表示(色_框,绘柄_左上,绘柄_左中,绘柄_左下,绘柄_中上,绘柄_中中,绘柄_中下,绘柄_右上,绘柄_右中,绘柄_右下,暗转_左上,暗转_左中,暗转_左下,暗转_中上,暗转_中中,暗转_中下,暗转_右上,暗转_右中,暗转_右下)
+
+#DIM REF 色_框
+
+#DIM REF 绘柄_左上
+#DIM REF 绘柄_左中
+#DIM REF 绘柄_左下
+#DIM REF 绘柄_中上
+#DIM REF 绘柄_中中
+#DIM REF 绘柄_中下
+#DIM REF 绘柄_右上
+#DIM REF 绘柄_右中
+#DIM REF 绘柄_右下
+#DIM REF 暗转_左上
+#DIM REF 暗转_左中
+#DIM REF 暗转_左下
+#DIM REF 暗转_中上
+#DIM REF 暗转_中中
+#DIM REF 暗转_中下
+#DIM REF 暗转_右上
+#DIM REF 暗转_右中
+#DIM REF 暗转_右下
+
+
+;=============================
+;ここよりスロット画面の表示
+;=============================
+;########
+;上框部分
+;########
+FONTSTYLE 1
+SETCOLOR 色_框
+PRINTFORML %UNICODE(0x2582)*82%
+RESETCOLOR
+FONTREGULAR
+
+;############
+;スロット上段
+;############
+FOR LOCAL, 1, 10
+	SETCOLOR 色_框
+	PRINTFORM %UNICODE(0x2589)%
+	RESETCOLOR
+	CALL SLOT_DISPLAY(绘柄_左上,LOCAL,暗转_左上)
+	SETCOLOR 色_框
+	PRINTFORM |%UNICODE(0x2589)%|
+	RESETCOLOR
+	CALL SLOT_DISPLAY(绘柄_中上,LOCAL,暗转_中上)
+	SETCOLOR 色_框
+	PRINTFORM |%UNICODE(0x2589)%|
+	RESETCOLOR
+	CALL SLOT_DISPLAY(绘柄_右上,LOCAL,暗转_右上)
+	SETCOLOR 色_框
+	PRINTFORML %UNICODE(0x2589)%
+	RESETCOLOR
+NEXT
+
+;############
+;スロット中段
+;############
+FOR LOCAL, 1, 10
+	SETCOLOR 色_框
+	PRINTFORM %UNICODE(0x2589)%
+	RESETCOLOR
+	CALL SLOT_DISPLAY(绘柄_左中,LOCAL,暗转_左中)
+	SETCOLOR 色_框
+	PRINTFORM |%UNICODE(0x2589)%|
+	RESETCOLOR
+	CALL SLOT_DISPLAY(绘柄_中中,LOCAL,暗转_中中)
+	SETCOLOR 色_框
+	PRINTFORM |%UNICODE(0x2589)%|
+	RESETCOLOR
+	CALL SLOT_DISPLAY(绘柄_右中,LOCAL,暗转_右中)
+	SETCOLOR 色_框
+	PRINTFORML %UNICODE(0x2589)%
+	RESETCOLOR
+NEXT
+
+;############
+;スロット下段
+;############
+FOR LOCAL, 1, 10
+	SETCOLOR 色_框
+	PRINTFORM %UNICODE(0x2589)%
+	RESETCOLOR
+	CALL SLOT_DISPLAY(绘柄_左下,LOCAL,暗转_左下)
+	SETCOLOR 色_框
+	PRINTFORM |%UNICODE(0x2589)%|
+	RESETCOLOR
+	CALL SLOT_DISPLAY(绘柄_中下,LOCAL,暗转_中下)
+	SETCOLOR 色_框
+	PRINTFORM |%UNICODE(0x2589)%|
+	RESETCOLOR
+	CALL SLOT_DISPLAY(绘柄_右下,LOCAL,暗转_右下)
+	SETCOLOR 色_框
+	PRINTFORML %UNICODE(0x2589)%
+	RESETCOLOR
+NEXT
+
+;########
+;下框部分
+;########
+FONTSTYLE 1
+SETCOLOR 色_框
+PRINTFORML %UNICODE(0x2580)*82%
+RESETCOLOR
+FONTREGULAR
+
+;########################################################
+;SLOT_情报パネル表示
+;スロット画面上部に各种情报を记载したパネルを表示
+@SLOT_情报パネル表示(情报パネル表示页,总回转数,上次当选的旋转数,累计短周期连セット数,当选履历,当选种类履历,当选枚数履历,小役カウンタ)
+#DIM REF 情报パネル表示页
+#DIM REF 总回转数
+#DIM REF 上次当选的旋转数
+#DIM REF 累计短周期连セット数
+#DIM REF 当选履历
+#DIM REF 当选种类履历
+#DIM REF 当选枚数履历
+#DIM REF 小役カウンタ
+
+#DIM CONST 色_SBIG = 0xFF0000
+#DIM CONST 色_BIG  = 0x66FFFF
+#DIM CONST 色_REG  = 0xFFFF00
+#DIM CONST 色_ART  = 0x6BBF3F
+#DIM CONST 色_History = 0xFFFFFF
+
+#DIM CONST 色_青 = 0x1987E5
+#DIM CONST 色_黄 = 0xFFFF00
+#DIM CONST 色_赤 = 0xFF0000
+#DIM CONST 色_金 = 0xE6B422
+
+;当选小役の种类
+#DIM CONST 当选小役_赤7BOUNS = 0
+#DIM CONST 当选小役_青7BOUNS = 1
+#DIM CONST 当选小役_レギュラーBOUNS = 2
+#DIM CONST 当选小役_中樱桃 = 3
+#DIM CONST 当选小役_大樱桃 = 4
+#DIM CONST 当选小役_小樱桃 = 5
+#DIM CONST 当选小役_强西瓜 = 6
+#DIM CONST 当选小役_弱西瓜 = 7
+#DIM CONST 当选小役_ベル = 8
+#DIM CONST 当选小役_回放 = 9
+#DIM CONST 当选小役_落空了 = 99
+
+;########
+;上框部分
+;########
+FONTSTYLE 1
+PRINTFORML %UNICODE(0x2582)*82%
+RESETCOLOR
+FONTREGULAR
+
+;0页目(12*80)
+;                                                                                
+;   SBIG     BIG     REG     ART             x100   1  | | | | | | | | | | |     
+;     99      99      99      99                    2  | | | | | | | | | | |     
+;                                                   3  | | | | | | | | | | |     
+;   SBIG     BIG     REG     ART                    4  | | | | | | | | | | |     
+;                                                   5  | | | | | | | | | | |     
+;  1 /     1 /     1 /     1 /                      6  | | | | | | | | | | |     
+;   /  123  / 1234  /   12  /  777                  7  | | | | | | | | | | |     
+;                                                   8  | | | | | | | | | | |     
+;    Play             Total                         9  | | | | | | | | | | |     
+;       999G              999G                     10  | | | | | | | | | | |     
+;                                                                                
+
+;1页目(12*80)
+;                                                                                
+;   SBIG     BIG     REG     ART                   x100  1 | | | | | | | | | | | 
+;     99      99      99      99                         2 | | | | | | | | | | | 
+;                           History                      3 | | | | | | | | | | | 
+;         Game  BONUS    Get         Game  BONUS    Get  4 | | | | | | | | | | | 
+;                                                        5 | | | | | | | | | | | 
+;     1   128G    REG    100     6   128G    BIG    200  6 | | | | | | | | | | | 
+;     2    64G    BIG    200     7   351G   SBIG    400  7 | | | | | | | | | | | 
+;     3   429G   SBIG    400     8   999G    REG    100  8 | | | | | | | | | | | 
+;     4    16G    RST    530     9   472G    BIG    200  9 | | | | | | | | | | | 
+;     5    13G    RST    335    10   128G    REG    100 10 | | | | | | | | | | | 
+;                                                                                
+
+FONTSTYLE 1
+;0页目
+IF 情报パネル表示页 == 0
+	FOR LOCAL, 1, 13
+		PRINTFORM %UNICODE(0x2589)%
+		SELECTCASE LOCAL
+		
+		;1行目と12行目
+		CASE 1,12
+			PRINT                                                                                 
+	
+		;2行目
+		CASE 2
+			PRINT    
+			SETCOLOR 色_SBIG
+			PRINT SBIG
+			PRINT      
+			SETCOLOR 色_BIG
+			PRINT BIG
+			PRINT      
+			SETCOLOR 色_REG
+			PRINT REG
+			PRINT      
+			SETCOLOR 色_ART
+			PRINT ART
+			SETCOLOR 色_History
+			PRINT              x100   
+			RESETCOLOR
+			;ここより粒グラフ表示
+			PRINTFORM {LOCAL-1}  
+			FOR LOCAL:2, 0, 11
+				SIF LOCAL:2 > (当选履历:(LOCAL-2)) / 100 || 当选履历:(LOCAL-2) == 0
+					SETCOLOR 0x404040
+				IF LOCAL:2 == (当选履历:(LOCAL-2)) / 100 && 当选履历:(LOCAL-2) != 0
+					SIF 当选种类履历:(LOCAL-2) == 0
+						SETCOLOR 色_SBIG
+					SIF 当选种类履历:(LOCAL-2) == 1
+						SETCOLOR 色_BIG
+					SIF 当选种类履历:(LOCAL-2) == 2
+						SETCOLOR 色_REG
+				ENDIF
+				PRINT | 
+				RESETCOLOR
+			NEXT
+			PRINT     
+			;粒グラフ表示结束
+		
+		;3行目
+		CASE 3
+			PRINT    
+			PRINTFORM {小役カウンタ:当选小役_赤7BOUNS,4,RIGHT}
+			PRINT     
+			PRINTFORM {小役カウンタ:当选小役_青7BOUNS,4,RIGHT}
+			PRINT     
+			PRINTFORM {小役カウンタ:当选小役_レギュラーBOUNS,4,RIGHT}
+			PRINT     
+			PRINTFORM {累计短周期连セット数,4,RIGHT}
+			PRINT                     
+			;ここより粒グラフ表示
+			PRINTFORM {LOCAL-1}  
+			FOR LOCAL:2, 0, 11
+				SIF LOCAL:2 > (当选履历:(LOCAL-2)) / 100 || 当选履历:(LOCAL-2) == 0
+					SETCOLOR 0x404040
+				IF LOCAL:2 == (当选履历:(LOCAL-2)) / 100 && 当选履历:(LOCAL-2) != 0
+					SIF 当选种类履历:(LOCAL-2) == 0
+						SETCOLOR 色_SBIG
+					SIF 当选种类履历:(LOCAL-2) == 1
+						SETCOLOR 色_BIG
+					SIF 当选种类履历:(LOCAL-2) == 2
+						SETCOLOR 色_REG
+				ENDIF
+				PRINT | 
+				RESETCOLOR
+			NEXT
+			PRINT     
+			;粒グラフ表示结束
+		
+		;4行目6行目9行目
+		CASE 4,6,9
+			PRINT                                                    
+			;ここより粒グラフ表示
+			PRINTFORM {LOCAL-1}  
+			FOR LOCAL:2, 0, 11
+				SIF LOCAL:2 > (当选履历:(LOCAL-2)) / 100 || 当选履历:(LOCAL-2) == 0
+					SETCOLOR 0x404040
+				IF LOCAL:2 == (当选履历:(LOCAL-2)) / 100 && 当选履历:(LOCAL-2) != 0
+					SIF 当选种类履历:(LOCAL-2) == 0
+						SETCOLOR 色_SBIG
+					SIF 当选种类履历:(LOCAL-2) == 1
+						SETCOLOR 色_BIG
+					SIF 当选种类履历:(LOCAL-2) == 2
+						SETCOLOR 色_REG
+				ENDIF
+				PRINT | 
+				RESETCOLOR
+			NEXT
+			PRINT     
+			;粒グラフ表示结束
+		;5行目
+		CASE 5
+			PRINT    
+			SETCOLOR 色_SBIG
+			PRINT SBIG
+			PRINT      
+			SETCOLOR 色_BIG
+			PRINT BIG
+			PRINT      
+			SETCOLOR 色_REG
+			PRINT REG
+			PRINT      
+			SETCOLOR 色_ART
+			PRINT ART
+			PRINT                     
+			RESETCOLOR
+			;ここより粒グラフ表示
+			PRINTFORM {LOCAL-1}  
+			FOR LOCAL:2, 0, 11
+				SIF LOCAL:2 > (当选履历:(LOCAL-2)) / 100 || 当选履历:(LOCAL-2) == 0
+					SETCOLOR 0x404040
+				IF LOCAL:2 == (当选履历:(LOCAL-2)) / 100 && 当选履历:(LOCAL-2) != 0
+					SIF 当选种类履历:(LOCAL-2) == 0
+						SETCOLOR 色_SBIG
+					SIF 当选种类履历:(LOCAL-2) == 1
+						SETCOLOR 色_BIG
+					SIF 当选种类履历:(LOCAL-2) == 2
+						SETCOLOR 色_REG
+				ENDIF
+				PRINT | 
+				RESETCOLOR
+			NEXT
+			PRINT     
+			;粒グラフ表示结束
+		
+		;7行目
+		CASE 7
+			PRINT   1 /     1 /     1 /     1 /                      
+			;ここより粒グラフ表示
+			PRINTFORM {LOCAL-1}  
+			FOR LOCAL:2, 0, 11
+				SIF LOCAL:2 > (当选履历:(LOCAL-2)) / 100 || 当选履历:(LOCAL-2) == 0
+					SETCOLOR 0x404040
+				IF LOCAL:2 == (当选履历:(LOCAL-2)) / 100 && 当选履历:(LOCAL-2) != 0
+					SIF 当选种类履历:(LOCAL-2) == 0
+						SETCOLOR 色_SBIG
+					SIF 当选种类履历:(LOCAL-2) == 1
+						SETCOLOR 色_BIG
+					SIF 当选种类履历:(LOCAL-2) == 2
+						SETCOLOR 色_REG
+				ENDIF
+				PRINT | 
+				RESETCOLOR
+			NEXT
+			PRINT     
+			;粒グラフ表示结束
+		
+		;8行目
+		CASE 8
+			
+			PRINT    /
+			IF 小役カウンタ:当选小役_赤7BOUNS
+				PRINTFORM {总回转数/小役カウンタ:当选小役_赤7BOUNS,5,RIGHT}
+			ELSE
+				PRINT   ---
+			ENDIF
+			
+			PRINT   /
+			IF 小役カウンタ:当选小役_青7BOUNS
+				PRINTFORM {总回转数/小役カウンタ:当选小役_青7BOUNS,5,RIGHT}
+			ELSE
+				PRINT   ---
+			ENDIF
+			
+			PRINT   /
+			IF 小役カウンタ:当选小役_レギュラーBOUNS
+				PRINTFORM {总回转数/小役カウンタ:当选小役_レギュラーBOUNS,5,RIGHT}
+			ELSE
+				PRINT   ---
+			ENDIF
+			
+			PRINT   /
+			IF 累计短周期连セット数
+				PRINTFORM {总回转数/累计短周期连セット数,5,RIGHT}
+			ELSE
+				PRINT   ---
+			ENDIF
+			
+			PRINT                   
+			
+			;ここより粒グラフ表示
+			PRINTFORM {LOCAL-1}  
+			FOR LOCAL:2, 0, 11
+				SIF LOCAL:2 > (当选履历:(LOCAL-2)) / 100 || 当选履历:(LOCAL-2) == 0
+					SETCOLOR 0x404040
+				IF LOCAL:2 == (当选履历:(LOCAL-2)) / 100 && 当选履历:(LOCAL-2) != 0
+					SIF 当选种类履历:(LOCAL-2) == 0
+						SETCOLOR 色_SBIG
+					SIF 当选种类履历:(LOCAL-2) == 1
+						SETCOLOR 色_BIG
+					SIF 当选种类履历:(LOCAL-2) == 2
+						SETCOLOR 色_REG
+				ENDIF
+				PRINT | 
+				RESETCOLOR
+			NEXT
+			PRINT     
+			;粒グラフ表示结束
+		
+		;10行目
+		CASE 10
+			PRINT     Play             Total                         
+			;ここより粒グラフ表示
+			PRINTFORM {LOCAL-1}  
+			FOR LOCAL:2, 0, 11
+				SIF LOCAL:2 > (当选履历:(LOCAL-2)) / 100 || 当选履历:(LOCAL-2) == 0
+					SETCOLOR 0x404040
+				IF LOCAL:2 == (当选履历:(LOCAL-2)) / 100 && 当选履历:(LOCAL-2) != 0
+					SIF 当选种类履历:(LOCAL-2) == 0
+						SETCOLOR 色_SBIG
+					SIF 当选种类履历:(LOCAL-2) == 1
+						SETCOLOR 色_BIG
+					SIF 当选种类履历:(LOCAL-2) == 2
+						SETCOLOR 色_REG
+				ENDIF
+				PRINT | 
+				RESETCOLOR
+			NEXT
+			PRINT     
+			;粒グラフ表示结束
+		
+		;11行目
+		CASE 11
+			PRINTFORM {上次当选的旋转数,10,RIGHT}
+			PRINT G
+			PRINTFORM {总回转数,17,RIGHT}
+			PRINT G
+			PRINT                      
+			;ここより粒グラフ表示
+			PRINTFORM {LOCAL-1}  
+			FOR LOCAL:2, 0, 11
+				SIF LOCAL:2 > (当选履历:(LOCAL-2)) / 100 || 当选履历:(LOCAL-2) == 0
+					SETCOLOR 0x404040
+				IF LOCAL:2 == (当选履历:(LOCAL-2)) / 100 && 当选履历:(LOCAL-2) != 0
+					SIF 当选种类履历:(LOCAL-2) == 0
+						SETCOLOR 色_SBIG
+					SIF 当选种类履历:(LOCAL-2) == 1
+						SETCOLOR 色_BIG
+					SIF 当选种类履历:(LOCAL-2) == 2
+						SETCOLOR 色_REG
+				ENDIF
+				PRINT | 
+				RESETCOLOR
+			NEXT
+			PRINT     
+			;粒グラフ表示结束
+		CASEELSE
+		ENDSELECT
+	PRINTFORML %UNICODE(0x2589)%
+	NEXT
+
+ELSEIF 情报パネル表示页 == 1
+	FOR LOCAL, 1, 13
+		PRINTFORM %UNICODE(0x2589)%
+		SELECTCASE LOCAL
+		
+		;1行目と12行目
+		CASE 1,12
+			PRINT                                                                                 
+		;2行目
+		CASE 2
+			
+			SETCOLOR 色_SBIG
+			PRINT    SBIG
+			SETCOLOR 色_BIG
+			PRINT      BIG
+			SETCOLOR 色_REG
+			PRINT      REG
+			SETCOLOR 色_ART
+			PRINT      ART
+			SETCOLOR 色_History
+			PRINT                    x100 
+			RESETCOLOR
+			
+			;ここより粒グラフ表示
+			PRINTFORM {LOCAL-1,2,RIGHT} 
+			FOR LOCAL:2, 0, 11
+				SIF LOCAL:2 > (当选履历:(LOCAL-2)) / 100 || 当选履历:(LOCAL-2) == 0
+					SETCOLOR 0x404040
+				IF LOCAL:2 == (当选履历:(LOCAL-2)) / 100 && 当选履历:(LOCAL-2) != 0
+					SIF 当选种类履历:(LOCAL-2) == 0
+						SETCOLOR 色_SBIG
+					SIF 当选种类履历:(LOCAL-2) == 1
+						SETCOLOR 色_BIG
+					SIF 当选种类履历:(LOCAL-2) == 2
+						SETCOLOR 色_REG
+				ENDIF
+				PRINT | 
+				RESETCOLOR
+			NEXT
+			;粒グラフ表示结束
+		
+		;3行目
+		CASE 3
+			PRINT    
+			PRINTFORM {小役カウンタ:当选小役_赤7BOUNS,4,RIGHT}
+			PRINT     
+			PRINTFORM {小役カウンタ:当选小役_青7BOUNS,4,RIGHT}
+			PRINT     
+			PRINTFORM {小役カウンタ:当选小役_レギュラーBOUNS,4,RIGHT}
+			PRINT     
+			PRINTFORM {累计短周期连セット数,4,RIGHT}
+			PRINT                         
+			
+			;ここより粒グラフ表示
+			PRINTFORM {LOCAL-1,2,RIGHT} 
+			FOR LOCAL:2, 0, 11
+				SIF LOCAL:2 > (当选履历:(LOCAL-2)) / 100 || 当选履历:(LOCAL-2) == 0
+					SETCOLOR 0x404040
+				IF LOCAL:2 == (当选履历:(LOCAL-2)) / 100 && 当选履历:(LOCAL-2) != 0
+					SIF 当选种类履历:(LOCAL-2) == 0
+						SETCOLOR 色_SBIG
+					SIF 当选种类履历:(LOCAL-2) == 1
+						SETCOLOR 色_BIG
+					SIF 当选种类履历:(LOCAL-2) == 2
+						SETCOLOR 色_REG
+				ENDIF
+				PRINT | 
+				RESETCOLOR
+			NEXT
+			;粒グラフ表示结束
+		
+		;4行目
+		CASE 4
+			SETCOLOR 色_History
+			PRINT                            History                     
+			RESETCOLOR
+			
+			;ここより粒グラフ表示
+			PRINTFORM {LOCAL-1,2,RIGHT} 
+			FOR LOCAL:2, 0, 11
+				SIF LOCAL:2 > (当选履历:(LOCAL-2)) / 100 || 当选履历:(LOCAL-2) == 0
+					SETCOLOR 0x404040
+				IF LOCAL:2 == (当选履历:(LOCAL-2)) / 100 && 当选履历:(LOCAL-2) != 0
+					SIF 当选种类履历:(LOCAL-2) == 0
+						SETCOLOR 色_SBIG
+					SIF 当选种类履历:(LOCAL-2) == 1
+						SETCOLOR 色_BIG
+					SIF 当选种类履历:(LOCAL-2) == 2
+						SETCOLOR 色_REG
+				ENDIF
+				PRINT | 
+				RESETCOLOR
+			NEXT
+			;粒グラフ表示结束
+		
+		;5行目
+		CASE 5
+			SETCOLOR 色_History
+			PRINT          Game  BONUS    Get         Game  BONUS    Get 
+			RESETCOLOR
+			
+			;ここより粒グラフ表示
+			PRINTFORM {LOCAL-1,2,RIGHT} 
+			FOR LOCAL:2, 0, 11
+				SIF LOCAL:2 > (当选履历:(LOCAL-2)) / 100 || 当选履历:(LOCAL-2) == 0
+					SETCOLOR 0x404040
+				IF LOCAL:2 == (当选履历:(LOCAL-2)) / 100 && 当选履历:(LOCAL-2) != 0
+					SIF 当选种类履历:(LOCAL-2) == 0
+						SETCOLOR 色_SBIG
+					SIF 当选种类履历:(LOCAL-2) == 1
+						SETCOLOR 色_BIG
+					SIF 当选种类履历:(LOCAL-2) == 2
+						SETCOLOR 色_REG
+				ENDIF
+				PRINT | 
+				RESETCOLOR
+			NEXT
+			;粒グラフ表示结束
+		
+		;6行目
+		CASE 6
+			PRINT                                                        
+			
+			;ここより粒グラフ表示
+			PRINTFORM {LOCAL-1,2,RIGHT} 
+			FOR LOCAL:2, 0, 11
+				SIF LOCAL:2 > (当选履历:(LOCAL-2)) / 100 || 当选履历:(LOCAL-2) == 0
+					SETCOLOR 0x404040
+				IF LOCAL:2 == (当选履历:(LOCAL-2)) / 100 && 当选履历:(LOCAL-2) != 0
+					SIF 当选种类履历:(LOCAL-2) == 0
+						SETCOLOR 色_SBIG
+					SIF 当选种类履历:(LOCAL-2) == 1
+						SETCOLOR 色_BIG
+					SIF 当选种类履历:(LOCAL-2) == 2
+						SETCOLOR 色_REG
+				ENDIF
+				PRINT | 
+				RESETCOLOR
+			NEXT
+			;粒グラフ表示结束
+			
+		;7行目
+		CASE 7
+		
+			PRINT      1
+			
+			IF 当选种类履历:0 != -1
+				PRINTFORM {当选履历:0,6,RIGHT}G
+			ELSE
+				PRINT    ---G
+			ENDIF
+			
+			SELECTCASE 当选种类履历:0
+			CASE 当选小役_赤7BOUNS
+				SETCOLOR 色_SBIG
+				PRINTFORM    SBIG
+			CASE 当选小役_青7BOUNS
+				SETCOLOR 色_BIG
+				PRINTFORM     BIG
+			CASE 当选小役_レギュラーBOUNS
+				SETCOLOR 色_REG
+				PRINTFORM     REG
+			CASEELSE
+				PRINTFORM     ---
+			ENDSELECT
+			RESETCOLOR
+			
+			IF 当选种类履历:0 != -1
+				SIF 当选枚数履历:0 > 1000
+					SETCOLOR 色_青
+				SIF 当选枚数履历:0 > 3000
+					SETCOLOR 色_黄
+				SIF 当选枚数履历:0 > 5000
+					SETCOLOR 色_赤
+				SIF 当选枚数履历:0 > 10000
+					SETCOLOR 色_金
+				PRINTFORM {当选枚数履历:0,7,RIGHT}
+				RESETCOLOR
+			ELSE
+				PRINT     ---
+			ENDIF
+			
+			PRINT      6
+			
+			IF 当选种类履历:5 != -1
+				PRINTFORM {当选履历:5,6,RIGHT}G
+			ELSE
+				PRINT    ---G
+			ENDIF
+			
+			SELECTCASE 当选种类履历:5
+			CASE 当选小役_赤7BOUNS
+				SETCOLOR 色_SBIG
+				PRINTFORM    SBIG
+			CASE 当选小役_青7BOUNS
+				SETCOLOR 色_BIG
+				PRINTFORM     BIG
+			CASE 当选小役_レギュラーBOUNS
+				SETCOLOR 色_REG
+				PRINTFORM     REG
+			CASEELSE
+				PRINTFORM     ---
+			ENDSELECT
+			RESETCOLOR
+			IF 当选种类履历:5 != -1
+				SIF 当选枚数履历:5 > 1000
+					SETCOLOR 色_青
+				SIF 当选枚数履历:5 > 3000
+					SETCOLOR 色_黄
+				SIF 当选枚数履历:5 > 5000
+					SETCOLOR 色_赤
+				SIF 当选枚数履历:5 > 10000
+					SETCOLOR 色_金
+				PRINTFORM {当选枚数履历:5,7,RIGHT}
+				RESETCOLOR
+			ELSE
+				PRINT     ---
+			ENDIF
+			
+			PRINT  
+			
+			;ここより粒グラフ表示
+			PRINTFORM {LOCAL-1,2,RIGHT} 
+			FOR LOCAL:2, 0, 11
+				SIF LOCAL:2 > (当选履历:(LOCAL-2)) / 100 || 当选履历:(LOCAL-2) == 0
+					SETCOLOR 0x404040
+				IF LOCAL:2 == (当选履历:(LOCAL-2)) / 100 && 当选履历:(LOCAL-2) != 0
+					SIF 当选种类履历:(LOCAL-2) == 0
+						SETCOLOR 色_SBIG
+					SIF 当选种类履历:(LOCAL-2) == 1
+						SETCOLOR 色_BIG
+					SIF 当选种类履历:(LOCAL-2) == 2
+						SETCOLOR 色_REG
+				ENDIF
+				PRINT | 
+				RESETCOLOR
+			NEXT
+			;粒グラフ表示结束
+		
+		;8行目
+		CASE 8
+			
+			PRINT      2
+			
+			IF 当选种类履历:1 != -1
+				PRINTFORM {当选履历:1,6,RIGHT}G
+			ELSE
+				PRINT    ---G
+			ENDIF
+			
+			SELECTCASE 当选种类履历:1
+			CASE 当选小役_赤7BOUNS
+				SETCOLOR 色_SBIG
+				PRINTFORM    SBIG
+			CASE 当选小役_青7BOUNS
+				SETCOLOR 色_BIG
+				PRINTFORM     BIG
+			CASE 当选小役_レギュラーBOUNS
+				SETCOLOR 色_REG
+				PRINTFORM     REG
+			CASEELSE
+				PRINTFORM     ---
+			ENDSELECT
+			RESETCOLOR
+			
+			IF 当选种类履历:1 != -1
+				SIF 当选枚数履历:1 > 1000
+					SETCOLOR 色_青
+				SIF 当选枚数履历:1 > 3000
+					SETCOLOR 色_黄
+				SIF 当选枚数履历:1 > 5000
+					SETCOLOR 色_赤
+				SIF 当选枚数履历:1 > 10000
+					SETCOLOR 色_金
+				PRINTFORM {当选枚数履历:1,7,RIGHT}
+				RESETCOLOR
+			ELSE
+				PRINT     ---
+			ENDIF
+			
+			PRINT      7
+			
+			IF 当选种类履历:6 != -1
+				PRINTFORM {当选履历:6,6,RIGHT}G
+			ELSE
+				PRINT    ---G
+			ENDIF
+			
+			SELECTCASE 当选种类履历:6
+			CASE 当选小役_赤7BOUNS
+				SETCOLOR 色_SBIG
+				PRINTFORM    SBIG
+			CASE 当选小役_青7BOUNS
+				SETCOLOR 色_BIG
+				PRINTFORM     BIG
+			CASE 当选小役_レギュラーBOUNS
+				SETCOLOR 色_REG
+				PRINTFORM     REG
+			CASEELSE
+				PRINTFORM     ---
+			ENDSELECT
+			RESETCOLOR
+			
+			IF 当选种类履历:6 != -1
+				SIF 当选枚数履历:6 > 1000
+					SETCOLOR 色_青
+				SIF 当选枚数履历:6 > 3000
+					SETCOLOR 色_黄
+				SIF 当选枚数履历:6 > 5000
+					SETCOLOR 色_赤
+				SIF 当选枚数履历:6 > 10000
+					SETCOLOR 色_金
+				PRINTFORM {当选枚数履历:6,7,RIGHT}
+				RESETCOLOR
+			ELSE
+				PRINT     ---
+			ENDIF
+			
+			PRINT  
+			
+			;ここより粒グラフ表示
+			PRINTFORM {LOCAL-1,2,RIGHT} 
+			FOR LOCAL:2, 0, 11
+				SIF LOCAL:2 > (当选履历:(LOCAL-2)) / 100 || 当选履历:(LOCAL-2) == 0
+					SETCOLOR 0x404040
+				IF LOCAL:2 == (当选履历:(LOCAL-2)) / 100 && 当选履历:(LOCAL-2) != 0
+					SIF 当选种类履历:(LOCAL-2) == 0
+						SETCOLOR 色_SBIG
+					SIF 当选种类履历:(LOCAL-2) == 1
+						SETCOLOR 色_BIG
+					SIF 当选种类履历:(LOCAL-2) == 2
+						SETCOLOR 色_REG
+				ENDIF
+				PRINT | 
+				RESETCOLOR
+			NEXT
+			;粒グラフ表示结束
+		
+		;9行目
+		CASE 9
+			
+			PRINT      3
+			
+			IF 当选种类履历:2 != -1
+				PRINTFORM {当选履历:2,6,RIGHT}G
+			ELSE
+				PRINT    ---G
+			ENDIF
+			
+			SELECTCASE 当选种类履历:2
+			CASE 当选小役_赤7BOUNS
+				SETCOLOR 色_SBIG
+				PRINTFORM    SBIG
+			CASE 当选小役_青7BOUNS
+				SETCOLOR 色_BIG
+				PRINTFORM     BIG
+			CASE 当选小役_レギュラーBOUNS
+				SETCOLOR 色_REG
+				PRINTFORM     REG
+			CASEELSE
+				PRINTFORM     ---
+			ENDSELECT
+			RESETCOLOR
+			
+			IF 当选种类履历:2 != -1
+				SIF 当选枚数履历:2 > 1000
+					SETCOLOR 色_青
+				SIF 当选枚数履历:2 > 3000
+					SETCOLOR 色_黄
+				SIF 当选枚数履历:2 > 5000
+					SETCOLOR 色_赤
+				SIF 当选枚数履历:2 > 10000
+					SETCOLOR 色_金
+				PRINTFORM {当选枚数履历:2,7,RIGHT}
+				RESETCOLOR
+			ELSE
+				PRINT     ---
+			ENDIF
+			
+			PRINT      8
+			
+			IF 当选种类履历:7 != -1
+				PRINTFORM {当选履历:7,6,RIGHT}G
+			ELSE
+				PRINT    ---G
+			ENDIF
+			
+			SELECTCASE 当选种类履历:7
+			CASE 当选小役_赤7BOUNS
+				SETCOLOR 色_SBIG
+				PRINTFORM    SBIG
+			CASE 当选小役_青7BOUNS
+				SETCOLOR 色_BIG
+				PRINTFORM     BIG
+			CASE 当选小役_レギュラーBOUNS
+				SETCOLOR 色_REG
+				PRINTFORM     REG
+			CASEELSE
+				PRINTFORM     ---
+			ENDSELECT
+			RESETCOLOR
+			
+			IF 当选种类履历:7 != -1
+				SIF 当选枚数履历:7 > 1000
+					SETCOLOR 色_青
+				SIF 当选枚数履历:7 > 3000
+					SETCOLOR 色_黄
+				SIF 当选枚数履历:7 > 5000
+					SETCOLOR 色_赤
+				SIF 当选枚数履历:7 > 10000
+					SETCOLOR 色_金
+				PRINTFORM {当选枚数履历:7,7,RIGHT}
+				RESETCOLOR
+			ELSE
+				PRINT     ---
+			ENDIF
+			
+			PRINT  
+			
+			;ここより粒グラフ表示
+			PRINTFORM {LOCAL-1,2,RIGHT} 
+			FOR LOCAL:2, 0, 11
+				SIF LOCAL:2 > (当选履历:(LOCAL-2)) / 100 || 当选履历:(LOCAL-2) == 0
+					SETCOLOR 0x404040
+				IF LOCAL:2 == (当选履历:(LOCAL-2)) / 100 && 当选履历:(LOCAL-2) != 0
+					SIF 当选种类履历:(LOCAL-2) == 0
+						SETCOLOR 色_SBIG
+					SIF 当选种类履历:(LOCAL-2) == 1
+						SETCOLOR 色_BIG
+					SIF 当选种类履历:(LOCAL-2) == 2
+						SETCOLOR 色_REG
+				ENDIF
+				PRINT | 
+				RESETCOLOR
+			NEXT
+			;粒グラフ表示结束
+		
+		;10行目
+		CASE 10
+			
+			PRINT      4
+			
+			IF 当选种类履历:3 != -1
+				PRINTFORM {当选履历:3,6,RIGHT}G
+			ELSE
+				PRINT    ---G
+			ENDIF
+			
+			SELECTCASE 当选种类履历:3
+			CASE 当选小役_赤7BOUNS
+				SETCOLOR 色_SBIG
+				PRINTFORM    SBIG
+			CASE 当选小役_青7BOUNS
+				SETCOLOR 色_BIG
+				PRINTFORM     BIG
+			CASE 当选小役_レギュラーBOUNS
+				SETCOLOR 色_REG
+				PRINTFORM     REG
+			CASEELSE
+				PRINTFORM     ---
+			ENDSELECT
+			RESETCOLOR
+			
+			IF 当选种类履历:3 != -1
+				SIF 当选枚数履历:3 > 1000
+					SETCOLOR 色_青
+				SIF 当选枚数履历:3 > 3000
+					SETCOLOR 色_黄
+				SIF 当选枚数履历:3 > 5000
+					SETCOLOR 色_赤
+				SIF 当选枚数履历:3 > 10000
+					SETCOLOR 色_金
+				PRINTFORM {当选枚数履历:3,7,RIGHT}
+				RESETCOLOR
+			ELSE
+				PRINT     ---
+			ENDIF
+			
+			PRINT      9
+			
+			IF 当选种类履历:8 != -1
+				PRINTFORM {当选履历:8,6,RIGHT}G
+			ELSE
+				PRINT    ---G
+			ENDIF
+			
+			SELECTCASE 当选种类履历:8
+			CASE 当选小役_赤7BOUNS
+				SETCOLOR 色_SBIG
+				PRINTFORM    SBIG
+			CASE 当选小役_青7BOUNS
+				SETCOLOR 色_BIG
+				PRINTFORM     BIG
+			CASE 当选小役_レギュラーBOUNS
+				SETCOLOR 色_REG
+				PRINTFORM     REG
+			CASEELSE
+				PRINTFORM     ---
+			ENDSELECT
+			RESETCOLOR
+			
+			IF 当选种类履历:8 != -1
+				SIF 当选枚数履历:8 > 1000
+					SETCOLOR 色_青
+				SIF 当选枚数履历:8 > 3000
+					SETCOLOR 色_黄
+				SIF 当选枚数履历:8 > 5000
+					SETCOLOR 色_赤
+				SIF 当选枚数履历:8 > 10000
+					SETCOLOR 色_金
+				PRINTFORM {当选枚数履历:8,7,RIGHT}
+				RESETCOLOR
+			ELSE
+				PRINT     ---
+			ENDIF
+			
+			PRINT  
+			
+			;ここより粒グラフ表示
+			PRINTFORM {LOCAL-1,2,RIGHT} 
+			FOR LOCAL:2, 0, 11
+				SIF LOCAL:2 > (当选履历:(LOCAL-2)) / 100 || 当选履历:(LOCAL-2) == 0
+					SETCOLOR 0x404040
+				IF LOCAL:2 == (当选履历:(LOCAL-2)) / 100 && 当选履历:(LOCAL-2) != 0
+					SIF 当选种类履历:(LOCAL-2) == 0
+						SETCOLOR 色_SBIG
+					SIF 当选种类履历:(LOCAL-2) == 1
+						SETCOLOR 色_BIG
+					SIF 当选种类履历:(LOCAL-2) == 2
+						SETCOLOR 色_REG
+				ENDIF
+				PRINT | 
+				RESETCOLOR
+			NEXT
+			;粒グラフ表示结束
+		
+		;11行目
+		CASE 11
+			
+			PRINT      5
+			
+			IF 当选种类履历:4 != -1
+				PRINTFORM {当选履历:4,6,RIGHT}G
+			ELSE
+				PRINT    ---G
+			ENDIF
+			
+			SELECTCASE 当选种类履历:4
+			CASE 当选小役_赤7BOUNS
+				SETCOLOR 色_SBIG
+				PRINTFORM    SBIG
+			CASE 当选小役_青7BOUNS
+				SETCOLOR 色_BIG
+				PRINTFORM     BIG
+			CASE 当选小役_レギュラーBOUNS
+				SETCOLOR 色_REG
+				PRINTFORM     REG
+			CASEELSE
+				PRINTFORM     ---
+			ENDSELECT
+			RESETCOLOR
+			
+			IF 当选种类履历:4 != -1
+				SIF 当选枚数履历:4 > 1000
+					SETCOLOR 色_青
+				SIF 当选枚数履历:4 > 3000
+					SETCOLOR 色_黄
+				SIF 当选枚数履历:4 > 5000
+					SETCOLOR 色_赤
+				SIF 当选枚数履历:4 > 10000
+					SETCOLOR 色_金
+				PRINTFORM {当选枚数履历:4,7,RIGHT}
+				RESETCOLOR
+			ELSE
+				PRINT     ---
+			ENDIF
+			
+			PRINT     10
+			
+			IF 当选种类履历:9 != -1
+				PRINTFORM {当选履历:9,6,RIGHT}G
+			ELSE
+				PRINT    ---G
+			ENDIF
+			
+			SELECTCASE 当选种类履历:9
+			CASE 当选小役_赤7BOUNS
+				SETCOLOR 色_SBIG
+				PRINTFORM    SBIG
+			CASE 当选小役_青7BOUNS
+				SETCOLOR 色_BIG
+				PRINTFORM     BIG
+			CASE 当选小役_レギュラーBOUNS
+				SETCOLOR 色_REG
+				PRINTFORM     REG
+			CASEELSE
+				PRINTFORM     ---
+			ENDSELECT
+			RESETCOLOR
+			
+			IF 当选种类履历:9 != -1
+				SIF 当选枚数履历:9 > 1000
+					SETCOLOR 色_青
+				SIF 当选枚数履历:9 > 3000
+					SETCOLOR 色_黄
+				SIF 当选枚数履历:9 > 5000
+					SETCOLOR 色_赤
+				SIF 当选枚数履历:9 > 10000
+					SETCOLOR 色_金
+				PRINTFORM {当选枚数履历:9,7,RIGHT}
+				RESETCOLOR
+			ELSE
+				PRINT     ---
+			ENDIF
+			
+			PRINT  
+			
+			;ここより粒グラフ表示
+			PRINTFORM {LOCAL-1,2,RIGHT} 
+			FOR LOCAL:2, 0, 11
+				SIF LOCAL:2 > (当选履历:(LOCAL-2)) / 100 || 当选履历:(LOCAL-2) == 0
+					SETCOLOR 0x404040
+				IF LOCAL:2 == (当选履历:(LOCAL-2)) / 100 && 当选履历:(LOCAL-2) != 0
+					SIF 当选种类履历:(LOCAL-2) == 0
+						SETCOLOR 色_SBIG
+					SIF 当选种类履历:(LOCAL-2) == 1
+						SETCOLOR 色_BIG
+					SIF 当选种类履历:(LOCAL-2) == 2
+						SETCOLOR 色_REG
+				ENDIF
+				PRINT | 
+				RESETCOLOR
+			NEXT
+			;粒グラフ表示结束
+			
+		CASEELSE
+		ENDSELECT
+	PRINTFORML %UNICODE(0x2589)%
+	NEXT
+ELSE
+ENDIF
+FONTREGULAR
+;########
+;下框部分
+;########
+FONTSTYLE 1
+PRINTFORML %UNICODE(0x2580)*82%
+RESETCOLOR
+FONTREGULAR
+
+;########################################################
+;@小役支付戻し(当选的小役)
+;当选的小役によって筹码を支付戻し
+
+;当选的小役 
+;0:斯卡雷特BB当选
+;1:十六夜BB当选
+;2:REG当选
+;3:中段樱桃当选
+;4:大樱桃当选
+;5:小樱桃当选
+;6:强西瓜当选
+;7:弱西瓜当选
+;8:ベル当选
+;9:回放当选
+;99:落空了
+
+@小役支付戻し(当选的小役)
+#DIM REF 当选的小役
+
+SELECTCASE 当选的小役
+;0:斯卡雷特BB当选
+CASE 0
+	MONEY:2 += 400
+
+;1:十六夜BB当选
+CASE 1
+	MONEY:2 += 200
+
+;2:REG当选
+CASE 2
+	MONEY:2 += 100
+
+;3:中段樱桃当选
+;4:大樱桃当选
+;5:小樱桃当选
+CASE 3 TO 5
+	MONEY:2 += 3
+
+;6:强西瓜当选
+;7:弱西瓜当选
+CASE 6,7
+	MONEY:2 += 5
+;8:ベル当选
+CASE 8
+	MONEY:2 += 8
+
+;9:回放当选(便宜上3枚役とする)
+CASE 9
+	MONEY:2 += 3
+
+;99:落空了
+CASEELSE
+ENDSELECT
+
+
+;########################################################
+;@一言メッセージ(短周期连セット数,设定,前兆,当选したBB种类,内部状态,短周期连继续率,当选的小役,上次当选的旋转数,短周期连开始时所持筹码)
+;PRINTL1行を使ってメッセージを插入
+;CLEARLINEの都合上现状は1行だけにしてね
+
+@一言メッセージ(短周期连セット数,设定,前兆,当选したBB种类,内部状态,短周期连继续率,当选的小役,上次当选的旋转数,短周期连开始时所持筹码)
+#DIM REF 设定
+#DIM REF 前兆
+#DIM REF 当选したBB种类
+#DIM REF 内部状态
+#DIM REF 短周期连继续率
+#DIM REF 短周期连セット数
+#DIM REF 上次当选的旋转数
+#DIM REF 当选的小役
+#DIM REF 短周期连开始时所持筹码
+
+;状况的に确实にメッセージを入れたいものを上に持ってく
+;=======================
+;BB当选时(死机を除外)
+;=======================
+IF 当选したBB种类 > -1 && 内部状态 != 5
+	FONTSTYLE 1
+	IF 当选したBB种类 == 0
+		SETCOLOR 0xFF0000
+		PRINTL 斯卡雷特BB确定！！ 400枚获得
+	ELSEIF 当选したBB种类 == 1
+		SETCOLOR 0x66FFFF
+		PRINTL 十六夜BB确定！！  200枚获得
+	ELSE
+		PRINTL 常规奖金确定！！  100枚获得
+	ENDIF
+	RESETCOLOR
+	FONTREGULAR
+	当选したBB种类 = -1
+
+;=======================
+;死机 (内部状态 == 5)斯卡雷特BB当选后
+;=======================
+ELSEIF 内部状态 == 5 && 当选したBB种类 == 0
+	FONTSTYLE 3
+	SETCOLOR 0xE6B422
+	PRINT 死机了！！  
+	SETCOLOR 0xFF0000
+	PRINTL 斯卡雷特BB确定！！ 400枚获得
+	RESETCOLOR
+	FONTREGULAR
+;=======================
+;死机 (内部状态 == 5)
+;=======================
+ELSEIF 内部状态 == 5
+	FONTSTYLE 1
+	SETCOLOR 0xFF00FF
+	PRINTL 嗯！！？
+	RESETCOLOR
+	FONTREGULAR
+;=======================
+;短周期连中 (内部状态 == 4)
+;=======================
+ELSEIF 内部状态 == 4
+	FONTSTYLE 1
+	SETCOLOR 0xFF0000
+	SIF 短周期连セット数 >= 10
+		SETCOLOR 0xE6B422
+	PRINT 不夜城时光！！ 
+	SETCOLOR 0xE6B422
+	PRINTFORM {短周期连セット数}セット目 剩余{32 - 上次当选的旋转数}G 
+	SETCOLOR 0xFFFFFF
+	PRINTFORM Total {MONEY:2 - 短周期连开始时所持筹码}
+	IF 短周期连继续率 >= 90
+		SETCOLOR 0xE6B422
+	ELSEIF 短周期连继续率 >= 80
+		SETCOLOR 0xFF0000
+	ELSEIF 短周期连继续率 >= 70
+		SETCOLOR 0x00FF00
+	ELSEIF 短周期连继续率 >= 60
+		SETCOLOR 0xFFFF00
+	ELSE
+		SETCOLOR 0xFFFFFF
+	ENDIF
+	SIF 短周期连继续率 >= 50
+		PRINTFORM  继续率{短周期连继续率 / 10 * 10}％以上！！
+	PRINTL 
+	RESETCOLOR
+	FONTREGULAR
+;=======================
+;小役が当选したとき
+;=======================
+ELSEIF 当选的小役 != 99
+	FONTSTYLE 1
+	SELECTCASE 当选的小役
+	CASE 3
+		SETCOLOR 0xFF00FF
+		PRINTL 中樱桃当选！！！ +3枚
+		RESETCOLOR
+	CASE 4
+		SETCOLOR 0xFF0000
+		PRINTL 大樱桃当选！！ +3枚
+		RESETCOLOR
+	CASE 5
+		SETCOLOR 0xFF0000
+		PRINTL 小樱桃当选！ +3枚
+		RESETCOLOR
+	CASE 6
+		SETCOLOR 0x70C070
+		PRINTL 强西瓜当选！！ +5枚
+		RESETCOLOR
+	CASE 7
+		SETCOLOR 0x70C070
+		PRINTL 弱西瓜当选！ +5枚
+		RESETCOLOR
+	CASE 8
+		SETCOLOR 0xFFFF00
+		PRINTL 铃鐺 +8枚
+		RESETCOLOR
+	CASE 9
+		SETCOLOR 0xCCFFFF
+		PRINTL REPLAY
+		RESETCOLOR
+	ENDSELECT
+	FONTREGULAR
+;=====================================
+;ここより下は概率でメッセージが出るかが决まる
+;=====================================
+;=======================
+;前兆确定メッセージ
+;=======================
+ELSEIF 前兆 < 32 && 前兆 > 0 && !RAND(32)
+	FONTSTYLE 1
+	SETCOLOR 0xFF00FF
+	PRINTL 超热血！！
+	RESETCOLOR
+	FONTREGULAR
+;=======================
+;超高确确定メッセージ
+;=======================
+ELSEIF 内部状态 == 3 && !RAND(100)
+	FONTSTYLE 1
+	SETCOLOR 0xFF00FF
+	PRINTL 状态非常好、在这里停止就太可惜了
+	RESETCOLOR
+	FONTREGULAR
+;=======================
+;高确确定メッセージ
+;=======================
+ELSEIF 内部状态 == 2 && !RAND(100)
+	FONTSTYLE 1
+	SETCOLOR 0xFF00FF
+	PRINTL 状态很好、再打一点吧
+	RESETCOLOR
+	FONTREGULAR
+
+;=======================
+;设定示唆メッセージ
+;=======================
+ELSEIF 设定 > 3 && !RAND(32768)
+	FONTSTYLE 1
+	SIF 设定 == 6
+		SETCOLOR 0xE6B422
+	SIF 设定 == 5
+		SETCOLOR 0xFF00FF
+	PRINTFORML 设定{设定}确定！！
+	RESETCOLOR
+	FONTREGULAR
+ELSEIF 设定 > 3 && !RAND(1000)
+	FONTSTYLE 1
+	PRINTL 好象是高设定的
+	FONTREGULAR
+
+;=======================
+;ここから下は通常メッセージ
+;=======================
+ELSE
+	SELECTCASE RAND(50)
+	CASE 0
+		PRINTL 超热血！！这样的文字燃烧着出现了
+	CASE 1
+		PRINTL 奖励细节：斯卡雷特BB 400枚 十六夜BB 200枚 常规B 100枚
+	CASE 2
+		PRINTL 有计划的利用着筹码
+	CASE 3
+		PRINTL ３２Ｇ连的最大继续率是95％
+	CASEELSE
+		PRINTL 
+	ENDSELECT
+ENDIF
+
+;########################################################
+;@闭店まで回せる回转数(営业开始时刻, 営业结束时刻)
+;函数名のまんま
+;営业开始时刻,営业结束时刻は分で入力
+;1回转4秒にしよう、计算めんどくさいので
+@闭店まで回せる回转数(営业结束时刻)
+#FUNCTION
+
+#DIM REF 営业结束时刻
+#DIM 残り営业时间
+
+残り営业时间 = 営业结束时刻 - TIME
+
+RETURNF 残り営业时间 * 60 / 4

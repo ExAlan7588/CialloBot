@@ -1,0 +1,3737 @@
+﻿;-------------------------------------------------
+; eraTheWorld 4.576用 破戒僧聖口上 私家版（キャラクターの名前を入れる、下にコンセプトなど一言あれば入れる）
+;-------------------------------------------------
+;他者による修正、加筆、改変については、同梱のライセンス条項に从ってください。
+
+;------ ｷﾘﾄﾘ ｶｲｼ -----------
+;eraTheWorld proto4.07パッチ取り込み用 Ver1.13
+;テンプレートの使い方
+;初めに置换コマンド等により KX を K(キャラNo) に変更して下さい  
+;キャラNoはCSVフォルダのCharaファイルを参照　例(雾雨 魔理沙の场合)：KX =置换=> K11
+;
+;------ ｷﾘﾄﾘ ｵﾜﾘ -----------
+
+;**** FlagManagement **********************************************************
+;本口上にて使用しているCFLAG・TCVAR等
+;
+;
+;
+;******************************************************************************
+;白蓮の初期ステータス
+;体力2000、气力1700（ちなみにあなたは体力2000、气力2000）
+;能力
+;各种感觉0、施虐属性2、百合属性3、战斗能力5、教养5、料理技能:3
+;性技
+;胸3、腰2
+;素質
+;气丈、献身的、謎の魅力、B敏感、巨乳、禁断的知识、人气
+;経験
+;V経験10、百合经验30、异常经验2、料理经验80
+
+;白蓮の服装
+;いつもの
+;靴、长筒袜、パンティ、裙子、ブラジャー、ブラウス
+;就寝时
+;パンティ、襦袢
+;****设定という名の妄想とさえ言えない觉书********************************************************
+;・色々とググってみたりしたところ、「建前」とかいうものを欠いたタイプの人であるようで。
+;・原理主義的でお堅い戒律にがんじがらめなのかと思ってたらV経験もついてるし、ヤるこたやってるのね。
+;レズッ气がついてるってことは取り巻きの女の子たちとやったってことなんだろうけど。
+;しかるに、肉欲への飢えというものも理解したうえで甘やかしてくれる超慈母ということにしよう。
+;～しかし超許す～
+;・[恋人]条件のトーク以外は基本ですます調で。恋人オンリーのセリフだけ女言叶にすりゃよかろ。
+;・五戒を破ってもOKとはいえ、トップである以上はあまり大っぴらに动くこともできない。
+;・MASTERは妖怪・人间のどちらも爱せうる稀有な人材ということを見込まれて入门許可されてる感じ。
+;・诶嘿嘿时
+;　白蓮が推倒た场合は攻め气な感じ。
+;　MASTERが推倒た场合には、
+;　恋人、恋慕の场合…甘やかしまくりな感じ
+;　いずれも所持しておらず、屈服刻印Lv.3の场合…積極的に責める感じ。
+;　非恋慕かつ屈服3未満…だめですいけませんと言いつつも感じてはいる感じ。
+;***********************************************************************************************
+
+;### 口上存在判定 ###################################
+@M_KOJO_K55(ARG)
+;ここでRESULTSを设定すると他の同キャラ口上を突っ込まれても正常动作する。
+
+;RESULTS = _TEST_
+
+;と设定すると、"EVENT"系イベントだと
+;M_KOJO_TEST_EVENT_K55_1() とかで呼ばれる…はず。（未テスト机能）
+
+;ここでCFLAG等のキャラ変数を使う场合、キャラ番号の指定が必要になります
+
+;コメントアウトを外して眠奸口上有、时间停止口上有に1を入れると、それぞれ时间停止时、眠奸时、扮演时にコマンド口上が読み込まれるように
+;入れないと时间停止时、眠奸时、扮演时は一切喋りません
+
+;破瓜中止口上有に1を入れると、@M_KOJO_EVENT_K55_LOST_VIRGIN_STOPでキャンセルの成否を操作できます
+;口上内抱き寄せ判定_初回と口上内抱き寄せ判定_通常に1を入れるとM_KOJO_EVENT_K55_PERMISSIONで推倒の成否を操作できます
+
+;Xにはキャラ番号を入れてください
+
+CFLAG:55:眠奸口上有 = 1
+;CFLAG:55:时间停止口上有 = 0
+;CFLAG:55:扮演口上有 = 0
+;CFLAG:55:破瓜中止口上有 = 0
+;CFLAG:55:口上内抱き寄せ判定_初回 = 0
+;CFLAG:55:口上内抱き寄せ判定_通常 = 0
+
+;CFLAG:推倒禁止に1を入れると自分から推倒てこなくなります
+;以下は恋慕かセフレがつくまで推倒てこなくなる使用例
+;IF !TALENT:X:恋慕 && !TALENT:X:セフレ
+;	CFLAG:X:推倒禁止 = 1
+;ELSE
+;	CFLAG:X:推倒禁止 = 0
+;ENDIF
+
+;口上存在判定です、けしてコメントアウトしないでください
+RETURN 1
+;### 口上色判定 ###################################
+@M_KOJO_COLOR_K55
+
+;ここでSETCOLORすることで口上に色を付けられます
+;例：SETCOLOR 0xC07070
+
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+;"UPDATE判定"
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+@M_KOJO_UPDATE_K55
+;口上独自のUPDATE用
+;ENCOUNTER専用に独自分岐フラグを仕込んだ场合等にどうぞ
+;UPDATE判定でCFLAG等のキャラ変数を使う场合、キャラ番号の指定が必要になります
+RETURN 1
+
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+;"ENCOUNTER"系イベント（エクストラ構文）
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+@M_KOJO_ENCOUNTER_K55
+;初対面、挨拶のタイミング
+;TALENTの変更はここでどうぞ。
+;経験の変更は齟齬が出る场合がありますので、CSVを修正し同梱する事を推奨します
+PRINTFORMW 白蓮はあなたの姿を認めると、やわらかな笑みを浮かべた。
+SELECTCASE TIME:2
+	CASE 1
+		PRINTFORMW 「おはようございます」
+	CASE 2
+		PRINTFORMW 「こんにちは」
+	CASEELSE
+		PRINTFORMW 「こんばんは」
+ENDSELECT
+PRINTFORML 「離れの居心地はどうでしたか？」
+PRINTFORMW 「寝泊まりはそこでしてもらうつもりだから、气に入ってもらえるといいのだけれど……」
+PRINTFORML
+PRINTFORMW 「……ふふ、良かった」
+PRINTFORMW 「あとはこの念书に名前を书いてもらうだけですね」
+
+;名前を教えるイベントを呼ぶ
+;CALL NAME_SET_K55
+
+PRINTFORMW 「はい。%CALLNAME:MASTER%、ありがとう」
+PRINTFORMW 「さて、命蓮寺の新しい一员に改めて自己紹介しましょうか」
+PRINTFORMW 「私の名は白蓮。この命蓮寺の住職です」
+PRINTFORMW 「困ったことがあれば、なんでも言ってくださいね？」
+PRINTFORML 
+PRINTFORMW 「そうそう、一輪や星達とはもう会ったかしら？」
+;MASTERが女性
+IF TALENT:PLAYER:2 == 1
+	PRINTFORMW 「皆いい子たちだから、あなたもすぐ仲良くなれると思うわ」
+ELSE
+	PRINTFORML 「女所带だから不便を感じることもあるかもしれないけれど、
+	PRINTFORMW 　皆いい子たちだし、あなたもじきに慣れると思うわ」
+ENDIF
+PRINTFORML
+PRINTFORMW 「ふふ。これからよろしくお願いしますね、%CALLNAME:MASTER%」
+RETURN 1
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+;"SP_EVENT"系イベント
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+;==================================================
+;デート帰りにファーストKISS（合意も付く）
+;==================================================
+@M_KOJO_SPEVENT_K55_1(ARG,ARG:1)
+;口上主はTARGET
+;地の文表示
+CALL SPEVENT_MESSAGE_1(ARG,ARG:1)
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	PRINTFORML 「…ちゅっ」
+	PRINTFORMW 「…ふふ」
+	PRINTFORMW 白蓮は少しはにかんだように微笑むと、くるりと踵を返して歩き始めた。
+	PRINTFORML 
+	PRINTFORML 「煩悩を捨てて仏道に帰依しなさい、と説いている私がこんなことするなんて、
+	PRINTFORMW 　皆に示しがつきませんよね」
+	PRINTFORML 自嘲气味に言ってから、白蓮はもう一度振り返った。
+	PRINTFORMW 目が润み、頬はわずかに红潮している。
+	PRINTFORML 
+	PRINTFORMW 「でも、もう少しだけ」
+ 	PRINTFORMW 白蓮はあなたの手を取ると、两手で包むようにして优しく、爱おしげに抚でた。
+	PRINTFORMW そのまま指同士を絡め合わせ、きゅっと握る。
+	PRINTFORMW 「こうして、あなたを感じていたいんです」
+	PRINTFORMW ささやくような声で言って、あなたの胸にもたれかかった。
+	PRINTFORML 
+	PRINTFORML
+	PRINTFORMW （……はぁ、こんな颜……皆には見せられないわね）
+
+	;白蓮からキスされたフラグ
+	CFLAG:1202 = 1
+	;どうやらこのイベントでは接吻经验が増えないようなので、接吻经验を1追加しとく
+	EXP:接吻经验 ++
+	
+	;キスをキャンセルしたい场合は以下を开放
+	;TFLAG:193 = 1
+ENDIF
+RETURN 1
+;==================================================
+;デート帰りに告白（恋人が付く）
+;==================================================
+@M_KOJO_SPEVENT_K55_2(ARG,ARG:1)
+;口上主はTARGET
+;地の文表示
+CALL SPEVENT_MESSAGE_2(ARG,ARG:1)
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;告白内容
+	;この告白内容表示后に受けるかどうかの选择分が表示されます
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 0
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;告白オッケー（恋人が付く）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;告白失敗
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		PRINTFORML
+		RETURN 1
+	ENDIF
+
+ENDIF
+RETURN 1
+
+;==================================================
+;デート帰り
+;==================================================
+@M_KOJO_SPEVENT_K55_3(ARG,ARG:1)
+;口上主はTARGET
+;地の文表示
+CALL SPEVENT_MESSAGE_3(ARG,ARG:1)
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;通常帰宅
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 0
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;反抗刻印消去イベント
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		PRINTFORMW 「……そうですね、中々乐しい时间を過ごさせてもらいました」
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;反抗刻印2>1レベルダウンイベント
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		PRINTFORML 「……はぁ」
+		PRINTFORMW 「今回は一応、これで許してあげます」
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;反抗刻印3>2レベルダウンイベント
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		PRINTFORML 「……はぁ」
+		PRINTFORMW 「これがあなたなりの反省の态度、なのかしら」
+		PRINTFORMW 「……まあ、いいでしょう。許してあげます」
+		RETURN 1
+	ENDIF
+	PRINTFORML
+ENDIF
+RETURN 1
+
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+;"EVENT"系イベント
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+;==================================================
+;房间で遭遇
+;==================================================
+@M_KOJO_EVENT_K55_1(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;MASTERが入ってきた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		;◆愤怒
+		IF CFLAG:LOCAL:勃然大怒
+			PRINTFORMW 「……何か御用でも？」
+		;恋慕かつ恋人取得后初遭遇、一回のみ
+		ELSEIF TALENT:恋人 && TALENT:恋慕 && CFLAG:1201 < 8
+			;ナズから告白されて恋人
+			;/现状どちらから告白されても口上は変わらない(ネタ切れ)。加筆キボンヌ
+			IF CFLAG:1202  ==  2
+					PRINTFORMW 「はぁ…」
+					PRINTFORMW 白蓮は肩を落としてため息をついている。
+					PRINTFORML
+					PRINTFORMW 「%CALLNAME:MASTER%との关系を皆に告白したら、叱られてしまって…」
+					PRINTFORMW 「仏道を教える者が肉欲に堕するなどとは不届き千万、などと言われることは觉悟していたのですが」
+					PRINTFORMW 「『あんだけ色々やっといて、气づかないとでも思ってたのか！？』って言われて…」
+					PRINTFORMW 「あぁ……これまでの%CALLNAME:MASTER%とのことも、全部筒抜けだったって……」
+					PRINTFORMW 「あああぁ……」
+					PRINTFORMW ……白蓮は、真っ赤になって身を震わせていた。
+					PRINTFORML 
+					PRINTFORML 
+					PRINTFORMW しばらくすると落ち着いたのか、白蓮はこちらに向きなおった。
+					PRINTFORMW 「……はぁ。まぁ、もう過ぎたことです」
+					PRINTFORMW そして、あなたの目をまっすぐに見つめて、微笑む。
+					PRINTFORMW 「今后ともよろしくお願いしますね。%CALLNAME:MASTER%」
+			;MASTERが告白して恋人
+			ELSE
+					PRINTFORMW 「はぁ…」
+					PRINTFORMW 白蓮は肩を落としてため息をついている。
+					PRINTFORML
+					PRINTFORMW 「%CALLNAME:MASTER%との关系を皆に告白したら、叱られてしまって…」
+					PRINTFORMW 「仏道を教える者が肉欲に堕するなどとは不届き千万、などと言われることは觉悟していたのですが」
+					PRINTFORMW 「『あんだけ色々やっといて气づかないとでも思ってたのか！？』って言われて…」
+					PRINTFORMW 「ああ……これまでの%CALLNAME:MASTER%とのことも、全部筒抜けだったって……」
+					PRINTFORMW 「あああぁ……」
+					PRINTFORMW ……白蓮は、真っ赤になって身を震わせていた。
+					PRINTFORML 
+					PRINTFORML 
+					PRINTFORMW しばらくすると落ち着いたのか、白蓮はこちらに向きなおった。
+					PRINTFORMW 「……はぁ。まぁ、もう過ぎたことです」
+					PRINTFORMW そして、あなたの目をまっすぐに見つめて、微笑む。
+					PRINTFORMW 「今后ともよろしくお願いしますね。%CALLNAME:MASTER%」
+			ENDIF
+			;恋慕かつ恋人后初遭遇済みフラグ
+			CFLAG:1201 = 8
+		;恋慕なし恋人取得后初遭遇
+		ELSEIF TALENT:恋人 && CFLAG:1201 < 6
+				PRINTFORMW 「あら、%CALLNAME:MASTER%。お疲れさま」
+				PRINTFORMW 「じーっ……」
+				PRINTFORMW 白蓮は、あなたの颜をまじまじと見つめた。
+				PRINTFORMW （うーん、恋人、恋人……）
+				PRINTFORMW 頬が朱に染まっていく。それを指摘すると、白蓮は一層颜を真っ赤にした。
+				PRINTFORMW 「もう。そういうことはいちいち言わなくてもいいの」
+				PRINTFORML
+				PRINTFORMW 「ともあれ……今后とも仲良くしましょうね、%CALLNAME:MASTER%」
+			;恋慕なし恋人后初遭遇済みフラグ
+			CFLAG:1201 = 6
+		;恋慕付き诶嘿嘿初体験后初遭遇
+		ELSEIF TALENT:恋慕 && ( CFLAG:1200 == 1 || CFLAG:1200 == 2 ) && CFLAG:1201 < 5
+			;非恋慕时に诶嘿嘿したことがある
+			IF CFLAG:1203 == 1
+				PRINTFORMW 「あ……%CALLNAME:MASTER%」
+				PRINTFORMW 白蓮はあなたの姿を認めると、少し頬を染めた。
+				PRINTFORMW 「えっと、その……これからも、たくさん甘えてくれていいんですよ」
+				PRINTFORMW それだけ言うと、ぷいと颜をそむけてしまった。
+			;诶嘿嘿も初めて
+			ELSE
+				;MASTERが押し倒されて诶嘿嘿
+				IF CFLAG:1200 == 2				
+					PRINTFORMW 「あ……%CALLNAME:MASTER%」
+					PRINTFORMW あなたの颜を見ると、白蓮は暗い颜をしてうつむいた。
+					PRINTFORMW 「…ごめんなさい、あなたには酷い事をしてしまったわね」
+					PRINTFORMW あなたは、特に气にしていないし自分も嫌いじゃないと伝えた。
+					PRINTFORMW 「…そう。优しいんですね、%CALLNAME:MASTER%は」
+					PRINTFORMW 「ありがとうございます、%CALLNAME:MASTER%」
+					PRINTFORMW 白蓮は深々と一礼した。
+					PRINTFORML 
+					PRINTFORMW 「…その、厚かましいかもしれないけど」
+					PRINTFORMW 「今后とも、仲良くしてくれますか…？」
+				;MASTERが推倒て诶嘿嘿
+				ELSEIF CFLAG:1200 == 1
+					PRINTFORMW 「あ……%CALLNAME:MASTER%」
+					PRINTFORMW 白蓮はあなたの姿を認めると、真っ赤になってうつむいた。
+					PRINTFORMW 「その、以前のことは私も气にしていませんし、气に病まなくても構いませんよ」
+					PRINTFORMW 「むしろ、その…これからも、たくさん甘えてくれていいですから……」
+					PRINTFORMW それだけ言うと、ぷいと颜をそむけてしまった。
+				ENDIF
+			ENDIF
+			;恋慕付き诶嘿嘿初体験后初遭遇済みフラグ
+			CFLAG:1201 = 5
+		;恋慕付きであなたからのキス后初遭遇、どちらか一回のみ表示
+		ELSEIF TALENT:恋慕 && EXP:接吻经验 >= 1 && CFLAG:1201 < 4
+		PRINTFORMW 白蓮は心ここにあらず、と言った表情で虚空を見つめている。
+			PRINTFORMW 「……あら、%CALLNAME:MASTER%」
+			PRINTFORMW ようやくあなたに气づくと、ぽっと頬を染めた。
+			PRINTFORML
+			PRINTFORMW （生まれて初めての接吻、というわけでもないのに。…はあ、落ち着かないわ）
+			;恋慕付きキス后初遭遇済みフラグ
+			CFLAG:1201 = 4
+		;恋慕取得后の初遭遇（一回のみ表示）
+		ELSEIF TALENT:恋慕 && CFLAG:1201 < 3
+			PRINTFORML
+			PRINTFORMW ……ここのところ、白蓮の视线を感じることが多い。
+			PRINTFORMW 「…ふふっ%UNICODE(0x2665)%」
+			PRINTFORMW ふとした拍子に目が合うと、白蓮は优しく微笑んだ。
+			;恋慕后初遭遇済みフラグ
+			CFLAG:1201 = 3
+		;非恋慕时诶嘿嘿初体験后初遭遇、どちらか一回のみ表示
+		ELSEIF CFLAG:1203 == 1 && CFLAG:1201 < 2
+			;MASTERが押し倒されて诶嘿嘿
+			IF CFLAG:1200 == 2
+				PRINTFORMW 「あ……%CALLNAME:MASTER%」
+				PRINTFORMW 「その……ごめんなさい。私としたことが、つい雰囲气に呑まれてしまって…」
+				PRINTFORMW あなたは、特に气にしていないし自分も嫌いじゃないと伝えた。
+				PRINTFORMW 「…そう。优しいんですね、%CALLNAME:MASTER%は」
+				PRINTFORML 「ありがとう、%CALLNAME:MASTER%」
+				PRINTFORMW そう言うと、白蓮はそそくさと会话を切り上げてしまった。
+			;MASTERが推倒て诶嘿嘿
+			ELSEIF CFLAG:1200 == 1
+				IF MARK:屈服刻印 == 3
+					PRINTFORMW 「あ……%CALLNAME:MASTER%」
+					PRINTFORMW 白蓮はあなたの姿を認めると、淫靡な微笑みを浮かべた。
+				ELSE
+					PRINTFORMW 「あ……%CALLNAME:MASTER%」
+					PRINTFORMW 白蓮はあなたの姿を認めると、頬を染めてうつむいた。
+					PRINTFORMW 「その、以前のことは私も气にしていません」
+					PRINTFORMW 「ただし、仏道の究極とは煩悩を超越することであり、
+					PRINTFORMW ここは仏道修行の场たる寺。そのことをゆめゆめお忘れなく」
+					PRINTFORMW やんわりと釘を刺されてしまった。
+					;しかし超許す
+				ENDIF
+			ENDIF
+			CFLAG:1201 = 2
+		;聖からキス、つまりデート帰りのファーストKissイベントを起こした
+		ELSEIF CFLAG:1202 == 1 && CFLAG:1201 < 1
+			PRINTFORMW 「……その、ですね」
+			PRINTFORMW 「この前の逢瀬でのことは、他言无用でお願いします」
+			PRINTFORMW 「……ですから、その……キスと、それに伴う諸々の事です」
+			PRINTFORMW 白蓮は真っ赤になっている。
+			CFLAG:1201 = 1
+		;MASTERの体力が800以下
+		ELSEIF BASE:MASTER:体力 <= 800
+			PRINTFORML 白蓮はあなたの颜を心配そうにのぞき込んだ。
+			IF RAND:3 == 0 
+				PRINTFORMW 「お疲れのようですね。休むべき时にちゃんと休まないと、体に毒ですよ？」
+			ELSEIF RAND:2 == 0 
+				PRINTFORMW 「疲れていては満足に仕事もできないでしょう。早く寝て、元气を取り戻してください」
+			ELSE 
+				PRINTFORML 「少しフラついていますよ。房间までお连れしましょうか？」
+				PRINTFORML あなたは白蓮の申し出に手を振ってこたえると、一人で歩き出した。
+				PRINTFORMW …一歩一歩が重く、確かに疲れている。休んだほうがいいかもしれない。
+			ENDIF 
+		;MASTERの气力が0
+		ELSEIF BASE:MASTER:气力 <= 0
+			IF RAND:3 == 0 
+				PRINTFORMW 「……なんだかボーッとしてる。早く休んだ方がいいと思いますよ」
+			ELSEIF RAND:2 == 0
+				PRINTFORML 「气力に欠けた颜ですね。元气がないならさっさと寝なさい！喝～ッ！」
+				PRINTFORML 白蓮は妙なポーズで喝を入れている…つもりのようだ。
+				PRINTFORMW …確かに、ツッコむ气力も残っていない。 
+			ELSE 
+				PRINTFORMW 「…%CALLNAME:MASTER%、大丈夫？疲れてるみたいですが……」
+			ENDIF 
+		;21时から24时 ※普通22时には寝てしまうので実質1时间だけ。忍び込みして起きてきた时も出る
+		ELSEIF TIME:0 >= 1260 
+			PRINTFORML 「……ふわぁ～…ぁふ」
+			PRINTFORML 白蓮は大きく口を開けて欠伸をした。
+			PRINTFORMW 「あらいけない、はしたないところを見られちゃいましたね」
+		;恋慕
+		ELSEIF TALENT:恋慕
+			;场所限定
+			SELECTCASE CFLAG:当前位置
+			;経蔵
+			CASE 105
+				;仕事中
+				IF CFLAG:325 ==5
+					IF RAND:4 == 0
+						PRINTFORML 「あらいらっしゃい。手伝ってくれるのですか？」
+						PRINTFORMW 白蓮はあなたに气が付くと、嬉しそうに微笑んだ。
+					ELSEIF RAND:3 == 0
+						PRINTFORML 「あら、私に会いに来てくれたのかしら？」
+						PRINTFORMW 「ふふっ、じゃあ、早く終わらせましょうね」
+					ELSEIF RAND:2 == 0
+						PRINTFORML 「ああ、いらっしゃい。ちょっと今手が離せないから、あまりお相手はできませんよ」
+						PRINTFORMW 「……でも、あなたがそこにいてくれると、私は嬉しいわ」
+					ELSE
+						PRINTFORML 「はぁ、机仕事は肩が凝るわね……」
+						PRINTFORML 「……%CALLNAME:MASTER%！？いつからそこに！？」
+						PRINTFORMW あなたに气付いた白蓮は、真っ赤になって仕事に戻った。
+					ENDIF
+				ELSE
+					IF RAND:3 ==0
+						PRINTFORML 「ああ、ちょうどいいところに来てくれましたね、%CALLNAME:MASTER%」
+						PRINTFORML 「少し手が届かないので、そこの脚立を持ってきてくれませんか？」
+						PRINTFORMW 「……あるいは、肩車っていうのもいいですね、ふふ」
+					ELSEIF RAND:2 == 0
+						PRINTFORML 「あら、私に御用かしら？」
+						PRINTFORMW 経典を読んでいた白蓮は、あなたに气づくとにっこりと微笑んだ。
+					ELSE
+						PRINTFORMW 「あら、いらっしゃい%CALLNAME:MASTER%」
+					ENDIF
+				ENDIF
+			;起居室
+			CASE 108
+					IF RAND:4 == 0 
+						PRINTFORMW 白蓮はこちらの様子を时折ちらちらと伺っているようだ…
+					ELSEIF RAND:3 == 0 
+						PRINTFORMW 「あら、ちょうどお菓子を出したところだったの。一绪にどうかしら？」
+					ELSEIF RAND:2 == 0
+						PRINTFORML 「ああ、ちょうどよかった。いま、お茶でも淹れようかと思っていたのですが、
+						PRINTFORML 良ければ%CALLNAME:MASTER%が淹れてくれませんか」
+						PRINTFORMW 「私、あなたの淹れてくれるお茶が好きなんです」
+					ELSE
+						PRINTFORMW 「ん…お扫除かしら。ご苦労様」
+					ENDIF
+			;縁側
+			CASE 110
+					IF RAND:3 == 0 
+						PRINTFORML 縁側に腰かけた白蓮はあなたの姿を見ると、表情をぱっと明るくさせた。
+						PRINTFORML 「せっかくですし、少しゆっくりしていきません？」
+						PRINTFORMW 「ここ、空いてますから…」
+					ELSEIF RAND:2 == 0 
+						PRINTFORML 「のどかねえ」
+						PRINTFORMW 白蓮は、どことなく嬉しそうだ…
+					ELSE 
+						PRINTFORML 「♪～」
+						PRINTFORMW 白蓮は縁側から足を投げ出して、气ままにぶらぶらさせている。
+					ENDIF  
+			;台所
+			CASE 111
+					IF RAND:4 ==0
+						PRINTFORML 「あら、%CALLNAME:MASTER%。つまみ食い？」
+						PRINTFORMW 白蓮は悪戯っぽく笑った。
+					ELSEIF RAND:3 == 0 
+						PRINTFORML 「ああ、%CALLNAME:MASTER%ね」
+						PRINTFORMW 「ちょっと喉が渇いて、水をもらっていたんです。あなたもどうかしら？」
+					ELSEIF RAND:2 == 0 
+						PRINTFORML 「あら、%CALLNAME:MASTER%。つまみ食いかしら？」
+						PRINTFORML 「いえ、别に私はなんだかちょっと口さみしいかも、なんて事は微塵も考えていませんよ」
+						PRINTFORMW 「…本当ですよ」
+					ELSE 
+						PRINTFORML 「あら。何か作るのかしら？」
+						PRINTFORMW 「折角なら、一绪に料理でもします？」
+				ENDIF 
+			;白蓮私室
+			CASE 118
+				;诶嘿嘿经验済みでランダム2つ追加、诶嘿嘿经验済み+恋人でランダム1つ追加。
+				IF RAND:7 == 0 && (CFLAG:1200 == 1 || CFLAG:1200 == 2) && TALENT:恋人
+					PRINTFORMW 「あら、私の房间に来たってことは…ふふ%UNICODE(0x2665)%」
+				ELSEIF RAND:6 == 0 && TALENT:恋人
+					PRINTFORML 「あら、何か御用かしら？」
+					PRINTFORML 「……颜が見たかっただけ？」
+					PRINTFORMW 「…ふふ、しょうがない人。でも、嬉しいわ」
+				ELSEIF RAND:5 == 0 && (CFLAG:1200 == 1 || CFLAG:1200 == 2)
+					PRINTFORML 「あ…。%CALLNAME:MASTER%、あなたなのね」
+					PRINTFORMW 白蓮は平静を装っているものの、頬がわずかに红潮している。
+				ELSEIF RAND:4 == 0 && (CFLAG:1200 == 1 || CFLAG:1200 == 2)
+					PRINTFORML 「いらっしゃい、なにか用かしら？」
+					PRINTFORML 「その……私に甘えに来たの？」
+					PRINTFORMW 颜を真っ赤にして、白蓮は尋ねた。
+				ELSEIF RAND:3 == 0 
+					PRINTFORML 「えっ…と、い、いらっしゃい%CALLNAME:MASTER%」
+					PRINTFORMW 白蓮は紧张を隠せないようだ。
+				ELSEIF RAND:2 == 0
+					PRINTFORML 「あら、あなただったの」
+					PRINTFORML 「…何か御用かしら？」
+					PRINTFORMW 白蓮はなんだか嬉しそうだ。
+				ELSE
+					PRINTFORML 「ああ、お扫除？」
+					;污れ度合いで分岐
+					SELECTCASE FLAG:(100 + CFLAG:MASTER:当前位置)
+						;清潔度:高
+						CASE IS < 500
+							PRINTFORMW 「うーん、それほど污れてはいないかしら。わざわざありがとう、%CALLNAME:MASTER%」
+						;清潔度:中
+						CASE IS < 2000
+							PRINTFORMW 「そうね、少し散らかっているかしら。まあ、これくらいならさほど时间はかからないでしょう」
+						;清潔度:低
+						CASE IS < 5000
+							PRINTFORMW 「ああ、だいぶ散らかってしまっていますね。少し手伝ってもらえるかしら？」
+						;ゴミの山
+							CASEELSE
+							PRINTFORML 「……ええ。ご览の有様よ。お恥ずかしいけれど」
+							PRINTFORML 房间の中は种々雑多な物で溢れかえっている。
+							PRINTFORMW ……ところどころに、何に使うのかもわからない怪しげな道具も見える。
+							;/ぱんつ发見のチャンス！生命のピンチ！
+					ENDSELECT
+				ENDIF
+			;◆離れ（あなた私室）
+			CASE  119
+					IF RAND:3 == 0 && TALENT:恋人
+						PRINTFORMW 「あら、おかえりなさい」
+						PRINTFORMW 「なんでここにいるのか、ですか？」
+						PRINTFORMW 「ふふ、あなたの颜が見たかったから、ですよ」
+					ELSEIF RAND:2 == 0
+						PRINTFORMW 「あら、おかえりなさい」
+						PRINTFORMW 「いえ、離れの様子はどうかな、と思ったのだけれど」
+						PRINTFORMW 「問題ないみたいですね。折角だから、少しお話ししていきましょう？」
+					ELSE
+						PRINTFORMW 「ああ、いたいた」
+						PRINTFORMW 「ここで待っていれば見つかると思っていたけれど、案の定会えましたね」
+					ENDIF
+			;他
+			CASEELSE
+				IF RAND:6 == 0
+					PRINTFORMW 「ああ、%CALLNAME:MASTER%。酢昆布いるかしら？」
+				ELSEIF RAND:5 == 0 
+					PRINTFORML 「お疲れさま、%CALLNAME:MASTER%」
+					PRINTFORMW 白蓮はあなたの目を見つめ、优しく微笑んだ。
+				ELSEIF RAND:4 == 0 
+					PRINTFORML 「あっ……」
+					PRINTFORMW 目线が合うと、白蓮の頬がほのかに染まった。
+				ELSEIF RAND:3 == 0 
+					PRINTFORML 「ふふ、よく会いますね」
+					PRINTFORMW 白蓮はあなたの姿を認めると、乐しそうな笑みを浮かべた…
+				ELSEIF RAND:2 == 0 
+					PRINTFORML 「……ふふ%UNICODE(0x2665)%」
+					PRINTFORMW 白蓮は熱っぽい目であなたを見つめている。
+				ELSE 
+					PRINTFORML 「♪～」
+					PRINTFORMW 白蓮は机嫌よく鼻歌を歌っている。
+				ENDIF 
+			ENDSELECT
+		;恋慕なし
+		ELSE
+			;场所限定
+			SELECTCASE CFLAG:当前位置
+			;経蔵
+			CASE 105
+				;仕事中
+				IF CFLAG:325 ==5
+					IF RAND:4 == 0
+						PRINTFORML 「はぁ、机仕事は肩が凝るわね……」
+						PRINTFORMW ひとりごちていた白蓮は、あなたに气付いて決まり悪そうに微笑んだ。
+					ELSEIF RAND:3 == 0
+						PRINTFORML 「あら、%CALLNAME:MASTER%。何か御用かしら？」
+						PRINTFORMW 「とはいえ、今はお勤めの最中だから、急用でなければ后にしてほしいのだけれど」
+					ELSEIF RAND:2 == 0
+						PRINTFORMW 「ああ、いらっしゃい。ちょっと今手が離せないから、あまりお相手はできませんよ」
+					ELSE
+						PRINTFORMW 「あらいらっしゃい。手伝ってくれるのですか？」
+					ENDIF
+				ELSE
+					IF RAND:3 ==0
+						PRINTFORML 「ああ、ちょうどいいところに来てくれましたね、%CALLNAME:MASTER%」
+						PRINTFORMW 「少し手が届かないので、そこの脚立を持ってきてくれませんか？」
+					ELSEIF RAND:2 == 0
+						PRINTFORML 「あら、私に御用かしら？」
+						PRINTFORMW 経典を広げていた白蓮は、あなたに气づくとにっこりと微笑んだ。
+					ELSE
+						PRINTFORMW 「あら、いらっしゃい%CALLNAME:MASTER%」
+					ENDIF
+				ENDIF
+			;起居室
+			CASE 108
+				IF RAND:4 == 0 
+					PRINTFORMW 白蓮はなにやら難しい颜をしている。…考え事だろうか。
+				ELSEIF RAND:3 == 0 
+					PRINTFORMW 「あら、ちょうど今、お菓子を出したんです。一绪にどうですか？」
+				ELSEIF RAND:2 == 0
+					PRINTFORMW 「ああ、ちょうどよかった。いま、お茶でも淹れようかと思っていたのですが、一绪にどうですか？」
+				ELSE
+					PRINTFORMW 「あ…お扫除かしら。ご苦労様」
+				ENDIF
+			;縁側
+			CASE 110
+				IF RAND:3 == 0 
+					PRINTFORML 縁側に腰かけた白蓮はあなたの姿を見ると、にっこりと微笑みかけた。
+					PRINTFORMW 「せっかくですし、少しゆっくりしていきませんか？」
+				ELSEIF RAND:2 == 0 && TIME:5 != 9 && TIME:5 != 13
+					PRINTFORMW 「のどかねえ」
+				ELSE 
+					PRINTFORML 「♪～」
+					PRINTFORMW 白蓮は縁側から足を投げ出して、气ままにぶらぶらさせている。
+				ENDIF 
+			;台所
+			CASE 111
+				IF RAND:3 == 0 
+					PRINTFORML 「ああ、%CALLNAME:MASTER%ね」
+					PRINTFORMW 「ちょっと喉が渇いて、水をもらっていたんです。あなたもどうかしら？」
+				ELSEIF RAND:2 == 0 
+					PRINTFORML 「あら、%CALLNAME:MASTER%。つまみ食い？」
+					PRINTFORMW 白蓮は悪戯っぽく笑った。
+				ELSE 
+					PRINTFORML 「あら。何か作るのかしら？」
+					PRINTFORMW 「折角なら、一绪に料理でもします？」
+				ENDIF
+			;白蓮私室
+			CASE 118
+				;诶嘿嘿经验済みでランダム2つ追加
+				IF RAND:6 == 0 && (CFLAG:1200 == 1 || CFLAG:1200 == 2)
+					PRINTFORML 「あ…。%CALLNAME:MASTER%、あなたなのね」
+					PRINTFORMW 白蓮は平静を装っているものの、頬がわずかに红潮している。
+				ELSEIF RAND:5 == 0 && (CFLAG:1200 == 1 || CFLAG:1200 == 2)
+					PRINTFORML 「いらっしゃい、なにか用かしら？」
+					PRINTFORML 「その……私に甘えに来たの？」
+					PRINTFORMW 颜を真っ赤にして、白蓮は尋ねた。
+				ELSEIF RAND:3 == 0 
+					PRINTFORML 「あら、いらっしゃい%CALLNAME:MASTER%」
+					PRINTFORMW 「私に何か御用かしら？」
+				ELSEIF RAND:2 == 0
+					PRINTFORML 「あら、あなただったの」
+					PRINTFORMW 「何か御用？」
+				ELSE
+					PRINTFORML 「ああ、お扫除？」
+					;污れ度合いで分岐
+					SELECTCASE FLAG:(100 + CFLAG:MASTER:当前位置)
+						;清潔度:高
+						CASE IS < 500
+							PRINTFORMW 「うーん、それほど污れてはいないかしら。わざわざありがとう、%CALLNAME:MASTER%」
+						;清潔度:中
+						CASE IS < 2000
+							PRINTFORMW 「そうね、少し散らかっているかしら。まあ、これくらいならさほど时间はかからないでしょう」
+						;清潔度:低
+						CASE IS < 5000
+							PRINTFORMW 「ああ、だいぶ散らかってしまっていますね。少し手伝ってもらえるかしら？」
+						;ゴミの山
+							CASEELSE
+							PRINTFORML 「……ええ。ご览の有様よ。お恥ずかしいけれど」
+							PRINTFORML 房间の中は种々雑多な物で溢れかえっている。
+							PRINTFORMW ……ところどころに、何に使うのかもわからない怪しげな道具も見える。
+							;/ぱんつ发見のチャンス！生命のピンチ！
+					ENDSELECT
+				ENDIF
+			;◆離れ（あなた私室）
+			CASE 119
+				IF RAND:2 == 0
+					PRINTFORMW 「ああ、お邪魔していますよ」
+				ELSE
+					PRINTFORMW 「離れの住み心地も、そう悪くないでしょう？」
+				ENDIF
+			;他
+			CASEELSE
+				IF RAND:6 == 0
+					PRINTFORMW 「ああ、%CALLNAME:MASTER%。酢昆布いるかしら？」
+				ELSEIF RAND:5 == 0 
+					PRINTFORML 「お疲れさま、%CALLNAME:MASTER%」
+					PRINTFORMW 白蓮はあなたを見ると、优しく微笑んだ。
+				ELSEIF RAND:4 == 0 
+					PRINTFORML 「……」
+					PRINTFORMW 考え事をしているようだ。
+				ELSEIF RAND:3 == 0 
+					PRINTFORMW 「ふふ、よく会いますね」
+				ELSEIF RAND:2 == 0 
+					PRINTFORMW 「あら、なにか御用？」
+				ELSE 
+					PRINTFORML 「♪～」
+					PRINTFORMW 白蓮は机嫌よく鼻歌を歌っている。
+				ENDIF 
+		ENDSELECT
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;TARGETが入ってきた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		IF RAND:3 == 0
+			PRINTFORMW 「あら、%CALLNAME:MASTER%。ごきげんよう」
+		ELSEIF RAND:2 == 0
+			PRINTFORMW 「ああ、お疲れさま、%CALLNAME:MASTER%」
+		ELSE
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;TARGETが澡堂に入ってきて一绪に入る
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;TARGETが澡堂に入ってきて出て行った
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 4
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;TARGETが澡堂に入ってきて追い出された
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 5
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;外出先で遭遇した
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 6
+		PRINTFORML 
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;他キャラと约会中に遭遇した
+	;ARG:1に约会的对象
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 7
+		PRINTFORML 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;朝起きたとき（おはよう口上）
+;==================================================
+@M_KOJO_EVENT_K55_2(ARG,ARG:1)
+CALL MESSAGE_GOODMONING(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+;TWには起床时キス・朝侍奉がないのでうまく移植できない
+;口上側にODのイベントテキストを仕込むことも考えたが本来の地の文との齟齬が起きうる
+;とりあえず无難なのを切り出して適当に割り振ることにする
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;非同棲かつ相手が先に起きてる
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		;-------------------------------------------------
+		;TARGET私室にMASTERが入っている（恋慕时陪睡中就寝时のみ？
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && !ARG:1
+			$OMEZAME
+			IF RAND:5 == 0 
+				PRINTFORMW 「おはようございます。よく眠れましたか？」
+			ELSEIF RAND:4 == 0
+				PRINTFORML 「早く起きてください？そうしたら、ご褒美にこんぶゼリーをあげますよ」
+				PRINTFORMW 今日の白蓮は机嫌がいいらしい。……ご褒美の选出は謎だが。
+			ELSEIF RAND:3 == 0
+				PRINTFORMW 「ああ、お目觉めですか」
+			ELSEIF RAND:2 == 0
+				PRINTFORMW 「ほら、朝ですよー。起きてくださーい」
+			ELSE
+				PRINTFORML 「惰眠をむさぼりたいというのも立派な煩悩ですよ～。
+				PRINTFORMW 　さあ、早く起きて颜を洗ってくださいね」
+			ENDIF
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;MASTER私室にTARGETが入ってきてる(恋慕无しでも入ってくる可能性有り
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 1
+			GOTO OMEZAME
+			RETURN 1
+		ENDIF
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;同棲かつ相手が起きている
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		IF TALENT:恋慕
+			;恋人状态
+			IF TALENT:恋人
+				IF RAND:4 == 0
+					PRINTFORML 「……あ、おはようございます」
+					PRINTFORMW 「ふふ、可爱い寝颜してらっしゃるんですね」
+				ELSEIF RAND:3 == 0 
+					PRINTFORML 「ん、おはようございます」
+					PRINTFORMW 「お目觉めついでに、もう一回いかがでしょう…」
+				ELSEIF RAND:2 == 0
+					PRINTFORML 「あ、お目觉めですね。おはようございます」
+					PRINTFORMW 「…ふふ。こういうのって、いかにも恋人らしいでしょう？」
+				ELSE
+					PRINTFORML 「ふふ、おはようございます」
+					PRINTFORMW 「…ちょっと照れますね」
+				ENDIF
+			;恋慕のみ
+			ELSE 
+				IF RAND:4 == 0 
+					PRINTFORML 「……おはようございます」
+					PRINTFORMW 「その、いつごろから起きてらっしゃいました…？」
+				ELSEIF RAND:3 == 0 
+					PRINTFORML 「ふふ、おはようございます」
+					PRINTFORMW 「…ちょっと照れますね」
+				ELSEIF RAND:2 == 0 
+					PRINTFORMW 「あっ…おはよう、%CALLNAME:MASTER%」
+				ELSE 
+					PRINTFORML 「……あ、おはようございます」
+					PRINTFORMW 「ふふ、可爱い寝颜してらっしゃるんですね」
+				ENDIF 
+			ENDIF
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;同棲かつ相手が寝ている
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		IF RAND:3 == 0
+			PRINTFORMW 「んん…ふふー♪%CALLNAME:MASTER%のにおいがします…」
+		ELSEIF RAND:2 == 0
+			PRINTFORML 「ぁふ、んん…」
+			PRINTFORMW 「もうすこしだけ…いいでしょうか…？」
+		ELSE
+			PRINTFORML 「ん……すぅ…」
+			PRINTFORML 白蓮はとても气持ちよさそうな颜で二度寝を始めてしまった…
+			PRINTFORMW …少し悪い气もするが、起こすしかないだろう
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;MASTERが起きていて、相手が起きてきた
+	;添い寝时TARGET起床はこちら（TARGET衰弱or陪睡中TARGET睡魔負け后そのままMASTERが起き続けた上で相手が起床した场合限定
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 4
+		;-------------------------------------------------
+		;非同棲
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 0
+		;-------------------------------------------------
+		IF LOCAL:1 && !ARG:1
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;同棲中
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 0
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 1
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;その他
+	PRINTFORML  
+ENDIF
+RETURN 1
+
+;==================================================
+;夜寝るとき（おやすみ口上）
+;==================================================
+@M_KOJO_EVENT_K55_3(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;自室に帰る（定时になって寝る）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		IF CFLAG:诶嘿嘿
+			;恋人
+			IF TALENT:恋人
+				IF BASE:TARGET:体力 <= 500
+					IF RAND:2 == 0
+						PRINTFORMW 「…っん、ふぅ……ちょっと、疲れた……かしら」
+						PRINTFORMW 「……もっと、あなたと爱し合いたいけれど…」
+						PRINTFORMW 「続きは、また明日、ね……おやすみなさい、%CALLNAME:MASTER%……」
+					ELSE
+						PRINTFORMW 「……ぁ…くぅ……%CALLNAME:MASTER%……激しすぎ……」
+						PRINTFORMW 「沢山、爱して…くれるのは……嬉しい、けれど…」
+						PRINTFORMW 「……また、明日…お願い……ね。おやすみなさい……」
+					ENDIF
+				ELSE
+					IF RAND:3 == 0
+						PRINTFORMW 「……ぁ、もう、終わり……？」
+						PRINTFORMW 「…そうね。皆に、疲れた颜は見せられないものね」
+						PRINTFORMW 「ふふっ、やっぱり%CALLNAME:MASTER%は优しいわ」
+						PRINTFORMW 「ありがとう。また、ね。…おやすみなさい、%CALLNAME:MASTER%」
+					ELSEIF RAND:2 == 0
+						PRINTFORMW 「ふふ、良かったわ、%CALLNAME:MASTER%」
+						PRINTFORMW 「明日もまた、爱してくれると……いえ、なんでもないわ」
+						PRINTFORMW 「おやすみ、%CALLNAME:MASTER%。また明日……」
+					ELSE
+						PRINTFORMW 「……ああ、あなたといると时间を忘れてしまうわね」
+						PRINTFORMW 「もう少しこうしていたかったけど……」
+						PRINTFORMW 「おやすみなさい。%CALLNAME:MASTER%……」
+					ENDIF
+				ENDIF
+			;恋慕
+			ELSEIF TALENT:恋慕
+				IF BASE:TARGET:体力 <= 500
+					PRINTFORMW 「あぁ…ぅ…そろそろ、休ませて頂戴……」
+					PRINTFORMW 「あまり皆に疲れた颜は見せられないし……」
+					PRINTFORMW 「もう。本当に、仕方のない人……」
+					PRINTFORMW 「おやすみなさい。…また明日ね、%CALLNAME:MASTER%」
+				ELSE
+					IF RAND:3 == 0
+						PRINTFORMW 「ああ、もうこんな时间なんですね」
+						PRINTFORMW 「ちょっと…名残惜しいかな」
+						PRINTFORML 
+						PRINTFORMW 「……なーんて、冗談です。ふふっ、おやすみなさい、%CALLNAME:MASTER%」
+					ELSEIF RAND:2 == 0
+						PRINTFORMW 「…%CALLNAME:MASTER%は悪い人です」
+						PRINTFORMW 「私を、こんな……」
+						PRINTFORMW 「いえ、なんでもありません。おやすみなさい、また明日……」
+					ELSE
+						PRINTFORMW 「……あ、もうこんな时间なんですか」
+						PRINTFORMW 「私はもう房间で休みます。おやすみなさい、%CALLNAME:MASTER%」
+						PRINTFORMW 白蓮はあなたの目をまじまじと見つめたあと、微笑して去っていった。
+					ENDIF
+				ENDIF
+			;恋慕、恋人なし
+			ELSE
+				IF BASE:TARGET:体力 <= 500
+					IF RAND:3 == 0
+						PRINTFORMW 「……ぅう…、が、がっつきすぎです、%CALLNAME:MASTER%……」
+						PRINTFORMW 「…私、もう…休みますね……」
+					ELSEIF RAND:2 == 0
+						PRINTFORMW 「……ん、ぅ…もう…ダメ。おしまい、です……」
+						PRINTFORMW 「…皆にばれたら、責任、とってもらいますからね…」
+					ELSE
+						PRINTFORMW 「…はぁ、はぁ……んん、いつまでするんですか……」
+						PRINTFORMW 「…あぁ、私が、一番…んん、
+						PRINTFORMW しっかりしていなきゃ…いけない、のに……」
+					ENDIF					
+				ELSE
+					IF RAND:3 == 0
+						PRINTFORMW 「……ほら、おしまいです」
+						PRINTFORMW 「私はもう房间に帰りますから、あなたも早く寝てください」
+					ELSEIF RAND:2 == 0
+						PRINTFORMW 「…あ、終わりですか？…わかりました、おやすみなさい」
+						PRINTFORMW 白蓮は着衣を正すと、そそくさと出て行った。
+							IF RAND:3 == 0
+								PRINTFORML
+								PRINTFORMW （あああ…流されてしまった。わたし、僧侶失格だわ…）
+							ENDIF
+					ELSE
+						PRINTFORMW 「……はぁ」
+						PRINTFORMW 「誰かに勘付かれたら、どう責任を取ってくれるんですか」
+						PRINTFORMW 「いえ、まあ確かに私も悪いのですが……」
+						PRINTFORMW 白蓮は头を抱えながら、とぼとぼと自室に帰った。
+					ENDIF
+				ENDIF
+			ENDIF
+		ELSE
+			;恋慕かつ屈服2以上または恋人
+			IF RAND:8 == 0 && TALENT:恋慕 && (MARK:屈服刻印 > 1 || TALENT:恋人)
+				PRINTFORML 
+				PRINTFORMW 「うーん…そろそろ寝る时间ですね」
+				PRINTFORML 
+				PRINTFORML 「なんだったら、私の寝颜を見に来てもいいんですよ？」 
+				PRINTFORMW 白蓮は悪戯っぽく微笑んで去っていった…
+			ELSEIF TALENT:恋慕 && RAND:7 ==0
+				PRINTFORML 
+				PRINTFORML 「…そろそろ寝る时间ね。おやすみなさい、%CALLNAME:MASTER%」
+				PRINTFORMW 白蓮はあなたを一瞥すると、名残惜しそうに去っていった。
+			ELSEIF RAND:6 == 0
+				PRINTFORML 「私はそろそろ寝ます。あなたもあまり夜更かしはしないようにね」
+				PRINTFORMW 「おやすみなさい、%CALLNAME:MASTER%」
+			ELSEIF RAND:5 == 0
+				PRINTFORMW 「…もう寝る时间ですね。おやすみなさい、%CALLNAME:MASTER%」
+			ELSEIF RAND:4 == 0
+				PRINTFORML 「…眠いです」 
+				PRINTFORML 白蓮はうつらうつらとしながら自室に戻っていった。
+				PRINTFORMW ……足元が危なっかしい。
+			ELSEIF RAND:3 == 0
+				PRINTFORMW 「…また明日。おやすみなさい」
+			ELSEIF RAND:2 == 0
+				PRINTFORML 「……ぐぅ…」
+				PRINTFORML 白蓮はこっくりこっくりと櫓を漕ぎながら自室へ向かっていった。
+				PRINTFORMW …よくわからないが、なんだかすごい事をやってのけている气がする。
+			ELSE
+				PRINTFORMW 「眠いわ。……おやすみなさい」
+			ENDIF
+		ENDIF
+	ENDIF
+	RETURN 1
+	;-------------------------------------------------
+	;眠そうにしている
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		IF CFLAG:陪睡中
+			IF RAND:2 == 0
+				PRINTFORMW 「……ふわぁ……ぁ、ごめんなさい…」
+			ELSE
+				PRINTFORML 「んん…」
+				PRINTFORMW 白蓮は眠そうだ。
+			ENDIF
+		ELSE
+			IF RAND:2 == 0
+				PRINTFORMW 「……すぅ」
+			ELSE
+				PRINTFORMW 「（こっくり…こっくり…）」
+			ENDIF
+			PRINTFORML 
+			PRINTFORMW 白蓮は櫓をこいでいる。
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;睡眠中（起きていないので会话というよりは寝言？）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		;诶嘿嘿が解除されていることを念押しする处理
+		CFLAG:1211 = 0
+		IF RAND:8 == 0
+			PRINTFORMW 「すぅ……すぅ……」
+		ELSEIF RAND:7 == 0
+			PRINTFORMW 白蓮は寝がえりを打ちそうになったがそのまま元に戻った。
+		ELSEIF RAND:6 == 0
+			PRINTFORML 「……ん…………」
+			PRINTFORMW 白蓮は寝返りを打った。 
+		ELSEIF RAND:5 == 0
+			PRINTFORMW 「…………ん、んん…」
+		ELSEIF RAND:4 == 0
+			PRINTFORML 「くー……くー……」
+			PRINTFORMW 白蓮は静かに寝息を立てている。
+		ELSEIF RAND:3 == 0
+			PRINTFORMW 「すー…んん…」
+		ELSEIF RAND:2 == 0
+			PRINTFORMW 「んん………なむさーん…」
+		ELSE
+			PRINTFORMW 「…ふぅ……」
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;恶作剧中
+	;记入チェック（=0, 非表示、1, 表示）
+	;LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 4
+		;◆
+		IF RAND:2 == 0
+			PRINTFORMW 「ん、うぅん……はぁ……」
+		;◆
+		ELSE
+			PRINTFORMW 「んく……はぁ……あっ……」
+		ENDIF
+		;◆
+		IF RAND:3 == 0
+			PRINTFORML 
+			PRINTFORML …襦袢の胸元がはだけかかっている。
+			PRINTFORMW 
+		;◆
+		ELSEIF RAND:2 == 0
+			PRINTFORML 
+			PRINTFORML 白蓮はむずがるように身を捩った。
+			PRINTFORMW 
+		ELSE
+			PRINTFORML 
+			PRINTFORML 薄く開いた唇から、艶かしい吐息が漏れた。
+			PRINTFORMW 
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;衰弱中（恋慕付き据点内キャラがMAIN_MAPで衰弱状态になった场合か、招待房间で相手が衰弱した场合に发生
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 5
+		;诶嘿嘿状态解除を示すフラグ
+		CFLAG:1211 = 0
+		;诶嘿嘿してた
+		IF CFLAG:诶嘿嘿
+			IF TALENT:恋人
+				;今回一度も绝顶してない
+				IF CFLAG:1502 + CFLAG:1503 + CFLAG:1504 + CFLAG:1505 == 0
+					PRINTFORML 「…ああもう。これじゃ、収まりがつかないじゃない…」
+					PRINTFORMW 「ひどいわ、%CALLNAME:MASTER%」
+				ELSE
+					IF RAND:2 == 0 
+						;Ｃ绝顶ばかりさせた
+						IF CFLAG:1502 >= 8 && CFLAG:1503 + CFLAG:1504 + CFLAG:1505 <= 8
+							PRINTFORML 「そこばかり責めるのは、ずるいわ……」
+							PRINTFORMW 「ふ…ぁ…まだ、収まらない…%UNICODE(0x2665)%」
+							PRINTFORMW その阴唇はぷっくりと充血し、阴核はいまだ萎えることなく张りつめている…
+						;Ｖ绝顶ばかりさせた
+						ELSEIF CFLAG:1503 >= 8 && CFLAG:1502 + CFLAG:1504 + CFLAG:1505 <= 8
+							PRINTFORML 「…んん、っ。こ、坏れてしまいそう…%UNICODE(0x2665)%」
+							PRINTFORMW 白蓮の秘裂からは、とどまることなく爱液が溢れ出している…
+						;Ｂ绝顶ばかりさせた
+						;白蓮はB敏感！
+						ELSEIF CFLAG:1504 >= 8 && CFLAG:1502 + CFLAG:1503 + CFLAG:1505 <= 8
+							PRINTFORML 「…うう、胸ばっかり……もう。どれだけおっぱいが好きなのかしら」
+							PRINTFORML 執拗に責められた丰かな乳肉はほんのり上气し、その先端は行为を終えてしばらくたっても硬く反り立っていた…
+							PRINTFORMW 「…弱いの、知ってるくせに…%UNICODE(0x2665)%」
+						;Ａ绝顶ばかりさせた
+						ELSEIF CFLAG:1505 >= 8 && CFLAG:1502 + CFLAG:1503 + CFLAG:1504 <= 10
+							PRINTFORML 「あ、ぁ…%UNICODE(0x2665)%ねえ、知ってるとは思うけれど、ここは不浄の穴なのよ？」
+							PRINTFORML
+							PRINTFORMW 「え…？いえ、别にその、嫌ってわけじゃ……もう。いじわるな人ね」
+						;四ヶ所の合計で20回以上绝顶させた
+						ELSEIF CFLAG:1502 + CFLAG:1503 + CFLAG:1504 + CFLAG:1505 >= 20
+							PRINTFORMW 「ふぅ…ん、はぁ……%UNICODE(0x2665)%…その、凄かったわ。%CALLNAME:MASTER%」
+							PRINTFORMW 「あぁ、腰が立たない…ねえ、もう少しだけ、抱きしめていてもらえるかしら」
+							PRINTFORMW あなたの两腕に抱きかかえられると、白蓮は幸せそうに身を預けた。
+						ENDIF
+					ELSEIF RAND:7 == 0
+						PRINTFORMW 「……はぁ……はぁ………」
+						PRINTFORMW 「……ああ、少し、休ませてもらえるかしら…………」
+						PRINTFORMW 白蓮の乱れた息は、ほどなくして规則正しい寝息に変わった。
+					ELSEIF RAND:6 == 0
+						PRINTFORMW 「はぁ…はぁ……、少し、胸を…貸して……」
+						PRINTFORMW 「ありがとう……好き、よ……ふふ………」
+						PRINTFORMW 「……すぅ……すぅ………」
+					ELSEIF RAND:5 == 0
+						PRINTFORMW 「…こんなに…爱されて…………」
+						PRINTFORMW 「ふふ、私……幸せよ……」
+						PRINTFORMW 「ん……すぅ…………」
+					ELSEIF RAND:4 == 0
+						PRINTFORML 「ふふ…良かったわ、%CALLNAME:MASTER%」
+						PRINTFORMW 「また、お願いしていいかしら…%UNICODE(0x2665)%」
+					ELSEIF RAND:3 == 0 
+						PRINTFORML 「…ごめんなさい…これ以上は、私がもたないわ」
+						PRINTFORMW 「ねえ、だから、また今度…%UNICODE(0x2665)%」
+					ELSEIF RAND:2 == 0  
+						PRINTFORML 「ああ…もう、限界よ…」
+						PRINTFORMW 「…本当に、底なしなのね……」
+					ELSE
+						PRINTFORML 「んん…もう、身体が言うことを聞かないわ…」
+						PRINTFORMW 「ねえ、最后にキスしてくれるかしら……ん…」
+					ENDIF
+				ENDIF  
+			;恋慕のみ、恋人なし
+			ELSE
+				IF RAND:2 == 0 
+					;Ｃ绝顶ばかりさせた
+					IF CFLAG:1502 >= 8 && CFLAG:1503 + CFLAG:1504 + CFLAG:1505 <= 8
+						PRINTFORML 「もう。そこばかり責めるのは、ずるいです……」
+						PRINTFORMW 「ふ…ぁ…まだ、収まらない…%UNICODE(0x2665)%」
+						PRINTFORMW その阴唇はぷっくりと充血し、阴核はいまだ萎えることなく张りつめている…
+					;Ｖ绝顶ばかりさせた
+					ELSEIF CFLAG:1503 >= 8 && CFLAG:1502 + CFLAG:1504 + CFLAG:1505 <= 8
+						PRINTFORML 「…んん、っ。こ、坏れてしまいそう…%UNICODE(0x2665)%」
+						PRINTFORMW 白蓮の秘裂からは、とどまることなく爱液が溢れ出している…
+					;Ｂ绝顶ばかりさせた
+					;白蓮ははB敏感！
+					ELSEIF CFLAG:1504 >= 8 && CFLAG:1502 + CFLAG:1503 + CFLAG:1505 <= 8
+						PRINTFORML 「…うう、胸ばっかり……もう。どれだけおっぱいが好きなのかしら」
+						PRINTFORML 執拗に責められた丰かな乳肉はほんのり上气し、その先端は行为を終えてしばらくたっても硬く反り立っていた…
+						PRINTFORMW 「…弱いの、知ってるくせに…%UNICODE(0x2665)%」
+						PRINTFORMW 白蓮は、かすかに聞き取れる声でつぶやいた。
+					;Ａ绝顶ばかりさせた
+					ELSEIF CFLAG:1505 >= 8 && CFLAG:1502 + CFLAG:1503 + CFLAG:1504 <= 10
+						PRINTFORML 「あ、ぁ…%UNICODE(0x2665)%ねえ、知ってるとは思うけれど、ここは不浄の穴なんですよ？」
+						PRINTFORML
+						PRINTFORMW 「え…？いえ、别にその、嫌ってわけじゃ……もう。いじわるな人ね」
+					;四ヶ所の合計で20回以上绝顶させた
+					ELSEIF CFLAG:1502 + CFLAG:1503 + CFLAG:1504 + CFLAG:1505 >= 20
+						PRINTFORMW 「ふぅ…ん、はぁ……%UNICODE(0x2665)%…その、凄かったわ。%CALLNAME:MASTER%」
+						PRINTFORMW 「あぁ、腰が立たない…ねえ、もう少しだけ、抱きしめていてもらえるかしら」
+						PRINTFORMW あなたの两腕に抱きかかえられると、白蓮は幸せそうに身を預けた。
+					ENDIF
+				ELSEIF RAND:4 == 0
+					PRINTFORML 「ああ…もう、限界…」
+					PRINTFORMW 「…あなたの精力には、感嘆させられますね」
+				ELSEIF RAND:3 == 0 
+					PRINTFORML 「あ…。その、ええと……良かった、わ」
+					PRINTFORMW 「…私たち、相性がいいのかしらね」
+				ELSEIF RAND:2 == 0  
+					PRINTFORML 「あ、終わりかしら…」
+					PRINTFORMW 「ごめんなさい。もう少しだけ、このまま…」
+				ELSE
+					PRINTFORML 「あ、終わりですか…」
+					PRINTFORMW 「その、最后に、キスを…」
+				ENDIF
+			ENDIF
+		;浴场にいる
+		ELSEIF CFLAG:当前位置 == 12
+			PRINTFORML 「……ちょっと、のぼせちゃったかしら…」
+			PRINTFORMW 「すみません、%CALLNAME:MASTER%」
+		ELSEIF RAND:2 == 0 
+			PRINTFORML 「…%CALLNAME:MASTER%」
+			PRINTFORMW 白蓮は名残惜しそうにあなたを一瞥した。
+		ELSE 
+			PRINTFORML 「ふう…」
+			PRINTFORMW 「その、あなたと私は、相性がいいのかもしれません…」
+		ENDIF 
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;MASTERがダウン（房间まで運ばれる）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 6
+		;浴场にいる
+		IF BATHROOM(CFLAG:当前位置)
+			PRINTFORML 「大丈夫ですか？%CALLNAME:MASTER%」
+			PRINTFORML 白蓮は不安そうにあなたの颜を覗き込んでいる。
+			PRINTFORMW 「そこでおとなしく待っていてくださいね、水を持ってきますから…」
+		ELSEIF CFLAG:诶嘿嘿
+			PRINTFORML 「…ごめんなさい、私としたことが…」
+			PRINTFORMW 白蓮は%CALLNAME:MASTER%の着衣を整えて、房间まで送ってくれた…
+		ELSE
+			;◆
+			IF RAND:3 == 0
+				PRINTFORMW 「……ああ！大丈夫ですか、%CALLNAME:MASTER%」
+				PRINTFORML
+				PRINTFORML 「今日はもう、ゆっくりと休んで体調を整えることに専念してください。わかりましたね？」
+				PRINTFORMW 白蓮は、优しく諭すように言うと、静かに房间を出て行った。
+			ELSEIF RAND:2 == 0
+				PRINTFORML 「ちょっと……大丈夫ですか？」
+				PRINTFORMW 「頑张るのは大事ですけれど、坏れるまで頑张るのはいけませんよ」
+			ELSE
+				PRINTFORML 「わ…」
+				PRINTFORMW 倒れ込みそうになったあなたを白蓮が受け止めた。
+				PRINTFORMW 「今日はもう休みましょう、ね？」
+			ENDIF
+		ENDIF
+			PRINTFORML 　
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;TARGETが自室まで戻ってきた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 7
+		;-------------------------------------------------
+		;そのまま着替えて寝た
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 0
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 0
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;房间から追い出された
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 0
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 1
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;他キャラとのＨを止めさせて寝た
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 0
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 2
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;非在住TARGETがMAIN_MAPで休憩
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 8
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;前のターンから一绪の房间にいる状态で相手が寝る（招待房间含む（
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 9
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;その他
+	PRINTFORML  
+ENDIF
+RETURN 1
+
+;==================================================
+;移动时すれちがい
+;==================================================
+@M_KOJO_EVENT_K55_4(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;立ち止まった
+	;この后遭遇口上に接続
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;軽く会釈して通り過ぎた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		IF CFLAG:勃然大怒
+			PRINTFORML 「……」
+			PRINTFORMW 白蓮はあなたに会釈を返したが、ツンとした颜のままどこかへ行ってしまった。
+		;恋人かつランダム1/2
+		ELSEIF TALENT:恋人 && RAND:2 == 0 
+			IF RAND:5 == 0
+				PRINTFORML 「ああ、仕事かしら」
+				PRINTFORMW 「后で沢山、構ってくださいね。ふふ」
+			ELSEIF RAND:4 == 0
+				PRINTFORMW 白蓮は会釈を返すと、流し目にあなたを追いながら通り過ぎていった。
+			ELSEIF RAND:3 == 0
+				PRINTFORMW 白蓮は会釈を返すと、ウインクをして通り過ぎていった。
+			ELSEIF RAND:2 == 0
+				PRINTFORML 「んっ…ふふ、ありがとう」
+				PRINTFORMW 通りすがりに髪を抚でると、白蓮は嬉しそうに目を细めた…
+			ELSE
+				PRINTFORMW 「あら、お疲れさま」
+			ENDIF
+		ELSE
+			;MASTERの气力が0
+			IF BASE:MASTER:气力 <= 0
+				PRINTFORMW 「なんだか疲れてるみたいよ。休んだ方がいいんじゃないかしら」
+			ELSE
+				IF RAND:5 == 0
+					PRINTFORML 
+					PRINTFORML 「あら、ごきげんよう」
+					PRINTFORMW 白蓮はあなたの姿を見ると、人懐こく微笑んだ。
+				ELSEIF RAND:4 == 0
+					PRINTFORML 
+					PRINTFORMW 白蓮は会釈を返した。
+					IF TALENT:恋慕 && RAND:2 == 0
+						PRINTFORMW すれ違いざま、あなたの姿を流し目に追っていた。
+					ENDIF
+				ELSEIF RAND:3 == 0 
+					PRINTFORML 
+					PRINTFORMW 「ああ、お疲れ様」
+					IF TALENT:恋慕 && RAND:2 == 0
+						PRINTFORML 
+						PRINTFORMW 「そうだ、后でお茶を淹れに来てくれないかしら」
+					ENDIF
+				ELSEIF RAND:2 == 0
+					PRINTFORML 白蓮は何やら思案颜で歩いていたが、
+					PRINTFORMW こちらの会釈に反応して、柔らかい笑みを浮かべた。
+				ELSE
+					PRINTFORMW 「ん。お疲れさま、%CALLNAME:MASTER%」
+				ENDIF
+			ENDIF
+			PRINTFORML 
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;无视して通り過ぎた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		IF CFLAG:勃然大怒
+			PRINTFORMW 「…………」
+		ELSEIF TALENT:恋人
+			IF RAND:2 == 0
+				PRINTFORML 「あ、%CALLNAME:MASTER%。あの…」
+				PRINTFORMW 「え…？ちょっと、なんで无视するの？」
+			ELSE
+				PRINTFORML 「あ、お疲れさま…」
+				PRINTFORML 「………」
+				PRINTFORMW （…私、何か悪い事したかしら）
+			ENDIF
+		ELSEIF TALENT:恋慕
+			IF RAND:2 == 0
+				PRINTFORML 「あら、%CALLNAME:MASTER%。あのね…」 
+				PRINTFORML 「………」				
+				PRINTFORMW 白蓮はあなたに无视されると、しょんぼりと肩を落とした。
+			ELSE
+				PRINTFORML 「あ、お疲れさま…」
+				PRINTFORML 「………」
+				PRINTFORMW （…私、何か悪い事したかしら）
+			ENDIF
+		ELSE
+			IF RAND:2 == 0
+				PRINTFORML 「あ、お疲れさま%CALLNAME:MASTER%…」
+				PRINTFORMW 挨拶を无视して通り過ぎていくあなたを見た白蓮は、少し残念そうな颜をしていた。
+			ELSE
+				PRINTFORML 「んんー、无视は良くないと思いますよ」
+				PRINTFORML 「何か气に障ったのなら言って頂戴ね？」
+				PRINTFORMW つかつかと去っていくあなたの背中に語り掛ける白蓮であった。
+			ENDIF
+		ENDIF
+		RETURN 1
+	ENDIF
+	;その他
+	PRINTFORML  
+ENDIF
+RETURN 1
+
+;==================================================
+;他者介入で情绪変化
+;==================================================
+@M_KOJO_EVENT_K55_5(ARG,ARG:1)
+;口上主はTARGET
+;ARGに入ってきたキャラ（人数が膨大なので、自己把握自己責任で
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;-------------------------------------------------
+	;ナズーリンが入ってきた
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == [[ナズーリン]]
+		PRINTFORMW 「あら、ナズ。何か見つけたの？」
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;一輪が入ってきた
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == [[一輪]]
+		PRINTFORMW 「あら、一輪。何か御用かしら？」
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;ムラサが入ってきた
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == [[ムラサ]]
+		PRINTFORMW 「ああ、ムラサ。何かあったのかしら？」
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;星が入ってきた
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == [[星]]
+		PRINTFORMW 「ああ、星。お疲れさま」
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;ぬえが入ってきた
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == [[ぬえ]]
+		PRINTFORMW 「あら、ぬえ。また何か面白いことでも考え付いた？」
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;小伞が入ってきた
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == [[小伞]]
+		PRINTFORMW 「ああ、小伞さんね。新しい驚かし方を試しに来たのかしら？」
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;響子が入ってきた
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == [[響子]]
+		PRINTFORMW 「ふふ、響子はいつも元气ね？」
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;が入ってきた
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == [[マミゾウ]]
+		PRINTFORMW 「ああ、マミゾウさん。何か御用でしょうか？」
+		RETURN 1
+	ENDIF
+	;その他（キャラ指定なし
+	PRINTFORML  
+ENDIF
+RETURN 1
+
+;==================================================
+;情事を目撃した
+;==================================================
+@M_KOJO_EVENT_K55_6(ARG,ARG:1)
+;口上主はTARGET
+;ARGに情事相手
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;情事を目撃した（馴れ合い度:低）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 1
+		IF RAND:2 ==0
+			PRINTFORMW 「……あっ」
+		ELSE 
+			PRINTFORMW 「……これは、看過できませんね」
+		ENDIF
+			;恋慕
+		IF TALENT:恋慕
+			PRINTFORML
+			PRINTFORMW （なんですか。ひとの气持ちも知らないで……）
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;負けじと参加（馴れ合い度:高）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 2
+		PRINTFORML 
+		;恋慕
+		IF TALENT:恋慕
+			IF RAND:2 ==0
+				PRINTFORMW 「……ちょっと、あなたたち……！」
+				PRINTFORMW 空气がピンと张り詰め……冷汗が、背中をゆっくりと流れ落ちる。
+				PRINTFORML 
+				PRINTFORMW 「わ、私もまぜなさい！」
+			ELSE
+				PRINTFORMW 「……あなたたち、ここがどこだと思っているのですか……！」
+				PRINTFORMW 「きょ、教育的指导が必要ですね！」
+				PRINTFORMW 「私のほうが上手…もとい、浄化して差し上げます！あなた方の邪な欲望を！」
+			ENDIF
+		ELSE
+			PRINTFORMW 「……ちょっと、あなたたち……！」
+			PRINTFORMW 「きょ、教育的指导が必要ですね！」
+		ENDIF
+		PRINTFORML 
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;气まずそうに立ち去る
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 3
+		PRINTFORML 	
+		PRINTFORML （……ええと。見なかったことにしておいてあげようかしら）
+		PRINTFORML （ええ、それがいいわ。私は间違っていないわ）
+		PRINTFORML （そうよ、この命蓮寺の理想は妖怪と人间との共生なのだから）
+		PRINTFORML （仲良くなった末にそういう关系に发展してしまうのも致し方ないわ、だって…）
+		PRINTFORMW 白蓮は物阴で何分间もウロウロして、ようやく立ち去った。
+		PRINTFORML 
+		RETURN 1
+	ENDIF
+	;その他
+	PRINTFORML  
+ENDIF
+RETURN 1
+
+;==================================================
+;情事を見られた
+;==================================================
+@M_KOJO_EVENT_K55_7(ARG,ARG:1)
+;口上主はTARGET
+;ARGに目撃者
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;情事を見られた（目撃者の馴れ合い度:低）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 1
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;目撃者が負けじと参加（目撃者の馴れ合い度:高）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 2
+		;恋慕
+		IF TALENT:恋慕
+			IF RAND:2 == 0
+				PRINTFORMW 「……妖怪をも等しく爱することのできる資質がある人だとは分かっていたわ」
+				PRINTFORMW 「でも、まさかこんなにだらしのない人だったなんて……」
+				PRINTFORMW 白蓮は大きなため息をついた。
+				PRINTFORMW 「まあ、いいわ。こうなったら、とことん气持ちよくさせてやるまでよ」
+			ELSE 
+				PRINTFORMW 「…はぁ。あなたって、本当にどうしようもない人なのね」
+				PRINTFORML 
+				PRINTFORMW 「ああ、ちょっと！勝手に始めないでちょうだい！」 
+			ENDIF
+		ELSE
+			PRINTFORMW 「……妖怪をも等しく爱することのできる資質がある人だとは分かっていたわ」
+			PRINTFORMW 「でも、まさかこんなにだらしのない人だったとは……」
+			PRINTFORMW 白蓮は大きなため息をついた。
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;目撃者が立ち去る
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 3
+		;恋慕
+		IF TALENT:恋慕
+			IF RAND:2 == 0
+				PRINTFORMW 「……はぁ。生きた心地がしないわ」
+				PRINTFORMW 「……きゃぁ！？不意打ちはずるいわ、もう…」
+			ELSE
+				PRINTFORML 「……うう、かたじけない…」 
+				PRINTFORMW 「この埋め合わせはいずれ…」
+			ENDIF
+		ELSE
+			PRINTFORMW 「……はぁ。生きた心地がしないわ」
+		ENDIF
+		RETURN 1
+	ENDIF
+	;その他
+	PRINTFORML  
+ENDIF
+RETURN 1
+
+;==================================================
+;目撃した情事を問い詰める（現在无し
+;==================================================
+@M_KOJO_EVENT_K55_8(ARG,ARG:1)
+IF TALENT:恋人
+	PRINTFORML ……
+	PRINTFORMW 「確かに、人间も妖怪も共に過ごせる世界こそがこの命蓮寺の描く理想です」
+	PRINTFORMW 「ですが！あくまでもここは寺！睦事に興じることはご法度です！」
+	PRINTFORMW 「何よりも！%CALLNAME:MASTER%、あなたは私の……」
+	PRINTFORMW そこまで言うと、白蓮の双眸が涙に润んだ。
+	PRINTFORMW 「……ええい、軽薄至極である！いざ！南无三っ！！」
+	PRINTFORML
+	PRINTFORMW …地狱に行った方がずっとマシだろう、と思えるほどの恐怖体験をさせられた。
+ELSEIF TALENT:恋慕
+	PRINTFORML ……
+	PRINTFORMW 「確かに、人间も妖怪も共に過ごせる世界こそがこの命蓮寺の描く理想です」
+	PRINTFORMW 「ですが！あくまでもここは寺！睦事に興じることはご法度です！」
+	PRINTFORMW 「いざ！南无三っ！！」
+	PRINTFORML
+	PRINTFORMW …地狱もこれよりは幾分マシだろう、と思えるほどの恐怖体験をさせられた。
+	;体力、气力マイナスっていうのも考えたけど、一キャラのデメリットとしてはちょっと重いかなって。
+	PRINTFORML
+	PRINTFORMW （なんですか。ひとの气持ちも知らないで……）
+ELSE
+	PRINTFORML ……
+	PRINTFORMW 「確かに、人间も妖怪も共に過ごせる世界こそがこの命蓮寺の描く理想です」
+	PRINTFORMW 「ですが！あくまでもここは寺！睦事に興じることはご法度です！」
+	PRINTFORMW 「いざ！南无三っ！！」
+	PRINTFORML
+	PRINTFORMW …地狱もこれよりは幾分マシだろう、と思えるほどの恐怖体験をさせられた。
+ENDIF
+RETURN 1
+
+;==================================================
+;パンツ没収された
+;==================================================
+@M_KOJO_EVENT_K55_9(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 1
+		PRINTFORMW 「あなたという人は、全く本当にどうしようもない人ですね！」
+		PRINTFORML 
+		PRINTFORMW 「……はぁ。もはや、説教をする气も起きません」
+		PRINTFORMW 「…そうですね。このことが皆に知れたらどうなるか、少し考えてみませんか？」
+		PRINTFORMW 白蓮は、満面の笑みでそう言った。
+		RETURN 1
+	ENDIF
+	PRINTFORML  
+ENDIF
+RETURN 1
+
+;==================================================
+;推倒た
+;==================================================
+@M_KOJO_EVENT_K55_10(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;诶嘿嘿==2（开始时）
+	;记入チェック（=0, 非表示、1, 表示）
+	;押し倒されている时に立つフラグ
+	CFLAG:1211 = 1
+	;聖に押し倒された回数を加算
+	CFLAG:1216 ++
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG
+		;-------------------------------------------------
+		;MASTERを推倒た（开始时）
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && !ARG:1
+			IF CFLAG:1215 == 0
+				;恋慕かつ恋人
+				;/普通にプレイしてたら多分見る机会はない。
+				IF TALENT:恋慕 && TALENT:恋人
+					PRINTFORMW 白蓮はそのままあなたを抱きしめると、胸元に颜をうずめた。
+					PRINTFORML
+					PRINTFORMW 「……ねえ、私を抱いてくれないかしら」
+					PRINTFORMW 「確かに私はここの住職です。それゆえの立场というものもあります」
+					PRINTFORMW 「でも、私は、……私たちは、恋人同士じゃありませんか……」
+					PRINTFORMW 表情こそ伺えないものの、震える声が彼女の心を示していた。
+					PRINTFORMW 「%CALLNAME:MASTER%、私は、あなたが…私の、最爱の人が欲しい」
+					PRINTFORMW 白蓮は颜を上げた。激情に染まる頬を、一筋の涙が伝う。
+					PRINTFORML 「…もう。なんですか。ここまで言っても手を出してくれない意气地なしに、
+					PRINTFORMW 私は惚れたっていうんですか」
+				;恋慕
+				ELSEIF TALENT:恋慕
+					PRINTFORMW 白蓮はあなたの上に跨って、切なげな目で見降ろしている。
+					PRINTFORMW 「ねえ、あなたがどうしても嫌というのでなければ…
+					PRINTFORMW しばらくそのまま、大人しくしていてくれませんか」
+					PRINTFORMW ささやくように言いながら、あなたの胸元へと静かに手を這わせる。 
+					PRINTFORMW 「僧侶失格と言われても、…軽蔑してくれても、構いません」
+					PRINTFORMW 「でも、私は僧侶である以前に女なんです…」
+					PRINTFORMW 白蓮はぐっと颜を近づけ、润んだ目であなたを見据えた。
+					PRINTFORMW 「お願い、私に、……少しの间だけ、梦を見させて…」
+				ELSE
+					PRINTFORMW 「ふぅ、まったくもう……」
+					PRINTFORMW 「なんですか。ひとが大人しくしていたら、あちこち好き放題してくれて……」
+					PRINTFORMW 「確かに私は仏门に入った身ではありますが…それでも、限度というものがあります」
+					PRINTFORMW 「はぁ…%UNICODE(0x2665)%仕方がありません…お仕置きして差し上げます」
+					PRINTFORMW 白蓮は情欲に燃えた目であなたを射すくめる。
+					PRINTFORMW 「あなたも、それをお望みなのでしょう？」
+					;非恋慕时に初诶嘿嘿フラグ
+					CFLAG:1203 = 1
+				ENDIF 
+				;MASTERが推倒たことがないなら、今日を初诶嘿嘿した日として记录
+				;MASTERが推倒たことがないなら、「MASTERが押し倒されて初诶嘿嘿突入」フラグを立てる
+				IF CFLAG:1200 == 0
+					CFLAG:1200 = 2
+				ENDIF
+				CFLAG:1215 = 1
+				RETURN 1
+			;二回目以降
+			;恋慕
+			ELSEIF TALENT:恋慕
+				;あなたの押し倒され回数が50回を超えた（一回のみ）。［淫乱］取得イベント
+				;/淫乱を取得したからといって何が変わるわけでもない。趣味。气が向いた人はいろんなコマンドに淫乱分岐でも足すといいよ
+				IF CFLAG:1216 == 50
+					TALENT:淫乱 = 1
+				ENDIF
+				;キスするの直后
+				IF PREVCOM == 312
+					IF RAND:4 == 0 
+						PRINTFORMW 「…ぷぁ、…はぁっ…」
+						PRINTFORMW 「ねえ、%CALLNAME:MASTER%。いい、でしょ…%UNICODE(0x2665)%」
+						PRINTFORMW 情欲に突き动かされるように、白蓮の手があなたの身体を抚でまわす…
+					ELSEIF RAND:3 == 0 
+						PRINTFORMW 白蓮はあなたを組み敷くと、口唇の间に舌を滑り込ませて熱烈なキスを続けた。
+						PRINTFORMW 「んちゅ、ちゅううぅ、ちゅむ、れろぉ、ちゅぴ…れる、ちゅ、ぷは、ぁ…%UNICODE(0x2665)%」
+						PRINTFORMW ようやく口を離すと、銀の糸が二人の口許を繋いだ…。
+					ELSEIF RAND:2 == 0
+						PRINTFORMW 「ねえ、もうキスだけじゃ満足できないんです」
+						PRINTFORMW 「ほら、あなただって嫌じゃないでしょう…？」
+					ELSE
+						PRINTFORMW 「ああ、もどかしい」
+						PRINTFORMW 「私はもっと全身で、あなたを感じたいのに…%UNICODE(0x2665)%」
+					ENDIF
+				;尻を抚でる、胸爱抚、秘所爱抚、肛门爱抚、指插入れの直后
+				ELSEIF GROUPMATCH(PREVCOM, 310, 313, 314, 315,316)
+					IF RAND:3 == 0 
+						PRINTFORML 「……はぁ。そんな风に触られると、本气になっちゃうじゃないですか…%UNICODE(0x2665)%」
+					ELSEIF RAND:2 == 0 
+						PRINTFORMW 「もう、好き放題抚でまわしてくれちゃって…」
+						PRINTFORMW 「今度は私の番ですからね…%UNICODE(0x2665)%」
+						PRINTFORMW 白蓮は情欲に润んだ瞳であなたを見つめている…
+					ELSE
+						PRINTFORML 「そうやっていやらしい触り方して、私をその气にさせて…」
+						PRINTFORMW 「この責任は、きちんと取ってもらいますからね…♪」
+					ENDIF
+				;食事をとる・食事を振る舞うの直后
+				ELSEIF PREVCOM == 414 || PREVCOM == 415
+					IF RAND:2 == 0
+						PRINTFORMW 「食后の運动、とでもいかないかしら…？」
+					ELSE
+						PRINTFORMW 「あら、ここにも御馳走がありましたね…%UNICODE(0x2665)%」
+					ENDIF
+				;头を抚でるの直后
+				ELSEIF PREVCOM == 309
+					IF RAND:2 == 0
+						PRINTFORMW 「头を抚でるだけなんて…意地悪のつもりかしら？」
+						PRINTFORMW 「私はもう、こんなに燃え上がっているのに…」
+					ELSE
+						PRINTFORMW 「ねえ、もう…头だけじゃ、物足りないの…%UNICODE(0x2665)%」
+						PRINTFORMW あなたに跨ったまま、白蓮は淫靡に微笑んだ。
+					ENDIF
+				;浴场にいる
+				ELSEIF CFLAG:当前位置 == 12
+					IF RAND:2 == 0 
+						PRINTFORML 「…さっきから私を見てるの、气づかないとでも思いました？」
+					ELSE
+						PRINTFORML 「…ふふ、%CALLNAME:MASTER%。あなたの裸も、中々綺丽なものですね…♪」
+						PRINTFORML 「ねぇ、私、我慢できなくなっちゃいました…%UNICODE(0x2665)%」
+						PRINTFORMW 白蓮は丰満な裸体をまとわりつかせ、あなたを诱っている…
+					ENDIF
+				ELSE
+					IF RAND:4 == 0 
+						PRINTFORML 「…ねえ、%CALLNAME:MASTER%…しましょう？」
+						PRINTFORMW 情欲に燃えた白蓮の目があなたを見降ろしている。
+					ELSEIF RAND:3 == 0
+						PRINTFORML 「仕事柄、いろいろと溜まるものもあってね…」
+						PRINTFORMW 「悪いけれど、すこし付き合ってもらいますよ…%UNICODE(0x2665)%」
+					ELSEIF RAND:2 == 0
+						PRINTFORML 「ああ…ごめんなさい…」
+						PRINTFORMW 「でも、もう我慢の限界なんです…%UNICODE(0x2665)%」
+					ELSE
+						PRINTFORMW 「もう、いけない人…」
+						PRINTFORMW 「私をこんな气分にさせて…%UNICODE(0x2665)%」
+					ENDIF
+				ENDIF
+			;恋慕なし
+			ELSE
+				IF RAND:4 == 0 
+					PRINTFORML 「もう、いけない人…」
+					PRINTFORML 「私をこんな气分にさせて…」
+					PRINTFORMW 「これは、お仕置きが必要ですね…%UNICODE(0x2665)%」
+				ELSEIF RAND:3 == 0
+					PRINTFORML 「ああ、ごめんなさい…」
+					PRINTFORMW 「でももう、我慢できないの…」
+				ELSEIF RAND:2 == 0
+					PRINTFORMW 「%CALLNAME:MASTER%は屈服に過ぎます」
+					PRINTFORMW 「私が懲らしめてあげますからね…」
+				ELSE
+					PRINTFORML 「まったく仕方のない人ですねえ…」
+					PRINTFORMW 「お仕置きです。甘んじてお受けなさい…%UNICODE(0x2665)%」
+				ENDIF
+			ENDIF
+		ENDIF
+		;-------------------------------------------------
+		;MASTERに抱きついた（开始时）
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 0
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 1
+			PRINTFORML
+			RETURN 1
+		ENDIF
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;なだめられた（終了时）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		;-------------------------------------------------
+		;抜け出した
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1 && !ARG:1
+			;诶嘿嘿状态解除を示すフラグ
+			CFLAG:1211 = 0
+			;◆初めて
+			IF FIRSTTIME(TFLAG:50 + 500)
+				PRINTFORMW 「……はっ！」
+				PRINTFORMW %CALLNAME:MASTER%が押しとどめると、白蓮は目を見開いた。
+				PRINTFORMW 「す、すみません%CALLNAME:MASTER%。私としたことがつい…」
+				PRINTFORMW 「でも、あなただって悪いんですよ、あんなふうに私に优しくして…」
+				PRINTFORMW 「…すみません、言い訳はやめにしましょう」
+				PRINTFORMW 「……私が一时の情欲に堕さぬよう导いてくれたことに感謝します、%CALLNAME:MASTER%」
+				PRINTFORML
+				PRINTFORMW (ただ、私をこんな气分にさせて放っておくあなたを、一人の女として恨みます…)
+			ELSE
+				IF RAND:3 == 0 
+					PRINTFORML 「あっ…」
+					PRINTFORML 白蓮はあなたから飛び退いて、いそいそと着衣を正した。
+					PRINTFORMW 「……うう」
+				ELSEIF RAND:2 == 0 
+					PRINTFORML 「…いじわる」
+					PRINTFORMW 白蓮は小さくつぶやいた。
+				ELSE
+					PRINTFORMW 「…は、ぁ…ご、ごめんなさい」
+				ENDIF
+			ENDIF
+		ENDIF
+		RETURN 1
+		;-------------------------------------------------
+		;抱き着きモード満足終了
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 0
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 1
+			PRINTFORML
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;抱き着きモード强制終了
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 0
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 2
+			PRINTFORML
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;抜け出す失敗
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		;-------------------------------------------------
+		;好きにして状态から抜け出せなかった
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 0
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 1
+			PRINTFORML
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;欲求不満が高くて抜け出せなかった
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 0
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 2
+			PRINTFORML
+			RETURN 1
+		ENDIF
+	ENDIF
+	;その他
+	PRINTFORML  
+ENDIF
+RETURN 1
+
+;==================================================
+;浴场で遭遇
+;==================================================
+@M_KOJO_EVENT_K55_11(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;追い出された
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		PRINTFORML 「ああ、ごめんなさい、今は私が入っているの」
+		PRINTFORMW 「湯浴みするなら、また后で来てちょうだい」
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;目が合った（追い出されない）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		IF FIRSTTIME("一绪にお澡堂")
+			PRINTFORML 「………どうしても入りたいというのなら、别に構いませんが」
+			PRINTFORMW 颜をほの赤く上气させて、白蓮は言った。
+		ELSE
+			;恋人
+			IF TALENT:恋人
+				IF RAND:3 == 0 
+					PRINTFORML 「あら、一绪に入りたいんですか？%CALLNAME:MASTER%」
+					PRINTFORMW 「いいですよ。ほら、早く来てください」
+				ELSEIF RAND:2 == 0
+					PRINTFORML 「ああ。いらっしゃい%CALLNAME:MASTER%、ここ、空いてるわよ」
+					PRINTFORMW 白蓮は湯船につかったまま、あなたに向かってパタパタと手を振った。
+					IF RAND:2 == 0
+						PRINTFORML
+						PRINTFORML たわわな双球が、动きに合わせて水面でぷかぷかと揺れる。
+						PRINTFORMW ……なかなかの壮観だ。
+					ENDIF
+				ELSE
+					PRINTFORML 「ほら、そんなところにいないで早く入っていらっしゃいな」
+					PRINTFORMW 「いまさらそんなこと、恥ずかしがる间柄でもないでしょう？…ふふっ」
+				ENDIF
+			;恋慕
+			ELSEIF TALENT:恋慕
+				IF RAND:3 == 0 
+					PRINTFORML 「あなたなのね、%CALLNAME:MASTER%。……はぁ」
+					PRINTFORML 白蓮はあなたの姿を認めると、ため息をついてうつむいた。
+					PRINTFORMW （追い返そうという气も起きないなんてね…）
+					IF RAND:2 == 0 && (MARK:屈服刻印 > 1)
+						PRINTFORML
+						PRINTFORMW （それどころか、期待さえ…）
+					ENDIF
+				ELSEIF RAND:2 == 0 
+					PRINTFORML 「…一绪に入りたいの？」
+					PRINTFORMW あなたが頷くと、白蓮は何も言わずに场所を開けた。
+				ELSE 
+					PRINTFORML 「……」
+					PRINTFORMW %CALLNAME:MASTER%の姿を認めると、白蓮は真っ赤になってうつむいた。
+					PRINTFORML
+					PRINTFORMW ……时折%CALLNAME:MASTER%の方にちらちらと目をやっている。
+				ENDIF
+			ELSE
+				IF RAND:2 == 0 
+					PRINTFORML 「……ひゃあ！？」
+					PRINTFORMW 白蓮は小さく声をあげたが、あなたを追い返すことはなかった。
+				ELSE
+					PRINTFORML 「……」
+					PRINTFORMW %CALLNAME:MASTER%の姿を認めると、白蓮は真っ赤になってうつむいた。
+				ENDIF
+			ENDIF
+		ENDIF
+	ENDIF
+	;その他
+	PRINTFORML  
+ENDIF
+RETURN 1
+
+;==================================================
+;寝床に忍び込み
+;==================================================
+@M_KOJO_EVENT_K55_12(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;追い出される（愤怒）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		PRINTFORMW 「出て行ってください」
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;寝床に侵入
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 1
+		IF RAND:2 == 0
+			PRINTFORMW 「……すぅ……すぅ……」
+			PRINTFORMW 白蓮は静かに寝息を立てている。
+		ELSE
+			PRINTFORML 「……ぐぅ……」
+			PRINTFORMW 白蓮を起こさずに侵入できた。
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;寝床に侵入（相手が恋慕）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 2
+		IF TALENT:恋人
+			IF RAND:2 == 0
+				PRINTFORMW 「あら、……いわゆる夜袭かしら」
+				PRINTFORMW 「ふふ、いいわよ、いらっしゃい……%UNICODE(0x2665)%」
+			ELSE
+				PRINTFORMW 「あっ……。ここに来たっていうことは、つまりそういうことかしら」
+			ENDIF
+		ELSE 
+			IF RAND:2 == 0
+				PRINTFORMW (……夜袭かしら)
+				PRINTFORMW (……ああ、駄目ね。追い返そうという气になりきれないわ…)
+			ELSE 
+				PRINTFORMW 「……梦かしら……梦なら……ねえ、优しくしてくれる？」
+			ENDIF 
+		ENDIF 
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;寝床に侵入（相手が恋慕・衰弱）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 3
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;追い出される
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 4
+		PRINTFORML 「私は寝ますから、御用があるなら明日にしてくださいね？」
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;追い出される（衰弱）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG:1 == 5
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;その他
+	PRINTFORML  
+ENDIF
+RETURN 1
+
+;==================================================
+;お仕事中
+;==================================================
+@M_KOJO_EVENT_K55_13(ARG,ARG:1)
+;口上主はTARGET
+;ARG:1に残っている工作量
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;仕事开始（职场へ移动する）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		IF CFLAG:诶嘿嘿
+			IF RAND:3 == 0
+				PRINTFORMW 「あぁ…は、ぅ…%CALLNAME:MASTER%、もう仕事の时间よ…行かなくちゃ…」 
+			ELSEIF RAND:2 == 0 
+				PRINTFORMW 「はぁ、はぁ…駄目、时间です、私、もう行かないと…」
+			ELSE
+				PRINTFORMW 「う、あ…仕事の时间です…私、行かないと…」
+			ENDIF
+			PRINTFORMW 白蓮は着衣を正すと、身体を火照らせたまま仕事场へ向かった…
+		ELSEIF BATHROOM(CFLAG:当前位置)
+			PRINTFORMW 「さて、身体もさっぱりしたことですし、今日もお仕事と行きましょうか」
+		ELSEIF GROUPMATCH(TIME:5, 4, 5, 6) && CFLAG:当前位置 == CFLAG:职场
+			PRINTFORMW 「うーん、雨の中を行くのは億劫ですが、仕事なので致し方ありませんね」
+		ELSEIF RAND:2 == 0
+			PRINTFORMW 「さて、今日もお仕事といきましょうか」
+		ELSE
+			PRINTFORMW 「あらあら、もうこんな时间なのね」
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;業務中
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;仕事終了
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		IF RAND:3 == 0
+			PRINTFORMW 「ふー。今日はここまでね」 
+		ELSEIF RAND:2 == 0 
+			PRINTFORMW 「ん。おしまいね」
+		ELSE 
+			PRINTFORML 「では皆さま、ごきげんよう……」
+			PRINTFORMW 説法を終えた白蓮は、聴衆に向かって恭しく一礼した。
+		ENDIF 
+		;早く終わった
+		IF TIME:0 < 960
+			;※16时より早い=手伝った　という解釈
+			;※でもコマンド実行后の时间なので直前のコマンドによる时间経過で17时超えてしまうと出ない。手伝いは一回で1时间もかかるので注意
+			;※バッタはどうするか考え中
+			PRINTFORML 「予定よりも早く終わりました。%CALLNAME:MASTER%のおかげですね」
+			PRINTFORMW 白蓮はうやうやしく一礼した。
+			;恋人
+			IF TALENT:恋人
+				PRINTFORML 「…ふふ、二人の时间が伸びたわね」
+			;恋慕
+			ELSEIF TALENT:恋慕
+				PRINTFORMW 「…そうね、一绪にお茶でもどうかしら？付き合ってくれると嬉しいのですが…」
+			ENDIF
+		ELSE
+			PRINTFORMW 仕事を終えた白蓮は、ほぅっとため息をついた。
+		ENDIF
+		RETURN 1
+	ENDIF
+	;その他
+	PRINTFORML  
+ENDIF
+RETURN 1
+
+;==================================================
+;食事系
+;==================================================
+@M_KOJO_EVENT_K55_14(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;持っていた食物を食べられた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == -1
+		IF RAND:2 == 0 
+			PRINTFORMW 「この感じ…食べ物ですか？食べ物ですね！？」
+		ELSE
+			PRINTFORMW （なにか美味しそうな匂いがしますが…あまり露骨に欲しがるのも意地污いですし、でも…）
+			PRINTFORML
+			PRINTFORMW …白蓮が物欲しそうにこちらを見ていたので、%DISHNAME%をあげることにした。
+		ENDIF
+		RETURN 1
+	ENDIF
+	;その他
+	PRINTFORML  
+ENDIF
+RETURN 1
+
+;==================================================
+;MASTERが推倒た
+;==================================================
+@M_KOJO_EVENT_K55_15(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;未实装（推倒コマンドに統合？
+	;MASTERが推倒た（ウフフ开始时）
+	;记入チェック（=0, 非表示、1, 表示）
+	;LOCAL:1 = 0
+	;-------------------------------------------------
+	;IF LOCAL:1 && ARG == 1
+		;PRINTFORML
+		;RETURN 1
+	;ENDIF
+	;-------------------------------------------------
+	;逢瀬終了（ウフフ終了时）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		;诶嘿嘿状态解除を示すフラグ
+		CFLAG:1211 = 0
+		IF TALENT:恋人
+			;今回一度も绝顶してない
+			IF CFLAG:1502 + CFLAG:1503 + CFLAG:1504 + CFLAG:1505 == 0
+					PRINTFORML 「…ああもう。これじゃ、収まりがつかないじゃない…」
+					PRINTFORMW 「ひどいわ、%CALLNAME:MASTER%」
+			ELSE
+				IF RAND:2 == 0 
+					;Ｃ绝顶ばかりさせた
+					IF CFLAG:1502 >= 8 && CFLAG:1503 + CFLAG:1504 + CFLAG:1505 <= 8
+						PRINTFORML 「もう。そこばかり責めるのは、ずるいわ……」
+						PRINTFORMW 「ふ…ぁ…まだ、収まらない…%UNICODE(0x2665)%」
+						PRINTFORMW その阴唇はぷっくりと充血し、阴核はいまだ萎えることなく张りつめている…
+					;Ｖ绝顶ばかりさせた
+					ELSEIF CFLAG:1503 >= 8 && CFLAG:1502 + CFLAG:1504 + CFLAG:1505 <= 8
+						PRINTFORML 「…んん、っ。こ、坏れてしまいそう…%UNICODE(0x2665)%」
+						PRINTFORMW 白蓮の秘裂からは、とどまることなく爱液が溢れ出している…
+					;Ｂ绝顶ばかりさせた
+					;聖はB敏感！
+					ELSEIF CFLAG:1504 >= 8 && CFLAG:1502 + CFLAG:1503 + CFLAG:1505 <= 8
+						PRINTFORML 「…うう、胸ばっかり……もう。どれだけおっぱいが好きなのかしら」
+						PRINTFORML 執拗に責められた丰かな乳肉はほんのり上气し、その先端は行为を終えてしばらくたっても硬く反り立っていた…
+						PRINTFORMW 「…弱いの、知ってるくせに…%UNICODE(0x2665)%」
+					;Ａ绝顶ばかりさせた
+					ELSEIF CFLAG:1505 >= 8 && CFLAG:1502 + CFLAG:1503 + CFLAG:1504 <= 10
+						PRINTFORML 「あ、ぁ…%UNICODE(0x2665)%ねえ、知ってるとは思うけれど、ここは不浄の穴なのよ？」
+						PRINTFORML
+						PRINTFORMW 「え…？いえ、别にその、嫌ってわけじゃ……もう。いじわるな人ね」
+					;四ヶ所の合計で20回以上绝顶させた
+					ELSEIF CFLAG:1502 + CFLAG:1503 + CFLAG:1504 + CFLAG:1505 >= 20
+						PRINTFORMW 「ふぅ…ん、はぁ……%UNICODE(0x2665)%…その、凄かったわ。%CALLNAME:MASTER%」
+						PRINTFORMW 「あぁ、腰が立たない…ねえ、もう少しだけ、抱きしめていてもらえるかしら」
+						PRINTFORMW あなたの两腕に抱きかかえられると、白蓮は幸せそうに身を預けた。
+					ENDIF
+				ELSEIF RAND:3 == 0
+					PRINTFORML 「ふふ…良かったわ、%CALLNAME:MASTER%」
+					PRINTFORMW 「また、お願いしていいかしら…%UNICODE(0x2665)%」
+				ELSEIF RAND:2 == 0 
+					PRINTFORML 「ふふ。満足したかしら？」
+					PRINTFORMW 「じゃあ、最后にキスしてくれる？」
+				ELSE
+					PRINTFORML 「ん…おしまいね？」
+					PRINTFORMW 「ふふ、もう少しだけこうしていたかったけれど」
+				ENDIF
+			ENDIF  
+		ELSEIF TALENT:恋慕
+			IF RAND:2 == 0 
+				PRINTFORML 「えっと…あなたは、満足してくれたかしら」
+				PRINTFORMW 「いえ、やっぱりこういった行为は、お互いに气持ちよくてこそでしょうし…」
+			ELSE
+				PRINTFORML 「ふぅ…その、良かったです」
+				PRINTFORML 「その、僅かばかりですが、お返し…」
+				PRINTFORMW 白蓮は着衣を整え終わると、あなたの额に接吻した。
+			ENDIF 
+		;恋人、恋慕なし
+		ELSE
+			IF RAND:3 == 0 
+				PRINTFORMW (はぁ……流されてしまいました)
+			ELSEIF RAND:2 == 0 
+				PRINTFORMW 「…ご満足ですか？」
+			ELSE 
+				PRINTFORMW 白蓮はいそいそと着衣を正した。
+			ENDIF  
+		ENDIF 
+		RETURN 1
+	ENDIF
+	;その他
+	PRINTFORML  
+	;-------------------------------------------------
+	;事后描写
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		;-------------------------------------------------
+		;精液が垂れてきた
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 0
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 1
+			PRINTFORML
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;爱液が垂れてきた
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 0
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 2
+			PRINTFORML
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;事后の情绪
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 0
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 3
+			PRINTFORML
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;服を着る
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 0
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 4
+			PRINTFORML
+			RETURN 1
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;添い寝する
+;==================================================
+@M_KOJO_EVENT_K55_16(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;添い寝を始めた（开始时）(存在せず
+	;记入チェック
+	;LOCAL:1 = 0
+	;-------------------------------------------------
+	;IF LOCAL:1 && ARG == 1
+		;PRINTFORML
+		;RETURN 1
+	;ENDIF
+	;-------------------------------------------------
+	;添い寝を終了した（終了时）
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;その他
+	PRINTFORML  
+ENDIF
+RETURN 1
+;==================================================
+;时止め終了时
+;==================================================
+@M_KOJO_EVENT_K55_17(ARG,ARG:1)
+;口上主はTARGET
+;排他と明记されていないモノは状况によっては连続で表示されるので注意
+;ARGに射精状况
+;ARG:1に射精状态
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;ARG=1～3は排他
+	;謎の快感
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;绝顶
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;パンツ紛失
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;【无自觉口内射精】
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 4
+		;精液中毒低精饮
+		IF ARG:1 == 1
+		;精液中毒低吐き出し
+		ELSEIF ARG:1 == 2
+		;精液中毒低手で覆う
+		ELSEIF ARG:1 == 3
+		;精液中毒高精饮
+		ELSEIF ARG:1 == 4
+		;濃厚精液＆精液中毒低吐き出し
+		ELSEIF ARG:1 == 5
+		;濃厚精液＆精液中毒高精饮
+		ELSEIF ARG:1 == 6
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;【无自觉颜面射精】
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 5
+		;无知持ち＆精液经验100未満
+		IF ARG:1 == 1
+		;通常ぬぐい取り
+		ELSEIF ARG:1 == 2
+		;颜射精液舐めとり
+		ELSEIF ARG:1 == 3
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;【无自觉手淫射精】
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 6
+		;ぬぐい取り
+		IF ARG:1 == 1
+		;舐めとり
+		ELSEIF ARG:1 == 2
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;【无自觉肛门射精】
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 7
+		;Ａ感觉2以下
+		IF ARG:1 == 1
+		;ソレ以外
+		ELSEIF ARG:1 == 2
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;【无自觉处女丧失】
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 8
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;【无自觉膣内射精】
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 9
+		;非处女膣内射精口服避孕药なし
+		IF ARG:1 == 1
+		;非处女膣内射精口服避孕药あり
+		ELSEIF ARG:1 == 2
+		;处女膣内射精
+		ELSEIF ARG:1 == 3
+		ENDIF
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;时间停止解除共通
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 0
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;ナマでやらせろ时
+;==================================================
+@M_KOJO_EVENT_K55_18(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;避孕要求台詞
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;断った
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;断ったのに粘られて切れた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;危険日以外許可
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 4
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;危険日許可
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 5
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;神社暮らしを承認して貰う
+;==================================================
+@M_KOJO_EVENT_K55_19(ARG,ARG:1)
+;口上主はARG
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;認められる
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;認められない
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		PRINTFORML
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;帰宅时
+;==================================================
+@M_KOJO_EVENT_K55_20(ARG,ARG:1)
+;口上主はLOCALS or RESULT
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;通常帰宅
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;约会中帰宅
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;玄関先でお見送り
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		PRINTFORML
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;陷落素質取得时
+;==================================================
+@M_KOJO_EVENT_K55_21(ARG,ARG:1)
+;口上主はARG
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;恋慕取得
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;思慕取得
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;爱欲取得
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;爱人取得
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 4
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;セフレ取得
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 5
+		PRINTFORML
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;调教終了时に自慰
+;==================================================
+@M_KOJO_EVENT_K55_22(ARG,ARG:1)
+;口上主はARG
+;ARG:0に自慰状况
+;ARG:1に自慰种类
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------
+IF LOCAL
+	;-------------------------------------------------
+	;通常自慰
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		PRINTFORML  
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;同室时自慰
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		PRINTFORML  
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;中だし精液自慰
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		PRINTFORML  
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;无知持ち（自慰经验(调教自慰经验は差し引き)による分岐あり
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 4
+		LOCAL:2 = EXP:自慰经验 - EXP:调教自慰经验
+		;无知消去イベントあり（表示は一度だけ
+		IF LOCAL:1 >= 25
+		;地の文分岐。书きたい场合は[SKIPSTART][SKIPEND]を削除してください
+		[SKIPSTART]
+		ELSEIF LOCAL:1 >= 20
+		ELSEIF LOCAL:1 >= 15
+		ELSEIF LOCAL:1 >= 10
+		ELSEIF LOCAL:1 >= 5
+		[SKIPEND]
+		ELSE
+		ENDIF
+		PRINTFORML  
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;陷落素質あり自慰中毒高め
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 5
+		;-------------------------------------------------
+		;Ｃ敏感orＣ感觉10以上
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 0
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 1
+			PRINTFORML  
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;Ｖ敏感orＶ感觉10以上
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 0
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 2
+			PRINTFORML  
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;Ａ敏感orＡ感觉10以上
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 0
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 3
+			PRINTFORML  
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;Ｂ敏感orＢ感觉10以上
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 0
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 4
+			PRINTFORML  
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;部位指定无し
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 0
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 5
+			PRINTFORML  
+			RETURN 1
+		ENDIF
+		;その他
+		;上の分岐を一切书かずに、ここに书くことで陷落素質あり自慰中毒高め自慰の共通口上を表示することが出来ます
+		PRINTFORML  
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;自慰中毒高め
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 6
+		;-------------------------------------------------
+		;尻穴膣腔同时
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 0
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 1
+			PRINTFORML  
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;膣腔のみ
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 0
+		;-------------------------------------------------
+		IF LOCAL:1 && ARG:1 == 2
+			PRINTFORML  
+			RETURN 1
+		ENDIF
+		;その他
+		;上の分岐を一切书かずに、ここに书くことで自慰中毒高め自慰の共通口上を表示することが出来ます
+		PRINTFORML  
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;我慢
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 7
+		PRINTFORML 
+		RETURN 1
+	ENDIF
+	;その他
+	;上の分岐を一切书かずに、ここに书くことで自慰の共通口上を表示することが出来ます
+	PRINTFORML  
+	RETURN 1
+ENDIF
+RETURN 1
+;==================================================
+;浴场连れだし
+;==================================================
+@M_KOJO_EVENT_K55_23(ARG,ARG:1)
+;口上主はLOCAL
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;断られた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;一绪に入ってくれた
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		RETURN 1
+	ENDIF
+	;その他
+	PRINTFORML  
+ENDIF
+RETURN 1
+;==================================================
+;懐妊
+;==================================================
+@M_KOJO_EVENT_K55_24(ARG,ARG:1)
+;口上主はLOCAL
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;恋慕
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;思慕
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;陷落素質无し
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;无自觉
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 4
+		RETURN 1
+	ENDIF
+	;その他
+	PRINTFORML  
+ENDIF
+RETURN 1
+;==================================================
+;出産
+;==================================================
+@M_KOJO_EVENT_K55_25(ARG,ARG:1)
+;口上主はLOCAL
+;ARG:1	何人目の儿童か
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;恋慕
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;思慕
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;陷落素質无し
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;无自觉
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 4
+		RETURN 1
+	ENDIF
+	;その他
+	PRINTFORML  
+ENDIF
+RETURN 1
+;==================================================
+;自慰暴露
+;==================================================
+@M_KOJO_EVENT_K55_26(ARG,ARG:1)
+
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------
+IF LOCAL
+	SELECTCASE ARG
+		;-------------------------------------------------
+		CASE 0
+		;見られた瞬间
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 0
+		;-------------------------------------------------
+		IF LOCAL:1
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		CASE 1
+		;何もしない
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 0
+		;-------------------------------------------------
+		IF LOCAL:1
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		CASE 2
+		;そのまま続行
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 0
+		;-------------------------------------------------
+		IF LOCAL:1
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		CASE 3
+		;追い出し
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 0
+		;-------------------------------------------------
+		IF LOCAL:1
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		CASE 4
+		;やっちゃう
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 0
+		;-------------------------------------------------
+		IF LOCAL:1
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		CASE 5
+		;事后
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 0
+		;-------------------------------------------------
+		IF LOCAL:1
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		CASE 6
+		;事后お泊り
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 0
+		;-------------------------------------------------
+	ENDSELECT
+ENDIF
+
+;==================================================
+;相手からデートのお诱い
+;==================================================
+@M_KOJO_EVENT_K55_27(ARG,ARG:1)
+;口上主はLOCAL
+;ARG:1は目的地
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------
+IF LOCAL
+	SELECTCASE ARG
+		;-------------------------------------------------
+		CASE 0
+		;诱い文句
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 0
+		;-------------------------------------------------
+		IF LOCAL:1
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		CASE 1
+		;受けた
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 0
+		;-------------------------------------------------
+		IF LOCAL:1
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		CASE 2
+		;断った
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 0
+		;-------------------------------------------------
+		IF LOCAL:1
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		CASE 3
+		;房间に诱われた
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 0
+		;-------------------------------------------------
+		IF LOCAL:1
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		CASE 4
+		;房间に诱われたのを受けた
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 0
+		;-------------------------------------------------
+		IF LOCAL:1
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		CASE 5
+		;房间に诱われたのを断った
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 0
+		;-------------------------------------------------
+		IF LOCAL:1
+			RETURN 1
+		ENDIF
+	ENDSELECT
+ENDIF
+RETURN 1
+
+;==================================================
+;脱衣口上
+;==================================================
+@M_KOJO_EVENT_K55_28(ARG,ARG:1)
+;口上主はTARGET
+;ARGに脱がし方选择
+;ARG:1（ARG=3の场合のみあり）地の文の反応
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------
+IF LOCAL
+	SELECTCASE ARG
+		;-------------------------------------------------
+		CASE 0
+		;全裸にする
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 1
+		;-------------------------------------------------
+		IF LOCAL:1
+			;时间停止时
+			IF FLAG:70
+			;通常
+			ELSE
+				SELECTCASE RAND:3
+			CASE 2
+				PRINTFORMW 白蓮の服に手をかけると彼女も%CALLNAME:MASTER%の服に手をかけ、お互いの服を脱がした。
+				PRINTFORMW 一糸まとわぬ姿に思わず見とれていると、白蓮は%CALLNAME:MASTER%に抱きついてきた。
+				PRINTFORMW %CALLNAME:MASTER%も白蓮を抱きしめ、しばらくの间お互いの体温を伝えあった。
+			CASE 1
+				PRINTFORMW 「ん……%UNICODE(0x2665)%」
+				PRINTFORMW 生まれたばかりの姿にされた白蓮は布団に横たわり、%CALLNAME:MASTER%を迎えるように两手を広げた
+				PRINTFORMW 「%CALLNAME:MASTER%…来て…%UNICODE(0x2665)%」
+			CASEELSE
+				PRINTFORMW キスに梦中になっている白蓮の清楚な连衣裙に手をかけ、ゆっくりと卷っていく。
+				PRINTFORMW 「あっ……%UNICODE(0x2665)%」
+				PRINTFORMW 扇情的な太もも、華奢なウエストを嘗めるように眺めて、仕上げとばかりに胸元までたくし上げた
+				PRINTFORMW たわわに実った乳房が零れ落ち、白蓮は颜を红潮させ恥ずかしそうに目を伏せる。
+			ENDSELECT
+			ENDIF
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		CASE 1
+		;下着姿にする
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 0
+		;-------------------------------------------------
+		IF LOCAL:1
+			;时间停止时
+			IF FLAG:70
+			;通常
+			ELSE
+			ENDIF
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		CASE 2
+		;半脱ぎ
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 0
+		;-------------------------------------------------
+		IF LOCAL:1
+			;时间停止时
+			IF FLAG:70
+			;通常
+			ELSE
+			ENDIF
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		CASE 3
+		;パンツちょうだい
+		;记入チェック（=0, 非表示、1, 表示）
+		LOCAL:1 = 0
+		;-------------------------------------------------
+		IF LOCAL:1
+			SELECTCASE ARG:1
+				;-------------------------------------------------
+				CASE 0
+				;交换です
+				;记入チェック（=0, 非表示、1, 表示）
+				LOCAL:1 = 0
+				;-------------------------------------------------
+				IF LOCAL:1
+					RETURN 1
+				ENDIF
+				;-------------------------------------------------
+				CASE 1
+				;OK（嬉々
+				;记入チェック（=0, 非表示、1, 表示）
+				LOCAL:1 = 0
+				;-------------------------------------------------
+				IF LOCAL:1
+					RETURN 1
+				ENDIF
+				;-------------------------------------------------
+				CASE 2
+				;OK（渋々
+				;记入チェック（=0, 非表示、1, 表示）
+				LOCAL:1 = 0
+				;-------------------------------------------------
+				IF LOCAL:1
+					RETURN 1
+				ENDIF
+				;-------------------------------------------------
+				CASE 3
+				;嫌です
+				;记入チェック（=0, 非表示、1, 表示）
+				LOCAL:1 = 0
+				;-------------------------------------------------
+				IF LOCAL:1
+					RETURN 1
+				ENDIF
+				RETURN 1
+			ENDSELECT
+		ENDIF
+	ENDSELECT
+ENDIF
+RETURN 1
+
+;==================================================
+;愤怒口上
+;==================================================
+@M_KOJO_EVENT_K55_29(ARG,ARG:1)
+;口上主はTARGET
+;ARGはTARGETの度胸で分岐
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;怒らせてしまった
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;泣かせてしまった　[臆病]持ち
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;相手が推倒を解除
+;==================================================
+@M_KOJO_EVENT_K55_30(ARG,ARG:1)
+;口上主はTARGET
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------
+
+IF LOCAL
+	;-------------------------------------------------
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 1
+	;疲れた
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 2
+	;満足して解放
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 3
+	;満足したところを押し倒された
+		PRINTFORML
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 4
+	;坏れるまでしてあげる
+		PRINTFORML
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+
+;==================================================
+;一日の終了时(AFTERTRAニーの前)、认识がなければ呼び出されない
+;==================================================
+@M_KOJO_EVENT_K55_31(ARG,ARG:1)
+;口上主はTARGET
+;ARGは会ってない日数
+;何日以上会ってなかったら愚痴を言うとかできます
+;CFLAG:自慰暴露で分岐入れてもよさそう
+;--------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;今日会っていない
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;今日会っている
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && ARG == 0
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+[SKIPSTART]
+;-------------------------------------------------
+;自慰暴露遭遇时の地の文をデフォルトのものから変更したい场合用。
+;その场合は上下のSKIPSTART~SKIPENDを外してください。
+;CFLAG等のキャラ変数を使う场合、キャラ番号の指定が必要になります。
+;-------------------------------------------------
+@M_KOJO_EVENT_K55_ONABARE_1(ARG)
+;-------------------------------------------------
+:口上色を付けるならコメントアウトを外しXをキャラ番号に
+;CALL M_KOJO_COLOR_K55
+
+IF ARG
+	PRINTFORML A弄ってる场合
+ELSE
+	PRINTFORML V弄ってる场合
+ENDIF
+;-------------------------------------------------
+[SKIPEND]
+
+
+[SKIPSTART]
+;-------------------------------------------------
+;自慰暴露でそのまま続けてもらう场合の地の文をデフォルトのものから変更したい场合用。
+;その场合は上下のSKIPSTART~SKIPENDを外してください。
+;CFLAG等のキャラ変数を使う场合、キャラ番号の指定が必要になります。
+;-------------------------------------------------
+@M_KOJO_EVENT_K55_ONABARE_2(ARG)
+;-------------------------------------------------
+:口上色を付けるならコメントアウトを外しXをキャラ番号に
+;CALL M_KOJO_COLOR_K55
+
+IF ARG
+	PRINTFORML A弄ってる场合
+ELSE
+	PRINTFORML V弄ってる场合
+ENDIF
+;-------------------------------------------------
+[SKIPEND]
+
+
+[SKIPSTART]
+;-------------------------------------------------
+;自慰暴露なし崩しックスの地の文をデフォルトのものから変更したい场合用。
+;その场合は上下のSKIPSTART~SKIPENDを外してください。
+;CFLAG等のキャラ変数を使う场合、キャラ番号の指定が必要になります。
+;-------------------------------------------------
+@M_KOJO_EVENT_K55_ONABARE_3(前戯１,本番はどっちか,回数,注入量)
+;-------------------------------------------------
+#DIM 前戯１
+;1=C 2=B 3=M
+#DIM 本番はどっちか
+;0でＶ、1でＡ
+#DIM 注入量
+#DIM 回数
+
+:口上色を付けるならコメントアウトを外しXをキャラ番号に
+;CALL M_KOJO_COLOR_K55
+
+SELECTCASE 前戯１
+	CASE 1
+		PRINTFORML Ｃ責め
+	CASE 2
+		PRINTFORML Ｂ責め
+	CASE 3
+		PRINTFORML Ｍ責め
+ENDSELECT
+
+IF 本番はどっちか
+	PRINTFORML Aで本番
+ELSE
+	PRINTFORML Vで本番
+ENDIF
+;-------------------------------------------------
+[SKIPEND]
+
+
+;-------------------------------------------------
+;处女・无自觉非处女に插入する直前の口上
+;RETURN 1するとコマンドをキャンセルします
+;RETURN 0なら通します
+;CFLAG:破瓜中止口上有がオンになってないと読み込まれないので注意
+;-------------------------------------------------
+@M_KOJO_EVENT_K55_LOST_VIRGIN_STOP
+;-------------------------------------------------
+PRINTFORML 
+RETURN 1
+
+;-------------------------------------------------
+;CFLAG:口上内抱き寄せ判定_初回がオンになっている场合のみ有效。
+;初めて推倒た时、ここでRETURN -1すると推倒を强制的にキャンセルします。
+;RETURN 0なら通常の判定を行い、RETURN 1すると无条件に成功させます。
+;特定のイベント（デート帰りキスなど）を見るまで诶嘿嘿できないようにしたいときなどにどうぞ。
+;-------------------------------------------------
+@M_KOJO_EVENT_K55_PERMISSION_1
+;-------------------------------------------------
+PRINTFORML 
+;RETURN -1
+RETURN 0
+;RETURN 1
+;-------------------------------------------------
+
+
+;-------------------------------------------------
+;CFLAG:口上内抱き寄せ判定_通常がオンになっている场合のみ有效。
+;合意付きで推倒た时、ここでRETURN -1すると推倒を强制的にキャンセルします。
+;RETURN 0なら通常通り成功させます。
+;合意があっても何らかの理由で诶嘿嘿できないようにしたいときなどにどうぞ。
+;-------------------------------------------------
+@M_KOJO_EVENT_K55_PERMISSION_2
+;-------------------------------------------------
+PRINTFORML 
+RETURN 0
+;RETURN -1
+;-------------------------------------------------
+
+;-------------------------------------------
+;刻印取得
+;-------------------------------------------
+@M_KOJO_MESSAGE_MARKCNG_K55
+;このままだと地の文が表示されません
+;地の文を表示したい方は、下记のコメントアウトを削除して下さい
+;CALL MARK_MESSAGE
+;苦痛刻印
+IF TFLAG:22 == 1
+	PRINTFORMW 
+ELSEIF TFLAG:22 == 2
+	PRINTFORMW 
+ELSEIF TFLAG:22 == 3
+	PRINTFORMW 
+ENDIF
+
+;时奸刻印
+IF TFLAG:时奸刻印取得 == 1
+	PRINTFORMW 
+ELSEIF TFLAG:时奸刻印取得 == 2
+	PRINTFORMW 
+ELSEIF TFLAG:时奸刻印取得 == 3
+	PRINTFORMW 
+ENDIF
+
+;快乐刻印
+IF TFLAG:23 == 1
+	PRINTFORML 「はぁ、はぁ、んっ…气持ちいい、です…」
+	PRINTFORMW 白蓮はあなたに触れられる快乐に身体を震わせた…
+ELSEIF TFLAG:23 == 2
+	PRINTFORMW 「ああ、そこ、とてもいいです…っ」
+ELSEIF TFLAG:23 == 3
+	PRINTFORML （あぁ、だめ…こんなのを知ってしまったら、もう…）
+	PRINTFORMW 白蓮はあなたとの行为がお气に召したようだ。
+ENDIF
+
+;屈服刻印
+;快乐による刻印
+;LV1
+IF TFLAG:24 == 11
+	PRINTFORMW 「こ、こんな破廉恥なこと…」
+;LV2
+ELSEIF TFLAG:24 == 12
+	PRINTFORMW 「だめ、駄目ですよっ…」
+;LV3
+ELSEIF TFLAG:24 == 13
+	PRINTFORMW 「ああ、もういっそ、開き直ってしまえば…」
+;屈服、恭顺による刻印
+;LV1
+ELSEIF TFLAG:24 == 31
+	PRINTFORMW 
+;LV2
+ELSEIF TFLAG:24 == 32
+	PRINTFORMW 
+;LV3
+ELSEIF TFLAG:24 == 33
+	PRINTFORMW 「はぁ、いっそのこと開きなおってしまった方が…」
+ENDIF
+
+;反抗刻印
+IF TFLAG:21 == 1
+	PRINTFORMW 
+ELSEIF TFLAG:21 == 2
+	PRINTFORMW 
+ELSEIF TFLAG:21 == 3
+	PRINTFORMW 
+ENDIF

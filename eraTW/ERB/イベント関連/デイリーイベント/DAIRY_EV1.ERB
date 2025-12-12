@@ -1,0 +1,19 @@
+﻿@DAILY_CONDITION_EV1
+;永远亭住まいなら1/10、それ以外で1/30で发生
+SIF MAIN_MAP == 4 && RAND:10 > 0
+	RETURN -1
+SIF MAIN_MAP != 4 && RAND:30 > 0
+	RETURN -1
+CALL DAILY_EV1
+RETURN 1
+
+
+@DAILY_EV1
+;ここにイベント内容を书こう　最后はRETURN 1してね
+IF MAIN_MAP != 4
+	PRINTFORML 永远亭把药剂的试用品送过来了
+ELSE
+	PRINTFORML 得到了永琳的试用药
+ENDIF
+CALL GET_ITEM("营养饮料", 1, 2)
+RETURN 1

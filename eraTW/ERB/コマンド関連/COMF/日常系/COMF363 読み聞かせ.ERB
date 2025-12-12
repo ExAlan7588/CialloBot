@@ -1,0 +1,155 @@
+﻿;-------------------------------------------------
+;朗读
+;日常系指令、レベル1
+;-------------------------------------------------
+@COM363
+SELECTCASE TFLAG:192
+	;通常
+	CASE 0
+		LOCAL = RAND:100
+		LOCAL:1 = 90 + GET_SUCCESS_RATE() / 5
+		SIF LOCAL:1 > 99
+			LOCAL:1 = 99
+		IF LOCAL <= 9
+			;10％で大成功
+			EXP:MASTER:会话经验 ++
+			TFLAG:193 = 1
+			TFLAG:98 = 2
+		ELSEIF LOCAL >= LOCAL:1
+			;10～1％で失败
+			TFLAG:193 = -1
+			TFLAG:98 = -2
+		ELSE
+			;残りは成功
+			TFLAG:193 = 0
+			TFLAG:98 = 0
+		ENDIF
+	;强制成功or大成功
+	CASE 1
+		IF RAND:100 <= 9
+			EXP:MASTER:会话经验 ++
+			TFLAG:193 = 1
+			TFLAG:98 = 2
+		ELSE
+			TFLAG:193 = 0
+			TFLAG:98 = 0
+		ENDIF
+	;强制失败
+	CASE -1
+		TFLAG:193 = -1
+		TFLAG:98 = -2
+	;指令结束
+	CASE -2
+		TFLAG:193 = -1
+		RETURN 0
+ENDSELECT
+
+
+DOWNBASE:MASTER:气力 += 150
+DOWNBASE:MASTER:体力 += 50
+
+;信赖
+TFLAG:98 += 3
+
+;その场に居るTARGET全员で回す
+LOCAL:1 = TARGET
+FOR LOCAL, 1, GET_TARGETNUM() + 1
+	SIF !TALENT:(TARGET:LOCAL):幼稚
+		CONTINUE
+	SIF CFLAG:(TARGET:LOCAL):睡眠
+		CONTINUE
+	TARGET = TARGET:LOCAL
+	CALL COM363_1
+NEXT
+TARGET = LOCAL:1
+
+TIME += 30
+RETURN 1
+
+@COM363_1
+
+DOWNBASE:气力 += 50
+
+;固定で获得するソース
+SOURCE:欢乐 = 1000
+
+;ABL:顺从をみる
+IF ABL:顺从 <= 1
+	SOURCE:欢乐 += (ABL:顺从 * 60)
+ELSEIF ABL:顺从 <= 3
+	SOURCE:欢乐 += 200 + (ABL:顺从 * 65)
+ELSEIF ABL:顺从 <= 5
+	SOURCE:欢乐 += 500 + (ABL:顺从 * 65)
+ELSEIF ABL:顺从 <= 8
+	SOURCE:欢乐 += 750 + (ABL:顺从 * 85)
+ELSEIF ABL:顺从 <= 11
+	SOURCE:欢乐 += 1000 + (ABL:顺从 * 85)
+ELSE
+	SOURCE:欢乐 += 2000 + (ABL:顺从 * 40)
+ENDIF
+
+;好感度をみる
+IF CFLAG:2 <= 500
+	SOURCE:欢乐 += CFLAG:2
+ELSEIF CFLAG:2 <= 5000
+	SOURCE:欢乐 += 500 + (CFLAG:2 - 500) / 3
+ELSE
+	SOURCE:欢乐 += 2000 + (CFLAG:2 - 5000) / 5
+ENDIF
+SIF SOURCE:欢乐 < 0
+	SOURCE:欢乐 = 0
+
+
+SOURCE:被动 = 300 + 150 * ABL:顺从
+SOURCE:征服 = 300 + 100 * ABL:施虐属性
+
+IF TFLAG:193 == -1
+	TIMES SOURCE:欢乐 , 0.10
+	TIMES SOURCE:征服 , 0.50
+	TIMES SOURCE:被动 , 0.50
+ELSEIF TFLAG:193 == 0
+	TIMES SOURCE:欢乐 , 1.00
+	TIMES SOURCE:征服 , 1.00
+	TIMES SOURCE:被动 , 1.00
+ELSE
+	TIMES SOURCE:欢乐 , 2.00
+	TIMES SOURCE:征服 , 2.00
+	TIMES SOURCE:被动 , 2.00
+ENDIF
+CALL SET_DERAY(6,TARGET)
+RETURN 1
+
+;-------------------------------------------------
+;实行判定
+;-------------------------------------------------
+@COM_ABLE363
+;停止中は不可
+SIF FLAG:70
+	RETURN 0
+SIF !TFLAG:100
+	RETURN 0
+SIF !TALENT:幼稚
+	RETURN 0
+;批量管理
+SIF GLOBAL_COMABLE(301)
+	RETURN RESULT
+;睡眠中
+SIF CFLAG:睡眠
+	RETURN 0
+;陪睡中
+SIF CFLAG:陪睡中
+	RETURN 0
+;浴场
+;SIF CFLAG:MASTER:当前位置 == 13 || CFLAG:MASTER:当前位置 == 24 || CFLAG:MASTER:当前位置 == 30 || CFLAG:MASTER:当前位置 == 39
+SIF BATHCHECK(CFLAG:MASTER:当前位置) && GET_MAPID(CFLAG:MASTER:当前位置) == MAIN_MAP
+	RETURN 0
+;约会中
+SIF CHK_DATENOW(CFLAG:约会中) && CFLAG:当前位置 != OMANEKIBEYA()
+	RETURN 0
+;气力0
+SIF BASE:MASTER:气力 <= 0
+	RETURN 0
+SIF !ITEM:104
+	RETURN 0
+RETURN 1
+

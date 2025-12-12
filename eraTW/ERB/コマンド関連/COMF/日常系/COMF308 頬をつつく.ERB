@@ -1,0 +1,134 @@
+﻿;-------------------------------------------------
+;捅脸颊
+;日常系指令　レベル1
+;-------------------------------------------------
+@COM308
+SELECTCASE TFLAG:192
+	;通常
+	CASE 0
+		LOCAL = RAND:110
+		LOCAL:1 = 90 + GET_SUCCESS_RATE() / 5
+		SIF LOCAL:1 > 109
+			LOCAL:1 = 109
+		IF LOCAL <= 9
+			;大成功
+			TFLAG:193 = 1
+		ELSEIF LOCAL >= LOCAL:1
+			;失败
+			TFLAG:193 = -1
+		ELSE
+			;残りは成功
+			TFLAG:193 = 0
+		ENDIF
+	;强制成功or大成功
+	CASE 1
+		IF RAND:100 <= 9
+			;大成功
+			TFLAG:193 = 1
+		ELSE
+			;残りは成功
+			TFLAG:193 = 0
+		ENDIF
+	;强制失败
+	CASE -1
+		TFLAG:193 = -1
+	;指令结束
+	CASE -2
+		TFLAG:193 = -1
+		RETURN 0
+ENDSELECT
+;先制发生时は失败しない
+SIF TFLAG:102 == 3 && TFLAG:192 != -1
+	TFLAG:193 = MAX(TFLAG:193,0)
+
+IF CFLAG:TARGET:陪睡中
+	DOWNBASE:MASTER:气力 += 50
+ELSE
+	DOWNBASE:气力 += 50
+	DOWNBASE:MASTER:气力 += 50
+ENDIF
+
+;固定で获得するソース
+SOURCE:欢乐 = 80
+SOURCE:情爱 = 50
+SOURCE:反感 = 200
+
+;ABL:亲密をみる
+IF ABL:亲密 <= 3
+	SOURCE:欢乐 += 100 + (ABL:亲密 * 20)
+	SOURCE:情爱 += 150 + (ABL:亲密 * 30)
+ELSEIF ABL:亲密 <= 5
+	SOURCE:欢乐 += 300 + (ABL:亲密 * 40)
+	SOURCE:情爱 += 350 + (ABL:亲密 * 30)
+ELSEIF ABL:亲密 <= 8
+	SOURCE:欢乐 += 600 + (ABL:亲密 * 50)
+	SOURCE:情爱 += 500 + (ABL:亲密 * 40)
+ELSEIF ABL:亲密 <= 11
+	SOURCE:欢乐 += 800 + (ABL:亲密 * 70)
+	SOURCE:情爱 += 700 + (ABL:亲密 * 60)
+ELSE
+	SOURCE:欢乐 += 1200 + (ABL:亲密 * 40)
+	SOURCE:情爱 += 1500 + (ABL:亲密 * 20)
+ENDIF
+
+;好感度をみる
+IF CFLAG:2 <= 500
+	SOURCE:欢乐 += CFLAG:2
+ELSEIF CFLAG:2 <= 5000
+	SOURCE:欢乐 += 200 + (CFLAG:2 - 500) / 3
+ELSE
+	SOURCE:欢乐 += 1000 + (CFLAG:2 - 5000) / 5
+ENDIF
+SIF SOURCE:欢乐 < 0
+	SOURCE:欢乐 = 0
+
+SOURCE:屈从 = 500
+SOURCE:被动 = 100 + 200 * ABL:顺从
+
+IF TFLAG:193 == -1
+	TIMES SOURCE:欢乐 , 0.10
+	TIMES SOURCE:情爱 , 0.50
+	TIMES SOURCE:被动 , 0.50
+	TIMES SOURCE:屈从 , 1.50
+	TIMES SOURCE:反感 , 1.50
+ELSEIF TFLAG:193 == 0
+	TIMES SOURCE:欢乐 , 1.00
+	TIMES SOURCE:情爱 , 1.00
+	TIMES SOURCE:被动 , 1.00
+	TIMES SOURCE:屈从 , 1.00
+ELSE
+	TIMES SOURCE:欢乐 , 2.00
+	TIMES SOURCE:情爱 , 2.00
+	TIMES SOURCE:被动 , 2.00
+	TIMES SOURCE:屈从 , 0.50
+	TIMES SOURCE:反感 , 0.75
+ENDIF
+TIME += 10
+RETURN 1
+
+;-------------------------------------------------
+;实行判定
+;-------------------------------------------------
+@COM_ABLE308
+;捅脸颊实行判定
+SIF !TFLAG:100
+	RETURN 0
+;睡眠奸中
+SIF CFLAG:恶作剧 > 1
+	RETURN 0
+;批量管理
+SIF GLOBAL_COMABLE(308)
+	RETURN RESULT
+;睡眠中でない
+SIF !CFLAG:睡眠 && !CFLAG:陪睡中
+	RETURN 0
+;恶作剧中でない
+SIF !CFLAG:恶作剧 && !CFLAG:陪睡中
+	RETURN 0
+;仕事中
+SIF CFLAG:行动 == 5
+	RETURN 0
+;气力0
+SIF BASE:MASTER:气力 <= 0
+	RETURN 0
+RETURN 1

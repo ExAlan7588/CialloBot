@@ -1,0 +1,602 @@
+﻿;-------------------------------------------------
+;奴隷の绝顶时の口上
+;NOWEX:0～4 CVABM绝顶
+;NOWEX:6 二重绝顶
+;NOWEX:7 三重绝顶
+;NOWEX:8 四重绝顶
+;NOWEX:9 五重绝顶
+;NOWEX:10 喷乳
+;NOWEX:11 射精
+;NOWEX:12 放尿
+;随意组み合わせて使ってください
+;-------------------------------------------------
+@M_KOJO_MESSAGE_PALAMCNG_B_K50
+;-------------------------------------------------
+;喷乳
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL && NOWEX:喷乳
+	PRINTFORMW 
+ENDIF
+;-------------------------------------------------
+;射精
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL && NOWEX:射精
+	PRINTFORMW 
+ENDIF
+;-------------------------------------------------
+;放尿
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL && NOWEX:放尿
+	PRINTFORMW 
+ENDIF
+;-------------------------------------------------
+;绝顶
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;五重绝顶
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF NOWEX:五重绝顶
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	;-------------------------------------------------
+	;四重绝顶
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF NOWEX:四重绝顶
+		;部位を指定せず简易的に书く场合、[SKIPSTART]&[SKIPEND]のコメントアウトを外して、[SKIPSTART]とこのコメントの间に书いてください
+		;[SKIPSTART]
+		SELECTCASE NOWEX:四重绝顶
+			;Ｃ＆Ｖ＆Ａ＆Ｂ绝顶
+			CASE 1
+				PRINTFORMW 
+				RETURN 1
+			;Ｃ＆Ｖ＆Ａ＆Ｍ绝顶
+			CASE 2
+				PRINTFORMW 
+				RETURN 1
+			;Ｃ＆Ｖ＆Ｂ＆Ｍ绝顶
+			CASE 3
+				PRINTFORMW 
+				RETURN 1
+			;Ｃ＆Ａ＆Ｂ＆Ｍ绝顶
+			CASE 4
+				PRINTFORMW 
+				RETURN 1
+			;Ｖ＆Ａ＆Ｂ＆Ｍ绝顶
+			CASE 5
+				PRINTFORMW 
+				RETURN 1
+		ENDSELECT
+		;[SKIPEND]
+	ENDIF
+	;-------------------------------------------------
+	;三重绝顶
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF NOWEX:三重绝顶
+		;部位を指定せず简易的に书く场合、[SKIPSTART]&[SKIPEND]のコメントアウトを外して、[SKIPSTART]とこのコメントの间に书いてください
+		;[SKIPSTART]
+		SELECTCASE NOWEX:三重绝顶
+			;Ｃ＆Ｖ＆Ａ绝顶
+			CASE 1
+				PRINTFORMW 
+				RETURN 1
+			;Ｂ＆Ｖ＆Ａ绝顶
+			CASE 2
+				PRINTFORMW 
+				RETURN 1
+			;Ｃ＆Ｂ＆Ａ绝顶
+			CASE 3
+				PRINTFORMW 
+				RETURN 1
+			;Ｃ＆Ｖ＆Ｂ绝顶
+			CASE 4
+				PRINTFORMW 
+				RETURN 1
+			;Ｃ＆Ｖ＆Ｍ绝顶
+			CASE 5
+				PRINTFORMW 
+				RETURN 1
+			;Ｂ＆Ｖ＆Ｍ绝顶
+			CASE 6
+				PRINTFORMW 
+				RETURN 1
+			;Ａ＆Ｖ＆Ｍ绝顶
+			CASE 7
+				PRINTFORMW 
+				RETURN 1
+			;Ｃ＆Ｂ＆Ｍ绝顶
+			CASE 8
+				PRINTFORMW 
+				RETURN 1
+			;Ａ＆Ｂ＆Ｍ绝顶
+			CASE 9
+				PRINTFORMW 
+				RETURN 1
+			;Ｃ＆Ａ＆Ｍ绝顶
+			CASE 10
+				PRINTFORMW 
+				RETURN 1
+		ENDSELECT
+		;[SKIPEND]
+	ENDIF
+	;-------------------------------------------------
+	;二重绝顶
+	;记入チェック（=0, 非表示、1, 表示）
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF NOWEX:二重绝顶
+		;部位を指定せず简易的に书く场合、[SKIPSTART]&[SKIPEND]のコメントアウトを外して、[SKIPSTART]とこのコメントの间に书いてください
+		;[SKIPSTART]
+		SELECTCASE NOWEX:二重绝顶
+			;Ｃ＆Ｖ绝顶
+			CASE 1
+				PRINTFORMW 
+				RETURN 1
+			;Ｃ＆Ａ绝顶
+			CASE 2
+				PRINTFORMW 
+				RETURN 1
+			;Ｖ＆Ａ绝顶
+			CASE 3
+				PRINTFORMW 
+				RETURN 1
+			;Ｃ＆Ｂ绝顶
+			CASE 4
+				PRINTFORMW 
+				RETURN 1
+			;Ｖ＆Ｂ绝顶
+			CASE 5
+				PRINTFORMW 
+				RETURN 1
+			;Ａ＆Ｂ绝顶
+			CASE 6
+				PRINTFORMW 
+				RETURN 1
+			;Ａ＆Ｍ绝顶
+			CASE 7
+				PRINTFORMW 
+				RETURN 1
+			;Ｖ＆Ｍ绝顶
+			CASE 8
+				PRINTFORMW 
+				RETURN 1
+			;Ｃ＆Ｍ绝顶
+			CASE 9
+				PRINTFORMW 
+				RETURN 1
+			;Ｂ＆Ｍ绝顶
+			CASE 10
+				PRINTFORMW 
+				RETURN 1
+		ENDSELECT
+		;[SKIPEND]
+	ENDIF
+	IF NOWEX:Ｃ绝顶
+		;强绝顶Ｃ
+		IF NOWEX:Ｃ绝顶 == 2
+			PRINTFORMW 
+		;绝顶Ｃ
+		ELSE
+			PRINTFORMW 
+		ENDIF
+	ENDIF
+	IF NOWEX:Ｖ绝顶
+		;强绝顶Ｖ
+		IF NOWEX:Ｖ绝顶 == 2
+			PRINTFORMW 
+		;绝顶Ｖ
+		ELSE
+			PRINTFORMW 
+		ENDIF
+	ENDIF
+	IF NOWEX:Ａ绝顶
+		;强绝顶Ａ
+		IF NOWEX:Ａ绝顶 == 2
+			PRINTFORMW 
+		;绝顶Ａ
+		ELSE
+			PRINTFORMW 
+		ENDIF
+	ENDIF
+	IF NOWEX:Ｂ绝顶
+		;强绝顶Ｂ
+		IF NOWEX:Ｂ绝顶 == 2
+			PRINTFORMW 
+		;绝顶Ｂ
+		ELSE
+			PRINTFORMW 
+		ENDIF
+	ENDIF
+	IF NOWEX:Ｍ绝顶
+		;强绝顶Ｍ
+		IF NOWEX:Ｍ绝顶 == 2
+			PRINTFORMW 
+		;绝顶Ｍ
+		ELSE
+			PRINTFORMW 
+		ENDIF
+	ENDIF
+ENDIF
+
+
+;-------------------------------------------------
+;射精に关する口上の表示
+;一时的にTARGETを口上主に设定している
+;-------------------------------------------------
+
+;==================================================
+;Optional: Determines if the standard description should be skipped.
+;Return 0 if description and KOJO should be shown, 1 if description should be hidden and KOJO shown, 2 if description should be shown and KOJO hidden, and 3 if both description and KOJO should be hidden.
+;==================================================
+@M_KOJO_MESSAGE_PALAMCNG_MESSAGECHECK_A_K50_0
+RETURN 0
+
+@M_KOJO_MESSAGE_PALAMCNG_A_K50_0(ARG)
+;-------------------------------------------------
+;避孕套
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	SIF !SHIRAHU(TARGET)
+		RETURN 0
+	PRINTFORMDL %CALLNAME:MASTER%将已使用的避孕套交给了%CALLNAME:TARGET%
+	IF GETBIT(CFLAG:1500,1)
+		PRINTFORMW 「做得很好呢」
+	ELSE
+		PRINTFORMDW %CALLNAME:TARGET%不可思议地望着满是白浊的这个
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;Optional: Determines if the standard description should be skipped.
+;Return 0 if description and KOJO should be shown, 1 if description should be hidden and KOJO shown, 2 if description should be shown and KOJO hidden, and 3 if both description and KOJO should be hidden.
+;==================================================
+@M_KOJO_MESSAGE_PALAMCNG_MESSAGECHECK_A_K50_23
+RETURN 0
+
+@M_KOJO_MESSAGE_PALAMCNG_A_K50_23(ARG)
+;-------------------------------------------------
+;深喉插入
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORMW 
+	RETURN 1
+ENDIF
+RETURN 1
+
+;==================================================
+;Optional: Determines if the standard description should be skipped.
+;Return 0 if description and KOJO should be shown, 1 if description should be hidden and KOJO shown, 2 if description should be shown and KOJO hidden, and 3 if both description and KOJO should be hidden.
+;==================================================
+@M_KOJO_MESSAGE_PALAMCNG_MESSAGECHECK_A_K50_22
+RETURN 0
+
+@M_KOJO_MESSAGE_PALAMCNG_A_K50_22(ARG)
+;-------------------------------------------------
+;六九式
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;同时射精
+	IF NOWEX:射精 && NOWEX:MASTER:射精
+		PRINTFORMW
+		RETURN 1
+	;TARGETだけ射精
+	ELSEIF NOWEX:射精
+		;PLAYERについてる
+		IF GETBIT(TALENT:PLAYER:性别,1)
+			PRINTFORMW
+			RETURN 1
+		;付いてない
+		ELSE
+			PRINTFORMW
+			RETURN 1
+		ENDIF
+	;PLAYERだけ射精
+	ELSE
+		;TARGETについてる
+		IF GETBIT(TALENT:性别,1)
+			PRINTFORMW
+			RETURN 1
+		;付いてない
+		ELSE
+			PRINTFORMW
+			RETURN 1
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;Optional: Determines if the standard description should be skipped.
+;Return 0 if description and KOJO should be shown, 1 if description should be hidden and KOJO shown, 2 if description should be shown and KOJO hidden, and 3 if both description and KOJO should be hidden.
+;==================================================
+@M_KOJO_MESSAGE_PALAMCNG_MESSAGECHECK_A_K50_21
+RETURN 0
+
+@M_KOJO_MESSAGE_PALAMCNG_A_K50_21(ARG)
+;-------------------------------------------------
+;乳夹口交
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORMW 
+	RETURN 1
+ENDIF
+RETURN 1
+
+;==================================================
+;Optional: Determines if the standard description should be skipped.
+;Return 0 if description and KOJO should be shown, 1 if description should be hidden and KOJO shown, 2 if description should be shown and KOJO hidden, and 3 if both description and KOJO should be hidden.
+;==================================================
+@M_KOJO_MESSAGE_PALAMCNG_MESSAGECHECK_A_K50_20
+RETURN 0
+
+@M_KOJO_MESSAGE_PALAMCNG_A_K50_20(ARG)
+;-------------------------------------------------
+;手淫口交
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORMW 
+	RETURN 1
+ENDIF
+RETURN 1
+
+;==================================================
+;Optional: Determines if the standard description should be skipped.
+;Return 0 if description and KOJO should be shown, 1 if description should be hidden and KOJO shown, 2 if description should be shown and KOJO hidden, and 3 if both description and KOJO should be hidden.
+;==================================================
+@M_KOJO_MESSAGE_PALAMCNG_MESSAGECHECK_A_K50_9
+RETURN 0
+
+@M_KOJO_MESSAGE_PALAMCNG_A_K50_9(ARG)
+;-------------------------------------------------
+;肛门侍奉
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORMW 
+	RETURN 1
+ENDIF
+RETURN 1
+
+;==================================================
+;Optional: Determines if the standard description should be skipped.
+;Return 0 if description and KOJO should be shown, 1 if description should be hidden and KOJO shown, 2 if description should be shown and KOJO hidden, and 3 if both description and KOJO should be hidden.
+;==================================================
+@M_KOJO_MESSAGE_PALAMCNG_MESSAGECHECK_A_K50_8
+RETURN 0
+
+@M_KOJO_MESSAGE_PALAMCNG_A_K50_8(ARG)
+;-------------------------------------------------
+;泡泡浴
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;同时射精
+	IF NOWEX:射精 && NOWEX:MASTER:射精
+		PRINTFORMW
+		RETURN 1
+	;TARGETだけ射精
+	ELSEIF NOWEX:射精
+		;PLAYERについてる
+		IF GETBIT(TALENT:PLAYER:性别,1)
+			PRINTFORMW
+			RETURN 1
+		;付いてない
+		ELSE
+			PRINTFORMW
+			RETURN 1
+		ENDIF
+	;PLAYERだけ射精
+	ELSE
+		;TARGETについてる
+		IF GETBIT(TALENT:性别,1)
+			PRINTFORMW
+			RETURN 1
+		;付いてない
+		ELSE
+			PRINTFORMW
+			RETURN 1
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;Optional: Determines if the standard description should be skipped.
+;Return 0 if description and KOJO should be shown, 1 if description should be hidden and KOJO shown, 2 if description should be shown and KOJO hidden, and 3 if both description and KOJO should be hidden.
+;==================================================
+@M_KOJO_MESSAGE_PALAMCNG_MESSAGECHECK_A_K50_7
+RETURN 0
+
+@M_KOJO_MESSAGE_PALAMCNG_A_K50_7(ARG)
+;-------------------------------------------------
+;足交
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORMW 
+	RETURN 1
+ENDIF
+RETURN 1
+
+;==================================================
+;Optional: Determines if the standard description should be skipped.
+;Return 0 if description and KOJO should be shown, 1 if description should be hidden and KOJO shown, 2 if description should be shown and KOJO hidden, and 3 if both description and KOJO should be hidden.
+;==================================================
+@M_KOJO_MESSAGE_PALAMCNG_MESSAGECHECK_A_K50_6
+RETURN 0
+
+@M_KOJO_MESSAGE_PALAMCNG_A_K50_6(ARG)
+;-------------------------------------------------
+;素股
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	RETURN 1
+ENDIF
+RETURN 1
+
+;==================================================
+;Optional: Determines if the standard description should be skipped.
+;Return 0 if description and KOJO should be shown, 1 if description should be hidden and KOJO shown, 2 if description should be shown and KOJO hidden, and 3 if both description and KOJO should be hidden.
+;==================================================
+@M_KOJO_MESSAGE_PALAMCNG_MESSAGECHECK_A_K50_5
+RETURN 0
+
+@M_KOJO_MESSAGE_PALAMCNG_A_K50_5(ARG)
+;-------------------------------------------------
+;乳交
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORMW 
+	RETURN 1
+ENDIF
+RETURN 1
+
+;==================================================
+;Optional: Determines if the standard description should be skipped.
+;Return 0 if description and KOJO should be shown, 1 if description should be hidden and KOJO shown, 2 if description should be shown and KOJO hidden, and 3 if both description and KOJO should be hidden.
+;==================================================
+@M_KOJO_MESSAGE_PALAMCNG_MESSAGECHECK_A_K50_4
+RETURN 0
+
+@M_KOJO_MESSAGE_PALAMCNG_A_K50_4(ARG)
+;-------------------------------------------------
+;口交
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORMW 
+	RETURN 1
+ENDIF
+RETURN 1
+
+;==================================================
+;Optional: Determines if the standard description should be skipped.
+;Return 0 if description and KOJO should be shown, 1 if description should be hidden and KOJO shown, 2 if description should be shown and KOJO hidden, and 3 if both description and KOJO should be hidden.
+;==================================================
+@M_KOJO_MESSAGE_PALAMCNG_MESSAGECHECK_A_K50_3
+RETURN 0
+
+@M_KOJO_MESSAGE_PALAMCNG_A_K50_3(ARG)
+;-------------------------------------------------
+;手淫
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	SIF !SHIRAHU(TARGET)
+		RETURN 0
+	IF !GETBIT(CFLAG:1500,1)
+		PRINTFORML 「小鸡鸡的前头开始有东西了」
+		PRINTFORMW 「要射精了？呜嗯」
+		PRINTFORMW 「不在%CALLNAME:TARGET%的肚子里做吗？不射在%CALLNAME:TARGET%的肚子里吗？」
+		SETBIT CFLAG:1500,1
+		SETBIT CFLAG:1500,3
+	ENDIF
+	RETURN 1
+ENDIF
+RETURN 1
+
+;==================================================
+;Optional: Determines if the standard description should be skipped.
+;Return 0 if description and KOJO should be shown, 1 if description should be hidden and KOJO shown, 2 if description should be shown and KOJO hidden, and 3 if both description and KOJO should be hidden.
+;==================================================
+@M_KOJO_MESSAGE_PALAMCNG_MESSAGECHECK_A_K50_2
+RETURN 0
+
+@M_KOJO_MESSAGE_PALAMCNG_A_K50_2(ARG)
+;-------------------------------------------------
+;肛门
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORMW 
+	RETURN 1
+ENDIF
+RETURN 1
+
+;==================================================
+;Optional: Determines if the standard description should be skipped.
+;Return 0 if description and KOJO should be shown, 1 if description should be hidden and KOJO shown, 2 if description should be shown and KOJO hidden, and 3 if both description and KOJO should be hidden.
+;==================================================
+@M_KOJO_MESSAGE_PALAMCNG_MESSAGECHECK_A_K50_1
+RETURN 0
+
+@M_KOJO_MESSAGE_PALAMCNG_A_K50_1(ARG)
+;-------------------------------------------------
+;膣内
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	SIF !SHIRAHU(TARGET)
+		RETURN 0
+	IF 充填率(TARGET,1) >= 100
+		;筹码は株だからおNISAまは优遇されるの
+		PRINTFORML 「哥哥、%CALLNAME:TARGET%已经肚子满满了哟」
+		PRINTFORMW 「变得不能吃饭了哟」
+	ELSE
+		PRINTFORMW 「嗯……\@ TALENT:恋慕 ? %UNICODE(0x2661)% #  \@」
+		PRINTFORML 「哥哥的小鸡鸡在肚子里头，咚咚咚做着」
+		IF GETBIT(CFLAG:1500,1)
+			PRINTFORMW 「在%CALLNAME:TARGET%中射精着呢」
+		ENDIF
+		IF ABL:Ｖ感觉 > 2
+			PRINTFORMW 「诶嘿嘿%UNICODE(0x2661)%在咚咚咚做的时候，每次哥哥的小鸡鸡闹腾，%CALLNAME:TARGET%也很舒服哟」
+		ELSE
+			PRINTFORMW 「哥哥好像很舒服」
+		ENDIF
+		IF GETBIT (CFLAG:1500,3)
+			PRINTFORMW 「哥哥高兴吗？在%CALLNAME:TARGET%肚子里\@ GETBIT (CFLAG:1500,1) ? 射精 # 咚咚地做着 \@开心吗？」
+			SIF 充填率(TARGET,1) < 50
+				PRINTFORMW 「继续做也可以哦」
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+
+@M_KOJO_MESSAGE_PALAMCNG_F_K50(ARG)
+;-------------------------------------------------
+;挑逗
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORMW 
+	RETURN 1
+ENDIF
+RETURN 1

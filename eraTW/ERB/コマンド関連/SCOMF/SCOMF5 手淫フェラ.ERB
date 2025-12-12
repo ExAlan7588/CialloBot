@@ -1,0 +1,238 @@
+﻿;-------------------------------------------------
+;手淫口交
+;侍奉系派生指令
+;-------------------------------------------------
+@SCOM5
+;口交に准拠
+CALL COM81
+
+;变更、追加部分
+EXP:手淫经验 += 1
+EXP:口淫经验 += 1
+
+;强度
+TCVAR:PLAYER:4 = 1400
+RETURN 1
+
+@CAN_SCOM5(ARG)
+SKIPDISP ARG
+PRINTL 手淫口交
+;-------------------------------------------------
+;实行判定处理
+;-------------------------------------------------
+A = 0
+S = 0
+
+;全部の命令に共通の要素を考虑
+;(顺从が高いと命令に从いやすいなど)
+CALL COM_ORDER
+
+;ABL:欲望
+IF ABL:欲望
+	SIF S
+		PRINT  + 
+	A += ABL:欲望 * 1
+	PRINT 欲望
+	PRINTV 'LV,ABL:欲望,'(,ABL:欲望 * 1,')
+	S = 1
+ENDIF
+;ABL:侍奉精神
+IF ABL:侍奉精神
+	SIF S
+		PRINT  + 
+	A += ABL:侍奉精神 * 4
+	PRINT 侍奉精神
+	PRINTV 'LV,ABL:侍奉精神,'(,ABL:侍奉精神 * 4,')
+	S = 1
+ENDIF
+;ABL:精液中毒
+IF ABL:精液中毒
+	SIF S
+		PRINT  + 
+	A += ABL:精液中毒 * 3
+	PRINT 精液中毒
+	PRINTV 'LV,ABL:精液中毒,'(,ABL:精液中毒 * 3,')
+	S = 1
+ENDIF
+
+IF MARK:快乐刻印
+	SIF S
+		PRINT  + 
+	A += MARK:快乐刻印 * 1
+	PRINT 快乐刻印
+	PRINTV 'LV,MARK:快乐刻印,'(,MARK:快乐刻印 * 1,')
+	S = 1
+ENDIF
+;PALAM:情欲
+IF GETPALAMLV(PALAM:情欲,5)
+	SIF S
+		PRINT  + 
+	A += GETPALAMLV(PALAM:情欲,5) * 1
+	PRINT 情欲
+	PRINTV 'LV,GETPALAMLV(PALAM:情欲,5),'(,GETPALAMLV(PALAM:情欲,5) * 1,')
+	S = 1
+ENDIF
+;害羞
+IF TALENT:羞耻心 > 0
+	PRINT  - 
+	A -= 1
+	PRINT 害羞
+	PRINTV '(,1,')
+	S = 1
+ENDIF
+;污臭钝感
+IF TALENT:污臭耐性 > 0
+	SIF S
+		PRINT  + 
+	A += 1
+	PRINT 污臭钝感
+	PRINTV '(,1,')
+	S = 1
+ENDIF
+;污臭敏感
+IF TALENT:污臭耐性 < 0
+	PRINT  - 
+	A -= 3
+	PRINT 污臭敏感
+	PRINTV '(,3,')
+	S = 1
+ENDIF
+;献身的
+IF TALENT:献身的
+	SIF S
+		PRINT  + 
+	A += 6
+	PRINT 献身的
+	PRINTV '(,6,')
+	S = 1
+ENDIF
+;否定快感（淫乱、娼妇で无效）
+IF TALENT:快感应答 < 0 && !TALENT:淫乱
+	PRINT  - 
+	A -= 1
+	PRINT 否定快感
+	PRINTV '(,1,')
+	S = 1
+ENDIF
+;讨厌男人（恋慕、亲爱で无效）
+IF OTOKOGIRAI(TARGET)
+	PRINT  - 
+	A -= 12
+	PRINT 讨厌男人
+	PRINTV '(,12,')
+	S = 1
+ENDIF
+;恋慕
+IF TALENT:恋慕 && ASSIPLAY == 0
+	SIF S
+		PRINT  + 
+	A += 5
+	PRINT 恋慕
+	PRINTV '(,5,')
+	S = 5
+ENDIF
+;亲爱
+IF TALENT:恋慕 > 1 && ASSIPLAY == 0
+	SIF S
+		PRINT  + 
+	A += 5
+	PRINT 亲爱
+	PRINTV '(,5,')
+	S = 5
+ENDIF
+
+;调教者が扶她
+IF (TALENT:PLAYER:2 & 3) == 3
+	SIF S
+		PRINT  + 
+	A += 8
+	PRINT 扶她
+	PRINTV '(,8,')
+	S = 1
+ENDIF
+
+Y = 0
+;爱液的污垢
+SIF STAIN:PLAYER:2 & 1
+	Y += 1
+;精液的污垢
+SIF STAIN:PLAYER:2 & 4
+	Y += 3
+;肛门的污垢
+SIF STAIN:PLAYER:2 & 8
+	Y += 7
+SIF STAIN:PLAYER:2 & 16
+	Y += 15
+
+Y = Y * (2 - TALENT:污臭耐性) / 2
+
+;有污垢
+IF Y
+	PRINT  - 
+	A -= Y
+	PRINT 有污垢
+	;污臭钝感
+	IF TALENT:污臭耐性 > 0
+		PRINT 、污臭钝感
+	ELSEIF TALENT:污臭耐性 < 0
+		PRINT 、污臭敏感
+	ENDIF
+	PRINTV '(,Y,')
+	S = 1
+ENDIF
+
+;合计を表示(24以上で实行)
+PRINT  = 
+PRINTV A
+
+V = 24
+SIF A < V
+	PRINT  < 
+SIF A == V
+	PRINT  = 
+SIF A > V
+	PRINT  > 
+PRINT 实行值
+PRINTV V
+
+WAIT
+SKIPDISP 0
+;实行できない
+SIF A < V
+	RETURN 0
+RETURN 1
+
+
+;-------------------------------------------------
+;选择可能判定
+;-------------------------------------------------
+@COM_ABLE505
+;手淫口交实行判定
+SIF !TFLAG:100
+	RETURN 0
+;批量管理
+SIF GLOBAL_COMABLE(505)
+	RETURN RESULT
+;睡眠奸中
+SIF CFLAG:恶作剧 > 1
+	RETURN 0
+;技巧Lv1以上必要
+SIF ABL:技巧 < 1
+	RETURN 0
+;猫舌の奴隷の场合は技巧Lv2以上必要
+SIF TALENT:猫舌 && ABL:技巧 < 2
+	RETURN 0
+;口球使用中は不可
+SIF TEQUIP:口球
+	RETURN 0
+;绳使用中は不可
+SIF TEQUIP:绳
+	RETURN 0
+;调教者が男人か半人半妖か扶她じゃないとダメ
+SIF !(TALENT:PLAYER:2 & 2)
+	RETURN 0
+;停止中は不可
+SIF FLAG:70 == 1
+	RETURN 0
+RETURN 1
+

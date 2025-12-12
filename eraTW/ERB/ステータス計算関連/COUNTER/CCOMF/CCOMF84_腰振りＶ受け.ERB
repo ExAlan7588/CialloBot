@@ -1,0 +1,140 @@
+﻿;*********************************************************************************************
+;Counter指令：腰振りＶ受け
+;ARG = 对象の角色番号
+;*********************************************************************************************
+@CCOMF84(ARG)
+
+	;体势の变更
+	;=============================
+	CALL TOUCH_SET(SET_FROM_P,6,ARG)
+	CALL DATUI_FOR_INSERT(ARG)
+	TFLAG:MASTERのＶ使用中 ++
+	TEQUIP:MASTER:体位 = 1
+	;ソース计算および内部处理系统
+	;=============================
+	[SKIPSTART]
+		SOURCE:ARG:性行动 += 300
+		SOURCE:ARG:征服 += 1200
+		SOURCE:ARG:诱惑 += 400
+		SOURCE:ARG:施虐 += 400
+		SOURCE:ARG:强迫 += 800
+		SOURCE:PLAYER:快Ｖ += 1000
+		CALL PAIN_CHECK_V_MASTER(ARG)
+		LOCALS = {ARG}/
+		CSTR:PLAYER:10 += LOCALS
+		TCVAR:PLAYER:2 = 13
+		TCVAR:PLAYER:4 += 150
+		LOCALS = {PLAYER}/
+		CSTR:ARG:10 += LOCALS
+		TCVAR:ARG:2 = 1
+		TCVAR:ARG:4 += 1000
+		STAIN:ARG:2 |= STAIN:PLAYER:6
+		STAIN:PLAYER:6 |= STAIN:ARG:2
+		EXP:PLAYER:Ｖ性交经验 ++
+		EXP:ARG:插入经验 ++
+		CALL LOST_VIRGIN(PLAYER)
+		TEQUIP:PLAYER:50 = ARG
+		TCVAR:ARG:嗜虐フラグ = 1
+	[SKIPEND]
+	CALL DATUI_FOR_INSERT(ARG)
+	TCVAR:ARG:4 += 1000
+	SOURCE:ARG:性行动 += 300
+	SOURCE:ARG:征服 += 1200
+	SOURCE:ARG:诱惑 += 400
+	SOURCE:ARG:施虐 += 400
+	SOURCE:ARG:强迫 += 800
+	SOURCE:PLAYER:快Ｖ += 1000
+	;子宫口开发经验で快感追加。「插入子宫口玩弄」から流用
+	;全ての要求值を50から25に低下。相手の行动随机だと狙って上げてもらう事も难しいと思うので…
+	;推倒からの其他插入系で子宫口责められ实装できたら戻したい
+	SELECTCASE EXP:PLAYER:子宫口开发经验
+		CASE IS > 150
+			SOURCE:PLAYER:快Ｖ += 200
+		CASE IS > 75
+			SOURCE:PLAYER:快Ｖ += 100
+		CASE IS > 25
+		CASEELSE
+			SOURCE:PLAYER:快Ｖ /= 2
+	ENDSELECT
+	CALL PAIN_CHECK_V_MASTER(ARG)
+	;射精部位（1=膣内 2=肛门 3=手淫 4=口淫 5=乳交 6=素股 7=足交 8=体表 9=肛门侍奉 10=道具 11=触手 12=Ａ调教 13=Ｖ调教）
+	CALL 射精对象登录(PLAYER, ARG, 13)
+	TCVAR:PLAYER:4 += 150
+	;射精部位（1=膣内 2=肛门 3=手淫 4=口淫 5=乳交 6=素股 7=足交 8=体表 9=肛门侍奉 10=道具 11=触手 12=Ａ调教 13=Ｖ调教）
+	CALL 射精对象登录(ARG, PLAYER, 1)
+	;なんとなく射精快感1500に上げる。奥で出したいのが阴茎の本能ってことで
+	TCVAR:ARG:4 += 1500
+	STAIN:ARG:2 |= STAIN:PLAYER:6
+	STAIN:PLAYER:6 |= STAIN:ARG:2
+	EXP:PLAYER:Ｖ性交经验 ++
+	EXP:ARG:插入经验 ++
+	;好感度が高いと射精感度增加。とりあえず恋慕ラインの10000で200增加の打ち止め1000
+	SIF CFLAG:ARG:好感度 >= 10000
+		TCVAR:ARG:4 += MIN(CFLAG:ARG:好感度 / 50,1000)
+	;「插入子宫口玩弄」から流用。开发经验で更に射精感度增加
+	;こちらも半分の值から发生
+	SIF EXP:PLAYER:子宫口开发经验 >= 25
+		TCVAR:ARG:4 += MIN(EXP:PLAYER:子宫口开发经验 * 5,1500)
+	;同じく流用。开发经验追加と腰使いレベルで更に追加
+	EXP:PLAYER:子宫口开发经验 ++
+	SIF ABL:ARG:腰 >= 3
+		EXP:PLAYER:子宫口开发经验 ++
+	CALL LOST_VIRGIN(PLAYER)
+	TEQUIP:PLAYER:50 = ARG
+	TCVAR:ARG:嗜虐フラグ = 1
+
+	;マ斯塔Counter制御
+	;(ビット立ちで不可 0=摸屁股 1=拥抱 2=接吻 3=胸爱抚 4=肛门爱抚 5=阴蒂爱抚 6=指插入れ 7=掀裙子)
+	;=============================
+	;CALL Counter插入され继续中处理(ARG)
+	IF TEQUIP:MASTER:体位 == 2
+		SETBIT TCVAR:ARG:26 ,0
+		SETBIT TCVAR:ARG:26 ,1
+		SETBIT TCVAR:ARG:26 ,2
+		SETBIT TCVAR:ARG:26 ,3
+	ENDIF
+	SETBIT TCVAR:ARG:26 ,4
+	SETBIT TCVAR:ARG:26 ,5
+	SETBIT TCVAR:ARG:26 ,6
+	SETBIT TCVAR:ARG:26 ,7
+
+RETURN 1
+
+;*********************************************************************************************
+;Counter实行可否出力函数
+;ARG = 对象の角色番号
+;*********************************************************************************************
+@CCOM_ABLE84(ARG)
+
+	SIF !(TALENT:ARG:2 & 2)
+		RETURN 0
+	SIF !(TALENT:PLAYER:2 & 1)
+		RETURN 0
+	SIF TEQUIP:MASTER:50 != ARG
+		RETURN 0
+
+RETURN 1
+
+;*********************************************************************************************
+;Counter实行判定值算出函数
+;ARG = 对象の角色番号
+;*********************************************************************************************
+@CCOM_ORDER84(指令番号, ARG, 基本值)
+#DIM 指令番号
+#DIM 基本值
+#DIMS Counterタイプ
+
+	;Counterタイプ设定
+	;=============================
+	Counterタイプ = 性交
+
+	;实行判定值算出式
+	;=============================
+	LOCAL = 基本值 + ABL:ARG:Ｃ感觉
+
+	;Counterタイプ别计算处理 实质实行判定处理を含む
+	;=============================
+	LOCAL = MAX(LOCAL + COUNTER_SIKOU:ARG:指令番号, 1)
+	LOCAL *= COUNTER_TYPE(Counterタイプ, ARG)
+
+RETURN LOCAL

@@ -1,0 +1,1032 @@
+;※※※※※※※※※※※※※※※※※※※※※※※※※
+;施虐系コマンド
+;※※※※※※※※※※※※※※※※※※※※※※※※※
+;==================================================
+;Spanking
+;100,スパンキング
+;==================================================
+@M_KOJO_MESSAGE_COM_K60_100
+CALL M_KOJO_MESSAGE_COM_K60_100_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K60_100_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1
+	;基本セット
+	;时奸中
+		IF FLAG:70
+			PRINTFORMDW You take out all your frustration on Parsee's %HIP(TARGET)%, spanking it over and over again in stopped time...
+			RETURN 1
+		;睡奸中
+		;Sleep rape
+		ELSEIF CFLAG:MASTER:恶作剧 == 2
+			SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 
+				CASE 1
+					PRINTFORML 
+				CASE 2
+					PRINTFORML 
+			ENDSELECT
+			RETURN 1
+				;Character is drunk
+		;Conscious rape
+ELSEIF (TCVAR:强行 || CFLAG:强行内射)
+RETURN 1
+ELSEIF TCVAR:TARGET:烂醉 == 1
+			SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 
+				CASE 1
+					PRINTFORML 
+				CASE 2
+					PRINTFORML 
+			ENDSELECT
+			RETURN 1
+		ELSEIF FIRSTTIME("ParseeSpanking", 1)
+			SELECTCASE K60_ATTITUDE()
+			;充满爱意
+				CASE 0
+					PRINTFORMW 「你想……打我的屁股？」
+					PRINTFORMW 「你是想报复吗？还是说，这也能让你兴奋？」
+					PRINTFORMDW 帕露西看起来有点紧张，但她还是对你微微一笑，然后躺了下来。
+					PRINTFORMW 「好吧，如果我不让你偶尔也支配我一下，我就太虚伪了……」
+			;温柔，色情
+				CASE 1
+					PRINTFORMW 「打屁股，嗯？所以你喜欢这种调调……」
+					PRINTFORMDW 帕露西对你咧嘴一笑，躺了下来，调皮地摇晃着她的 %HIP(TARGET)%。
+					PRINTFORMW 「那就让我看看你能做什么。完事后我会给你一些建议。」
+			;爱抱怨的傲娇
+				CASE 2
+					PRINTFORMW 「我想你不太明白这里是怎么运作的。」
+					PRINTFORMDW 帕露西鄙夷地看着你。
+					PRINTFORMW 「是我给你带来痛苦。不是反过来。」
+					CALL PRINT_STRW, @"「你根本不知道该怎么做才对- @ITALIC@ow@!」"
+					PRINTFORMDW 愤怒在你心中爆发，你用尽全力一巴掌打在帕露西的 %HIP(TARGET)% 上。
+					PRINTFORMDW 帕露西怒视着你，眼中燃烧着怒火……然后怒火被鄙视所取代。
+					PRINTFORMW 「就这？我几乎什么都没感觉到！」
+					CALL PRINT_STRW, @"「@ITALIC@阿求@可能都比你打得更重！」"
+					PRINTFORML 「你太弱了，%K60_MASTER()%。趁早放弃吧，免得你更加丢人。」
+					PRINTFORMDW 她真是太好预测了。
+					PRINTFORMDW %BREAKENG(@"如果她认为可以利用它来让你嫉妒，她会让你对她做任何事。")%
+					PRINTFORMDW 你暗自窃笑，再次举起了手……
+			;虚伪的温柔
+				CASE 3
+					PRINTFORMW 「打屁股？不，我不这么认为。」
+					CALL PRINT_STRW, @"「如果@ITALIC@你@喜欢的话，我可以打@ITALIC@你@的屁股- @ITALIC@ow@!」"
+					PRINTFORMDW 无视帕露西，你用尽全力一巴掌打在帕露西的 %HIP(TARGET)% 上。
+					PRINTFORMDW 帕露西怒视着你，眼中燃烧着怒火……然后怒火被鄙视所取代。
+					PRINTFORMW 「就这？我几乎什么都没感觉到！」
+					CALL PRINT_STRL, @"「@ITALIC@阿求@可能都比你打得更重！」"
+					PRINTFORMW 「你太弱了，%K60_MASTER()%。趁早放弃吧，免得你更加丢人。」
+					PRINTFORMDW 现在你也生气了。
+					PRINTFORMDW 你也怒视着她，再次举起了手……
+			ENDSELECT
+			CALLF FIRSTTIME("ParseeSpanking")
+			RETURN 1
+		ELSE
+			SELECTCASE K60_ATTITUDE()
+		;充满爱意
+				CASE 0
+					PRINTFORMDW 帕露西咬紧牙关，忍受着疼痛。
+					SELECTCASE RAND:3
+						CASE 0
+							IF ABL:TARGET:受虐属性 < 2
+								PRINTFORMW 「好痛，%K60_MASTER()%……我们能做点别的吗？」
+							ELSE
+								CALL HPH_PRINT, @"「虽然很痛，但感觉很好……请不要停下来HPH」", "W"
+							ENDIF
+						CASE 1
+							IF ABL:TARGET:受虐属性 < 2
+								IF TEQUIP:绳
+									PRINTFORMW 「我们一定要这样做吗？你不能在我被绑起来的时候爱抚我吗？」
+								ELSE
+									PRINTFORMW 「我们一定要这样做吗？你不能先把我绑起来吗？」
+								ENDIF
+							ELSE
+								IF TEQUIP:绳
+									PRINTFORMW 「被绑起来的时候感觉更好……啊……」
+								ELSE
+									PRINTFORMW 「也把我绑起来，拜托……啊……」
+								ENDIF
+							ENDIF
+						CASE 2
+							IF ABL:TARGET:受虐属性 < 2
+								PRINTFORMW 「你不是因为生我的气才这么做的吧？」
+							ELSE
+								PRINTFORMW 「我从不知道接受痛苦也能像施加痛苦一样让人感到快乐……%SLUR(MOAN("m"), -1)%」
+							ENDIF
+					ENDSELECT
+		;温柔，色情
+				CASE 1
+					PRINTFORMDW 当你一巴掌打在她的 %HIP(TARGET)% 上时，帕露西呻吟了一声。
+					SELECTCASE RAND:3
+						CASE 0
+							PRINTFORMW 「啊……这就是我打别人屁股时的感觉吗？」
+							SIF ABL:TARGET:受虐属性 >= 2
+								PRINTFORMW 「啊……好痛……但感觉很好……」
+						CASE 1
+							PRINTFORMW 「呜……要是我能更耐痛一点就好了……」
+						CASE 2
+							PRINTFORML 「让我的屁股休息一下，把注意力放在我的大腿上吧！」
+							PRINTFORMW 「如果一直打同一个地方，感觉就不好。」
+					ENDSELECT
+		;爱抱怨的傲娇
+				CASE 2
+					SELECTCASE RAND:3
+						CASE 0
+							PRINTFORML 「别老是打同一个地方，你这个白痴！」
+							PRINTFORMW 「会造成瘀伤的！」
+							PRINTFORMW 「真是的……还是从现在开始让我来打你吧。你只会让自己丢人现眼。」
+						CASE 1
+							PRINTFORMW 「呜……提醒我，在这些瘀伤消退之前，不要和我的朋友们一起去泡温泉。」
+							PRINTFORMW 「我不想让他们知道我的性生活。我尤其不想让他们知道我和你睡过。」
+						CASE 2
+							IF ABL:TARGET:受虐属性 < 2
+								PRINTFORML 「痛苦和快乐对你来说可能是交织在一起的，但对我来说不是！」
+								PRINTFORMW 「如果你不停止，我就让你知道真正的打屁股是什么感觉！」
+							ELSE
+								PRINTFORMW 「比让你打我更屈辱的是它竟然让我 \@ HAS_PENIS(TARGET) ? 勃起 # 湿了……」
+							ENDIF
+					ENDSELECT
+		;虚伪的温柔
+				CASE 3
+					SELECTCASE RAND:3
+						CASE 0
+							PRINTFORMW 「你不想让我打你屁股吗？」
+						CASE 1
+							PRINTFORML 「如果一直打同一个地方，会导致瘀伤。」
+							PRINTFORMW 「你不是很熟悉这个，是吗？」
+						CASE 2
+							IF IS_NONHUMAN(MASTER)
+								PRINTFORMW 「你可能是个妖怪，但你不够强大，无法给我带来太大的痛苦。」
+							ELSE
+								PRINTFORMW 「你真的认为人类可以伤害像我这样的妖怪吗？」
+							ENDIF
+							PRINTFORMW 「我们为什么不做点别的事情呢？你只会把自己累坏，让我不满意。」
+					ENDSELECT
+			ENDSELECT
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;Whip (unused)
+;101,鞭
+;==================================================
+@M_KOJO_MESSAGE_COM_K60_101
+CALL M_KOJO_MESSAGE_COM_K60_101_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K60_101_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1
+    ;基本セット
+        ;Time stop
+        ;时奸中
+		IF FLAG:70
+			PRINTFORML
+			RETURN 1
+        ;睡奸中
+        ;Sleep rape
+		ELSEIF CFLAG:MASTER:恶作剧 == 2
+			SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 
+				CASE 1
+					PRINTFORML 
+				CASE 2
+					PRINTFORML 
+			ENDSELECT
+			RETURN 1
+        ;Character is drunk
+		;Conscious rape
+ELSEIF (TCVAR:强行 || CFLAG:强行内射)
+RETURN 1
+ELSEIF TCVAR:TARGET:烂醉 == 1
+			SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 
+				CASE 1
+					PRINTFORML 
+				CASE 2
+					PRINTFORML 
+			ENDSELECT
+			RETURN 1
+		ELSEIF FIRSTTIME(SELECTCOM)
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	;基本セット
+	;恋慕
+		IF TALENT:恋慕
+			PRINTFORMW 
+			RETURN 1
+	;屈服3
+		ELSEIF MARK:屈服刻印 == 3
+			PRINTFORMW 
+			RETURN 1
+	;それ以外
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;Candle (unused)
+;102,蜡烛
+;==================================================
+@M_KOJO_MESSAGE_COM_K60_102
+CALL M_KOJO_MESSAGE_COM_K60_102_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K60_102_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1
+    ;基本セット
+        ;Time stop
+        ;时奸中
+		IF FLAG:70
+			PRINTFORML
+			RETURN 1
+        ;睡奸中
+        ;Sleep rape
+		ELSEIF CFLAG:MASTER:恶作剧 == 2
+			SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 
+				CASE 1
+					PRINTFORML 
+				CASE 2
+					PRINTFORML 
+			ENDSELECT
+			RETURN 1
+        ;Character is drunk
+		;Conscious rape
+ELSEIF (TCVAR:强行 || CFLAG:强行内射)
+RETURN 1
+ELSEIF TCVAR:TARGET:烂醉 == 1
+			SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 
+				CASE 1
+					PRINTFORML 
+				CASE 2
+					PRINTFORML 
+			ENDSELECT
+			RETURN 1
+		ELSEIF FIRSTTIME(SELECTCOM)
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	;基本セット
+	;恋慕
+		IF TALENT:恋慕
+			PRINTFORMW 
+			RETURN 1
+	;屈服3
+		ELSEIF MARK:屈服刻印 == 3
+			PRINTFORMW 
+			RETURN 1
+	;それ以外
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;Needle (unused)
+;103,针
+;==================================================
+@M_KOJO_MESSAGE_COM_K60_103
+CALL M_KOJO_MESSAGE_COM_K60_103_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K60_103_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1
+    ;基本セット
+        ;Time stop
+        ;时奸中
+		IF FLAG:70
+			PRINTFORML
+			RETURN 1
+        ;睡奸中
+        ;Sleep rape
+		ELSEIF CFLAG:MASTER:恶作剧 == 2
+			SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 
+				CASE 1
+					PRINTFORML 
+				CASE 2
+					PRINTFORML 
+			ENDSELECT
+			RETURN 1
+        ;Character is drunk
+		;Conscious rape
+ELSEIF (TCVAR:强行 || CFLAG:强行内射)
+RETURN 1
+ELSEIF TCVAR:TARGET:烂醉 == 1
+			SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 
+				CASE 1
+					PRINTFORML 
+				CASE 2
+					PRINTFORML 
+			ENDSELECT
+			RETURN 1
+		ELSEIF FIRSTTIME(SELECTCOM)
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	;基本セット
+	;恋慕
+		IF TALENT:恋慕
+			PRINTFORMW 
+			RETURN 1
+	;屈服3
+		ELSEIF MARK:屈服刻印 == 3
+			PRINTFORMW 
+			RETURN 1
+	;それ以外
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;Blindfold
+;104,眼罩
+;==================================================
+@M_KOJO_MESSAGE_COM_K60_104
+CALL M_KOJO_MESSAGE_COM_K60_104_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K60_104_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1
+    ;基本セット
+        ;Time stop
+        ;时奸中
+		IF FLAG:70
+			PRINTFORML
+			RETURN 1
+        ;睡奸中
+        ;Sleep rape
+		ELSEIF CFLAG:MASTER:恶作剧 == 2
+			SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 
+				CASE 1
+					PRINTFORML 
+				CASE 2
+					PRINTFORML 
+			ENDSELECT
+			RETURN 1
+        ;Character is drunk
+		;Conscious rape
+ELSEIF (TCVAR:强行 || CFLAG:强行内射)
+RETURN 1
+ELSEIF TCVAR:TARGET:烂醉 == 1
+			SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 
+				CASE 1
+					PRINTFORML 
+				CASE 2
+					PRINTFORML 
+			ENDSELECT
+			RETURN 1
+		ELSEIF FIRSTTIME(SELECTCOM)
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	;基本セット
+	;装着
+		IF TEQUIP:眼罩
+		;时奸中
+			IF FLAG:70
+				PRINTFORMW 
+				RETURN 1
+		;恋慕
+			ELSEIF TALENT:恋慕
+				PRINTFORMW 
+				RETURN 1
+		;屈服3
+			ELSEIF MARK:屈服刻印 == 3
+				PRINTFORMW 
+				RETURN 1
+		;それ以外
+			ELSE
+				PRINTFORMW 
+				RETURN 1
+			ENDIF
+	;解除
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;Bondage
+;105,绳
+;==================================================
+@M_KOJO_MESSAGE_COM_K60_105
+CALL M_KOJO_MESSAGE_COM_K60_105_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K60_105_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1
+    ;基本セット
+        ;Time stop
+        ;时奸中
+		IF FLAG:70
+			PRINTFORML
+			RETURN 1
+        ;睡奸中
+        ;Sleep rape
+		ELSEIF CFLAG:MASTER:恶作剧 == 2
+			SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 
+				CASE 1
+					PRINTFORML 
+				CASE 2
+					PRINTFORML 
+			ENDSELECT
+			RETURN 1
+        ;Character is drunk
+		;Conscious rape
+ELSEIF (TCVAR:强行 || CFLAG:强行内射)
+RETURN 1
+ELSEIF TCVAR:TARGET:烂醉 == 1
+			SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 
+				CASE 1
+					PRINTFORML 
+				CASE 2
+					PRINTFORML 
+			ENDSELECT
+			RETURN 1
+		ELSEIF FIRSTTIME(SELECTCOM)
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	;基本セット
+	;装着
+		IF TEQUIP:绳
+		;时奸中
+			IF FLAG:70
+				PRINTFORMW 
+				RETURN 1
+		;恋慕
+			ELSEIF TALENT:恋慕
+				PRINTFORMW 
+				RETURN 1
+		;屈服3
+			ELSEIF MARK:屈服刻印 == 3
+				PRINTFORMW 
+				RETURN 1
+		;それ以外
+			ELSE
+				PRINTFORMW 
+				RETURN 1
+			ENDIF
+	;解除
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;Ball Gag (unused)
+;106,口球
+;==================================================
+@M_KOJO_MESSAGE_COM_K60_106
+CALL M_KOJO_MESSAGE_COM_K60_106_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K60_106_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1
+    ;基本セット
+        ;Time stop
+        ;时奸中
+		IF FLAG:70
+			PRINTFORML
+			RETURN 1
+        ;睡奸中
+        ;Sleep rape
+		ELSEIF CFLAG:MASTER:恶作剧 == 2
+			SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 
+				CASE 1
+					PRINTFORML 
+				CASE 2
+					PRINTFORML 
+			ENDSELECT
+			RETURN 1
+        ;Character is drunk
+		;Conscious rape
+ELSEIF (TCVAR:强行 || CFLAG:强行内射)
+RETURN 1
+ELSEIF TCVAR:TARGET:烂醉 == 1
+			SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 
+				CASE 1
+					PRINTFORML 
+				CASE 2
+					PRINTFORML 
+			ENDSELECT
+			RETURN 1
+		ELSEIF FIRSTTIME(SELECTCOM)
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	;基本セット
+	;装着
+		IF TEQUIP:口球
+		;恋慕
+			IF TALENT:恋慕
+				PRINTFORMW 
+				RETURN 1
+		;屈服3
+			ELSEIF MARK:屈服刻印 == 3
+				PRINTFORMW 
+				RETURN 1
+		;それ以外
+			ELSE
+				PRINTFORMW 
+				RETURN 1
+			ENDIF
+	;解除
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;Restrain Mode
+;107,拘束プレイ
+;==================================================
+@M_KOJO_MESSAGE_COM_K60_107
+CALL M_KOJO_MESSAGE_COM_K60_107_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K60_107_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 
+	;基本セット
+		;Time stop
+		;时奸中
+		IF FLAG:70
+			PRINTFORML
+			RETURN 1
+		;睡奸中
+		;Sleep rape
+		ELSEIF CFLAG:MASTER:恶作剧 == 2
+			SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 
+				CASE 1
+					PRINTFORML 
+				CASE 2
+					PRINTFORML 
+			ENDSELECT
+			RETURN 1
+		;Character is drunk
+		;Conscious rape
+ELSEIF (TCVAR:强行 || CFLAG:强行内射)
+RETURN 1
+ELSEIF TCVAR:TARGET:烂醉 == 1
+			SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 
+				CASE 1
+					PRINTFORML 
+				CASE 2
+					PRINTFORML 
+			ENDSELECT
+			RETURN 1
+		ELSEIF FIRSTTIME("ParseeRestrainMode", 1)
+			SELECTCASE K60_ATTITUDE()
+			;Loving
+				CASE 0
+					PRINTFORMW 「你为什么要给我戴上这些东西？我又不会去任何地方。」
+					PRINTFORMW 「我永远不会离开你……」
+			;温柔，色情
+				CASE 1
+					PRINTFORMW 「你不想让我用这些东西对付你吗？」
+					PRINTFORMW 「不想？好吧……」
+			;爱抱怨的傲娇
+				CASE 2
+					PRINTFORMW 「你知道我可以随时打破这些东西，对吧？」
+					PRINTFORMW （而且如果不是你的话，我早就把它们打破了……）
+			;虚伪的温柔
+				CASE 3
+					PRINTFORMW 「你觉得我会从你身边逃跑吗？」
+					PRINTFORMW 「你已经把我弄上床了。如果我要逃跑，我现在就跑了。」
+					PRINTFORMW 「而且这些束缚反正也困不住妖怪……」
+			ENDSELECT
+			CALLF FIRSTTIME("ParseeRestrainMode")
+			RETURN 1
+	;基本セット
+	;装着
+		ELSEIF TEQUIP:口球
+			SELECTCASE K60_ATTITUDE()
+		;Loving
+				CASE 0
+					SELECTCASE RAND:3
+						CASE 0
+							PRINTFORML
+						CASE 1
+							PRINTFORML
+						CASE 2
+							PRINTFORML
+					ENDSELECT
+		;Nice, horny
+				CASE 1
+					SELECTCASE RAND:3
+						CASE 0
+							PRINTFORML 「我想偶尔顺从一下也没什么坏处。」
+							PRINTFORMW 「毕竟，多样性是生活的调味剂。」
+						CASE 1
+							PRINTFORML 「我想偶尔顺从一下也没什么坏处。」
+							PRINTFORMW 「毕竟，多样性是生活的调味剂。」
+						CASE 2
+							PRINTFORML 「我想偶尔顺从一下也没什么坏处。」
+							PRINTFORMW 「毕竟，多样性是生活的调味剂。」
+					ENDSELECT
+		;爱抱怨的傲娇
+				CASE 2
+					SELECTCASE RAND:6
+						CASE 0
+							PRINTFORMW 「又是这些东西……」
+						CASE 1
+							PRINTFORML 「你真的很喜欢压制比你弱的人，不是吗？」
+							IF !(IS_NONHUMAN(MASTER))
+								PRINTFORMDW （她不是一直说自己是妖怪，而你只不过是个人类吗……？）
+							ELSEIF ABL:MASTER:战斗能力 < ABL:TARGET:战斗能力
+								PRINTFORMDW 她在说什么？她比你强多了！
+							ELSEIF ABL:MASTER:施虐属性 >= 3
+								PRINTFORMDW 当然喜欢。而且你真的很喜欢压制那些一有机会就对你很差劲的人……
+							ELSE
+								PRINTFORMDW 其实你并不喜欢。但你确实很喜欢压制那些一有机会就对你很差劲的人……
+							ENDIF
+						CASE 2
+							PRINTFORML 「和你睡觉的其他女孩都不会让你对她们做这种事。」
+							PRINTFORMW 「下次你情欲高涨的时候，记住这一点。」
+						CASE 3
+							PRINTFORMW 「你把它们弄得太紧了。松开一点。」
+						CASE 4
+							PRINTFORMW 「你把它们弄得太松了。紧一点。」
+						CASE 5
+							PRINTFORMW 「请不要忘记，我只是在配合你，我可以随时挣脱这些东西。」
+					ENDSELECT
+		;虚伪的温柔
+				CASE 3
+					SELECTCASE RAND:3
+						CASE 0
+							PRINTFORML
+						CASE 1
+							PRINTFORML
+						CASE 2
+							PRINTFORML
+					ENDSELECT
+			ENDSELECT
+	;解除
+		ELSE
+			SELECTCASE K60_ATTITUDE()
+			;充满爱意
+				CASE 0
+					SELECTCASE RAND:3
+						CASE 0
+							PRINTFORML
+						CASE 1
+							PRINTFORML
+						CASE 2
+							PRINTFORML
+					ENDSELECT
+			;温柔，色情
+				CASE 1
+					SELECTCASE RAND:3
+						CASE 0
+							PRINTFORMW 「你把它们弄得太紧了……我的手像被针扎一样。」
+							PRINTFORMDW 帕露西开始转动她的手腕，试图让血液流回她的手中。
+							PRINTFORMW 「你能帮我按摩一下吗？」
+						CASE 1
+							PRINTFORMW 「你把它们弄得太紧了……我的手像被针扎一样。」
+							PRINTFORMDW 帕露西开始转动她的手腕，试图让血液流回她的手中。
+							PRINTFORMW 「你能帮我按摩一下吗？」
+						CASE 2
+							PRINTFORMW 「你把它们弄得太紧了……我的手像被针扎一样。」
+							PRINTFORMDW 帕露西开始转动她的手腕，试图让血液流回她的手中。
+							PRINTFORMW 「你能帮我按摩一下吗？」
+					ENDSELECT
+			;爱抱怨的傲娇
+				CASE 2
+					SELECTCASE RAND:3
+						CASE 0
+							PRINTFORMW 「我的手腕擦伤了……」
+							PRINTFORMDW 帕露西揉着她的一个手腕，怒视着你。
+							PRINTFORMW 「如果你还想让我为你做这件事，你最好按摩一下它们。」
+						CASE 1
+							CALL M_KOJO_COLOR_K60_JEALOUS
+							PRINTFORMW 「我真的，真的希望你不要对其他女孩做这种事。」
+							PRINTFORMDW 帕露西对你皱着眉头。
+							PRINTFORMW 「不是说我嫉妒她们什么的……我只是不想你像伤害我一样伤害她们。」
+							CALL M_KOJO_COLOR_K60
+						CASE 2
+							PRINTFORML 「下次我会把你绑起来。」
+							PRINTFORMDW 帕露西邪恶地笑了笑。
+					ENDSELECT
+			;Fake nice
+				CASE 3
+					SELECTCASE RAND:3
+						CASE 0
+							PRINTFORML
+						CASE 1
+							PRINTFORML
+						CASE 2
+							PRINTFORML
+					ENDSELECT
+			ENDSELECT
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;Breast Spanking
+;108,乳スパンキング
+;==================================================
+@M_KOJO_MESSAGE_COM_K60_108
+CALL M_KOJO_MESSAGE_COM_K60_108_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K60_108_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	;记入チェック
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1
+    ;基本セット
+        ;Time stop
+        ;时奸中
+		IF FLAG:70
+			PRINTFORML
+			RETURN 1
+        ;睡奸中
+        ;Sleep rape
+		ELSEIF CFLAG:MASTER:恶作剧 == 2
+			SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 
+				CASE 1
+					PRINTFORML 
+				CASE 2
+					PRINTFORML 
+			ENDSELECT
+			RETURN 1
+        ;Character is drunk
+		;Conscious rape
+ELSEIF (TCVAR:强行 || CFLAG:强行内射)
+RETURN 1
+ELSEIF TCVAR:TARGET:烂醉 == 1
+			SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 
+				CASE 1
+					PRINTFORML 
+				CASE 2
+					PRINTFORML 
+			ENDSELECT
+			RETURN 1
+		ELSEIF FIRSTTIME(SELECTCOM)
+			PRINTFORMW 
+			RETURN 1
+		ELSEIF ABL:TARGET:受虐属性 >= 2 && TALENT:TARGET:胸围 > 0 && FIRSTTIME("ParseeBigBreastSpankMasochist",1)
+			PRINTFORMDW 你鄙夷地看着%CALLNAME:[[帕露西]]%。她颤抖着——你不确定那是出于恐惧、欲望，还是两者都有。
+			PRINTFORMDW 你。渴望我。
+			PRINTFORMDW 你让这些话在空气中停留了一会儿。
+			PRINTFORMD 你想要我触摸你的
+			FONTITALIC
+			PRINTFORMDW 恶心的母牛巨乳？
+			FONTREGULAR
+			PRINTFORMDW %CALLNAME:[[帕露西]]% 吞了吞口水。她现在的呼吸很急促。
+			PRINTFORMW 「是、是的。我想要-」
+			PRINTFORMDW 你把一只手放在她的大腿上，捏了一下。不是很用力，但很坚定。现在还不需要太粗暴。
+			FONTITALIC
+			PRINTFORMD 你应该说
+			FONTREGULAR
+			IF IS_MALE(MASTER)
+				PRINTFORMD 主人
+			ELSE
+				PRINTFORMD 女主人
+			ENDIF
+			FONTITALIC
+			PRINTFORMDW ，桥姬小姐。
+			FONTREGULAR
+			PRINTFORMDW %CALLNAME:[[帕露西]]%又开始颤抖了。这次绝对是欲望。
+			PRINTFORMW 「请原谅我， \@ IS_MALE(MASTER) ? 主人 # 女主人\@。我没有对您表现出应有的尊重……」
+			PRINTFORMDW 她低下头。除非你告诉她，否则她现在甚至不会看你。
+			PRINTFORMW 「是的， \@ IS_MALE(MASTER) ? 主人 # 女主人\@……我想要你触摸我那妓女般的胸部。」
+			CALL M_KOJO_COLOR_K60_JEALOUS
+			PRINTFORMW 「即使隔着我的外套，它们也太淫秽和巨大了，每个人都能看到。不像普通女孩的胸部。」
+			PRINTFORMW 「而且每个人都能看到我的……当我想起你触摸我时，我的乳头是如何勃起的……」
+			CALL M_KOJO_COLOR_K60
+			PRINTFORMDW 她的脸红了。她深吸了一口气，颤抖着，然后继续说道。
+			PRINTFORMW 「只有我的 \@ IS_MALE(MASTER) ? 主人 # 女主人\@才应该被允许看到它们。但当我过桥时，每个人都盯着它们看。」
+			CALL PRINT_STRL, @"「他们一定认为我是个@ITALIC@荡妇@。这是事实……但我只是您的@ITALIC@荡妇@，而且只属于您。」"
+			PRINTFORMW 「而且因为它们太大了，无法隐藏，我希望你留下痕迹。这样，每个人都知道我属于您。」
+			PRINTFORMDW 一丝慵懒的笑容爬上你的脸庞。你盯着 %CALLNAME:[[帕露西]]%低下的头，考虑着这个提议。
+			PRINTFORMDW 然后你慢慢地，慢慢地伸出手，将一只手放在她的一个巨大的胸部上。
+			PRINTFORMDW %CALLNAME:[[帕露西]]%呻吟了一声。你笑了笑，捏了一下，慢慢捏紧，直到你尽可能地紧紧地挤压她的乳房。
+			PRINTFORMD 然后，快如闪电，你用空着的手抓住她另一个乳房的乳头，并
+			FONTITALIC
+			PRINTFORMDW 扭动。
+			FONTREGULAR
+			PRINTFORMDW %CALLNAME:[[帕露西]]%尖叫一声，畏缩了一下。但她没有使用安全词，也没有挣脱你的拧动。
+			PRINTFORMDW 很好。你真的开始喜欢上这个了 \@ ABL:MASTER:施虐属性 >= 3 ? ，比你想象的要喜欢得多 #\@。
+			PRINTFORMDW 至于 %CALLNAME:[[帕露西]]%……
+			PRINTFORMD 你瞥了一眼她的双腿之间，看到
+			IF HAS_PENIS(TARGET)
+				PRINTFORMD 她坚硬如铁的阴茎
+				IF HAS_VAGINA(TARGET)
+					PRINTFORMD ，以及它下面，她那闪耀着汁液的骚穴
+				ENDIF
+			ELSE
+				PRINTFORMD 她那闪耀着汁液的骚穴
+			ENDIF
+			PRINTFORMDW 。
+			PRINTFORMDW 她绝对很喜欢。
+			PRINTFORMDL
+			CALLF FIRSTTIME("ParseeBigBreastSpankMasochist")
+			RETURN 1
+		ELSE
+			SELECTCASE K60_ATTITUDE()
+			;Loving
+				CASE 0
+					SELECTCASE RAND:3
+						CASE 0
+							PRINTFORMW 
+						CASE 1
+							PRINTFORMW 
+						CASE 2
+							PRINTFORMW 
+					ENDSELECT
+			;Nice, horny
+				CASE 1
+					SELECTCASE RAND:3
+						CASE 0
+							PRINTFORMW 
+						CASE 1
+							PRINTFORMW 
+						CASE 2
+							PRINTFORMW 
+					ENDSELECT
+			;Grumpy tsundere
+				CASE 2
+					SELECTCASE RAND:3
+						CASE 0
+							PRINTFORMW 
+						CASE 1
+							PRINTFORMW 
+						CASE 2
+							PRINTFORMW 
+					ENDSELECT
+			;Fake nice
+				CASE 3
+					SELECTCASE RAND:3
+						CASE 0
+							PRINTFORMW 
+						CASE 1
+							PRINTFORMW 
+						CASE 2
+							PRINTFORMW 
+					ENDSELECT
+			ENDSELECT
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1

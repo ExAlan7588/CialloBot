@@ -1,0 +1,46 @@
+﻿;-------------------------------------------------
+;追踪
+;日常系指令、レベル1
+;-------------------------------------------------
+@COM482
+#DIM GOAL
+GOAL = CFLAG:STALKED:当前位置
+IF !MAP_CAN_MOVE(GOAL)
+	PRINTFORMW 那里去不了
+	RETURN -1
+ENDIF
+IF IN_HOME(GOAL) != 1
+	PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", STALKED)%好像不在这附近的样子
+	RETURN -1
+ENDIF
+
+CALL SKIP_MOVE(CFLAG:MASTER:当前位置, GOAL)
+TARGET = STALKED
+;-------------------------------------------------
+;实行判定
+;-------------------------------------------------
+@COM_ABLE482
+;自宅外は不可
+SIF AT_HOME(MASTER) == 0
+	RETURN 0
+;停止中は不可
+SIF FLAG:70 == 1
+	RETURN 0
+;移动实行判定
+SIF !TFLAG:100
+	RETURN 0
+;批量管理
+SIF GLOBAL_COMABLE(482)
+	RETURN RESULT
+SIF !STALKED
+	RETURN 0
+SIF IN_HOME(CFLAG:STALKED:当前位置) != 1
+	RETURN 0
+SIF CFLAG:STALKED:睡眠
+	RETURN 0
+SIF CFLAG:MASTER:当前位置 == CFLAG:STALKED:当前位置
+	RETURN 0
+SIF CFLAG:诶嘿嘿 == 2
+	RETURN 0
+RETURN 1
+

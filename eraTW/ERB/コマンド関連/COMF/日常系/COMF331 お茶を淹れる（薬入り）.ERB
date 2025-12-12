@@ -1,0 +1,221 @@
+﻿;-------------------------------------------------
+;泡茶(下药)
+;日常系指令、レベル1
+;-------------------------------------------------
+@COM331
+#DIM ごっくん
+#DIM 发觉概率
+#DIM 成功概率
+ごっくん = 0
+成功概率 = RAND:100
+IF 成功概率 <= 9
+	;10％で大成功
+	EXP:MASTER:会话经验 ++
+	TFLAG:193 = 1
+	TFLAG:98 = 2
+ELSE
+	;残りは一时的に成功
+	TFLAG:193 = 0
+	TFLAG:98 = 0
+ENDIF
+LOCAL:2 = 0
+LOCAL:1 = TARGET
+发觉概率 = TALENT:MASTER:调合知识 ? 5 # 3
+;IF TALENT:MASTER:调合知识
+;	发觉概率 = 5
+;ELSE
+;	发觉概率 = 3
+;ENDIF
+FOR LOCAL, 1, GET_TARGETNUM() + 1
+	;寝ている人に饮ませられない
+	SIF CFLAG:(TARGET:LOCAL):睡眠
+		CONTINUE
+	TARGET = TARGET:LOCAL
+	CALL KOJO_MESSAGE_SEND("SUCCESS",-1,TARGET,-1,-1)
+	SELECTCASE TFLAG:192
+		;通常
+		CASE 0
+			;睡眠药冰淇淋ティーは眠气を感じていると饮まない
+			IF TCVAR:TARGET:睡眠药强度 >= 2 && TFLAG:131 == 252
+				;PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%はあくびをしながら茶を断った
+				TCVAR:TARGET:睡眠药茶使用 = 0
+				CONTINUE
+			;[污臭敏感][洁癖症]は违いの分かる人
+			;发觉する可能性は调合知识の有无で1/2か1/1
+			ELSEIF TALENT:TARGET:61 < 0
+				IF (发觉概率 - 3) ? !RAND:(发觉概率 - 3) # 1
+					;LOCAL:2 ++
+					;PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%は茶に口をつけなかった
+					CONTINUE
+				ENDIF
+			;污臭耐性の素質がなければ发觉する可能性は调合知识の有无で1/5か1/3
+			ELSEIF TALENT:TARGET:61 == 0
+				IF !RAND:发觉概率
+					;LOCAL:2 ++
+					;PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%は茶に口をつけなかった
+					CONTINUE
+				ENDIF
+			ENDIF
+		;强制成功or大成功
+		CASE 1
+			;睡眠药冰淇淋ティーは眠气を感じていると饮まない
+			IF TCVAR:TARGET:睡眠药强度 >= 2 && TFLAG:131 == 252
+				;PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%はあくびをしながら茶を断った
+				TCVAR:TARGET:睡眠药茶使用 = 0
+				CONTINUE
+			ENDIF
+		;强制失败
+		CASE -1,-2
+			CONTINUE
+		;指令结束
+		;CASE -2
+			;RETURN 0
+	ENDSELECT
+	;[污臭钝感][污臭无视]が那个ば确定で饮む、やったね
+	;SIF LOCAL:2
+		;BREAK
+	CALL COM331_1
+	;TFLAG:193の成否判定はCOMのTARGET専用なので修正
+	SIF TARGET == LOCAL:1
+		ごっくん = 1
+NEXT
+;SIF TCVAR:TARGET:媚药 != 210 && TCVAR:TARGET:利尿剂 != 210 && TCVAR:TARGET:催情药 != 1 && !TCVAR:TARGET:睡眠药强度 >= 2
+SIF !ごっくん
+	TFLAG:193 = -1
+TFLAG:98 += 3
+SIF TFLAG:193 == -1
+	TFLAG:98 = 0
+;SIF LOCAL:2 > 0
+	;TFLAG:98 = 0
+DOWNBASE:MASTER:气力 += 100
+DOWNBASE:MASTER:体力 += 50
+TIME += 30
+TARGET = LOCAL:1
+TFLAG:131 = 0
+RETURN 1
+
+
+
+@COM331_1
+
+DOWNBASE:气力 += 10
+
+;固定で获得するソース
+SOURCE:欢乐 = 500
+
+;ABL:顺从をみる
+IF ABL:顺从 <= 1
+	SOURCE:欢乐 += (ABL:顺从 * 60)
+ELSEIF ABL:顺从 <= 3
+	SOURCE:欢乐 += 200 + (ABL:顺从 * 60)
+ELSEIF ABL:顺从 <= 5
+	SOURCE:欢乐 += 500 + (ABL:顺从 * 60)
+ELSEIF ABL:顺从 <= 8
+	SOURCE:欢乐 += 750 + (ABL:顺从 * 75)
+ELSEIF ABL:顺从 <= 11
+	SOURCE:欢乐 += 1000 + (ABL:顺从 * 75)
+ELSE
+	SOURCE:欢乐 += 2000 + (ABL:顺从 * 30)
+ENDIF
+
+;好感度をみる
+IF CFLAG:2 <= 500
+	SOURCE:欢乐 += CFLAG:2
+ELSEIF CFLAG:2 <= 5000
+	SOURCE:欢乐 += 500 + (CFLAG:2 - 500) / 3
+ELSE
+	SOURCE:欢乐 += 2000 + (CFLAG:2 - 5000) / 5
+ENDIF
+SIF SOURCE:欢乐 < 0
+	SOURCE:欢乐 = 0
+
+
+SOURCE:被动 = 200 + 100 * ABL:顺从
+SOURCE:征服 = 200 + 100 * ABL:施虐属性
+
+IF TFLAG:193 == -1
+	TIMES SOURCE:欢乐 , 0.10
+	TIMES SOURCE:征服 , 0.50
+	TIMES SOURCE:被动 , 0.50
+ELSEIF TFLAG:193 == 0
+	TIMES SOURCE:欢乐 , 1.00
+	TIMES SOURCE:征服 , 1.00
+	TIMES SOURCE:被动 , 1.00
+ELSE
+	TIMES SOURCE:欢乐 , 2.00
+	TIMES SOURCE:征服 , 2.00
+	TIMES SOURCE:被动 , 2.00
+ENDIF
+IF TFLAG:131 == 41
+	TCVAR:TARGET:媚药 = 210
+	DOWNBASE:TARGET:气力 += 150
+	DOWNBASE:TARGET:体力 += 150
+	;PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%は媚药入りの茶を口にした
+ELSEIF TFLAG:131 == 42
+	TCVAR:TARGET:利尿剂 = 210
+	DOWNBASE:TARGET:气力 += 150
+	DOWNBASE:TARGET:体力 += 150
+	;PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%は利尿剂入りの茶を口にした
+ELSEIF TFLAG:131 == 250
+	;PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%は催情药入りの茶を口にした
+	TCVAR:TARGET:催情药 = 210
+	DOWNBASE:TARGET:气力 += 150
+	DOWNBASE:TARGET:体力 += 150
+ELSEIF TFLAG:131 == 252
+	;PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%は睡眠药入りの茶を口にした
+	IF TCVAR:TARGET:睡眠药强度 < 2
+		TCVAR:TARGET:睡眠药强度 = 2
+		TCVAR:TARGET:睡眠药茶使用 = 1
+	ENDIF
+ELSEIF TFLAG:131 == 47
+	TCVAR:TARGET:新鲜精液 = 210
+	DOWNBASE:TARGET:气力 += 150
+	DOWNBASE:TARGET:体力 += 150
+	EXP:精饮经验 ++
+;	IF TALENT:精爱味觉 == 1
+;       CFLAG:积攒度 = CFLAG:积攒度 * 2 + 50
+;   ENDIF
+ENDIF
+;茶を饮んだフラグ
+TCVAR:300 = 1440 * DAY + TIME
+
+RETURN 1
+
+;-------------------------------------------------
+;实行判定
+;-------------------------------------------------
+@COM_ABLE331
+;泡茶实行判定
+SIF !TFLAG:100
+	RETURN 0
+;批量管理
+SIF GLOBAL_COMABLE(301)
+	RETURN RESULT
+;二时间间隔
+;SIF TIME_PROGRESS(TCVAR:300) < 120
+;魔改二次泡茶时间
+SIF TIME_PROGRESS(TCVAR:300) < 60
+	RETURN 0
+;睡眠中
+SIF CFLAG:睡眠
+	RETURN 0
+;陪睡中
+SIF CFLAG:陪睡中
+	RETURN 0
+SIF !TFLAG:131
+	RETURN 0
+;浴场
+;SIF CFLAG:MASTER:当前位置 == 13 || CFLAG:MASTER:当前位置 == 24 || CFLAG:MASTER:当前位置 == 30 || CFLAG:MASTER:当前位置 == 39
+SIF BATHCHECK(CFLAG:MASTER:当前位置) && GET_MAPID(CFLAG:MASTER:当前位置) == MAIN_MAP
+	RETURN 0
+;约会中
+SIF CHK_DATENOW(CFLAG:约会中) && CFLAG:当前位置 != OMANEKIBEYA()
+	RETURN 0
+;气力0
+SIF BASE:MASTER:气力 <= 0
+	RETURN 0
+;停止中は不可
+SIF FLAG:70
+	RETURN 0
+RETURN 1
+

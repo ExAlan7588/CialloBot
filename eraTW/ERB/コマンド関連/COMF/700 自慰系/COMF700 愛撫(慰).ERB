@@ -1,0 +1,94 @@
+﻿;-------------------------------------------------
+;爱抚
+;自慰系指令　レベル2
+;-------------------------------------------------
+@COM700
+PRINTFORML 爱抚实行
+;-------------------------------------------------
+;COM别FLAGの设定
+;-------------------------------------------------
+;行为者
+TCVAR:116 = PLAYER
+
+;-------------------------------------------------
+;ソース追加处理
+;-------------------------------------------------
+;消费体力、气力
+DOWNBASE:PLAYER:体力 += 5
+DOWNBASE:PLAYER:气力 += 50
+
+SOURCE:PLAYER:快Ｃ = 80
+SOURCE:PLAYER:快Ｂ = 80
+SOURCE:PLAYER:情爱 = 50
+SOURCE:PLAYER:性行动 = 60
+SOURCE:PLAYER:露出 = 20
+SOURCE:PLAYER:不洁 = 30
+SOURCE:PLAYER:偏离正轨 = 20
+SOURCE:PLAYER:反感 = 20
+
+;性技补正
+SOURCE:PLAYER:快Ｃ += ABL:PLAYER:指 * 5
+SOURCE:PLAYER:快Ｂ += ABL:PLAYER:指 * 5
+
+;舌を使用调教では、调教者の舌头灵活によって、快感のソース增加
+IF TALENT:PLAYER:灵活手指
+	TIMES SOURCE:PLAYER:快Ｃ , 1.50
+	TIMES SOURCE:PLAYER:快Ｂ , 1.50
+ENDIF
+
+SIF TALENT:PLAYER:舌头灵活
+	TIMES SOURCE:PLAYER:情爱 , 1.50
+;-------------------------------------------------
+;特殊ソース处理
+;-------------------------------------------------
+;圧抑、抵抗持ちには、抑郁ソース追加
+SIF TALENT:PLAYER:自己爱 < 0 || TALENT:PLAYER:抵抗
+	SOURCE:PLAYER:郁闷 += 20
+;-------------------------------------------------
+;污れの处理
+;-------------------------------------------------
+IF (FIRSTTIME(312,1) || FIRSTTIME(20,1)) || (MASTER_POSE(SET_M, SET_M) != TARGET && MASTER_POSE(0,4)) || (STAIN:0 >= 2 && (STAIN:0 != 16 && STAIN:0 != 17) && ASSIPLAY == 0 && TALENT:MASTER:污臭耐性 < 2) || TEQUIP:20
+;奴隷の口的污垢があるとき接吻はない（爱液と母乳よごれはＯＫ、污臭无视か助手调教时は没问题）
+;口球使用中も无
+	SOURCE:PLAYER:不洁 = 0
+	SOURCE:PLAYER:情爱 /= 4
+	SOURCE:PLAYER:液体 /= 2
+ELSE
+	;污臭钝感
+	SIF TALENT:PLAYER:污臭耐性 > 0
+		SOURCE:PLAYER:不洁 /= 4
+	;污臭敏感
+	SIF TALENT:PLAYER:污臭耐性 < 0
+		SOURCE:PLAYER:不洁 *= 3
+	;自尊心高
+	SIF TALENT:PLAYER:自尊心 > 0
+		SOURCE:PLAYER:不洁 *= 2
+ENDIF
+
+
+;-------------------------------------------------
+;経験の处理
+;-------------------------------------------------
+;调教者が猫舌持ちの场合は、调教者に嗜虐快乐经验を追加
+SIF TALENT:PLAYER:猫舌
+	EXP:PLAYER:嗜虐快乐经验 += 1
+;手淫经验
+EXP:PLAYER:手淫经验 ++
+;自慰经验
+CFLAG:PLAYER:自慰过了 ++
+SIF !FLAG:时间停止
+	TIME += 5
+RETURN 1
+
+;-------------------------------------------------
+;实行可能判定
+;-------------------------------------------------
+@COM_ABLE700
+;爱抚实行判定
+SIF !TFLAG:100
+	RETURN 0
+;批量管理
+SIF GLOBAL_COMABLE(700)
+	RETURN RESULT
+RETURN 1
+

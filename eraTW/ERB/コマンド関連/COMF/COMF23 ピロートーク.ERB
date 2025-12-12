@@ -1,0 +1,211 @@
+﻿;-------------------------------------------------
+;枕边话
+;-------------------------------------------------
+@COM23
+#DIM 恢复前体力
+#DIM 恢复前气力
+#DIM 恢复后体力
+#DIM 恢复后气力
+#DIM 恢复前精力
+#DIM 恢复后精力
+#DIM 恢复前体力２
+#DIM 恢复前气力２
+#DIM 恢复后体力２
+#DIM 恢复后气力２
+
+;会话累积值が阈值を超えると失败
+IF TCVAR:302
+	PRINTFORML 虽然想向%NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%搭话可是不知道该说些什么
+	PRINTW 四周弥漫着尴尬的气氛…
+	TIME += 10
+	DOWNBASE:气力 += 100
+	DOWNBASE:PLAYER:气力 += 100
+	RETURN 1
+ENDIF
+
+;======会话からｺﾋﾟﾍﾟ======
+;固定で获得するソース
+SOURCE:欢乐 = 200
+
+;ABL:亲密をみる
+IF ABL:亲密 <= 1
+	SOURCE:欢乐 += (ABL:顺从 * 40)
+ELSEIF ABL:亲密 <= 3
+	SOURCE:欢乐 += 200 + (ABL:顺从 * 40)
+ELSEIF ABL:亲密 <= 5
+	SOURCE:欢乐 += 500 + (ABL:顺从 * 40)
+ELSEIF ABL:亲密 <= 8
+	SOURCE:欢乐 += 750 + (ABL:顺从 * 60)
+ELSEIF ABL:亲密 <= 10
+	SOURCE:欢乐 += 1000 + (ABL:顺从 * 60)
+ELSE
+	SOURCE:欢乐 += 1600 + (ABL:顺从 * 30)
+ENDIF
+
+;好感度をみる
+IF CFLAG:2 <= 1000
+	SOURCE:欢乐 += CFLAG:2
+ELSEIF CFLAG:2 <= 5000
+	SOURCE:欢乐 += 500 + (CFLAG:2 - 500) / 3
+ELSE
+	SOURCE:欢乐 += 2000 + (CFLAG:2 - 5000) / 5
+ENDIF
+SIF SOURCE:欢乐 < 0
+	SOURCE:欢乐 = 0
+
+
+SOURCE:被动 = 100 + 100 * ABL:顺从
+SOURCE:征服 = 100 + 100 * ABL:施虐属性
+
+;しかし恋慕でないと成功率が下がる
+LOCAL = RAND:(200 - TALENT:恋慕 * 100 - TALENT:思慕 * 50)
+
+IF LOCAL <= 20
+	;大成功
+	TFLAG:98 = 2
+	EXP:PLAYER:会话经验 ++
+	TFLAG:193 = 1
+ELSEIF LOCAL >= 95
+	;运が恶いと失败
+	TFLAG:好感度减少 = 2
+	TFLAG:193 = -1
+ENDIF
+
+IF TFLAG:193 == -1
+	TIMES SOURCE:欢乐 , 0.10
+	TIMES SOURCE:征服 , 0.50
+	TIMES SOURCE:被动 , 0.50
+ELSEIF TFLAG:193 == 0
+	TIMES SOURCE:欢乐 , 1.00
+	TIMES SOURCE:征服 , 1.00
+	TIMES SOURCE:被动 , 1.00
+ELSE
+	TIMES SOURCE:欢乐 , 2.00
+	TIMES SOURCE:征服 , 2.00
+	TIMES SOURCE:被动 , 2.00
+ENDIF
+SELECTCASE ABL:PLAYER:话术技能
+	CASE 0
+		TIMES SOURCE:欢乐 , 0.20
+		TIMES SOURCE:征服 , 0.20
+		TIMES SOURCE:被动 , 0.20
+	CASE 1
+		TIMES SOURCE:欢乐 , 0.40
+		TIMES SOURCE:征服 , 0.40
+		TIMES SOURCE:被动 , 0.40
+	CASE 2
+		TIMES SOURCE:欢乐 , 0.70
+		TIMES SOURCE:征服 , 0.70
+		TIMES SOURCE:被动 , 0.70
+	CASE 3
+		TIMES SOURCE:欢乐 , 1.00
+		TIMES SOURCE:征服 , 1.00
+		TIMES SOURCE:被动 , 1.00
+	CASE 4
+		TIMES SOURCE:欢乐 , 1.20
+		TIMES SOURCE:征服 , 1.20
+		TIMES SOURCE:被动 , 1.20
+	CASEELSE
+		TIMES SOURCE:欢乐 , 1.50
+		TIMES SOURCE:征服 , 1.50
+		TIMES SOURCE:被动 , 1.50
+ENDSELECT
+;==================================
+;会话累积值
+TCVAR:301 += 1200 / (10 + ABL:PLAYER:话术技能)
+恢复前体力 = BASE:PLAYER:体力
+恢复前气力 = BASE:PLAYER:气力
+恢复前精力 = BASE:PLAYER:精力
+恢复前精力 = BASE:PLAYER:精力
+恢复前体力２ = BASE:体力
+恢复前气力２ = BASE:气力
+
+CALL RECOVER_PERMIL(PLAYER, 50, "体力", 1)
+CALL RECOVER_PERMIL(TARGET, 50, "体力", 1)
+IF TFLAG:193 == 1
+	CALL RECOVER_PERMIL(PLAYER, 100, "气力", 1)
+	CALL RECOVER_PERMIL(TARGET, 150, "气力", 1)
+	CALL RECOVER_PERMIL(PLAYER, 150, "精力", 1)
+ELSEIF TFLAG:193 == -1
+	CALL RECOVER_PERMIL(PLAYER, -100, "气力", 1)
+	CALL RECOVER_PERMIL(TARGET, -100, "气力", 1)
+	CALL RECOVER_PERMIL(PLAYER, 50, "精力", 1)
+ELSE
+	CALL RECOVER_PERMIL(PLAYER, 100, "气力", 1)
+	CALL RECOVER_PERMIL(TARGET, 100, "气力", 1)
+	CALL RECOVER_PERMIL(PLAYER, 100, "精力", 1)
+ENDIF
+
+TIME += 30
+恢复后体力 = BASE:PLAYER:体力
+恢复后气力 = BASE:PLAYER:气力
+恢复后精力 = BASE:PLAYER:精力
+恢复后体力２ = BASE:体力
+恢复后气力２ = BASE:气力
+
+;DRAWLINE
+;PRINTFORML 体力+{ABS(恢复后体力 - 恢复前体力)}（%NAME_OUTPUT_TRANSLATION("CALLNAME", PLAYER)%）
+;PRINTFORML 气力+{ABS(恢复后气力 - 恢复前气力)}（%NAME_OUTPUT_TRANSLATION("CALLNAME", PLAYER)%）
+;PRINTFORML 精力+{ABS(恢复后精力 - 恢复前精力)}（%NAME_OUTPUT_TRANSLATION("CALLNAME", PLAYER)%）
+;PRINTFORML 体力+{ABS(恢复后体力２ - 恢复前体力２)}（%NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%）
+;PRINTFORML 气力+{ABS(恢复后气力２ - 恢复前气力２)}（%NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%）
+RETURN 1
+
+;-------------------------------------------------
+;实行判定
+;-------------------------------------------------
+@COM_ABLE23
+;枕边话
+SIF !TFLAG:100
+	RETURN 0
+;批量管理
+SIF GLOBAL_COMABLE(23)
+	RETURN RESULT
+
+;自分か相手が疲れてないと駄目
+IF (BASE:PLAYER:体力 > MAXBASE:PLAYER:体力 / 2) && (BASE:体力 > MAXBASE:体力 / 2)
+	RETURN 0
+ENDIF
+;自分だけ疲れている场合(许して枕边话の场合の追加判定)
+IF (BASE:PLAYER:体力 <= MAXBASE:PLAYER:体力 / 2) && (BASE:体力 > MAXBASE:体力 / 2)
+	;发情だと无理
+	IF TCVAR:TARGET:发情 == 1
+		RETURN 0
+	;相手が幼稚だと无理
+	ELSEIF TALENT:TARGET:幼稚
+		RETURN 0
+	ENDIF
+ENDIF
+
+;时间停止中も駄目
+SIF FLAG:70
+	RETURN 0
+;なんか装着してるとダメ
+FOR LOCAL,11,25
+	SIF TEQUIP:LOCAL
+		RETURN 0
+NEXT
+;插入中は駄目
+SIF TEQUIP:50 != -1
+	RETURN 0
+SIF TEQUIP:51 != -1
+	RETURN 0
+;淋浴中はダメ
+SIF TEQUIP:32
+	RETURN 0
+;吸乳头中はダメ
+SIF TEQUIP:41
+	RETURN 0
+;乳揉み中はダメ
+SIF TEQUIP:42
+	RETURN 0
+;继续接吻
+SIF TEQUIP:继续接吻
+	RETURN 0
+;睡眠奸中
+SIF CFLAG:恶作剧 > 1
+	RETURN 0
+;ベッドルームでないとダメ
+SIF !BEDROOM(CFLAG:PLAYER:当前位置)
+	RETURN 0
+RETURN 1

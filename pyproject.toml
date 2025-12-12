@@ -13,6 +13,7 @@ dependencies = [
     "rosu-pp-py>=1.0",
     "matplotlib>=3.0",
     "loguru>=0.7",
+    "pillow>=12.0.0",
 ]
 
 [tool.uv]

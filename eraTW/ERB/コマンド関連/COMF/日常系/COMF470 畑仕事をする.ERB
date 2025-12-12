@@ -1,0 +1,103 @@
+﻿;-------------------------------------------------
+;做农活
+;日常系指令、レベル1
+;-------------------------------------------------
+;COM系函数、MESSAGEは本来は切り分けて别ファイル
+
+;养蚕だろうが田地工作になるけどまあいいや
+@MESSAGE_COM470
+#LOCALSIZE 1
+#LOCALSSIZE 1
+PRINTFORML 你往%STR_NOUMIN(FLAG:地主, "田的种类")%走去了
+SELECTCASE TFLAG:193
+CASE 1
+	PRINTFORML 今天的农活糟糕的要命
+CASE 2
+	PRINTFORML 今天的农活太慢了
+CASE 3
+	PRINTFORML 今天的农活没发生什么特别的事情
+CASE 4
+	PRINTFORML 今天的农活有一定的进展
+CASE 5
+	PRINTFORML 今天的农活顺利结束了
+CASEELSE
+	PRINTFORML 今天的农活简直是受到了神的眷恋
+ENDSELECT
+
+
+
+;システム的に1角色优遇するのはどうかと思うけど
+;アイデンティティだものいいよね
+@COM470
+IF ITEM:园艺用品一式
+	TFLAG:田地工作成功度 = RAND(2, 7)
+ELSE
+	TFLAG:田地工作成功度 = RAND(1, 4)
+ENDIF
+
+;神の加护
+SELECTCASE CFLAG:(FINDCHARA(CALLNAME, "穣子", 1)):好感度
+	CASE IS < 1000
+	CASE IS < 5000
+		TFLAG:田地工作成功度 += 1
+	CASE IS < 10000
+		TFLAG:田地工作成功度 += 2
+	CASE IS < 30000
+		TFLAG:田地工作成功度 += 3
+	CASEELSE
+		TFLAG:田地工作成功度 += 4
+ENDSELECT
+FLAG:田地工作的成果 += TFLAG:田地工作成功度
+TFLAG:193 = TFLAG:田地工作成功度
+IF FLAG:70
+	BASE:MASTER:TSP -= 500
+ELSE
+	TIME += 180
+	DOWNBASE:MASTER:体力 += 300
+	DOWNBASE:MASTER:气力 += 300
+ENDIF
+
+RETURN 1
+;-------------------------------------------------
+;实行可能判定
+;-------------------------------------------------
+;做农活
+@COM_ABLE470
+SIF !TFLAG:100
+	RETURN 0
+SIF TFLAG:妄想中
+	RETURN 0
+;你は农民ではない
+SIF !FLAG:地主
+	RETURN 0
+;当前位置が畑の场所ではない、LOCALに畑の位置を一次取得して使用
+LOCAL = INT_NOUMIN(FLAG:地主, "场所ID")
+SIF GET_MAPID(LOCAL) != MAIN_MAP
+	LOCAL = GET_MAP_REPLACEMENT(LOCAL)
+SIF CFLAG:MASTER:当前位置 != LOCAL
+	RETURN 0
+;吞んでる
+SIF BASE:MASTER:酒气
+	RETURN 0
+SIF CFLAG:诶嘿嘿
+	RETURN 0
+;体力・气力不足
+SIF BASE:MASTER:气力 < 300 || BASE:MASTER:体力 < 300
+	RETURN 0
+;天气が恶い
+SIF !GROUPMATCH(TIME:5, 0, 1, 2, 3, 4, 6, 7)
+	RETURN 0
+;今日はもう仕事をした
+SIF TFLAG:田地工作成功度
+	RETURN 0
+;时间に余裕が无いとダメ
+IF FLAG:70
+	;TSP足りない
+	SIF BASE:MASTER:TSP < 300
+		RETURN 0
+ELSE
+	;活动限界を720としてその3时间前
+	SIF NEMUKE() >= 540
+		RETURN 0
+ENDIF
+RETURN 1

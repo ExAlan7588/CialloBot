@@ -1,0 +1,79 @@
+﻿;-------------------------------------------
+;刻印取得
+;-------------------------------------------
+;==================================================
+;Optional: Determines if the standard description should be skipped.
+;Return 0 if description and KOJO should be shown, 1 if description should be hidden and KOJO shown, 2 if description should be shown and KOJO hidden, and 3 if both description and KOJO should be hidden.
+;==================================================
+;【メモ】2024/09/08 原本にはないけど刻印取得も追加しました。先に性交をやれって？はい……
+
+@M_KOJO_MESSAGE_MARKCNG_MESSAGECHECK_K47
+RETURN 1
+
+@M_KOJO_MESSAGE_MARKCNG_K47
+;このままだと地の文が表示されません
+;地の文を表示したい方は、下记のコメントアウトを削除して下さい
+;苦痛刻印
+IF TFLAG:22 == 1
+	PRINTFORMW 
+ELSEIF TFLAG:22 == 2
+	PRINTFORMW 
+ELSEIF TFLAG:22 == 3
+	PRINTFORMW 
+ENDIF
+
+;时奸刻印
+IF TFLAG:时奸刻印取得 == 1
+	PRINTFORMW 「什、什么……！？ 刚才、突然、颤抖了一下……？ \/\/\/」
+	PRINTFORMW （但是稍微，感觉有点舒服……\/\/\/）
+ELSEIF TFLAG:时奸刻印取得 == 2
+	CALL HPH_PRINT,@"「啊啊啊，为、为什么啊HPH 突然，来了，啦HPH」","W"
+	CALL HPH_PRINT,@"（……习、习惯了这、这个的话，会、会，不、不行HPH 感觉会变得不好……\/\/\/）","W"
+ELSEIF TFLAG:时奸刻印取得 == 3
+	CALL HPH_PRINT,@"「嗯啊啊啊啊――HPHHPHHPH 要、要坏掉了HPH 要去了HPH 里香，不知不觉，就HPH 去、去得太多了，啦HPH」","W"
+	PRINTFORMDW 里香被突然袭来的强烈快感震得浑身颤抖，流着口水，下衣被爱液浸湿，疯狂地达到高潮。
+	CALL HPH_PRINT,@"「啊……啊ーHPH……哈……哈嘿……HPH 呜、呜，这、这个……记、记住的话……HPH」","W"
+	CALL HPH_PRINT,@"「啊、啊回不去了……不、不行了……啦……HPH」","W"
+ENDIF
+
+;快乐刻印
+IF TFLAG:23 == 1
+	CALL HPH_PRINT,@"「这就是……H的事情，的舒服，吗，呢……HPH」","W"
+ELSEIF TFLAG:23 == 2
+	CALL HPH_PRINT,@"「啊ー要坏掉了啦……HPH 好舒服……HPH 感觉，要沉迷其中了，啦……HPH」","W"
+ELSEIF TFLAG:23 == 3
+	CALL HPH_PRINT,@"「啊欸欸……HPH 饶、饶了我吧HPH 饶了我吧，求你了HPH 这样下去，里香，会变成H笨蛋的……HPH」","W"
+	CALL HPH_PRINT,@"（或者说，不行HPH 比起工作，感觉要更喜欢H的事情了HPHHPHHPH）","W"
+ENDIF
+
+;屈服刻印
+;快乐による刻印
+;LV1
+IF TFLAG:24 == 11
+	PRINTFORMW （这、这是什么感觉……\/\/\/）
+;LV2
+ELSEIF TFLAG:24 == 12
+	PRINTFORMW （呜……我、我，居然对和%CALLNAME:MASTER%这样在一起，感到高兴——？！\/\/\/）
+;LV3
+ELSEIF TFLAG:24 == 13
+	PRINTFORMW （还要……还要更多……想和%CALLNAME:MASTER%，做舒服的事情……\/\/\/）
+;屈服、恭顺带来的刻印
+;LV1
+ELSEIF TFLAG:24 == 31
+	PRINTFORMW （呜……为什么呢，总觉得，无法反抗%CALLNAME:MASTER%一样——）
+;LV2
+ELSEIF TFLAG:24 == 32
+	PRINTFORMW （啊呜……我、我竟然会想让，让这种%CALLNAME:MASTER%高兴……为什么……）
+;LV3
+ELSEIF TFLAG:24 == 33
+	PRINTFORMW （啊啊……就算嘴上怎么说，我已经，对能让%CALLNAME:MASTER%高兴……感到高兴了……）
+ENDIF
+
+;反抗刻印
+IF TFLAG:21 == 1
+	PRINTFORMW 「你想干什么！？ 住手啊！」
+ELSEIF TFLAG:21 == 2
+	PRINTFORMW 「适可而止啊！！ 你是想被战车炮轰吗！？」
+ELSEIF TFLAG:21 == 3
+	PRINTFORMW 「啊啊——看来继巫女之后，下一个要杀的就是%CALLNAME:MASTER%了。 可以吗？」
+ENDIF

@@ -1,0 +1,102 @@
+﻿;-------------------------------------------------
+;抚摸肚子
+;日常系指令　レベル2
+;-------------------------------------------------
+@COM306
+;-------------------------------------------------
+;ソース追加处理
+;-------------------------------------------------
+;破瓜抑制
+TFLAG:2 = 1
+
+;消费体力、气力
+IF FLAG:70 == 1
+	BASE:MASTER:TSP -= 10
+	CUP:快Ｖ = 30 + ABL:PLAYER:指 * 5
+	;着衣补正
+	SIF TEQUIP:1 > 1
+		TIMES SOURCE:快Ｖ , 0.50
+ELSE
+	DOWNBASE:体力 += 5
+	DOWNBASE:气力 += 30
+	CUP:快Ｖ = BASE:TARGET:情绪 / 100 + 30 + ABL:PLAYER:指 * 5
+	SOURCE:欢乐 = 150
+	SOURCE:情爱 = 100
+	SOURCE:情欲 = 30
+	SOURCE:露出 = 10
+	SOURCE:反感 = 150 - BASE:TARGET:情绪 / 100
+	SOURCE:被动 = 120
+	IF TALENT:妊娠 == 1
+		DOWNBASE:体力 += 5
+		DOWNBASE:气力 += 30
+		SOURCE:欢乐 = 350 + 240 * ABL:顺从
+		SOURCE:情爱 = 150
+		SOURCE:反感 = 50
+		SOURCE:被动 = 120
+		SIF TALENT:恋慕
+			EXP:爱情经验 ++
+	ENDIF
+	;着衣补正
+	IF TEQUIP:1 > 1
+		TIMES SOURCE:快Ｖ , 0.50
+		TIMES SOURCE:情欲 , 0.70
+		TIMES SOURCE:露出 , 0.30
+	ENDIF
+	IF !TALENT:恋慕 && !TALENT:思慕
+		CUP:快Ｖ /= 2
+		SOURCE:欢乐 /= 2
+	ENDIF
+	;好感度变化
+	IF ABL:亲密 <= 5
+		TFLAG:97 -= 3
+		TFLAG:193 = -1
+	ELSEIF TALENT:妊娠
+		TFLAG:97 += 3
+		TFLAG:193 = 1
+	ENDIF
+	;-------------------------------------------------
+	;特殊ソース处理
+	;-------------------------------------------------
+	;圧抑、抵抗持ちには、抑郁ソース追加
+	SIF TALENT:自己爱 < 0 || TALENT:抵抗
+		SOURCE:郁闷 += 20
+
+	;-------------------------------------------------
+	;経験の处理
+	;-------------------------------------------------
+	IF HETEROSEX(TARGET,PLAYER)
+		EXP:(50 + HETEROSEX(TARGET,PLAYER)) += 1
+		EXP:PLAYER:(50 + HETEROSEX(TARGET,PLAYER)) += 1
+	ENDIF
+	TIME += 10
+ENDIF
+RETURN 1
+
+;-------------------------------------------------
+;实行判定
+;-------------------------------------------------
+@COM_ABLE306
+;お腹抚でる实行判定
+SIF !TFLAG:100
+	RETURN 0
+SIF !TARGET
+	RETURN 0
+;批量管理
+SIF GLOBAL_COMABLE(306)
+	RETURN RESULT
+;气力0
+SIF BASE:MASTER:气力 <= 0
+	RETURN 0
+;亲热强度1
+SIF TCVAR:MASTER:亲热 < 1
+	RETURN 0
+;仕事中
+SIF CFLAG:行动 == 5
+	RETURN 0
+;腕使用中
+SIF TFLAG:61
+	RETURN 0
+SIF GETBIT (TCVAR:26,1)
+	RETURN 0
+RETURN 1
+

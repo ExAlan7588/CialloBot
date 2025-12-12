@@ -1,0 +1,48 @@
+﻿;================================
+;custom shop button
+;カスタムSHOPボタン
+;y is the id of the button, range from 0 to 9
+;yはボタンのID、0~9に对応
+;使用する际はSKIPSTART~SKIPENDを外してください。
+;================================
+;judge the button can be shown, if return 1, it will show
+;これをRETURN 1するとボタンが表示される
+@KOJO_CUSTOM_BUTTON_CONDITION_K30_0
+SIF !GETBIT(CFLAG:30:1803, 8)
+	RETURN 0
+custom_button_name:30:0 = 口上色变更
+RETURN 1
+
+;when the button is clicked
+;ボタンがクリックされた场合
+@KOJO_CUSTOM_BUTTON_K30_0
+#DIM K_COLOR = 0x337D5C, 0x52C487, 0x7FD8A7, GETDEFCOLOR(), 0xFF93FB
+LOCALS '= "沉稳的", "普通的", "稍微高亢的", "没有个性的", "色情的"
+LOCAL = FINDELEMENT(K_COLOR, CFLAG:30:1501, 0)
+LOCAL = INRANGE(LOCAL, 0, 3) ? LOCAL + 1 # 0
+CFLAG:30:1501 = K_COLOR:LOCAL
+SETCOLOR CFLAG:30:1501
+PRINTFORML 「已更改为%LOCALS:LOCAL%语音」
+RESETCOLOR
+RETURN 1
+
+;================================
+;カスタム素質
+;テンプレの便宜上、独立した函数としてまとめました。
+;使用する际はSKIPSTART~SKIPENDを外してください。
+;================================
+@KOJO_CUSTOM_TALENT_SET_K30
+
+;表示判定 真=表示/伪=非表示
+CUSTOM_TALENT:30:0 = GETBIT(CFLAG:1910, 7)
+;素質名
+CUSTOM_TALENT_NAME:30:0 = 纵割れ肛门
+;(省略可)表示色、0/通常 1/粉色 2/赤色+太字
+CUSTOM_TALENT_COLOR:30:0 = 1
+;(省略可)表示TYPE 1/种族 2/性的 3/身体的 4/精神的 5/技术的 他は「其他」
+CUSTOM_TALENT_TYPE:30:0 = 3
+
+CUSTOM_TALENT:30:1 = !INRANGE(TCVAR:30:363, -1, 0)
+CUSTOM_TALENT_NAME:30:1 = %\@ TCVAR:30:363 < 0 ? 朝から # お口が \@%满足
+CUSTOM_TALENT_COLOR:30:1 = 1
+CUSTOM_TALENT_TYPE:30:1 = 0

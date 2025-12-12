@@ -1,0 +1,187 @@
+﻿;----------------------------------------------------------------------------------------------------
+;潜伏率の增减处理
+;----------------------------------------------------------------------------------------------------
+@潜伏率增减处理
+IF GETBIT(FLAG:潜伏,2)
+	;会话モードはこれで判定
+	SELECTCASE SELECTCOM
+		CASE 300
+			BASE:MASTER:潜伏率 += 10
+		CASE 19,20,21
+			BASE:MASTER:潜伏率 += 0
+		CASEELSE
+			IF NOWEX:Ｃ绝顶 || NOWEX:Ｖ绝顶 || NOWEX:Ａ绝顶 || NOWEX:Ｂ绝顶 || NOWEX:Ｍ绝顶
+				BASE:MASTER:潜伏率 -= 18
+			ELSE
+				BASE:MASTER:潜伏率 -= 6
+			ENDIF
+	ENDSELECT
+	CALL 会话モード继续判定
+ELSEIF GETBIT(FLAG:潜伏,1)
+	;探索モードはこれで判定
+	SELECTCASE SELECTCOM
+		CASE 19,20,21
+			BASE:MASTER:潜伏率 += 3
+		CASEELSE
+			IF NOWEX:Ｃ绝顶 || NOWEX:Ｖ绝顶 || NOWEX:Ａ绝顶 || NOWEX:Ｂ绝顶 || NOWEX:Ｍ绝顶
+				BASE:MASTER:潜伏率 -= 12
+			ELSE
+				BASE:MASTER:潜伏率 -= 4
+			ENDIF
+		ENDSELECT
+	CALL 探索判定
+ELSE
+	;潜伏モードはこれで判定
+	IF GET_TARGETNUM() > 1
+		SELECTCASE SELECTCOM
+			CASE 19,20,21
+				BASE:MASTER:潜伏率 += 5
+			CASEELSE
+				IF NOWEX:Ｃ绝顶 || NOWEX:Ｖ绝顶 || NOWEX:Ａ绝顶 || NOWEX:Ｂ绝顶 || NOWEX:Ｍ绝顶
+					BASE:MASTER:潜伏率 -= 6
+				ELSE
+					BASE:MASTER:潜伏率 -= 2
+				ENDIF
+			ENDSELECT
+		SIF BASE:MASTER:潜伏率 < 40
+			CALL 探索者决定处理
+	ELSE
+	;周围に谁もいなければ常に100％
+		BASE:MASTER:潜伏率 = 100
+	ENDIF
+
+ENDIF
+
+;会话モード以外で继续接吻中は＋7
+SIF TEQUIP:继续接吻 && !GETBIT(FLAG:潜伏,2)
+	BASE:MASTER:潜伏率 += 7
+
+;潜伏率100以上なら100に
+BASE:MASTER:潜伏率 = MIN(BASE:MASTER:潜伏率, 100)
+
+;潜伏率0%で潜伏モード结束、ウフフバレへ
+IF BASE:MASTER:潜伏率 <=0
+	CALL 潜伏モード结束处理
+	FOR LOCAL, 1, GET_TARGETNUM() + 1
+		SIF CFLAG:LOCAL:诶嘿嘿 || CFLAG:LOCAL:恶作剧
+			CONTINUE
+		SIF !(CFLAG:LOCAL:诶嘿嘿 || CFLAG:LOCAL:恶作剧)
+			BREAK
+	NEXT
+	CALL AFFAIR_DISCLOSURE(TARGET:LOCAL, 0)
+ENDIF
+;----------------------------------------------------------------------------------------------------
+;潜伏モードの结束处理
+;----------------------------------------------------------------------------------------------------
+@潜伏モード结束处理
+;CFLAG:潜伏状态が1以上の角色を全て0に
+FOR LOCAL, 1, GET_TARGETNUM() + 1
+	;全CFLAG:探索状态をオフに
+	SIF GETBIT(CFLAG:(TARGET:LOCAL):潜伏状态,0)
+		CLEARBIT CFLAG:(TARGET:LOCAL):潜伏状态,0
+	SIF GETBIT(CFLAG:(TARGET:LOCAL):潜伏状态,1)
+		CLEARBIT CFLAG:(TARGET:LOCAL):潜伏状态,1
+	SIF GETBIT(CFLAG:(TARGET:LOCAL):潜伏状态,2)
+		CLEARBIT CFLAG:(TARGET:LOCAL):潜伏状态,2
+NEXT
+;潜伏フラグをオールクリア
+CLEARBIT FLAG:潜伏,0
+CLEARBIT FLAG:潜伏,1
+CLEARBIT FLAG:潜伏,2
+TFLAG:探索试行回数 = 0
+TFLAG:会话回数 = 0
+
+
+;----------------------------------------------------------------------------------------------------
+;探索者の决定处理
+;----------------------------------------------------------------------------------------------------
+@探索者决定处理
+;(LOCAL:1)＝探索者
+LOCAL:1 = IN_ROOM_MEMBER("MAX", CFLAG:MASTER:当前位置, "CFLAG", 2)
+SIF CFLAG:(LOCAL:1):好感度 < 1500
+	RETURN
+SIF GETBIT(CFLAG:(LOCAL:1):潜伏状态,0)
+	RETURN
+
+SETBIT CFLAG:(LOCAL:1):潜伏状态,1
+
+;探索モード(1)をオンに
+SETBIT FLAG:潜伏,1
+SETCOLOR COLOR("黄")
+PRINTFORML 注意到%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%动静的%NAME_OUTPUT_TRANSLATION("CALLNAME", (LOCAL:1))%开始探索周围了…
+RESETCOLOR
+
+;----------------------------------------------------------------------------------------------------
+;探索モードの探索判定关联
+;----------------------------------------------------------------------------------------------------
+@探索判定
+;(LOCAL:1)＝探索者
+LOCAL:1 = IN_ROOM_MEMBER("MAX", CFLAG:MASTER:当前位置, "CFLAG", 2)
+IF !GETBIT(CFLAG:(LOCAL:1):潜伏状态,1)
+;探索角色が移动した等でいない场合は探索モード(1)をオフ
+	CLEARBIT FLAG:潜伏,1
+	TFLAG:探索试行回数 = 0
+	SETCOLOR COLOR("绿")
+	PRINTFORML 在探寻的人似乎去了别的地方
+	RESETCOLOR
+ENDIF
+
+
+
+IF TFLAG:探索试行回数 < 6
+	IF RAND:10 < 1 
+		;探索された场合会话モード(2)をオンに、探索モード(1)はオフに
+		SETBIT CFLAG:(LOCAL:1):潜伏状态,2
+		CLEARBIT CFLAG:(LOCAL:1):潜伏状态,1
+		SETBIT FLAG:潜伏,2
+		CLEARBIT FLAG:潜伏,1
+		TFLAG:探索试行回数 = 0
+		SETCOLOR COLOR("赤")
+		PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", (LOCAL:1))%看到了%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%并远远地发起了会话！
+		RESETCOLOR
+	ELSE
+		TFLAG:探索试行回数 ++
+		SETCOLOR COLOR("黄")
+		PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", (LOCAL:1))%探索着%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%…
+		RESETCOLOR
+	ENDIF
+ELSE
+	;探索试行回数が6回以上なら探索结束
+	CLEARBIT CFLAG:(LOCAL:1):潜伏状态,1
+	CLEARBIT FLAG:潜伏,1
+	TFLAG:探索试行回数 = 0
+	SETCOLOR COLOR("绿")
+	PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", (LOCAL:1))%似乎放弃了对%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%的探索…
+	RESETCOLOR
+ENDIF
+
+;----------------------------------------------------------------------------------------------------
+;会话モードの继续判定
+;----------------------------------------------------------------------------------------------------
+@会话モード继续判定
+;(LOCAL:1)＝会话者
+LOCAL:1 = IN_ROOM_MEMBER("MAX", CFLAG:MASTER:当前位置, "CFLAG", 2)
+IF !GETBIT(CFLAG:(LOCAL:1):潜伏状态,2)
+;会话角色が移动した等でいない场合は会话モード(2)をオフ
+	CLEARBIT FLAG:潜伏,2
+	TFLAG:会话回数 = 0
+	SETCOLOR COLOR("绿")
+	PRINTFORML 不知不觉间会话的对方已经不在了
+	RESETCOLOR
+ENDIF
+
+;会话回数以下のRANDを出せば会话结束。それ以外ならモード续行
+IF RAND:20 < TFLAG:会话回数
+	CLEARBIT CFLAG:(LOCAL:1):潜伏状态,2
+	CLEARBIT FLAG:潜伏,2
+	TFLAG:会话回数 = 0
+	SETCOLOR COLOR("绿")
+	PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", (LOCAL:1))%似乎对和%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%的会话已经满足了
+	RESETCOLOR
+ELSE
+	TFLAG:会话回数 ++
+	SETCOLOR COLOR("赤")
+	PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", (LOCAL:1))%似乎还在持续着和%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%的会话
+	RESETCOLOR
+ENDIF
+

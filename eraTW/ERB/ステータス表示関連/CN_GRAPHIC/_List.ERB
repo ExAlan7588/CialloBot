@@ -1,0 +1,394 @@
+﻿;_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/#
+;
+;Module   :_LIST.ERB, _LIST.ERH
+;Facility :文字列を可变长配列のように扱うライブラリ
+;Licence  :ライセンスフリー(CC0)。
+;
+;Modification Data:
+;  Edit  Date          Author                   Reason
+;  001   2018/08/29    MinorShift(Emueraの人)   新规作成
+;_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/#
+
+
+;文字列を使った可变长配列もどき
+;"值,值,值,"という形式でデータを保存する。（要素数が1以上なら终端にカンマが必须）
+;例えば、可变长配列用文字列STRが"ショート,セミロング,ロング,"であるとき、LIST_GET(STR, 1)は"セミロング"を返す。
+;また、STRが"ショート,セミロング,ロング,"であるとき、LIST_ADD(STR, "ロングウェーブ")は"ショート,セミロング,ロング,ロングウェーブ,"を返す。
+;制限として、格纳する值にはカンマが含まれていて是けない。当然入れ子にはできない。
+;标准では一つの可变长配列中の要素の最大数は100个。_LIST.ERHを变更すれば增やせるが实行速度が实用的でないと思われる。
+;少しでも高速化するためにデータ形式のチェックは省いている。そのため错误的形式のデータが送られてくると何が起こるかわからない。
+;データをまとめて格纳するためにどうぞ。
+;_Dictionaryとは独立しているので值として连想配列を格纳する、又は可变长配列を连想配列に格纳することはできる。入れ子にすると死ぬ。
+
+;@LIST_ADD(_LIST, _VALUE) ;对象の可变长配列の末尾に_VALUEを追加した可变长配列を返す。
+;@LIST_SET(_LIST, _INDEX, _VALUE) ;对象の可变长配列の_INDEX番目の要素を_VALUEで上书きした可变长配列を返す。配列尺寸が不足していれば自动的に扩张される。
+;@LIST_ADDLIST(_LIST, _LIST_OTHER) ;对象の可变长配列の末尾に_LIST_OTHERを结合した可变长配列を返す。
+;@LIST_GET(_LIST, _INDEX) ;对象の可变长配列の_INDEX番目の要素を返す。配列の范围外である场合、空文字列を返す。
+;@LIST_INDEXOF(_LIST, _VALUE) ;对象の可变长配列に_VALUEと完全一致する要素が存在すればその最初のINDEX、存在しなければ-1を返す。
+;@LIST_COUNT(_LIST) ;对象の可变长配列の尺寸（要素数）を返す。
+;@LIST_INSERTAT(_LIST, _INDEX, _VALUE) ;对象の可变长配列の_INDEX番目に_VALUEを追加した可变长配列を返す。
+;@LIST_REMOVEAT(_LIST, _INDEX) ;对象の可变长配列の_INDEX番目の要素を削除した可变长配列を返す。配列の范围外である场合、_LISTをそのまま返す。
+;@LIST_REMOVEALL(_LIST, _VALUE) ;对象の可变长配列から_VALUEと一致する要素を全て削除した可变长配列を返す。
+;@LIST_SORT(_LIST) ;对象の可变长配列を升顺でソートした可变长配列を返す。
+;@LIST_SORT_R(_LIST) ;对象の可变长配列を逆顺（降顺）でソートした可变长配列を返す。
+;@LIST_FOREACH(_LIST, _FUNCNAME) ;对象の可变长配列に含まれる要素全てについて、顺番にCALLFORM %_FUNCNAME%, _VALUE; を实行する。
+
+
+;================================================
+;@LIST_SET (#FUNCTIONS);对象の可变长配列の_INDEX番目の要素を_VALUEで上书きした可变长配列を返す。配列尺寸が不足していれば自动的に扩张される。
+;_LIST       对象の可变长配列（文字列）
+;_INDEX      追加又は变更する场所のインデックス
+;_VALUE      追加又は变更する值
+;RETURNF     追加又は变更された可变长配列（文字列）
+;================================================
+@LIST_SET(_LIST, _INDEX, _VALUE)
+#FUNCTIONS
+#DIMS _LIST
+#DIM _INDEX
+#DIMS _VALUE
+#DIM _COUNT
+IF _INDEX < 0
+	THROW _List.ERB:_INDEXに负の值({_INDEX})が指定された→%_LIST%
+ENDIF
+_LIST_LENGTH = STRCOUNT(_LIST, ",")
+;配列数不足なら扩张（,を增やす）して结束
+IF _INDEX >= _LIST_LENGTH
+	RETURNF _LIST + ("," * (_INDEX - _LIST_LENGTH)) + _VALUE + ","
+ENDIF
+;(_INDEX-1)番目のカンマと_INDEX番目のカンマを探索して_LIST_INDEX_LEFT,_LIST_INDEX_RIGHTに代入
+_LIST_INDEX_COMMA = -1
+_LIST_INDEX_LEFT = -1
+_COUNT = 0
+WHILE 1
+	_LIST_INDEX_COMMA = STRFINDU(_LIST, "," , _LIST_INDEX_COMMA + 1)
+	IF _COUNT == _INDEX
+		_LIST_INDEX_RIGHT = _LIST_INDEX_COMMA
+		BREAK
+	ENDIF
+	_LIST_INDEX_LEFT = _LIST_INDEX_COMMA
+	_COUNT ++
+WEND
+IF _INDEX > 0
+	;右端にカンマを含む形で切り取る
+	_LIST_LEFT '= SUBSTRINGU(_LIST,0,_LIST_INDEX_LEFT+1)
+ELSE
+	_LIST_LEFT '= ""
+ENDIF
+;左端にカンマを含む形で切り取る
+_LIST_RIGHT '= SUBSTRINGU(_LIST, _LIST_INDEX_RIGHT , -1)
+
+;足して返す
+RETURNF _LIST_LEFT + _VALUE + _LIST_RIGHT
+
+
+;================================================
+;@LIST_ADD (#FUNCTIONS);对象の可变长配列の末尾に_VALUEを追加した可变长配列を返す。
+;_LIST       对象の可变长配列（文字列）
+;_VALUE      追加する值
+;RETURNF     追加された可变长配列（文字列）
+;================================================
+@LIST_ADD(_LIST, _VALUE)
+#FUNCTIONS
+#DIMS _LIST
+#DIMS _VALUE
+RETURNF _LIST + _VALUE + ","
+
+;================================================
+;@LIST_ADDLIST (#FUNCTIONS);对象の可变长配列の末尾に_LIST_OTHERを结合した可变长配列を返す。
+;_LIST       对象の可变长配列（文字列）
+;_LIST_OTHER 追加する可变长配列
+;RETURNF     追加された可变长配列（文字列）
+;================================================
+@LIST_ADDLIST(_LIST, _LIST_OTHER)
+#FUNCTIONS
+#DIMS _LIST
+#DIMS _LIST_OTHER
+RETURNF _LIST + "," + _LIST_OTHER
+
+;@LIST_GET(_LIST, _INDEX) ;对象の可变长配列の_INDEX番目の要素を返す。配列の范围外である场合、空文字列を返す。
+;================================================
+;@LIST_GET (#FUNCTIONS);对象の可变长配列の_INDEX番目の要素を返す。配列の范围外である场合、空文字列を返す。
+;_LIST       对象の可变长配列（文字列）
+;_INDEX      取得する要素のインデックス
+;RETURNF     取得した要素
+;================================================
+@LIST_GET(_LIST, _INDEX)
+#FUNCTIONS
+#DIMS _LIST
+#DIM _INDEX
+#DIM _COUNT
+IF _INDEX < 0
+	THROW _List.ERB:_INDEXに负の值({_INDEX})が指定された→%_LIST%
+ENDIF
+;(_INDEX-1)番目のカンマと_INDEX番目のカンマを探索して_LIST_INDEX_LEFT,_LIST_INDEX_RIGHTに代入
+_LIST_INDEX_COMMA = -1
+_LIST_INDEX_LEFT = -1
+_COUNT = 0
+WHILE 1
+	_LIST_INDEX_COMMA = STRFINDU(_LIST, "," , _LIST_INDEX_COMMA + 1)
+	IF _COUNT == _INDEX
+		_LIST_INDEX_RIGHT = _LIST_INDEX_COMMA
+		BREAK
+	ENDIF
+	;_INDEXが配列外参照
+	IF _LIST_INDEX_COMMA < 0
+		RETURNF ""
+	ENDIF
+	_LIST_INDEX_LEFT = _LIST_INDEX_COMMA
+	_COUNT ++
+WEND
+RETURNF SUBSTRINGU(_LIST,_LIST_INDEX_LEFT + 1, _LIST_INDEX_RIGHT - _LIST_INDEX_LEFT - 1)
+
+
+
+;@LIST_COUNT(_LIST) ;对象の可变长配列の尺寸（要素数）を返す。
+;================================================
+;@LIST_COUNT (#FUNCTION);对象の可变长配列の尺寸（要素数）を返す。
+;_LIST       对象の可变长配列（文字列）
+;RETURNF     尺寸（要素数）
+;================================================
+@LIST_COUNT(_LIST)
+#FUNCTION
+#DIMS _LIST
+RETURNF STRCOUNT(_LIST, ",")
+
+
+
+;================================================
+;@LIST_INSERTAT (#FUNCTIONS);对象の可变长配列の_INDEX番目に_VALUEを追加した可变长配列を返す。
+;_LIST       对象の可变长配列（文字列）
+;_INDEX      追加する场所のインデックス
+;_VALUE      追加する值
+;RETURNF     追加された可变长配列（文字列）
+;================================================
+@LIST_INSERTAT(_LIST, _INDEX, _VALUE)
+#FUNCTIONS
+#DIMS _LIST
+#DIM _INDEX
+#DIMS _VALUE
+#DIM _COUNT
+IF _INDEX < 0
+	THROW _List.ERB:_INDEXに负の值({_INDEX})が指定された→%_LIST%
+ENDIF
+_LIST_LENGTH = STRCOUNT(_LIST, ",")
+;配列数不足なら扩张（,を增やす）して结束。LIST_SETと同じ处理
+IF _INDEX >= _LIST_LENGTH
+	RETURNF _LIST + ("," * (_INDEX - _LIST_LENGTH)) + _VALUE + ","
+ENDIF
+
+;(_INDEX-1)番目のカンマと_INDEX番目のカンマを探索して_LIST_INDEX_LEFT,_LIST_INDEX_RIGHTに代入
+_LIST_INDEX_COMMA = -1
+_LIST_INDEX_LEFT = -1
+_COUNT = 0
+WHILE 1
+	_LIST_INDEX_COMMA = STRFINDU(_LIST, "," , _LIST_INDEX_COMMA + 1)
+	IF _COUNT == _INDEX
+		_LIST_INDEX_RIGHT = _LIST_INDEX_COMMA
+		BREAK
+	ENDIF
+	_LIST_INDEX_LEFT = _LIST_INDEX_COMMA
+	_COUNT ++
+WEND
+IF _INDEX > 0
+	;右端にカンマを含む形で切り取る
+	_LIST_LEFT '= SUBSTRINGU(_LIST,0,_LIST_INDEX_LEFT+1)
+ELSE
+	_LIST_LEFT '= ""
+ENDIF
+;左端にカンマを含む形で切り取る
+_LIST_RIGHT '= SUBSTRINGU(_LIST, _LIST_INDEX_LEFT , -1); _LIST_INDEX_RIGHTじゃなくてLEFT。元のINDEX番目の要素を含む
+
+;足して返す
+RETURNF _LIST_LEFT + _VALUE + _LIST_RIGHT
+
+
+
+;================================================
+;@LIST_REMOVEAT (#FUNCTIONS);对象の可变长配列の_INDEX番目の要素を削除した可变长配列を返す。配列の范围外である场合、_LISTをそのまま返す。
+;_LIST       对象の可变长配列（文字列）
+;_INDEX      削除する场所のインデックス
+;RETURNF     削除された可变长配列（文字列）
+;================================================
+@LIST_REMOVEAT(_LIST, _INDEX)
+#FUNCTIONS
+#DIMS _LIST
+#DIM _INDEX
+#DIM _COUNT
+IF _INDEX < 0
+	THROW _List.ERB:_INDEXに负の值({_INDEX})が指定された→%_LIST%
+ENDIF
+_LIST_LENGTH = STRCOUNT(_LIST, ",")
+;配列外なら_LISTをそのまま返す
+IF _INDEX > _LIST_LENGTH
+	RETURNF _LIST
+ENDIF
+;配列の唯一の要素を削除しようとしているなら空配列（空文字列）を返す
+IF _LIST_LENGTH == 1 && _INDEX == 0
+	RETURNF ""
+ENDIF
+;(_INDEX-1)番目のカンマと_INDEX番目のカンマを探索して_LIST_INDEX_LEFT,_LIST_INDEX_RIGHTに代入
+_LIST_INDEX_COMMA = -1
+_LIST_INDEX_LEFT = -1
+_COUNT = 0
+WHILE 1
+	_LIST_INDEX_COMMA = STRFINDU(_LIST, "," , _LIST_INDEX_COMMA + 1)
+	IF _COUNT == _INDEX
+		_LIST_INDEX_RIGHT = _LIST_INDEX_COMMA
+		BREAK
+	ENDIF
+	_LIST_INDEX_LEFT = _LIST_INDEX_COMMA
+	_COUNT ++
+WEND
+IF _INDEX > 0
+	;右端にカンマを"含まない"形で切り取る
+	_LIST_LEFT '= SUBSTRINGU(_LIST,0,_LIST_INDEX_LEFT)
+ELSE
+	_LIST_LEFT '= ""
+ENDIF
+;左端にカンマを含む形で切り取る
+_LIST_RIGHT '= SUBSTRINGU(_LIST, _LIST_INDEX_RIGHT , -1)
+
+;足して返す
+RETURNF _LIST_LEFT + _LIST_RIGHT
+
+
+;================================================
+;@LIST_INDEXOF (#FUNCTION) ;对象の可变长配列に_VALUEと完全一致する要素が存在すればその最初のINDEX、存在しなければ-1を返す。
+;_LIST       对象の可变长配列（文字列）
+;_VALUE      探索する值
+;RETURNF     发见されたINDEX又は-1
+;================================================
+@LIST_INDEXOF(_LIST, _VALUE)
+#FUNCTION
+#DIMS _LIST
+#DIMS _VALUE
+#DIM _KEYCOUNT
+#DIM _CNT
+;手抜きして「_VALUE + ","」をFINDすると_VALUEが空文字列の时に爆死する
+SPLIT _LIST, ",", _LIST_ELEMENT
+IF RESULT > _LIST_MAX
+	THROW _List.ERB:列表の要素数が多すぎる→%_LIST%
+ENDIF
+_KEYCOUNT = RESULT-1 ;末尾が,なのでSPLITした末端は空文字列になる
+IF _KEYCOUNT <= 0
+	RETURNF -1
+ENDIF
+FOR _CNT,0,_KEYCOUNT
+	IF _LIST_ELEMENT:_CNT == _VALUE
+		RETURNF _CNT
+	ENDIF
+NEXT
+RETURNF -1
+
+;================================================
+;@LIST_REMOVEALL (#FUNCTIONS) ;对象の可变长配列から_VALUEと一致する要素を全て削除した可变长配列を返す。
+;_LIST       对象の可变长配列（文字列）
+;_VALUE      削除する值
+;RETURNF     削除された可变长配列（文字列）
+;================================================
+@LIST_REMOVEALL(_LIST, _VALUE)
+#FUNCTIONS
+#DIMS _LIST
+#DIMS _VALUE
+#DIM _KEYCOUNT
+#DIM _CNT
+;手抜きして「_VALUE + ","」を空文字列でREPLACEすると_VALUEが空文字列の时に爆死する
+SPLIT _LIST, ",", _LIST_ELEMENT
+IF RESULT > _LIST_MAX
+	THROW _List.ERB:列表の要素数が多すぎる→%_LIST%
+ENDIF
+_KEYCOUNT = RESULT-1 ;末尾が,なのでSPLITした末端は空文字列になる
+IF _KEYCOUNT <= 0
+	RETURNF _LIST
+ENDIF
+_LIST '= ""
+FOR _CNT,0,_KEYCOUNT
+	IF _LIST_ELEMENT:_CNT == _VALUE
+		CONTINUE
+	ENDIF
+	_LIST += _LIST_ELEMENT:_CNT + ","
+NEXT
+RETURNF _LIST
+
+;================================================
+;@LIST_SORT (#FUNCTIONS) ;对象の可变长配列を升顺でソートした可变长配列を返す。
+;_LIST       对象の可变长配列（文字列）
+;RETURNF     ソートされた可变长配列（文字列）
+;================================================
+@LIST_SORT(_LIST)
+#FUNCTIONS
+#DIMS _LIST
+#DIMS _FUNCNAME
+#DIM _KEYCOUNT
+#DIM _CNT
+SPLIT _LIST, ",", _LIST_ELEMENT
+IF RESULT > _LIST_MAX
+	THROW _List.ERB:列表の要素数が多すぎる→%_LIST%
+ENDIF
+_KEYCOUNT = RESULT-1 ;末尾が,なのでSPLITした末端は空文字列になる
+IF _KEYCOUNT <= 0
+	RETURNF _LIST
+ENDIF
+ARRAYSORT _LIST_ELEMENT, FORWARD, 0, _KEYCOUNT
+_LIST '= ""
+FOR _CNT,0,_KEYCOUNT
+	_LIST += _LIST_ELEMENT:_CNT + ","
+NEXT
+RETURNF _LIST
+
+;================================================
+;@LIST_SORT_R (#FUNCTIONS) ;对象の可变长配列を逆顺（降顺）でソートした可变长配列を返す。
+;_LIST       对象の可变长配列（文字列）
+;RETURNF     ソートされた可变长配列（文字列）
+;================================================
+@LIST_SORT_R(_LIST)
+#FUNCTIONS
+#DIMS _LIST
+#DIMS _FUNCNAME
+#DIM _KEYCOUNT
+#DIM _CNT
+SPLIT _LIST, ",", _LIST_ELEMENT
+IF RESULT > _LIST_MAX
+	THROW _List.ERB:列表の要素数が多すぎる→%_LIST%
+ENDIF
+_KEYCOUNT = RESULT-1 ;末尾が,なのでSPLITした末端は空文字列になる
+IF _KEYCOUNT <= 0
+	RETURNF _LIST
+ENDIF
+ARRAYSORT _LIST_ELEMENT, BACK, 0, _KEYCOUNT
+_LIST '= ""
+FOR _CNT,0,_KEYCOUNT
+	_LIST += _LIST_ELEMENT:_CNT + ","
+NEXT
+RETURNF _LIST
+
+;================================================
+;@LIST_FOREACH ;对象の可变长配列に含まれる要素全てについて、顺番にCALLFORM %_FUNCNAME%, _VALUE; を实行する。
+;_LIST  对象の连想配列（文字列）
+;_FUNCNAME    实行する函数名(CALLFORM %_FUNCNAME%, _VALUE)
+;RESULT       特に无
+;================================================
+@LIST_FOREACH(_LIST, _FUNCNAME)
+#DIMS _LIST
+#DIMS _FUNCNAME
+#DIM _KEYCOUNT
+#DIM _CNT
+#DIMS _LIST_ELEMENT_P,_LIST_MAX ;ERHの变量を使用とFOREACH中に他の配列のSORTとかできなくなるので。再归の需要はたぶんないからDYNAMICにはしない
+
+SPLIT _LIST, ",", _LIST_ELEMENT_P
+IF RESULT > _LIST_MAX
+	THROW _List.ERB:列表の要素数が多すぎる→%_LIST%
+ENDIF
+
+_KEYCOUNT = RESULT-1 ;末尾が,なのでSPLITした末端は空文字列になる
+IF _KEYCOUNT <= 0
+	RETURN
+ENDIF
+FOR _CNT,0,_KEYCOUNT
+	CALLFORM %_FUNCNAME%, _LIST_ELEMENT_P:_CNT
+NEXT
+RETURN
+
+
+
+

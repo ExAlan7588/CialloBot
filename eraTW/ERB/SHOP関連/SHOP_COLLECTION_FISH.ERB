@@ -1,0 +1,189 @@
+﻿;-----------------------------------------------------------
+;钓った鱼列表の表示
+;-----------------------------------------------------------
+@SHOW_COLLECTION_FISH
+#DIM 选んだ鱼
+#DIM 全种数
+#DIM 钓った种数
+#DIM 钓った总数
+#DIM 最大尺寸
+#DIM 消去行数
+
+VARSET LOCAL
+全种数 = 0
+钓った种数 = 0
+钓った总数 = 0
+最大尺寸 = 0
+消去行数 = 0
+
+CLEARLINE 1
+PRINTFORML 至今为止钓上来的鱼的列表
+DRAWLINE
+FOR LOCAL, 1, 61
+	;鱼が无名でない
+	IF FISH_NAME(LOCAL) != ""
+		全种数 ++
+		SIF LOCAL < 10
+			PRINTFORM  
+		IF FISH_EXP:(LOCAL)
+			钓った种数 ++
+			PRINTFORM [{LOCAL}] %FISH_NAME(LOCAL), 18, LEFT%
+			SETCOLOR C_L_GRAY
+			PRINTFORM （钓鱼总数：
+			SELECTCASE FISH_EXP:LOCAL
+				CASE IS < 10
+					PRINTFORM     
+				CASE IS < 100
+					PRINTFORM    
+				CASE IS < 1000
+					PRINTFORM   
+				CASE IS < 10000
+					PRINTFORM  
+			ENDSELECT
+			钓った总数 += FISH_EXP:LOCAL
+			PRINTFORM {FISH_EXP:LOCAL}条／最大尺寸：
+			SELECTCASE FISHSIZE_RECORD:LOCAL
+				CASE IS < 10
+					PRINTFORM   
+				CASE IS < 100
+					PRINTFORM  
+			ENDSELECT
+			PRINTFORML {FISHSIZE_RECORD:LOCAL}cm ）
+			SIF FISHSIZE_RECORD:LOCAL > 最大尺寸
+				最大尺寸 = FISHSIZE_RECORD:LOCAL
+		ELSE
+			PRINTFORML [{LOCAL}] ????????????
+		ENDIF
+	ENDIF
+	RESETCOLOR
+NEXT
+SETCOLOR 0x00FF00
+PRINTFORM 钓鱼种类：{钓った种数}／{全种数}
+IF 钓った总数
+	PRINTFORML 　钓鱼总数：{钓った总数}条　至今为止钓上来的鱼的最大尺寸：{最大尺寸}cm
+ELSE
+	PRINTL 
+ENDIF
+RESETCOLOR
+DRAWLINE
+PRINT [0] - 返回
+
+$LOOP
+INPUT
+
+选んだ鱼 = RESULT
+SELECTCASE 选んだ鱼
+	CASE 1 TO 60
+		IF FISH_NAME(选んだ鱼) != ""
+			CLEARLINE 1
+			CALL PRINT_FISHINFO(选んだ鱼)
+			IF FISH_EXP:选んだ鱼
+				消去行数 = 9
+			ELSE
+				消去行数 = 2
+			ENDIF
+			CLEARLINE 消去行数
+			GOTO LOOP
+		ELSE
+			CLEARLINE 1
+			GOTO LOOP
+		ENDIF
+	CASE 0
+		RETURN
+	CASEELSE
+		CLEARLINE 1
+		GOTO LOOP
+ENDSELECT
+
+;-----------------------------------------------------------
+;选择した鱼の说明／ヒント表记
+;ARG …选んだ鱼番号
+;-----------------------------------------------------------
+@PRINT_FISHINFO(ARG)
+
+DRAWLINE
+IF FISH_EXP:ARG
+	PRINTPLAINFORM [{ARG}] %FISH_NAME(ARG)%
+	PRINTFORML （钓鱼数：{FISH_EXP:ARG}条／最大尺寸：{FISHSIZE_RECORD:ARG}cm ）
+	IF ABL:MASTER:教养 < 3
+		CALL COLORMESSAGE(@"　　（提升教养的Lv的话、可以获得分布域・钓期的信息…）",C_L_GRAY,1)
+	ELSE
+		CALL FISHING_HINT(ARG)
+	ENDIF
+	CALL FISHING_EXPLANATION(ARG)
+ELSE
+	PRINTPLAINFORM [{ARG}] ?????????????
+	CALL FISHING_HINT(ARG)
+ENDIF
+WAIT
+
+;-----------------------------------------------------------
+;选择した鱼のヒント文
+;ARG …选んだ鱼番号
+;-----------------------------------------------------------
+@FISHING_HINT(ARG)
+
+SELECTCASE ARG
+	CASE 1 ;石斑鱼
+		PRINTFORML 　　在玄武之泽、九天瀑布、山之湖分布　难易度★
+	CASE 2 ;皋月鳟
+		PRINTFORML 　　在玄武之泽、九天瀑布分布　难易度★★
+	CASE 3 ;山女鱼
+		PRINTFORML 　　在玄武之泽、九天瀑布分布　难易度★★★
+	CASE 4 ;岩鱼
+		PRINTFORML 　　在玄武之泽、九天瀑布分布　难易度★★★
+	CASE 5 ;拉氏鱥
+		PRINTFORML 　　在雾之湖、大蛤蟆之池分布　难易度★
+	CASE 6 ;溪哥
+		PRINTFORML 　　在三途之川、地狱的街道、纯狐邸中庭分布　难易度★
+	CASE 7 ;鲫鱼
+		PRINTFORML 　　在三途之川、山之湖分布　难易度★★
+	CASE 8 ;食人鱼
+		PRINTFORML 　　在地狱的街道、纯狐邸中庭分布　难易度★★
+	CASE 9 ;雀鳝
+		PRINTFORML 　　在地狱的街道分布　难易度★★★
+	CASE 10 ;蓝鳃太阳鱼
+		PRINTFORML 　　在雾之湖、山之湖分布　难易度★★★
+	CASE 11 ;鲑鱼
+		PRINTFORML 　　在玄武之泽、九天瀑布分布　钓期为秋　难易度★★★★
+	CASE 12 ;西太公鱼
+		PRINTFORML 　　在雾之湖、玄武之泽、九天瀑布、大蛤蟆之池、山之湖分布　钓期为冬　难易度★★★★
+	CASE 13 ;虹鳟
+		PRINTFORML 　　玄武之泽、九天瀑布分布　钓期为春・夏　难易度★★★★
+	CASE 14 ;八目鳗
+		PRINTFORML 　　在玄武之泽、九天瀑布分布　难易度★★★★
+	CASE 15 ;雷鱼
+		PRINTFORML 　　在玄武之泽分布　难易度★★★★★
+	CASE 16 ;杜父鱼
+		PRINTFORML 　　在雾之湖、三途之川、山之湖分布　难易度★★★
+	CASE 17 ;香鱼
+		PRINTFORML 　　在三途之川、地狱的街道、纯狐邸中庭分布　钓期为春・夏　难易度★★★
+	CASE 18 ;鲶鱼
+		PRINTFORML 　　在雾之湖、山之湖分布　钓期为春～秋　难易度★★★★
+	CASE 19 ;鳗鱼
+		PRINTFORML 　　在三途之川、地狱的街道、纯狐邸中庭分布　难易度★★★★
+	CASE 20 ;姫鳟
+		PRINTFORML 　　在雾之湖分布　难易度★★★★
+	CASE 22 ;鲤鱼
+		PRINTFORML 　　在三途之川、大蛤蟆之池、山之湖、纯狐邸中庭分布　难易度★★★★
+	CASE 23 ;腔棘鱼
+		PRINTFORML 　　在三途之川分布　难易度★★★★★
+	CASE 24 ;鲟
+		PRINTFORML 　　在地狱的街道分布　难易度★★★★
+	CASE 25 ;国鳟
+		PRINTFORML 　　在雾之湖分布　难易度★★★★★
+	CASE 26 ;草鱼
+		PRINTFORML 　　在三途之川分布　难易度★★★★★
+	CASE 27 ;高身鲫
+		PRINTFORML 　　在大蛤蟆之池分布　难易度★★★★★
+	CASE 28 ;伊富鱼
+		PRINTFORML 　　在九天瀑布分布　难易度★★★★★
+	CASE 29 ;大口黑鲈
+		PRINTFORML 　　在山之湖分布　难易度★★★★★
+	CASE 30 ;巨骨舌鱼
+		PRINTFORML 　　在地狱的街道分布　难易度★★★★★
+	CASE 31; 泷太郎
+		PRINTFORML 　　在雾之湖分布　有在朔月之夜现身的传闻　难易度EXTREAM！！
+	CASE 32;青鱼
+		PRINTFORML 　　在纯狐邸中庭分布　难易度★★★★★
+ENDSELECT

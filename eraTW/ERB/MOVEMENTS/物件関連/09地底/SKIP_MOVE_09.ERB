@@ -1,0 +1,148 @@
+﻿;-----------------------------------------------------------
+;远距离移动の设定
+;ARG     目的地
+;ARG:1   现在地
+;RETURN  次の目的地
+;-----------------------------------------------------------
+@SKIP_MOVE_9(ARG, ARG:1)
+#DIM 现在的位置
+;当前位置取得
+IF ARG:1
+	现在的位置 = ARG:1
+ELSE
+	现在的位置 = CFLAG:MASTER:当前位置
+ENDIF
+
+;目的地に直接移动できる场合そこに移动
+SIF CAN_MOVE(现在的位置, ARG) & 1
+	RETURN ARG
+;袋小路から行ける场所は固定なので、そこを目指す
+SELECTCASE 现在的位置
+	CASE P904大会堂, P906一层厕所, P911阿空私室, P912阿燐私室
+		RETURN P905一层走廊
+	CASE P910食料库
+		RETURN P909厨房
+	CASE P915露台, P916库房, P917二层厕所, P918恋私室
+		RETURN P914二层走廊
+	CASE P921澡堂
+		RETURN P922更衣间
+	CASE P947血枪的栖息处
+		RETURN P930旧血池地狱
+	CASE P934温泉, P935情人旅馆, P936勇仪的家, P938鬼的聚集场所, P939小胡同
+		RETURN P932后街
+	CASE P937空屋
+		RETURN P931大街
+	CASE P940帕露西的家, P941山女的家, P942琪斯美的家
+		RETURN P945河岸
+	CASE P943茅屋
+		RETURN P944街道
+	CASE P948竖井底部
+		RETURN P946桥
+	CASE P949托卡马克装置核心
+		RETURN P929地狱的人工太阳
+ENDSELECT
+
+;直接移动できない场合、1つ近い位置を暂定目的地に设定し直してループ
+;基本的に最短で行けるコースを设定する
+;现在地によってコースが变わることも考虑して对応する
+SELECTCASE ARG
+	CASE P901地灵殿前
+		SELECTCASE 现在的位置
+		CASE P906一层厕所 TO P930旧血池地狱, P947血枪的栖息处
+			RETURN P905一层走廊
+		CASEELSE
+			RETURN P931大街
+		ENDSELECT
+	CASE P904大会堂, P906一层厕所, P911阿空私室, P912阿燐私室
+		RETURN P905一层走廊
+	CASE P905一层走廊
+		SELECTCASE 现在的位置
+		CASE P915露台 TO P922更衣间
+			RETURN P914二层走廊
+		CASE P925薔薇园
+			RETURN P923后院
+		CASE P928灼热地狱遗迹 TO P930旧血池地狱, P947血枪的栖息处
+			RETURN P926中庭
+		CASEELSE
+			RETURN P901地灵殿前
+		ENDSELECT
+	CASE P909厨房
+		SELECTCASE 现在的位置
+		CASE P923后院
+			RETURN P925薔薇园
+		CASEELSE
+			RETURN P905一层走廊
+		ENDSELECT
+	CASE P910食料库
+		RETURN P909厨房
+	CASE P913食堂
+		SELECTCASE 现在的位置
+		CASE P925薔薇园
+			RETURN P923后院
+		CASEELSE
+			RETURN P905一层走廊
+		ENDSELECT
+	CASE P914二层走廊
+		RETURN P905一层走廊
+	CASE P915露台, P916库房, P917二层厕所, P918恋私室, P919觉私室, P920书斋, P922更衣间
+		RETURN P914二层走廊
+	CASE P921澡堂
+		RETURN P922更衣间
+	CASE P923后院
+		SELECTCASE 现在的位置
+		CASE P909厨房
+			RETURN P925薔薇园
+		CASEELSE
+			RETURN P905一层走廊
+		ENDSELECT
+	CASE P925薔薇园
+		RETURN P923后院
+	CASE P926中庭
+		SELECTCASE 现在的位置
+		CASE P929地狱的人工太阳, P930旧血池地狱, P947血枪的栖息处
+			RETURN P928灼热地狱遗迹
+		CASEELSE
+			RETURN P905一层走廊
+		ENDSELECT
+	CASE P928灼热地狱遗迹
+		SELECTCASE 现在的位置
+		CASE P930旧血池地狱, P947血枪的栖息处
+			RETURN P929地狱的人工太阳
+		CASEELSE
+		RETURN P926中庭
+		ENDSELECT
+	CASE P929地狱的人工太阳
+		SELECTCASE 现在的位置
+		CASE  P947血枪的栖息处
+			RETURN P930旧血池地狱
+		CASEELSE
+		RETURN P928灼热地狱遗迹
+		ENDSELECT
+	CASE P930旧血池地狱
+		RETURN P929地狱的人工太阳
+	CASE P947血枪的栖息处
+		RETURN P930旧血池地狱
+	CASE P931大街
+		SELECTCASE 现在的位置
+		CASE P904大会堂 TO P930旧血池地狱, P947血枪的栖息处
+			RETURN P901地灵殿前
+		CASE P940帕露西的家 TO P948竖井底部
+			RETURN P944街道
+		CASEELSE
+			RETURN P932后街
+		ENDSELECT
+	CASE P932后街, P933酒场, P937空屋
+		RETURN P931大街
+	CASE P934温泉, P935情人旅馆, P936勇仪的家, P938鬼的聚集场所, P939小胡同
+		RETURN P932后街
+	CASE P940帕露西的家, P941山女的家, P942琪斯美的家
+		RETURN P945河岸
+	CASE P943茅屋, P945河岸, P946桥
+		RETURN P944街道
+	CASE P944街道
+		RETURN P931大街
+	CASE P948竖井底部
+		RETURN P946桥
+	CASE P949托卡马克装置核心
+		RETURN P929地狱的人工太阳
+ENDSELECT

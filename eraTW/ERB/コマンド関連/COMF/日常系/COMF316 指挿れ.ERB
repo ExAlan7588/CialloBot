@@ -1,0 +1,138 @@
+﻿;-------------------------------------------------
+;指插入れ
+;日常系指令　レベル3
+;-------------------------------------------------
+@COM316
+;-------------------------------------------------
+;COM别FLAGの设定
+;-------------------------------------------------
+;行为者
+TCVAR:116 = PLAYER
+
+;破瓜抑制
+TFLAG:2 = 1
+TFLAG:理性削り = 1
+;-------------------------------------------------
+;ソース追加处理
+;-------------------------------------------------
+;消费体力、气力
+IF FLAG:70 == 1
+	BASE:MASTER:TSP -= 40
+	IF !TALENT:处女 || TALENT:处女 -1
+		SOURCE:快Ｖ = 120
+	ELSE
+		SOURCE:快Ｖ = 60
+	ENDIF
+ELSE
+	;口上による强制失败
+	IF TFLAG:192 == -1
+		RETURN -1
+	ENDIF
+	DOWNBASE:体力 += 30
+	DOWNBASE:气力 += 80
+
+	IF !TALENT:处女 || TALENT:处女 -1
+		SOURCE:快Ｖ = 120
+		SOURCE:情爱 = 150
+		SOURCE:苦痛 = 250
+		SOURCE:情欲 = 200
+		SOURCE:露出 = 250
+		SOURCE:偏离正轨 = 150
+		SOURCE:反感 = 800
+	;V経験が0の时はV経験を伴わない物に派生
+	;Vの珠は入らないが、快Vが高いと惯らしてあるため处女丧失时に影响
+	ELSE
+		SOURCE:快Ｖ = 60
+		SOURCE:情爱 = 150
+		SOURCE:苦痛 = 250
+		SOURCE:情欲 = 200
+		SOURCE:露出 = 350
+		SOURCE:偏离正轨 = 300
+		SOURCE:反感 = 1000
+	ENDIF
+
+	;信赖
+	TFLAG:98 = -7
+
+	;-------------------------------------------------
+	;特殊ソース处理
+	;-------------------------------------------------
+	;圧抑、抵抗持ちには、抑郁ソース追加
+	IF TALENT:自己爱 < 0 || TALENT:抵抗
+		SOURCE:郁闷 += 20
+		;处女
+		SIF TALENT:处女
+			SOURCE:郁闷 += 10
+	ENDIF
+ENDIF
+;Vへの苦痛
+CALL PAIN_CHECK_V(TARGET)
+;-------------------------------------------------
+;污れの处理
+;-------------------------------------------------
+;奴隷の膣内⇔调教者の指的污垢が移动
+STAIN:6 |= STAIN:PLAYER:1
+STAIN:PLAYER:1 |= STAIN:6
+;-------------------------------------------------
+;経験の处理
+;-------------------------------------------------
+EXP:PLAYER:手淫经验 ++
+IF FLAG:70 == 1
+	IF HETEROSEX(TARGET,PLAYER)
+		EXP:PLAYER:(50 + HETEROSEX(TARGET,PLAYER)) += 4
+	ENDIF
+ELSE
+	IF HETEROSEX(TARGET,PLAYER)
+		EXP:(50 + HETEROSEX(TARGET,PLAYER)) += 4
+		EXP:PLAYER:(50 + HETEROSEX(TARGET,PLAYER)) += 4
+	ENDIF
+	TIME += 5
+ENDIF
+RETURN 1
+
+;-------------------------------------------------
+;实行判定
+;-------------------------------------------------
+@COM_ABLE316
+;指插入れ实行判定
+SIF !TFLAG:100
+	RETURN 0
+;批量管理
+SIF GLOBAL_COMABLE(316)
+	RETURN RESULT
+;时间停止中はスキップ
+IF !FLAG:70
+	;亲热强度2
+	SIF (TCVAR:MASTER:亲热 < 2) && CFLAG:睡眠 == 0
+		RETURN 0
+	;着衣
+	SIF TEQUIP:0 & 4
+		RETURN 0
+	;睡眠中
+	SIF CFLAG:睡眠 && CFLAG:恶作剧 < 2
+		RETURN 0
+	;仕事中
+	SIF CFLAG:行动 == 5
+		RETURN 0
+	;约会中
+	SIF CHK_DATENOW(CFLAG:约会中) && CFLAG:当前位置 != OMANEKIBEYA()
+		RETURN 0
+	;陪睡中
+	SIF CFLAG:陪睡中
+		RETURN 0
+	SIF TEQUIP:50 >= 0
+		RETURN 0
+	;甲斐性无しにそんな度胸はない
+	SIF FLAG:甲斐性无 && !CFLAG:诶嘿嘿
+		RETURN 0
+ENDIF
+;气力0
+SIF BASE:MASTER:气力 <= 0
+	RETURN 0
+;腕使用中
+SIF TFLAG:61 && MASTER_POSE(SET_C,3) != TARGET && MASTER_POSE(SET_P,SET_YUBI) != TARGET && MASTER_POSE(SET_V,SET_YUBI) != TARGET && MASTER_POSE(SET_A,SET_YUBI) != TARGET
+	RETURN 0
+SIF GETBIT (TCVAR:26,5)
+	RETURN 0
+RETURN 1
+

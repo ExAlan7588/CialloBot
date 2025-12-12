@@ -1,0 +1,942 @@
+﻿;进行调合
+@COM446
+#DIM 调合物
+#DIM 调合候补
+#DIM 选择レシピ
+#DIM 调合件数
+#DIM 调合パワー
+#DIM 调合パワーM
+#DIM 调合パワーT
+#DIM CHARA
+#DIM R_ID
+#DIM PRODUCTION
+#DIM 体力消费
+#DIM 气力消费
+
+调合物 = 0
+调合候补 = 0
+选择レシピ = 0
+调合件数 = 0
+调合パワーM = 0
+调合パワーT = 0
+
+;参加者判定
+IF TARGET && ABL:TARGET:亲密 >= 5 && SHIRAHU(TARGET) && CFLAG:TARGET:行动 != 5
+	CHARA = TARGET
+ELSE
+	CHARA = 0
+ENDIF
+
+;调合パワー设定 调合知识と教养、药学教本を持っていると加算
+调合パワーM = TALENT:MASTER:调合Lv * 15 + ABL:MASTER:教养 * 5 + TFLAG:幸运补正 * 5 + TALENT:MASTER:调合知识 * 30
+SIF ITEM:药学教本
+	调合パワーM += 10
+SIF CHARA
+	调合パワーT = TALENT:CHARA:调合Lv * 15 + ABL:CHARA:教养 * 5 + TALENT:CHARA:调合知识 * 30
+;参加者で最もパワーが高いものを基准に、1/2したもう１人のパワーを足す
+IF 调合パワーM >= 调合パワーT
+	调合パワー = 调合パワーM + (调合パワーT / 2)
+ELSE
+	调合パワー = 调合パワーT + (调合パワーM / 2)
+ENDIF
+
+;①调合物选择列表画面描画、调合候补を选择
+CALL PHARMACY_LIST
+
+$INPUT_LOOP01
+INPUT
+SIF RESULT == 1000
+	RETURN -1
+调合候补 = RESULT
+
+;②调合物选择列表内の能力によるレシピ解放・调合可能かを判定
+SELECTCASE PHARMACY_RANK(调合候补)
+	CASE 0
+		CLEARLINE 1
+		GOTO INPUT_LOOP01
+	CASE 1
+		;无条件解放
+	CASE 2, 3
+		IF TALENT:MASTER:调合Lv < (PHARMACY_RANK(调合候补) - 1) && ITEM:109 == 0
+			CLEARLINE 1
+			GOTO INPUT_LOOP01
+		ENDIF
+	CASE 4, 5
+		IF TALENT:MASTER:调合Lv < (PHARMACY_RANK(调合候补) - 1)
+			CLEARLINE 1
+			GOTO INPUT_LOOP01
+		ENDIF
+ENDSELECT
+;体质变化药は【禁断的知识】所有时のみ可
+IF PHARMA_VOLATILE(调合候补) && !TALENT:MASTER:禁断的知识
+	CLEARLINE 1
+	GOTO INPUT_LOOP01
+ENDIF
+
+;③调合レシピ列表を出力
+DRAWLINE
+;★ここに道具列表を出す？
+
+;道具解说.ERBから说明文を表记
+SETCOLOR 0x00FF00
+PRINTFORML ●%ITEMNAME:调合候补%　（所持数：{ITEM:调合候补}）
+PRINTFORML 　%ITEM_EXPLANATION(调合候补)% 
+RESETCOLOR
+PRINTL 
+PRINTL 要用哪个菜谱进行调合？
+DRAWLINE
+CALL PHARMACY_RECIPELIST(调合候补)
+
+;④レシピ番号を入力、实行可否を判定
+$INPUT_LOOP02
+INPUT
+SIF RESULT == 0
+	RESTART
+选择レシピ = RESULT
+R_ID = 调合候补 * 10 + 选择レシピ
+IF !CAN_PHARMA(R_ID)
+	CLEARLINE 1
+	GOTO INPUT_LOOP02
+ENDIF
+
+;⑤调合回数を入力、可否を判定（70番台の体质变化药の类は１个限定、他は最大10回まで）
+IF PHARMA_VOLATILE(调合候补)
+	PRINTFORML %ITEMNAME:调合候补%只能１个个调合
+ELSE
+	PRINTFORML 用这个菜谱调合多少次%ITEMNAME:调合候补%？(输入1～的个数、0为返回)
+ENDIF
+;そのレシピで消费する素材の现在的所持数を表记
+PRINT 　消费素材的持有数：
+
+CALL PHARMACY_CONSUME(R_ID, 0, 1)
+
+PRINTBUTTON "[0] 放弃", 0
+PRINT     
+PRINTBUTTON "[1] 1回", 1
+PRINT     
+IF !PHARMA_VOLATILE(调合候补)
+	IF CAN_PHARMA(R_ID, 5)
+		PRINTBUTTON "[5] 5回", 5
+		PRINT   
+	ENDIF
+	IF CAN_PHARMA(R_ID, 10)
+		PRINTBUTTON "[10] 10回", 10
+		PRINT   
+	ENDIF
+ENDIF
+
+$INPUT_LOOP03
+INPUT
+调合件数 = RESULT
+SIF RESULT == 0
+	RESTART
+PRODUCTION = CAN_PHARMA(R_ID, 调合件数)
+IF PRODUCTION && 调合件数 <= 10
+	CLEARLINE 1
+	;体质变化药は入力回数に关わらず强制的に１回に绞る
+	SIF PHARMA_VOLATILE(调合候补)
+		调合件数 = 1
+	PRINTFORML %ITEMNAME:调合候补%第{选择レシピ}号菜谱来进行{PRODUCTION}调合计画制定完毕了
+	;调合时前后での消费道具の数を表记
+	PRINT 　消费的素材：
+	CALL PHARMACY_CONSUME(R_ID, 调合件数, 1)
+	;调合成功时道具个数が99を超える场合は警告を出す
+	IF ITEM:(调合候补) + PRODUCTION > 99
+		PRINTFORML 　这个计画的话会不保管%ITEMNAME:调合候补%、浪费掉{PRODUCTION - 99}个
+	ELSE
+		PRINTFORML 　调合成功时%ITEMNAME:调合候补%的个数：（{ITEM:调合候补}→{ITEM:调合候补 + PRODUCTION}）
+	ENDIF
+	IF PHARMACY_RANK(调合候补) == 1
+		PRINTL 怎么看都不可能会失败吧…
+	ELSEIF PHARMACY_RANK(调合候补) >= 2
+		SELECTCASE (调合パワー - (PHARMACY_RANK(调合候补) * 20))
+			CASE IS <= -100
+				PRINTL 虽然制订了计画、但是未知的要素太多了…应该会失败吧
+			CASE -99 TO -50
+				PRINTL 不得不说想让这次调合成功的话会非常困难…
+			CASE -49 TO -30
+				PRINTL 这次调合的失败率挺高的…
+			CASE -29 TO -10
+				PRINTL 这次调合有失败的风险…
+			CASE -9 TO -1
+				PRINTL 这次调合基本上来说应该是会成功的…
+			CASEELSE
+				PRINTL 怎么看都不可能会失败吧…
+		ENDSELECT
+	ENDIF
+	PRINT 要调合吗？
+	IF PHARMA_VOLATILE(调合候补)
+		SETCOLOR 0x666666
+		PRINTFORML （如果选择这个道具的话是不能放弃的、有浪费素材的可能）
+		RESETCOLOR
+	ELSE
+		PRINTL 
+	ENDIF
+	CALL ASK_YN
+	IF !RESULT
+	;先に进む
+	ELSE
+		调合件数 = 0
+		CLEARLINE 8
+		RETURN -1
+	ENDIF
+ELSE
+	调合件数 = 0
+	CLEARLINE 1
+	GOTO INPUT_LOOP03
+ENDIF
+
+;ここまでで条件を全部クリアしている场合は以下に进行
+REPEAT 5
+	REUSELASTLINE  \@ CHARA ? 和%NAME_OUTPUT_TRANSLATION("CALLNAME", CHARA)%一起 #  \@调合中.%"." * COUNT%
+	TWAIT 150, 1
+REND
+R_ID = 调合物 * 10 + 选择レシピ
+;⑥调合の成功判定
+IF PHARMACY_RANK(调合候补) != 1
+	IF 调合パワー >= RAND:(PHARMACY_RANK(调合候补) * 20)
+		PRINTFORML 调合成功了！
+		调合物 = 调合候补
+		;调合后入手个数を流し込む
+		TFLAG:194 = PRODUCTION
+	ELSE
+		PRINTFORML 调合失败了…
+		调合物 = 0
+	ENDIF
+;调合LV1レシピは100％成功
+ELSE
+	PRINTFORML 调合成功了！
+	调合物 = 调合候补
+	;调合后入手个数を流し込む
+	TFLAG:194 = PRODUCTION
+ENDIF
+
+;素材道具消费处理をここで
+PRINT 　本次消费的素材：
+R_ID = (调合候补 * 10 + 选择レシピ)
+CALL PHARMACY_CONSUME(R_ID, 调合件数)
+
+;⑦道具入手处理 99个以上にならないようにする
+;  体质改变药は入手处理の代わりに使用处理に飞ぶ
+IF PHARMA_VOLATILE(调合物)
+	CALL PHARMACY_CONSTITUTIONAL(调合物)
+ELSEIF 调合物 != 0
+	IF ITEM:(调合物) + TFLAG:194 > 99
+		ITEM:(调合物) = 99
+	ELSE
+		ITEM:(调合物) += TFLAG:194
+	ENDIF
+ENDIF
+
+;⑧経験加算 调合成功时は调合难易度×调合件数の経験
+EXP:MASTER:调合经验 += PHARMACY_EXP(调合候补, 调合件数, 调合物)
+SIF CHARA
+	EXP:CHARA:调合经验 += PHARMACY_EXP(调合候补, 调合件数, 调合物)
+;药学教本持っていると追加
+SIF ITEM:109
+	EXP:MASTER:调合经验 += MAX(RAND:(调合件数), 1)
+
+;能力差で教えてもらう・进行解答
+IF 调合パワーM >= 调合パワーT && CHARA
+	EXP:CHARA:调合经验 ++
+ELSEIF CHARA
+	EXP:MASTER:调合经验 ++
+ENDIF
+
+
+;⑨时间经过 调合难易度と调合件数によって补正
+TIME += PHARMACY_TIME(调合候补, 调合件数)
+
+;⑩体力・气力减少处理
+体力消费 = 30 * SQRT(调合件数)
+气力消费 = MAX((((50 * PHARMACY_RANK(调合候补)) - (15 * TALENT:MASTER:调合知识 + 10 * TALENT:MASTER:调合Lv))), 30) * SQRT(调合件数)
+;自室かつ机椅子があると体力气力消费低减
+IF CFLAG:MASTER:当前位置 == CFLAG:MASTER:初始位置 && ITEM:榉木桌椅
+	SELECTCASE ITEM:榉木桌椅
+		CASE 1
+			TIMES 体力消费, 0.9
+			TIMES 气力消费, 0.9
+		CASE 2
+			TIMES 体力消费, 0.85
+			TIMES 气力消费, 0.85
+		CASE 3
+			TIMES 体力消费, 0.8
+			TIMES 气力消费, 0.8
+	ENDSELECT
+	PRINTFORML 桌子上经常整理整顿、能够高效率地进行调合
+ENDIF
+DOWNBASE:MASTER:体力 = 体力消费
+DOWNBASE:MASTER:气力 = 气力消费
+
+;参加者のソース,同一指令制限を受けないので控えめに、调合失败は半减
+IF CHARA > 0
+	;固定で获得するソース
+	SOURCE:CHARA:欢乐 = 200
+	SOURCE:CHARA:情爱 = 50
+	
+	;ABL:顺从をみる
+	IF ABL:顺从 <= 1
+		SOURCE:CHARA:欢乐 += (ABL:顺从 * 40)
+		SOURCE:CHARA:情爱 += (ABL:亲密 * 20)
+	ELSEIF ABL:顺从 <= 3
+		SOURCE:CHARA:欢乐 += 200 + (ABL:顺从 * 40)
+		SOURCE:CHARA:情爱 += 50 + (ABL:亲密 * 30)
+	ELSEIF ABL:顺从 <= 5
+		SOURCE:CHARA:欢乐 += 500 + (ABL:顺从 * 40)
+		SOURCE:CHARA:情爱 += 200 + (ABL:亲密 * 30)
+	ELSEIF ABL:顺从 <= 8
+		SOURCE:CHARA:欢乐 += 750 + (ABL:顺从 * 60)
+		SOURCE:CHARA:情爱 += 300 + (ABL:亲密 * 40)
+	ELSEIF ABL:顺从 <= 11
+		SOURCE:CHARA:欢乐 += 1000 + (ABL:顺从 * 60)
+		SOURCE:CHARA:情爱 += 600 + (ABL:亲密 * 40)
+	ELSE
+		SOURCE:CHARA:欢乐 += 1600 + (ABL:顺从 * 30)
+		SOURCE:CHARA:情爱 += 1000 + (ABL:亲密 * 20)
+	ENDIF
+	
+	;好感度はみない
+	
+	SOURCE:CHARA:被动 = 200 + 100 * ABL:顺从
+	SOURCE:CHARA:征服 = 200 + 100 * ABL:施虐属性
+	
+	;调合成果をみる、调合难易度で设定
+	IF 调合物
+		SELECTCASE PHARMACY_RANK(调合物)
+			CASE 1
+				TIMES SOURCE:CHARA:欢乐 , 1.00
+				TIMES SOURCE:CHARA:被动 , 1.00
+				TIMES SOURCE:CHARA:征服 , 1.00
+				SOURCE:CHARA:达成 = 80
+			CASE 2
+				TIMES SOURCE:CHARA:欢乐 , 1.25
+				TIMES SOURCE:CHARA:被动 , 1.25
+				TIMES SOURCE:CHARA:征服 , 1.15
+				SOURCE:CHARA:达成 = 125
+			CASE 3
+				TIMES SOURCE:CHARA:欢乐 , 1.50
+				TIMES SOURCE:CHARA:被动 , 1.50
+				TIMES SOURCE:CHARA:征服 , 1.25
+				SOURCE:CHARA:达成 = 150
+			CASE 4
+				TIMES SOURCE:CHARA:欢乐 , 1.75
+				TIMES SOURCE:CHARA:被动 , 1.75
+				TIMES SOURCE:CHARA:征服 , 1.50
+				SOURCE:CHARA:达成 = 200
+			CASE 5
+				TIMES SOURCE:CHARA:欢乐 , 2.00
+				TIMES SOURCE:CHARA:被动 , 2.00
+				TIMES SOURCE:CHARA:征服 , 1.75
+				SOURCE:CHARA:达成 = 300
+			CASEELSE
+				TIMES SOURCE:CHARA:欢乐 , 2.25
+				TIMES SOURCE:CHARA:被动 , 2.25
+				TIMES SOURCE:CHARA:征服 , 2.00
+				SOURCE:CHARA:达成 = 350
+		ENDSELECT
+	;调合失败
+	ELSE
+		TIMES SOURCE:CHARA:欢乐 , 0.50
+		TIMES SOURCE:CHARA:被动 , 0.50
+		TIMES SOURCE:CHARA:征服 , 0.50
+	ENDIF
+ENDIF
+
+;フラグ引き渡し
+TFLAG:SELECTCOM的分岐 = 调合物
+
+RETURN 1
+
+;-------------------------------------------------
+;实行可能判定
+;-------------------------------------------------
+;进行调合
+@COM_ABLE446
+SIF !TFLAG:100
+	RETURN 0
+;批量管理
+SIF GLOBAL_COMABLE(446)
+	RETURN RESULT
+;调合できる场所でない
+SIF !PHARMACY_SPOT(CFLAG:MASTER:当前位置)
+	RETURN 0
+;调合用品一式を持っておらず、特殊调合スポットでない
+SIF ITEM:(29) == 0 && PHARMACY_SPOT(CFLAG:MASTER:当前位置) == 1
+	RETURN 0
+;睡眠中
+SIF CFLAG:MASTER:睡眠
+	RETURN 0
+SIF CFLAG:诶嘿嘿
+	RETURN 0
+;气力０
+SIF BASE:MASTER:气力 <= 0
+	RETURN 0
+;时间停止中
+SIF FLAG:70
+	RETURN 0
+RETURN 1
+
+;-----------------------------------------------------------
+;调合可能スポットかどうかを判定する函数
+;ARG		当前位置
+;RETURN		0 不可	1 可	2 调合セットなくても可（特殊调合ｽﾎﾟｯﾄ）
+;COMMENT	基本は初始位置、それっぽい场所があるときはそちらも。
+;			场所を追加した场合、CASEを变更の事
+;-----------------------------------------------------------
+@PHARMACY_SPOT(ARG)
+#FUNCTION
+
+SIF ARG == CFLAG:MASTER:初始位置
+	RETURNF 1
+;特殊调合スポット、メインMapでの判定
+SELECTCASE MAIN_MAP
+	CASE 0
+		;博灵神社：无限遗迹・研究室
+		SIF GROUPMATCH(ARG, 49)
+			RETURNF 2
+	CASE 1
+		;命莲寺：调药室
+		SIF GROUPMATCH(ARG, 132)
+			RETURNF 2
+	CASE 4
+		;永远亭：配药室
+		SIF GROUPMATCH(ARG, 405)
+			RETURNF 2
+	CASE 5
+		;魔法之森：魔理沙宅・研究房间、人偶洋馆・研究室
+		SIF GROUPMATCH(ARG, 513, 524)
+			RETURNF 2
+	CASE 6
+		;冥界：袿姫的房间
+		SIF GROUPMATCH(ARG, 644)
+			RETURNF 2
+	CASE 7
+		;妖怪之山山麓：河童的宣传站
+		SIF GROUPMATCH(ARG, 704)
+			RETURNF 2
+ENDSELECT
+
+RETURNF 0
+
+
+@CAN_PHARMA(R_ID, AMT = 1)
+#FUNCTION
+#DIM R_ID
+#DIM AMT
+#DIM INGREDIENT
+
+SIF RECIPE_DATA(R_ID) == -1
+	RETURNF 0
+;SIF RECIPE_DATA(R_ID, 7) && !TFLAG:打水
+SIF RECIPE_DATA(R_ID, 7) && VAR_WATER == ""
+	RETURNF 0
+
+;特定角色の亲密依存道具を弹く
+SELECTCASE R_ID / 10
+	CASE 513 
+		SIF ABL:[[阿求]]:亲密 < 5
+			RETURNF 0
+	CASE 514, 515
+		SIF ABL:[[永琳]]:亲密 < 5
+			RETURNF 0
+	CASE 516, 517
+		SIF ABL:[[梅蒂欣]]:亲密 < 5
+			RETURNF 0
+	CASE 531
+		SIF ABL:[[妹红]]:亲密 < 5
+			RETURNF 0
+	CASE 850
+		SIF ABL:[[魔理沙]]:亲密 < 5
+			RETURNF 0
+	CASE 851
+		SIF ABL:[[琪露诺]]:亲密 < 5
+			RETURNF 0
+	CASE 852
+		SIF ABL:[[布都]]:亲密 < 5
+			RETURNF 0
+	CASE 853
+		SIF ABL:[[紫]]:亲密 < 5
+			RETURNF 0
+	CASE 854
+		SIF ABL:[[帕秋莉]]:亲密 < 5
+			RETURNF 0
+	CASE 855
+		SIF ABL:[[成美]]:亲密 < 5
+			RETURNF 0
+ENDSELECT
+
+FOR LOCAL,0,6
+	INGREDIENT = RECIPE_DATA(R_ID, LOCAL)
+	SIF !INGREDIENT
+		BREAK
+	SIF ITEM:INGREDIENT < AMT
+		RETURNF 0
+NEXT
+SIF ITEM:RECIPE_DATA(R_ID) < AMT * RECIPE_DATA(R_ID, 8)
+	RETURNF 0
+
+RETURNF AMT * RECIPE_DATA(R_ID, 6)
+
+
+;-----------------------------------------------------------
+;调合物选择列表を描画する
+;  MASTERの调合知识か教养のレベルに応じて列表が解放される仕组み
+;  体质变化药の类は【禁断的知识】がないと解放されない
+;-----------------------------------------------------------
+@PHARMACY_LIST
+#DIMS 道具名
+
+PRINTL 要调合什么？
+PRINTL ■调合Lv1===========================================================================================================
+LOCAL:1 = 999
+FOR LOCAL:0 ,0, 1000
+	SELECTCASE PHARMACY_RANK(LOCAL:0)
+		CASE 1
+			CALL PHARMACY_LIST_BUTTON(LOCAL:0, LOCAL:1)
+			LOCAL:1 = RESULT
+	ENDSELECT
+NEXT
+PRINTL 
+PRINTL ■调合Lv2===========================================================================================================
+;教养あるいは调合知识、药学教本で列表解放
+IF TALENT:MASTER:调合Lv >= 1 || ITEM:药学教本
+	LOCAL:1 = 999
+	FOR LOCAL:0 ,0, 1000
+		SELECTCASE PHARMACY_RANK(LOCAL:0)
+			CASE 2
+				CALL PHARMACY_LIST_BUTTON(LOCAL:0, LOCAL:1)
+				LOCAL:1 = RESULT
+		ENDSELECT
+	NEXT
+ELSE
+	SETCOLOR 0x666666
+	PRINTFORM 　　？？？？
+	RESETCOLOR
+ENDIF
+PRINTL 
+;あとは教养レベルと调合知识レベルを变えて繰り返し、うまく整理したい（药学教本での解禁はLv3まで）
+PRINTL ■调合Lv3===========================================================================================================
+IF TALENT:MASTER:调合Lv >= 2 || ITEM:药学教本
+	LOCAL:1 = 999
+	FOR LOCAL:0 ,0, 1000
+		SELECTCASE PHARMACY_RANK(LOCAL:0)
+			CASE 3
+				CALL PHARMACY_LIST_BUTTON(LOCAL:0, LOCAL:1)
+				LOCAL:1 = RESULT
+		ENDSELECT
+	NEXT
+ELSE
+	SETCOLOR 0x666666
+	PRINTFORM 　　？？？？
+	RESETCOLOR
+ENDIF
+PRINTL 
+PRINTL ■调合Lv4===========================================================================================================
+IF TALENT:MASTER:调合Lv >= 3
+	LOCAL:1 = 999
+	FOR LOCAL:0 ,0, 1000
+		SELECTCASE PHARMACY_RANK(LOCAL:0)
+			CASE 4
+				;体质变化药は【禁断的知识】がない场合はスキップ
+				SIF PHARMA_VOLATILE(LOCAL:0) && !TALENT:MASTER:禁断的知识
+					CONTINUE
+				CALL PHARMACY_LIST_BUTTON(LOCAL:0, LOCAL:1)
+				LOCAL:1 = RESULT
+		ENDSELECT
+	NEXT
+ELSE
+	SETCOLOR 0x666666
+	PRINTFORM 　　？？？？
+	RESETCOLOR
+ENDIF
+PRINTL 
+PRINTL ■调合Lv5===========================================================================================================
+IF TALENT:MASTER:调合Lv >= 4
+	LOCAL:1 = 999
+	FOR LOCAL:0 ,0, 1000
+		SELECTCASE PHARMACY_RANK(LOCAL:0)
+			CASE 5
+				SIF PHARMA_VOLATILE(LOCAL:0) && !TALENT:MASTER:禁断的知识
+					CONTINUE
+				CALL PHARMACY_LIST_BUTTON(LOCAL:0, LOCAL:1)
+				LOCAL:1 = RESULT
+		ENDSELECT
+	NEXT
+ELSE
+	SETCOLOR 0x666666
+	PRINTFORM 　　？？？？
+	RESETCOLOR
+ENDIF
+PRINTL 
+DRAWLINE
+PRINTL 　　[1000] 放弃
+
+;-----------------------------------------------------------
+;レシピ列表用ボタン作成・改行
+;ARGS:0レシピ名（文字列）、ARG:1レシピ番号、ARG:2道具番号
+;PHARMACY函数で判定し素材が不足している场合、ボタンを无效(灰色)に
+;-----------------------------------------------------------
+@BUTTON_RECIPE(ARGS:0, ARG:1, ARG:2)
+#DIM R_ID
+R_ID = ARG:2 * 10 + ARG:1
+IF !CAN_PHARMA(R_ID)
+	SETCOLOR 0x606060
+	PRINTPLAINFORM [{ARG:1}] %ARGS:0%
+	RESETCOLOR
+ELSE
+	PRINTBUTTON @"[{ARG:1}] %ARGS:0%", ARG:1
+ENDIF
+PRINTL 
+
+;-----------------------------------------------------------
+;レシピを文本化し表示する
+;-----------------------------------------------------------
+@TEXT_FOR_RECIPEBUTTON(R_ID)
+#DIM R_ID
+#DIM INGREDIENT
+VARSET LOCALS
+;单一素材复数使用レシピは×いくつ表记で省略する
+IF RECIPE_DATA(R_ID, 8)
+	LOCALS += ITEMNAME:RECIPE_DATA(R_ID, 0)
+	LOCALS += "("
+	LOCALS += TOSTR(ITEM:RECIPE_DATA(R_ID, 0))
+	LOCALS += ")×"
+	LOCALS += TOSTR(RECIPE_DATA(R_ID, 8))
+	LOCALS += " "
+ELSE
+	FOR LOCAL,0,6
+		INGREDIENT = RECIPE_DATA(R_ID, LOCAL)
+		SIF !INGREDIENT
+			BREAK
+		LOCALS += ITEMNAME:INGREDIENT
+		LOCALS += "("
+		LOCALS += TOSTR(ITEM:INGREDIENT)
+		LOCALS += ")"
+		LOCALS += " "
+	NEXT
+ENDIF
+SIF RECIPE_DATA(R_ID, 7)
+	LOCALS += "水"
+LOCALS += "→（"
+LOCALS += TOSTR(RECIPE_DATA(R_ID, 6))
+LOCALS += "）"
+CALL BUTTON_RECIPE(@"%LOCALS%", R_ID % 10, R_ID / 10)
+
+;-----------------------------------------------------------
+;道具番号ARG:0の调合レシピをボタン形式で列表化し描画する
+;-----------------------------------------------------------
+@PHARMACY_RECIPELIST(ARG:0)
+#DIM R_ID
+
+FOR LOCAL,1,6
+	R_ID = ARG:0 * 10 + LOCAL
+	SIF RECIPE_DATA(R_ID) == -1
+		BREAK
+	CALL TEXT_FOR_RECIPEBUTTON(R_ID)
+NEXT
+PRINTL [0] 放弃
+
+;-----------------------------------------------------------
+;道具番号*10 + レシピ番号 = ARG:0をARG:1回作成した场合に
+;既定量の素材道具を减少させ、消费数の文本を流す
+;ARG:2が1のときは道具の减少はしない（消费予定の文本のみ流す）
+;さらにARG:1が0のときは、必要素材の现所持数のみを文本表记
+;ARG:2は未入力なら0
+;COMMENT	道具やレシピを追加した场合は、RECIPE_DATAに追记
+;-----------------------------------------------------------
+@PHARMACY_CONSUME(ARG:0, ARG:1, ARG:2 = 0)
+#DIM CONSUMED_ITEM
+#DIM ING, 6
+
+FOR LOCAL,0,6
+	ING:LOCAL = RECIPE_DATA(ARG:0, LOCAL)
+NEXT
+;单一素材复数利用型レシピの场合は表记を变える
+IF RECIPE_DATA(ARG:0, 8)
+	CALL PHARMACY_CONSUME_T_LOT(ING:0, ARG:1, RECIPE_DATA(ARG:0, 8))
+ELSE
+	CALL PHARMACY_CONSUME_T(ING:0, ARG:1, ING:1, ARG:1, ING:2, ARG:1, ING:3, ARG:1, ING:4, ARG:1, ING:5, ARG:1)
+ENDIF
+;单一素材复数利用の时になぜか素材の消耗がおかしくなるため修正
+IF ARG:2 == 0
+	IF RECIPE_DATA(ARG:0, 8)
+		ITEM:(ING:0) -=  (ARG:1)*RECIPE_DATA(ARG:0, 8)
+	ELSE
+		FOR LOCAL,0,6
+			CONSUMED_ITEM = ING:LOCAL
+			SIF !CONSUMED_ITEM
+				BREAK
+			ITEM:CONSUMED_ITEM -= ARG:1
+		NEXT
+	ENDIF
+ENDIF
+;打水フラグを0にするのは、ARG:2が0の时（实际に调合が行われた时）のみ
+SIF RECIPE_DATA(ARG:0, 7) && ARG:2 == 0
+	;TFLAG:打水 = 0
+	VAR_WATER =
+;-----------------------------------------------------------
+;道具を调合したときの素材消费量を文章で表记する
+;（素材は水を除いて６种が上限）
+;ARG:0,2,4,6,8,10には素材の道具番号、
+;ARG:1,3,5,7,9,11には必要素材个数を入力
+;ARG;2以降は入力しなければスキップされる
+;ARG:1が0の时は、素材の现所持量のみが表记される
+;-----------------------------------------------------------
+@PHARMACY_CONSUME_T(ARG:0, ARG:1, ARG:2 = 0, ARG:3 = 0, ARG:4 = 0, ARG:5 = 0, ARG:6 = 0, ARG:7 = 0, ARG:8 = 0, ARG:9 = 0, ARG:10 = 0, ARG:11 = 0)
+
+IF ARG:1 > 0
+	PRINTFORM %ITEMNAME:(ARG:0)%({ITEM:(ARG:0)}→{ITEM:(ARG:0) - ARG:1})
+	SIF ARG:2
+		PRINTFORM 　%ITEMNAME:(ARG:2)%({ITEM:(ARG:2)}→{ITEM:(ARG:2) - ARG:3})
+	SIF ARG:4
+		PRINTFORM 　%ITEMNAME:(ARG:4)%({ITEM:(ARG:4)}→{ITEM:(ARG:4) - ARG:5})
+	SIF ARG:6
+		PRINTFORM 　%ITEMNAME:(ARG:6)%({ITEM:(ARG:6)}→{ITEM:(ARG:6) - ARG:7})
+	SIF ARG:8
+		PRINTFORM 　%ITEMNAME:(ARG:8)%({ITEM:(ARG:8)}→{ITEM:(ARG:8) - ARG:9})
+	SIF ARG:10
+		PRINTFORM 　%ITEMNAME:(ARG:10)%({ITEM:(ARG:10)}→{ITEM:(ARG:10) - ARG:11})
+ELSE
+	PRINTFORM %ITEMNAME:(ARG:0)%({ITEM:(ARG:0)})
+	SIF ARG:2
+		PRINTFORM 　%ITEMNAME:(ARG:2)%({ITEM:(ARG:2)})
+	SIF ARG:4
+		PRINTFORM 　%ITEMNAME:(ARG:4)%({ITEM:(ARG:4)})
+	SIF ARG:6
+		PRINTFORM 　%ITEMNAME:(ARG:6)%({ITEM:(ARG:6)})
+	SIF ARG:8
+		PRINTFORM 　%ITEMNAME:(ARG:8)%({ITEM:(ARG:8)})
+	SIF ARG:10
+		PRINTFORM 　%ITEMNAME:(ARG:10)%({ITEM:(ARG:10)})
+ENDIF
+PRINTL 
+;-----------------------------------------------------------
+;道具を调合したときの素材消费量を文章で表记する
+;同一素材复数必要利用型レシピの表记
+;ARG:0に必要素材道具番号、ARG:1に必要素材个数を入力
+;ARG:2にはRECIPE_DATA(ARG:0, 8)のLOT数を入力する
+;现状のレシピでは１种の素材のみを复数个用意すればいいので、とりあえず简略化
+;ARG:1が0の时は、素材の现所持量のみが表记される
+;-----------------------------------------------------------
+@PHARMACY_CONSUME_T_LOT(ARG:0, ARG:1, ARG:2)
+
+IF ARG:1 > 0
+	PRINTFORM %ITEMNAME:(ARG:0)%({ITEM:(ARG:0)}→{ITEM:(ARG:0) - (ARG:1 * ARG:2)})
+ELSE
+	PRINTFORM %ITEMNAME:(ARG:0)%({ITEM:(ARG:0)})
+ENDIF
+PRINTL 
+;-----------------------------------------------------------
+;ARG:0番の道具の调合にかかる时间を算出する函数
+;ARG:1に调合件数を入力、件数が多ければ补正をかける
+;-----------------------------------------------------------
+@PHARMACY_TIME(ARG:0, ARG:1)
+#FUNCTION
+
+SELECTCASE PHARMACY_RANK(ARG:0)
+	CASE 1
+		LOCAL:0 = 30
+	CASE 2
+		LOCAL:0 = 40
+	CASE 3
+		LOCAL:0 = 50
+	CASE 4
+		LOCAL:0 = 65
+	CASE 5
+		LOCAL:0 = 80
+ENDSELECT
+;自室かつ机椅子があると时间短缩
+IF CFLAG:MASTER:当前位置 == CFLAG:MASTER:初始位置 && ITEM:榉木桌椅
+	SELECTCASE ITEM:榉木桌椅
+		CASE 1
+			TIMES LOCAL:0, 0.90
+		CASE 2
+			TIMES LOCAL:0, 0.85
+		CASE 3
+			TIMES LOCAL:0, 0.80
+	ENDSELECT
+ENDIF
+;√调合件数をかける
+SELECTCASE ARG:1
+	CASE 1
+		TIMES LOCAL:0, 1
+	CASE 2
+		TIMES LOCAL:0, 1.4
+	CASE 3
+		TIMES LOCAL:0, 1.7
+	CASE 4
+		TIMES LOCAL:0, 2
+	CASE 5
+		TIMES LOCAL:0, 2.2
+	CASE 6
+		TIMES LOCAL:0, 2.4
+	CASE 7
+		TIMES LOCAL:0, 2.6
+	CASE 8
+		TIMES LOCAL:0, 2.8
+	CASE 9
+		TIMES LOCAL:0, 3
+	CASE 10
+		TIMES LOCAL:0, 3.1
+ENDSELECT
+RETURNF LOCAL:0
+
+;-----------------------------------------------------------
+;ARG:0番の道具の调合で得られる経験值を算出する函数
+;ARG:1に调合件数、ARG:2に调合结果を入力
+;-----------------------------------------------------------
+@PHARMACY_EXP(ARG:0, ARG:1, ARG:2)
+#FUNCTION
+;成功时
+IF ARG:2
+	SELECTCASE PHARMACY_RANK(ARG:0)
+		CASE 1
+			LOCAL:0 = 1
+		CASE 2
+			LOCAL:0 = 1
+		CASE 3
+			LOCAL:0 = 2
+		CASE 4
+			LOCAL:0 = 2
+		CASE 5
+			LOCAL:0 = 3
+	ENDSELECT
+ELSE
+;失败时
+	SELECTCASE PHARMACY_RANK(ARG:0)
+		CASE 1
+			LOCAL:0 = 2
+		CASE 2
+			LOCAL:0 = 2
+		CASE 3
+			LOCAL:0 = 3
+		CASE 4
+			LOCAL:0 = 5
+		CASE 5
+			LOCAL:0 = 10
+	ENDSELECT
+ENDIF
+;调合件数をかける
+RETURNF (LOCAL:0 * ARG:1)
+
+;-----------------------------------------------------------
+;ARG:0番の道具が体质改变药だった场合の处理
+;-----------------------------------------------------------
+@PHARMACY_CONSTITUTIONAL(ARG:0)
+
+SELECTCASE ARG:0
+	CASE 71
+		PRINTFORML 要给谁使用【药的材料(双)】呢？
+		CALL SHOW_CHARA_LIST("女性")
+		LOCAL:1 = RESULT
+		SELECTCASE LOCAL:1
+			CASE 999
+				PRINTFORML 使用失败、结果还是浪费掉了…
+			CASEELSE
+				PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", (LOCAL:1))%变成了扶她
+				TALENT:(LOCAL:1):性别 |= 2
+				MAXBASE:(LOCAL:1):2 = 10000
+				MAXBASE:(LOCAL:1):精力 = 1000
+				MAXBASE:(LOCAL:1):勃起 = 1500
+				SIF BASE:(LOCAL:1):精力 > 1000
+					BASE:(LOCAL:1):精力 = 1000
+			ENDSELECT
+	CASE 72
+		PRINTFORML 要给谁使用【药的材料(消)】呢？
+		CALL SHOW_CHARA_LIST("扶她")
+		LOCAL:1 = RESULT
+		SELECTCASE LOCAL:1
+			CASE 999
+				PRINTFORML 使用失败、结果还是浪费掉了…
+			CASEELSE
+				PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", (LOCAL:1))%变成了女孩子
+				TALENT:(LOCAL:1):性别 = 1
+				MAXBASE:(LOCAL:1):2 = 0
+				MAXBASE:(LOCAL:1):精力 = 0
+				TALENT:(LOCAL:1):120 = 0
+			ENDSELECT
+	CASE 74
+		PRINTFORML 要给谁使用【红色糖果】呢？
+		CALL SHOW_CHARA_LIST("非处女")
+		LOCAL:1 = RESULT
+		SELECTCASE LOCAL:1
+			CASE 999
+				PRINTFORML 使用失败、结果还是浪费掉了…
+			CASEELSE
+				PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", (LOCAL:1))%的处女膜再生了
+				TALENT:(LOCAL:1):处女 = 2
+			ENDSELECT
+	CASE 77
+		PRINTFORML 要给谁使用【茶色糖果】呢？
+		CALL SHOW_CHARA_LIST("人类耳")
+		LOCAL:1 = RESULT
+		SELECTCASE LOCAL:1
+			CASE 999
+				PRINTFORML 使用失败、结果还是浪费掉了…
+			CASEELSE
+				PRINTFORML [4]猫耳
+				PRINTFORML [3]犬耳
+				PRINTFORML [2]兔耳
+				PRINTFORML [1]动物耳
+				PRINTFORML 
+				PRINTFORML [0]果然还是放弃
+				DO
+					INPUT
+					SELECTCASE RESULT
+					CASE 0
+						PRINTFORML 使用失败、结果还是浪费掉了…
+					CASE 1, 2, 3, 4
+						TALENT:(LOCAL:1):动物耳 = RESULT
+						PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", (LOCAL:1))%长出了%GET_TALENTNAME(GETNUM(TALENT, "动物耳"), TALENT:(LOCAL:1):动物耳)%
+						BREAK
+					CASEELSE
+					ENDSELECT
+				LOOP 1
+		ENDSELECT
+	CASE 78
+		PRINTFORML 要给谁使用【水色糖果】呢？
+		CALL SHOW_CHARA_LIST("ケモミミ")
+		LOCAL:1 = RESULT
+		SELECTCASE LOCAL:1
+			CASE 999
+				PRINTFORML 使用失败、结果还是浪费掉了…
+			CASEELSE
+				PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", (LOCAL:1))%的%GET_TALENTNAME(GETNUM(TALENT, "动物耳"), TALENT:(LOCAL:1):动物耳)%消失了
+				TALENT:(LOCAL:1):动物耳 = 0
+		ENDSELECT
+ENDSELECT
+
+@PHARMACY_LIST_BUTTON(ARG,改行用)
+#DIMS 道具名
+#DIM 改行用
+#DIM R_ID
+道具名 = [{ARG}] %ITEMNAME:(ARG), 18, LEFT% 
+改行用 += STRLENS(道具名)
+SIF LOCAL:0 < 100
+	改行用 ++
+IF 改行用 > 116
+	IF 改行用 >= 999
+	;最初のみ改行しない
+	ELSE
+		PRINTL 
+	ENDIF
+	改行用 = STRLENS(道具名)
+	SIF LOCAL:0 < 100
+		改行用 ++
+	PRINT 　　
+ENDIF
+;一旦灰色にセット
+SETCOLOR 0x666666
+FOR LOCAL,1,6
+	R_ID = ARG * 10 + LOCAL
+	;可能なレシピが那个ば白に戻す
+	SIF CAN_PHARMA(R_ID)
+		RESETCOLOR
+NEXT
+
+PRINTFORM [{ARG}] %ITEMNAME:(ARG), 18, LEFT%
+SIF ARG < 100
+	PRINT  
+RESETCOLOR
+PRINT 　　
+RETURN 改行用

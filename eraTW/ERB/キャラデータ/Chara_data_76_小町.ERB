@@ -1,0 +1,459 @@
+﻿@CHARAMOVE_DATA_76(ARG, ARG:2)
+LOCAL = 76
+SELECTCASE ARG
+	;连动设定（RETURN=依存する角色, RESULT:1～3=对等に连动する角色）
+	CASE 1
+	;特殊生活时间设定（CFLAG:LOCAL:生活时间补正を设定する）
+	CASE 3
+	;移动倾向（±～10=行きやすい/行きにくい, -100=行かない）
+	CASE 4
+		SELECTCASE ARG:2
+			;八云邸、畜生界は行かない
+			CASE P630八云邸玄关 TO P655尤魔宅的澡堂
+				RETURN -100
+			;他人的家、他宅の私室等には入らない
+			CASE P608润美的家, P609璎花的家, P606日狭美的家, P607残无的家
+				RETURN -100
+			;映姫样の私室はあまり入らない
+			CASE P615映姫的房间
+				RETURN -5
+			;法庭はなるべく入らない
+			CASE P612法庭
+				RETURN -10
+			;赛河原～彼岸によく居る
+			CASE P602赛河原, P603积石冢, P604彼岸
+				RETURN 5
+		ENDSELECT
+	;出现场所
+	CASE 7
+		SELECTCASE ARG:2
+			CASE 樱花道的鸟居, 神社境内, 神社走廊
+				RETURN 1
+			CASE 吞屋小道
+				RETURN 1
+			CASE 中有之道, 三途之川, 彼岸, 白玉楼庭院, 地狱
+				RETURN 1
+			CASE 山麓树海, 玄武之泽, 大蛤蟆之池, 仙人的宅邸
+				RETURN 1
+		ENDSELECT
+	;引力设定（CFLAG:LOCAL:引力点を设定する）
+	CASE 8
+ENDSELECT
+
+@EXIST_キャラデータ76
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@キャラデータ76(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "称呼"
+	CALLF MAKE_STR(V_NAME, "小町")
+;こっから衣装设定
+CASE "今天的睡衣"
+	CALLF MAKE_STR(V_NAME, "睡衣（襦袢）套")
+
+CASE "便装：帽子"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("帽子", "发饰"))
+CASE "便装：靴"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("靴", "木屐"))
+CASE "便装：袜子"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("袜子", "短布袜"))
+CASE "便装：和服"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("和服", "和服"))
+CASE "便装：连衣裙"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("连衣裙", "肌襦袢"))
+CASE "便装：裙子"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("裙子", "长裙"))
+CASE "便装：其他１"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("其他１", "带"))
+
+CASE "固有内衣形容词"
+	CALLF MAKE_STR(V_NAME, "大人的魅力溢出")
+CASE "固有下半身内衣名"
+	CALLF MAKE_STR(V_NAME, "坦加(巴西两截式女游泳衣)")
+CASE "固有上半身内衣"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "固有上半身内衣名"
+	CALLF MAKE_STR(V_NAME, "人造胸罩")
+CASE "固有内衣着用条件"
+	SIF !RAND:(3 - (2 * 胜负内衣判定([[小町]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "固有内衣半透明(前)"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "固有内衣半透明(后)"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "固有内衣布料厚度"
+	CALLF MAKE_INT(V_NAME, 1)
+
+;料理关联
+CASE "料理：喜欢的味道"
+	CALLF MAKE_STR(V_NAME, "鱼料理/香料/和食/油炸食品/开胃/丰盛/垃圾/浓厚/豪华/新鲜/豪快/灵障/冥界风/辣/辣/咸/咸/")
+CASE "料理：讨厌的味道"
+	CALLF MAKE_STR(V_NAME, "健康/化学的/酸/酸/朴素/朴素/青蛙/青蛙/青蛙/虫肉/虫肉/虫肉/")
+CASE "料理：助手效果"
+	CALLF MAKE_STR(V_NAME, "冥界风/")
+;赠り物关联
+CASE "感性：好き"
+	CALLF MAKE_STR(V_NAME, "赤/美的/和风/夸张/" + "死生/酒/" * 3 + "死神の/彼岸の/带来死亡の/" * 5)
+CASE "感性：嫌い"
+	CALLF MAKE_STR(V_NAME, "洋风/纤细/洛丽塔/狂热/" + "领带/" * 3)
+
+;ここは依赖IDが关联しない情报
+;依赖发生率スカ2/一般3/固有5
+CASE "没有依赖发生率"
+	CALLF MAKE_INT(V_NAME, 2)
+CASE "一般依赖发生率"
+	CALLF MAKE_INT(V_NAME, 3)
+CASE "固有依赖发生率"
+	CALLF MAKE_INT(V_NAME, 5)
+CASE "固有依赖最终要素"
+	CALLF MAKE_INT(V_NAME, 101)
+CASEELSE
+	;固有依赖关联のデータにバトンタッチ
+	SIF STRCOUNT(O_DATA, "依赖")
+		CALLF 固有依赖76(ARG, O_DATA, V_NAME)
+ENDSELECT
+
+;-------------------------------------------------
+;固有料理设定
+;DISH_NAME          料理名
+;RESULTS            料理の种类（轻食/主食/甜点）
+;CALL 材料设定("")  材料の指定。"泛用"を入れると自动で泛用食材になる
+;DISH_TASTE         味の设定
+;DISH_COMMENT       （任意）一行コメント
+;DISH_TIME          （任意）调理にかかる时间
+;DISH_MAXLIMIT      （任意）料理の持续时间
+;-------------------------------------------------
+@SPECIAL_MENU_76
+DISH_NAME = 人魂棉花糖
+RESULTS = 甜点
+CALL 材料设定("彷徨灵魂")
+DISH_TASTE = 和食/甜/清淡/清淡/冷/朴素/软绵绵/灵障/冥界风/
+DISH_COMMENT = 这是一种在冥界人气不高的棉花糖。
+RETURN 1
+
+;IMAGE_I76_特殊服装(CHARA)-------------------------------------------------------------------
+;角色特有の服装表示条件
+;エフェクトを共有する服装差分はこちらで指定する
+;使用时注意点:
+;	RESULTSに特殊服装を格纳すること
+;	书式は %服装%%特殊服装% 适宜"_"等入れること
+;-------------------------------------------------------------------------------------------
+@IMAGE_I76_特殊服装(CHARA)
+#DIM CHARA
+VARSET RESULTS
+
+IF CFLAG:CHARA:应用差分替换
+	;替换用画像
+	;IF CHECK_NUDE(CHARA)
+		;裸
+		;IF FLAG:立绘种类
+			;颜绘
+		;ELSE
+			;立绘
+		;ENDIF
+	;ELSE
+		;服
+		;IF FLAG:立绘种类
+			;颜绘
+		;ELSE
+			;立绘
+		;ENDIF
+	;ENDIF
+ELSE
+	;通常画像
+	IF CHECK_NUDE(CHARA)
+		;裸
+		;IF FLAG:立绘种类
+			;颜绘
+		;ELSE
+			;立绘
+		;ENDIF
+	ELSE
+		;服
+		IF FLAG:立绘种类
+		;颜绘
+		;通常画像
+			;欲求不满度750%以上または发情中かつ欲望LV5以上かつ风骚で、小町が自室にいて二人きり
+			SIF (CFLAG:76:积攒度 >= 750 || TCVAR:76:发情 == 1)  && ABL:欲望 >= 5 && TALENT:风骚 && CFLAG:76:当前位置 == 616 && GET_TARGETNUM() == 1
+			RESULTS = _はだけ
+		ELSE
+			;立绘
+		ENDIF
+	ENDIF
+ENDIF
+
+;IMAGE_I76_体形(CHARA)-----------------------------------------------------------------------
+;角色特有の体形表示条件
+;エフェクトを共有する体形差分はこちら
+;服装を指定しても自动で表示されるので注意
+;使用时注意点:
+;	RESULTSに体形を格纳すること
+;	书式は %体形%%服装% 适宜"_"等入れること
+;	"巨乳"は本编で实装済み %体形%巨乳%服装% で追记可能
+;-------------------------------------------------------------------------------------------
+@IMAGE_I76_体形(CHARA)
+#DIM CHARA
+VARSET RESULTS
+
+IF CFLAG:CHARA:应用差分替换
+	;替换用画像
+	IF FLAG:立绘种类
+		;颜绘
+	ELSE
+		;立绘
+	ENDIF
+ELSE
+	;通常画像 颜绘&立绘
+	SIF TALENT:CHARA:妊娠 && CFLAG:CHARA:妊娠经过日数 >= 41
+		RESULTS = 妊娠
+	;IF FLAG:立绘种类
+		;颜绘
+	;ELSE
+		;立绘
+	;ENDIF
+ENDIF
+
+;IMAGE_I76_特殊表情(CHARA)--------------------------------------------------------------------
+;角色特有の表情表示条件
+;时间停止中でも维持する表情はこちら
+;使用时注意点:
+;	RESULTS:0に表情を格纳
+;	RESULTS:1にマウスオーバー时の表情を格纳すること
+;	"通常","笑颜","愤怒","发情","睡眠"は本编で实装済み
+;-------------------------------------------------------------------------------------------
+@IMAGE_I76_特殊表情(CHARA)
+#DIM CHARA
+
+IF CFLAG:CHARA:应用差分替换
+	;替换用画像
+	IF FLAG:立绘种类
+		;颜绘
+	ELSE
+		;立绘
+	ENDIF
+ELSE
+	;通常画像
+	IF FLAG:立绘种类
+		;颜绘
+	ELSE
+		;立绘
+	ENDIF
+ENDIF
+
+;IMAGE_I76_特殊表情COM(CHARA, 指令)-------------------------------------------------------
+;直前の指令で变化する角色特有の表情表示条件
+;时间停止中は变化しない表情はこちら
+;使用时注意点:
+;	RESULTS:0に表情を格纳
+;	RESULTS:1にマウスオーバー时の表情を格纳すること
+;	"自慰","爱抚","性交"は本编で实装済み
+;-------------------------------------------------------------------------------------------
+@IMAGE_I76_特殊表情COM(CHARA, 指令)
+#DIM CHARA
+#DIM 指令
+
+IF CFLAG:CHARA:应用差分替换
+	;替换用画像
+	IF FLAG:立绘种类
+		;颜绘
+	ELSE
+		;立绘
+	ENDIF
+ELSE
+	;通常画像
+	IF FLAG:立绘种类
+		;颜绘
+	ELSE
+		;立绘
+	ENDIF
+ENDIF
+
+;IMAGE_I76_差分(CHARA)-----------------------------------------------------------------------
+;角色特有の差分表示条件
+;裸やエフェクトを共有しない画像はこちら
+;使用时注意点:
+;	RESULTSに差分を格纳すること
+;	书式は {CHARA}%差分% 适宜"_"等入れること
+;-------------------------------------------------------------------------------------------
+@IMAGE_I76_差分(CHARA)
+#DIM CHARA
+VARSET RESULTS
+
+IF CFLAG:CHARA:应用差分替换
+	;替换用画像
+	IF FLAG:立绘种类
+		;颜绘
+	ELSE
+		;立绘
+	ENDIF
+ELSE
+ENDIF
+
+;IMAGE_I76_特殊照れ(CHARA)--------------------------------------------------------------------
+;角色特有の照れエフェクト表示条件
+;使用时注意点:
+;	RESULTSに特殊照れを格纳すること
+;	书式は %特殊照れ%照れ
+;	"裸"は本编で实装済み %特殊照れ%裸照れ で追记可能
+;-------------------------------------------------------------------------------------------
+@IMAGE_I76_特殊照れ(CHARA)
+#DIM CHARA
+VARSET RESULTS
+
+IF CFLAG:CHARA:应用差分替换
+	;替换用画像
+	IF FLAG:立绘种类
+		;颜绘
+	ELSE
+		;立绘
+	ENDIF
+ELSE
+	;通常画像
+	IF FLAG:立绘种类
+		;颜绘
+	ELSE
+		;立绘
+	ENDIF
+ENDIF
+
+;IMAGE_I76_特殊吐息(CHARA)--------------------------------------------------------------------
+;角色特有の吐息エフェクト表示条件
+;使用时注意点:
+;	RESULTSに特殊吐息を格纳すること
+;	书式は %特殊吐息%吐息
+;	"裸"は本编で实装済み %特殊吐息%裸吐息 で追记可能
+;-------------------------------------------------------------------------------------------
+@IMAGE_I76_特殊吐息(CHARA)
+#DIM CHARA
+VARSET RESULTS
+
+IF CFLAG:CHARA:应用差分替换
+	;替换用画像
+	IF FLAG:立绘种类
+		;颜绘
+	ELSE
+		;立绘
+	ENDIF
+ELSE
+	;通常画像
+	IF FLAG:立绘种类
+		;颜绘
+	ELSE
+		;立绘
+	ENDIF
+ENDIF
+
+;IMAGE_I76_特殊汗(CHARA)--------------------------------------------------------------------
+;角色特有の汗エフェクト表示条件
+;使用时注意点:
+;	RESULTSに特殊汗を格纳すること
+;	书式は %特殊汗%汗
+;	"裸"は本编で实装済み %特殊汗%裸汗 で追记可能
+;-------------------------------------------------------------------------------------------
+@IMAGE_I76_特殊汗(CHARA)
+#DIM CHARA
+VARSET RESULTS
+
+IF CFLAG:CHARA:应用差分替换
+	;替换用画像
+	IF FLAG:立绘种类
+		;颜绘
+	ELSE
+		;立绘
+	ENDIF
+ELSE
+	;通常画像
+	IF FLAG:立绘种类
+		;颜绘
+	ELSE
+		;立绘
+	ENDIF
+ENDIF
+
+;IMAGE_I76_特殊エフェクトチェック(CHAR, エフェクト)--------------------------------------------
+;角色特有のエフェクト判定  特殊エフェクトを直接指定したい场合に参照
+;参数 "エフェクト" に固有のエフェクトが含まれるかを判定する
+;例の街道、STRFINDを使用してください
+;-------------------------------------------------------------------------------------------
+@IMAGE_I76_特殊エフェクトチェック(CHARA, エフェクト)
+#DIM CHARA
+#DIMS エフェクト
+
+IF CFLAG:CHARA:应用差分替换
+	;替换用画像
+ELSE
+	;通常画像
+	SIF STRFIND(エフェクト, "母乳") != -1
+		RETURN 1
+ENDIF
+
+RETURN 0
+
+;IMAGE_I76_特殊エフェクト(CHARA)--------------------------------------------------------------------
+;角色特有のエフェクト表示条件
+;使用时注意点:
+;	RESULTS配列に特殊エフェクトを格纳
+;	RETURNで追加するエフェクト数を返还すること
+;-------------------------------------------------------------------------------------------
+@IMAGE_I76_特殊エフェクト(CHARA)
+#DIM CHARA
+#DIM DYNAMIC エフェクト数 = 0
+VARSET RESULTS
+
+IF CFLAG:CHARA:应用差分替换
+	;替换用画像
+	IF FLAG:立绘种类
+		;颜绘
+	ELSE
+		;立绘
+	ENDIF
+ELSE
+	;通常画像
+	IF FLAG:立绘种类
+		;颜绘
+		IF TALENT:CHARA:母乳体质 && NOWEX:CHARA:喷乳 && CHECK_NUDE(CHARA)
+			IF TALENT:CHARA:妊娠 && CFLAG:CHARA:妊娠经过日数 >= 41
+				RESULTS:エフェクト数 = 妊娠母乳
+			ELSE
+				RESULTS:エフェクト数 = 母乳
+			ENDIF
+			エフェクト数 += 1
+		ENDIF
+	ELSE
+		;立绘
+	ENDIF
+ENDIF
+
+RETURN エフェクト数
+
+;IMAGE_I76_自慰エフェクト(CHARA)--------------------------------------------------------------------
+;角色特有の自慰エフェクト表示条件
+@IMAGE_I76_自慰エフェクト(CHARA)
+#DIM CHARA
+#DIM DYNAMIC エフェクト数 = 0
+VARSET RESULTS
+
+IF CFLAG:CHARA:应用差分替换
+	;替换用画像
+	IF FLAG:立绘种类
+		;颜绘
+	ELSE
+		;立绘
+	ENDIF
+ELSE
+	;通常画像
+	IF FLAG:立绘种类
+		;颜绘
+	ELSE
+		;立绘
+	ENDIF
+ENDIF
+
+RETURN エフェクト数
+;********************************************************************************************

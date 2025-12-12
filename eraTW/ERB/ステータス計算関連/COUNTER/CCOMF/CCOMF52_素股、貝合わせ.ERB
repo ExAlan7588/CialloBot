@@ -1,0 +1,101 @@
+﻿;*********************************************************************************************
+;Counter指令：素股、磨镜
+;ARG = 对象の角色番号
+;*********************************************************************************************
+@CCOMF52(ARG)
+
+	;体势の变更
+	;=============================
+	IF !(TALENT:PLAYER:2 & 2)
+		SOURCE:PLAYER:快Ｃ += 500
+		CALL TOUCH_SET(SET_FROM_C,2,ARG)
+	ELSE
+		CALL TOUCH_SET(SET_FROM_C,1,ARG)
+	ENDIF
+	TFLAG:MASTERのＣ使用中 ++
+	
+
+	;ソース计算および内部处理系统
+	;=============================
+	SIF TEQUIP:PLAYER:0
+		CALL DATUI_BOTTOM(ARG,0)
+	SIF TEQUIP:ARG:0
+		CALL DATUI_BOTTOM_T(ARG,0)
+	SOURCE:ARG:快Ｃ += 150
+	SOURCE:ARG:性行动 += 250
+	SOURCE:ARG:诱惑 += 700
+	SOURCE:ARG:挑衅 += 200
+	SOURCE:ARG:侍奉 += 400
+	SOURCE:ARG:强迫 += 500
+	;射精部位（1=膣内 2=肛门 3=手淫 4=口淫 5=乳交 6=素股 7=足交 8=体表 9=肛门侍奉 10=道具 11=触手 12=Ａ调教 13=Ｖ调教）
+	CALL 射精对象登录(PLAYER, ARG, 6)
+	;强度
+	IF ABL:ARG:腰 < 1
+		TCVAR:PLAYER:4 += 200
+	ELSE
+		TCVAR:PLAYER:4 += 800
+	ENDIF
+	;侍奉FLAG
+	TCVAR:ARG:108 = 1
+	TCVAR:ARG:嗜虐フラグ = 1
+
+	;マ斯塔Counter制御
+	;(ビット立ちで不可 0=摸屁股 1=拥抱 2=接吻 3=胸爱抚 4=肛门爱抚 5=阴蒂爱抚 6=指插入れ 7=掀裙子)
+	;=============================
+	;CALL Counter插入され继续中处理(ARG)
+	;复数人がありうるのでこれは…うーん？ 稍微よくわからない
+	SETBIT TCVAR:ARG:26 ,5
+	SETBIT TCVAR:ARG:26 ,6
+
+RETURN 1
+
+;*********************************************************************************************
+;Counter实行可否出力函数
+;ARG = 对象の角色番号
+;*********************************************************************************************
+@CCOM_ABLE52(ARG)
+
+	SIF TFLAG:62
+		RETURN 0
+	;腰使いが无くても、十分な情欲があれば自分の快乐目的で实行する
+	;无知な子も快Ｃが溜まると本能でこすりつけてくる
+	IF ABL:ARG:腰 < 1
+		IF PALAM:ARG:情欲 < PALAMLV:3
+			RETURN 0
+		ELSEIF TALENT:ARG:无知 && PALAM:ARG:快Ｃ < PALAMLV:3
+			RETURN 0
+		ENDIF
+	ENDIF
+	;润滑
+	SIF PALAM:ARG:润滑 < 2000
+		RETURN 0
+	SIF TEQUIP:50 >= 0 || TEQUIP:51 >= 0
+		RETURN 0
+	SIF TEQUIP:MASTER:50 >= 0 || TEQUIP:MASTER:51 >= 0
+		RETURN 0
+
+RETURN 1
+
+;*********************************************************************************************
+;Counter实行判定值算出函数
+;ARG = 对象の角色番号
+;*********************************************************************************************
+@CCOM_ORDER52(指令番号, ARG, 基本值)
+#DIM 指令番号
+#DIM 基本值
+#DIMS Counterタイプ
+
+	;Counterタイプ设定
+	;=============================
+	Counterタイプ = 脱衣爱抚
+
+	;实行判定值算出式
+	;=============================
+	LOCAL = 基本值 + ABL:ARG:腰 + 2 * TALENT:ARG:弄湿难易 + BASE:MASTER:勃起 / 500
+
+	;Counterタイプ别计算处理 实质实行判定处理を含む
+	;=============================
+	LOCAL = MAX(LOCAL + COUNTER_SIKOU:ARG:指令番号, 1)
+	LOCAL *= COUNTER_TYPE(Counterタイプ, ARG)
+
+RETURN LOCAL

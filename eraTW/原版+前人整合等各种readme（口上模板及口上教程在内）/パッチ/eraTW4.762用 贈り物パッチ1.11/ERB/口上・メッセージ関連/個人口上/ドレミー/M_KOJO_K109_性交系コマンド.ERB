@@ -1,0 +1,3343 @@
+;��������������������������������������������������
+;�����n�R�}���h
+;��������������������������������������������������
+;==================================================
+;60,�����
+;==================================================
+@M_KOJO_MESSAGE_COM_K109_60
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K109_60_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K109_60_1
+
+;-------------------------------------------------
+;����
+;�L���`�F�b�N�i=0, ��\���A1, �\���j
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL && TFLAG:193
+	;-------------------------------------------------
+	;������
+	;-------------------------------------------------
+	;���߂�
+	;�L���`�F�b�N
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		IF FLAG:70
+			PRINTFORMW 
+			RETURN 1
+		;�T�O���Ȃ肫�莞
+		ELSEIF FLAG:�Ȃ肫�� == 110
+			PRINTFORML
+			CALL AUTO_AEGI(NO:TARGET)
+			RETURN 1
+		;����
+		ELSEIF TCVAR:�j�Z == 1
+			PRINTFORMW �u���߂Ă��������܂܂Ƃ́c�����z���Ɓc�v
+			PRINTFORMDW %CALLNAME:MASTER%�̓h���~�[��ǂɉ����t���A�鏊�ɊƂ������t���Ȃ�������������Ă���
+			PRINTFORMDW �ْ����炩�ċz�������Ȃ��Ă���h���~�[�ɗD�����L�X�����A������������悤�w�߂�
+			CALL HPH_PRINT,@"�u���c����c�����HPH�c�c�����ł���c�v","W"
+			PRINTFORMDW �o������߂��̂��A�h���~�[�͎w�ŉA�O�������L�����_���󂯓���鏀���𐮂���
+			PRINTFORMDW %CALLNAME:MASTER%�͍������҂��󂯓��ꂽ���Ƃ��Ȃ��ł��낤���A�ɋT�������Ă����ƁA���X�ɍ���i�߂Ă����c
+			PRINTFORMW �u���A�����b�c�b�c�v
+			PRINTFORMDW �������ɋT�����G���ƃh���~�[�͋�ɂɊ��c�߂��B�����ꂵ�߂�͍̂����낤�Ǝv����%CALLNAME:MASTER%�͈�C�ɍ���˂������
+			PRINTFORMW �u���A�̓b�c�Ƀb�A�����c�b�I�H�v
+			PRINTFORMDW ��u�̒�R�̌�A���_�͖��̎x�z�҂̏�����˂��j��Y���b���S���܂œ��B����
+			PRINTFORMDW �˂������ꂽ�Ռ��ƒɂ݂ɁA�h���~�[�͂ܐ旧���ɂȂ�Ȃ���g�̂�k�킹�Ă���c
+			PRINTFORMW �u���A����Łc��ɂȂ����̂ˁc�v
+			PRINTFORMDW �h���~�[�͗܂𕂂��ׂȂ�������C�ɔ��΂݂����Ă���
+			PRINTFORMDW �b���q�������܂ܕ��������ƁA%CALLNAME:MASTER%�̓L�X�����Ȃ��獘�𓮂����n�߂��c
+		RETURN 1
+		ELSE
+			PRINTFORMW �u���̊��D�c�����p���������悤�ȁc�v
+			PRINTFORMDW %CALLNAME:MASTER%�̓h���~�[��ǂɉ����t���A�鏊�ɊƂ������t���Ȃ�������������Ă���
+			PRINTFORMDW �����ő}����邼�ƚ����ƁA�ԓ���҂����Ɉ�C�ɓ˂����ꂽ
+			CALL HPH_PRINT,@"�u�ӂ�HPH���A���񂣂�HPH�v","W"
+			PRINTFORMDW %CALLNAME:MASTER%�͖ڂ𔒍������Ă���h���~�[�̐O��D���A�@�����r�����Ȃ��獘�𓮂����Ă�����
+		RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;�}���p��
+	;�L���`�F�b�N
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:100 == PLAYER
+		IF FLAG:70
+			PRINTFORMW 
+			RETURN 1
+		;�T�O���Ȃ肫�莞
+		ELSEIF FLAG:�Ȃ肫�� == 110
+			PRINTFORML
+			CALL AUTO_AEGI(NO:TARGET)
+			RETURN 1
+		ELSEIF ABL:�S >= 3
+			;���ː�����
+			IF NOWEX:PLAYER:11
+				SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"�u�ӂ���HPH�͂����bHPH�񂣂���HPH�v","L"
+					PRINTFORMDL �Ζʗ��ʂ̎p���̂܂܁A�h���~�[�̓���Ɍ���������ł��t����
+					CALL HPH_PRINT,@"�u����bHPH�[�c�񂣂�HPH������HPH�v","L"
+					PRINTFORMDL �h���~�[�̕Б��������グ�A���[���}�����L�X������
+					PRINTFORMDW �܂�ň�ɂȂ����悤�Ȋ��o�𖡂킢�Ȃ���A���݂��ɐ��s�ׂɖv�����Ă������c
+				CASE 1
+					CALL HPH_PRINT,@"�u����HPH���bHPH���J���J���bHPH�v","L"
+					PRINTFORMDL %CALLNAME:MASTER%�̓h���~�[�������ׂ��悤�ɕǂɉ��������A�q���Ȗ�������W���Ă���
+					PRINTFORMDW ���|�I�ȗY�̖\�͂ɁA�h���~�[�͂��������b�̂悤�ɚb�����Ƃ����ł��Ȃ�
+				CASE 2
+					CALL HPH_PRINT,@"�u������HPH�c�Ȃ񂾂��A����HPH�D�������cHPH�v","L"
+					PRINTFORMDL %CALLNAME:MASTER%�̓h���~�[��ǂɉ��������A�ޏ��̐g�̂������オ�邩�Ƃ������ɍ���˂��グ��
+					PRINTFORMDW ������̂Ȃ��\�͓I�ȃZ�b�N�X�ɁA�h���~�[�͂ǂ����|���I�ȉ����������Ă���
+				ENDSELECT
+				RETURN 1
+			;�O��ː�����
+			ELSEIF TCVAR:102
+				SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"�u���HPH�ǂꂾ���A���~�����Ȃ�ł����c�Ђ���HPH�v","L"
+					PRINTFORMDL �ː����I���Ă�%CALLNAME:MASTER%�̍��͎~�܂�Ȃ�
+					PRINTFORMDL �����������~���񂷂悤�ɓ˂������ƁA�����ꂽ���t���d�͂ɏ]���đ����ɓH�藎���Ă���
+					PRINTFORMDW �h���~�[�̍�����ߕt����悤�ɕ������߂Ȃ���A%CALLNAME:MASTER%�͗~�]�̂܂܃Z�b�N�X�ɖv�����Ă������c
+				CASE 1
+					CALL HPH_PRINT,@"�u����HPH������HPH�܂��A�܂����C�ł��˂��c��HPH�v","L"
+					PRINTFORMDL �ː����I����Ă��x�މɂ͂Ȃ��B%CALLNAME:MASTER%�̓h���~�[�̐K�����O�b�ƒ͂ݏグ�A�s�X�g�����ĊJ����
+					PRINTFORMDW �h���~�[�͂ܐ旧���ɂȂ�Ȃ���A�e�ޓ��[��%CALLNAME:MASTER%�̋��ɉ����t�����������悤�ȏ΂݂𕂂��ׂĂ���c
+				CASE 2
+					CALL HPH_PRINT,@"�u�������A���イ����HPH�񂠂�HPH���bHPH�v","L"
+					PRINTFORMDL �h���~�[�̍���𕕎E���A�b�~�̂܂܂ɓ��_���S���ɑł�����
+					PRINTFORMDW ���x�������m�b�N���Ă��ƁA�h���~�[�͂����Ɏ��̕\��ɂȂ�b�̂悤�ɚb��������
+				ENDSELECT
+				RETURN 1
+			ELSE
+				SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"�u�����ƁA��������HPH�c��A�����HPH�v","L"
+					PRINTFORMDL %CALLNAME:MASTER%�͍��𓮂����X�s�[�h���ɂ߁A�h���~�[��[����������
+					PRINTFORMDW �h���~�[�̂��Ȃ��Ɏ��Y���D�����L�X���J��Ԃ��ƁA�h���~�[���S�͕Ԃ��悤�ɃL�����L�����ƒ��ߕt���Ă���
+				CASE 1
+					CALL HPH_PRINT,@"�u�͂���HPH���HPH�c�ӂӁA�C�����ǂ������Ȋ炵�Ă�cHPH�v","L"
+					PRINTFORMDL �j�`���b�A�O�`���b�A�ƔS�����m�̎C��鉹�������Ă���
+					PRINTFORMDW %CALLNAME:MASTER%�͊ɋ}�����Ȃ���A�h���~�[���S���̊��G���y����
+				CASE 2
+					CALL HPH_PRINT,@"�u�ӂ���HPH����HPH�������A�����ł����c�HHPH�v","L"
+					PRINTFORMDL �h���~�[�̏��A�����t�ɓh�ꂽ���_���j�����j�����Ɖ������Ă���
+					PRINTFORMDW ��ʂ̖���X��������́A�˂������ꂽ���_����ߕt���A�J���̗��܂ŔM�S�ɕ�d�����c
+				ENDSELECT
+				RETURN 1
+			ENDIF
+		ELSE
+			;���ː�����
+			IF NOWEX:PLAYER:11
+				SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"�u�c����A�ӂ��cHPH�c���ł��A�ː����Ă����ł�����c��HPH�v","L"
+					PRINTFORMDL %CALLNAME:MASTER%�̓h���~�[�ƌ��ߍ����Ȃ���ː��Ɍ������̑��x���グ�Ă���
+					PRINTFORMDW �r���������Əd���������Â��ȋ�Ԃɋ����B���̉����~�܂������A���ɑz����������ꂽ
+				CASE 1
+					CALL HPH_PRINT,@"�u�����cHPH�A����A�����c��HPH�c�b��HPH�v","L"
+					PRINTFORMDL �ː����ߕt������ł��t���鉹���������Ă���
+					PRINTFORMDW �h���~�[���B���w���ɒ܂𗧂Ă�Ɠ����ɁA%CALLNAME:MASTER%��������琸��瞂点��
+				CASE 2
+					CALL HPH_PRINT,@"�u�͂��c��A�Ӂc��HPH�ق�A�C���ācHPH�v","L"
+					PRINTFORMDL %CALLNAME:MASTER%�̓h���~�[�Ə�~�ɔG�ꂽ���������킵�Ȃ��獂�݂ւƏ����Ă���
+					PRINTFORMDW �h���~�[�̋r�����ɗ��߂���Ɠ����ɁA%CALLNAME:MASTER%�͍Ō�̈�˂����S���ɕ������c�c
+				ENDSELECT
+				RETURN 1
+			;�O��ː�����
+			ELSEIF TCVAR:102
+				SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"�u�͂��c�͂��c��HPH�c��A�ӂ��cHPH�v","L"
+					PRINTFORMDL �������ɂ�����ƍL����M�Ƀh���~�[�͔M��������R�炵�Z�����u������
+					PRINTFORMDL �b���q�������܂ܕ��������Ă���ƁA���������j�����Ă��S���������g���Ă����c�c
+					CALL HPH_PRINT,@"�u�c��c��HPH�c�܂��A����Ȃ��݂����ł��ˁc�cHPH�v","L"
+					PRINTFORMDW %CALLNAME:MASTER%�͕ԓ�����ɍ���h����A�܂��h���~�[��������󂯓��ꂽ�c�c
+				CASE 1
+					CALL HPH_PRINT,@"�u�ӂ��cHPH��cHPH�����A�x�e���c�����HPH�v","L"
+					PRINTFORMDL �h���~�[��%CALLNAME:MASTER%�ɑ̂�a���ċz�𐮂��Ă���
+					PRINTFORMDW �ޏ����x�܂��Ȃ��獘�𓮂����Ă��A�h���~�[�͓������\��ł���邪�܂܂ɂȂ��Ă���
+				CASE 2
+					CALL HPH_PRINT,@"�u��c�ӂӂ�HPH�����ƃV�����ł����c�HHPH�v","L"
+					PRINTFORMDL �ː����I���A�h���~�[�Ɍy���L�X�������%CALLNAME:MASTER%�͍Ăэ��𓮂���
+					PRINTFORMDW �ʂ�����A��������A�Ƃ��݂��̑̉t�������荇�������`���d�������𗧂ĂĂ���c
+				ENDSELECT
+				RETURN 1
+			ELSE
+				SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"�u�c����c�́c��HPH�c�p���������̂Łc���܂�c��HPH�v","L"
+					PRINTFORMDL �p�������C�ɖڂ���炷�h���~�[������񂹂Ȃ���A�������Ƃ����������ŃZ�b�N�X���y����ł���
+					PRINTFORMDW �����ň��𚑂��Ă��ƁA�ޏ��̖���̓L���b�ƒ��܂�S�n�ǂ��������ƑS�̂ɗ^���Ă���
+				CASE 1
+					CALL HPH_PRINT,@"�u�c���A��A������c���ށc����Ձc��HPH�v","L"
+					PRINTFORMDL %CALLNAME:MASTER%�̓h���~�[�������̃��m�ɂ��邩�̂悤�ɐ�𗍂܂��A���ɂ͋z���グ�A���t�𗬂�����ł���
+					PRINTFORMDW ����ȍs�ׂɔޏ��͂�������|�M���ꂽ�l�q�ŁA��C�����j���B�����Ƃ���������邪�܂܂ɂȂ��Ă���c�c
+				CASE 2
+					CALL HPH_PRINT,@"�u�c��c����c�c�͂Ӂc������cHPH�v","L"
+					PRINTFORMDL �O��ɗh�����Ă��������~�߂�ƁA%CALLNAME:MASTER%�̓h���~�[�̊�������񂹐O���d�˂�
+					PRINTFORMDL �����S����G�ꍇ�킹�邾���̃L�X
+					PRINTFORMDL ����͎���Ɍ݂��̐O����ނ悤�ȓ����ɕς��A���ɂ͐�𗍂܂���܂łɂȂ��Ă�����
+					CALL HPH_PRINT,@"�u�c���A�͂��cHPH�c�L�X����x�ɂ����񂿂񂪃r�N�b�Ē��˂āc���������̂ł���ˁH�c�ق�A�����ėǂ��ł���HPH�v","W"
+				ENDSELECT
+				RETURN 1
+			ENDIF
+		ENDIF
+	ENDIF
+	;��{�Z�b�g
+	;������
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;�T�O���Ȃ肫�莞
+	ELSEIF FLAG:�Ȃ肫�� == 110
+		PRINTFORML
+		CALL AUTO_AEGI(NO:TARGET)
+		RETURN 1
+	ELSEIF ABL:�S >= 3
+		SELECTCASE RAND:3
+		CASE 0
+			CALL HPH_PRINT,@"�u���HPH�c���̊��D�A���܂ł�HPH�v","L"
+			PRINTFORMDL �h���~�[������グ��ƁA�}���ւ̊��҂��甽��Ԃ���_���S���Ɉ���������i�߂Ă���
+			PRINTFORMDL �ŉ��܂œ��B�����_���q�{�����R�c���Ə��˂��ƁA�h���~�[�̓r�N�r�N���z�������ウ��
+			PRINTFORMDW �ޏ����|��Ă��܂�Ȃ��悤�A%CALLNAME:MASTER%�͔w���x���Ȃ���������ƃX�g���[�N���Ă�����
+		CASE 1
+			PRINTFORMDL �ӂƎv�����A�S���܂ő}�������܂܃h���~�[��������ߎb�������Ȃ��ł���
+			CALL HPH_PRINT,@"�u�񂣂���HPH�c�͂����cHPHH�c�����Ȃ��̂ł����c�H�v","L"
+			PRINTFORMDW �c�c�c
+			CALL HPH_PRINT,@"�u�Ӂc��HPH�ӂ��c��HPH�c�́A�͂₭�c��HPH�~���񂵂āA�Ƃ��āc��HPH�v","L"
+			PRINTFORMDL �����o�߂���ƁA�h���~�[�̓���͎��߂𐿂��悤�ɔS�������k��������������_���_���Ɩ{�C�`����ꂳ����܂łɕϖe����
+			PRINTFORMDW ����͖ʔ�����������Ȃ��B%CALLNAME:MASTER%�͂����v���ޏ��̊肢�ɉ����č���˂��グ�Ă������c�c
+		CASE 2
+			CALL HPH_PRINT,@"�u���HPH�ӂ����c���܂ő}����܂�����cHPH�v","L"
+			PRINTFORMDL ���_���ŉ��܂œ��B����ƁA�h���~�[�͏���������f��
+			PRINTFORMDW ���̂܂܃h���~�[�͂�����Ɋ���񂹂�ƁA�����Ś����n�߂�
+			CALL HPH_PRINT,@"�u���̑̐��c���������Ă���Ċ��������܂���HPH�v","W"
+			CALL HPH_PRINT,@"�u����Ɂc�ӂӁA%CALLNAME:MASTER%�̂����񂿂�A���̎���s�܂��������ăr�N�r�N�z�����Ă܂���HHPH�v","W"
+			CALL HPH_PRINT,@"�u�ق�ƃG�b�`�Ȃ����񂿂�ł��˂��c�ł��������Ȃ��Ă�����ł���c�HHPH�v","W"
+			CALL HPH_PRINT,@"�u�т�[�т�[���Ďː����Ď��̎���D�P�����Ă��A%CALLNAME:MASTER%�͉��������Ȃ���ł��v","W"
+			CALL HPH_PRINT,@"�u�����āA����%CALLNAME:MASTER%�̎����c�񂟂�HPH�������A�D���Ȃ�ł�����A�������bHPH HPH HPH�v","L"
+			PRINTFORMDW �łꂽ%CALLNAME:MASTER%������������˂��グ��ƁA�h���~�[�̓r�N�r�N���z�����Ⓒ�ɒB�����c
+		ENDSELECT
+		RETURN 1
+	ELSE
+		SELECTCASE RAND:3
+		CASE 0
+			CALL HPH_PRINT,@"�u���A����܂茩�Ȃ��ł��������c�c����HPH�v","L"
+			PRINTFORMDL �����グ���h���~�[���S���𔽂�Ԃ���_�ɍ��킹��ƁA�������Ƒ}�����Ă���
+			PRINTFORMDL �T�����q�{�����y���m�b�N����ƁA�h���~�[�͎����̂��̂̕\��ŃJ�N�J�N�ƍ���U���Ă��܂�
+			PRINTFORMDW %CALLNAME:MASTER%�͂���Ȕޏ��Ɉ��������������Ȃ���A���t�������킵���𓮂����Ă�����
+		CASE 1
+			CALL HPH_PRINT,@"�u�ӂ�HPH�c���c���̊��D�A���Ȃ���c�v","L"
+			PRINTFORMDL �h���~�[�͎w�����݁A�S���������L���Ă������_�̉����ɑς��Ă���
+			PRINTFORMDL �������A�������Əł炷�悤�ɍ���h�炵����܂��Ă���%CALLNAME:MASTER%
+			PRINTFORMDW �S���ɓ��B���鍠�ɂ́A�h���~�[�̛Z���͓����؂��Ĉ����������l�̂悤�ɓ��_������Ԃ��Ă���
+		CASE 2
+			CALL HPH_PRINT,@"�u���HPH�A�ӂ�HPH�c�˂��c�L�X���āc�HHPH�v","L"
+			PRINTFORMDL �Ζʗ��ʂŌ����Ȃ���A�h���~�[�̋��߂ɉ����ĐO�����킹��
+			PRINTFORMDW �����ƍ��𓮂�������𖡂킢�Ȃ���A���݂��̑��t���������Z���ɐ�𗍂܂��������c
+		ENDSELECT
+		RETURN 1
+	ENDIF
+ENDIF
+;-------------------------------------------------
+;�����
+;�L���`�F�b�N�i=0, ��\���A1, �\���j
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;������
+	;-------------------------------------------------
+	;���߂�
+	;�L���`�F�b�N
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		IF FLAG:70
+			PRINTFORMW 
+			RETURN 1
+		;�T�O���Ȃ肫�莞
+		ELSEIF FLAG:�Ȃ肫�� == 110
+			PRINTFORML
+			CALL AUTO_AEGI(NO:TARGET)
+			RETURN 1
+		;����
+		ELSEIF TCVAR:�j�Z == 1
+			PRINTFORMW �u���A���́c���c���́A���́c�����Ɓv
+			PRINTFORMDW �h���~�[�͊��^���Ԃɂ��āA���ǂ���ǂ�ɂȂ��Ă���
+			PRINTFORMDW %CALLNAME:MASTER%�͎���X���Ȃ���A�h���~�[�̎��̌��t��҂�
+			PRINTFORMW �u�́A���߂ĂȂ�ł��c�������������Ƃ́c�v
+			PRINTFORMDW �h���~�[�̌�����o�Ă����̂́A�܂�ŔN�Ⴂ�����̂悤�Ȑ���t�̍����ł�����
+			PRINTFORMDW �Ȃ񂾁A����Ȃ��Ƃ��c��%CALLNAME:MASTER%���S���ɋT�������Ă���
+			PRINTFORMW �u����Ȃ��Ƃ����āA�����A�҂��c�v
+			PRINTFORMDW �����ɓ���؂�̂��ʃh���~�[�̐O���ǂ��A��C�ɍŉ��܂œ˂������
+			PRINTFORMDW �h���~�[�͐O������ł������A����ł�%CALLNAME:MASTER%�͌��𗣂����Ƃ͂Ȃ�����
+			CALL HPH_PRINT,@"�u���c�t�[�bHPH�c�Ղ͂�HPH�c�c�����Ȑl�ł��˂��c�v","W"
+			PRINTFORMDW �h���~�[�͗܂𗬂��Ȃ���A�Ȃ�Ƃ������Ȃ��\��ł���������߂Ă���
+			PRINTFORMDW �ӊO�ƒɂ��Ȃ��������낤�c����%CALLNAME:MASTER%�������ƃh���~�[�͎b�����ق�����A��������������
+			PRINTFORMW �u�͂��c�c���A�������c�{���ɑ}�����Ă�c�v
+			PRINTFORMDW �����ۂ�Ɠ��_��������񂾏��A����́A�r���̏؂ł���N��������o�Ă���
+			PRINTFORMDW %CALLNAME:MASTER%�̓h���~�[���S��������ނ܂ŁA�J���悤�ɗD���������𑱂���
+		RETURN 1
+		ELSE
+			PRINTFORMW �u�c��c�������Č���ƁA%CALLNAME:MASTER%�c����ς�j���Ȃ�ł��˂��v
+			PRINTFORMDW �h���~�[�͕����킳����%CALLNAME:MASTER%�����グ�Ȃ��炻��Ȃ��Ƃ�ꂢ��
+			PRINTFORMDW �Ȃɂ𓖂���O�̂��Ƃ��B�������ɏo���ƃh���~�[�̓N�X�N�X�Ə΂���
+			CALL HPH_PRINT,@"�u�Ȃ�ł�����܂����c�ق�A�c����HPH�}�����Ă���cHPH�v","W"
+			PRINTFORMDW �h���~�[�ɓ������܂܍��������i�߂�ƁA�_�炩���S�q�_�����_���ݍ���
+			PRINTFORMDW ���̊��G�ɍ���k�킹�Ȃ�����S���܂ł��ǂ蒅���ƁA�������ƃh���~�[�Ɋ���ߕt���O�����킹��
+		RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;�}���p��
+	;�L���`�F�b�N
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:100 == PLAYER
+		IF FLAG:70
+			PRINTFORMW 
+			RETURN 1
+		;�T�O���Ȃ肫�莞
+		ELSEIF FLAG:�Ȃ肫�� == 110
+			PRINTFORML
+			CALL AUTO_AEGI(NO:TARGET)
+			RETURN 1
+		ELSEIF ABL:�S >= 3
+			;���ː�����
+			IF NOWEX:PLAYER:11
+				SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"�u��c��HPH�ӂ�HPH�ӂ����c��HPH�c�C�L�����ł����c�HHPH�����c�������HPH�v","L"
+					PRINTFORMDL ����߂��S���͕q���Ɏː��̗\�����������K���ɂȂ��Ēj���ɂ����݂�
+					PRINTFORMDW ����Ȋ��҂ɉ�����%CALLNAME:MASTER%�͍���ł��t����ƁA�������̐��q���܂ގq��`�𑶕��Ɏq�{�֓f���o����
+				CASE 1
+					CALL HPH_PRINT,@"�u���A�͂��c��HPH���J�c�bHPH�c�����c�S���ɁA�łāc��HPH�v","L"
+					PRINTFORMDL �T����Ⴢ��悤�Ȋ��o��%CALLNAME:MASTER%�͂��ނ����ɂȂ��č���U��A�Ԃ�u�����ː�����
+					PRINTFORMDW �Z���Ȏq���j��Ƃ̂悤���S���֒@���t����ƁA�h���~�[�̎q�{���͊���ɐk����������Ɩ���J����
+				CASE 2
+					CALL HPH_PRINT,@"�u�ː������ł����H�c�ӂӁA�����ł���B�S�������S���Ɂc��HPH�v","L"
+					PRINTFORMDL �ː��Ɍ����s�X�g���̑��x���グ��ƁA�h���~�[�͒��o���ȊO�F�߂Ȃ��Ƃ΂���ɋr�𗍂߂Ă���
+					PRINTFORMDW %CALLNAME:MASTER%�͓�������������~�]�̗B��̂͂����ł���q�{�ɋT����P�����ނƁA�ς������锒������H�c�炸�r������
+				ENDSELECT
+				RETURN 1
+			;�O��ː�����
+			ELSEIF TCVAR:102
+				SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"�u���c��HPH�܂��܂��c�C�������ł��ˁcHPH�͂����HPH�v","L"
+					PRINTFORMDL �������܂ꂽ���t�̔M�ʂɃh���~�[�͜����Ƃ����܂܂��炵�Ȃ��΂݂𕂂��ׂ�
+					PRINTFORMDW ����ȕ\������ċ������Ȃ��͂��͂Ȃ��A%CALLNAME:MASTER%�͖����d������Ԃ���_���S�ǂɎC��t���Ă�����
+				CASE 1
+					CALL HPH_PRINT,@"�u�܂�����Ȃ��H�c�N�X�bHPH���ꂶ�Ⴀ�c�������A�V�܂��傤���cHPH�v","L"
+					PRINTFORMDL �h�v�b�A�S�v�b�A�Ɖ��i�ȉ���t�Ō��������甒�������Ă���
+					PRINTFORMDW �݂��̈�`�q�������荇�����t�́A����Ńh���~�[���S���𖞂��������Ǝv����%CALLNAME:MASTER%�͋x�ގ��Ȃ�������ĊJ����
+				CASE 2
+					CALL HPH_PRINT,@"�u��A�͂��c��HPH�C�b���΂���Ȃ̂ɂ����c��HPH�v","L"
+					PRINTFORMDL �ː����ďI���ł͂Ȃ��B%CALLNAME:MASTER%�̓h���~�[�̍���͂ނƍĂэ���U��o��
+					PRINTFORMDW ���̐�ςԂ���S�S���͉x�тɐk���A���イ���イ�ƒj������ߕt���V�N�Ȏq����������Ă���
+				ENDSELECT
+				RETURN 1
+			ELSE
+				SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"�u�́A�������c��HPH����A�C�����ǂ��c��HPH�D���c��HPH�v","L"
+					PRINTFORMDL ����������_�̌`���o�����h���~�[�̖����%CALLNAME:MASTER%�̐����т���d�����S�q�_�ŔM�����i���Ă���
+					PRINTFORMDW ����ł��t���~���񂷓x�ɖ�O�`���O�`���Ƃ������ɁA�݂��̋����͍ی��������܂��Ă������c�c
+				CASE 1
+					CALL HPH_PRINT,@"�u�ӂ��A�����c��HPH�˂��A�����ƌ������c��HPH�v","L"
+					PRINTFORMDL %CALLNAME:MASTER%�����������x�ɔ����A���������`���~���o����Ă���
+					PRINTFORMDW ��C�ɐG��S�x�̍��܂�������́A�݂����q���~�߂邩�̂悤�ɂ��܂ł��Ӑ}�������Ă���
+				CASE 2
+					CALL HPH_PRINT,@"�u�����c�{���ɈӒn���Ȑl�ł��ˁcHPH�v","L"
+					PRINTFORMDL ����̉��y�ɓ������h���~�[�̊��ڂɏĂ��t���Ȃ���{�\�̂܂܂ɍ���ł��t���Ă���
+					PRINTFORMDW ���E�܂ō����������������ƔG�ꂽ�Ƃ���������ƁA�����x�z�҂͂܂�Ő����̂悤�Ɋ��w���Ă��܂���
+				ENDSELECT
+				RETURN 1
+			ENDIF
+		ELSE
+			;���ː�����
+			IF NOWEX:PLAYER:11
+				SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"�u�c���́c���A���c��HPH�c���������A�������c�c�����HPH�v","L"
+					PRINTFORMDL ���E���ߕt����%CALLNAME:MASTER%�̓h���~�[���C�����]�T����������U�肽�����Ă���
+					PRINTFORMDW ��˂����ɓf���o������ɐ\����Ȃ��������Ȃ�����A�{�\�ɔC���č���˂��o���ː�����
+				CASE 1
+					CALL HPH_PRINT,@"�u�c���A�������āc��HPH�A���ӁA���c�c��HPH�v","L"
+					PRINTFORMDL ���̓����������Ȃ������ŏI��肪�ߕt���Ă��鎖���������̂��A�h���~�[�͌��C�ɂ��S����ߎː��𑣂��Ă���
+					PRINTFORMDW ���͂�~�܂�Ȃ��Ȃ���%CALLNAME:MASTER%�́A�{�\�I�Ɏ���s�܂���ׂ��q�{�ڊ|���Ďq���������c�c
+				CASE 2
+					CALL HPH_PRINT,@"�u�c�����c�񂣁c��HPH�c���̂܂܁A�ꏏ�Ɂc�c��HPH�v","L"
+					PRINTFORMDL %CALLNAME:MASTER%�̓h���~�[�ɐL���|����Ǝː��Ɍ�������U��o��
+					PRINTFORMDW �d�����炩��t���ւ̊��҂��炩�A���^���Ԃɂ��Č��ウ��ޏ��ɗD�����L�X��������S���ŗ~�]������������
+				ENDSELECT
+				RETURN 1
+			;�O��ː�����
+			ELSEIF TCVAR:102
+				SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"�u�c�񂟂��c��HPH���A���ĂȂ��Łc�p������������c��HPH�v","L"
+					PRINTFORMDL �Ⓒ�̗]�C�����������ɁA����������̗ǂ��Ȃ����������Ăуy�j�X����������
+					PRINTFORMDW �݂��̑̉t�������荇���������������Ղ�Ɨ��ݍ����A�s�X�g���̓x�ɏd�������𗧂Ă�
+				CASE 1
+					CALL HPH_PRINT,@"�u���ꂾ���o�����̂Ɂc�c���HPH�c�ق�ƁA��ςł��ˁcHPH�v","L"
+					PRINTFORMDL �����d���u�N���S���������g������_�̊��G�Ƀh���~�[�̓]�N���Ɛg��k�킹��
+					PRINTFORMDW ���̎d�������ɐF���ۂ��A%CALLNAME:MASTER%�͖��ӎ��ɍ���U��o���Ă���
+				CASE 2
+					CALL HPH_PRINT,@"�u�c���ӂӁA���傤���Ȃ��ł��˂��c�ق�A�͂₭�����Ă�������HPH�v","L"
+					PRINTFORMDL �q���h�荞�ނ悤�ɍ��𓮂����Ă���ƍĂ��S���Œj��������Ԃ�
+					PRINTFORMDW �S�ǂ������グ�銴�o�Ƀh���~�[�͔M���ۂ��f����R�炵�Ȃ���A����h���葱�����Ñ�����
+				ENDSELECT
+				RETURN 1
+			ELSE
+				SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"�u���c�c����c��HPH�c������ƁA�ꂵ�c�c���v","L"
+					PRINTFORMDL �܂��d�����c���S�����������ƃy�j�X����������
+					PRINTFORMDW ������������]�T�������̂��A�h���~�[�͋ʂ̂悤�Ȋ��𕂂��׋ꂵ�C�ɑ���f���΂��肾�c�c
+				CASE 1
+					CALL HPH_PRINT,@"�u�c���A���c�c�͂����c��HPH�c�D�����ł��ˁc%CALLNAME:MASTER%�́c�c�v","L"
+					PRINTFORMDL ������߂�h���~�[���C�����悤��%CALLNAME:MASTER%�͍��������Ă���
+					PRINTFORMDW �j�`�b�c�c�O�`���b�c�c�ƌ���������鉹�ɋ��������܂邪�A�����ł����ė}������
+				CASE 2
+					CALL HPH_PRINT,@"�u���̎p���c%CALLNAME:MASTER%�̊炪�ǂ������āc�ӂ��cHPH�v","L"
+					PRINTFORMDL ������~���񂵂����Փ���K���ŗ}���Ȃ���T�d�ɒj��������������
+					PRINTFORMDW ���ݏo�������t�͊ƑS�̂ɗ��ݕt���A�������������Ȃقǂ̉�����^���Ă���c�c
+				ENDSELECT
+				RETURN 1
+			ENDIF
+		ENDIF
+	ENDIF
+	;��{�Z�b�g
+	;������
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;�T�O���Ȃ肫�莞
+	ELSEIF FLAG:�Ȃ肫�� == 110
+		PRINTFORML
+		CALL AUTO_AEGI(NO:TARGET)
+		RETURN 1
+	ELSEIF ABL:�S >= 3
+		SELECTCASE RAND:3
+		CASE 0
+			CALL HPH_PRINT,@"�u�͂��c��HPH�͂����c��HPH�c�͂₭�c�}����āc��HPH�v","L"
+			PRINTFORMDL �h���~�[�̏��A�ɒj�������Ă����㉺�ɎC��グ��
+			PRINTFORMDL �����炱��ŔƂ����Ƃł������悤�ȍs�ׂ��S������̓W�����Ɩ������o�Ă���
+			PRINTFORMDW �T���ɖ��ՂȂ����t��h��t����ƁA%CALLNAME:MASTER%�͂������Ǝ����ɓ˂�����Ă������c�c
+		CASE 1
+			CALL HPH_PRINT,@"�u���̑̈ʁA�D���ł���c�񂣂�HPH�v","L"
+			PRINTFORMDL ��{�ɒ����Ƃ����������̐���ʂł��݂��̋��������ɂ͏\���߂���قǂ�
+			PRINTFORMDW %CALLNAME:MASTER%�͔����o���ꂽ�h���~�[�̏��A�ɖu�N�����ꕨ�����Ă����ƁA������ɔ[�߂�悤�ɒ��߂Ă������c�c
+		CASE 2
+			CALL HPH_PRINT,@"�u%CALLNAME:MASTER%�̂����񂿂�A�����S���Ƀs�b�^���Łc�c���HPH�v","L"
+			PRINTFORMDL �Q�������h���~�[���S���ɋT�������Ă����A�S�ǂ������L����悤�ɑ}�����Ă���
+			PRINTFORMDW �݂�����Ɠ��_��������񂾏��A�̓L���E�L���E���S������ߕt���x�т̈��t����ꂳ���Ă���c
+		ENDSELECT
+		RETURN 1
+	ELSE
+		SELECTCASE RAND:3
+		CASE 0
+			CALL HPH_PRINT,@"�u���A���c���c�S���}����܂������c�HHPH�v","L"
+			PRINTFORMDL �h���~�[�͏��A�ɓ˂������ꂽ���_�̈������ɋꂵ�����ɂ��Ă���
+			PRINTFORMDL %CALLNAME:MASTER%�̓h���~�[�̉A�O���������Ȃ����S�ǂ��J���ř������悤�ɍ�������
+			PRINTFORMDW ����ƃh���~�[�͍��𕂂����A�K�����u���u���ƐU��Ȃ���ウ��
+		CASE 1
+			CALL HPH_PRINT,@"�u���c�͂���HPH�c�܂��A����܂���˂��c�v","L"
+			PRINTFORMDL �h���~�[�ɕ����킳����%CALLNAME:MASTER%���������Ɠ��_��}�����Ă����ƁA�ޏ��͋ꂵ�����ɑ���R�炷
+			PRINTFORMDW ����ȗl�q���C�����Ȃ�����A�����ɉ䖝�ł��Ȃ��Ȃ�p���p���Əb�~�̂܂܂ɍ���ł��t����
+		CASE 2
+			CALL HPH_PRINT,@"�u�c����ς�傫���ł��ˁA�M���́c�c�́A�������c��HPH�v","L"
+			PRINTFORMDL �����������z�����摖��𐂂炷�j�̗~�]���h���~�[�Ɍ�������
+			PRINTFORMDW �r���J���}����҂ޏ��̎�����B�t���ɂ���������A�������Ǝ����ɓ˂�����Ă������c�c
+		ENDSELECT
+		RETURN 1
+	ENDIF
+ENDIF
+;==================================================
+;61,��w��
+;==================================================
+@M_KOJO_MESSAGE_COM_K109_61
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K109_61_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K109_61_1
+;-------------------------------------------------
+;����
+;�L���`�F�b�N�i=0, ��\���A1, �\���j
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL && TFLAG:193
+	;-------------------------------------------------
+	;������
+	;-------------------------------------------------
+	;���߂�
+	;�L���`�F�b�N
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		IF FLAG:70
+			PRINTFORMW 
+			RETURN 1
+		;�T�O���Ȃ肫�莞
+		ELSEIF FLAG:�Ȃ肫�� == 110
+			PRINTFORML
+			CALL AUTO_AEGI(NO:TARGET)
+			RETURN 1
+		;����
+		ELSEIF TCVAR:�j�Z == 1
+			PRINTFORMW �u����Ȋ��D�A�܂�ŏb�݂����ȁc�v
+			PRINTFORMDW �h���~�[�͕ǂɎ��t���Ȃ�����A�s�������ɂ������������Ă���
+			PRINTFORMDW %CALLNAME:MASTER%�̓h���~�[����납��������߁A�S�z����Ȃ��Ɛ����|����
+			PRINTFORMW �u%CALLNAME:MASTER%�͂�����������܂��񂪁c�v
+			PRINTFORMDW ���̂܂ܒ���������̂��C�����킪���̂ŁA��b��ł��؂���_���S���ɂ��Ă���
+			PRINTFORMDW �h���~�[�̓r�N���b�ƌ���k�킹�邪�A�ӂ��������̂����������ɐK��˂��o���}����҂��Ă���
+			PRINTFORMW �u�b�A�񂣂��c�}�����Ă���c�b�v
+			PRINTFORMDW ��������i�߂�ƁA�����̏؂ł��鏈�����ɓ˂�������c
+			PRINTFORMDW �h���~�[�̐K�𕏂ŋْ��������ƁA�ޏ��͏������������̐�ւƐi�ނ悤�ɑ����Ă���
+			PRINTFORMW �u���A�����b�c�����c�I�v
+			PRINTFORMDW �u�`�b�Ə�����j��A�������S���ւƓ��_�����B����
+			PRINTFORMDW ���{�܂Ńs�b�^���ƉA�s�����܂�ƁA�h���~�[�͐g�̂�o�ɂ����[������f����
+			PRINTFORMW �u���A�͂����c�S���A�}�������̂ˁc�v
+			PRINTFORMW �u�������������A���̂܂܁c�v
+			PRINTFORMDW %CALLNAME:MASTER%�ƃh���~�[�́A�b���̊ԐÂ��ɂ��݂��̔M������������
+		RETURN 1
+		ELSE
+			CALL HPH_PRINT,@"�u�����c�킴�킴�������܂܂łȂ��Ă��c��HPH�v","W"
+			PRINTFORMDW %CALLNAME:MASTER%�̓h���~�[��ǂɉ��������A�w�ォ�疧�����Ă���
+			PRINTFORMDW ���������l�q�ŉA�s���w�Ŏx������֑}�����悤�Ƃ��邪�A��肭�����Ȃ�
+			CALL HPH_PRINT,@"�u�ӂӂ��c����HPH�����Ə�ł���c���HPH������HPH�v","W"
+			PRINTFORMDW �A�O�ɎC��t�����Ă������_���A�����S���֏Ə������킹�Җ]�̓���ւƑ}�������
+			PRINTFORMDW �O�`���D�E�b���S���܂ň�C�ɓ˂������ƁA���_���Â��S�q�_�ƔM�����t�̊���ɉ����������̂悤�ɏP���Ă���
+			PRINTFORMDW �u���u���ƍ���k�킹��%CALLNAME:MASTER%���A�h���~�[�͉����ۂ��΂݂Ō��߂Ă���c
+		RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;�}���p��
+	;�L���`�F�b�N
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:100 == PLAYER
+		IF FLAG:70
+			PRINTFORMW 
+			RETURN 1
+		;�T�O���Ȃ肫�莞
+		ELSEIF FLAG:�Ȃ肫�� == 110
+			PRINTFORML
+			CALL AUTO_AEGI(NO:TARGET)
+			RETURN 1
+		ELSEIF ABL:�S >= 3
+			;���ː�����
+			IF NOWEX:PLAYER:11
+				SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"�u���bHPH�����bHPH������HPH�҂�HPH�v","L"
+					PRINTFORMDL %CALLNAME:MASTER%�̓h���~�[�̎����j�̂悤�Ɉ���A����������ł��t���Ă���
+					CALL HPH_PRINT,@"�u����������HPH��A������HPH�ӂ��bHPH HPH HPH�I�H�v","L"
+					PRINTFORMDL �K����͂ݏグ�A���ӂ��ɂȂ艺�����Ă����K�������グ��
+					PRINTFORMDW ����Ȓ��ߕt���ɐ��Ɍ��E���K�ꂽ%CALLNAME:MASTER%�́A�q�{���󂷐����œ��_��˂����񂾁c
+				CASE 1
+					CALL HPH_PRINT,@"�u�ӂ�HPH�񂣂���HPH�����A�C�L�����c�HHPH�񂟂�HPH�v","L"
+					PRINTFORMDL %CALLNAME:MASTER%�̓h���~�[�̍����K�b�V���ƒ͂݁A�{�\�ɔC���s�X�g�����J��Ԃ�
+					PRINTFORMDW �ޏ����L���b���S����ߕt����ƁA��������h����%CALLNAME:MASTER%�͂������Ȃ��ː��Ɏ������c
+				CASE 2
+					CALL HPH_PRINT,@"�u���HPH���HPH���ł��c�����ł���A����HPH�v","L"
+					PRINTFORMDL %CALLNAME:MASTER%�̓h���~�[�̐K�𝆂݂������Ȃ���A�����g���Ă���
+					PRINTFORMDW �S�q�_�̈ꖇ�ꖇ�����݂��A�×~�ɓ��_������Ԃ��Ă��閨��ɉ䖝�Ȃǂł���͂����Ȃ�����
+				ENDSELECT
+				RETURN 1
+			;�O��ː�����
+			ELSEIF TCVAR:102
+				SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"�u�͂���HPH�c���HPH�c�܂�����܂��񂩁c�HHPH�v","L"
+					PRINTFORMDL �h���~�[�̖���Ɉ�`�q��h�荞�ނ悤�ɍ��𓮂����Ă���ƁA�Ă�%CALLNAME:MASTER%�̓��_�͍d���u�N����
+					PRINTFORMDL �S���Ŕ���Ԃ�Z���������グ��Ƃ̊��G�Ƀh���~�[�͔M���ۂ�����R�炵�A���獘��h�炵�Ď������߂Ă���c
+					PRINTFORMDW %CALLNAME:MASTER%�̓h���~�[�̎�؂ɐ�𔇂킹�Ȃ���A�Ăщ��y��ړI�Ƃ�������ɒ^����
+				CASE 1
+					CALL HPH_PRINT,@"�u��J�bHPH���܂�HPH�q���ɂȂ��āA�񂣂������b�bHPH HPH HPH�v","L"
+					PRINTFORMDL �ː����I�����S���؂����l�q�̃h���~�[�̍����O�b�ƕ����񂹁A�Ăіҗ�ȃs�X�g����������
+					PRINTFORMDW �����Ȑ������S�����ނ悤�ɒ��܂邪�A�@�킷��悤�ɓ��_���˂����ނƉ�ԂȖ���͂����ɏ]���ɂȂ���
+				CASE 2
+					CALL HPH_PRINT,@"�u�͂��c�񂣁cHPH�c�܂��C���܂���ˁc�HHPH�v","L"
+					PRINTFORMDL �ċz�𐮂���%CALLNAME:MASTER%�Ɉ��r�Ȏ�����������h���~�[�́A�O�C�O�C�ƍ��������t���X�Ȃ�����v������
+					PRINTFORMDW �����ۂ�Ɠ��_��������񂾖���́A�܂�Ŋl����O�ɂ����b�̂悤�ɔ����t�𐂂ꗬ���Ă���c
+				ENDSELECT
+				RETURN 1
+			ELSE
+				SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"�u�������A�����cHPH����HPH������HPH�v","L"
+					PRINTFORMDL �h���~�[�͔w�ʗ��ʂŔƂ���A���������񂫂��ƒ��ߕt�����������󂵂Ă���
+					PRINTFORMDW �b���R�̌���ɖ{�\���h������A�h���~�[�͎q�{�����q������߂ĊJ���̂�������
+				CASE 1
+					CALL HPH_PRINT,@"�u����HPH�c�K���́A�_���c�bHPH�v","L"
+					PRINTFORMDL %CALLNAME:MASTER%������˂������x�ɁA�K�����r�N���Ɣ������ڂ��y���܂���
+					PRINTFORMDW �D��S�Ŏ�������邩�̂悤�ɐK���������ƁA�h���~�[�͓������ߕt�����t����ꂳ����
+				CASE 2
+					CALL HPH_PRINT,@"�u�����HPH����ȂɁA�����������āc�ӂ�HPH�����Z�b�N�X�A�D���ł����HHPH�v","L"
+					PRINTFORMDL �h���~�[�͌�w�ʂŔƂ���Ȃ���A�ǂ����y���C�ɂ��������Ă���
+					PRINTFORMDW �����Ȓj�Ȃǂ�����̂��B�ԓ�������S���ɓ˂������ƁA�h���~�[�̓s�X�g���̓����ɍ��킹�č��������t���Ă���
+				ENDSELECT
+				RETURN 1
+			ENDIF
+		ELSE
+			;���ː�����
+			IF NOWEX:PLAYER:11
+				SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"�u�����HPH����ȁA�����c��HPH�v","L"
+					PRINTFORMDL �}�s�b�`�Ő��Y���ꂽ�q�킪�������l�߂Ă������o�ɁA%CALLNAME:MASTER%�͖��䖲���ō���˂��グ��
+					PRINTFORMDL �����Ƃ����I�����͒[���疳���A�܂��h���~�[�������]��ł��Ȃ��͖̂����������c�c
+					CALL HPH_PRINT,@"�u���A����HPH�񂠂���HPH�c�i�J�ɁA�S���ɂ��������c��HPH�M���̐��t�A�S�����Ɂc��HPH�v","W"
+				CASE 1
+					CALL HPH_PRINT,@"�u���A�����c��HPH�c�b�A���A�����c��HPH�v","L"
+					PRINTFORMDL �Ⓒ�ɒB�������Ȃ̂��h���~�[�̓���͌���������߂��A�M�����ꏏ�ɂƒj���ɗ��ݕt���Ă���
+					PRINTFORMDW ��~�ɑi��������悤�ȗU�f�ɓ��R%CALLNAME:MASTER%�͍R����͂����Ȃ��A�����ɂȂ��č���ł��t���A�����ɒB����
+				CASE 2
+					CALL HPH_PRINT,@"�u�ӂ���HPH�c�񂣂�HPH�ː������ł����c�HHPH�v","L"
+					PRINTFORMDL �j�`�b�A�j�`�b�A�Ɩ�����炵�Ȃ���h���~�[�����𓮂����Ă���
+					PRINTFORMDW �ː����߂��Ȃ��%CALLNAME:MASTER%�͔ޏ��̍���͂݁A�����̃y�[�X�ō���˂��グ�Ă���
+					PRINTFORMDW �h���~�[�͗Y�̖{�\�I�ȃs�X�g���Ɋ��c�߂Ȃ�����A�K�����S����߂邱�Ƃŉ�����
+				ENDSELECT
+				RETURN 1
+			;�O��ː�����
+			ELSEIF TCVAR:102
+				SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"�u�͂��cHPH�c�����cHPH�܂��A�������c�ӂ�HPH�v","L"
+					PRINTFORMDL �h���~�[�͐��t�̗��܂����������𕏂ŁA�����Ƃ����\��ō���h�炵�Ă���
+					PRINTFORMDW %CALLNAME:MASTER%���S���̋��X�܂Ŏq���h�荞�ނ悤�ɍ��𓮂����Ȃ���A�܂��킢���ĊJ����
+				CASE 1
+					CALL HPH_PRINT,@"�u��A�Ӂc��HPH�c���ꂾ���ː������̂Ɂc�܂��c����HPH�v","L"
+					PRINTFORMDL �ː����I�����j������U���������A�����d������Ԃ��Ă���l���h���~�[�Ɍ�������
+					PRINTFORMDW ���W���W�ƍ���h�炷�ޏ���������߂�ƁA�Ă��S���ւƓ��_�𖄂ߍ���ł�����
+				CASE 2
+					CALL HPH_PRINT,@"�u��͂��c��HPH�ː����߂��ł���c����HPH�v","L"
+					PRINTFORMDL �����Ղ�ƒ����ꂽ�q�킪�S�|�b�Ɖ��𗧂ĂČ�����������Ă���
+					PRINTFORMDW ����������߂����̂悤�ɁA%CALLNAME:MASTER%�͍Ăэ���h�����Ă�����
+				ENDSELECT
+				RETURN 1
+			ELSE
+				SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"�u���A�_���c��HPH�g�́A�x���āc�HHPH�v","L"
+					PRINTFORMDL �J��Ԃ���钊�}�Ɋ����؂�Ȃ��Ȃ����h���~�[�́A%CALLNAME:MASTER%�ɐg�̂�a�������^��������y�ɏW������
+					PRINTFORMDW %CALLNAME:MASTER%�͂���ȃh���~�[��w�ォ��������߂�ƁA����͂ݓˋN�����˂���񂵂Ȃ��獘�𓮂����Ă�����
+				CASE 1
+					CALL HPH_PRINT,@"�u�c���c��HPH�c��A���ށc����A�����c��HPH�v","L"
+					PRINTFORMDL �L�����L�����Ǝ��k���閨��̊��G�𖡂킢�Ȃ���%CALLNAME:MASTER%�̓h���~�[�Ɣw�ʗ��ʂŌ����
+					PRINTFORMDW �󂢂���ŋ��𝆂݂������Ȃ�����������Ɍ���������ƁA���ߍ����悤�ɐO���d�˂�
+				CASE 2
+					CALL HPH_PRINT,@"�u��c��HPH��A�ӂ����c��HPH�c����c�C�����ǂ��c��HPH�v","L"
+					PRINTFORMDL �M���M���܂œ��_�����������A�Ăт������ƒ��߂Ă����B���̓������J��Ԃ��Ă���
+					PRINTFORMDW �܂�ŗY�̃J�^�`���o�����܂���悤�ȍ������ɁA�h���~�[�̖���͖{�C�`�𐂂ꗬ�����̉x�тɑł��k����
+				ENDSELECT
+				RETURN 1
+			ENDIF
+		ENDIF
+	ENDIF
+	;��{�Z�b�g
+	;������
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;�T�O���Ȃ肫�莞
+	ELSEIF FLAG:�Ȃ肫�� == 110
+		PRINTFORML
+		CALL AUTO_AEGI(NO:TARGET)
+		RETURN 1
+	ELSEIF ABL:�S >= 3
+		SELECTCASE RAND:3
+		CASE 0
+			CALL HPH_PRINT,@"�u�ӂ�HPH�ӂ�HPH�c�͂₭�}����āc��HPH�v","L"
+			PRINTFORMDL �h���~�[�͋Q�����b�̂悤�ɟ��𐂂炵�A������ɐ���I�ɐK���C��t���đ}�����˂����Ă���
+			PRINTFORMDL %CALLNAME:MASTER%�̓M���M���ɖu�N�������_���A�O�ɓh��t����ƁA�������Ƒ}�����Ă�����
+			CALL HPH_PRINT,@"�u���bHPH�c���A�͂����c�bHPH�����񂿂�A�C�����ǂ��c��HPH�v","L"
+			PRINTFORMDW �h�����Ȏ��т͏b�̌���ɂ����x�̂悤���c
+		CASE 1
+			CALL HPH_PRINT,@"�u�́A�������cHPH���܂Łc�������cHPH�v","L"
+			PRINTFORMDL %CALLNAME:MASTER%���������S�ǂ��T���ł����J���Ȃ���˂������ƁA�h���~�[�͑����s���ƐL�΂��Ėウ��
+			PRINTFORMDW ���J�߂�悤�ɓ��𕏂łĂ��ƁA�h���~�[�͂�����ɐU��Ԃ���y�ɘc�񂾎���Ŕ��΂�
+		CASE 2
+			CALL HPH_PRINT,@"�u���c�͂�����HPH�c�����cHPH���̎����I�i�z�݂����Ɂc�����HPH�v","L"
+			PRINTFORMDL %CALLNAME:MASTER%�̓h���~�[�̗����ǂɕt������ƁA�����������_�����Ă�����C�ɍŉ��܂œ˂������
+			PRINTFORMDW �I�i�z�[���̂悤�ɔw�ォ��˂��グ��ƁA�����^����ꂽ�����͂��炾��ƈ��`�𐂂ꗬ�����_�ɐ���t��d�����c
+		ENDSELECT
+		RETURN 1
+	ELSE
+		SELECTCASE RAND:3
+		CASE 0
+			CALL HPH_PRINT,@"�u�c���A�ӂ����c�͂��cHPH�c�܂��A������Ƌꂵ���ł��ˁc�v","L"
+			PRINTFORMDL �S���܂�%CALLNAME:MASTER%��痂������_���}����ƁA�h���~�[�͐g�̂������点�Ȃ��瑧��f��
+			PRINTFORMDL �M�`�M�`�ɉA�s��������񂾏��A�́A����ł������ė����܂����×~�ɋz���t���Ă���
+			PRINTFORMDW �����ɂł����𓮂��������Փ����O�b�Ɗ����A�h���~�[�����������܂Őh�������҂���
+		CASE 1
+			CALL HPH_PRINT,@"�u���Ⴃ��HPH�c�����c���\�ł��˂��c�v","L"
+			PRINTFORMDL %CALLNAME:MASTER%�͍r���ۂ��w�ォ��������߂�ƁA�h������Ȃ��Ƃ΂���ɍ��������t����
+			PRINTFORMDW ����̂����Y�̗~�]���󂯎~�߂�ׂ��A�h���~�[�͍��𕂂���������󂯓��ꂽ
+			CALL HPH_PRINT,@"�u�ӁA����HPH�c�}�����āA�����cHPH�v","W"
+		CASE 2
+			CALL HPH_PRINT,@"�u���A���HPH�c���ɁA�������ācHPH�v","L"
+			PRINTFORMDL ���{�܂œ��_��������񂾏��A�́A�ꂵ�����ɂ���h���~�[�Ƃ͑ΏƓI�ɉx�т̈��t����ꂳ���Ă���
+			PRINTFORMDW �s�X�g���̓x�ɒe�ދ��𝆂݂������Ȃ��獘�𓮂����ƁA�ꂵ�������y�Ɏ���đ������̂������ɚb����R�炵������
+		ENDSELECT
+		RETURN 1
+	ENDIF
+ENDIF
+;-------------------------------------------------
+;��w��
+;�L���`�F�b�N�i=0, ��\���A1, �\���j
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;������
+	;-------------------------------------------------
+	;���߂�
+	;�L���`�F�b�N
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		IF FLAG:70
+			PRINTFORMW 
+			RETURN 1
+		;�T�O���Ȃ肫�莞
+		ELSEIF FLAG:�Ȃ肫�� == 110
+			PRINTFORML
+			CALL AUTO_AEGI(NO:TARGET)
+			RETURN 1
+		;����
+		ELSEIF TCVAR:�j�Z == 1
+			PRINTFORMW �u�炪�����Ȃ��̂��c�����s���ł��ˁv
+			PRINTFORMDW %CALLNAME:MASTER%�͎l�񔇂��ɂȂ����h���~�[�̍���͂݁A���A�ɋT�����������ĂĂ���
+			PRINTFORMW �u�c�ЂƎv���ɂ���Ă��������c���̋C���ς��Ȃ����Ɂc�v
+			PRINTFORMDW �s�������ȃh���~�[�̎����Łw�D��������x�Ɛ����|���A%CALLNAME:MASTER%�͂������ƍ��������i�߂�
+			PRINTFORMDW �h���~�[�͂���������������グ�Ȃ�����K���ɂȂ��đς��Ă���
+			PRINTFORMW �u���c�S���A�}����܂������c�H�v
+			PRINTFORMDW �T�����������ɂԂ���ƁA�h���~�[�͂��������Ă���
+			PRINTFORMDW �����������c�����ޏ��ɚ����ƁA��C�ɍ���˂��o�������̏؂��т�
+			PRINTFORMW �u�Ђ��b�c���A�������c�Ƀb�c���c�I�v
+			PRINTFORMDW �����ȓ��_�Ɂw���x�ɂ��ꂽ�h���~�[�̏��A�͂����Ղ�ƉA�s��������݁A�r���̏؂ł���N���𗬂��Ă���
+			PRINTFORMDW �v���v���ƒɂ݂ɐg��k�킹�Ă�ޏ��̎�؂ɃL�X�����Ȃ���A�ɂ݂������̂�҂c
+			PRINTFORMW �u���A���c�R���c�Ȃ�āA���炵���Ȃ��ł���ˁc�v
+			PRINTFORMW �u�����āA�ǂ��ł���c����c�ɂ݂��A�����Ă��܂������c�v
+			PRINTFORMDW �S�z�����߂���̂��������ċC�����킹�Ă��܂����낤
+			PRINTFORMDW �������f����%CALLNAME:MASTER%�́A�h���~�[�̍���͂ݒ����ɂ₩�ɍ��𓮂����Ă���
+			CALL HPH_PRINT,@"�u�c��A���c�Ȃ񂾂��c�ɂ݈ȊO�́c���ꂪ�c��HPH�v","W"
+			PRINTFORMDW �h���~�[�͏��X�ɏ��̉x�тɖڊo�߂���悤��
+			PRINTFORMDW ���̗l�q�Ȃ�S�z�͂���Ȃ����낤�B%CALLNAME:MASTER%�͏��X�Ƀy�[�X���グ�Ă�����
+		RETURN 1
+		ELSE
+			PRINTFORMW �u�ӂӁA�P�_���m�Z�b�N�X�����]�݂ł����c�ł́A���̖��c�����܂��傤�v
+			PRINTFORMDW �h���~�[�͑�w�Ȍ���𐂂ꂽ��A�l�񔇂��ɂȂ荘��������Ɍ�����
+			PRINTFORMDW �K���������Ɠ����A�܂�ŗY��U�����̂悤��忂��Ă���c
+			CALL HPH_PRINT,@"�u�񂟂�HPH�c�������苻�����Ă܂��˂�HPH�c�������Ȃ��Ă��A������ł���HHPH�v","W"
+			PRINTFORMDW %CALLNAME:MASTER%�������킳��ƁA�h���~�[�͗]�T�̕\��ł�����󂯎~�߂�
+			PRINTFORMDW ���łɔG��Ă���鏊�ɓ��_�����Ă����ƁA%CALLNAME:MASTER%�͗~�]�̊���������ׂ��y�j�X��˂����ꂽ�c
+		RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;�}���p��
+	;�L���`�F�b�N
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:100 == PLAYER
+		IF FLAG:70
+			PRINTFORMW 
+			RETURN 1
+		;�T�O���Ȃ肫�莞
+		ELSEIF FLAG:�Ȃ肫�� == 110
+			PRINTFORML
+			CALL AUTO_AEGI(NO:TARGET)
+			RETURN 1
+		ELSEIF ABL:�S >= 3
+			;���ː�����
+			IF NOWEX:PLAYER:11
+				SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"�u����cHPH�ق�A�S���ː���������Ă�������HPH�v","L"
+					PRINTFORMDL ���t���A�����삯�オ���Ă���悤�Ȋ��o��%CALLNAME:MASTER%�͂��悢��]�T�������Ȃ�
+					PRINTFORMDW �ː������B���̈ꌾ�𕷂����h���~�[�̓O�C�O�C�ƍ��������t����ƁA���R�̂悤���S���ː�����������
+				CASE 1
+					CALL HPH_PRINT,@"�u�����A���������āc��HPH���A������HPH�v","L"
+					PRINTFORMDL �h���~�[�̓���̓M���E�M���E�Ǝ��k���j������q�������낤�Ɩ�N�ɂȂ��Ă���
+					PRINTFORMDW �Ƃ�ł��Ȃ������%CALLNAME:MASTER%�͌��̂悤�ɍ���U�邵���Ȃ��A�܂��B����̂���u������
+				CASE 2
+					CALL HPH_PRINT,@"�u���A�͂��c��HPH�����A�����グ���āc��HPH�������HPH�v","L"
+					PRINTFORMDL �����Ƃ����ԂɌ��E�̗���%CALLNAME:MASTER%�̓h���~�[�̂��Ȃ��Ɋ�𖄂߂�Ǝq�{�������グ��悤�Ɍ������˂�
+					PRINTFORMDW ���\�ȃZ�b�N�X�Ƀh���~�[�͟��𐂂炵�Ȃ���A����������̂��̂̕\��Ŏq��s�ޏ����𐮂���
+				ENDSELECT
+				RETURN 1
+			;�O��ː�����
+			ELSEIF TCVAR:102
+				SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"�u�c��c�ӂ��c�c�������c���ށc��HPH�v","L"
+					PRINTFORMDL �ɁX�ƍ��𓮂������t�����@�M�i�ɓh�荞�݂Ȃ���A�h���~�[�̊��������Ɍ���������𗍂܂���
+					PRINTFORMDW ����Ƀs�X�g���̑��x���オ���Ă����B�݂��Ɍ��t�����킷���ƂȂ��������̓��킪�n�܂���
+				CASE 1
+					CALL HPH_PRINT,@"�u�͂��c�͂��c�c�������ː��܂����˂��cHPH�v","L"
+					PRINTFORMDL �h���~�[�̎����͊��x�����k���A�����ꂽ�q�����H�c�炸�q�{�ň��݊�������忂��Ă���
+					PRINTFORMDL ���u��������%CALLNAME:MASTER%�̃y�j�X�����̓����Ɍĉ����A�Ăэd������Ԃ��Ă���
+					CALL HPH_PRINT,@"�u�c�c�������A����HHPH�v","W"
+				CASE 2
+					CALL HPH_PRINT,@"�u����HPH��������_���c��HPH�����ƁcHPH�v","L"
+					PRINTFORMDL ���x�ː����Ă��ɏ�̖����%CALLNAME:MASTER%��O�������邱�Ƃ��Ȃ�
+					PRINTFORMDW �Â����t��~���o���悤�ɍ��������ƁA�h���~�[���S���͐�΂ɒj���𗣂��܂��ƃo�L���[���̂悤�ɋz���t���Ă���
+				ENDSELECT
+				RETURN 1
+			ELSE
+				SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"�u�����HPH�c�����A����炵���ł��˂��cHPH�v","L"
+					PRINTFORMDL �h���~�[�̎�؂ɐ�𔇂킹�Ȃ��痐�\�ɗ~�]��˂�����Ă���
+					PRINTFORMDW �J�����ꂽ�����͂˂��Ƃ�ƒj���ɗ��ݕt���A�ǂ����q����Ǝ��߂𐿂��悤�ɒ��ߕt���Ă���c�c
+				CASE 1
+					CALL HPH_PRINT,@"�u�͂�HPH�c���c��HPH�����Ɓc���A�����Ɠ˂��āc��HPH�v","L"
+					PRINTFORMDL �b���R�̌���Ƀh���~�[���{�C�ɂȂ����̂��A�×~�Ɏ�������ߕt��������̓����ɍ��킹�č��������Ă���
+					PRINTFORMDW �ޏ��̔M�S�ȕ�d�ɁA%CALLNAME:MASTER%�͖����ɂȂ��č���ł��t���Z���̊��G�𖡂���Ă�����
+				CASE 2
+					CALL HPH_PRINT,@"�u������C�����c��HPH�񂟂�HPH�q�{�A�~�肿�Ⴄ�c�bHPH�v","L"
+					PRINTFORMDL �܂�Ŏq���̂悤�ȃZ�b�N�X�Ƀh���~�[�̎q�{���͏��X�ɒ]�сA�˂������ꂽ���_�̐�[�ɉ��x���L�X�����Ă���
+					PRINTFORMDW ���̗��q������̈�`�q���q�����i��z�����Ȃ���A%CALLNAME:MASTER%���Â�悤�ɍ��������Ă�����
+				ENDSELECT
+				RETURN 1
+			ENDIF
+		ELSE
+			;���ː�����
+			IF NOWEX:PLAYER:11
+				SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"�u�ӂӁA�C�������c�HHPH�c�����HPH�c�ق�A�C�b�Ă����ł���c��HPH�v","L"
+					PRINTFORMDL ������C�����Ă������̓������ː��̗U�f�ɏ��ĂȂ��Ȃ莟��ɏb�̗l����ттĂ���
+					PRINTFORMDW �h���~�[���{�\�I�ɐK���グ��ƁA�L���b���S�ɗ͂����ߗY�̎�t���ɔ�����
+				CASE 1
+					CALL HPH_PRINT,@"�u���́A���ł��c����HPH����A����HPH�v","L"
+					PRINTFORMDL %CALLNAME:MASTER%�̓h���~�[�̎����Ŏː���\������ƃs�X�g���̑��x���グ�Ă���
+					PRINTFORMDW ����ł��t����x�ɔg�łK����h�݂͂ɂ���ƁA�ς������鐸�t��������瞂点��
+				CASE 2
+					CALL HPH_PRINT,@"�u�͂��c���A�����c��HPH�c�����ς��A�ː����āc��HPH�v","L"
+					PRINTFORMDL �ꂵ�C�ɚb���h���~�[��w�ォ�����␂߂�Ǝː��Ɍ����Ō�̃X�p�[�g���|���Ă���
+					PRINTFORMDW �o�����Ȃ����A�͐^���Ԃɏ[�����Ȃ���A����ł��q������߂ĔS���𑍓������j�����x�΂��Ă�����
+				ENDSELECT
+				RETURN 1
+			;�O��ː�����
+			ELSEIF TCVAR:102
+				SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"�u��A�ӂ��c��HPH�c�܂��ː�������܂��񂩁c�HHPH�v","L"
+					PRINTFORMDL �s�ׂ̗]�C�ɐZ��Ԃ��Ȃ���ɂ�������Ăуy�j�X���������Ă���
+					PRINTFORMDW �h���~�[�̓��������ƐK����h�炵�Ȃ���A����̍ĊJ�����X�Ƃ��Ď󂯓��ꂽ
+				CASE 1
+					CALL HPH_PRINT,@"�u������ƁA�@���ȁc�����A�₟��HPH�v","L"
+					PRINTFORMDL ��������I������C�ł���h���~�[�͗I���Ƀe�B�b�V�������o���s�ׂ̌�n�������悤�Ƃ��Ă���
+					PRINTFORMDW �����q�������܂܂��Ƃ������Ƃ��v���o������悤�ɁA%CALLNAME:MASTER%�͌���������U��o����
+				CASE 2
+					CALL HPH_PRINT,@"�u�c�͂��c�͂����c�����A�M�c��HPH�v","L"
+					PRINTFORMDL �ː����I���Ă�%CALLNAME:MASTER%�̓��_�͖�����������������܂܁A���̍s�ׂ����҂��邩�̂悤���S���𒵂ˉ���Ă���
+					CALL HPH_PRINT,@"�u�ق�Ɩ��s���ł��˂��c�c�ق�A�ǂ����܂����H�����������c�cHPH�v","W"
+				ENDSELECT
+				RETURN 1
+			ELSE
+				SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"�u�ЂႣ��HPH�c����c�͂��c�c��HPH�v","L"
+					PRINTFORMDL �S�����T���Œ@���x�Ƀh���~�[�̐K�����r�N���Ɣ�������
+					PRINTFORMDW �����������Ă��邩�ۂ��A�ޏ��̐K���͎��ɗǂ��w�W�ƂȂ���
+				CASE 1
+					CALL HPH_PRINT,@"�u�c�ӂ��c�c���c��HPH�v","L"
+					PRINTFORMDL �ْ��ŋ������S����D���������ق����悤�ɍ��������Ă���
+					PRINTFORMDW ���ܕs�������ɐU��Ԃ�h���~�[��������߂Ȃ���A�������ƌ�����y����
+				CASE 2
+					CALL HPH_PRINT,@"�u�񂣁c��HPH�c�����������s�ׂɊւ��Ă����́c����HPH�c�M���ɓG���C�����܂���ˁcHPH�v","L"
+					PRINTFORMDL �b���R�ɍ���U�肽���~����}���R�~���j�P�[�V�����Ƃ��ẴZ�b�N�X���y����
+					PRINTFORMDL �������𓮂��������łȂ��A���X�ω���t���Ĕ������f���Ă���
+					PRINTFORMDW �����%CALLNAME:MASTER%�Ƀh���~�[�����S�����̂��A�����b�N�X�����l�q�Őg��C���Ă���
+				ENDSELECT
+				RETURN 1
+			ENDIF
+		ENDIF
+	ENDIF
+	;��{�Z�b�g
+	;������
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;�T�O���Ȃ肫�莞
+	ELSEIF FLAG:�Ȃ肫�� == 110
+		PRINTFORML
+		CALL AUTO_AEGI(NO:TARGET)
+		RETURN 1
+	ELSEIF ABL:�S >= 3
+		SELECTCASE RAND:3
+		CASE 0
+			CALL HPH_PRINT,@"�u����c�c�ق�cHPH�v","L"
+			PRINTFORMDL �l�񔇂��ɂȂ����h���~�[�͕Ў�Ŏ���̉A�O�����J���ƁA�p�N���S�����������w�}����āx�ƚ���
+			PRINTFORMDW %CALLNAME:MASTER%�͂������悤�ɕ����킳��ƁA���ɏ����̐����������ɐ摖��𐂂炷���_��˂�����
+		CASE 1
+			CALL HPH_PRINT,@"�u���A�������c��HPH�c�c%CALLNAME:MASTER%�́A�M���cHPH�v","L"
+			PRINTFORMDL %CALLNAME:MASTER%�̓h���~�[���������ɐQ������ƁA�����Ղ�Ƃ����K����~���������A�Ɉꕨ�����Ă���
+			PRINTFORMDW ���̂܂܂������ƍ��𒾂߂Ă����ƁA�ƑS�̂ɛZ�������ݕt���Y�̐N�������}���Ă���
+		CASE 2
+			CALL HPH_PRINT,@"�u�Ӓn�����Ȃ��Łc��HPH�͂₭�c��HPH�v","L"
+			PRINTFORMDL �쐫�I�ȑ̈ʂɋ������B���؂�Ȃ��h���~�[�́A���������ƍ���h�炵�q���Z�b�N�X��������ł���
+			PRINTFORMDW %CALLNAME:MASTER%�͂���Ȕޏ����ł炷�悤�ɁA�������Ǝ��Ԃ��|���Ēj����}�����Ă�����
+		ENDSELECT
+		RETURN 1
+	ELSE
+		SELECTCASE RAND:3
+		CASE 0
+			CALL HPH_PRINT,@"�u���A���HPH�c���ɁA�������ācHPH�v","L"
+			PRINTFORMDL ���{�܂œ��_��������񂾏��A�́A�ꂵ�����ɂ���h���~�[�Ƃ͑ΏƓI�ɉx�т̈��t����ꂳ���Ă���
+			PRINTFORMDW �h���~�[�̏�̂�����グ�������Ȃ��獘�𓮂����ƁA�ꂵ�������y�Ɏ���đ������̂������ɚb����R�炵������
+		CASE 1
+			CALL HPH_PRINT,@"�u�ӂ��c��HPH�����c���HPH�c���̊��D�A�������c��HPH�v","L"
+			PRINTFORMDL �܂��Ɍ���ɓK�����p���Ńh���~�[�͗Y�̓��_���󂯓���Ă���
+			PRINTFORMDW ��[���S���܂œ��B����ƁA%CALLNAME:MASTER%�͂����ɍ��𓮂�����忂������̊��G���y����
+		CASE 2
+			CALL HPH_PRINT,@"�u�c���A���c�񂣂��c��HPH�c�}�����āc�����c���v","L"
+			PRINTFORMDL %CALLNAME:MASTER%�̓h���~�[��w�ォ��������߂�ƁA�����d�����c���S���ւƓ��_��N�������Ă���
+			PRINTFORMDW �S���}�������Ǝ����Ś����ƁA�ޏ��͒p�����������ɍ���h�����Ă���
+		ENDSELECT
+		RETURN 1
+	ENDIF
+ENDIF
+;==================================================
+;62,����ʃA�i��
+;==================================================
+@M_KOJO_MESSAGE_COM_K109_62
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K109_62_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K109_62_1
+;-------------------------------------------------
+;����
+;�L���`�F�b�N�i=0, ��\���A1, �\���j
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL && TFLAG:193
+	;-------------------------------------------------
+	;������
+	;-------------------------------------------------
+	;���߂�
+	;�L���`�F�b�N
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		IF FLAG:70
+			PRINTFORMW 
+			RETURN 1
+		;�T�O���Ȃ肫�莞
+		ELSEIF FLAG:�Ȃ肫�� == 110
+			PRINTFORML
+			CALL AUTO_AEGI(NO:TARGET)
+			RETURN 1
+		;�A�i������
+		ELSEIF TCVAR:�`�j�Z
+			PRINTFORMW �u�ˁA�˂��c�{���ɑ}�����́c�H�v
+			PRINTFORMDW %CALLNAME:MASTER%�͗��������h���~�[�̕Б�������������A�}����O�ɖ��𐂂炷���A�ɓ��_���C��t����
+			PRINTFORMDW ���t�����X�܂œh�������������ނ悤�Ɍł������A�k�X�ɂ��Ă����ƁA�ޏ��̐g�̂��r�N���Ɛk����
+			PRINTFORMW �u���c����ȃK�`�K�`�ɖu�N�����̑}����킯�Ȃ��ł���c�ˁH�~�߂܂��傤�c�H�v
+			PRINTFORMDW �炵���Ȃ���������d�˂�h���~�[�𖳎����A���_���������Ɖ�������ł���
+			PRINTFORMW �u�Ђ��A���c���ӂ����������c�b�b�I�H�v
+			PRINTFORMDW ���̎x�z�҂̕s��̌��ɐԍ������_�����ݍ��܂�Ă����x�ɁA�ޏ��̌�����ꂵ�C�ș���R��Ă���
+			PRINTFORMDW �������t���Ȃ��悤�C�����Ȃ���}�����Ă���ƁA���ɉA�s�����{�܂ł����Ղ�Ǝ��܂���
+			PRINTFORMW �u���A�͂��c�͂��A�͂����c�����c�񂮂��c���A����ԁA�͂���܂������c�H�v
+			PRINTFORMDW �h���~�[�̔M���S���ɕ���ꂽ�A�k�X�͂܂�ŃR�b�N�����O�̂悤�ɍ��{����ߕt���Ă���
+			PRINTFORMDW �ڈ�t�ɓ��_��j�������K���̒ɂ݂ɁA�ޏ��̓M���b���������%CALLNAME:MASTER%�̔w�ɒ܂𗧂ĂĂ���
+			PRINTFORMW �u�܁A�܂������Ȃ��ł��c�����c�͂��A�͂��c�v
+			PRINTFORMDW �h���~�[�͊��^���Ԃɂ��Ȃ���A�܂�ŏo�Y��O�ɂ����s�w�̂悤�Ɍċz�𐮂��Ă���
+			PRINTFORMDW ��������������������ǂ̂悤�Ȕ���������̂��낤���c
+			PRINTFORMDW �����͂��邪�A�ꐶ�A�i���Z�b�N�X�����₳�ꂻ���Ȃ̂ŉ䖝����
+			PRINTFORMW �u�c�Ђ��Ђ��ӂ��c��c���������A�������Ă݂Ă��������c�v
+			PRINTFORMDW �ޏ��̋��߂ɉ����ď����������������B��炢�t���悤�Ȓ��ߕt�����܂��S�Ƃ͈Ⴄ�����
+			CALL HPH_PRINT,@"�u���A�������cHPH�c���A���v�����ˁcHPH�v","W"
+			PRINTFORMDW �ӊO�ƍ˔\������񂶂�Ȃ����B%CALLNAME:MASTER%�͍��𓮂����Ȃ��炻��Ȃ��Ƃ��v����
+		RETURN 1
+		ELSE
+			PRINTFORMW �u�ӂӁA�X�L���m�ł��˂��c�����ł���c�v
+			PRINTFORMDW �h���~�[�͗���ŐK������J���A�s��̌����O�C�ɎN��
+			PRINTFORMDW �Ζʗ��ʂ̎p���ɂȂ���%CALLNAME:MASTER%�͔ޏ��̕Б��������ƁA�r�N�r�N���z��������_��}�����Ă�����
+			CALL HPH_PRINT,@"�u�فA����HPH�c��������HPH�c�}�����A�����cHPH�v","W"
+			PRINTFORMDW �ޏ��̃A�k�X�͂܂�Ŏg�����񂾏��A�̂悤�ɉA�s���󂯓���A���ݍ���ł��܂�
+			PRINTFORMDW �D�P�̐S�z�̂Ȃ��|���I�Ȑ����ɁA�h���~�[�͖����ɂȂ肩���Ă����c
+		RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;�}���p��
+	;�L���`�F�b�N
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:101 == PLAYER
+		IF FLAG:70
+			PRINTFORMW 
+			RETURN 1
+		;�T�O���Ȃ肫�莞
+		ELSEIF FLAG:�Ȃ肫�� == 110
+			PRINTFORML
+			CALL AUTO_AEGI(NO:TARGET)
+			RETURN 1
+		;���ː�����
+		ELSEIF NOWEX:PLAYER:11
+			SELECTCASE RAND:3
+			CASE 0
+				CALL HPH_PRINT,@"�u�͂����c�͂��c�񂣂���HPH�����HPH�͂�����HPH�v","L"
+				PRINTFORMDL �ː����ߕt����%CALLNAME:MASTER%�̓h���~�[���M���b�ƕ������߂�ƁA���܂�̋����A�k�X�ɉ��x���˂����ꂽ
+				PRINTFORMDL �ɂ݂Ɖ��������݂���Ⴢ��悤�Ȋ��o�ɁA�h���~�[�͎q�{���u�������A���爤�t����ꂳ����
+				CALL HPH_PRINT,@"�u��������A�؂ꂿ���HPH����HPH������HPH���A������HPH�v","L"
+				PRINTFORMDW �Q�����x�y�ɂǂ��ł��悭�Ȃ����h���~�[�́A��������ɔr�������Ƃ��������������󂯓��ꂽ�c
+			CASE 1
+				CALL HPH_PRINT,@"�u����HPH�ӂ��A�����A������HPH���HPH�����HPH������HPH�v","L"
+				PRINTFORMDL �ː��Ɍ�������U�鑬�x���グ��%CALLNAME:MASTER%�ɁA�h���~�[�͒ɂ݂𕴂炷���̂悤�Ɍ��t�������Ă���
+				PRINTFORMDW �݂��ɐ�𗍂܂��Ȃ���A�|���I����含���ɒ^���Ă������c
+			CASE 2
+				CALL HPH_PRINT,@"�u�ː������Ⴄ�c�HHPH������ɁA�r���E�b�āA����HPH�ق�HPH������HPH�v","L"
+				PRINTFORMDL �䖝�̌��E���ߕt���Ă���%CALLNAME:MASTER%������U�鑬�x���グ��ƁA�h���~�[�������Ś����Ă���
+				PRINTFORMDW ���̌��t�Ƀ^�K���O�ꂽ%CALLNAME:MASTER%�����Ɏ��t����ׂ�����w����������U�����c
+			ENDSELECT
+			RETURN 1
+		;�O��ː�����
+		ELSEIF TCVAR:104
+			SELECTCASE RAND:3
+			CASE 0
+				CALL HPH_PRINT,@"�u��́A���cHPH�����Ɓc�HHPH�d���Ȃ��ł��˂��cHPH�v","L"
+				PRINTFORMDL �����ɂ����Ղ�ƒ������܂ꂽ�h���~�[�́A���̔M�ɂǂ����E�b�g���Ƃ����\��𕂂��ׂĂ���
+				PRINTFORMDW %CALLNAME:MASTER%�̓h���~�[�̖j���ɃL�X�����Ȃ���A��含�����ĊJ����
+			CASE 1
+				CALL HPH_PRINT,@"�u����HPH�����x�ɁA�����ŗh��āc��HPH�v","L"
+				PRINTFORMDL %CALLNAME:MASTER%������˂��グ��x�ɁA�h���~�[�̒����Ő��t���g�ł悤�ɗh���
+				PRINTFORMDW �������̃A�i���Z�b�N�X�Ńh���~�[�̒��������t�Ŗ��������̂ɂ������Ԃ͊|����Ȃ������c
+			CASE 2
+				CALL HPH_PRINT,@"�u�ӂ�HPH��ӂ�HPH�c���HPH�c�����HPH�C�����A���������c��HPH�v","L"
+				PRINTFORMDL %CALLNAME:MASTER%�͗��������h���~�[�̕Б���͂ݒ����ƁA�����݂ɍ���U�萸�t�h��̃A�k�X��Ƃ�
+				PRINTFORMDW �~���o���ꂽ���t�Ɣ鏊����H�鈤�t�ŁA�����ɂ͔����̐����܂肪�o���Ă����c
+			ENDSELECT
+			RETURN 1
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				CALL HPH_PRINT,@"�u�����cHPH���c������HPH�����Ȃ艜�܂Łc��HPH�v","L"
+				PRINTFORMDL ���قǂ܂ő}�����ɂ₩�ɍ��𓮂����Ă���%CALLNAME:MASTER%���s�ӂɍŉ��܂œ˂��グ��
+				PRINTFORMDW �e�傪�������ƍ��������ݍ��ނƁA�M�������͂܂�Ő���̂悤�ɉA�s���ݍ��ݒ��ߕt���Ă���
+			CASE 1
+				CALL HPH_PRINT,@"�u�����HPH���c�����HPH�D���ɂȂ����Ⴄ����A���߁c��HPH�v","L"
+				PRINTFORMDL %CALLNAME:MASTER%���h���~�[�̐K���̕t�������������Ȃ��獘�����Ⴍ��ƁA�ޏ��͍����J�N�J�N�Ɠ������Ȃ��猩�ウ��
+				PRINTFORMDW ��含���ɂ�������炸�A�h���~�[�̏��A�͂܂�œ��_���Â��Ă��邩�̂悤�Ƀp�N�p�N�ƊJ�����`�𐂂ꗬ���Ă����c
+			CASE 2
+				CALL HPH_PRINT,@"�u����A�[���܂ł�HPH�فA�񂧂��I�HHPH�v","L"
+				PRINTFORMDL �h���~�[��%CALLNAME:MASTER%�ɕ������������A�w�ق̎p���ŔƂ���Ă���
+				PRINTFORMDW ���\�ɒ��}����Ȃ�����K���ɉA�s��������ރA�k�X�́A�r���ɂ����������Ƀq�N�q�N�Ɛ�ɂ����_����ߕt���Ă���c
+			ENDSELECT
+			RETURN 1
+		ENDIF
+	ENDIF
+	;��{�Z�b�g
+	;������
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;�T�O���Ȃ肫�莞
+	ELSEIF FLAG:�Ȃ肫�� == 110
+		PRINTFORML
+		CALL AUTO_AEGI(NO:TARGET)
+		RETURN 1
+	;����
+	ELSEIF TALENT:���� || TALENT:���~ || TALENT:�Z�t�� || TALENT:�����}��
+			SELECTCASE RAND:3
+			CASE 0
+				CALL HPH_PRINT,@"�u��A�}����ɂ����H�c����łǂ��ł����c�HHPH�v","L"
+				PRINTFORMDL �h���~�[�͏������V����ƁA�K������J�����_���󂯓���鏀��������
+				PRINTFORMDL %CALLNAME:MASTER%�͋C�����Ɋ��ӂ��A�h���~�[�̋e��ɂ������ƋT����}�����Ă����c
+				CALL HPH_PRINT,@"�u�ӁA���HPH�c�k�����đ}�����āc�ӂӁA��̒N�̂����ł����Ȃ����̂��cHPH�v","L"
+				PRINTFORMDW �×~�ɋz���t���Ă���A�k�X�ɋT���𔲂��������ē���܂�����A�������ƍ��{�܂ő}�����Ă�����
+			CASE 1
+				CALL HPH_PRINT,@"�u���c���HPH�ˁA�˂�HPH�͂₭�c��HPH�v","L"
+				PRINTFORMDL �h���~�[�̔鏊����H�鈤�t���w�ŋd�����x���ޏ��̃A�i���ɓh�荞��ł���ƁA�łꂽ�̂��}�����Ñ����Ă���
+				PRINTFORMDL �A�i���Z�b�N�X�̖��͂ɂ������̖��̎x�z�҂Ƃ����ǍR�����Ƃ͂ł��Ȃ��炵���c
+				PRINTFORMDW %CALLNAME:MASTER%���h���~�[�̐g�̂�����グ�A���Ɂw�G�ꂽ�x�e��ɓ��_�����荞�܂���ƁA�ޏ��͚X��悤�Țb�����グ�悪����
+			CASE 2
+				CALL HPH_PRINT,@"�u���A����HPH�c�͂������cHPH�����A�L�����Ă�c��HPH�v","L"
+				PRINTFORMDL �ŏ��̍��͍d�����Ă����A�k�X�����A����̖��������o�����̂����_���������ނƑ債����R���Ȃ��������ނ悤�ɂȂ���
+				PRINTFORMDL %CALLNAME:MASTER%�̓h���~�[��ǂɉ����t���A���Ŏ����グ��悤�ɂ��Ȃ���������ƃs�X�g��������
+				CALL HPH_PRINT,@"�u�ӂ��c����HPH���Y���Y���āA����HPH�����������c��HPH�v","L"
+				PRINTFORMDW �A���ő����r���Ɏ��������ɁA�h���~�[�̔鏊�����ꂽ������A��`���A�i����G�炵���c
+			ENDSELECT
+			RETURN 1
+	;����3
+	ELSEIF MARK:�s������ == 3
+			SELECTCASE RAND:2
+			CASE 0
+				CALL HPH_PRINT,@"�u���HPH�c�ɂނ̂ŁA��ɂق����Ē�����Ɓc�v","L"
+				PRINTFORMDL �h���~�[�̋��߂ɉ����Ĕޏ��̏��A�Ɏw���������Ƒ}�����A�W�����ƈ��鈤�t���w�ɓh��
+				PRINTFORMDL ���̂܂ܔޏ��̍�������\��Ɏw�����点��ƁA�ْ����炩�ł������e����L����悤�Ɏw����������
+				CALL HPH_PRINT,@"�u���c�񂣁cHPH�ӂ�HPH�c�ق�HPH�c���A���낻��c�v","L"
+				PRINTFORMDL �\���ɂق��ꂽ�A�k�X�̓A�i���Z�b�N�X�����҂��ăq�N�q�N�Ɛ�ɂ��Ă���
+				PRINTFORMDW %CALLNAME:MASTER%�͐摖��𐂂炵�z��������_���w�Ŏx����ƁA�ޏ��̃A�i���ւƑ}�����Ă������c
+			CASE 1
+				CALL HPH_PRINT,@"�u�܂��ł����c�H�͂��c�X�L���m�ł��˂��cHPH�v","L"
+				PRINTFORMDL �A�i���Z�b�N�X���������Ƃ���%CALLNAME:MASTER%�Ƀh���~�[�͕��ꂽ�悤�ȕ\��𕂂��ׂĂ���
+				PRINTFORMDW ���΂�畏�������A�ޏ��͏��������������L����ƕǂɂ�����|������
+			ENDSELECT
+			RETURN 1
+	;����ȊO
+	ELSE
+				CALL HPH_PRINT,@"�u�܂��ł����c�H�͂��c�X�L���m�ł��˂��cHPH�v","L"
+				PRINTFORMDL �A�i���Z�b�N�X���������Ƃ���%CALLNAME:MASTER%�Ƀh���~�[�͕��ꂽ�悤�ȕ\��𕂂��ׂĂ���
+				PRINTFORMDW ���΂�畏�������A�ޏ��͏��������������L����ƕǂɂ�����|������
+		RETURN 1
+	ENDIF
+ENDIF
+;-------------------------------------------------
+;�����
+;�L���`�F�b�N�i=0, ��\���A1, �\���j
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;������
+	;-------------------------------------------------
+	;���߂�
+	;�L���`�F�b�N
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		IF FLAG:70
+			PRINTFORMW 
+			RETURN 1
+		;�T�O���Ȃ肫�莞
+		ELSEIF FLAG:�Ȃ肫�� == 110
+			PRINTFORML
+			CALL AUTO_AEGI(NO:TARGET)
+			RETURN 1
+		;�A�i������
+		ELSEIF TCVAR:�`�j�Z
+			PRINTFORMW �u���K�̌��ɑ}�����Ȃ�āc������Ȃ�ł��c�v
+			PRINTFORMDW %CALLNAME:MASTER%�͎�̕��Ƀ��[�V�����𐂂炵�A�h���~�[�̃A�k�X�ɓh�肽�����Ă���
+			PRINTFORMDW ����������łȂ������ɂ܂Ŏw��}�����h�荞��ł����ƁA�����e�傪�w���M���E�b�ƒ��ߕt���Ă���
+			PRINTFORMW �u���A�����c����c����Ȃɏo�����ꂵ�Ȃ��Łc���v
+			PRINTFORMDW �ʂۂʂۂƎw�𒊑}����ƁA�S�������[�V�����Ƌ��Ɏw��������񂾃A�k�X���牺�i�ȉ�������
+			PRINTFORMW �u�������c��������c�v
+			PRINTFORMDW �h���~�[�͎��g�̊����ŕ����A㵒p�ɐk���Ă���
+			PRINTFORMDW ���������A�O�l�̓A�i���Z�b�N�X�D�����ƕ����Ă������c
+			PRINTFORMW �u���A�M���c���̖��O����������������Ă���Ȃ��ƍl���Ă��̂ł����c�H�v
+			PRINTFORMDW ����Ԃ�h���~�[�𖳎����A�ق��ꂽ�A�i���ɒɂ��قǖu�N�������_�����Ă���
+			PRINTFORMDW ���[�V�����Ńe�J�錊�ɋT�����G���ƁA�ޏ��̓r�N���Ɛg�̂𒵂˂����e�傪���ނ悤�ɒ��܂�
+			PRINTFORMW �u�܁A�҂��āc�S�̏������c�v
+			PRINTFORMDW �h���~�[��%CALLNAME:MASTER%����Ő�����ƁA������ċz�𐮂��n�߂�
+			PRINTFORMDW ����ȗl�q������%CALLNAME:MASTER%�́A�����`�����X���Ƃ΂���ɍ���˂������c
+			CALL HPH_PRINT,@"�u���J�b�I�HHPH���J���J���J���J�b�I�H�HHPH HPH HPH�v","W"
+			PRINTFORMDW �C�̊ɂ�ł����h���~�[�̃A�k�X�͈ӊO�Ȃقǒ�R�Ȃ����_�����ݍ���ł��܂�
+			PRINTFORMDW ��C�ɒ������𖞂������ٕ��ɁA�ޏ��͖ڂ𔒍������b�̂悤�ȋ��т��グ�Ă���c
+			CALL HPH_PRINT,@"�u���A�͂�HPH�c�܁A�҂��Ă��Č������̂Ɂc���I�v","W"
+			PRINTFORMDW �|���|���Ƃ������@���Ă���h���~�[�͂܂�Ŏq���̂悤�ɋ������Ⴍ���Ă���
+			PRINTFORMDW %CALLNAME:MASTER%�͂���Ȕޏ���������߁A���������܂ňԂ߂��c
+			CALL HPH_PRINT,@"�u�������I�������I�c�c�����cHPH�v","W"
+		RETURN 1
+		ELSE
+			CALL HPH_PRINT,@"�u�ӂӁA���̑̐����Ɗ炪�ǂ������ācHPH�v","W"
+			PRINTFORMDW �܂񂮂�Ԃ��̎p���ɂȂ����h���~�[�́A����̃A�k�X��%CALLNAME:MASTER%�ɎN�������ۂ��΂݂𕂂��ׂĂ���
+			PRINTFORMDW ���̎x�z�҂̃A�i���̓p�N�p�N�ƊJ���A�Y�̓��_�̑}����҂���тĂ���c
+			CALL HPH_PRINT,@"�u���HPH�c����HPH�c������HPH�􂯂�����HPH�v","W"
+			PRINTFORMDW %CALLNAME:MASTER%���������ƉA�s��}�����Ă����ƁA�h���~�[�͊���ɐk���Ȃ���N�����󂯓����
+			PRINTFORMDW ���_�����։��ւƐi��ł����x�ɁA�h���~�[�͂܂�ŐK���śs�ނƂł��������̂悤�Ɏ���̎q�{���~��Ă���̂������Ă����c
+		RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;�}���p��
+	;�L���`�F�b�N
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:101 == PLAYER
+		IF FLAG:70
+			PRINTFORMW 
+			RETURN 1
+		;�T�O���Ȃ肫�莞
+		ELSEIF FLAG:�Ȃ肫�� == 110
+			PRINTFORML
+			CALL AUTO_AEGI(NO:TARGET)
+			RETURN 1
+		;���ː�����
+		ELSEIF NOWEX:PLAYER:11
+			SELECTCASE RAND:3
+			CASE 0
+				CALL HPH_PRINT,@"�u���HPH����HPH���HPH���K��HPH�A���������Ȃ��Ă�HPH�v","L"
+				PRINTFORMDL �A�k�X�̋������ߕt���ɂ����Ƃ����ԂɌ��E�̖K�ꂽ%CALLNAME:MASTER%�́A�h���~�[�̋r��͂ݖ����ō���ł��t���Ă���
+				PRINTFORMDL �e�傪���Ă��܂��̂ł͂Ȃ����Ƃ����������s�X�g���ɔޏ��͍��𕂂������K���Ă���c
+				CALL HPH_PRINT,@"�u�����HPH�ː����Ă��c�����Ă����Ă����āc��HPH HPH HPH�v","L"
+				PRINTFORMDW �ː��̏u�ԁA�h���~�[�̐K�Ƀs�b�^���ƍ����t���قǓ˂����ނƔޏ��͏��A���璪�𐁂��o������ɒB�����c
+			CASE 1
+				CALL HPH_PRINT,@"�u�񂟂��c��HPH�������A�C���Ă�c��HPH�v","L"
+				PRINTFORMDL %CALLNAME:MASTER%���ł炷�悤�ɍ���U��ƁA�h���~�[�͒����[���܂œ͂����_�̊��G�ɓ������\��𕂂��ׂ�
+				PRINTFORMDL ���{�܂ő}�������܂܁A���ǂɋT�����C��t����悤�����݂ɓ����Β����q�_�̗D�����h���Ɏv�킸�ː��������ɂȂ�
+				PRINTFORMDL �h���~�[�̑��̐���Ɏ��t����ׂ��A%CALLNAME:MASTER%�͔ޏ��̍����O�b�ƒ͂ނƎː��Ɍ����y�[�X���グ�Ă�����
+				CALL HPH_PRINT,@"�u�񂧂�HPH�c�ӂӁA���̂��K�ɁA�����ς��ː����āc��HPH�v","W"
+			CASE 2
+				CALL HPH_PRINT,@"�u���HPH���̊��D�c�p�������A����HPH�񂣂����cHPH�v","L"
+				PRINTFORMDL �h���~�[��Ƃ��Ă���%CALLNAME:MASTER%�́A�ޏ��̋r��͂ނƂ܂�Ńo�C�N�̃n���h���̂悤�ɍL������
+				PRINTFORMDL �ی����ɂȂ������A����́A�A�i���Z�b�N�X�̉��y�ɔ������邩�̂悤�Ɉ��t�����`�������Ă���c
+				CALL HPH_PRINT,@"�u�r���A���āc�ӂ���HPH����HPH���߂�HPH����HPH�v","L"
+				PRINTFORMDW %CALLNAME:MASTER%�͓˂�����₷���Ȃ����A�k�X�ɁA�~�]��f���o���ׂ����x������ł��t�����c
+			ENDSELECT
+			RETURN 1
+		;�O��ː�����
+		ELSEIF TCVAR:104
+			SELECTCASE RAND:3
+			CASE 0
+				CALL HPH_PRINT,@"�u����HPH�c�˂��A����������O�ɁcHPH�v","L"
+				PRINTFORMDL %CALLNAME:MASTER%������U�낤�Ƃ���ƁA�h���~�[�͂��̓����𐧂�����̐O���w������
+				PRINTFORMDW ���̈Ӑ}�𗝉�����%CALLNAME:MASTER%�͔ޏ��Ɍ��t�������A����Â�Ȃ���ɂ₩�ȃX�g���[�N������ł�����
+			CASE 1
+				CALL HPH_PRINT,@"�u�͂��c���K�̌��ł���Ȃɋ�������́A%CALLNAME:MASTER%���炢�ł���c������HPH�v","L"
+				PRINTFORMDL ����̗ǂ��Ȃ����e��Ƀs�X�g������ƁA�����Ղ�ƒ������܂ꂽ���t�����i�ȉ���t�łȂ�����Ă���
+				PRINTFORMDW %CALLNAME:MASTER%�̓h���~�[�Ɉ����|����A�ޏ��̒��������S�ɐ��t�Ŗ������ׂ������ō���@������
+			CASE 2
+				CALL HPH_PRINT,@"�u�ӁA�ӂӂ�HPH�A���K�̌��ɂ������ācHPH�p���������Ȃ��̂ł����HHPH�A���bHPH�v","L"
+				PRINTFORMDL �ː����I���A�Ăюq��𒍂����ނׂ����𓮂����Ă���ƃh���~�[������Ȏ������Ă���
+				PRINTFORMDW ����𒧔��Ǝ󂯎����%CALLNAME:MASTER%�́A�g�̒��m�炸���тɕ����点��ׂ��ޏ��̃A�k�X�ɉ��x�����_��˂����ꂽ�c
+			ENDSELECT
+			RETURN 1
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML �u�O�l�̂��o�����݂����ɚb���ŗ~�����c�H�c�͂��c�v
+				PRINTFORMDW �m���͚b���ňނ���l�������Ƃ����b�𕷂���%CALLNAME:MASTER%�́A������m���߂�ׂ��h���~�[�Ɏ��������肢���Ă݂�
+				PRINTFORML �u���Ⴀ�c�˂��Ă݂Ă��������v
+				PRINTFORMDW %CALLNAME:MASTER%�͌����邪�܂܁A�A�i���Z�b�N�X���ĊJ����
+				CALL HPH_PRINT,@"�u�n���`HPH�C�G�X�bHPH�C�G�X�C�G�X�C�G�X�b�bHPH HPH HPH�z�H�`�bHPH�V�bHPH�I�H�`�bHPH�v","W"
+				PRINTFORMDL �c���܂ꂵ�����ɂȂ����̂ōQ�Ăăh���~�[���~�߂��c
+				CALL HPH_PRINT,@"�u�����c����Ȑl�ł��˂��cHPH�v","W"
+			CASE 1
+				CALL HPH_PRINT,@"�u����HPH�񂣂�HPH�c�����HPH�C�����ǂ��c�H�v","L"
+				PRINTFORMDL �A�k�X��Ƃ���Ă���h���~�[��%CALLNAME:MASTER%�̖j�Ɏ��Y���A�����Ƃ�����̕\������߂Ă���
+				PRINTFORMDW �ǂ����C�p����������������%CALLNAME:MASTER%���h���~�[�ɃL�X������ƁA�ޏ��͋e���D�������ߕt���Ȃ��������Ă���
+			CASE 2
+				CALL HPH_PRINT,@"�u���A����HPH���K�̌����A�����|�����āc���HPH�v","L"
+				PRINTFORMDL %CALLNAME:MASTER%���M���M���܂ŉA�s�����������ƁA�h���~�[�̏[�������e��̓J���Ɉ����|���萷��オ���Ă���c
+				CALL HPH_PRINT,@"�u�ӁA����HPH����HPH����������HPH�v","L"
+				PRINTFORMDW �������ƍŉ��܂ő}�����ĂуJ���܂ň��������ƁA�K�����ق�������������炩�ޏ��̚b��������ɉ��i�ɂȂ��Ă���
+			ENDSELECT
+			RETURN 1
+		ENDIF
+	ENDIF
+	;��{�Z�b�g
+	;������
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;�T�O���Ȃ肫�莞
+	ELSEIF FLAG:�Ȃ肫�� == 110
+		PRINTFORML
+		CALL AUTO_AEGI(NO:TARGET)
+		RETURN 1
+	;����
+	ELSEIF TALENT:���� || TALENT:���~ || TALENT:�Z�t�� || TALENT:�����}��
+			SELECTCASE RAND:3
+			CASE 0
+				CALL HPH_PRINT,@"�u�{���ɂ������ł���̍D���ł���˂��cHPH�v","L"
+				PRINTFORMDL �h���~�[�͌�����킯�ł��Ȃ��A����̃A�i���ɐi��Ń��[�V�����𐂂炵�A����܂���
+				PRINTFORMDL ����������含���̖����߂����̎x�z�҂��A%CALLNAME:MASTER%�͓��_�𔽂�Ԃ点�Ȃ��璭�߂Ă���c
+				CALL HPH_PRINT,@"�u�͂��A�����ł���HPH�c������cHPH�}�����Ă����c��HPH�v","L"
+				PRINTFORMDW �e���e���ƌ���A�k�X�́A�}���������_���Ȃ�̒�R���Ȃ��󂯓��ꂽ�c
+			CASE 1
+				CALL HPH_PRINT,@"�u�ق�c�ӂ�HPH�}���ꂽ���ł���ˁc�HHPH�v","L"
+				PRINTFORMDL �h���~�[�͈��r�ȏ΂݂𕂂��ׂ�ƁA�A�i�����J�����z��������_�ɍ��������t���Ă���
+				PRINTFORMDL �ŋ߂��т͖�����Ȃ��ăP�c���Ńy�j�X��H�ׂ�񂾂Ȃ��c
+				PRINTFORMDW %CALLNAME:MASTER%�͂���ȏ�k�������Ȃ���A�}�������҂���ޏ��̃A�k�X�ɉA�s����������ł�����
+			CASE 2
+				CALL HPH_PRINT,@"�u�͂����cHPH�����āc���A�ӂ���HPH�c�������cHPH�v","L"
+				PRINTFORMDL %CALLNAME:MASTER%�̓h���~�[�̗��������ɏ悹�A�q�N���A�k�X�ɖu�N�������_��}�����Ă���
+				PRINTFORMDL �����̉��[���܂Ōq����ƁA�ޏ��̋��𝆂݂������Ȃ��犴�G���m���߂�悤�ɍ��𓮂�����
+				CALL HPH_PRINT,@"�u�����A��HPH���̊��D�c������HPH�c�C�����ǂ��A���āc��HPH�v","L"
+				PRINTFORMDL �݂��̔���ł��t���鉹�ɁA�O�|�b�A�O�|�b�A�ƃA�i����~���񂷉��F��������
+				PRINTFORMDW �܂�Ŏq���̂悤�ȊÂ��A�i���Z�b�N�X�ɁA���݂������ɂȂ��Ĕ����d�˂��c
+			ENDSELECT
+			RETURN 1
+	;����3
+	ELSEIF MARK:�s������ == 3
+			SELECTCASE RAND:2
+			CASE 0
+				CALL HPH_PRINT,@"�u���HPH�c�ɂނ̂ŁA��ɂق����Ē�����Ɓc�v","L"
+				PRINTFORMDL �h���~�[�̋��߂ɉ����Ĕޏ��̏��A�Ɏw���������Ƒ}�����A�W�����ƈ��鈤�t���w�ɓh��
+				PRINTFORMDL ���̂܂ܔޏ��̍�������\��Ɏw�����点��ƁA�ْ����炩�ł������e����L����悤�Ɏw����������
+				CALL HPH_PRINT,@"�u���c�񂣁cHPH�ӂ�HPH�c�ق�HPH�c���A���낻��c�v","L"
+				PRINTFORMDL �\���ɂق��ꂽ�A�k�X�̓A�i���Z�b�N�X�����҂��ăq�N�q�N�Ɛ�ɂ��Ă���
+				PRINTFORMDW %CALLNAME:MASTER%�͐摖��𐂂炵�z��������_���w�Ŏx����ƁA�ޏ��̃A�i���ւƑ}�����Ă������c
+			CASE 1
+				CALL HPH_PRINT,@"�u�܂��ł����c�H�͂��c�X�L���m�ł��˂��cHPH�v","L"
+				PRINTFORMDL �A�i���Z�b�N�X���������Ƃ���%CALLNAME:MASTER%�Ƀh���~�[�͕��ꂽ�悤�ȕ\��𕂂��ׂĂ���
+				PRINTFORMDW ���΂�畏�������A�ޏ��͏��������������L����
+			ENDSELECT
+			RETURN 1
+	;����ȊO
+	ELSE
+				CALL HPH_PRINT,@"�u�܂��ł����c�H�͂��c�X�L���m�ł��˂��cHPH�v","L"
+				PRINTFORMDL �A�i���Z�b�N�X���������Ƃ���%CALLNAME:MASTER%�Ƀh���~�[�͕��ꂽ�悤�ȕ\��𕂂��ׂĂ���
+				PRINTFORMDW ���΂�畏�������A�ޏ��͏��������������L����
+		RETURN 1
+	ENDIF
+ENDIF
+;==================================================
+;63,��w�ʃA�i��
+;==================================================
+@M_KOJO_MESSAGE_COM_K109_63
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K109_63_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K109_63_1
+;-------------------------------------------------
+;����
+;�L���`�F�b�N�i=0, ��\���A1, �\���j
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL && TFLAG:193
+	;-------------------------------------------------
+	;������
+	;-------------------------------------------------
+	;���߂�
+	;�L���`�F�b�N
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		IF FLAG:70
+			PRINTFORMW 
+			RETURN 1
+		;�T�O���Ȃ肫�莞
+		ELSEIF FLAG:�Ȃ肫�� == 110
+			PRINTFORML
+			CALL AUTO_AEGI(NO:TARGET)
+			RETURN 1
+		;�A�i������
+		ELSEIF TCVAR:�`�j�Z
+			PRINTFORMW �u�����������c�ƌ����ΉR�ɂȂ邯�ǁc�v
+			PRINTFORMDW ���ɐ����ς܂����h���~�[�́A�ǂɎ��t��%CALLNAME:MASTER%�ɐK�������Ă���
+			PRINTFORMDW ����Ŕޏ��̐K��������J���ƁA�F�f���璾�����Ă��Ȃ����g�p���f�킹��A�k�X�����̑��݂��咣���Ă���
+			PRINTFORMW �u���A����Ȃɂ܂��܂��ƌ��Ȃ��ł��������c���v
+			PRINTFORMDW %CALLNAME:MASTER%�͔ޏ��̃A�k�X�Ɋ���ߕt����ƁA���̎��ӂ��r��
+			CALL HPH_PRINT,@"�u�ӂ��cHPH��A�����c�ł���c��HPH�v","W"
+			PRINTFORMDW �܂�ŏ��A�����߂ق������̂悤�ɁA�h���~�[�̕s��̌���O�O�Ɉ�������
+			PRINTFORMDW %CALLNAME:MASTER%�����}������ƁA�ޏ��͍������܂ꂽ������ނ悤�ɒ��ߕt���Ă���
+			CALL HPH_PRINT,@"�u�͂���HPH�c���c���܂ŁA���߂Ă��ł����cHPH�v","W"
+			PRINTFORMDW ������������ƁA���t�łʂ���A�k�X�͏����Ȍ����ɂ܂��ǂ������c�ɂ������Ƀq�N���Ă���
+			PRINTFORMDW �������o�����Ɣ��f����%CALLNAME:MASTER%�́A�d���u�N�������_�����Ă����ƋT���𒾂܂�����܂��Ă����c
+			CALL HPH_PRINT,@"�u����HPH����c�͂₭�A�ς܂��āc���v","W"
+			PRINTFORMDW ����ۂ���ۂƉ��x���o�����ꂵ����A�ޏ��̋��߂ɉ����������ƍ���i�߂Ă���
+			CALL HPH_PRINT,@"�u����HPH�c�����c�ӂ��A�ӂ���HPH�c�������A�[���܂ŁcHPH�v","W"
+			PRINTFORMDW �~�b�`���ƍL�������A�k�X�́A�}������Ă����A�s�����X�Ƃ��Ď󂯓���Ă���
+			PRINTFORMDW �M�������́A�A�s�ɓZ�����q�������낤�Ǝh����^���Ă���c
+			CALL HPH_PRINT,@"�u�ӂ���HPH�c�ӊO�ƁA���������c��HPH�v","W"
+			PRINTFORMDW �ŉ��܂ő}�����A���݂��̔������������%CALLNAME:MASTER%�̓h���~�[��w�ォ��������ߌy���L�X������
+			CALL HPH_PRINT,@"�u�͂��c�͂��cHPH���HPH������cHPH�v","W"
+			PRINTFORMW �i���������΁c���K���߂����Łc�c�܂��A�������c�j
+		RETURN 1
+		ELSE
+			CALL HPH_PRINT,@"�u�}���ꂽ���Ċ���Ȃ��c���Ċ炵�Ă�cHPH�v","W"
+			PRINTFORMDW �ǂɎ��t�����h���~�[�́A������ɐK��˂��o���U���悤�ɗh�炵�Ă���
+			PRINTFORMDW %CALLNAME:MASTER%������͂ݓ��_��}�����Ă����ƁA�ޏ��̃A�k�X�͉��̋���Ȃ����_�����ݍ���ł��܂�
+			CALL HPH_PRINT,@"�u���bHPH�������cHPH�͂��A������HPH HPH HPH�v","W"
+			PRINTFORMDW �D�P�̐S�z���������炩�A�h���~�[�͏����ɃA�i���Z�b�N�X�̉��y���y����ł���悤��
+			PRINTFORMDW ����Ȕޏ��ɉ����͂���Ȃ��ƁA%CALLNAME:MASTER%�͍ŏ�����y�[�X���グ�č��𓮂����Ă������c
+		RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;�}���p��
+	;�L���`�F�b�N
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:101 == PLAYER
+		IF FLAG:70
+			PRINTFORMW 
+			RETURN 1
+		;�T�O���Ȃ肫�莞
+		ELSEIF FLAG:�Ȃ肫�� == 110
+			PRINTFORML
+			CALL AUTO_AEGI(NO:TARGET)
+			RETURN 1
+		;���ː�����
+		ELSEIF NOWEX:PLAYER:11
+			SELECTCASE RAND:3
+			CASE 0
+				CALL HPH_PRINT,@"�u����HPH�c�ӁA�񂣂���HPH�҂��cHPH�v","L"
+				PRINTFORMDL ���t���o���Ă��銴�o�Ɏ����������Ȃ��Ȃ荘��ł��t���鑬�x���グ�Ă���
+				PRINTFORMDL �������A�k�X���C��������ɁA�h���~�[�͑����K�N�K�N�Ƃ����ǂɊz�������t���Ă���
+				CALL HPH_PRINT,@"�u�́A������HPH�C�bHPH�c�`�`�`�bHPH HPH HPH�v","L"
+				PRINTFORMDW �ː��̏u�ԁA������������قǂɓ˂����ނƃh���~�[�͌҂�����`�𐂂ꗬ���Ȃ���Ⓒ�����c
+			CASE 1
+				CALL HPH_PRINT,@"�u������HPH�c%CALLNAME:MASTER%�c��HPH�I�bHPH������񂣂�HPH�v","L"
+				PRINTFORMDL ���R�̂悤�ɒ����ː����悤�Ƃ���%CALLNAME:MASTER%���h���~�[�͍���˂��o���{�\�̂܂܎󂯓����
+				PRINTFORMDL 忂������͗Y�̗~�]����������ƕ�ݍ��݁A��t���ɔ����Ă���c
+				PRINTFORMDW �h���~�[�̃A�k�X�́A���͂�r���ׂ̈ł͂Ȃ��Y�̎q����󂯓����ׂ̊튯�Ɖ����Ă���
+			CASE 2
+				CALL HPH_PRINT,@"�u�����Ɠ˂��āA�����ł���c��HPH�񂟂���HPH�v","L"
+				PRINTFORMDL �ǂɎ��t�����h���~�[�͂�����ɐU��Ԃ�ƁA���r�ȕ\��𕂂��׌���������悤�v�����Ă���
+				PRINTFORMDL �ː����߂��Ȃ��Ă���%CALLNAME:MASTER%�͔ޏ��̖]�ݒʂ�b�̂悤�ɍ���U�肽����c
+				CALL HPH_PRINT,@"�u���bHPH����b�A�D����HPH�Ȃ��bHPH�i�J�Ɏː����Ă�HPH�c�`�`�`�b�bHPH HPH HPH�v","W"
+			ENDSELECT
+			RETURN 1
+		;�O��ː�����
+		ELSEIF TCVAR:104
+			SELECTCASE RAND:3
+			CASE 0
+				CALL HPH_PRINT,@"�u�͂Ӂc�񂟂�HPH�c���K�Ɍ��c����ȂɋC�ɓ���܂������c�HHPH�v","L"
+				PRINTFORMDL �b���q�������܂ܑ��𐮂�����A%CALLNAME:MASTER%�͍Ăэ��𓮂����n�߂�
+				PRINTFORMDW �����łʂ߂�e��́A���_����������x�Ƀq�N���x�т̂܂܉A�s���������ł���c
+			CASE 1
+				CALL HPH_PRINT,@"�u����HPH�c�����c���K���K�o�K�o�ɂȂ�����ǂ������ł����cHPH�v","L"
+				PRINTFORMDL �w�r���x���I����Ă��ނ��邱�Ƃ̂Ȃ��y�j�X�ŋe����т����܂܁A�����X�g���[�N�����Ă���
+				PRINTFORMDL �h���~�[�̃A�k�X�͌������d�˂閈�ɓ��_�̑����ɓ����ł����Ă���c
+				PRINTFORMDW ������p�̓����̎d�オ��ɖ�������%CALLNAME:MASTER%�́A�ޏ��̐K�𕏂łȂ���s�X�g���̑��x���グ�Ă�����
+			CASE 2
+				CALL HPH_PRINT,@"�u���A�͂��c�͂��c���HPH�c�܂��V�����c�HHPH�v","L"
+				PRINTFORMDL %CALLNAME:MASTER%�̗~�]���󂯎~�߂��h���~�[�͌��ő������Ȃ��璼���̔M�������Ă���
+				PRINTFORMDL �e��̋������ߕt���ɓ��_�͈ނ���ǂ��납����Ɍ��𗭂ߍ��݂͂��؂��΂��肾
+				PRINTFORMDW �h���~�[�̌��t�ɓ��R���ƕԂ���%CALLNAME:MASTER%�́A�Ăюq���A���t����ׂ������g���Ă������c
+			ENDSELECT
+			RETURN 1
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				CALL HPH_PRINT,@"�u�����HPH�˂��c�K���A�C���ācHPH�v","L"
+				PRINTFORMDL �������Ƃ������g���Ńh���~�[�̒����𖡂���Ă���ƁA�ޏ����K����h�炵�Ȃ��炨�˂��肵�Ă���
+				PRINTFORMDL ���߂ɉ����A�s�N�s�N�Ɛk����K�����Ê��݂��}�b�T�[�W����悤�Ɉ������Ă�����c
+				CALL HPH_PRINT,@"�u�́A������������HPH HPH HPH�������A�C�����A������HPH�v","W"
+			CASE 1
+				CALL HPH_PRINT,@"�u���HPH�c����HPH�c�˂��A�������߂āc��HPH�v","L"
+				PRINTFORMDL %CALLNAME:MASTER%�̓h���~�[�̏�̂�������߂�ƁA�������ƍ��𓮂����Ă���
+				PRINTFORMDL �݂��̑̉t��������A����������A�����Ă���̂�������
+				CALL HPH_PRINT,@"�u������cHPH�D�����̂��A�����ł��ˁcHPH����HPH�v","W"
+			CASE 2
+				CALL HPH_PRINT,@"�u��񂣂�HPH�c�����ƁA�[���܂Łc��HPH�v","L"
+				PRINTFORMDL �e����h������悤�ɐ󂭃s�X�g�����Ă���ƁA�h���~�[�������Ɛ[���}������悤�ɗv�����Ă���
+				PRINTFORMDL %CALLNAME:MASTER%�̓h���~�[�̉��������O�b�Ɖ������S�����h������悤�ɃX�g���[�N���A��؂ɃL�X������
+				CALL HPH_PRINT,@"�u���A�����J���J��HPH�������A�ア�����HPH�I�J�bHPH�v","W"
+			ENDSELECT
+			RETURN 1
+		ENDIF
+	ENDIF
+	;��{�Z�b�g
+	;������
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;�T�O���Ȃ肫�莞
+	ELSEIF FLAG:�Ȃ肫�� == 110
+		PRINTFORML
+		CALL AUTO_AEGI(NO:TARGET)
+		RETURN 1
+	;����
+	ELSEIF TALENT:���� || TALENT:���~ || TALENT:�Z�t�� || TALENT:�����}��
+			SELECTCASE RAND:3
+			CASE 0
+				CALL HPH_PRINT,@"�u����HPH�ӂ����c��HPH�{���́A�������ɑ}����Ă̓_���Ȃ̂ł���c�HHPH�v","L"
+				PRINTFORMDL %CALLNAME:MASTER%�̓h���~�[�̉�����������ƁA�A�ɂ₩�ɍ��𓮂����Ă���
+				PRINTFORMDL ���ł͒�R��������悤�Ȃ��Ƃ������Ă��邪�A�e��͂���������_�̃J�^�`�ɍL����܂�Ő�p�I�i�z�[���̂悤�ȗL�l��
+				CALL HPH_PRINT,@"�u�C�����ǂ����낤���āc��HPH����ȁA������HPH�v","L"
+				PRINTFORMDW �����̕ӂ���h�����Ă��ƁA�h���~�[�͂܂�Ŏq�{�����˂��ꂽ�悤�Ƀ��K�����c
+			CASE 1
+				CALL HPH_PRINT,@"�u�����҂��Ă��������ˁc�͂��A�ǂ���HPH�v","L"
+				PRINTFORMDL �h���~�[�͂��������ƒ����̐����ς܂���ƁA������ɐK��˂��o���Ă���
+				PRINTFORMDL %CALLNAME:MASTER%�̓h���~�[�̐K������J���Ƌe��ɑ��t�𐂂炵�A�w��}�����ē���܂��Ă���
+				PRINTFORMDW �b���ق�������A�ɂ��قǂɖu�N������_�����Ă����A�}�����Ă������c
+			CASE 2
+				CALL HPH_PRINT,@"�u�܂��A�����ł��ˁcHPH�P�_���m�݂����ɂ��K�̌����c��HPH�v","L"
+				PRINTFORMDL �������苻�������l�q�̃h���~�[��ǂɉ��������A�q�N���A�k�X�ɓ��_�����Ă���
+				PRINTFORMDL �����ŋT����������������܂�����A�������ƉA�s����������ł�����
+				CALL HPH_PRINT,@"�u�ق�HPH�������c��HPH�͂����āc��HPH���A������HPH�v","L"
+				PRINTFORMDL �}�������������Ƃ����̂ɁA�h���~�[�͂܂�ŃN�X���𓾂����Ŏ҂̂悤�ɐ�𐂂炵����ɐk���Ă���
+				PRINTFORMDW ���̂܂܃A�i���Z�b�N�X���łɂ���̂������Ȃ���%CALLNAME:MASTER%�͎v����
+			ENDSELECT
+			RETURN 1
+	;����3
+	ELSEIF MARK:�s������ == 3
+			SELECTCASE RAND:2
+			CASE 0
+				CALL HPH_PRINT,@"�u���HPH�c�ɂނ̂ŁA��ɂق����Ē�����Ɓc�v","L"
+				PRINTFORMDL �h���~�[�̋��߂ɉ����Ĕޏ��̏��A�Ɏw���������Ƒ}�����A�W�����ƈ��鈤�t���w�ɓh��
+				PRINTFORMDL ���̂܂ܔޏ��̍�������\��Ɏw�����点��ƁA�ْ����炩�ł������e����L����悤�Ɏw����������
+				CALL HPH_PRINT,@"�u���c�񂣁cHPH�ӂ�HPH�c�ق�HPH�c���A���낻��c�v","L"
+				PRINTFORMDL �\���ɂق��ꂽ�A�k�X�̓A�i���Z�b�N�X�����҂��ăq�N�q�N�Ɛ�ɂ��Ă���
+				PRINTFORMDW %CALLNAME:MASTER%�͐摖��𐂂炵�z��������_���w�Ŏx����ƁA�ޏ��̃A�i���ւƑ}�����Ă������c
+			CASE 1
+				CALL HPH_PRINT,@"�u�܂��ł����c�H�͂��c�X�L���m�ł��˂��cHPH�v","L"
+				PRINTFORMDL �A�i���Z�b�N�X���������Ƃ���%CALLNAME:MASTER%�Ƀh���~�[�͕��ꂽ�悤�ȕ\��𕂂��ׂĂ���
+				PRINTFORMDW ���΂�畏�������A�ޏ��͏��������������L����
+			ENDSELECT
+			RETURN 1
+	;����ȊO
+	ELSE
+				CALL HPH_PRINT,@"�u�܂��ł����c�H�͂��c�X�L���m�ł��˂��cHPH�v","L"
+				PRINTFORMDL �A�i���Z�b�N�X���������Ƃ���%CALLNAME:MASTER%�Ƀh���~�[�͕��ꂽ�悤�ȕ\��𕂂��ׂĂ���
+				PRINTFORMDW ���΂�畏�������A�ޏ��͏��������������L����
+		RETURN 1
+	ENDIF
+ENDIF
+;-------------------------------------------------
+;��w��
+;�L���`�F�b�N�i=0, ��\���A1, �\���j
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;������
+	;-------------------------------------------------
+	;���߂�
+	;�L���`�F�b�N
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		IF FLAG:70
+			PRINTFORMW 
+			RETURN 1
+		;�T�O���Ȃ肫�莞
+		ELSEIF FLAG:�Ȃ肫�� == 110
+			PRINTFORML
+			CALL AUTO_AEGI(NO:TARGET)
+			RETURN 1
+		;�A�i������
+		ELSEIF TCVAR:�`�j�Z
+			PRINTFORMW �u�͂��c�{�C�A�Ȃ̂ł��ˁv
+			PRINTFORMDW �A�i���Z�b�N�X���������Ƃ���%CALLNAME:MASTER%�̐����ɂ��ɐ܂ꂽ�h���~�[�́A�l�񔇂��ɂȂ�Ƃ�����ɐK��������
+			PRINTFORMDW �ْ����炩�g�̂��������Ă���ޏ��̐K��D�������łĂ��ƁA�K�����v��悤�ɘr�Ɋ����t���Ă���c
+			PRINTFORMW �u�ӂ��c���̎�������Ȃɋْ�����Ȃ�āc�v
+			PRINTFORMDW %CALLNAME:MASTER%�͎��O�ɗp�ӂ��Ă��������[�V���������o���ƁA�h���~�[�̃A�k�X�ɒO�O�ɓh��t����
+			PRINTFORMDW ���̌��ŕs�����낤�B�����v����%CALLNAME:MASTER%�́A�K���ɎG�k�����Ȃ���ޏ��ْ̋����ق����悤�ɓw�߂�
+			PRINTFORMW �u�A�i���Z�b�N�X������Ȃ�Ė��ɂ��v���Ă��܂���ł������c�v
+			CALL HPH_PRINT,@"�u�c�������v�c���Ǝv���܂��B�����v��Ȃ��Ƃ���Ă��Ȃ��Ƃ������c���HPH�v","W"
+			PRINTFORMDW ���[�V�����łʂ߂�e��ɋT�����G���ƃh���~�[�̐g�̂��ٕ����Ƀs�N���Ɣ�������
+			PRINTFORMDW %CALLNAME:MASTER%�͗͂𔲂��悤�Ɍ����ƁA�������Ɠ��_��}�����Ă������c
+			CALL HPH_PRINT,@"�u�Ӂc��HPH���A�����c�ӂ������c��HPH�v","W"
+			PRINTFORMDW �h���~�[�͐[������f���Ȃ���N�����Ă�����_�̈������ɑς���
+			PRINTFORMDW ��قǂ܂Ŗ��g�p�������A�k�X�́A�􂯂����ɂȂ�Ȃ�����Ȃ�Ƃ����_���������ł���c
+			CALL HPH_PRINT,@"�u���A����HPH�c�}���A�����c�H�v","W"
+			PRINTFORMDW ��l�̍����������A�s���S�Ď��܂�ƁA�݂��ɐ[��������f���E�͂���
+			PRINTFORMDW �A�i��������������h���~�[��w�ォ��������ߘJ���悤�ɃL�X������ƁA�ޏ����ɂ݂𕴂�킷�悤�ɃL�X��Ԃ��Ă���
+			CALL HPH_PRINT,@"�u��A�����HPH�c����ς��cHPH�c�͂��A�͂��c�v","W"
+			CALL HPH_PRINT,@"�u���K�̌��܂ŋ����Ă��܂��āc�c�ӔC�A����Ă��������ˁc�HHPH�v","W"
+			PRINTFORMDW %CALLNAME:MASTER%�̓h���~�[�̔��Ɋ�𖄂߂�ƕԓ�����Ƃ΂���ɗD�������𓮂����Ă������c
+		RETURN 1
+		ELSE
+			CALL HPH_PRINT,@"�u�ӂӁA�ق�c�����ł���HPH�v","W"
+			PRINTFORMDW �l�񔇂��ɂȂ����h���~�[�͈��r�ɐK��U��A�K�������U���Ă���
+			PRINTFORMDW ���i����͑z�����ł��Ȃ�����I�ȐU�镑���ɋ������؂���%CALLNAME:MASTER%�̓h���~�[��g�ݕ~��
+			CALL HPH_PRINT,@"�u�}����āc��HPH�A�ق�HPH����HPH HPH HPH�v","W"
+			PRINTFORMDW �O�Y��������%CALLNAME:MASTER%���ŉ��܂ň�C�ɓ��_��˂����ނƁA�h���~�[�͑����s���ƐL�΂��z������
+			PRINTFORMDW ���̂܂��S�����h������悤�Ƀs�X�g������ƁA���o�����t�Ɛ摖��ł����Ɋ��肪�ǂ��Ȃ����c
+		RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;�}���p��
+	;�L���`�F�b�N
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:101 == PLAYER
+		IF FLAG:70
+			PRINTFORMW 
+			RETURN 1
+		;�T�O���Ȃ肫�莞
+		ELSEIF FLAG:�Ȃ肫�� == 110
+			PRINTFORML
+			CALL AUTO_AEGI(NO:TARGET)
+			RETURN 1
+		;���ː�����
+		ELSEIF NOWEX:PLAYER:11
+			SELECTCASE RAND:3
+			CASE 0
+				CALL HPH_PRINT,@"�u�͂��c��HPH�c����HPH����HPH�C�A�����c��HPH�v","L"
+				PRINTFORMDL �ː����߂��Ȃ�s�X�g���̑��x���グ��ƁA�h���~�[�̓O�b�Ƒ��𓥂񒣂��t������b�̂悤�ɐK���グ��
+				PRINTFORMDL �{�����R�̃A�i���Z�b�N�X�Ƀh���~�[�̐��B�{�\���h������A���A�͛s�ޏ����𐮂����Ƃ΂���ɖ{�C�̈��`�𐂂ꗬ��
+				PRINTFORMDW %CALLNAME:MASTER%�͛s�݂�����̎q�{�ł͂Ȃ����t����ꂳ���钼���ɒ������ނ��߃X�p�[�g���|�����c
+			CASE 1
+				CALL HPH_PRINT,@"�u���A���͂���HPH���A�����c��HPH�O�|�O�|�����́c��HPH�D����HPH�v","L"
+				PRINTFORMDL �ː����߂��Ȃ���%CALLNAME:MASTER%�̓h���~�[�̐K��������J���A���������������Ȃ���X�g���[�N�𑬂߂Ă���
+				PRINTFORMDL ������Ɖ������A�k�X�͓�����O�̂悤�ɉA�s��������݁A�˂��������x�Ɉ��t����̒��t�𕪔傳����
+				PRINTFORMDW �ː����O��%CALLNAME:MASTER%�̓h���~�[�̐K�������h�͂ނƁA�ŉ��܂œ˂�����q�������������
+			CASE 2
+				CALL HPH_PRINT,@"�u���A�͂����c��HPH�������A���c��HPH�c���A�C�����ǂ��c��HPH�v","L"
+				PRINTFORMDL ���t���̂ڂ��Ă��銴�o��%CALLNAME:MASTER%������U�鑬�x���グ��ƁA�h���~�[�̓A�k�X����ߕt���x�y�̂��팾���J��Ԃ�������
+				PRINTFORMDL �e����󂷂悤�Ȍ������������Ɍ������͍����荇�����̉t�ŖA�����A���A����͍^���̂悤�Ɉ��t����ꂳ���Ă���
+				PRINTFORMDW ���E������%CALLNAME:MASTER%���ː�����ƁA�h���~�[�͒����ɑł��t�����锒���̔M���ɉ��x���C��������c
+			ENDSELECT
+			RETURN 1
+		;�O��ː�����
+		ELSEIF TCVAR:104
+			SELECTCASE RAND:3
+			CASE 0
+				CALL HPH_PRINT,@"�u��A�ӂ��c��HPH�ӂӁA��ςł��˂��cHPH�v","L"
+				PRINTFORMDL �q���f���o�����̂����̊ԁA%CALLNAME:MASTER%�͍Ăэ��𓮂���
+				PRINTFORMDL �S���������������Ȃ�����_���A�k�X����������x�ɁA�h���~�[�͐K�����˂点���y�ɖウ��
+				CALL HPH_PRINT,@"�u�����Ɓc��HPH�����ƁA��������ŁcHPH�v","W"
+			CASE 1
+				CALL HPH_PRINT,@"�u�����cHPH���ƁA���ĂȂ��Łc��HPH�񂟂�HPH�v","L"
+				PRINTFORMDL �ː������܂�݂��ɑ��𐮂���ƁA%CALLNAME:MASTER%�̓h���~�[�̐K��͂ݒ����Ăэ���ł��t����
+				PRINTFORMDL ���}����x�Ɏ�t���̏؂ł��锒���t���u�s�b�Ɖ���t�łȂ���e����~���o����Ă����c
+				PRINTFORMDW �p�J�Ɋ��^���Ԃɂ��Ă���ł��낤�h���~�[�̕\�������Ȃ��̂��c�O����%CALLNAME:MASTER%�͎v����
+			CASE 2
+				CALL HPH_PRINT,@"�u�����HPH�c�񂣁cHPH���ł���́c����ȂɍD���Ȃ́c�HHPH�v","L"
+				PRINTFORMDL %CALLNAME:MASTER%�͎��܂邱�Ƃ̂Ȃ��~�]������ɓf���o���ׂ��A���̂܂ܔ������̃A�i���Z�b�N�X���ĊJ����
+				PRINTFORMDL �h���~�[�̗������j�̂悤�ɒ͂݌���������ł��t����ƁA�_�炩�ȋ����㉺�ɗh��ڂ��y���܂���
+				CALL HPH_PRINT,@"�u����HPH����HPH����HPH%CALLNAME:MASTER%�̂����Łc���̐g�́A�ςɁc��HPH���bHPH�v","L"
+				PRINTFORMDW ���Ŋ����Ă��܂��Ƃ����˘f���́A%CALLNAME:MASTER%���ŉ��܂œ˂������Ƃ������y�ɓh��ׂ��ꂽ�c
+			ENDSELECT
+			RETURN 1
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORMDL �A�s��ڈ�t�ə������݁A�x�тŃq�N���h���~�[�̒����̋��X�܂Ŗ��키���̂悤�ɍ����X�g���[�N������
+				CALL HPH_PRINT,@"�u��A�������c��HPH�c�Ȃ�ŁA����ȂɁcHPH�v","L"
+				PRINTFORMDL �������Ɠ��_�����������M���M���̏��ōŉ��܂œ˂����ނƁA����̃A�k�X�͎��k������������^���Ă���c
+				CALL HPH_PRINT,@"�i�C�����ǂ��́c?HPH�j","W"
+			CASE 1
+				CALL HPH_PRINT,@"�u��c��HPH�Ȃ񂾂��c�ςȊ����ł��ˁcHPH�v","L"
+				PRINTFORMDL %CALLNAME:MASTER%�͂������ɐQ�������h���~�[�ɕ����킳�荘��ł��t���Ă���
+				PRINTFORMDL �S�̏d��a�����u�h�[����Ƃ��悤�Ƀs�X�g������ƁA�h���~�[�͕@���r���e�����ߕt���Ă���
+				CALL HPH_PRINT,@"�i�����c�܂�Ŋߋ�݂����ɔƂ���āc�c���\���������cHPH�j","W"
+			CASE 2
+				CALL HPH_PRINT,@"�u�Ђ���HPH����HPH�c���A���K�c����ꂿ��A����HPH�v","L"
+				PRINTFORMDL %CALLNAME:MASTER%�̓h���~�[�̐K����ڈ�t�Ɋ���J���A���W����悤�ɉ��x������ł��t����
+				PRINTFORMDL �O�|�b�A�O�|�b�A�ƒ��}����x�ɔS�����m�̎C�ꍇ�������苿���ۉ��ɂ����������܂��Ă���
+				CALL HPH_PRINT,@"�u���HPH�{���ɁA�����c��HPH�I�bHPH��H�bHPH HPH HPH�v","L"
+				PRINTFORMDW �h���~�[�������������������A%CALLNAME:MASTER%�͋C�ɂ��邱�ƂȂ��~�]�̂܂܋e������C�v��������
+			ENDSELECT
+			RETURN 1
+		ENDIF
+	ENDIF
+	;��{�Z�b�g
+	;������
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;�T�O���Ȃ肫�莞
+	ELSEIF FLAG:�Ȃ肫�� == 110
+		PRINTFORML
+		CALL AUTO_AEGI(NO:TARGET)
+		RETURN 1
+	;����
+	ELSEIF TALENT:���� || TALENT:���~ || TALENT:�Z�t�� || TALENT:�����}��
+			SELECTCASE RAND:3
+			CASE 0
+				CALL HPH_PRINT,@"�u���Łc�H�ӂӁA�����ł���HPH�v","L"
+				PRINTFORMDL %CALLNAME:MASTER%�̓h���~�[���l�񔇂��ɂ�����ƁA����I�ɗh���K��͂݋e��ɋT�������Ă���
+				PRINTFORMDL �ޏ��̔r�����́A�y���������߂΂����ɑ}�����Ă��܂��قǂɓ����Ă���c
+				CALL HPH_PRINT,@"�u���A�ӂ�HPH�c�͂₭�c��HPH�v","L"
+				PRINTFORMDW �b���󂢏������������ł炵����A�k����h���~�[�̐g�̂��K�b�V���ƒ͂ݍ��{�܂ő}�����Ă�����
+			CASE 1
+				CALL HPH_PRINT,@"�u�c�ŋ߁A�������ł��鎖�ɒ�R�������Ȃ��Ă��āc���HPH�v","L"
+				PRINTFORMDL %CALLNAME:MASTER%�͂��Ԃ��ɐQ�������h���~�[�ɕ����킳��ƁA�摖��𐂂炷���_��ޏ��̐K���ɎC��t����
+				PRINTFORMDL �_�炩���K���̊��G�ɁA���ꂾ���Ŏː����Ă��܂������ɂȂ�̂��Ȃ�Ƃ�������c
+				CALL HPH_PRINT,@"�u���K�̌��Ɂc�}����Ȃ��ėǂ��́c�HHPH�v","L"
+				PRINTFORMDW ���������̂��U����f�闝�R�ȂǂȂ��B%CALLNAME:MASTER%�̓h���~�[�̃q�N���A�k�X�ɂ������Ƒ}�����Ă������c
+			CASE 2
+				CALL HPH_PRINT,@"�u����������Ǝv���܂��āc�ϑԂ�%CALLNAME:MASTER%�̈׏������Ă����܂�����HPH�v","L"
+				PRINTFORMDL �l�񔇂��ɂȂ����h���~�[�͐K��������J���A�}�������҂��ăp�N�p�N�ƊJ����A�k�X������N���Ă���
+				PRINTFORMDL ���̌��g�I�ȑԓx��%CALLNAME:MASTER%�̃y�j�X�͒ɂ��قǖu�N���A�������͏b�~�̟��𐂂ꗬ���Ă���c
+				PRINTFORMDW �������悤�Ƀh���~�[��g�ݕ~���ƁA%CALLNAME:MASTER%�͐K���Ɏ��t����ׂ����_��˂�����
+			ENDSELECT
+			RETURN 1
+	;����3
+	ELSEIF MARK:�s������ == 3
+			SELECTCASE RAND:2
+			CASE 0
+				CALL HPH_PRINT,@"�u���HPH�c�ɂނ̂ŁA��ɂق����Ē�����Ɓc�v","L"
+				PRINTFORMDL �h���~�[�̋��߂ɉ����Ĕޏ��̏��A�Ɏw���������Ƒ}�����A�W�����ƈ��鈤�t���w�ɓh��
+				PRINTFORMDL ���̂܂ܔޏ��̍�������\��Ɏw�����点��ƁA�ْ����炩�ł������e����L����悤�Ɏw����������
+				CALL HPH_PRINT,@"�u���c�񂣁cHPH�ӂ�HPH�c�ق�HPH�c���A���낻��c�v","L"
+				PRINTFORMDL �\���ɂق��ꂽ�A�k�X�̓A�i���Z�b�N�X�����҂��ăq�N�q�N�Ɛ�ɂ��Ă���
+				PRINTFORMDW %CALLNAME:MASTER%�͐摖��𐂂炵�z��������_���w�Ŏx����ƁA�ޏ��̃A�i���ւƑ}�����Ă������c
+			CASE 1
+				CALL HPH_PRINT,@"�u�܂��ł����c�H�͂��c�X�L���m�ł��˂��cHPH�v","L"
+				PRINTFORMDL �A�i���Z�b�N�X���������Ƃ���%CALLNAME:MASTER%�Ƀh���~�[�͕��ꂽ�悤�ȕ\��𕂂��ׂĂ���
+				PRINTFORMDW ���΂�畏�������A�ޏ��͏��������������L����
+			ENDSELECT
+			RETURN 1
+	;����ȊO
+	ELSE
+				CALL HPH_PRINT,@"�u�܂��ł����c�H�͂��c�X�L���m�ł��˂��cHPH�v","L"
+				PRINTFORMDL �A�i���Z�b�N�X���������Ƃ���%CALLNAME:MASTER%�Ƀh���~�[�͕��ꂽ�悤�ȕ\��𕂂��ׂĂ���
+				PRINTFORMDW ���΂�畏�������A�ޏ��͏��������������L����
+		RETURN 1
+	ENDIF
+ENDIF
+;====================================================================
+;64,�t���C�v����
+;����킵���������Ȃ�����ɏ��̂ł���A���Ȃ����P����킯�ł͂Ȃ�
+;====================================================================
+@M_KOJO_MESSAGE_COM_K109_64
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K109_64_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K109_64_1
+;-------------------------------------------------
+;�L���`�F�b�N�i=0, ��\���A1, �\���j
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;������
+	;-------------------------------------------------
+	;���߂�
+	;�L���`�F�b�N
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		;�����҂�����
+		IF TCVAR:PLAYER:�j�Z == 1
+			CALL AUTO_AEGI(NO:TARGET)
+			RETURN 1
+		ELSE
+			CALL AUTO_AEGI(NO:TARGET)
+			RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;�}���p��
+	;�L���`�F�b�N
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:PLAYER:100 == TARGET
+		;�O��ː�����
+		IF TCVAR:PLAYER:102
+			CALL AUTO_AEGI(NO:TARGET)
+			RETURN 1
+		ELSE
+			CALL AUTO_AEGI(NO:TARGET)
+			RETURN 1
+		ENDIF
+	ENDIF
+	;��{�Z�b�g
+	;����
+	IF TALENT:����
+		CALL AUTO_AEGI(NO:TARGET)
+		RETURN 1
+	;����3
+	ELSEIF MARK:�s������ == 3
+		CALL AUTO_AEGI(NO:TARGET)
+		RETURN 1
+	;����ȊO
+	ELSE
+		CALL AUTO_AEGI(NO:TARGET)
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;65,�R���
+;==================================================
+@M_KOJO_MESSAGE_COM_K109_65
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K109_65_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K109_65_1
+;-------------------------------------------------
+;�L���`�F�b�N�i=0, ��\���A1, �\���j
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;������
+	;-------------------------------------------------
+	;���߂�
+	;�L���`�F�b�N
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		IF FLAG:70
+			PRINTFORMW 
+			RETURN 1
+		;�T�O���Ȃ肫�莞
+		ELSEIF FLAG:�Ȃ肫�� == 110
+			PRINTFORML
+			CALL AUTO_AEGI(NO:TARGET)
+			RETURN 1
+		;����
+		ELSEIF TCVAR:�j�Z == 1
+			PRINTFORMW �u�������珈��������ė~�����Ȃ�āc����ȁw�ُ�o���x���ł������̌��ł��܂���ˁv
+			PRINTFORMDW %CALLNAME:MASTER%�Ɍׂ����h���~�[�́A��������W�g�ڂŌ��߂Ă���
+			PRINTFORMDW ���珈��������邱�ƂɁA�h���~�[�͂܂���R������悤���c
+			PRINTFORMW �u�����A����Ȕ߂������Ȋ炵�āc�͂��c�킩��܂����v
+			PRINTFORMDW ���������ƁA�h���~�[��%CALLNAME:MASTER%�̓��_����Ŏx������S���ɂ��Ă���
+			PRINTFORMDW �������ƍ����~�낵�A�T���܂ł��ΏƂ����Z���ɕ�܂��c
+			PRINTFORMW �u�c�c���̎x�z�҂̏����A����Ă��������v
+			PRINTFORMDW �X�g���b�ƃh���~�[�����𗎂Ƃ��B痂������_�͏��A�ɕ�܂ꂠ���Ƃ����ԂɌ����Ȃ��Ȃ���
+			PRINTFORMW �u���c�����c�������c�v
+			PRINTFORMDW �h���~�[��%CALLNAME:MASTER%�̋��Ɏ��t���A�����r���̒ɂ݂ɐk���Ă���c
+			PRINTFORMDW �j��`���܂������Ɛ@���ƁA�ޏ��͂�����̖j�Ɏ��Y���A�N�X�b�Ə΂���
+			PRINTFORMW �u���������Ȋ炵������āc�{���ɕϑԂł��˂��c�v
+			CALL HPH_PRINT,@"�u����c������c���イ���cHPH�v","W"
+			PRINTFORMDW �h���~�[�͒ɂ݂𕴂�킷���̂悤�ɏ�M�I�ȃL�X�����Ă���
+			PRINTFORMDW %CALLNAME:MASTER%�͂���ɉ����Ȃ���A�b�����ߍ����悤�Ɍ��t�����J��Ԃ����c
+		RETURN 1
+		ELSE
+			PRINTFORMW �u�ӂӁA%CALLNAME:MASTER%�΂��肪�Ƃ����̂�ᛂł�����ˁv
+			PRINTFORMDW ���r�ȏ΂݂𕂂��ׂ��h���~�[��%CALLNAME:MASTER%�������|���A�}�������҂��Đ摖��𐂂炷���_�̏�Ɍׂ���
+			CALL HPH_PRINT,@"�u�ق�A�H�ׂ��Ⴂ�܂���cHPH�v","W"
+			PRINTFORMDW �T�����k���b�Ƃ������G����񂾂��Ǝv���΁A�����ɊƂ��獪�{�܂Ńh���~�[�̏��A���Â��Ă���
+			PRINTFORMDW �S���܂œ��B����ƁA����ɉ��̎q�{�����摖������߂邩�̂悤�ɗ���ɋz���t���Ă����c
+		RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;�}���p��
+	;�L���`�F�b�N
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:100 == PLAYER
+		IF FLAG:70
+			PRINTFORMW 
+			RETURN 1
+		;�T�O���Ȃ肫�莞
+		ELSEIF FLAG:�Ȃ肫�� == 110
+			PRINTFORML
+			CALL AUTO_AEGI(NO:TARGET)
+			RETURN 1
+		ELSEIF ABL:�S >= 3
+			;���ː�����
+			IF NOWEX:PLAYER:11
+				SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"�u�񂟂�HPH�˂��c��A�q���ł�HPH�ЂႣ��HPH�v","L"
+					PRINTFORMDL %CALLNAME:MASTER%�̓h���~�[�Ǝw�𗍂܂��A���݂ւƓo���Ă���
+					PRINTFORMDL �摖��ƍ����荇�������t���Ƃ߂ǂȂ����o���A%CALLNAME:MASTER%�̉��������ׂ��Ƃ�ƔG�炵�Ă���c
+					PRINTFORMDW �ː��̏u�ԁA�����v���؂�˂��o���ƃh���~�[�͔w�𔽂炵�[���A�N���ɒB����
+				CASE 1
+					CALL HPH_PRINT,@"�u�i�J�ő傫���Ȃ��āc�������HPH�c���A�ː����Ⴂ�����Ȃ�ł��ˁcHPH�v","L"
+					PRINTFORMDL �ː����ߕt���c������j���Ƀh�从�~�[�̛Z�S���͉x�тɐk���A�����従��ł����Ďː��ւƓ����Ă����
+					PRINTFORMDW �Ή��Ƃ��Ďq���v�����Ă�������ɁA%CALLNAME:MASTER%�͂����Ղ�ƕ�V���x������
+				CASE 2
+					CALL HPH_PRINT,@"�u����HPH���HPH���HPH�ӂӁA�C�����ǂ����Ċ�A���Ă�cHPH�v","L"
+					PRINTFORMDL �h���~�[�͍����������㉺�����z��������_�����x�����A�ř�������
+					PRINTFORMDL �ː����߂��Ȃ���%CALLNAME:MASTER%�͉䖝���ł��Ȃ��Ȃ�A�ޏ��̓����ɍ��킹�č���˂��グ��
+				ENDSELECT
+				RETURN 1
+			;�O��ː�����
+			ELSEIF TCVAR:102
+				SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"�u�͂��c�͂��cHPH�܂��A�����܂���ˁc�HHPH�v","L"
+					PRINTFORMDL �����Ղ�Ǝq��𒍂��ł�����ɂ��ւ�炸�A�h���~�[�͕�����Ȃ��Ƃ΂���ɍ����O���C���h��������̍ĊJ�𑣂��Ă���
+					CALL HPH_PRINT,@"�u�����HPH�c�ӂӁA�傫���Ȃ���HPH�v","W"
+				CASE 1
+					CALL HPH_PRINT,@"�u�c�͂��c�͂��c�܂��ː��Ă�cHPH�c���������͂ł��˂��cHPH�v","L"
+					PRINTFORMDL �h�N�b�c�h�N�b�c�ƒf���I�Ɏq��̉��f���o�����_�͈ނ���C�z���������A�ނ��������傫���A�d���Ȃ��Ă���
+					PRINTFORMDW %CALLNAME:MASTER%�͏�̂��N�����h���~�[��������߂�ƁA�X�Ȃ���y�����߃Z�b�N�X�ɖv�����Ă�����
+				CASE 2
+					CALL HPH_PRINT,@"�u�ق�A�ׁ[���Ă��Ă�������HPH�c���ނ�HPH�c���c���A������HPH�v","L"
+					PRINTFORMDL �h���~�[�ƌq�������܂܁A���߂ɉ�����𗍂܂�����̗]�C�ɐZ��
+					PRINTFORMDW ���R����ŏI���͂����Ȃ��A�ǂ���Ƃ��Ȃ����𓮂����Ăюq���ɒ^���Ă�����
+				ENDSELECT
+				RETURN 1
+			ELSE
+				SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"�u�˂��A�C�����ǂ��H�c�ӂӁA����Ȃ��Ɠ����Ă����܂����H�v","L"
+					PRINTFORMDL �h���~�[�̈���ȍ�������%CALLNAME:MASTER%�͙���Ƃ����ł��Ȃ�
+					PRINTFORMDW ����ł��Ȃ�Ƃ������i��o���ƁA�h���~�[�͎����Łw�ǂ��q�ˁx�ƚ�������A����������h���肾����
+				CASE 1
+					CALL HPH_PRINT,@"�u�͂��A���cHPH�c�ق�c��������āc��HPH���𓮂����ƋC�����ǂ���ł���ˁc�HHPH�v","L"
+					PRINTFORMDL �h���~�[�͍I�݂ɍ����������_������ł����Ɛӂߗ��ĂĂ���
+					PRINTFORMDW ������S�Ď������d���񂾓������Ǝv���ƁA�����ɂł��ː����Ă��܂������ɂȂ���
+				CASE 2
+					CALL HPH_PRINT,@"�u�ӂ�HPH���������ɂ߂Ăق����H�c�_�`��HPH�v","L"
+					PRINTFORMDL �h���~�[�͒����I�ȏ΂݂𕂂��ׂȂ�����_�����{�܂ř������݁A�����݂ɍ��𓮂����Ă���
+					PRINTFORMDW �A���ŗ^����������ɁA%CALLNAME:MASTER%�͖\�����Ȃ��悤�ς��邵���Ȃ�����
+				ENDSELECT
+				RETURN 1
+			ENDIF
+		ELSE
+			;���ː�����
+			IF NOWEX:PLAYER:11
+				SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"�u��c�Ӂc��HPH�c�b�I�H�A����A���A������HPH�v","L"
+					PRINTFORMDL ���ݏグ�Ă���ː��~�Ƀh���~�[�̍������͂��܂�ɂ����������
+					PRINTFORMDW ���͂�C�����]�T�������Ȃ���%CALLNAME:MASTER%�̓h���~�[�����␂߂�ƁA�Ȃ̗~�]�̂܂܂ɍ���˂��グ��
+				CASE 1
+					CALL HPH_PRINT,@"�u�Ђ���HPH�c�͂�HPH�c%CALLNAME:MASTER%�̂����񂿂�c���̃i�J�Œ��˂āc��HPH�v","L"
+					PRINTFORMDL �q�킪�A�����������銴�o��%CALLNAME:MASTER%�͌��E���߂����A�����ƌ����������ė~���������h���~�[�ɓ`����
+					PRINTFORMDW ����ƃh���~�[�͕s����Ȃ�����A��M�I�ȍ������ł�����%CALLNAME:MASTER%���ː��ւƓ������c�c
+				CASE 2
+					CALL HPH_PRINT,@"�u�ӁA�����c��HPH�c�����A�g�����āc����HPH�v","L"
+					PRINTFORMDL �ː����O�ɂȂ�c��オ�����j�����h���~�[�̎������~�b�`���Ɖ����g����
+					PRINTFORMDW �q��������Ă��炨���ƍ~��Ă����q�{�Ƀs�b�^���Ƒ_�����߂�ƁA%CALLNAME:MASTER%�͍���˂��o���ː�����
+				ENDSELECT
+				RETURN 1
+			;�O��ː�����
+			ELSEIF TCVAR:102
+				SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"�u�͂��c��HPH�c��́A���c��HPH�c�����A����ȂɁcHPH�v","L"
+					PRINTFORMDL �����Ղ�ƒ����ꂽ���t���S�|�b�Ɖ��𗧂Č�����������Ă���
+					CALL HPH_PRINT,@"�u�c�c�܂��A�C�������ł���HPH�v","L"
+					PRINTFORMDW �h���~�[�͉������𕏂łȂ���A�������΂݂𕂂��׍���h���肾����
+				CASE 1
+					CALL HPH_PRINT,@"�u�c���͂��c�ӂ��cHPH�c�܂��A�d���c�cHPH�v","L"
+					PRINTFORMDL �ː����I���Ă�%CALLNAME:MASTER%�̓��_�͈ނ��鎖��m��Ȃ�
+					PRINTFORMDL �r�������킵�Ȃ���U�f����悤�ɍ���h����ƁA�h���~�[�̖���̓]�N���Ɛ�ɂ����̖{�\�̂܂܂ɒj������������c�c
+					CALL HPH_PRINT,@"�u�c��c��HPH�c�c�����c���܂��傤���cHPH�v","W"
+				CASE 2
+					CALL HPH_PRINT,@"�u�c�ӂ��c��A���cHPH�c%CALLNAME:MASTER%���Đl�́cHPH�v","L"
+					PRINTFORMDL �q���A���t����ꂽ�h���~�[��%CALLNAME:MASTER%�ɓ|�ꍞ�ނƁA��C�����j�����ɎC��t���Â��Ă���
+					PRINTFORMDW ����ȍs�ׂɗY�̖{�\���h�����ꂽ%CALLNAME:MASTER%�́A�ċz�𐮂���Ƃ����Ɍ�����ĊJ����
+				ENDSELECT
+				RETURN 1
+			ELSE
+				SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"�u�񂟂�HPH�c�����c��l�������ĂĂ��������cHPH�v","L"
+					PRINTFORMDL �h���~�[�͂������Ȃ����𓮂����Ȃ���%CALLNAME:MASTER%���C�����ǂ��Ȃ��悤�����ɕ�d���Ă���
+					PRINTFORMDW ���X�s�ӑł��̂悤�ɍ���˂��グ�Ă��ƁA�ޏ��͉��炵�����ウ���Ȃ���Â��e�������グ��
+				CASE 1
+					CALL HPH_PRINT,@"�u��c��HPH�c�Ӂc��HPH�c���\���ɃL�܂��ˁc�v","L"
+					PRINTFORMDL ����h����x�Ɉ���ȉ���t�ł錋�������������Ȃ���A%CALLNAME:MASTER%�͔M�S�ɕ�d����h���~�[�ɐg��C����
+					CALL HPH_PRINT,@"�u�c�͂��c��HPH�c��肭�A�o���Ă܂����c�H�c������HPH�v","W"
+				CASE 2
+					CALL HPH_PRINT,@"�u�ӂ��c����HPH�c����ȁA�����c�HHPH�v","L"
+					PRINTFORMDL �h���~�[��%CALLNAME:MASTER%�Ǝ���q���Ȃ��狳����ꂽ�ʂ�ɍ��𓮂����Ă���
+					PRINTFORMDW ���͂ǂ�Ȃ��Ƃ������悤���B%CALLNAME:MASTER%�͂���Ȏ����l���Ȃ��疲�̎x�z�҂ɐ��Z���d����ł�����
+				ENDSELECT
+				RETURN 1
+			ENDIF
+		ENDIF
+	ENDIF
+	;��{�Z�b�g
+	;������
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;�T�O���Ȃ肫�莞
+	ELSEIF FLAG:�Ȃ肫�� == 110
+		PRINTFORML
+		CALL AUTO_AEGI(NO:TARGET)
+		RETURN 1
+	ELSEIF ABL:�S >= 3
+		SELECTCASE RAND:3
+		CASE 0
+			CALL HPH_PRINT,@"�u���ꂶ�Ⴀ�A�}����܂���c��A��������HPH�v","L"
+			PRINTFORMDL %CALLNAME:MASTER%�Ɍׂ����h���~�[�͂������ƍ��𗎂Ƃ��A���_�����ݍ���ł���
+			PRINTFORMDL �������ɋz���t���Ă����S�ǂ͂܂�Ŕޏ��̐S����f���o���Ă��邩�̂悤��
+			CALL HPH_PRINT,@"�u�ӂ����cHPH�����܂��ˁc���HPH����HPH�v","W"
+		CASE 1
+			CALL HPH_PRINT,@"�u�c�킩��܂����H�����c�ۂ����肵�Ă܂���ˁHHPH�v","L"
+			PRINTFORMDL ����̓���ŉA�s�����ݍ��񂾃h���~�[�͉������𕏂ŁA�����ɓ��_�����܂��Ă��邼�ƃA�s�[�����Ă���
+			PRINTFORMDW %CALLNAME:MASTER%�����̏�����A�q�{������ł��낤�ʒu�𕏂ł�ƃh���~�[�̓r�N�r�N�ƍ���k�킹���`����ꂳ����
+		CASE 2
+			CALL HPH_PRINT,@"�u����%CALLNAME:MASTER%�ɂ͋�������Ă΂���ł�����˂��c��ɂ͎����c�����HPH�v","L"
+			PRINTFORMDL �h���~�[�͈А��ǂ����_��������ނ��A���قǂ܂ő}�������Ƃ���ŉ����̂��܂荘���ӂ������ɂȂ��Ă��܂�
+			PRINTFORMDW %CALLNAME:MASTER%���h���~�[�̋r���J������C���S���܂ő}�����Ă��ƁA�ޏ��͉��x�������㉺���z�������Ⓒ�Ɏ������c
+		ENDSELECT
+		RETURN 1
+	ELSE
+		SELECTCASE RAND:3
+		CASE 0
+			CALL HPH_PRINT,@"�u�ӁA�����cHPH�����c���܂ŁcHPH�v","L"
+			PRINTFORMDL �ŉ��܂Ńy�j�X��������݃y�^���ƍ��𗎂Ƃ����h���~�[�́A�S�����z��������_�̈������ɑ����r���Ă���
+			PRINTFORMDW %CALLNAME:MASTER%�̓h���~�[�̎�����w�𗍂܂���ƁA�ْ����Ă��鏗�A�������悤�ɍ��𓮂�����
+		CASE 1
+			CALL HPH_PRINT,@"�u���A����cHPH�����ƁA�ł��Ă܂����c�HHPH�v","L"
+			PRINTFORMDL �����Ɋ���Ȃ��l�q�̃h���~�[�́A%CALLNAME:MASTER%�Ɍׂ肬�����Ȃ����𓮂����Ă���
+			PRINTFORMDW %CALLNAME:MASTER%���C�����ǂ��Ɛ����|����ƁA�����ۂ��΂݂𕂂��ׂ�h���~�[�̍��g���͏��X�Ɉ���ɂȂ��Ă�����
+		CASE 2
+			CALL HPH_PRINT,@"�u�������A�}����܂��ˁc�c��A�������c��HPH�v","L"
+			PRINTFORMDL �h���~�[��%CALLNAME:MASTER%�̏�Ɍׂ�ƁA�镔�ɒj�������Ă����T�d�ɍ��𗎂Ƃ��Ă���
+			PRINTFORMDL �q�N�q�N�Ɛ�ɂ����A�͋ꂵ�C�ɓ��_��������݂Ȃ�����A��튯�Ƃ��Ă̖�ڂ��ʂ������ƕK���ɂȂ��ė��ݕt���Ă���c�c
+			CALL HPH_PRINT,@"�u�͂��c�ӂ��c��HPH������Ƒ҂��āc�ċz���c�c�v","W"
+		ENDSELECT
+		RETURN 1
+	ENDIF
+ENDIF
+;==================================================
+;66,�R��ʃA�i��
+;==================================================
+@M_KOJO_MESSAGE_COM_K109_66
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K109_66_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K109_66_1
+;-------------------------------------------------
+;�L���`�F�b�N�i=0, ��\���A1, �\���j
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;������
+	;-------------------------------------------------
+	;���߂�
+	;�L���`�F�b�N
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		IF FLAG:70
+			PRINTFORMW 
+			RETURN 1
+		;�T�O���Ȃ肫�莞
+		ELSEIF FLAG:�Ȃ肫�� == 110
+			PRINTFORML
+			CALL AUTO_AEGI(NO:TARGET)
+			RETURN 1
+		;�A�i������
+		ELSEIF TCVAR:�`�j�Z
+			PRINTFORMW �u�����炨�K�̌��ɁH�c�c���ی��́c�Ȃ����˂��c�v
+			PRINTFORMDW %CALLNAME:MASTER%�̓h���~�[���ׂ点�A����A�k�X�ɓ��_���󂯓����悤���߂���
+			PRINTFORMDW ���炩�Ɍ������ȕ\��𕂂��ׂ邪�A�f�ŋ��ۂ��Ȃ���������Ƃ��ƈꉟ���Ƃ���������
+			PRINTFORMW �u�c%CALLNAME:MASTER%�̌������ɏ悹���鎄�������c�v
+			PRINTFORMW �u�͂��c������܂����B�������������Ă��������v
+			PRINTFORMDW %CALLNAME:MASTER%�����[�V��������n���ƁA�h���~�[�͂������_�ɐ��炷
+			PRINTFORMDW �����₽�����[�V�����Ɏv�킸�Ƃ��r�N���Ɛk����ƁA�ޏ������f�I�ȏ΂݂𕂂��ׂ�
+			PRINTFORMW �u�r�N�����Đk��������āc�����ł��˂��v
+			CALL HPH_PRINT,@"�u�ӂӁA�h���Ă����Ȃ��Ɓc��HPH�v","W"
+			PRINTFORMDW �h���~�[�͎���̗v�̂ŉA�s�S�̂Ƀ��[�V������h���Ă���
+			PRINTFORMDW �C�����ǂ�����m��s�����Ă��邩�̂悤�Ȏ���ɁA�v�킸�\���������ɂȂ��Ă��܂��c
+			CALL HPH_PRINT,@"�u%CALLNAME:MASTER%�̂����񂿂�A�z�������ςȂ��ł���c�HHPH�v","W"
+			PRINTFORMDW ���̂܂܎�R�L�ō��������̂ł͂Ǝv�������A�肪�~�܂�
+			PRINTFORMDW �Ȃ��~�߂�̂��c�����v���h���~�[������ƁA�ޏ��̓��[�V�����܂݂�̎w��Ŏ���̋e����ق����z��������_�����Ă����Ă���
+			CALL HPH_PRINT,@"�u�����܂Ŗ{���͂������c�ł���ˁcHPH�v","W"
+			PRINTFORMDW �h���~�[�͈�x�[�ċz����ƁA�������ƍ��𗎂Ƃ��Ă���
+			PRINTFORMDW ���߂Ă��Ƃ����̂ɁA�܂�ł�������������Ȃ����̂悤�ɃX���[�Y�ɓ��_�͈��ݍ��܂�Ă��܂����c
+			CALL HPH_PRINT,@"�u���������c��HPH�ق�c�S���H�ׂ��Ⴂ�܂�����cHPH�v","W"
+			PRINTFORMDW �h���~�[�͂ǂ������������ɓ��_�����܂邨���𕏂łĂ���
+			CALL HPH_PRINT,@"�u%CALLNAME:MASTER%�͓����Ă͂����܂����c������ʂȂ�ł�����cHPH�v","W"
+			PRINTFORMDW %CALLNAME:MASTER%�͂��イ���イ�ƒ��ߕt���Ă���e��̊��G�ɑς��Ȃ���A�ޏ��������o���܂ő҂����c
+		RETURN 1
+		ELSE
+			CALL HPH_PRINT,@"�u�ق�A���ɂȂ��Ă�������HPH�v","W"
+			PRINTFORMDW �h���~�[��%CALLNAME:MASTER%�������|���ƁA���̏�Ɍׂ��Ă���
+			PRINTFORMDW �A�i���Z�b�N�X�ɖ����ɂȂ��Ă����h���~�[�͎��瓮�����̑̈ʂ��D��������
+			CALL HPH_PRINT,@"�u�ف`��c�H�ׂ��Ⴂ�܂���c��HPH��A����HPH�v","W"
+			PRINTFORMDW �h���~�[�����𗎂Ƃ��ƁA�債����R���Ȃ����_�����ݍ��܂�Ă��܂�
+			PRINTFORMDW �}���̗]�C�ɐZ��Ԃ��Ȃ��A�Q�����b�̂悤�Ƀh���~�[�͍���ł��t���Ă������c
+		RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;�}���p��
+	;�L���`�F�b�N
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:101 == PLAYER
+		IF FLAG:70
+			PRINTFORMW 
+			RETURN 1
+		;�T�O���Ȃ肫�莞
+		ELSEIF FLAG:�Ȃ肫�� == 110
+			PRINTFORML
+			CALL AUTO_AEGI(NO:TARGET)
+			RETURN 1
+		;���ː�����
+		ELSEIF NOWEX:PLAYER:11
+			SELECTCASE RAND:3
+			CASE 0
+				CALL HPH_PRINT,@"�u�͂�HPH����HPH����HPH���ł��A�����Ă����ł���c��HPH�v","L"
+				PRINTFORMDL �h���~�[�̓��Y�~�J���ɍ����㉺�����A�ː����O�̓��_���Â��Ă���
+				PRINTFORMDL ���܂����q�����z���ƍÑ����Ă���A�k�X�́A�܂�ō����悤�ɊƂ���߂����Ă���
+				PRINTFORMDW �C�����������ɂȂ������%CALLNAME:MASTER%�͍���˂��グ��ƁA��ʂ̐���������c
+			CASE 1
+				CALL HPH_PRINT,@"�u���������Ɓc�C�����ǂ��ł���ˁc��HPH�v","L"
+				PRINTFORMDL �h���~�[�͍����㉺�����Ȃ���A%CALLNAME:MASTER%�̓���Ɏw�𔇂킹�Ă���
+				CALL HPH_PRINT,@"�u��A�ӂ����c��HPH�R���R�������̍D���c�HHPH����HPH�v","L"
+				PRINTFORMDW �I�݂Ȏw�J���œ�����s�߂���ƁA%CALLNAME:MASTER%�͍����z���������l�Ɏː����Ă��܂���
+			CASE 2
+				CALL HPH_PRINT,@"�u����HPH����HPH��������c��HPH���A����HPH�v","L"
+				PRINTFORMDL �h���~�[�̂���������������ɉ䖝�̂ł��Ȃ��Ȃ���%CALLNAME:MASTER%�́A�ޏ��̍���͂ނƖґR�ƍ���˂��グ��
+				CALL HPH_PRINT,@"�u���A����HPH�g�ԁc��HPH�g�񂶂Ⴄ�c��HPH�́A����������HPH HPH HPH�v","L"
+				PRINTFORMDW �ŉ��܂œ˂����ݎv���؂萸���������ƁA�h���~�[�͋|�Ȃ�ɔw�𔽂炵�Ȃ���A�N���ɒB�����c
+			ENDSELECT
+			RETURN 1
+		;�O��ː�����
+		ELSEIF TCVAR:104
+			SELECTCASE RAND:3
+			CASE 0
+				CALL HPH_PRINT,@"�u�ӁA�ӂӂ�HPH�A���K�̌��ɂ������ācHPH�p���������Ȃ��̂ł����HHPH�A���bHPH�v","L"
+				PRINTFORMDL �ː����I���A�Ăюq��𒍂����ނׂ����𓮂����Ă���ƃh���~�[������Ȏ������Ă���
+				PRINTFORMDW ����𒧔��Ǝ󂯎����%CALLNAME:MASTER%�́A�g�̒��m�炸���тɕ����点��ׂ��ޏ��̃A�k�X�ɉ��x�����_��˂����ꂽ�c
+			CASE 1
+				CALL HPH_PRINT,@"�u���A�͂��c�͂��c���HPH�c�܂��V�����c�HHPH�v","L"
+				PRINTFORMDL %CALLNAME:MASTER%�̗~�]���󂯎~�߂��h���~�[�͌��ő������Ȃ��璼���̔M�������Ă���
+				PRINTFORMDL �e��̋������ߕt���ɓ��_�͈ނ���ǂ��납����Ɍ��𗭂ߍ��݂͂��؂��΂��肾
+				PRINTFORMDW �h���~�[�̌��t�ɓ��R���ƕԂ���%CALLNAME:MASTER%�́A�Ăюq���A���t����ׂ������g���Ă������c
+			CASE 2
+				CALL HPH_PRINT,@"�u����HPH�����x�ɁA�����ŗh��āc��HPH�v","L"
+				PRINTFORMDL %CALLNAME:MASTER%������˂��グ��x�ɁA�h���~�[�̒����Ő��t���g�ł悤�ɗh���
+				PRINTFORMDW �������̃A�i���Z�b�N�X�Ńh���~�[�̒��������t�Ŗ��������̂ɂ������Ԃ͊|����Ȃ������c
+			ENDSELECT
+			RETURN 1
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				CALL HPH_PRINT,@"�u��cHPH���HPH�c�C�����ǂ��ł����c�HHPH�v","L"
+				PRINTFORMDL �h���~�[�����𓮂����x�ɁA����������ʂۂ��A�ʂۂ��A�ƈ���ȉ�����
+				PRINTFORMDL %CALLNAME:MASTER%���h���~�[�̍���͂݃O�C�O�C�Ɠ��_���������ނƁA�ޏ��͋e����M���b�ƒ��ߕt�������ɐg��k�킹��
+				CALL HPH_PRINT,@"�u���A���A���c��HPH�����Ă̓_���ł���cHPH�v","W"
+			CASE 1
+				CALL HPH_PRINT,@"�u�����HPH���c�����HPH�D���ɂȂ����Ⴄ����A���߁c��HPH�v","L"
+				PRINTFORMDL %CALLNAME:MASTER%���h���~�[�̐K���̕t�������������Ȃ��獘�����Ⴍ��ƁA�ޏ��͍����J�N�J�N�Ɠ������Ȃ��猩�ウ��
+				PRINTFORMDW ��含���ɂ�������炸�A�h���~�[�̏��A�͂܂�œ��_���Â��Ă��邩�̂悤�Ƀp�N�p�N�ƊJ�����`�𐂂ꗬ���Ă����c
+			CASE 2
+				CALL HPH_PRINT,@"�u�͂��c��HPH����HPH�c�����A�C�����ǂ��c��HPH�v","L"
+				PRINTFORMDL �A�i������_����������x�ɁA�h���~�[�͋��������������Ă���悤���c
+				PRINTFORMDL %CALLNAME:MASTER%�����݂Ȃ����ɂ��Ă���h���~�[�̎������ƁA�ޏ��͗��l�q�������Ă���
+				CALL HPH_PRINT,@"�u%CALLNAME:MASTER%���c�C�����ǂ��Ȃ��āc��HPH����HPH�v","W"
+			ENDSELECT
+			RETURN 1
+		ENDIF
+	ENDIF
+	;��{�Z�b�g
+	;������
+	IF FLAG:70
+		PRINTFORMW 
+		RETURN 1
+	;�T�O���Ȃ肫�莞
+	ELSEIF FLAG:�Ȃ肫�� == 110
+		PRINTFORML
+		CALL AUTO_AEGI(NO:TARGET)
+		RETURN 1
+	;����
+	ELSEIF TALENT:���� || TALENT:���~ || TALENT:�Z�t�� || TALENT:�����}��
+			SELECTCASE RAND:3
+			CASE 0
+				CALL HPH_PRINT,@"�u���Ⴀ�A�}����܂��ˁc�����HPH�v","L"
+				PRINTFORMDL �h���~�[�͋����ɂȂ���%CALLNAME:MASTER%�Ɍׂ�ƁA������_���������ł���
+				PRINTFORMDL ���łɉ��x���g��ꂽ�e�傩��^������h���́A�ɂ݂��������̕��������Ă���悤���c
+				CALL HPH_PRINT,@"�u����c�O�ł�����[���܂ő}���邩��c��HPH�v","L"
+				PRINTFORMDW ���ړ�����Ƃ����|�����ɖ����ɂȂ����h���~�[�́A�������܍��𓮂����n�߂�
+			CASE 1
+				CALL HPH_PRINT,@"�u���A��c��HPH�c���́A�}�����Ă��銴�o�c�����c��HPH�v","L"
+				PRINTFORMDL %CALLNAME:MASTER%�̏�Ɍׂ����h���~�[�͂܂�Ŕr�����鎞�̂悤�Ȏp���ɂȂ�ƁA�������ƍ����~�낵�Ă���
+				PRINTFORMDL �ޏ��̃A�k�X�ɉA�s�����ݍ��܂�����Ă����x�ɁA�q�N�����A����͈��t���Ƃ߂ǂȂ����o���Ă���c
+				CALL HPH_PRINT,@"�u�ӂ����c�����HPH�A�������A�N�`���N�`��������A�_���c��HPH�v","L"
+				PRINTFORMDW �鏊���킴�Ɖ��𗧂ĘM���Ă��ƁA�h���~�[�͍����K�N�K�N���z�������e�����߂����Ă���
+			CASE 2
+				CALL HPH_PRINT,@"�u�́A�����c��HPH�ӂӁA�ǂ������܂����c�HHPH�v","L"
+				PRINTFORMDL �A�k�X�ŉA�s�����{�܂ř������񂾃h���~�[�́A�l���J�r����ƌ��������������Ă���
+				CALL HPH_PRINT,@"�i����ȂɐH������悤�Ɍ��߂āc�p�����������ǁA�Ȃ񂾂��cHPH�j","L"
+				PRINTFORMDW �����鎖�ɋ��������̂��A�������h���~�[�̏��A����͍^���̂悤�Ɉ��t�����o���Ă����c
+			ENDSELECT
+			RETURN 1
+	;����3
+	ELSEIF MARK:�s������ == 3
+			SELECTCASE RAND:2
+			CASE 0
+				CALL HPH_PRINT,@"�u���HPH�c�ɂނ̂ŁA��ɂق����Ē�����Ɓc�v","L"
+				PRINTFORMDL �h���~�[�̋��߂ɉ����Ĕޏ��̏��A�Ɏw���������Ƒ}�����A�W�����ƈ��鈤�t���w�ɓh��
+				PRINTFORMDL ���̂܂ܔޏ��̍�������\��Ɏw�����点��ƁA�ْ����炩�ł������e����L����悤�Ɏw����������
+				CALL HPH_PRINT,@"�u���c�񂣁cHPH�ӂ�HPH�c�ق�HPH�c���A���낻��c�v","L"
+				PRINTFORMDL �\���ɂق��ꂽ�A�k�X�̓A�i���Z�b�N�X�����҂��ăq�N�q�N�Ɛ�ɂ��Ă���
+				PRINTFORMDW %CALLNAME:MASTER%�͐摖��𐂂炵�z��������_���w�Ŏx����ƁA�ޏ��̃A�i���ւƑ}�����Ă������c
+			CASE 1
+				CALL HPH_PRINT,@"�u�܂��ł����c�H�͂��c�X�L���m�ł��˂��cHPH�v","L"
+				PRINTFORMDL �A�i���Z�b�N�X���������Ƃ���%CALLNAME:MASTER%�Ƀh���~�[�͕��ꂽ�悤�ȕ\��𕂂��ׂĂ���
+				PRINTFORMDW ���΂�畏�������A�ޏ��͏��������������L����
+			ENDSELECT
+			RETURN 1
+	;����ȊO
+	ELSE
+				CALL HPH_PRINT,@"�u�܂��ł����c�H�͂��c�X�L���m�ł��˂��cHPH�v","L"
+				PRINTFORMDL �A�i���Z�b�N�X���������Ƃ���%CALLNAME:MASTER%�Ƀh���~�[�͕��ꂽ�悤�ȕ\��𕂂��ׂĂ���
+				PRINTFORMDW ���΂�畏�������A�ޏ��͏��������������L����
+		RETURN 1
+	ENDIF
+ENDIF
+;==================================================
+;67,�Ζʍ���
+;==================================================
+@M_KOJO_MESSAGE_COM_K109_67
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K109_67_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K109_67_1
+;-------------------------------------------------
+;�L���`�F�b�N�i=0, ��\���A1, �\���j
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;������
+	;-------------------------------------------------
+	;���߂�
+	;�L���`�F�b�N
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		IF FLAG:70
+			PRINTFORMW 
+			RETURN 1
+		;�T�O���Ȃ肫�莞
+		ELSEIF FLAG:�Ȃ肫�� == 110
+			PRINTFORML
+			CALL AUTO_AEGI(NO:TARGET)
+			RETURN 1
+		;����
+		ELSEIF TCVAR:�j�Z == 1
+			PRINTFORMW �u�ӂӁA%CALLNAME:MASTER%�̊炪�ǂ������܂��˂��c�v
+			PRINTFORMDW %CALLNAME:MASTER%�̓h���~�[��������߁A�ޏ��̉������ɊƂ������t���Ȃ�������������Ă���
+			PRINTFORMDW �ْ����炩�ċz�������Ȃ��Ă���h���~�[�ɗD�����L�X�����A������������悤�w�߂�
+			CALL HPH_PRINT,@"�u���c����c�����HPH�c�c�����ł���c�v","W"
+			PRINTFORMDW �o������߂��̂��A�h���~�[�͎w�ŉA�O�������L�����𕂂������_���󂯓���鏀���𐮂���
+			PRINTFORMDW %CALLNAME:MASTER%�͍������҂��󂯓��ꂽ���Ƃ��Ȃ��ł��낤���A�ɋT�������Ă����ƁA���X�ɍ���i�߂Ă����c
+			PRINTFORMW �u���A�����b�c�b�c�v
+			PRINTFORMDW �������ɋT�����G���ƃh���~�[�͋�ɂɊ��c�߂��B�����ꂵ�߂�͍̂����낤�Ǝv����%CALLNAME:MASTER%�͈�C�ɍ���˂������
+			PRINTFORMW �u���A�̓b�c�Ƀb�A�����c�b�I�H�v
+			PRINTFORMDW ��u�̒�R�̌�A���_�͖��̎x�z�҂̏�����˂��j��Y���b���S���܂œ��B����
+			PRINTFORMDW �˂������ꂽ�Ռ��ƒɂ݂ɁA�h���~�[��%CALLNAME:MASTER%�̔w�ɒ܂𗧂Đg�̂�k�킹�Ă���c
+			PRINTFORMW �u���A����Łc��ɂȂ����̂ˁc�v
+			PRINTFORMDW �h���~�[�͗܂𕂂��ׂȂ�������C�ɔ��΂݂����Ă���
+			PRINTFORMDW �b���q�������܂ܕ��������ƁA%CALLNAME:MASTER%�̓L�X�����Ȃ��獘�𓮂����n�߂��c
+		RETURN 1
+		ELSE
+			PRINTFORMW �u���̊��D�c�����p���������悤�ȁc�v
+			PRINTFORMDW %CALLNAME:MASTER%�̓h���~�[��������߁A�ޏ��̉������ɊƂ������t���Ȃ�������������Ă���
+			PRINTFORMDW �����ő}����邼�ƚ����ƁA�ԓ���҂����Ɉ�C�ɓ˂����ꂽ
+			CALL HPH_PRINT,@"�u�ӂ�HPH���A���񂣂�HPH�v","W"
+			PRINTFORMDW %CALLNAME:MASTER%�͖ڂ𔒍������Ă���h���~�[�̐O��D���A�@�����r�����Ȃ��獘�𓮂����Ă�����
+		RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;�}���p��
+	;�L���`�F�b�N
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:100 == PLAYER
+		;�T�O���Ȃ肫�莞
+		IF FLAG:�Ȃ肫�� == 110
+			PRINTFORML
+			CALL AUTO_AEGI(NO:TARGET)
+			RETURN 1
+		ELSEIF ABL:�S >= 3
+			;���ː�����
+			IF NOWEX:PLAYER:11
+				SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"�u���HPH�ӂ�HPH�ӂ�����HPH�v","L"
+					PRINTFORMDL %CALLNAME:MASTER%�̓h���~�[�ɕ���␂ߌ���������ł��t���Ă���
+					PRINTFORMDL �ː����߂��Ȃ�P��悤�ɓ˂������ƁA�h���~�[���S�̓M���E�D�b�ƒ��܂艜�։��ւƗU���Ă���
+					CALL HPH_PRINT,@"�u�́A���bHPH�ł����A�ł����HHPH�ӂ�HPH�ǂ����A�����Ȃ��c��HPH�c���J�bHPH�v","L"
+					PRINTFORMDW �����t�ɊÂ��Ďq�{��Ƃ��悤�ɓ˂������ƁA�h���~�[�̐g�̂̓r�N���ƒ��ˏオ�舤�t���T���U�炵��
+				CASE 1
+					CALL HPH_PRINT,@"�u�C�����c��HPH�c��A����HPH�́A���A�������HPH�v","L"
+					PRINTFORMDL ��g�̔Ԃ݂͌��Ɋ��΂񂾐g�̂𖧒������S�����C�荇�킹��s�ׂɖv�����Ă���
+					PRINTFORMDL �Y��痂������̂ɃK�b�V���ƕ���␂߂��A�h���~�[�͖{�\�I��%CALLNAME:MASTER%�̎q���~�����Ǝv���Ă��܂����c�c
+					CALL HPH_PRINT,@"�u�c��HPH�c�����o��������Ă��A���Ȃ�c�c��HPH�v","W"
+				CASE 2
+					CALL HPH_PRINT,@"�u����A�����c��HPH���A����HPH�`�`�`�������bHPH HPH HPH�v","L"
+					PRINTFORMDL %CALLNAME:MASTER%�̓h���~�[�̐K��͂݁A�ː��Ɍ�������������ł��t����
+					PRINTFORMDW �g�h���Ƃ΂���Ƀh���~�[�̉A�j��E�܂ݏグ��Ɣޏ��͍��𒵂˂����ɂ݂�������قǂ��S����ߕt����
+				ENDSELECT
+				RETURN 1
+			;�O��ː�����
+			ELSEIF TCVAR:102
+				SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"�u����HPH�܂��܂��c�C������HPH�͂����HPH�v","L"
+					PRINTFORMDL �ː����ς�ł��h���~�[�̛Z���̓����ɓ��_���ނ��邱�Ƃ�������Ȃ�
+					PRINTFORMDW %CALLNAME:MASTER%�͐V�N�Ȑ��t�𒍂����ނׂ��A�Ăэ���ł��t���n�߂�
+				CASE 1
+					CALL HPH_PRINT,@"�u�񂟂�HPH�����c�����������cHPH�v","L"
+					PRINTFORMDL �����ː��̑���Ȃ�%CALLNAME:MASTER%�̓h���~�[�����␂߂��܂ܔ�������ꂳ���閨���~���񂵂�
+					PRINTFORMDW �Y�̗~�]��S�ĂԂ����A�h���~�[�͜����Ƃ����\��őS�Ă��󂯎~�߂Ă����c�c
+				CASE 2
+					CALL HPH_PRINT,@"�u�����HPH�c�񂿂��HPH�c�͂��c�܂��V�����ł����c�H�����ł���HPH�v","L"
+					PRINTFORMDL �����������x���L�X�����Ȃ���ɂ₩�ɍ��𓮂����Ă���ƁA���_���Ăэd�������߂��q�{�������グ��
+					PRINTFORMDW %CALLNAME:MASTER%�͉����t����ꐅ���D�̂悤�ɘc�񂾃h���~�[�̔�����͂ނƁA���݂������Ȃ���Ăэ��𓮂�����
+				ENDSELECT
+				RETURN 1
+			ELSE
+				SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"�u�͂��c��HPH�ق�ƁA�����ł��ˁc�c���ŁA�C�����ǂ��ācHPH�v","L"
+					PRINTFORMDL �������ƍ��𓮂����A�h���~�[�ƕ��������Ȃ���X���[�Z�b�N�X���y����
+					PRINTFORMDW �S�g���������Ȃ���̗D�������s�ׂɃh���~�[�͂������蓠����ɂȂ莩�獘��U�肾����
+				CASE 1
+					CALL HPH_PRINT,@"�u���HPH�c�ӂӁA�ق�c�����Ɗ撣���č��U���Ă�������HPH�v","L"
+					PRINTFORMDL %CALLNAME:MASTER%�̓h���~�[�̋��Ɋ�𖄂߁A����U�邱�ƂɏW�����Ă���
+					PRINTFORMDW �h���~�[�͔��΂𕂂��ׂȂ���%CALLNAME:MASTER%�̓��𕏂ŁA�n�������悤�ȃZ�b�N�X�ɖv������
+				CASE 2
+					CALL HPH_PRINT,@"�u��J��HPH���J�bHPH�c�bHPH���������A�������c��HPH�͂��A����HPH�v","L"
+					PRINTFORMDL �{�\�ɏ]���S���ɓ��_��˂�����Ă���ƁA�����������̂��h���~�[���z�߂��Ă��܂�
+					PRINTFORMDW �d�����Ȃ��̂Ńy�[�X�𗎂Ƃ��ƁA�h���~�[�̓z�b�Ƃ����l�q�œ��_����^��������y�ɏW����������
+				ENDSELECT
+				RETURN 1
+			ENDIF
+		ELSE
+			;���ː�����
+			IF NOWEX:PLAYER:11
+				SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"�u�c����A�ӂ��cHPH�c���ł��A�ː����Ă����ł�����c��HPH�v","L"
+					PRINTFORMDL %CALLNAME:MASTER%�̓h���~�[�ƌ��ߍ����Ȃ���ː��Ɍ������̑��x���グ�Ă���
+					PRINTFORMDW �r���������Əd���������Â��ȋ�Ԃɋ����B���̉����~�܂������A���ɑz����������ꂽ
+				CASE 1
+					CALL HPH_PRINT,@"�u�����cHPH�A����A�����c��HPH�c�b��HPH�v","L"
+					PRINTFORMDL �ː����ߕt������ł��t���鉹���������Ă���
+					PRINTFORMDW �h���~�[���B���w���ɒ܂𗧂Ă�Ɠ����ɁA%CALLNAME:MASTER%��������琸��瞂点��
+				CASE 2
+					CALL HPH_PRINT,@"�u�͂��c��A�Ӂc��HPH�ق�A�C���ācHPH�v","L"
+					PRINTFORMDL %CALLNAME:MASTER%�̓h���~�[�Ə�~�ɔG�ꂽ���������킵�Ȃ��獂�݂ւƏ����Ă���
+					PRINTFORMDW �h���~�[�̋r�����ɗ��߂���Ɠ����ɁA%CALLNAME:MASTER%�͍Ō�̈�˂����S���ɕ������c�c
+				ENDSELECT
+				RETURN 1
+			;�O��ː�����
+			ELSEIF TCVAR:102
+				SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"�u�͂��c�͂��c��HPH�c��A�ӂ��cHPH�v","L"
+					PRINTFORMDL �������ɂ�����ƍL����M�Ƀh���~�[�͔M��������R�炵�Z�����u������
+					PRINTFORMDL �b���q�������܂ܕ��������Ă���ƁA���������j�����Ă��S���������g���Ă����c�c
+					CALL HPH_PRINT,@"�u�c��c��HPH�c�܂��A����Ȃ��݂����ł��ˁc�cHPH�v","L"
+					PRINTFORMDW %CALLNAME:MASTER%�͕ԓ�����ɍ���h����A�܂��h���~�[��������󂯓��ꂽ�c�c
+				CASE 1
+					CALL HPH_PRINT,@"�u�ӂ��cHPH��cHPH�����A�x�e���c�����HPH�v","L"
+					PRINTFORMDL �h���~�[��%CALLNAME:MASTER%�ɑ̂�a���ċz�𐮂��Ă���
+					PRINTFORMDW �ޏ����x�܂��Ȃ��獘�𓮂����Ă��A�h���~�[�͓������\��ł���邪�܂܂ɂȂ��Ă���
+				CASE 2
+					CALL HPH_PRINT,@"�u��c�ӂӂ�HPH�����ƃV�����ł����c�HHPH�v","L"
+					PRINTFORMDL �ː����I���A�h���~�[�Ɍy���L�X�������%CALLNAME:MASTER%�͍Ăэ��𓮂���
+					PRINTFORMDW �ʂ�����A��������A�Ƃ��݂��̑̉t�������荇�������`���d�������𗧂ĂĂ���c
+				ENDSELECT
+				RETURN 1
+			ELSE
+				SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"�u�c����c�́c��HPH�c�p���������̂Łc���܂�c��HPH�v","L"
+					PRINTFORMDL �p�������C�ɖڂ���炷�h���~�[������񂹂Ȃ���A�������Ƃ����������ŃZ�b�N�X���y����ł���
+					PRINTFORMDW �����ň��𚑂��Ă��ƁA�ޏ��̖���̓L���b�ƒ��܂�S�n�ǂ��������ƑS�̂ɗ^���Ă���
+				CASE 1
+					CALL HPH_PRINT,@"�u�c���A��A������c���ށc����Ձc��HPH�v","L"
+					PRINTFORMDL %CALLNAME:MASTER%�̓h���~�[�������̃��m�ɂ��邩�̂悤�ɐ�𗍂܂��A���ɂ͋z���グ�A���t�𗬂�����ł���
+					PRINTFORMDW ����ȍs�ׂɔޏ��͂�������|�M���ꂽ�l�q�ŁA��C�����j���B�����Ƃ���������邪�܂܂ɂȂ��Ă���c�c
+				CASE 2
+					CALL HPH_PRINT,@"�u�c��c����c�c�͂Ӂc������cHPH�v","L"
+					PRINTFORMDL �O��ɗh�����Ă��������~�߂�ƁA%CALLNAME:MASTER%�̓h���~�[�̊�������񂹐O���d�˂�
+					PRINTFORMDL �����S����G�ꍇ�킹�邾���̃L�X
+					PRINTFORMDL ����͎���Ɍ݂��̐O����ނ悤�ȓ����ɕς��A���ɂ͐�𗍂܂���܂łɂȂ��Ă�����
+					CALL HPH_PRINT,@"�u�c���A�͂��cHPH�c�L�X����x�ɂ����񂿂񂪃r�N�b�Ē��˂āc���������̂ł���ˁH�c�ق�A�����ėǂ��ł���HPH�v","W"
+				ENDSELECT
+				RETURN 1
+			ENDIF
+		ENDIF
+	ENDIF
+	;��{�Z�b�g
+	;�T�O���Ȃ肫�莞
+	IF FLAG:�Ȃ肫�� == 110
+		PRINTFORML
+		CALL AUTO_AEGI(NO:TARGET)
+		RETURN 1
+	ELSEIF ABL:�S >= 3
+		SELECTCASE RAND:3
+		CASE 0
+			CALL HPH_PRINT,@"�u���HPH�c���̊��D�A���܂ł�HPH�v","L"
+			PRINTFORMDL �h���~�[������グ��ƁA�}���ւ̊��҂��甽��Ԃ���_���S���Ɉ���������i�߂Ă���
+			PRINTFORMDL �ŉ��܂œ��B�����_���q�{�����R�c���Ə��˂��ƁA�h���~�[�̓r�N�r�N���z�������ウ��
+			PRINTFORMDW �ޏ����|��Ă��܂�Ȃ��悤�A%CALLNAME:MASTER%�͔w���x���Ȃ���������ƃX�g���[�N���Ă�����
+		CASE 1
+			PRINTFORMDL �ӂƎv�����A�S���܂ő}�������܂܃h���~�[��������ߎb�������Ȃ��ł���
+			CALL HPH_PRINT,@"�u�񂣂���HPH�c�͂����cHPHH�c�����Ȃ��̂ł����c�H�v","L"
+			PRINTFORMDW �c�c�c
+			CALL HPH_PRINT,@"�u�Ӂc��HPH�ӂ��c��HPH�c�́A�͂₭�c��HPH�~���񂵂āA�Ƃ��āc��HPH�v","L"
+			PRINTFORMDL �����o�߂���ƁA�h���~�[�̓���͎��߂𐿂��悤�ɔS�������k��������������_���_���Ɩ{�C�`����ꂳ����܂łɕϖe����
+			PRINTFORMDW ����͖ʔ�����������Ȃ��B%CALLNAME:MASTER%�͂����v���ޏ��̊肢�ɉ����č���˂��グ�Ă������c�c
+		CASE 2
+			CALL HPH_PRINT,@"�u���HPH�ӂ����c���܂ő}����܂�����cHPH�v","L"
+			PRINTFORMDL ���_���ŉ��܂œ��B����ƁA�h���~�[�͏���������f��
+			PRINTFORMDW ���̂܂܃h���~�[�͂�����Ɋ���񂹂�ƁA�����Ś����n�߂�
+			CALL HPH_PRINT,@"�u���̑̐��c���������Ă���Ċ��������܂���HPH�v","W"
+			CALL HPH_PRINT,@"�u����Ɂc�ӂӁA%CALLNAME:MASTER%�̂����񂿂�A���̎���s�܂��������ăr�N�r�N�z�����Ă܂���HHPH�v","W"
+			CALL HPH_PRINT,@"�u�ق�ƃG�b�`�Ȃ����񂿂�ł��˂��c�ł��������Ȃ��Ă�����ł���c�HHPH�v","W"
+			CALL HPH_PRINT,@"�u�т�[�т�[���Ďː����Ď��̎���D�P�����Ă��A%CALLNAME:MASTER%�͉��������Ȃ���ł��v","W"
+			CALL HPH_PRINT,@"�u�����āA����%CALLNAME:MASTER%�̎����c�񂟂�HPH�������A�D���Ȃ�ł�����A�������bHPH HPH HPH�v","L"
+			PRINTFORMDW �łꂽ%CALLNAME:MASTER%������������˂��グ��ƁA�h���~�[�̓r�N�r�N���z�����Ⓒ�ɒB�����c
+		ENDSELECT
+		RETURN 1
+	ELSE
+		SELECTCASE RAND:3
+		CASE 0
+			CALL HPH_PRINT,@"�u���A����܂茩�Ȃ��ł��������c�c����HPH�v","L"
+			PRINTFORMDL �����グ���h���~�[���S���𔽂�Ԃ���_�ɍ��킹��ƁA�������Ƒ}�����Ă���
+			PRINTFORMDL �T�����q�{�����y���m�b�N����ƁA�h���~�[�͎����̂��̂̕\��ŃJ�N�J�N�ƍ���U���Ă��܂�
+			PRINTFORMDW %CALLNAME:MASTER%�͂���Ȕޏ��Ɉ��������������Ȃ���A���t�������킵���𓮂����Ă�����
+		CASE 1
+			CALL HPH_PRINT,@"�u�ӂ�HPH�c���c���̊��D�A���Ȃ���c�v","L"
+			PRINTFORMDL �h���~�[�͎w�����݁A�S���������L���Ă������_�̉����ɑς��Ă���
+			PRINTFORMDL �������A�������Əł炷�悤�ɍ���h�炵����܂��Ă���%CALLNAME:MASTER%
+			PRINTFORMDW �S���ɓ��B���鍠�ɂ́A�h���~�[�̛Z���͓����؂��Ĉ����������l�̂悤�ɓ��_������Ԃ��Ă���
+		CASE 2
+			CALL HPH_PRINT,@"�u���HPH�A�ӂ�HPH�c�˂��c�L�X���āc�HHPH�v","L"
+			PRINTFORMDL �Ζʍ��ʂŌ����Ȃ���A�h���~�[�̋��߂ɉ����ĐO�����킹��
+			PRINTFORMDW �����ƍ��𓮂�������𖡂킢�Ȃ���A���݂��̑��t���������Z���ɐ�𗍂܂��������c
+		ENDSELECT
+		RETURN 1
+	ENDIF
+ENDIF
+;==================================================
+;68,�w�ʍ���
+;==================================================
+@M_KOJO_MESSAGE_COM_K109_68
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K109_68_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K109_68_1
+;-------------------------------------------------
+;�L���`�F�b�N�i=0, ��\���A1, �\���j
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;������
+	;-------------------------------------------------
+	;���߂�
+	;�L���`�F�b�N
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		IF FLAG:70
+			PRINTFORMW 
+			RETURN 1
+		;�T�O���Ȃ肫�莞
+		ELSEIF FLAG:�Ȃ肫�� == 110
+			PRINTFORML
+			CALL AUTO_AEGI(NO:TARGET)
+			RETURN 1
+		;����
+		ELSEIF TCVAR:�j�Z == 1
+			PRINTFORMW �u�炪�����Ȃ��̂��c�����s���ł��ˁv
+			PRINTFORMDW %CALLNAME:MASTER%�͔w�ʍ��ʂ̎p���Ńh���~�[�ƕ��������A�D�����鏊���������Ă���
+			PRINTFORMW �u����c�ЂƎv���ɂ���Ă��������c���̋C���ς��Ȃ����Ɂc�v
+			PRINTFORMDW �s�������ȃh���~�[�̎����Łw�D��������x�Ɛ����|���A%CALLNAME:MASTER%�͓��_�����Ă����Ƃ������ƍ��������i�߂�
+			PRINTFORMDW �h���~�[�͂���������������グ�Ȃ�����K���ɂȂ��đς��Ă���
+			PRINTFORMW �u���c�S���A�}����܂������c�H�v
+			PRINTFORMDW �T�����������ɂԂ���ƁA�h���~�[�͂��������Ă���
+			PRINTFORMDW �����������c�����ޏ��ɚ����ƁA��C�ɍ���˂��o�������̏؂��т�
+			PRINTFORMW �u�Ђ��b�c���A�������c�Ƀb�c���c�I�v
+			PRINTFORMDW �����ȓ��_�Ɂw���x�ɂ��ꂽ�h���~�[�̏��A�͂����Ղ�ƉA�s��������݁A�r���̏؂ł���N���𗬂��Ă���
+			PRINTFORMDW �v���v���ƒɂ݂ɐg��k�킹�Ă�ޏ��̎�؂ɃL�X�����Ȃ���A�ɂ݂������̂�҂c
+			PRINTFORMW �u���A���c�R���c�Ȃ�āA���炵���Ȃ��ł���ˁc�v
+			PRINTFORMW �u�����āA�ǂ��ł���c����c�ɂ݂��A�����Ă��܂������c�v
+			PRINTFORMDW �S�z�����߂���̂��������ċC�����킹�Ă��܂����낤
+			PRINTFORMDW �������f����%CALLNAME:MASTER%�́A�h���~�[��D�����x���ɂ₩�ɍ��𓮂����Ă���
+			CALL HPH_PRINT,@"�u�c��A���c�Ȃ񂾂��c�ɂ݈ȊO�́c���ꂪ�c��HPH�v","W"
+			PRINTFORMDW �h���~�[�͏��X�ɏ��̉x�тɖڊo�߂���悤��
+			PRINTFORMDW ���̗l�q�Ȃ�S�z�͂���Ȃ����낤�B%CALLNAME:MASTER%�͏��X�Ƀy�[�X���グ�Ă�����
+		RETURN 1
+		ELSE
+			PRINTFORMW �u����c�������ĕ�܂��ƁA%CALLNAME:MASTER%��痂�����������܂��ˁv
+			PRINTFORMDW �Ӎ���������%CALLNAME:MASTER%�ɍ������h���~�[�́A�������߂��Ȃ��炻��Ȃ��Ƃ������Ă���
+			PRINTFORMDW ���z���͎�����H������ȁB�������ɏo���ƃh���~�[�̓N�X�N�X�Ə΂�
+			CALL HPH_PRINT,@"�u�m���ɂ����ł��ˁc�ق�A�c�����HPH�}�����Ă���cHPH�v","W"
+			PRINTFORMDW ���𕂂������h���~�[�ɓ������܂܃y�j�X�������i�߂�ƁA�_�炩���S�q�_�����_���ݍ���
+			PRINTFORMDW ���̊��G�ɍ���k�킹�Ȃ�����S���܂ł��ǂ蒅���ƁA�ޏ��̖j�ɃL�X���������̊Ԃ��݂��̑̉�������������
+		RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;�}���p��
+	;�L���`�F�b�N
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:100 == PLAYER
+		;�T�O���Ȃ肫�莞
+		IF FLAG:�Ȃ肫�� == 110
+			PRINTFORML
+			CALL AUTO_AEGI(NO:TARGET)
+			RETURN 1
+		ELSEIF ABL:�S >= 3
+			;���ː�����
+			IF NOWEX:PLAYER:11
+				SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"�u�����bHPH�͂����A�����c���bHPH������bHPH�v","L"
+					PRINTFORMDL %CALLNAME:MASTER%�Ƃ̖{�C�̌���̌������Ƀh���~�[�͈�C�̎��Ƃ��Ěb�����Ƃ����ł��Ȃ�
+					PRINTFORMDL �ޏ��͌��̒[����_���_���Ɵ��𐂂炵�A�S���͂���񂫂��ƒ��ߕt���q���~�������Ă���
+					CALL HPH_PRINT,@"�u���A�����c�bHPH�C�N�c�bHPH�c�C�b�c�\�\�\�b�bHPH HPH HPH�v","L"
+					PRINTFORMDW �h���~�[���Ⓒ�ɒB�����Ƃ���ŁA%CALLNAME:MASTER%�͕q���ɂȂ��Ă��閨����������~���񂵃X�p�[�g���|���Ă�����
+				CASE 1
+					CALL HPH_PRINT,@"�u��A������HPH�����A�ł���cHPH�S���S���łԂ��܂��Ă��c��HPH�v","L"
+					PRINTFORMDL �h���~�[��%CALLNAME:MASTER%�ɐg�̂�a������R�ɔƂ���Ȃ����t����]�ݖ������ߕt����
+					PRINTFORMDW ����Ȏ���s�܂��邩�̂悤�ɁA%CALLNAME:MASTER%�͌������h���~�[��Ƃ����c
+				CASE 2
+					CALL HPH_PRINT,@"�u���A������HPH����A�����c����HPH�Ԃ����Y�݂������āc���A�r����������Ă�c��HPH HPH HPH�v","L"
+					PRINTFORMDL �ː����߂��Ȃ���%CALLNAME:MASTER%�͓˂������x�ɋT���ɋz���t���Ă���q�{���̊��G�ɖ����ɂȂ��č���ł��t����
+					PRINTFORMDW �h���~�[�͎b���ウ�Ă������A�����ɑ�l�����Ȃ�b�̙���グ��݂̂̎��ɂȂ艺������
+				ENDSELECT
+				RETURN 1
+			;�O��ː�����
+			ELSEIF TCVAR:102
+				SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"�u�����c�i�J�ɁA����ȂɁcHPH�v","L"
+					PRINTFORMDL ��ʂ̐��t�𒍂����܂ꂽ�h���~�[�́A�����S���ɂ����藧���_�̔M���ɃE�b�g���Ƃ��Ă���
+					PRINTFORMDL �ܘ_���ꂾ���Ŗ������锤�̂Ȃ�%CALLNAME:MASTER%�́A�x�e�����������ɍĂю�t��������J�n����
+					CALL HPH_PRINT,@"�u�ӂ�HPH���HPH����ȂɁA����s�܂������̂ł����c���D���ɂǂ��A����HPH�v","W"
+				CASE 1
+					CALL HPH_PRINT,@"�u���A�͂�HPH�c�����A�������cHPH�v","L"
+					PRINTFORMDL �S���Œ��˃g�v�g�v�ƃU�[������R�炷���_�͂��܂��ނ���C�z�������Ȃ�
+					CALL HPH_PRINT,@"�u�c�ӂӁA���������ł���ˁc�H�����ł���HPH�Œ��ꒃ�ɔƂ��Ă��c��HPH�v","L"
+					PRINTFORMDW ���t����ꊮ�S�Ɏ��������т́A�������͖��̎x�z�҂Ƃ����������̂�%CALLNAME:MASTER%��p�I�i�z�[���Ƃ��Ă��̐g�̂�񋟂���
+				CASE 2
+					CALL HPH_PRINT,@"�u���A�ӂ�HPH�O�`���O�`�����āc�����������Ă܂��A�˂���HPH�v","L"
+					PRINTFORMDL %CALLNAME:MASTER%�͎q��𒍂����ݏI����ƁA���ɔG�ꂽ�h���~�[�̐g�̂�������ߍĂэ��𓮂���
+					PRINTFORMDW �y�j�X���S������������x�ɁA���݂��̈�`�q�������荇���������t���~���o����Ă����c
+				ENDSELECT
+				RETURN 1
+			ELSE
+				SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"�u�Ђ�A�����HPH�c�����Ɓc��HPH���˂��グ�āc��HPH�v","L"
+					PRINTFORMDL �h���~�[�̖���͓��q�_�𗍂ݕt�����A�q��������o�����ƍ������������Ȃقǂ̉�����^���Ă���
+					PRINTFORMDW ������p�ɊJ�������̗ǂ��Ȃ���������y���ނ悤�ɁA%CALLNAME:MASTER%�͍��������Ă�����
+				CASE 1
+					CALL HPH_PRINT,@"�u�c�������C�����ǂ��āc���HPH�c���āA����ȂɁcHPH�v","L"
+					PRINTFORMDL ��~�ɔG�ꂽ���������킵�Ȃ���A���y�����ߌ݂��ɍ��̓��������킹��
+					PRINTFORMDW �s�X�g���̓x�Ɉ��t���Ƃ߂ǂȂ��~���o����A%CALLNAME:MASTER%�̉����g���т������ƔG�炵�Ă����c�c
+				CASE 2
+					CALL HPH_PRINT,@"�u�񂟂���HPH���ɁA�R�c�R�c����HPH�������āc��HPH�v","L"
+					PRINTFORMDL %CALLNAME:MASTER%����˂����ɉ��̉��܂ő}������ƁA�h���~�[���S�͂�����Ǝ��k������ɐk���Ȃ��爤�t���T���U�炷
+					PRINTFORMDW �h���~�[�̋��𝆂݂������Ȃ���A�����₷�������𕋂��܂܂Ɋy����
+				ENDSELECT
+				RETURN 1
+			ENDIF
+		ELSE
+			;���ː�����
+			IF NOWEX:PLAYER:11
+				SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"�u�����HPH����ȁA�����c��HPH�v","L"
+					PRINTFORMDL �}�s�b�`�Ő��Y���ꂽ�q�킪�������l�߂Ă������o�ɁA%CALLNAME:MASTER%�͖��䖲���ō���˂��グ��
+					PRINTFORMDL �����Ƃ����I�����͒[���疳���A�܂��h���~�[�������]��ł��Ȃ��͖̂����������c�c
+					CALL HPH_PRINT,@"�u���A����HPH�񂠂���HPH�c�i�J�ɁA�S���ɂ��������c��HPH�M���̐��t�A�S�����Ɂc��HPH�v","W"
+				CASE 1
+					CALL HPH_PRINT,@"�u���A�����c��HPH�c�b�A���A�����c��HPH�v","L"
+					PRINTFORMDL �Ⓒ�ɒB�������Ȃ̂��h���~�[�̓���͌���������߂��A�M�����ꏏ�ɂƒj���ɗ��ݕt���Ă���
+					PRINTFORMDW ��~�ɑi��������悤�ȗU�f�ɓ��R%CALLNAME:MASTER%�͍R����͂����Ȃ��A�����ɂȂ��č���ł��t���A�����ɒB����
+				CASE 2
+					CALL HPH_PRINT,@"�u�ӂ���HPH�c�񂣂�HPH�ː������ł����c�HHPH�v","L"
+					PRINTFORMDL �j�`�b�A�j�`�b�A�Ɩ�����炵�Ȃ���h���~�[�����𓮂����Ă���
+					PRINTFORMDW �ː����߂��Ȃ��%CALLNAME:MASTER%�͔ޏ��̍���͂݁A�����̃y�[�X�ō���˂��グ�Ă���
+					PRINTFORMDW �h���~�[�͗Y�̖{�\�I�ȃs�X�g���Ɋ��c�߂Ȃ�����A�K�����S����߂邱�Ƃŉ�����
+				ENDSELECT
+				RETURN 1
+			;�O��ː�����
+			ELSEIF TCVAR:102
+				SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"�u�͂��cHPH�c�����cHPH�܂��A�������c�ӂ�HPH�v","L"
+					PRINTFORMDL �h���~�[�͐��t�̗��܂����������𕏂ŁA�����Ƃ����\��ō���h�炵�Ă���
+					PRINTFORMDW %CALLNAME:MASTER%���S���̋��X�܂Ŏq���h�荞�ނ悤�ɍ��𓮂����Ȃ���A�܂��킢���ĊJ����
+				CASE 1
+					CALL HPH_PRINT,@"�u��A�Ӂc��HPH�c���ꂾ���ː������̂Ɂc�܂��c����HPH�v","L"
+					PRINTFORMDL �ː����I�����j������U���������A�����d������Ԃ��Ă���l���h���~�[�Ɍ�������
+					PRINTFORMDW ���W���W�ƍ���h�炷�ޏ���������߂�ƁA�Ă��S���ւƓ��_�𖄂ߍ���ł�����
+				CASE 2
+					CALL HPH_PRINT,@"�u��͂��c��HPH�ː����߂��ł���c����HPH�v","L"
+					PRINTFORMDL �����Ղ�ƒ����ꂽ�q�킪�S�|�b�Ɖ��𗧂ĂČ�����������Ă���
+					PRINTFORMDW ����������߂����̂悤�ɁA%CALLNAME:MASTER%�͍Ăэ���h�����Ă�����
+				ENDSELECT
+				RETURN 1
+			ELSE
+				SELECTCASE RAND:3
+				CASE 0
+					CALL HPH_PRINT,@"�u���c��HPH�c����ȁA�����Ȃ��Łc���v","L"
+					PRINTFORMDL �G�̏�ɍ��点���h���~�[�ƌq�������܂܁A%CALLNAME:MASTER%�͂������ƍ��𓮂����Ă���
+					PRINTFORMDW �����r���J������ƁA�Y�b�|���Ɠ��_��������񂾔镔���ی����ɂȂ�h���~�[��㵒p�������
+				CASE 1
+					CALL HPH_PRINT,@"�u�c���c��HPH�c��A���ށc����A�����c��HPH�v","L"
+					PRINTFORMDL �L�����L�����Ǝ��k���閨��̊��G�𖡂킢�Ȃ���%CALLNAME:MASTER%�̓h���~�[�Ɣw�ʍ��ʂŌ����
+					PRINTFORMDW �󂢂���ŋ��𝆂݂������Ȃ�����������Ɍ���������ƁA���ߍ����悤�ɐO���d�˂�
+				CASE 2
+					CALL HPH_PRINT,@"�u��c��HPH��A�ӂ����c��HPH�c����c�C�����ǂ��c��HPH�v","L"
+					PRINTFORMDL �M���M���܂œ��_�����������A�Ăт������ƒ��߂Ă����B���̓������J��Ԃ��Ă���
+					PRINTFORMDW �܂�ŗY�̃J�^�`���o�����܂���悤�ȍ������ɁA�h���~�[�̖���͖{�C�`�𐂂ꗬ�����̉x�тɑł��k����
+				ENDSELECT
+				RETURN 1
+			ENDIF
+		ENDIF
+	ENDIF
+	;��{�Z�b�g
+	;�T�O���Ȃ肫�莞
+	IF FLAG:�Ȃ肫�� == 110
+		PRINTFORML
+		CALL AUTO_AEGI(NO:TARGET)
+		RETURN 1
+	ELSEIF ABL:�S >= 3
+		SELECTCASE RAND:3
+		CASE 0
+			CALL HPH_PRINT,@"�u�ӂ�HPH�ӂ�HPH�c�͂₭�}����āc��HPH�v","L"
+			PRINTFORMDL �h���~�[�͋Q�����b�̂悤�ɟ��𐂂炵�A������ɐ���I�ɐK���C��t���đ}�����˂����Ă���
+			PRINTFORMDL %CALLNAME:MASTER%�̓M���M���ɖu�N�������_���A�O�ɓh��t����ƁA�������Ƒ}�����Ă�����
+			CALL HPH_PRINT,@"�u���bHPH�c���A�͂����c�bHPH�����񂿂�A�C�����ǂ��c��HPH�v","L"
+			PRINTFORMDW �h�����Ȏ��т͏b�̌���ɂ����x�̂悤���c
+		CASE 1
+			CALL HPH_PRINT,@"�u�́A�������cHPH���܂Łc�������cHPH�v","L"
+			PRINTFORMDL %CALLNAME:MASTER%���������S�ǂ��T���ł����J���Ȃ���˂������ƁA�h���~�[�͑����s���ƐL�΂��Ėウ��
+			PRINTFORMDW ���J�߂�悤�ɓ��𕏂łĂ��ƁA�h���~�[�͂�����ɐU��Ԃ���y�ɘc�񂾎���Ŕ��΂�
+		CASE 2
+			CALL HPH_PRINT,@"�u���c�͂�����HPH�c�����cHPH���̎����I�i�z�݂����Ɂc�����HPH�v","L"
+			PRINTFORMDL %CALLNAME:MASTER%�͎���̏�ɍ���h���~�[�ɍ����グ������ƁA�����������_�����Ă�����C�ɍŉ��܂œ˂������
+			PRINTFORMDW �I�i�z�[���̂悤�ɔw�ォ��˂��グ��ƁA�����^����ꂽ�����͂��炾��ƈ��`�𐂂ꗬ�����_�ɐ���t��d�����c
+		ENDSELECT
+		RETURN 1
+	ELSE
+		SELECTCASE RAND:3
+		CASE 0
+			CALL HPH_PRINT,@"�u�c���A�ӂ����c�͂��cHPH�c�܂��A������Ƌꂵ���ł��ˁc�v","L"
+			PRINTFORMDL �S���܂�%CALLNAME:MASTER%��痂������_���}����ƁA�h���~�[�͐g�̂������点�Ȃ��瑧��f��
+			PRINTFORMDL �M�`�M�`�ɉA�s��������񂾏��A�́A����ł������ė����܂����×~�ɋz���t���Ă���
+			PRINTFORMDW �����ɂł����𓮂��������Փ����O�b�Ɗ����A�h���~�[�����������܂Őh�������҂���
+		CASE 1
+			CALL HPH_PRINT,@"�u���Ⴃ��HPH�c�����c���\�ł��˂��c�v","L"
+			PRINTFORMDL %CALLNAME:MASTER%�͍r���ۂ��w�ォ��������߂�ƁA�h������Ȃ��Ƃ΂���ɍ��������t����
+			PRINTFORMDW ����̂����Y�̗~�]���󂯎~�߂�ׂ��A�h���~�[�͍��𕂂���������󂯓��ꂽ
+			CALL HPH_PRINT,@"�u�ӁA����HPH�c�}�����āA�����cHPH�v","W"
+		CASE 2
+			CALL HPH_PRINT,@"�u���A���HPH�c���ɁA�������ācHPH�v","L"
+			PRINTFORMDL ���{�܂œ��_��������񂾏��A�́A�ꂵ�����ɂ���h���~�[�Ƃ͑ΏƓI�ɉx�т̈��t����ꂳ���Ă���
+			PRINTFORMDW �s�X�g���̓x�ɒe�ދ��𝆂݂������Ȃ��獘�𓮂����ƁA�ꂵ�������y�Ɏ���đ������̂������ɚb����R�炵������
+		ENDSELECT
+		RETURN 1
+	ENDIF
+ENDIF
+;==================================================
+;69,�Ζʍ��ʃA�i���i���ʂ��痬�p�̎蔲���j
+;==================================================
+@M_KOJO_MESSAGE_COM_K109_69
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K109_69_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K109_69_1
+;-------------------------------------------------
+;�L���`�F�b�N�i=0, ��\���A1, �\���j
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;������
+	;-------------------------------------------------
+	;���߂�
+	;�L���`�F�b�N
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		IF FLAG:70
+			PRINTFORMW 
+			RETURN 1
+		;�T�O���Ȃ肫�莞
+		ELSEIF FLAG:�Ȃ肫�� == 110
+			PRINTFORML
+			CALL AUTO_AEGI(NO:TARGET)
+			RETURN 1
+		;�A�i������
+		ELSEIF TCVAR:�`�j�Z
+			PRINTFORMW �u�ˁA�˂��c�{���ɑ}�����́c�H�v
+			PRINTFORMDW %CALLNAME:MASTER%�̓h���~�[��G�̏�Ɍׂ点��ƁA�Ў�Ƀ��[�V�����𐂂炵�h���~�[�̋e��ɓh�荞��ł���
+			PRINTFORMDW �A�s�ɂ����[�V������h�����̂��A�ޏ�������グ�ł������A�k�X�ɋT�������Ă���
+			PRINTFORMW �u���c����ȃK�`�K�`�ɖu�N�����̑}����킯�Ȃ��ł���c�ˁH�~�߂܂��傤�c�H�v
+			PRINTFORMDW �炵���Ȃ���������d�˂�h���~�[�𖳎����A���_���������Ɖ�������ł���
+			PRINTFORMW �u�Ђ��A���c���ӂ����������c�b�b�I�H�v
+			PRINTFORMDW ���̎x�z�҂̕s��̌��ɐԍ������_�����ݍ��܂�Ă����x�ɔޏ��̌�����ꂵ�C�ș���R��Ă���
+			PRINTFORMDW �������t���Ȃ��悤�C�����Ȃ���}�����Ă���ƁA���ɉA�s�����{�܂ł����Ղ�Ǝ��܂���
+			PRINTFORMW �u���A�͂��c�͂��A�͂����c�����c�񂮂��c���A����ԁA�͂���܂������c�H�v
+			PRINTFORMDW �h���~�[�̔M���S���ɕ���ꂽ�A�k�X�͂܂�ŃR�b�N�����O�̂悤�ɍ��{����ߕt���Ă���
+			PRINTFORMDW �ڈ�t�ɓ��_��j�������K���̒ɂ݂ɁA�ޏ��̓M���b���������%CALLNAME:MASTER%�̔w�ɒ܂𗧂ĂĂ���
+			PRINTFORMW �u�܁A�܂������Ȃ��ł��c�����c�͂��A�͂��c�v
+			PRINTFORMDW �h���~�[�͊��^���Ԃɂ��Ȃ���A�܂�ŏo�Y��O�ɂ����s�w�̂悤�Ɍċz�𐮂��Ă���
+			PRINTFORMDW ��������������������ǂ̂悤�Ȕ���������̂��낤���c
+			PRINTFORMDW �����͂��邪�A�ꐶ�A�i���Z�b�N�X�����₳�ꂻ���Ȃ̂ŉ䖝����
+			PRINTFORMW �u�c�Ђ��Ђ��ӂ��c��c���������A�������Ă݂Ă��������c�v
+			PRINTFORMDW �ޏ��̋��߂ɉ����ď����������������B��炢�t���悤�Ȓ��ߕt�����܂��S�Ƃ͈Ⴄ�����
+			CALL HPH_PRINT,@"�u���A�������cHPH�c���A���v�����ˁcHPH�v","W"
+			PRINTFORMDW �ӊO�ƍ˔\������񂶂�Ȃ����B%CALLNAME:MASTER%�̓h���~�[��h���Ԃ�悤�ɍ��𓮂����Ȃ��炻��Ȃ��Ƃ��v����
+		RETURN 1
+		ELSE
+			PRINTFORMW �u�ӂӁA�X�L���m�ł��˂��c�����ł���c�v
+			PRINTFORMDW �h���~�[�͗���ŐK������J���A�s��̌����O�C�ɎN��
+			PRINTFORMDW �Ζʍ��ʂ̎p���ɂȂ���%CALLNAME:MASTER%�͔ޏ��̕����グ��ƁA�r�N�r�N���z��������_��}�����Ă�����
+			CALL HPH_PRINT,@"�u�فA����HPH�c��������HPH�c�}�����A�����cHPH�v","W"
+			PRINTFORMDW �ޏ��̃A�k�X�͂܂�Ŏg�����񂾏��A�̂悤�ɉA�s���󂯓���A���ݍ���ł��܂�
+			PRINTFORMDW �D�P�̐S�z�̂Ȃ��|���I�Ȑ����ɁA�h���~�[�͖����ɂȂ肩���Ă����c
+		RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;�}���p��
+	;�L���`�F�b�N
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:101 == PLAYER
+		;�T�O���Ȃ肫�莞
+		IF FLAG:�Ȃ肫�� == 110
+			PRINTFORML
+			CALL AUTO_AEGI(NO:TARGET)
+			RETURN 1
+		;���ː�����
+		ELSEIF NOWEX:PLAYER:11
+			SELECTCASE RAND:3
+			CASE 0
+				CALL HPH_PRINT,@"�u�͂����c�͂��c�񂣂���HPH�����HPH�͂�����HPH�v","L"
+				PRINTFORMDL �ː����ߕt����%CALLNAME:MASTER%�̓h���~�[���M���b�ƕ������߂�ƁA���܂�̋����A�k�X�ɉ��x���˂����ꂽ
+				PRINTFORMDL �ɂ݂Ɖ��������݂���Ⴢ��悤�Ȋ��o�ɁA�h���~�[�͎q�{���u�������A���爤�t����ꂳ����
+				CALL HPH_PRINT,@"�u��������A�؂ꂿ���HPH����HPH������HPH���A������HPH�v","L"
+				PRINTFORMDW �Q�����x�y�ɂǂ��ł��悭�Ȃ����h���~�[�́A��������ɔr�������Ƃ��������������󂯓��ꂽ�c
+			CASE 1
+				CALL HPH_PRINT,@"�u����HPH�ӂ��A�����A������HPH���HPH�����HPH������HPH�v","L"
+				PRINTFORMDL �ː��Ɍ�������U�鑬�x���グ��%CALLNAME:MASTER%�ɁA�h���~�[�͒ɂ݂𕴂炷���̂悤�Ɍ��t�������Ă���
+				PRINTFORMDW �݂��ɐ�𗍂܂��Ȃ���A�|���I����含���ɒ^���Ă������c
+			CASE 2
+				CALL HPH_PRINT,@"�u�ː������Ⴄ�c�HHPH������ɁA�r���E�b�āA����HPH�ق�HPH������HPH�v","L"
+				PRINTFORMDL �䖝�̌��E���ߕt���Ă���%CALLNAME:MASTER%������U�鑬�x���グ��ƁA�h���~�[�������Ś����Ă���
+				PRINTFORMDW ���̌��t�Ƀ^�K���O�ꂽ%CALLNAME:MASTER%�����Ɏ��t����ׂ�����w����������U�����c
+			ENDSELECT
+			RETURN 1
+		;�O��ː�����
+		ELSEIF TCVAR:104
+			SELECTCASE RAND:3
+			CASE 0
+				CALL HPH_PRINT,@"�u��́A���cHPH�����Ɓc�HHPH�d���Ȃ��ł��˂��cHPH�v","L"
+				PRINTFORMDL �����ɂ����Ղ�ƒ������܂ꂽ�h���~�[�́A���̔M�ɂǂ����E�b�g���Ƃ����\��𕂂��ׂĂ���
+				PRINTFORMDW %CALLNAME:MASTER%�̓h���~�[�̖j���ɃL�X�����Ȃ���A��含�����ĊJ����
+			CASE 1
+				CALL HPH_PRINT,@"�u����HPH�����x�ɁA�����ŗh��āc��HPH�v","L"
+				PRINTFORMDL %CALLNAME:MASTER%������˂��グ��x�ɁA�h���~�[�̒����Ő��t���g�ł悤�ɗh���
+				PRINTFORMDW �������̃A�i���Z�b�N�X�Ńh���~�[�̒��������t�Ŗ��������̂ɂ������Ԃ͊|����Ȃ������c
+			CASE 2
+				CALL HPH_PRINT,@"�u�ӂ�HPH��ӂ�HPH�c���HPH�c�����HPH�C�����A���������c��HPH�v","L"
+				PRINTFORMDL %CALLNAME:MASTER%�̓h���~�[���M���b�ƕ������߂�ƁA�����݂ɍ���U�萸�t�h��̃A�k�X��Ƃ�
+				PRINTFORMDW �~���o���ꂽ���t�Ɣ鏊����H�鈤�t��%CALLNAME:MASTER%�̉����g�������Ă����c
+			ENDSELECT
+			RETURN 1
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				CALL HPH_PRINT,@"�u�����cHPH���c������HPH�����Ȃ艜�܂Łc��HPH�v","L"
+				PRINTFORMDL ���قǂ܂ő}�����ɂ₩�ɍ��𓮂����Ă���%CALLNAME:MASTER%���s�ӂɍŉ��܂œ˂��グ��
+				PRINTFORMDW �e�傪�������ƍ��������ݍ��ނƁA�M�������͂܂�Ő���̂悤�ɉA�s���ݍ��ݒ��ߕt���Ă���
+			CASE 1
+				CALL HPH_PRINT,@"�u�����HPH���c�����HPH�D���ɂȂ����Ⴄ����A���߁c��HPH�v","L"
+				PRINTFORMDL %CALLNAME:MASTER%���h���~�[�̐K���̕t�������������Ȃ��獘�����Ⴍ��ƁA�ޏ��͍����J�N�J�N�Ɠ������Ȃ��猩�ウ��
+				PRINTFORMDW ��含���ɂ�������炸�A�h���~�[�̏��A�͂܂�œ��_���Â��Ă��邩�̂悤�Ƀp�N�p�N�ƊJ�����`�𐂂ꗬ���Ă����c
+			CASE 2
+				CALL HPH_PRINT,@"�u����A�[���܂ł�HPH�فA�񂧂��I�HHPH�v","L"
+				PRINTFORMDL �h���~�[����ߕt����悤�ɕ������߁A�Ђ�����ɃA�k�X��˂��グ��
+				PRINTFORMDW ���\�ɒ��}����Ȃ�����K���ɉA�s��������ދe��́A�r���ɂ����������Ƀq�N�q�N�Ɛ�ɂ����_����ߕt���Ă���c
+			ENDSELECT
+			RETURN 1
+		ENDIF
+	ENDIF
+	;��{�Z�b�g
+	;�T�O���Ȃ肫�莞
+	IF FLAG:�Ȃ肫�� == 110
+		PRINTFORML
+		CALL AUTO_AEGI(NO:TARGET)
+		RETURN 1
+	;����
+	ELSEIF TALENT:���� || TALENT:���~ || TALENT:�Z�t�� || TALENT:�����}��
+			SELECTCASE RAND:3
+			CASE 0
+				CALL HPH_PRINT,@"�u��A�}����ɂ����H�c����łǂ��ł����c�HHPH�v","L"
+				PRINTFORMDL �h���~�[�͏������𕂂�����ƁA�K������J�����_���󂯓���鏀��������
+				PRINTFORMDL %CALLNAME:MASTER%�͋C�����Ɋ��ӂ��A�h���~�[�̋e��ɂ������ƋT����}�����Ă����c
+				CALL HPH_PRINT,@"�u�ӁA���HPH�c�k�����đ}�����āc�ӂӁA��̒N�̂����ł����Ȃ����̂��cHPH�v","L"
+				PRINTFORMDW �×~�ɋz���t���Ă���A�k�X�ɋT���𔲂��������ē���܂�����A�������ƍ��{�܂ő}�����Ă�����
+			CASE 1
+				CALL HPH_PRINT,@"�u���c���HPH�ˁA�˂�HPH�͂₭�c��HPH�v","L"
+				PRINTFORMDL �h���~�[�̔鏊����H�鈤�t���w�ŋd�����x���ޏ��̃A�i���ɓh�荞��ł���ƁA�łꂽ�̂��}�����Ñ����Ă���
+				PRINTFORMDL �A�i���Z�b�N�X�̖��͂ɂ������̖��̎x�z�҂Ƃ����ǍR�����Ƃ͂ł��Ȃ��炵���c
+				PRINTFORMDW %CALLNAME:MASTER%���h���~�[�̐g�̂�����グ�A���Ɂw�G�ꂽ�x�e��ɓ��_�����荞�܂���ƁA�ޏ��͚X��悤�Țb�����グ�悪����
+			CASE 2
+				CALL HPH_PRINT,@"�u���A����HPH�c�͂������cHPH�����A�L�����Ă�c��HPH�v","L"
+				PRINTFORMDL �ŏ��̍��͍d�����Ă����A�k�X�����A����̖��������o�����̂����_���������ނƑ債����R���Ȃ��������ނ悤�ɂȂ���
+				PRINTFORMDL %CALLNAME:MASTER%�̓h���~�[��������߁A���Ŏ����グ��悤�ɂ��Ȃ���������ƃs�X�g��������
+				CALL HPH_PRINT,@"�u�ӂ��c����HPH���Y���Y���āA����HPH�����������c��HPH�v","L"
+				PRINTFORMDW �A���ő����r���Ɏ��������ɁA�h���~�[�̔鏊�����ꂽ������A��`���A�i����G�炵���c
+			ENDSELECT
+			RETURN 1
+	;����3
+	ELSEIF MARK:�s������ == 3
+			SELECTCASE RAND:2
+			CASE 0
+				CALL HPH_PRINT,@"�u���HPH�c�ɂނ̂ŁA��ɂق����Ē�����Ɓc�v","L"
+				PRINTFORMDL �h���~�[�̋��߂ɉ����Ĕޏ��̏��A�Ɏw���������Ƒ}�����A�W�����ƈ��鈤�t���w�ɓh��
+				PRINTFORMDL ���̂܂ܔޏ��̍�������\��Ɏw�����点��ƁA�ْ����炩�ł������e����L����悤�Ɏw����������
+				CALL HPH_PRINT,@"�u���c�񂣁cHPH�ӂ�HPH�c�ق�HPH�c���A���낻��c�v","L"
+				PRINTFORMDL �\���ɂق��ꂽ�A�k�X�̓A�i���Z�b�N�X�����҂��ăq�N�q�N�Ɛ�ɂ��Ă���
+				PRINTFORMDW %CALLNAME:MASTER%�͐摖��𐂂炵�z��������_���w�Ŏx����ƁA�ޏ��̃A�i���ւƑ}�����Ă������c
+			CASE 1
+				CALL HPH_PRINT,@"�u�܂��ł����c�H�͂��c�X�L���m�ł��˂��cHPH�v","L"
+				PRINTFORMDL �A�i���Z�b�N�X���������Ƃ���%CALLNAME:MASTER%�Ƀh���~�[�͕��ꂽ�悤�ȕ\��𕂂��ׂĂ���
+				PRINTFORMDW ���΂�畏�������A�ޏ��͏��������������L����ƕǂɂ�����|������
+			ENDSELECT
+			RETURN 1
+	;����ȊO
+	ELSE
+				CALL HPH_PRINT,@"�u�܂��ł����c�H�͂��c�X�L���m�ł��˂��cHPH�v","L"
+				PRINTFORMDL �A�i���Z�b�N�X���������Ƃ���%CALLNAME:MASTER%�Ƀh���~�[�͕��ꂽ�悤�ȕ\��𕂂��ׂĂ���
+				PRINTFORMDW ���΂�畏�������A�ޏ��͏��������������L����ƕǂɂ�����|������
+		RETURN 1
+	ENDIF
+ENDIF
+;==================================================
+;70,�w�ʍ��ʃA�i���i���ʂ��痬�p�̎蔲���j
+;==================================================
+@M_KOJO_MESSAGE_COM_K109_70
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K109_70_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K109_70_1
+;-------------------------------------------------
+;�L���`�F�b�N�i=0, ��\���A1, �\���j
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;������
+	;-------------------------------------------------
+	;���߂�
+	;�L���`�F�b�N
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+		IF FLAG:70
+			PRINTFORMW 
+			RETURN 1
+		;�T�O���Ȃ肫�莞
+		ELSEIF FLAG:�Ȃ肫�� == 110
+			PRINTFORML
+			CALL AUTO_AEGI(NO:TARGET)
+			RETURN 1
+		;�A�i������
+		ELSEIF TCVAR:�`�j�Z
+			PRINTFORMW �u�����������c�ƌ����ΉR�ɂȂ邯�ǁc�v
+			PRINTFORMDW ���ɐ����ς܂����h���~�[�́A�l�񔇂��ɂȂ�%CALLNAME:MASTER%�ɐK�������Ă���
+			PRINTFORMDW ����Ŕޏ��̐K��������J���ƁA�F�f���璾�����Ă��Ȃ����g�p���f�킹��A�k�X�����̑��݂��咣���Ă���
+			PRINTFORMW �u���A����Ȃɂ܂��܂��ƌ��Ȃ��ł��������c���v
+			PRINTFORMDW %CALLNAME:MASTER%�͔ޏ��̃A�k�X�Ɋ���ߕt����ƁA���̎��ӂ��r��
+			CALL HPH_PRINT,@"�u�ӂ��cHPH��A�����c�ł���c��HPH�v","W"
+			PRINTFORMDW �܂�ŏ��A�����߂ق������̂悤�ɁA�h���~�[�̕s��̌���O�O�Ɉ�������
+			PRINTFORMDW %CALLNAME:MASTER%�����}������ƁA�ޏ��͍������܂ꂽ������ނ悤�ɒ��ߕt���Ă���
+			CALL HPH_PRINT,@"�u�͂���HPH�c���c���܂ŁA���߂Ă��ł����cHPH�v","W"
+			PRINTFORMDW ������������ƁA���t�łʂ���A�k�X�͏����Ȍ����ɂ܂��ǂ������c�ɂ������Ƀq�N���Ă���
+			PRINTFORMDW �������o�����Ɣ��f����%CALLNAME:MASTER%�́A�w�ォ��ޏ�������グ��Ɛ󂭑}�������_�����܂���
+			CALL HPH_PRINT,@"�u����HPH����c�͂₭�A�ς܂��āc���v","W"
+			PRINTFORMDW ����ۂ���ۂƉ��x���o�����ꂵ����A�ޏ��̋��߂ɉ����������ƍ���i�߂Ă���
+			CALL HPH_PRINT,@"�u����HPH�c�����c�ӂ��A�ӂ���HPH�c�������A�[���܂ŁcHPH�v","W"
+			PRINTFORMDW �~�b�`���ƍL�������A�k�X�́A�}������Ă����A�s�����X�Ƃ��Ď󂯓���Ă���
+			PRINTFORMDW �M�������́A�A�s�ɓZ�����q�������낤�Ǝh����^���Ă���c
+			CALL HPH_PRINT,@"�u�ӂ���HPH�c�ӊO�ƁA���������c��HPH�v","W"
+			PRINTFORMDW �ŉ��܂ő}�����A���݂��̔������������%CALLNAME:MASTER%�̓h���~�[�̊��������Ɍ��������y���L�X������
+			CALL HPH_PRINT,@"�u�͂��c�͂��cHPH���HPH������cHPH�v","W"
+			PRINTFORMW �i���������΁c���K���߂����Łc�c�܂��A�������c�j
+		RETURN 1
+		ELSE
+			CALL HPH_PRINT,@"�u�}���ꂽ���Ċ���Ȃ��c���Ċ炵�Ă�cHPH�v","W"
+			PRINTFORMDW �w�ʍ��ʂ̎p���ɂȂ����h���~�[�́A������ɐK�������t���U���悤�ɗh�炵�Ă���
+			PRINTFORMDW %CALLNAME:MASTER%������͂ݓ��_��}�����Ă����ƁA�ޏ��̃A�k�X�͉��̋���Ȃ����_�����ݍ���ł��܂�
+			CALL HPH_PRINT,@"�u���bHPH�������cHPH�͂��A������HPH HPH HPH�v","W"
+			PRINTFORMDW �D�P�̐S�z���������炩�A�h���~�[�͏����ɃA�i���Z�b�N�X�̉��y���y����ł���悤��
+			PRINTFORMDW ����Ȕޏ��ɉ����͂���Ȃ��ƁA%CALLNAME:MASTER%�͍ŏ�����y�[�X���グ�č��𓮂����Ă������c
+		RETURN 1
+		ENDIF
+	ENDIF
+	;-------------------------------------------------
+	;�}���p��
+	;�L���`�F�b�N
+	LOCAL:1 = 1
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:101 == PLAYER
+		;�T�O���Ȃ肫�莞
+		IF FLAG:�Ȃ肫�� == 110
+			PRINTFORML
+			CALL AUTO_AEGI(NO:TARGET)
+			RETURN 1
+		;���ː�����
+		ELSEIF NOWEX:PLAYER:11
+			SELECTCASE RAND:3
+			CASE 0
+				CALL HPH_PRINT,@"�u����HPH�c�ӁA�񂣂���HPH�҂��cHPH�v","L"
+				PRINTFORMDL ���t���o���Ă��銴�o�Ɏ����������Ȃ��Ȃ荘��ł��t���鑬�x���グ�Ă���
+				PRINTFORMDL �������A�k�X���C��������ɁA�h���~�[�͑S�g���K�N�K�N���z���������̒[���矵�𐂂炵�Ă���c
+				CALL HPH_PRINT,@"�u�́A������HPH�C�bHPH�c�`�`�`�bHPH HPH HPH�v","L"
+				PRINTFORMDW �ː��̏u�ԁA������������قǂɓ˂����ނƃh���~�[�͌҂�����`�𐂂ꗬ���Ȃ���Ⓒ�����c
+			CASE 1
+				CALL HPH_PRINT,@"�u������HPH�c%CALLNAME:MASTER%�c��HPH�I�bHPH������񂣂�HPH�v","L"
+				PRINTFORMDL ���R�̂悤�ɒ����ː����悤�Ƃ���%CALLNAME:MASTER%�Ƀh���~�[�͑S�g��a���{�\�̂܂܎�t�����󂯓����
+				PRINTFORMDL 忂������͗Y�̗~�]����������ƕ�ݍ��݁A�ː��𑣂��Ă���c
+				PRINTFORMDW �h���~�[�̃A�k�X�́A���͂�r���ׂ̈ł͂Ȃ��Y�̎q����󂯓����ׂ̊튯�Ɖ����Ă���
+			CASE 2
+				CALL HPH_PRINT,@"�u�����Ɠ˂��āA�����ł���c��HPH�񂟂���HPH�v","L"
+				PRINTFORMDL �h���~�[�͂�����̖j�Ɏ��Y����ƁA���r�ȕ\��𕂂��׌���������悤�v�����Ă���
+				PRINTFORMDL �ː����߂��Ȃ��Ă���%CALLNAME:MASTER%�͔ޏ��̖]�ݒʂ�b�̂悤�ɍ���U�肽����c
+				CALL HPH_PRINT,@"�u���bHPH����b�A�D����HPH�Ȃ��bHPH�i�J�Ɏː����Ă�HPH�c�`�`�`�b�bHPH HPH HPH�v","W"
+			ENDSELECT
+			RETURN 1
+		;�O��ː�����
+		ELSEIF TCVAR:104
+			SELECTCASE RAND:3
+			CASE 0
+				CALL HPH_PRINT,@"�u�͂Ӂc�񂟂�HPH�c���K�̌��c����ȂɋC�ɓ���܂������c�HHPH�v","L"
+				PRINTFORMDL �b���q�������܂ܑ��𐮂�����A%CALLNAME:MASTER%�͍Ăэ��𓮂����n�߂�
+				PRINTFORMDW �����łʂ߂�e��́A���_����������x�Ƀq�N���x�т̂܂܉A�s���������ł���c
+			CASE 1
+				CALL HPH_PRINT,@"�u����HPH�c�����c���K���K�o�K�o�ɂȂ�����ǂ������ł����cHPH�v","L"
+				PRINTFORMDL �w�r���x���I����Ă��ނ��邱�Ƃ̂Ȃ��y�j�X�ŋe����т����܂܁A�����X�g���[�N�����Ă���
+				PRINTFORMDL �h���~�[�̃A�k�X�͌������d�˂閈�ɓ��_�̑����ɓ����ł����Ă���c
+				PRINTFORMDW ������p�̓����̎d�オ��ɖ�������%CALLNAME:MASTER%�́A�ޏ��̐K�𕏂łȂ���s�X�g���̑��x���グ�Ă�����
+			CASE 2
+				CALL HPH_PRINT,@"�u���A�͂��c�͂��c���HPH�c�܂��V�����c�HHPH�v","L"
+				PRINTFORMDL %CALLNAME:MASTER%�̗~�]���󂯎~�߂��h���~�[�͌��ő������Ȃ��璼���̔M�������Ă���
+				PRINTFORMDL �e��̋������ߕt���ɓ��_�͈ނ���ǂ��납����Ɍ��𗭂ߍ��݂͂��؂��΂��肾
+				PRINTFORMDW �h���~�[�̌��t�ɓ��R���ƕԂ���%CALLNAME:MASTER%�́A�Ăюq���A���t����ׂ������g���Ă������c
+			ENDSELECT
+			RETURN 1
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				CALL HPH_PRINT,@"�u�����HPH�˂��c�K���A�C���ācHPH�v","L"
+				PRINTFORMDL �������Ƃ������g���Ńh���~�[�̒����𖡂���Ă���ƁA�ޏ����K����h�炵�Ȃ��炨�˂��肵�Ă���
+				PRINTFORMDL ���߂ɉ����A�s�N�s�N�Ɛk����K�����Ê��݂��}�b�T�[�W����悤�Ɉ������Ă�����c
+				CALL HPH_PRINT,@"�u�́A������������HPH HPH HPH�������A�C�����A������HPH�v","W"
+			CASE 1
+				CALL HPH_PRINT,@"�u���HPH�c����HPH�c�˂��A�������߂āc��HPH�v","L"
+				PRINTFORMDL %CALLNAME:MASTER%�̓h���~�[�̏�̂�������߂�ƁA�������ƍ��𓮂����Ă���
+				PRINTFORMDL �݂��̑̉t��������A����������A�����Ă���̂�������
+				CALL HPH_PRINT,@"�u������cHPH�D�����̂��A�����ł��ˁcHPH����HPH�v","W"
+			CASE 2
+				CALL HPH_PRINT,@"�u��񂣂�HPH�c�����ƁA�[���܂Łc��HPH�v","L"
+				PRINTFORMDL �e����h������悤�ɐ󂭃s�X�g�����Ă���ƁA�h���~�[�������Ɛ[���}������悤�ɗv�����Ă���
+				PRINTFORMDL %CALLNAME:MASTER%�̓h���~�[�̉��������O�b�Ɖ������S�����h������悤�ɃX�g���[�N���A��؂ɃL�X������
+				CALL HPH_PRINT,@"�u���A�����J���J��HPH�������A�ア�����HPH�I�J�bHPH�v","W"
+			ENDSELECT
+			RETURN 1
+		ENDIF
+	ENDIF
+	;��{�Z�b�g
+	;�T�O���Ȃ肫�莞
+	IF FLAG:�Ȃ肫�� == 110
+		PRINTFORML
+		CALL AUTO_AEGI(NO:TARGET)
+		RETURN 1
+	;����
+	ELSEIF TALENT:���� || TALENT:���~ || TALENT:�Z�t�� || TALENT:�����}��
+			SELECTCASE RAND:3
+			CASE 0
+				CALL HPH_PRINT,@"�u����HPH�ӂ����c��HPH�{���́A�������ɑ}����Ă̓_���Ȃ̂ł���c�HHPH�v","L"
+				PRINTFORMDL %CALLNAME:MASTER%�̓h���~�[�̉�����������ƁA�A�ɂ₩�ɍ��𓮂����Ă���
+				PRINTFORMDL ���ł͒�R��������悤�Ȃ��Ƃ������Ă��邪�A�e��͂���������_�̃J�^�`�ɍL����܂�Ő�p�I�i�z�[���̂悤�ȗL�l��
+				CALL HPH_PRINT,@"�u�C�����ǂ����낤���āc��HPH����ȁA������HPH�v","L"
+				PRINTFORMDW �����̕ӂ���h�����Ă��ƁA�h���~�[�͂܂�Ŏq�{�����˂��ꂽ�悤�Ƀ��K�����c
+			CASE 1
+				CALL HPH_PRINT,@"�u�����҂��Ă��������ˁc�͂��A�ǂ���HPH�v","L"
+				PRINTFORMDL �h���~�[�͂��������ƒ����̐����ς܂���ƁA������ɐK��˂��o���Ă���
+				PRINTFORMDL %CALLNAME:MASTER%�̓h���~�[�̐K������J���Ƌe��ɑ��t�𐂂炵�A�w��}�����ē���܂��Ă���
+				PRINTFORMDW �b���ق�������A�ɂ��قǂɖu�N������_�����Ă����A�}�����Ă������c
+			CASE 2
+				CALL HPH_PRINT,@"�u�܂��A�����ł��ˁcHPH�P�_���m�݂����ɂ��K�̌����c��HPH�v","L"
+				PRINTFORMDL �������苻�������l�q�̃h���~�[��������߂�ƁA�q�N���A�k�X�ɓ��_�����Ă���
+				PRINTFORMDL �����ŋT����������������܂�����A�������ƉA�s����������ł�����
+				CALL HPH_PRINT,@"�u�ق�HPH�������c��HPH�͂����āc��HPH���A������HPH�v","L"
+				PRINTFORMDL �}�������������Ƃ����̂ɁA�h���~�[�͂܂�ŃN�X���𓾂����Ŏ҂̂悤�ɟ��𐂂炵����ɐk���Ă���
+				PRINTFORMDW ���̂܂܃A�i���Z�b�N�X���łɂ���̂������Ȃ���%CALLNAME:MASTER%�͎v����
+			ENDSELECT
+			RETURN 1
+	;����3
+	ELSEIF MARK:�s������ == 3
+			SELECTCASE RAND:2
+			CASE 0
+				CALL HPH_PRINT,@"�u���HPH�c�ɂނ̂ŁA��ɂق����Ē�����Ɓc�v","L"
+				PRINTFORMDL �h���~�[�̋��߂ɉ����Ĕޏ��̏��A�Ɏw���������Ƒ}�����A�W�����ƈ��鈤�t���w�ɓh��
+				PRINTFORMDL ���̂܂ܔޏ��̍�������\��Ɏw�����点��ƁA�ْ����炩�ł������e����L����悤�Ɏw����������
+				CALL HPH_PRINT,@"�u���c�񂣁cHPH�ӂ�HPH�c�ق�HPH�c���A���낻��c�v","L"
+				PRINTFORMDL �\���ɂق��ꂽ�A�k�X�̓A�i���Z�b�N�X�����҂��ăq�N�q�N�Ɛ�ɂ��Ă���
+				PRINTFORMDW %CALLNAME:MASTER%�͐摖��𐂂炵�z��������_���w�Ŏx����ƁA�ޏ��̃A�i���ւƑ}�����Ă������c
+			CASE 1
+				CALL HPH_PRINT,@"�u�܂��ł����c�H�͂��c�X�L���m�ł��˂��cHPH�v","L"
+				PRINTFORMDL �A�i���Z�b�N�X���������Ƃ���%CALLNAME:MASTER%�Ƀh���~�[�͕��ꂽ�悤�ȕ\��𕂂��ׂĂ���
+				PRINTFORMDW ���΂�畏�������A�ޏ��͏��������������L����
+			ENDSELECT
+			RETURN 1
+	;����ȊO
+	ELSE
+				CALL HPH_PRINT,@"�u�܂��ł����c�H�͂��c�X�L���m�ł��˂��cHPH�v","L"
+				PRINTFORMDL �A�i���Z�b�N�X���������Ƃ���%CALLNAME:MASTER%�Ƀh���~�[�͕��ꂽ�悤�ȕ\��𕂂��ׂĂ���
+				PRINTFORMDW ���΂�畏�������A�ޏ��͏��������������L����
+		RETURN 1
+	ENDIF
+ENDIF
+;==================================================
+;71,�񌊑}��
+;==================================================
+@M_KOJO_MESSAGE_COM_K109_71
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K109_71_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K109_71_1
+;-------------------------------------------------
+;�L���`�F�b�N�i=0, ��\���A1, �\���j
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;�l�����镪�򂪑�������̂Œn�̕��̑�܂��ȕ��򂾂�
+	;�A��
+	IF PREVCOM == SELECTCOM
+		PRINTFORMW 
+		RETURN 1
+	;��lV�}��������A�}��
+	ELSEIF TCVAR:100 == MASTER
+		PRINTFORMW 
+		RETURN 1
+	;��lA�}��������V�}��
+	ELSEIF TCVAR:101 == MASTER
+		PRINTFORMW 
+		RETURN 1
+	;����V�}������lA�}��
+	ELSEIF TCVAR:100 == ASSI
+		PRINTFORMW 
+		RETURN 1
+	;����A�}������lV�}��
+	ELSEIF TCVAR:101 == ASSI
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;72,�}���f�X�|�b�g�ӂ�
+;==================================================
+@M_KOJO_MESSAGE_COM_K109_72
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K109_72_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K109_72_1
+;-------------------------------------------------
+;�L���`�F�b�N�i=0, ��\���A1, �\���j
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;������
+	;-------------------------------------------------
+	;���߂�
+	;�L���`�F�b�N
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+	ENDIF
+	;-------------------------------------------------
+	;�}���p��
+	;�L���`�F�b�N
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:101 == PLAYER
+		;�O��ː�����
+		IF TCVAR:104
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;��{�Z�b�g
+	;����
+	IF TALENT:����
+		PRINTFORMW 
+		RETURN 1
+	;����3
+	ELSEIF MARK:�s������ == 3
+		PRINTFORMW 
+		RETURN 1
+	;����ȊO
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;73,�}���q�{���ӂ�
+;==================================================
+@M_KOJO_MESSAGE_COM_K109_73
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K109_73_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K109_73_1
+;-------------------------------------------------
+;�L���`�F�b�N�i=0, ��\���A1, �\���j
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;������
+	;-------------------------------------------------
+	;���߂�
+	;�L���`�F�b�N
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+	ENDIF
+	;-------------------------------------------------
+	;�}���p��
+	;�L���`�F�b�N
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:101 == PLAYER
+		;�O��ː�����
+		IF TCVAR:104
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;��{�Z�b�g
+	;����
+	IF TALENT:����
+		PRINTFORMW 
+		RETURN 1
+	;����3
+	ELSEIF MARK:�s������ == 3
+		PRINTFORMW 
+		RETURN 1
+	;����ȊO
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;74,�r�󌋒��ӂ�
+;==================================================
+@M_KOJO_MESSAGE_COM_K109_74
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K109_74_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K109_74_1
+;-------------------------------------------------
+;�L���`�F�b�N�i=0, ��\���A1, �\���j
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;������
+	;-------------------------------------------------
+	;���߂�
+	;�L���`�F�b�N
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+	ENDIF
+	;-------------------------------------------------
+	;�}���p��
+	;�L���`�F�b�N
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:101 == PLAYER
+		;�O��ː�����
+		IF TCVAR:104
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;��{�Z�b�g
+	;����
+	IF TALENT:����
+		PRINTFORMW 
+		RETURN 1
+	;����3
+	ELSEIF MARK:�s������ == 3
+		PRINTFORMW 
+		RETURN 1
+	;����ȊO
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;75,�S���ӂ�
+;==================================================
+@M_KOJO_MESSAGE_COM_K109_75
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K109_75_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K109_75_1
+;-------------------------------------------------
+;�L���`�F�b�N�i=0, ��\���A1, �\���j
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;������
+	;-------------------------------------------------
+	;���߂�
+	;�L���`�F�b�N
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+	ENDIF
+	;-------------------------------------------------
+	;�}���p��
+	;�L���`�F�b�N
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:101 == PLAYER
+		;�O��ː�����
+		IF TCVAR:104
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;��{�Z�b�g
+	;����
+	IF TALENT:����
+		PRINTFORMW 
+		RETURN 1
+	;����3
+	ELSEIF MARK:�s������ == 3
+		PRINTFORMW 
+		RETURN 1
+	;����ȊO
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;77,���l�I�i�z(�j���ۗp�H
+;==================================================
+@M_KOJO_MESSAGE_COM_K109_77
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K109_77_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K109_77_1
+;-------------------------------------------------
+;�L���`�F�b�N�i=0, ��\���A1, �\���j
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;������
+	;-------------------------------------------------
+	;���߂�
+	;�L���`�F�b�N
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+	ENDIF
+	;-------------------------------------------------
+	;�}���p��
+	;�L���`�F�b�N
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && TCVAR:101 == PLAYER
+		;�O��ː�����
+		IF TCVAR:104
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+	;��{�Z�b�g
+	;����
+	IF TALENT:����
+		PRINTFORMW 
+		RETURN 1
+	;����3
+	ELSEIF MARK:�s������ == 3
+		PRINTFORMW 
+		RETURN 1
+	;����ȊO
+	ELSE
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;95,�^���}��
+;==================================================
+@M_KOJO_MESSAGE_COM_K109_95
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K109_95_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K109_95_1
+;-------------------------------------------------
+;�L���`�F�b�N�i=0, ��\���A1, �\���j
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;������
+	;-------------------------------------------------
+	;���߂�
+	;�L���`�F�b�N
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	IF LOCAL:1 && FIRSTTIME(SELECTCOM)
+	ENDIF
+	;-------------------------------------------------
+	;�L���`�F�b�N
+	LOCAL:1 = 0
+	;-------------------------------------------------
+	;�����������o�񏈏��̏ꍇ
+	IF LOCAL:1 && TFLAG:194
+		;�~������ꍇ�̕���
+		IF TFLAG:194 == 2
+			PRINTFORMW 
+			RETURN 1
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	;�񏈏�
+	ELSE
+		;����
+		IF TALENT:����
+			PRINTFORMW 
+			RETURN 1
+		;����ȊO
+		ELSE
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1

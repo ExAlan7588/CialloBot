@@ -1,0 +1,159 @@
+﻿@COM615
+#DIM 恢复前体力１
+#DIM 恢复前气力１
+#DIM 恢复后体力１
+#DIM 恢复后气力１
+#DIM 恢复前体力２
+#DIM 恢复前气力２
+#DIM 恢复后体力２
+#DIM 恢复后气力２
+
+恢复前体力１ = BASE:MASTER:体力
+恢复前气力１ = BASE:MASTER:气力
+恢复前体力２ = BASE:TARGET:体力
+恢复前气力２ = BASE:TARGET:气力
+LOCAL = RAND:3
+LOCAL:1 = RAND:10
+IF LOCAL > ABL:料理技能
+	;料理が下手だと失败
+	TFLAG:193 = -1
+	TFLAG:98 = -1
+ELSEIF LOCAL:1 <= ABL:料理技能 - 2
+	;料理が上手いと大成功
+	EXP:MASTER:会话经验 ++
+	EXP:MASTER:约会经验 ++
+	EXP:TARGET:约会经验 ++
+	TFLAG:193 = 1
+	TFLAG:98 = 5
+ELSE
+	;残りは成功
+	TFLAG:193 = 0
+	TFLAG:98 = 3
+ENDIF
+
+DOWNBASE:气力 += 50
+
+;固定で获得するソース
+SOURCE:欢乐 = 300
+SOURCE:情爱 = 300
+SOURCE:露出 = 100
+SOURCE:反感 = 50
+
+
+IF (ABL:亲密 + ABL:侍奉精神) < 10
+	LOCAL:2 = 1
+	SOURCE:欢乐 += 1000 + (ABL:亲密 * 100)
+	SOURCE:达成 += 500 + (ABL:亲密 * 50)
+	SOURCE:情爱 += (ABL:亲密 * 30)
+ELSEIF (ABL:亲密 + ABL:侍奉精神) < 15
+	LOCAL:2 = 2
+	SOURCE:欢乐 += 2000 + (ABL:亲密 * 150)
+	SOURCE:达成 += 1500 + (ABL:亲密 * 80)
+	SOURCE:情爱 += 400 + (ABL:亲密 * 30)
+ELSEIF (ABL:亲密 + ABL:侍奉精神) < 25
+	LOCAL:2 = 3
+	SOURCE:欢乐 += 3000 + (ABL:亲密 * 200)
+	SOURCE:达成 += 2000 + (ABL:亲密 * 100)
+	SOURCE:情爱 += 600 + (ABL:亲密 * 40)
+ELSE
+	 LOCAL:2 = 5
+	SOURCE:欢乐 += 5000 + (ABL:亲密 * 250)
+	SOURCE:达成 += 3000 + (ABL:亲密 * 150)
+	SOURCE:情爱 += 1800 + (ABL:亲密 * 30)
+ENDIF
+
+EXP:料理经验 += LOCAL:2
+SIF TALENT:恋慕
+	EXP:爱情经验 += LOCAL:2
+
+IF ABL:料理技能 < 2
+	CALL RECOVER_PERMIL_BOTH(TARGET, 200, "体力", 0, "因为饮食而产生的恢复")
+	CALL RECOVER_PERMIL_BOTH(TARGET, 300, "气力", 0, "因为饮食而产生的恢复")
+	CALL RECOVER_PERMIL_BOTH(TARGET, 100, "精力", 0, "因为饮食而产生的恢复")
+ELSEIF ABL:料理技能 < 4
+	CALL RECOVER_PERMIL_BOTH(TARGET, 250, "体力", 0, "因为饮食而产生的恢复")
+	CALL RECOVER_PERMIL_BOTH(TARGET, 350, "气力", 0, "因为饮食而产生的恢复")
+	CALL RECOVER_PERMIL_BOTH(TARGET, 150, "精力", 0, "因为饮食而产生的恢复")
+ELSE
+	CALL RECOVER_PERMIL_BOTH(TARGET, 300, "体力", 0, "因为饮食而产生的恢复")
+	CALL RECOVER_PERMIL_BOTH(TARGET, 400, "气力", 0, "因为饮食而产生的恢复")
+	CALL RECOVER_PERMIL_BOTH(TARGET, 200, "精力", 0, "因为饮食而产生的恢复")
+ENDIF
+IF TFLAG:193 == -1
+	TIMES SOURCE:欢乐 , 0.50
+	TIMES SOURCE:达成 , 0.50
+	TIMES SOURCE:情爱 , 0.50
+ELSEIF TFLAG:193 == 0
+	TIMES SOURCE:欢乐 , 1.00
+	TIMES SOURCE:达成 , 1.00
+	TIMES SOURCE:情爱 , 1.00
+ELSE
+	TIMES SOURCE:欢乐 , 2.00
+	TIMES SOURCE:达成 , 2.00
+	TIMES SOURCE:情爱 , 2.00
+ENDIF
+TIME += 60
+EXP:MASTER:约会经验 ++
+EXP:TARGET:约会经验 ++
+CALL 满腹度上升(MASTER,"主食")
+CALL 满腹度上升(TARGET,"主食")
+
+SETBIT TFLAG:一日一回,1
+恢复后体力１ = BASE:MASTER:体力
+恢复后气力１ = BASE:MASTER:气力
+恢复后体力２ = BASE:TARGET:体力
+恢复后气力２ = BASE:TARGET:气力
+;DRAWLINE
+;PRINTFORML 体力+{ABS(恢复后体力１ - 恢复前体力１)}（%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%）
+;PRINTFORML 气力+{ABS(恢复后气力１ - 恢复前气力１)}（%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%）
+;PRINTFORML 体力+{ABS(恢复后体力２ - 恢复前体力２)}（%NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%）
+;PRINTFORML 气力+{ABS(恢复后气力２ - 恢复前气力２)}（%NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%）
+RETURN 1
+
+;-------------------------------------------------
+;实行可能判定
+;-------------------------------------------------
+;便当
+@COM_ABLE615
+;批量管理
+SIF GLOBAL_COMABLE(615)
+	RETURN RESULT
+;相手が居ない
+SIF !TARGET
+	RETURN 0
+;约会中以外
+SIF !CHK_DATENOW(CFLAG:12)
+	RETURN 0
+;约会道中
+SIF TFLAG:约会道中
+	RETURN 0
+SIF !OBENTO(CFLAG:MASTER:当前位置)
+	RETURN 0
+;食べたばかり
+SIF !TIME_PROGRESS(TCVAR:312)
+	RETURN 0
+SIF GETBIT(TFLAG:一日一回,1)
+	RETURN 0
+;睡眠中
+SIF CFLAG:睡眠
+	RETURN 0
+;时间停止中
+SIF FLAG:70
+	RETURN 0
+RETURN 1
+
+;-----------------------------------------------------------
+;便当が食べられる场所
+;RETURNF	1=便当食べられる,0=便当食べられない
+;-----------------------------------------------------------
+@OBENTO(ARG)
+#FUNCTION
+IF IN_HOME(ARG)
+	RETURNF 0
+ELSEIF ARG == OMANEKIBEYA()
+	RETURNF 0
+ELSE
+	SIF ODEKAKEMAP_SETTING(ARG, "便当")
+		RETURNF 1
+ENDIF
+RETURNF 0

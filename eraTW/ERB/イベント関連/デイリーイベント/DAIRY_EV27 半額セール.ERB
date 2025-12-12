@@ -1,0 +1,19 @@
+﻿@DAILY_CONDITION_EV27
+
+IF !FLAG:土特产店特价销售 && !RAND:30
+	CALL DAILY_EV27
+	RETURN 1
+ELSE
+	RETURN -1
+ENDIF
+
+@DAILY_EV27
+;この后にフラグリセットが入るので目印として+1100しておく
+FLAG:土特产店特价销售 = RAND:11 + 1100
+SIF FLAG:土特产店特价销售 % 100 == MAIN_MAP
+	RESTART
+IF FLAG:新闻订阅
+	PRINTFORML 根据文文。新闻、%STR:(5000 + (FLAG:土特产店特价销售 % 100) )%的土特产店开始了特价销售
+	PRINTFORMW 全部的商品都是半价
+ENDIF
+RETURN 1

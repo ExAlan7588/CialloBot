@@ -1,0 +1,16 @@
+﻿#DIMS DISH_NAME      ;料理の名前
+#DIMS DISH_TASTE     ;料理に含まれるパラメータ
+#DIMS DISH_TYPE      ;料理の分类（轻食,主食,甜点）
+#DIMS DISH_COMMENT   ;料理の说明文
+#DIM DISH_ING,11     ;制作料理のに使える材料
+#DIM DISH_TIME       ;调理时间
+#DIM DISH_DRG        ;料理に仕込まれた药物
+#DIM DISH_DRG_2      ;料理に仕込んだ添加物
+#DIM DISH_ASSI       ;一绪に料理をする/した角色
+#DIMS EX_DISH_NAME   ;表示用に使われる料理の名前
+#DIM DISH_RANK       ;食材のランク
+#DIM DISH_BASEPOINT  ;作った料理の基本点
+#DIM DISH_LIMIT      ;料理の鲜度
+#DIM DISH_MAXLIMIT   ;料理の鲜度の最大值
+
+#DIMS DISHNAME       ;旧料理の名前,口上でのみ使用可能

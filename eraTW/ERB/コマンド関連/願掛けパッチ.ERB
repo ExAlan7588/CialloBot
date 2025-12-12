@@ -1,0 +1,409 @@
+﻿@GANKAKE_0(ARG,ARG:1)
+
+FLAG:祈愿内容 = ARG
+IF CFLAG:ARG:神社在住 && ARG > 0
+;	// 好感度上升 //
+	CFLAG:ARG:好感度 += 10 + RAND:10
+	CFLAG:ARG:信赖度 += 5 + RAND:10
+ELSEIF CFLAG:ARG:来访不能
+	FLAG:祈愿内容 = -1
+ELSE
+	FOR LOCAL, 1, CHARANUM
+	;	// 引っ越しで自宅が变わるので自宅メンバーも祈愿フラグは立てることにする //
+	;	SIF CFLAG:LOCAL:神社在住 > 0
+	;		CONTINUE
+		IF ARG == LOCAL
+			CFLAG:LOCAL:翌日来访 = 1
+		ELSE
+			CFLAG:LOCAL:翌日来访 = 0
+		ENDIF
+	NEXT
+ENDIF
+
+@GANKAKE_1(ARG)
+#FUNCTION
+#DIM Buff可能个所数
+#DIM Buffする个所候补, 12
+#DIM 实际Buffする个所
+
+;Buffする个所候补:0~12に素質番号を割り振り、その度にBuff可能个所数を增やす
+
+VARSET Buffする个所候补
+Buff可能个所数 = 0
+实际Buffする个所 = 0
+
+IF TALENT:ARG:思慕 || IS_LOVER(ARG)
+	IF TALENT:ARG:性的兴趣 < 1
+		Buffする个所候补:Buff可能个所数 = 23
+		Buff可能个所数 ++
+	ENDIF
+	IF TALENT:ARG:自己爱 < 1
+		Buffする个所候补:Buff可能个所数 = 31
+		Buff可能个所数 ++
+	ENDIF
+	IF TALENT:ARG:弄湿难易 < 1
+		Buffする个所候补:Buff可能个所数 = 41
+		Buff可能个所数 ++
+	ENDIF
+	IF TALENT:ARG:快感应答 < 1
+		Buffする个所候补:Buff可能个所数 = 70
+		Buff可能个所数 ++
+	ENDIF
+	IF TALENT:ARG:倒错的 < 1
+		Buffする个所候补:Buff可能个所数 = 80
+		Buff可能个所数 ++
+	ENDIF
+	IF TALENT:ARG:施虐狂 < 1
+		Buffする个所候补:Buff可能个所数 = 82
+		Buff可能个所数 ++
+	ENDIF
+	IF TALENT:ARG:受虐狂 < 1
+		Buffする个所候补:Buff可能个所数 = 83
+		Buff可能个所数 ++
+	ENDIF
+ENDIF
+
+FOR LOCAL,101,105
+	IF TALENT:ARG:LOCAL < 1
+		Buffする个所候补:Buff可能个所数 = LOCAL
+		Buff可能个所数 ++
+	ENDIF
+NEXT
+IF TALENT:ARG:106 < 1
+	Buffする个所候补:Buff可能个所数 = 106
+	Buff可能个所数 ++
+ENDIF
+
+SIF !Buff可能个所数
+	RETURNF Buff可能个所数
+
+实际Buffする个所 = Buffする个所候补:(RAND:Buff可能个所数)
+TALENT:ARG:实际Buffする个所 ++
+TCVAR:TARGET:祈愿补正 = 实际Buffする个所
+TFLAG:193 = 实际Buffする个所
+
+RETURNF Buff可能个所数
+
+@SHOW_CHALALIST
+SIF FLAG:排序
+	CALL CHARASORT_EX
+FOR LOCAL:1, 1, EX_CHARANUM
+	IF FLAG:排序
+		LOCAL = RESULT:(LOCAL:1)
+		SIF LOCAL < 0
+			CONTINUE
+	ELSE
+		LOCAL = LOCAL:1
+		SIF LOCAL >= CHARANUM
+			BREAK
+	ENDIF
+	SIF !CFLAG:LOCAL:出禁 && !TALENT:LOCAL:路人
+		PRINTFORMLC [{LOCAL, 3}] %NAME_OUTPUT_TRANSLATION("CALLNAME", LOCAL),15,LEFT%
+NEXT
+;21/08/27 反抗履历削除追加、反抗解除时に反抗履历も消去可に变更
+@IKENIE(ARG,ARG:1)
+;ARG 对象
+;ARG:1 愿い(1=反抗解除 2=感度一时上升 3=小槌 4=时间停止暴露解除[オミット]
+;			 5=天罚 6=生子祈愿 7=施虐属性减少 8=反抗履历削除)
+#DIM 总计
+#DIM 种类数
+#DIM 重复
+#DIM 捧げた枚数
+#DIM 献出枚数
+#DIM 必要枚数
+VARSET LOCAL
+CALL CHECK_COLLECTION(ARG)
+总计 = RESULT:0
+种类数 = RESULT:1
+重复 = 总计 - 种类数
+捧げた枚数 = 0
+献出枚数 = 0
+SELECTCASE ARG:1
+	CASE 1
+		必要枚数 = 10
+	CASE 2
+		必要枚数 = 3
+	CASE 3
+		必要枚数 = CFLAG:MASTER:魔力回收 / 2 + 1
+	CASE 4,6,8
+		必要枚数 = 1
+	CASE 5,7
+		必要枚数 = 3
+ENDSELECT
+
+PRINTL 脑海中响起了声音…
+PRINTW ((想实现这个愿望的话、就献上祭品吧…))
+PRINTFORMW ((献出%NAME_OUTPUT_TRANSLATION("CALLNAME", ARG)%的内裤{必要枚数}条吧……))
+PRINTFORM 现在%NAME_OUTPUT_TRANSLATION("CALLNAME", ARG)%的内裤
+IF !种类数
+	PRINTL 一条也没有
+	RETURN -1
+ENDIF
+PRINTFORML 共有{总计}条{种类数}种、重复的有{重复}条
+IF 总计 < 必要枚数
+	PRINTFORML 离需要的条数还差{必要枚数 - 总计}条
+	RETURN -1
+ENDIF
+
+LOCALS = 献出
+SIF 重复 < 必要枚数
+	LOCALS = 即使有不重复的内裤也将其献出来
+$LOOP
+CALL ASK_M("不献出",1,@"%LOCALS%",总计 >= 必要枚数)
+IF RESULT == 1
+	FOR LOCAL, 0, MAXPANTS
+		IF CFLAG:ARG:(胖次管理 + LOCAL) > 1
+			献出枚数 = MIN(CFLAG:ARG:(胖次管理 + LOCAL) - 1,(必要枚数 - 捧げた枚数))
+			CFLAG:ARG:(胖次管理 + LOCAL) -= 献出枚数
+			捧げた枚数 += 献出枚数
+			SIF 捧げた枚数 >= 必要枚数
+				BREAK
+		ENDIF
+	NEXT
+	IF 捧げた枚数 < 必要枚数
+		FOR LOCAL, 0, MAXPANTS
+			献出枚数 = MIN(CFLAG:ARG:(胖次管理 + LOCAL),(必要枚数 - 捧げた枚数))
+			CFLAG:ARG:(胖次管理 + LOCAL) -= 献出枚数
+			捧げた枚数 += 献出枚数
+			FLAG:700 --
+			SIF 捧げた枚数 >= 必要枚数
+				BREAK
+		NEXT
+	ENDIF
+	SIF ARG:1 == 1
+		CALL ASK_M("履历也消除",1,"留下履历",1)
+	SELECTCASE ARG:1
+		CASE 1
+			MARK:ARG:反抗刻印 --
+			SIF !RESULT
+				MARK:ARG:反抗取得履历 = MAX(MARK:ARG:反抗取得履历 - 1, 0)
+			TFLAG:193 = 30
+		CASE 2
+			FLAG:祈愿内容 = 999
+		CASE 3
+			CFLAG:MASTER:魔力回收 = 1
+			SIF (CFLAG:MASTER:小槌 == 4 || CFLAG:MASTER:小槌 == 5) && TALENT:MASTER:形状 == 2
+				TALENT:MASTER:形状 = CFLAG:MASTER:382
+		CASE 4
+			CFLAG:ARG:时间停止暴露 = 0
+		CASE 5
+			FLAG:祈愿内容 = 204
+			TFLAG:193 = 200
+			FLAG:开运大纹购入回数 = 1
+			BASE:53:体力 = 1
+			BASE:53:气力 = 0
+		CASE 6
+			FLAG:祈愿内容 = 206
+			IF BABYDLC == 1
+				FLAG:祈愿内容 = 999
+					IF CFLAG:生子补正 < 10
+					CFLAG:生子补正 = 9
+					ENDIF
+				CFLAG:生子补正 ++
+				TCVAR:ARG:发情 = 1
+				PRINTFORMW 因为你的祈祷%NAME_OUTPUT_TRANSLATION("CALLNAME", ARG)%发情了
+				IF EXP:MASTER:11 > (100 + FLAG:561 * 100) && FLAG:561 < 11
+					LOCAL += 100
+					FLAG:561 += 1
+				ENDIF
+				CALL BUFF_BASE(MASTER,BASE_精力,1000)
+				
+				PRINTFORMW 而你的体内出现了大量精力并且蠢蠢欲动
+					TALENT:MASTER:浓厚精液 = 1
+			ENDIF
+			IF FLAG:生子祈愿 == TARGET
+				CFLAG:生子补正 ++
+			ELSE
+				FOR LOCAL,1,CHARANUM
+					CFLAG:LOCAL:生子补正 = 0
+				NEXT
+				CFLAG:生子补正 ++
+			ENDIF
+			SIF TALENT:怀孕愿望
+				CFLAG:生子补正 ++
+			SIF TALENT:恋人
+				CFLAG:生子补正 ++
+			FLAG:生子祈愿 = TARGET
+		CASE 7
+			ABL:ARG:施虐属性 -= 1
+			JUEL:ARG:优越 = 0
+			EXP:ARG:嗜虐快乐经验 = MAX(EXP:ARG:嗜虐快乐经验 - 200, 0)
+		CASE 8
+			MARK:ARG:反抗取得履历 = 0
+			TFLAG:193 = 35
+	ENDSELECT
+	PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%将秘藏的收集品叠起来刚一祈祷、一道非人间所能有的火焰就冒了出来将{必要枚数}条内裤烧的一点都不剩！
+	FLAG:笃信 += 必要枚数
+	IF ARG:1 == 7
+		CALL COLORMESSAGE(@"%NAME_OUTPUT_TRANSLATION("CALLNAME", ARG)%的施虐属性下降了",C_YELLOW,2,1)
+		CALL COLORMESSAGE(@"%NAME_OUTPUT_TRANSLATION("CALLNAME", ARG)%的嗜虐快乐经验下降了",C_YELLOW,2,1)
+		CALL COLORMESSAGE(@"%NAME_OUTPUT_TRANSLATION("CALLNAME", ARG)%的优越之珠变为了0",C_YELLOW,2,1)
+	ENDIF
+	IF ARG:1 == 6
+		PRINTFORML ((你的愿望实现了))
+		PRINTFORMW ((我就收下祭品了……))
+	ELSEIF ARG:1 == 2 && !GANKAKE_1(ARG)
+		PRINTW
+		PRINTW …
+		PRINTW ……
+		PRINTW ………
+		PRINTW …………
+		PRINTFORML 即使是胖次神明也无法将%NAME_OUTPUT_TRANSLATION("CALLNAME", ARG)%变得更加工口……
+		RETURN -1
+	ELSE
+		PRINTW ((汝的愿望已经实现了……))
+	ENDIF
+	PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%懂得要尊敬神明了
+	RETURN 0
+ELSE
+	RETURN -1
+ENDIF
+
+@PINK_WIND
+#DIM 供物
+#DIM 献出枚数
+#DIM 总数
+#DIM HIT
+献出枚数 = 0
+总数 = 0
+DO
+	IF FLAG:胖次输送 == 0
+		供物 = 0
+		BREAK
+	ENDIF
+	PRINTFORML 要追加奉献作为供品的手持胖次吗？
+	CALL ASK_M("不献出", 1, "献出", 1, "手持胖次确认", 1)
+	SELECTCASE RESULT
+		CASE 0, 1
+			供物 = RESULT
+			BREAK
+		CASE 2
+			CALL SHOW_HAVE_COLLECTION()
+			PRINTL 
+	ENDSELECT
+LOOP 1
+SETCOLOR 255,100,255
+FONTBOLD
+PRINTFORMW 幻想乡吹起了桃色之风！
+FOR LOCAL,1,CHARANUM
+	IF 供物
+		CALL CHECK_COLLECTION(LOCAL, 1)
+		献出枚数 = RESULT
+	ENDIF
+	HIT = !RAND:15
+	;供物を献出ことにより元の持ち主に桃色の风を确定で当てる
+	IF HIT || (供物 && 献出枚数 > 0)
+		IF 供物
+			IF 献出枚数 > 0
+				IF HIT
+					PRINTFORM 〇●
+					;从来街道の概率に当たりかつ捧げた场合に加算
+					总数 ++
+				ELSE
+					PRINTFORM 〇　
+				ENDIF
+				;同角色の胖次を2枚以上捧げた枚数分加算
+				SIF 献出枚数 > 1
+					总数 += (献出枚数 - 1) * 2
+			ELSEIF HIT
+				PRINTFORM 　●
+			ENDIF
+		ENDIF
+
+		PRINTFORML 沐浴在桃色之风中的%NAME_OUTPUT_TRANSLATION("CALLNAME", LOCAL)%产生了奇怪的感觉
+		CFLAG:LOCAL:积攒度 += LIMIT((10 + RAND:20 + RAND:20 + RAND:20) * ABL:LOCAL:欲望,200,1000)
+		;捧げてかつ、くすねて是ていない场合追加效果あってもよさげ？
+
+		TCVAR:LOCAL:祈愿桃色の风 = 1
+	ENDIF
+NEXT
+RESETCOLOR
+FONTREGULAR
+PRINTW ((汝的愿望已经实现了……))
+IF 供物
+	PRINTFORML 回过神来，作为供品献上的胖次已经消失得无影无踪
+	;VARSET PANTS_TEMP
+	;FLAG:胖次输送 = 0
+	CALL CLEAR_HAVE_COLLECTION()
+ENDIF
+PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%懂得要尊敬神明了
+FLAG:笃信 += (1 + 总数)
+
+@DOWSING_PANTS
+#DIM CHK_SLOT
+#DIM CHARA
+#DIM HIT
+PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%祈祷着能找到被委托寻找的东西…………
+PRINTL 
+HIT = 0
+FOR CHK_SLOT, 1, 6
+	SIF !GETBIT(CAN_DOWSING(), CHK_SLOT)
+		CONTINUE
+	CHARA = 0
+	SELECTCASE IRAI_SLOT_TO_TASKNAME(CHK_SLOT)
+	CASE "捜索（人物）"
+		CHARA = IRAI_SLOT_TO_PERSON(CHK_SLOT)
+		;手持
+		CALL CHECK_COLLECTION(CHARA, 1)
+		IF RESULT
+			CALL DOWSING_PANTS_MESSAGE(CHARA, 1)
+			HIT = 1
+		ELSE
+			;收藏
+			CALL CHECK_COLLECTION(CHARA, 0)
+			IF RESULT
+				CALL DOWSING_PANTS_MESSAGE(CHARA, 0)
+				HIT = 1
+			ENDIF
+		ENDIF
+	CASE "捜索（场所）"
+		;自宅がある角色を抽出
+		FOR CHARA, 1, CHARANUM
+			IF CFLAG:CHARA:自宅位置 == GET_MAP_REPLACEMENT(IRAI_SLOT_TO_PLACE(CHK_SLOT))
+				;手持
+				CALL CHECK_COLLECTION(CHARA, 1)
+				IF RESULT
+					CALL DOWSING_PANTS_MESSAGE(CHARA, 1)
+					HIT = 1
+					BREAK
+				ELSE
+					;收藏
+					CALL CHECK_COLLECTION(CHARA, 0)
+					IF RESULT
+						CALL DOWSING_PANTS_MESSAGE(CHARA, 0)
+						HIT = 1
+						BREAK
+					ENDIF
+				ENDIF
+			ENDIF
+		NEXT
+	CASEELSE
+		CONTINUE
+	ENDSELECT
+NEXT
+SIF !HIT
+	PRINTFORMW ……可惜愿望并没有传达到
+
+@DOWSING_PANTS_MESSAGE(CHARA, HAND)
+#DIM CHARA
+#DIM HAND
+#DIM 种类
+#DIM 所有数
+CALL FISHER_YATES_SHAFFLE(MAXPANTS)
+SETCOLOR C_YELLOW
+FOR LOCAL, 0, MAXPANTS
+	种类 = SHAFFLE_ARRAY:LOCAL
+	IF !HAND
+		IF CFLAG:CHARA:(种类 + 胖次管理)
+			PRINTFORMW 天哪！ 保管的%NAME_OUTPUT_TRANSLATION("CALLNAME", CHARA)%的%PANTSNAME(种类,CHARA)%发出了光芒！
+			BREAK
+		ENDIF
+	ELSE
+		IF PANTS_TEMP:CHARA:种类
+			PRINTFORMW 天哪！ 手里拿着的%NAME_OUTPUT_TRANSLATION("CALLNAME", CHARA)%的%PANTSNAME(种类,CHARA)%发出了光芒！
+			BREAK
+		ENDIF
+	ENDIF
+NEXT
+RESETCOLOR
+

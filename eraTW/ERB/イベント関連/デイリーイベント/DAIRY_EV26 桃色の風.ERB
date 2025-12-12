@@ -1,0 +1,17 @@
+﻿@DAILY_CONDITION_EV26
+#DIM 发生率
+发生率 = 25
+SIF FLAG:获得胖次种数 >= 4
+	发生率 += SQRT(FLAG:获得胖次种数) / 2
+发生率 += FLAG:笃信 * 5
+IF 发生率 < RAND:1000 || FLAG:异常气象
+	RETURN -1
+ENDIF
+CALL DAILY_EV26
+RETURN 1
+
+@DAILY_EV26
+FLAG:笃信 = 0
+PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%积下来的德让奇迹发生了……！
+CALL COLORMESSAGE(@"开始吹起了桃色的风了",C_PINK,2,1)
+FLAG:异常气象 = 8

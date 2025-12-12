@@ -1,0 +1,548 @@
+﻿;※※※※※※※※※※※※※※※※※※※※※※※※※
+;侍奉系指令
+;※※※※※※※※※※※※※※※※※※※※※※※※※
+;==================================================
+;80,手淫
+;==================================================
+@M_KOJO_MESSAGE_COM_K79_80
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K79_80_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K79_80_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	IF FIRSTTIME(SELECTCOM)
+		IF TALENT:恋慕
+			PRINTFORML 「嘛，算了，我也有各种各样的。也就是说%CALLNAME:MASTER%…这样的话，彼此彼此吧……」
+			PRINTFORMW 雏回想起被%CALLNAME:MASTER%拒绝了的事，红着脸也接受了的样子,把手搭在%CALLNAME:MASTER%肉棒上……。
+		ELSE
+			PRINTFORML 「诶！？那个，那个……用我的手擦吗…？嗯…我，我知道了」
+			PRINTFORMW 对于%CALLNAME:MASTER%向雏的要求，雏的表情瞬间退缩了，但还是勉强答应了……。
+		ENDIF
+		RETURN 1
+	ENDIF
+	;基本セット
+	;时奸中
+	IF FLAG:时间停止
+		PRINTFORMW 
+		RETURN 1
+	ELSEIF TALENT:恋慕
+		IF ABL:指 >= 5
+			;この后射精する(射精寸前の描写)
+				IF NOWEX:PLAYER:射精
+				PRINTFORML 「啊…%UNICODE(0x2764)% %CALLNAME:MASTER%，差不多要去了吗？」
+				PRINTFORMW 注意到%CALLNAME:MASTER%的阴茎的细微变化，雏向%CALLNAME:MASTER%问道。
+				PRINTFORML 「来来，差不多要射精了吧？ 不要忍耐，尽情地释放出来吧？」
+				PRINTFORMW 雏一边拼命地爱抚着%CALLNAME:MASTER%的肉棒，一边用充满慈爱的表情凝视着%CALLNAME:MASTER%……。
+			ELSE
+				SELECTCASE RAND:5
+					CASE 0
+						PRINTFORML 「好——的，来，我们来撸%CALLNAME:MASTER%的小鸡鸡吧——%UNICODE(0x2764)%」
+						PRINTFORMW 熟知手淫技巧的雏，一边用手指缠绕着，一边用轻快的节奏爱抚着肉棒。
+						PRINTFORML 「嗯嗯——%UNICODE(0x2764)% 这样的话…，会变得滑溜溜的，很舒服吧…%UNICODE(0x2764)%」
+						PRINTFORMW 雏将唾液滴在%CALLNAME:MASTER%的阴茎上，使爱抚变得更加顺滑……。
+					CASE 1
+						PRINTFORML 「呵呵，%CALLNAME:MASTER%的这里…，硬邦邦的……%UNICODE(0x2764)%」
+						PRINTFORMW 雏一边揉捏着%CALLNAME:MASTER%的睾丸，一边眺望着勃起的%CALLNAME:MASTER%的肉棒……。
+						PRINTFORML 「那么，期待已久……。要抓紧了哦%UNICODE(0x2764)%」
+						PRINTFORMW 雏用双手紧紧抓住%CALLNAME:MASTER%的男性器官，开始玩弄整个性器官……。
+					CASE 2
+						PRINTFORML 「诶——噫！ ……啾%UNICODE(0x2764)%」
+						PRINTFORMW 雏紧紧地握住了%CALLNAME:MASTER%的肉棒。但是那个力度非常绝妙，既没有疼痛感，反而感觉很舒服。
+						PRINTFORML 「小鸡鸡，可不只是用来撸的哦……？」
+						PRINTFORMW 这样说着雏，似乎有些得意。
+					CASE 3
+						PRINTFORML 「……这样的话，怎么样呢？」
+						PRINTFORMW 雏用熟练的手法爱抚着%CALLNAME:MASTER%的肉棒，一边用指尖的动作给肉棒带来刺激。
+						PRINTFORML 「怎么样？ %CALLNAME:MASTER%的小鸡鸡，是不是感觉很舒服啊……？」
+						PRINTFORMW 一边时而加强时而减弱刺激，雏一边玩弄着%CALLNAME:MASTER%的肉棒，一边享受着乐趣……。
+					CASE 4
+						PRINTFORML 「嗯…，转圈圈，咕噜咕噜地……%UNICODE(0x2764)%」
+						PRINTFORMW 雏用手掌咕噜咕噜地摩擦着%CALLNAME:MASTER%的龟头。强烈的刺激让%CALLNAME:MASTER%忍不住想要扭动身体。
+						PRINTFORML 「诶嘿嘿，%CALLNAME:MASTER%的脸都红了哦…？ 有那么舒服吗…？」
+						PRINTFORMW 雏放缓了爱抚的动作，一边吊着胃口，一边眺望着勃起的%CALLNAME:MASTER%的肉棒的样子……。
+				ENDSELECT
+			ENDIF
+		ELSEIF ABL:指 >= 2
+			;这个之后射精(射精临近的描写)
+			IF NOWEX:PLAYER:射精
+				PRINTFORML 「…哎呀？ 难道说，差不多要出来了吗？ 那么……！」
+				PRINTFORMW 这样说着雏加快了爱抚的速度，并催促着%CALLNAME:MASTER%射精……。
+				PRINTFORML 「来，%CALLNAME:MASTER%。从『这里』，尽情地释放出来吧？」
+				PRINTFORMW 雏轻轻地揉捏着%CALLNAME:MASTER%的睾丸，爱抚着整个男性器官……。
+			ELSE
+				PRINTFORML 「……怎么样？ 我也变得很熟练了吧？」
+				PRINTFORMW 曾经的笨拙已经消失，雏正以一定的节奏持续地爱抚着肉棒。
+				PRINTFORML 「呵呵，%CALLNAME:MASTER%，看起来很舒服……」
+				PRINTFORMW 雏甚至露出了能够观察%CALLNAME:MASTER%的样子的余裕。看来雏很享受手淫。
+			ENDIF
+		ELSE
+			;这个之后射精(射精临近的描写)
+			IF NOWEX:PLAYER:射精
+				PRINTFORML 「%CALLNAME:MASTER%，脸很红，没关系吗……？」
+				PRINTFORMW 面对担心着的雏，%CALLNAME:MASTER%传达了自己差不多快到极限了。
+				PRINTFORML 「诶，是、是这样吗……？ 那么我也要加油了……！」
+				PRINTFORMW 雏虽然笨拙，但还是加快了爱抚的节奏……。
+			ELSE
+				PRINTFORML 「如、如果痛的话，要马上说哦……？」
+				PRINTFORML 雏为了不伤害到%CALLNAME:MASTER%，正慢慢地爱抚着肉棒。
+				PRINTFORML 「那个…，我、我有没有让%CALLNAME:MASTER%感到舒服呢……？」
+				PRINTFORMW 用双手温柔地包裹着%CALLNAME:MASTER%的肉棒，雏拼命地持续着侍奉……。
+			ENDIF
+		ENDIF
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		;这个之后射精(射精临近的描写)
+		IF NOWEX:PLAYER:射精
+			PRINTFORML 「那、那前端，有什么东西要出来了……」
+			PRINTFORMW 看到从龟头分泌出的前列腺液，雏发出了不安的声音。
+			PRINTFORML 「也就是说，马上就要出来了……？ 呜呜」
+			PRINTFORMW 似乎是想起了射精的瞬间，雏的表情一瞬间变得僵硬了……。
+		ELSE
+			PRINTFORML 「啊……，这个…，好、好热，还在一跳一跳的……！」
+			PRINTFORMW 面对从手中传来的热感，雏睁大了眼睛，并一动不动地凝视着作为那个热源的%CALLNAME:MASTER%的怒张……。
+			PRINTFORML 「对、对不起…，那么，我要开始了哦……」
+			PRINTFORMW 回过神来的雏慌忙地开始爱抚%CALLNAME:MASTER%的肉棒……。
+		ENDIF
+	;其他(※没有射精临近描写)
+	ELSE
+		PRINTFORML 「这、这个…，好可怕……」
+		PRINTFORMW 握着%CALLNAME:MASTER%的肉棒的雏的表情充满了不安，完全看不出是要进行侍奉的样子。
+		PRINTFORML 「那个…，这样的话，可以吗……？」
+		PRINTFORML 爱抚肉棒的手法很笨拙，怎么说都感觉不舒服。只能一点点地让她习惯了吧。
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;81,口交
+;==================================================
+@M_KOJO_MESSAGE_COM_K79_81
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K79_81_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K79_81_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	IF FIRSTTIME(SELECTCOM)
+		IF TALENT:恋慕
+			PRINTFORML 「…我听也是那个，那个……在那里，好好地侍奉吗……？」
+			PRINTFORMW %CALLNAME:MASTER%回答“没问题”，雏很害怕地舔了%CALLNAME:MASTER%的肉棒。
+		ELSE
+			PRINTFORML 「嗯…嗯……为什么，为什么，必须要舔那样的东西啊……嗯，嗯……」
+			PRINTFORMW 虽然有点流泪，但是雏还是在%CALLNAME:MASTER%的肉棒前端舔了一下。
+		ENDIF
+		RETURN 1
+	ENDIF
+	;基本セット
+	;时奸中
+	IF FLAG:时间停止
+		PRINTFORMW 
+		RETURN 1
+	ELSEIF TALENT:恋慕
+		IF ABL:舌 >= 5
+			SELECTCASE RAND:5
+				CASE 0
+					PRINTFORML 「啊…、%CALLNAME:MASTER%的肉棒……嗯，中…、中%UNICODE(0x2764)% 嗯…、中……%UNICODE(0x2764)%」
+					PRINTFORMW 把%CALLNAME:MASTER%的阴茎拿了出来，雏开心地含住%CALLNAME:MASTER%的肉棒，深入喉咙深处……。
+					PRINTFORML 「中…、哈、哈…%UNICODE(0x2764)% 在雏的口中…喜欢，好厉害…？」
+					PRINTFORMW 在舌尖缠绕着肉棒在喉咙里咕噜咕噜地响的同时，雏入迷地吞吐着%CALLNAME:MASTER%的肉棒……。
+				CASE 1
+					PRINTFORML 「啾、啾、唔……%UNICODE(0x2764)% 中、中、中…%UNICODE(0x2764)%」
+					PRINTFORMW 雏可爱地来回舔着%CALLNAME:MASTER%的肉棒，把肉棒用雏的唾液变得黏糊糊的……。
+					PRINTFORML 「中…%UNICODE(0x2764)% 嗯，珠…、%CALLNAME:MASTER%，嗯…！嗯，肉棒，肉棒……！」
+					PRINTFORMW 以和龟头悄悄地接吻为信号，雏一口气撑到竿根，温暖的舌头和嘴唇蹂躏了%CALLNAME:MASTER%的肉棒……。
+				CASE 2
+					PRINTFORML 「啊，%CALLNAME:MASTER%的肉棒……%UNICODE(0x2764)% 哈，哈…快点，快给我……？」
+					PRINTFORMW 被%CALLNAME:MASTER%阴茎所吸引的雏、兴高采烈地坐下来，用舌头爬在了%CALLNAME:MASTER%的肉棒上。
+					PRINTFORML 「嗯，嗯…%UNICODE(0x2764)%、嗯，嗯，哈哈…嗯，嗯，嗯，知道了，珠%UNICODE(0x2764)% 中，噗哈哈…！」
+					PRINTFORMW 因为太过用力而从嘴里蹦出来了、雏带着恍惚的表情望着抽得直哆嗦的%CALLNAME:MASTER%的肉棒……。
+				CASE 3
+					PRINTFORML 「%CALLNAME:MASTER%的肉棒，雏会慢慢给你弄干净」
+					PRINTFORMW 这样说来，雏开始用心舔容易积存的肉棒。……是否清洁，稍微有点不安。
+					PRINTFORML 「嗯，中啊…%UNICODE(0x2764)% 嗯，嘿嘿，是雏啊…嗯，知道了%UNICODE(0x2764)% 中…、肉棒……！」
+					PRINTFORMW 放弃了变漂亮的目的，雏叼着%CALLNAME:MASTER%的肉棒一直都不想放开……。
+				CASE 4
+					PRINTFORML 「嗯、哈哈……%UNICODE(0x2764)% 嗯，中，中…！」
+					PRINTFORMW 雏把%CALLNAME:MASTER%的睾丸含在嘴里，像舔糖球一样在嘴里滚动……。
+					PRINTFORML 「啊……、%CALLNAME:MASTER%心情变好了呢……%UNICODE(0x2764)% 嗯，啾！」
+					PRINTFORMW 雏发现龟头前端贮藏着液体，眼睛闪闪发光地吸着液体，就这样吞进了肉棒……。
+			ENDSELECT
+		ELSEIF ABL:舌 >= 2
+			PRINTFORML 「啊…还会再让我服务的吧……？」
+			PRINTFORMW 有点兴奋的样子的雏，跑到了%CALLNAME:MASTER%面前毫不犹豫地把眼前的阴茎含入了口中。
+			PRINTFORML 「承、承、承、中、哈…、%CALLNAME:MASTER%的味道，可能喜欢上了……」
+			PRINTFORMW 雏完全感受到了%CALLNAME:MASTER%的味道，并积极地为他服务。……。
+		ELSE
+			PRINTFORML 「那、那…、哈哈……嗯，嗯，嗯…、噗、啾、熟透……」
+			PRINTFORMW 突然，雏叼住了%CALLNAME:MASTER%的肉棒。因为太舒服了%CALLNAME:MASTER%不由得喘息。
+			PRINTFORML 「…？？ 我爱你…、嗯…？嗯，嗯，嗯……」
+			PRINTFORMW 虽然嘴里涂着雄性的香味，但是看着%CALLNAME:MASTER%喘息的情况，雏被充实感满足了……。
+		ENDIF
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORML 「哇啊啊…啊，总觉得，有很强烈的味道……」
+		PRINTFORMW 虽然脸被从男根散发出来的独特香味所吸引，但雏还是用舌尖吧嗒吧嗒地舔着龟头和尿道。
+		PRINTFORML 「但是……嗯，知道了，这个也，嗯，不错，嗯，嗯，嗯，嗯，嗯……」
+		PRINTFORMW 然而，这种香味刺激着雏的鼻腔，渐渐地唤醒了女人的本能……。
+	;それ以外
+	ELSE
+		PRINTFORML 「呸！嗯……、小、咸……」
+		PRINTFORMW 对于不习惯口头交流的雏来说，竭尽全力地舔肉棒的前端。
+		PRINTFORML 「这、这样啊…、什么的，不可能啊……」
+		PRINTFORMW 看来雏似乎还对叼的东西有抵触情绪。。
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;82,乳交
+;★现状は胸技术で分岐しているがＢ感觉の分岐も追加したい(MASTERに侍奉しているのに自分が气持ちよくなっちゃうシチュエーション)
+;==================================================
+@M_KOJO_MESSAGE_COM_K79_82
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K79_82_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K79_82_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	IF FIRSTTIME(SELECTCOM)
+		IF TALENT:恋慕
+			PRINTFORML 「嗯…嗯，这样就行了……？」
+			PRINTFORMW 雏用双手按住胸口把%CALLNAME:MASTER%的肉棒夹在中间，温和的揉了起来……。
+		ELSE
+			PRINTFORML 「……这样行吗？？」
+			PRINTFORMW %CALLNAME:MASTER%的指示下，雏把%CALLNAME:MASTER%的肉棒用乳房夹住了……。
+		ENDIF
+		RETURN 1
+	ENDIF
+	;基本セット
+	;时奸中
+	IF FLAG:时间停止
+		PRINTFORMW 
+		RETURN 1
+	ELSEIF TALENT:恋慕
+		IF ABL:胸 >= 5
+			SELECTCASE RAND:5
+				CASE 0
+					PRINTFORML 「%CALLNAME:MASTER%的肉棒……我会在我的胸部好好服务你的%UNICODE(0x2764)%」
+					PRINTFORMW %CALLNAME:MASTER%阴茎被雏的美乳夹住，让%CALLNAME:MASTER%感到幸福的心情……。
+					PRINTFORML 「呵呵呵…%UNICODE(0x2764)% %CALLNAME:MASTER%然后，脸上露出了那样的表情……%UNICODE(0x2764)% 那么，再多走一点吧%UNICODE(0x2764)%」
+					PRINTFORMW 雏一边眺望着陶醉在胸口的柔软触感中的%CALLNAME:MASTER%那开放的表情一边继续服务着……。
+				CASE 1
+					PRINTFORML 「嗯，嗯%UNICODE(0x2764)% 哈……、%CALLNAME:MASTER%，嗯…、嗯%UNICODE(0x2764)% 心情好吧？」
+					PRINTFORMW 掌握了卓越技术的雏的乳交是十分好的，%CALLNAME:MASTER%忍不住喘息。
+					PRINTFORML 「啊啊啊啊啊…%UNICODE(0x2764)% %CALLNAME:MASTER%好啊%UNICODE(0x2764)% 在我的胸部里，变得更舒服%UNICODE(0x2764)%」
+					PRINTFORMW %CALLNAME:MASTER%阴茎分泌的液体上涂着乳汁，雏继续着乳交……。
+				CASE 2
+					PRINTFORML 「嗯，啊，哈……%UNICODE(0x2764)% 哈哈，%CALLNAME:MASTER%……心情舒畅……？」
+					PRINTFORMW 在被雏的两胸服务的触觉感到心情舒畅，就这样在雏的胸上快要射了……。
+					PRINTFORML 「%CALLNAME:MASTER%快到了吧？那么，这里就满慢的…%UNICODE(0x2764)% 拿出来吧%UNICODE(0x2764)%」
+					PRINTFORMW 大概是感受到了射精的气息吧，雏加快了动作让%CALLNAME:MASTER%的射精……。
+				CASE 3
+					PRINTFORML 「哈、哈、哈%UNICODE(0x2764)% %CALLNAME:MASTER%，嗯……%UNICODE(0x2764)%」
+					PRINTFORMW 雏出神的样子，为%CALLNAME:MASTER%的阴茎而服务。
+					PRINTFORML 「诶嘿嘿っ%UNICODE(0x2764)% 很开心吧…？%CALLNAME:MASTER%那个肉棒，战战兢兢的……%UNICODE(0x2764)%」
+					PRINTFORMW 身体上下摇动的同时，保持元气服务的雏的身姿看起来非常艳丽……。
+				CASE 4
+					PRINTFORML 「啊，啊…、啊呼%UNICODE(0x2764)% 嗯，嗯……！哈、哈……%UNICODE(0x2764)%」
+					PRINTFORMW %CALLNAME:MASTER%挺立的阴茎在雏胸中温和地接受，以一定的韵律上下操纵着。
+					PRINTFORML 「呵呵，%CALLNAME:MASTER%好可爱……%UNICODE(0x2764)% 那么，这样怎么样？ 诶嘿嘿っ%UNICODE(0x2764)%」
+					PRINTFORMW 喘息后雏露出了恍惚的表情看着%CALLNAME:MASTER%，以更加坚强的压力挤压着%CALLNAME:MASTER%的阴茎……。
+			ENDSELECT
+		ELSEIF ABL:胸 >= 2
+			PRINTFORML 「啊，呵…嗯，嗯…！嗯，嗯，怎么样？好舒服啊，嗯………？」
+			PRINTFORMW 雏柔软的胸脯每次摩擦%CALLNAME:MASTER%肉棒的时候，透明的液体从肉棒的前端飞散，弄脏了雏的胸部。
+			PRINTFORML 「嗯，啊，%CALLNAME:MASTER%真开心啊……。我也很舒服啊……」
+			PRINTFORMW 雏不在意飞散的液体，拼命地持续服务着……。
+		ELSE
+			PRINTFORML 「嗯，好吧……、呼、嗯！嗯，哈哈……！」
+			PRINTFORMW %CALLNAME:MASTER%的肉棒被夹在雏的稍微出汗的乳房之间……。
+			PRINTFORML 「啊、啊、啊…、啊啊啊……！怎、怎么知道？」
+			PRINTFORMW 汗成为了润滑剂，用胸摩擦的动作更加加速了……。
+		ENDIF
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORML 「啊…嗯，是这样做的……嗯，嗯！啊啊啊……！」
+		PRINTFORMW %CALLNAME:MASTER%感觉着从阴茎传来的胸脯的柔软。……。
+		PRINTFORML 「……哎呀？难道，心情那么好吗？……？」
+		PRINTFORMW 雏向上看%CALLNAME:MASTER%的情况。也许脸上浮现着无情的表情……。
+	;それ以外
+	ELSE
+		PRINTFORML 「说实话，用手做还不错呢……。嗯，很难做……」
+		PRINTFORMW 雏用两胸想压制%CALLNAME:MASTER%阴茎，但是不大舒服……。
+		PRINTFORML 「啊，弄错了……我要！嗯，啊……啊，啊！又错过了！」
+		PRINTFORMW 没有充分夹在一起吗？%CALLNAME:MASTER%的阴茎从胸之间滑下来了……。
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;83,素股
+;==================================================
+@M_KOJO_MESSAGE_COM_K79_83
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K79_83_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K79_83_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	IF FIRSTTIME(SELECTCOM)
+		IF TALENT:恋慕
+			PRINTFORML 
+			PRINTFORMW 
+		ELSE
+			PRINTFORML 
+			PRINTFORMW 
+		ENDIF
+		RETURN 1
+	ENDIF
+	;基本セット
+	;时奸中
+	IF FLAG:时间停止
+		PRINTFORMW 
+		RETURN 1
+	ELSEIF TALENT:恋慕
+		IF ABL:腰 >= 5
+			SELECTCASE RAND:5
+				CASE 0
+					PRINTFORMW 
+				CASE 1
+					PRINTFORMW 
+				CASE 2
+					PRINTFORMW 
+				CASE 3
+					PRINTFORMW 
+				CASE 4
+					PRINTFORMW 
+			ENDSELECT
+		ELSEIF ABL:腰 >= 2
+			PRINTFORMW 
+		ELSE
+			PRINTFORMW 
+		ENDIF
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+	;それ以外
+	ELSE
+		PRINTFORMW 
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;84,泡泡浴
+;==================================================
+@M_KOJO_MESSAGE_COM_K79_84
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K79_84_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K79_84_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	IF FIRSTTIME(SELECTCOM)
+		IF TALENT:恋慕
+			PRINTFORML 「」
+			PRINTFORMW 
+		ELSE
+			PRINTFORML 「」
+			PRINTFORMW 
+		ENDIF
+		RETURN 1
+	ENDIF
+	;基本セット
+	;时奸中
+	IF FLAG:时间停止
+		PRINTFORMW 
+		RETURN 1
+	ELSEIF TALENT:恋慕
+		IF ABL:腰 >= 5
+			SELECTCASE RAND:5
+				CASE 0
+					PRINTFORMW 
+				CASE 1
+					PRINTFORMW 
+				CASE 2
+					PRINTFORMW 
+				CASE 3
+					PRINTFORMW 
+				CASE 4
+					PRINTFORMW 
+			ENDSELECT
+		ELSEIF ABL:腰 >= 2
+			PRINTFORMW 
+		ELSE
+			PRINTFORMW 
+		ENDIF
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+	;それ以外
+	ELSE
+		PRINTFORMW 
+	ENDIF
+ENDIF
+RETURN 1
+
+;==================================================
+;85,足交
+;==================================================
+@M_KOJO_MESSAGE_COM_K79_85
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K79_85_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K79_85_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	IF FIRSTTIME(SELECTCOM)
+		IF TALENT:恋慕
+			PRINTFORML 「」
+			PRINTFORMW 
+		ELSE
+			PRINTFORML 「」
+			PRINTFORMW 
+		ENDIF
+		RETURN 1
+	ENDIF
+	;基本セット
+	;时奸中
+	IF FLAG:时间停止
+		PRINTFORMW 
+		RETURN 1
+	ELSEIF TALENT:恋慕
+		IF ABL:技巧 > 9
+			SELECTCASE RAND:5
+				CASE 0
+					PRINTFORMW 
+				CASE 1
+					PRINTFORMW 
+				CASE 2
+					PRINTFORMW 
+				CASE 3
+					PRINTFORMW 
+				CASE 4
+					PRINTFORMW 
+			ENDSELECT
+		ELSEIF ABL:技巧 > 4
+			PRINTFORMW 
+		ELSEIF ABL:技巧 > 2
+			PRINTFORMW 
+		ENDIF
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+	;それ以外
+	ELSE
+		PRINTFORMW 
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;88,真空口交
+;==================================================
+@M_KOJO_MESSAGE_COM_K79_88
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K79_88_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K79_88_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+	;-------------------------------------------------
+	;小分岐
+	;-------------------------------------------------
+	;初めて
+	IF FIRSTTIME(SELECTCOM)
+		IF TALENT:恋慕
+			PRINTFORML 「」
+			PRINTFORMW 
+		ELSE
+			PRINTFORML 「」
+			PRINTFORMW 
+		ENDIF
+		RETURN 1
+	ENDIF
+	;基本セット
+	;时奸中
+	IF FLAG:时间停止
+		PRINTFORMW 
+	ELSEIF TALENT:恋慕
+		IF ABL:舌 >= 5
+			SELECTCASE RAND:5
+				CASE 0
+					PRINTFORMW 
+				CASE 1
+					PRINTFORMW 
+				CASE 2
+					PRINTFORMW 
+				CASE 3
+					PRINTFORMW 
+				CASE 4
+					PRINTFORMW 
+			ENDSELECT
+		ELSEIF ABL:舌 >= 2
+			PRINTFORMW 
+		ELSE
+			PRINTFORMW 
+		ENDIF
+	;屈服3
+	ELSEIF MARK:屈服刻印 == 3
+		PRINTFORMW 
+	;それ以外
+	ELSE
+		PRINTFORMW 
+	ENDIF
+ENDIF
+RETURN 1

@@ -1,0 +1,89 @@
+﻿;*********************************************************************************************
+;Counter指令：フェラチオ强制
+;ARG = 对象の角色番号
+;*********************************************************************************************
+@CCOMF71(ARG)
+
+	;体势の变更
+	;=============================
+	CALL TOUCH_SET(SET_FROM_P,4,ARG)
+	TFLAG:MASTERの口使用中 ++
+	
+	;ソース计算および内部处理系统
+	;=============================
+	IF BEDROOM(CFLAG:MASTER:当前位置)
+		SIF TEQUIP:ARG:0
+			CALL DATUI_BOTTOM_T(ARG,0)
+	ELSE
+		SIF TEQUIP:ARG:0 & 14
+			CALL DATUI_BOTTOM_T(ARG,1)	
+	ENDIF
+	SIF GETBIT(TALENT:PLAYER:2,0)
+		SOURCE:ARG:快Ｃ = 100
+	SOURCE:ARG:性行动 += 300
+	SOURCE:ARG:征服 += 700
+	SOURCE:ARG:液体 += 60
+	SOURCE:ARG:挑衅 += 100
+	SOURCE:ARG:施虐 += 500
+	SOURCE:ARG:强迫 += 1000
+	SOURCE:PLAYER:快Ｍ += 200
+	;射精部位（1=膣内 2=肛门 3=手淫 4=口淫 5=乳交 6=素股 7=足交 8=体表 9=肛门侍奉 10=道具 11=触手 12=Ａ调教 13=Ｖ调教）
+	CALL 射精对象登录(ARG, PLAYER, 4)
+	;强度
+	TCVAR:ARG:4 += 800
+	STAIN:ARG:2 |= STAIN:PLAYER:0
+	STAIN:PLAYER:0 |= STAIN:ARG:2
+	EXP:PLAYER:口淫经验 ++
+	TCVAR:ARG:嗜虐フラグ = 1
+	CALL EVENT_COUNTER_POSE_69(ARG,2)
+
+	;マ斯塔Counter制御
+	;(ビット立ちで不可 0=摸屁股 1=拥抱 2=接吻 3=胸爱抚 4=肛门爱抚 5=阴蒂爱抚 6=指插入れ 7=掀裙子)
+	;=============================
+	;CALL Counter插入され继续中处理(ARG)
+	SETBIT TCVAR:ARG:26 ,1
+	SETBIT TCVAR:ARG:26 ,2
+	SETBIT TCVAR:ARG:26 ,7
+
+RETURN 1
+
+;*********************************************************************************************
+;Counter实行可否出力函数
+;ARG = 对象の角色番号
+;*********************************************************************************************
+@CCOM_ABLE71(ARG)
+
+	SIF !(TALENT:ARG:2 & 2)
+		RETURN 0
+	SIF TFLAG:60
+		RETURN 0
+	SIF TEQUIP:ARG:50
+		RETURN 0
+	SIF TEQUIP:MASTER:50 == ARG || TEQUIP:MASTER:51 == ARG
+		RETURN 0
+
+RETURN 1
+
+;*********************************************************************************************
+;Counter实行判定值算出函数
+;ARG = 对象の角色番号
+;*********************************************************************************************
+@CCOM_ORDER71(指令番号, ARG, 基本值)
+#DIM 指令番号
+#DIM 基本值
+#DIMS Counterタイプ
+
+	;Counterタイプ设定
+	;=============================
+	Counterタイプ = 脱衣强迫
+
+	;实行判定值算出式
+	;=============================
+	LOCAL = 基本值 + ABL:ARG:Ｃ感觉
+
+	;Counterタイプ别计算处理 实质实行判定处理を含む
+	;=============================
+	LOCAL = MAX(LOCAL + COUNTER_SIKOU:ARG:指令番号, 1)
+	LOCAL *= COUNTER_TYPE(Counterタイプ, ARG)
+
+RETURN LOCAL

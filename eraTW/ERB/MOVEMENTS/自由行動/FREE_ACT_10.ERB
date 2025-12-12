@@ -1,0 +1,143 @@
+﻿@EXIST_FreeAct10
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+;オブジェクト本体
+@FreeAct10(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+#DIM 经过时间
+经过时间 = Activity_Duration:TARGET
+SELECTCASE O_DATA
+;陪同行动指令の名称
+CASE "名称"
+	CALLF MAKE_STR(V_NAME, "一起钓鱼")
+CASE "CHAIN"
+;他角色に连锁しない场合コメントアウトすること
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "经过时间"
+;陪同行动指令での经过时间
+;0だと30分か残り时间全部の小さい方
+	CALLF MAKE_INT(V_NAME, 0)
+ENDSELECT
+
+@自由行动内容_10(CHARA, ARGS, 时间系数, CHAIN)
+#DIM CHARA
+#DIM CHAIN
+#DIM 现在地
+#DIM メッセージ表示
+#DIM 时间系数
+#DIM 经过时间
+现在地 = CFLAG:CHARA:当前位置
+メッセージ表示 = 现在地 == CFLAG:MASTER:当前位置 ? 1 # 0
+SELECTCASE ARGS
+	CASE "发生"
+		;钓鱼Lv1以上の角色が钓鱼できる场所にいる时
+		SIF TALENT:CHARA:钓鱼Lv < 1
+			RETURN 0
+		SIF !FISHING_SPOT(现在地)
+			RETURN 0
+		SIF BASE:CHARA:气力 <= 500
+			RETURN 0
+		SIF メッセージ表示
+			PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", CHARA)%\@ CHAIN ? 开始跟着%NAME_OUTPUT_TRANSLATION("CALLNAME", CHAIN)%一起钓鱼了。# 拿出了钓鱼竿开始钓鱼。\@
+		RETURN 60 + RAND:120
+	CASE "行动中"
+			IF 充填率(TARGET,1) >= 10 || 充填率(TARGET,2) >= 10
+				IF メッセージ表示
+					SELECTCASE RAND:4
+					CASE 1
+					PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", CHARA)%钓上了一条鱼…红彤彤的脸上充满兴奋的神色…
+					CASEELSE
+					PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", CHARA)%在悠哉由哉地钓着鱼…脸微微发红
+					ENDSELECT
+				ENDIF
+			ELSE
+				IF メッセージ表示
+					SELECTCASE RAND:4
+					CASE 1
+					PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", CHARA)%钓上了一条鱼。
+					CASEELSE
+					PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", CHARA)%在悠哉由哉地钓着鱼。
+					ENDSELECT
+				ENDIF
+			ENDIF
+	CASE "完了"
+		;完了までいったら経験+2
+		EXP:CHARA:钓鱼经验 += 2
+		IF 充填率(CHARA,1) >= 10 || 充填率(CHARA,2) >= 10
+			SIF メッセージ表示
+				PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", CHARA)%钓完鱼后吐着甜美的喘息。
+		ELSE
+			SIF メッセージ表示
+				PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", CHARA)%似乎钓完鱼了。
+		ENDIF	
+	CASE "中断"
+		EXP:CHARA:钓鱼经验 += 1
+	CASE "交手"
+		;自由行动に付き合ったとき用メッセージ
+		IF TFLAG:193 < 0
+			IF 充填率(CHARA,1) >= 150 || 充填率(CHARA,2) >= 150
+				PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", CHARA)%捂着嘴忍耐着体内\@ TALENT:MASTER:浓厚精液? 浓厚的 # 的\@精子的爱抚…香汗淋漓…
+				PRINTFORML 脸涨得通红并且夹杂着甜美喘息…并没有在认真钓鱼…
+				PRINTFORML 捂着小腹忍耐着❤真可爱…
+			ELSEIF 充填率(CHARA,1) >= 100 || 充填率(CHARA,2) >= 100
+				PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", CHARA)%正享受着体内满满\@ TALENT:MASTER:浓厚精液? 浓厚的 # 的\@精子的刺激轻轻娇喘……
+				PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", CHARA)%夹杂着甜美气息的脸涨得通红…注意力似乎没有钓鱼上…
+			ELSEIF 充填率(CHARA,1) >= 70 || 充填率(CHARA,2) >= 70
+				PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", CHARA)%正感受着体内大量\@ TALENT:MASTER:浓厚精液? 浓厚的 # 的\@精子的刺激……
+				PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", CHARA)%在钓鱼中似乎夹杂着甜美的气息…
+			ELSEIF 充填率(CHARA,1) >= 40 || 充填率(CHARA,2) >= 40
+				PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", CHARA)%正被体内许多\@ TALENT:MASTER:浓厚精液? 浓厚的 # 的\@精子刺激着……
+				PRINTFORML 钓鱼中的%NAME_OUTPUT_TRANSLATION("CALLNAME", CHARA)%脸红红的…
+			ELSEIF 充填率(CHARA,1) >= 10 || 充填率(CHARA,2) >= 10
+				PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", CHARA)%正被体内残存\@ TALENT:MASTER:浓厚精液? 浓厚的 # 的\@精子刺激着……
+				PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", PLAYER)%看着钓鱼中的%NAME_OUTPUT_TRANSLATION("CALLNAME", CHARA)%…
+			ELSE 
+				PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", PLAYER)%在钓鱼中的%NAME_OUTPUT_TRANSLATION("CALLNAME", CHARA)%旁边发着呆…
+			ENDIF	
+		ELSE
+			PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", PLAYER)%在%NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%的旁边一起钓着鱼
+			IF 充填率(CHARA,1) >= 150 || 充填率(CHARA,2) >= 150
+				PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", CHARA)%捂着嘴忍耐着体内\@ TALENT:MASTER:浓厚精液? 浓厚的 # 的\@精子的爱抚…香汗淋漓…
+				PRINTFORML 脸涨得通红并且夹杂着甜美喘息拿着鱼竿、
+				PRINTFORML 捂着小腹忍耐着的样子❤真可爱…
+			ELSEIF 充填率(CHARA,1) >= 100 || 充填率(CHARA,2) >= 100
+				PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", CHARA)%正享受着体内满满\@ TALENT:MASTER:浓厚精液? 浓厚的 # 的\@精子的刺激轻轻娇喘……
+				PRINTFORML 虽然%NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%努力装出钓鱼的样子…但其实根本没在认真钓鱼…
+			ELSEIF 充填率(CHARA,1) >= 70 || 充填率(CHARA,2) >= 70
+				PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", CHARA)%正感受着体内大量\@ TALENT:MASTER:浓厚精液? 浓厚的 # 的\@精子的刺激……
+				PRINTFORML 观察着脸红的%NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%……偶尔发出甜美的娇喘…
+			ELSEIF 充填率(CHARA,1) >= 40 || 充填率(CHARA,2) >= 40
+				PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", CHARA)%正被体内许多\@ TALENT:MASTER:浓厚精液? 浓厚的 # 的\@精子刺激着……
+				PRINTFORML 观察着脸红的%NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%……眼神有些飘忽…
+			ELSEIF 充填率(CHARA,1) >= 10 || 充填率(CHARA,2) >= 10
+				PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", CHARA)%正被体内残存\@ TALENT:MASTER:浓厚精液? 浓厚的 # 的\@精子刺激着……
+				PRINTFORML 观察着脸红的%NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%…
+			ELSE
+			ENDIF	
+			PRINTFORML %TEXTR(@"%NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%似乎钓上了什么东西…/虽然没钓上什么、两人度过了悠闲自在的一段时间…/钓到了小鱼、往%NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%的钓鱼桶里放进去了…")%
+		ENDIF
+	CASE "ソース"
+		;交手指令选择时の入手ソース、时间系数は付き合った时间の1/10
+		IF !ITEM:钓鱼竿
+			;钓鱼竿がないと见てるだけ
+			TFLAG:193 = -1
+			DOWNBASE:MASTER:气力 += 50 * 时间系数
+			DOWNBASE:TARGET:体力 += 10 * 时间系数
+			DOWNBASE:TARGET:气力 += 20 * 时间系数
+			SOURCE:欢乐 = (50 + ((ABL:亲密 + TALENT:MASTER:钓鱼Lv) * 25)) * 时间系数
+		ELSE
+			DOWNBASE:MASTER:体力 += 20 * 时间系数
+			DOWNBASE:MASTER:气力 += 40 * 时间系数
+			DOWNBASE:TARGET:体力 += 10 * 时间系数
+			DOWNBASE:TARGET:气力 += 20 * 时间系数
+			SOURCE:欢乐 = (150 + ((ABL:亲密 + TALENT:MASTER:钓鱼Lv) * 50)) * 时间系数
+			SOURCE:被动 = (100 + ((ABL:顺从 + TALENT:MASTER:钓鱼Lv) * 50)) * 时间系数
+			TFLAG:98 = 1
+			EXP:MASTER:钓鱼经验 ++
+		ENDIF
+ENDSELECT

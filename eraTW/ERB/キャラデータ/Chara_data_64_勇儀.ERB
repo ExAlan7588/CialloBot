@@ -1,0 +1,176 @@
+﻿@CHARAMOVE_DATA_64(ARG, ARG:2)
+LOCAL = 64
+SELECTCASE ARG
+	;连动设定（RETURN=依存する角色, RESULT:1～3=对等に连动する角色）
+	CASE 1
+	;特殊生活时间设定（CFLAG:LOCAL:生活时间补正を设定する）
+	CASE 3
+	;移动倾向（±～10=行きやすい/行きにくい, -100=行かない）
+	CASE 4
+		SELECTCASE ARG:2
+			;地灵殿には行かない
+			CASE P901地灵殿前 TO P930旧血池地狱, P947血枪的栖息处
+				RETURN -100
+			;酒场と鬼的聚集场所に行きやすい
+			CASE P933酒场, P938鬼的聚集场所
+				RETURN 5
+		ENDSELECT
+	;出现场所
+	CASE 7
+		SELECTCASE ARG:2
+			;春と秋だけ
+			CASE 吞屋小道
+				SIF GROUPMATCH(DAY:2, 1, 3)
+					RETURN 1
+			CASE 山麓树海, 玄武之泽, 大蛤蟆之池
+				SIF GROUPMATCH(DAY:2, 1, 3)
+					RETURN 1
+			CASE 幻想风穴, 地狱的深道, 旧地狱街道
+				RETURN 1
+		ENDSELECT
+	;引力设定（CFLAG:LOCAL:引力点を设定する）
+	CASE 8
+		;夜はよく酒场
+		SIF CFLAG:LOCAL:今日的运势 % 4 == 0 && INRANGE(TIME, 1200, 1440)
+			TCVAR:LOCAL:引力点 = P933酒场
+ENDSELECT
+
+@EXIST_キャラデータ64
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@キャラデータ64(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "称呼"
+	CALLF MAKE_STR(V_NAME, "勇仪")
+;こっから衣装设定
+CASE "今天的睡衣"
+	CALLF MAKE_STR(V_NAME, "睡衣（襦袢）套")
+
+CASE "便装：靴"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("靴", "木屐"))
+CASE "便装：裙子"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("裙子", "裙子"))
+CASE "便装：上身衣服２"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("上身衣服２", "女式衬衫"))
+CASE "便装：其他１"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("其他１", "拘束具"))
+
+CASE "固有内衣形容词"
+	CALLF MAKE_STR(V_NAME, "超强")
+CASE "固有下半身内衣名"
+	CALLF MAKE_STR(V_NAME, "虎皮の鬼胖次")
+CASE "固有上半身内衣"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "固有上半身内衣名"
+	CALLF MAKE_STR(V_NAME, "裹胸")
+CASE "固有内衣着用条件"
+	SIF !RAND:(1 + (2 * 胜负内衣判定([[勇仪]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "固有内衣半透明(前)"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "固有内衣半透明(后)"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "固有内衣布料厚度"
+	CALLF MAKE_INT(V_NAME, 3)
+
+;料理关联
+CASE "料理：喜欢的味道"
+	CALLF MAKE_STR(V_NAME, "肉料理/香料/和食/锅物/开胃/辣/丰盛/浓厚/艺术的/野趣/豪快/松脆/地底风/天狗流/" + "咸/" * 3)
+CASE "料理：讨厌的味道"
+	CALLF MAKE_STR(V_NAME, "简易/清淡/甜/甜/谜料理/谜料理/谜料理/化学的/化学的/化学的/" + "小人族秘传的味道/" * 5)
+CASE "料理：助手效果"
+	CALLF MAKE_STR(V_NAME, "地底风/得意料理＊豪快＊/")
+;赠り物关联
+CASE "感性：好き"
+	CALLF MAKE_STR(V_NAME, "赤/金/混沌/帅气的/充满力量/壮大/" + "食器/锁の/酒/" * 3 + "鬼の/华の/鬼力の/力の/" * 5)
+CASE "感性：嫌い"
+	CALLF MAKE_STR(V_NAME, "精神/活泼/纤细/知的/洛丽塔/" + "刃物/弹/书物/机械/" * 3 + "河童の/天狗の/" * 10)
+ENDSELECT
+
+;-------------------------------------------------
+;固有料理设定
+;DISH_NAME          料理名
+;RESULTS            料理の种类（轻食/主食/甜点）
+;CALL 材料设定("")  材料の指定。"泛用"を入れると自动で泛用食材になる
+;DISH_TASTE         味の设定
+;DISH_COMMENT       （任意）一行コメント
+;DISH_TIME          （任意）调理にかかる时间
+;DISH_MAXLIMIT      （任意）料理の持续时间
+;-------------------------------------------------
+@SPECIAL_MENU_64
+DISH_NAME = 牡丹火锅
+RESULTS = 主食
+CALL 材料设定("野味")
+DISH_TASTE = 肉料理/野菜/和食/锅物/丰盛/浓厚/艺术的/野趣/咸/
+DISH_COMMENT = 使用和妖怪非常接近的野猪的肉的锅料理。排列整齐的肉就像牡丹花一样美丽。
+RETURN 1
+
+;IMAGE_I64_差分(CHARA)-----------------------------------------------------------------------
+;角色特有の差分表示条件
+;裸やエフェクトを共有しない画像はこちら
+;使用时注意点:
+;	RESULTSに差分を格纳すること
+;	书式は {CHARA}%差分% 适宜"_"等入れること
+;-------------------------------------------------------------------------------------------
+@IMAGE_I64_差分(CHARA)
+#DIM CHARA
+VARSET RESULTS
+
+IF CFLAG:CHARA:应用差分替换
+	;替换用画像
+	IF FLAG:立绘种类
+		;颜绘
+	ELSE
+		;立绘
+	ENDIF
+ELSE
+	SIF CFLAG:CHARA:1001
+		RESULTS = _黄昏
+ENDIF
+
+;IMAGE_I64_特殊エフェクト(CHARA)--------------------------------------------------------------------
+;角色特有のエフェクト表示条件
+;使用时注意点:
+;	RESULTS配列に特殊エフェクトを格纳
+;	RETURNで追加するエフェクト数を返还すること
+;-------------------------------------------------------------------------------------------
+@IMAGE_I64_特殊エフェクト(CHARA)
+#DIM CHARA
+#DIM DYNAMIC エフェクト数 = 0
+VARSET RESULTS
+
+IF CFLAG:CHARA:应用差分替换
+	;替换用画像
+	IF FLAG:立绘种类
+		;颜绘
+	ELSE
+		;立绘
+	ENDIF
+ELSE
+	;通常画像
+	IF FLAG:立绘种类
+		;颜绘
+		IF CFLAG:CHARA:1001
+			IF CFLAG:64:脸上精液
+				;胸ぶっかけ
+				RESULTS:エフェクト数 = 颜精液
+				エフェクト数 += 1
+			ENDIF
+			IF CFLAG:64:口内精液
+				;口交
+				RESULTS:エフェクト数 = 胸精液
+				エフェクト数 += 1
+			ENDIF
+		ENDIF
+	ELSE
+		;立绘
+	ENDIF
+ENDIF
+
+RETURN エフェクト数

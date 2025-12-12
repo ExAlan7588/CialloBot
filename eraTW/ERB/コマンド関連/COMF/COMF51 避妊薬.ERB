@@ -1,0 +1,35 @@
+﻿;-------------------------------------------------
+;避孕药
+;道具使用指令、レベル2
+;-------------------------------------------------
+@COM51
+;着脱の处理
+IF TCVAR:口服避孕药
+	PRINTL 已经服用完毕
+	RETURN -1
+ENDIF
+ITEM:口服避孕药 -= 1
+TCVAR:口服避孕药 = 1
+PRINTFORML \@ SHIRAHU(TARGET) ? %NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%喝下了避孕药# 让%NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%喝下了避孕药\@
+PRINTFORMW 剩余{ITEM:口服避孕药}个
+
+;-------------------------------------------------
+;COM别FLAGの设定
+;-------------------------------------------------
+;行为者
+TCVAR:116 = PLAYER
+
+RETURN 0
+
+;-------------------------------------------------
+;实行判定
+;-------------------------------------------------
+@COM_ABLE51
+SIF !TFLAG:100
+	RETURN 0
+;批量管理
+SIF GLOBAL_COMABLE(51)
+	RETURN RESULT
+SIF !ITEM:口服避孕药
+	RETURN 0
+RETURN 1

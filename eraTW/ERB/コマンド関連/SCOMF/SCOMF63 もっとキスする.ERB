@@ -1,0 +1,172 @@
+﻿@SCOM63
+;更多的接吻
+SELECTCASE TFLAG:192
+	;通常
+	CASE 0
+		LOCAL = RAND:110
+		LOCAL:1 = 90 + GET_SUCCESS_RATE() / 5
+		SIF LOCAL:1 > 109
+			LOCAL:1 = 109
+		IF LOCAL <= 9
+			;10％で大成功
+			TFLAG:193 = 1
+			IF CHK_DATENOW(CFLAG:TARGET:约会中)
+				EXP:MASTER:约会经验 ++
+				EXP:TARGET:约会经验 ++
+			ENDIF
+		ELSEIF LOCAL >= LOCAL:1
+			;10～1％で失败
+			TFLAG:193 = -1
+		ELSE
+			;残りは成功
+			TFLAG:193 = 0
+		ENDIF
+	;强制成功or大成功
+	CASE 1
+		IF RAND:110 <= 9
+			;10％で大成功
+			TFLAG:193 = 1
+			IF CHK_DATENOW(CFLAG:TARGET:约会中)
+				EXP:MASTER:约会经验 ++
+				EXP:TARGET:约会经验 ++
+			ENDIF
+		ELSE
+			;残りは成功
+			TFLAG:193 = 0
+		ENDIF
+	;强制失败
+	CASE -1
+		TFLAG:193 = -1
+		TFLAG:98 = -1
+	;指令结束
+	CASE -2
+		TFLAG:193 = -1
+		RETURN 0
+ENDSELECT
+;先制发生时は失败しない
+SIF TFLAG:102 == 3
+	TFLAG:193 = MAX(TFLAG:193,0)
+
+IF FLAG:70
+	BASE:MASTER:TSP -= 30
+ELSEIF CFLAG:TARGET:陪睡中
+	DOWNBASE:MASTER:体力 += 30
+	DOWNBASE:MASTER:气力 += 50
+ELSEIF CHK_DATENOW(CFLAG:TARGET:约会中)
+	DOWNBASE:体力 += 30
+	DOWNBASE:气力 += 50
+	DOWNBASE:MASTER:体力 += 10
+	DOWNBASE:MASTER:气力 += 70
+ELSE
+	DOWNBASE:体力 += 50
+	DOWNBASE:气力 += 70
+	DOWNBASE:MASTER:体力 += 30
+	DOWNBASE:MASTER:气力 += 100
+ENDIF
+
+;固定で获得するソース
+SOURCE:欢乐 = 200
+SOURCE:情爱 = 250
+SOURCE:露出 = 80
+SOURCE:反感 = 200
+SOURCE:被动 = 150 + 300 * ABL:顺从
+SOURCE:快Ｍ = ABL:PLAYER:舌 * 3 + 20
+SOURCE:PLAYER:快Ｍ = ABL:舌 * 3 + 20
+EXP:接吻经验 ++
+EXP:MASTER:接吻经验 ++
+
+SIF CFLAG:睡眠
+	SOURCE:反感 = 150
+	
+;ABL:亲密をみる
+IF ABL:亲密 <= 1
+	SOURCE:情爱 += (ABL:亲密 * 30)
+ELSEIF ABL:亲密 <= 3
+	SOURCE:欢乐 += 150 + (ABL:亲密 * 50)
+	SOURCE:情爱 += 200 + (ABL:亲密 * 40)
+ELSEIF ABL:亲密 <= 5
+	SOURCE:欢乐 += 250 + (ABL:亲密 * 70)
+	SOURCE:情爱 += 280 + (ABL:亲密 * 50)
+ELSEIF ABL:亲密 <= 8
+	SOURCE:欢乐 += 350 + (ABL:亲密 * 80)
+	SOURCE:情爱 += 380 + (ABL:亲密 * 50)
+ELSEIF ABL:亲密 <= 11
+	SOURCE:欢乐 += 400 + (ABL:亲密 * 90)
+	SOURCE:情爱 += 500 + (ABL:亲密 * 70)
+ELSE
+	SOURCE:欢乐 += 700 + (ABL:亲密 * 75)
+	SOURCE:情爱 += 730 + (ABL:亲密 * 50)
+ENDIF
+
+;好感度をみる
+IF CFLAG:2 <= 500
+	SOURCE:情爱 += CFLAG:2
+ELSEIF CFLAG:2 <= 5000
+	SOURCE:情爱 += 400 + (CFLAG:2 - 500) / 4
+ELSE
+	SOURCE:情爱 += 1200 + (CFLAG:2 - 5000) / 6
+ENDIF
+
+SIF SOURCE:情爱 < 0
+	SOURCE:情爱 = 0
+
+LOCAL = 0
+;好感度が低いと好感度低下
+IF CFLAG:2 <= 50
+	LOCAL -= 3
+ELSEIF CFLAG:2 <= 100
+	LOCAL -= 2
+ELSEIF CFLAG:2 <= 250
+	LOCAL -= 1
+ENDIF
+
+SOURCE:被动 = 150 + 300 * ABL:顺从
+
+;好感度变化
+SIF !CFLAG:睡眠
+	TFLAG:97 += LOCAL
+
+IF TFLAG:193 == -1
+	TIMES SOURCE:欢乐 , 0.10
+	TIMES SOURCE:情爱 , 0.50
+	TIMES SOURCE:被动 , 0.50
+ELSEIF TFLAG:193 == 0
+	TIMES SOURCE:欢乐 , 1.00
+	TIMES SOURCE:情爱 , 1.00
+	TIMES SOURCE:被动 , 1.00
+ELSE
+	TIMES SOURCE:欢乐 , 2.00
+	TIMES SOURCE:情爱 , 2.00
+	TIMES SOURCE:被动 , 2.00
+ENDIF
+
+SIF !FLAG:70
+	TIME += 10
+
+IF CHK_DATENOW(CFLAG:TARGET:约会中)
+	EXP:MASTER:约会经验 ++
+	EXP:TARGET:约会经验 ++
+ENDIF
+IF HETEROSEX(TARGET,PLAYER)
+	EXP:(50 + HETEROSEX(TARGET,PLAYER)) += 2
+	EXP:MASTER:百合经验 += 2
+ENDIF
+RETURN 1
+
+;-------------------------------------------------
+;选择可能判定
+;-------------------------------------------------
+;更多的接吻
+@COM_ABLE563
+SIF !TFLAG:100
+	RETURN 0
+;批量管理
+SIF GLOBAL_COMABLE(563)
+	RETURN RESULT
+;相手が居ないとダメ
+SIF !TARGET
+	RETURN 0
+SIF TFLAG:103 != TARGET
+	RETURN 0
+RETURN 1
+

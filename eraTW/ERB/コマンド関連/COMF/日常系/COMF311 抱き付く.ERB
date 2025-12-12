@@ -1,0 +1,205 @@
+﻿;-------------------------------------------------
+;拥抱
+;日常系指令　レベル2
+;-------------------------------------------------
+@COM311
+IF FLAG:70 == 1
+	BASE:MASTER:TSP -= 10
+	IF HETEROSEX(TARGET,PLAYER)
+		EXP:PLAYER:(50 + HETEROSEX(TARGET,PLAYER)) += 1
+	ENDIF
+ELSE
+	;甲斐性无しの场合、その场にいる全员が关系を公认してないと勇气がでない
+	IF FLAG:甲斐性无
+		FOR LOCAL, 1, GET_TARGETNUM() + 1
+			SIF TARGET:LOCAL == TARGET:0
+				CONTINUE
+			IF GET_UWAKI_HISTORY(TARGET:LOCAL, TARGET:0) < 2
+				DRAWLINE
+				; PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%は%NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%に抱き着こうとしたが
+				PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%试图抱住%NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%
+				; PRINTFORMW 视界の端に%NAME_OUTPUT_TRANSLATION("CALLNAME", (TARGET:LOCAL))%の姿が映ると思わず手を引いてしまった…
+				PRINTFORMW 但视野的边缘出现%NAME_OUTPUT_TRANSLATION("CALLNAME", (TARGET:LOCAL))%的身影时，%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%不由得缩回了手…
+				RETURN -1
+			ENDIF
+		NEXT
+	ENDIF
+	TFLAG:理性削り = 1
+	SELECTCASE TFLAG:192
+		;通常
+		CASE 0
+			LOCAL = RAND:110
+			LOCAL:1 = 90 + GET_SUCCESS_RATE() / 5
+			SIF LOCAL:1 > 109
+				LOCAL:1 = 109
+			IF LOCAL <= 9
+				;10％で大成功
+				TFLAG:193 = 1
+				IF CHK_DATENOW(CFLAG:TARGET:约会中)
+					EXP:MASTER:约会经验 ++
+					EXP:TARGET:约会经验 ++
+				ENDIF
+			ELSEIF LOCAL >= LOCAL:1
+				;10～1％で失败
+				TFLAG:193 = -1
+			ELSE
+				;残りは成功
+				TFLAG:193 = 0
+			ENDIF
+		;强制成功or大成功
+		CASE 1
+			IF RAND:110 <= 9
+				;10％で大成功
+				TFLAG:193 = 1
+				IF CHK_DATENOW(CFLAG:TARGET:约会中)
+					EXP:MASTER:约会经验 ++
+					EXP:TARGET:约会经验 ++
+				ENDIF
+			ELSE
+				;残りは成功
+				TFLAG:193 = 0
+			ENDIF
+		;强制失败
+		CASE -1
+			TFLAG:193 = -1
+		;指令结束
+		CASE -2
+			TFLAG:193 = -1
+			RETURN 0
+	ENDSELECT
+	;先制发生时は失败しない
+	SIF TFLAG:102 == 3 && TFLAG:192 != -1
+		TFLAG:193 = MAX(TFLAG:193,0)
+	IF CFLAG:TARGET:陪睡中
+		DOWNBASE:MASTER:气力 += 50
+	ELSE
+		DOWNBASE:气力 += 100
+		DOWNBASE:MASTER:气力 += 50
+	ENDIF
+
+	;固定で获得するソース
+	SOURCE:欢乐 = 120
+	SOURCE:情爱 = 160
+	SOURCE:露出 = 100
+	SOURCE:反感 = 250
+
+	;ABL:亲密をみる
+	IF ABL:亲密 <= 1
+		SOURCE:情爱 += (ABL:亲密 * 30)
+	ELSEIF ABL:亲密 <= 3
+		SOURCE:情爱 += 200 + (ABL:亲密 * 30)
+	ELSEIF ABL:亲密 <= 5
+		SOURCE:情爱 += 400 + (ABL:亲密 * 30)
+	ELSEIF ABL:亲密 <= 8
+		SOURCE:情爱 += 600 + (ABL:亲密 * 40)
+		SOURCE:露出 += 200 + (ABL:欲望 * 15)
+	ELSEIF ABL:亲密 <= 11
+		SOURCE:情爱 += 800 + (ABL:亲密 * 40)
+		SOURCE:露出 += 300 + (ABL:欲望 * 15)
+	ELSE
+		SOURCE:情爱 += 1800 + (ABL:亲密 * 20)
+		SOURCE:露出 += 700 + (ABL:欲望 * 10)
+	ENDIF
+
+	;好感度をみる
+	IF CFLAG:2 <= 1000
+	ELSEIF CFLAG:2 <= 5000
+		SOURCE:恭顺 = CFLAG:2 / 5
+	ELSEIF CFLAG:2 <= 10000
+		SOURCE:恭顺 = 100 + CFLAG:2 / 20
+	ELSE
+		SOURCE:恭顺 = 350 + CFLAG:2 / 100
+	ENDIF
+	SIF SOURCE:恭顺 < 0
+		SOURCE:恭顺 = 0
+
+	LOCAL = 0
+	;好感度が低いと好感度低下
+	IF CFLAG:2 <= 50
+		LOCAL -= 3
+	ELSEIF CFLAG:2 <= 100
+		LOCAL -= 2
+	ELSEIF CFLAG:2 <= 250
+		LOCAL -= 1
+	ENDIF
+
+
+	SOURCE:被动 = 120 + 240 * ABL:顺从
+	SOURCE:征服 = 120 + 240 * ABL:施虐属性
+
+	;好感度变化
+	TFLAG:97 += LOCAL
+
+	IF TFLAG:193 == -1
+		TIMES SOURCE:欢乐 , 0.10
+		TIMES SOURCE:情爱 , 0.50
+		TIMES SOURCE:征服 , 0.50
+		TIMES SOURCE:被动 , 0.50
+		TIMES SOURCE:露出 , 0.40
+	ELSEIF TFLAG:193 == 0
+		TIMES SOURCE:欢乐 , 1.00
+		TIMES SOURCE:情爱 , 1.00
+		TIMES SOURCE:征服 , 1.00
+		TIMES SOURCE:被动 , 1.00
+		TIMES SOURCE:露出 , 0.90
+		TFLAG:情绪BOUNS = 30
+	ELSE
+		TIMES SOURCE:欢乐 , 2.00
+		TIMES SOURCE:情爱 , 2.00
+		TIMES SOURCE:征服 , 2.00
+		TIMES SOURCE:被动 , 2.00
+		TIMES SOURCE:露出 , 1.80
+		TFLAG:情绪BOUNS = 50
+	ENDIF
+	TIME += 10
+
+	IF CHK_DATENOW(CFLAG:TARGET:约会中)
+		EXP:MASTER:约会经验 ++
+		EXP:TARGET:约会经验 ++
+	ENDIF
+
+	IF HETEROSEX(TARGET,PLAYER)
+		EXP:(50 + HETEROSEX(TARGET,PLAYER)) += 1
+		EXP:PLAYER:(50 + HETEROSEX(TARGET,PLAYER)) += 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;-------------------------------------------------
+;实行判定
+;-------------------------------------------------
+@COM_ABLE311
+;拥抱实行判定
+SIF !TFLAG:100
+	RETURN 0
+;批量管理
+SIF GLOBAL_COMABLE(311)
+	RETURN RESULT
+;时间停止中はスキップ
+IF !FLAG:70
+	;亲热强度1
+	SIF TCVAR:MASTER:亲热 < 1 && !CFLAG:陪睡中
+		RETURN 0
+	;甲斐性なしはもう少し驯れ合い强度と既成事实が必要
+	SIF FLAG:甲斐性无 && ((TCVAR:MASTER:亲热 < 2 && !CFLAG:陪睡中) || (!CFLAG:诶嘿嘿 && !GETBIT(CFLAG:既成事实, 1)))
+		RETURN 0
+	;睡眠中
+	SIF CFLAG:睡眠 && !CFLAG:陪睡中
+		RETURN 0
+	;仕事中
+	SIF CFLAG:行动 == 5
+		RETURN 0
+ENDIF
+;气力0
+SIF BASE:MASTER:气力 <= 0
+	RETURN 0
+;腕使用中
+SIF TFLAG:61
+	RETURN 0
+SIF GETBIT (TCVAR:26,1)
+	RETURN 0
+;六九式体势
+SIF TEQUIP:六九式
+	RETURN 0
+RETURN 1
+

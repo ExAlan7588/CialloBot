@@ -1,0 +1,663 @@
+﻿;-------------------------------------------------
+;帕露西用
+;Hashihime services
+;-------------------------------------------------
+@K60_HASHIHIME_SERVICES
+#DIM UnwantedLover
+#DIM DYNAMIC LOVERPEP
+CALL M_KOJO_COLOR_K60
+SELECTCASE K60_ATTITUDE()
+	CASE 0, 1, 3
+;        PRINTFORMDW Parsee smiles at you.
+;        PRINTFORMW 「What do you need from me?」
+        PRINTFORMDW 帕露西对你露出了微笑。
+        PRINTFORMW 「有什么想让我做的吗？」
+
+    CASE 2
+;        PRINTFORMDW Parsee glares at you.
+;        PRINTFORMW 「What do you want?」
+        PRINTFORMDW 帕露西狠狠地瞪着你。
+        PRINTFORMW 「有什么事吗？」
+ENDSELECT
+
+
+DO
+    RESETCOLOR
+    DRAWLINE
+
+    CALL K60_HashihimeServices_CalculateLOVERPEP()
+    LOVERPEP = RESULT:0
+    UnwantedLover = RESULT:1
+    IF LOVERPEP > 1
+        ;PRINTFORML [  1] - Help me break up with one of my lovers
+        PRINTFORML [  1] - 帮我和恋人分手
+    ELSEIF UnwantedLover == 60
+        ;PRINTFORML [  1] - I want to break up with you
+        PRINTFORML [  1] - 我想和帕露西分手
+    ELSEIF LOVERPEP == 1
+        ;PRINTFORML [  1] - Help me break up with %CALLNAME:UnwantedLover%
+        PRINTFORML [  1] - 帮我和 %CALLNAME:UnwantedLover% 分手
+    ELSE
+        SETCOLOR C_L_GRAY
+        ;PRINTFORML [  1] - ????? (Acquire a lover)
+        PRINTFORML [  1] - ？？？(需要一个恋人)
+        RESETCOLOR
+    ENDIF
+
+    IF ABL:[[帕露西]]:亲密 >= 5
+        ;PRINTFORML [  2] - Tell me about...
+        PRINTFORML [  2] - 我有些事想问你...
+    ELSE
+        SETCOLOR C_L_GRAY
+        ;PRINTFORML [  2] - ????? (Befriend Parsee)
+        PRINTFORML [  2] - ？？？（和帕露西搞好关系）
+        RESETCOLOR
+    ENDIF
+    IF (K60_FUCKED_PARSEE())
+        ;PRINTFORML [  3] - I want you to style your pubic hair
+        PRINTFORML [  3] - 我想让你改变一下私处的发型
+    ELSE
+        SETCOLOR C_L_GRAY
+        ;PRINTFORML [  3] - ????? (Get pushed down by Parsee or get Parsee's consent)
+        PRINTFORML [  3] - ？？？（被帕露西推倒或者取得她的同意）
+        RESETCOLOR
+    ENDIF
+
+    IF K60_YOU_ARE_CHEATING_ON_ONE_OF_PARSEES_FRIENDS()
+        SETCOLOR C_L_GRAY
+        IF !CFLAG:[[帕露西]]:允许无套
+            ;PRINTFORML [  4] - ????? (Enable More Lovers or break up with Parsee's friends)
+            PRINTFORML [  4] - ？？？（获得【左拥右抱】或者和帕露西的朋友分手）
+        ELSE
+            PRINTFORML [  4] - Parsee will not consent to raw sex unless you enable More Lovers or break up with her friends
+            PRINTFORML [  4] - 除非你获得【左拥右抱】或者和帕露西的朋友分手，否则帕露西不会允许你无套
+        ENDIF
+        RESETCOLOR
+    ELSEIF CFLAG:[[帕露西]]:允许无套 == 2
+        SETCOLOR C_L_GRAY
+        ;PRINTFORML [  4] - Parsee is already willing to have children with you
+        PRINTFORML [  4] - 帕露西已经做好了和你生孩子的准备
+        RESETCOLOR
+    ELSEIF (TALENT:[[帕露西]]:恋人 && CFLAG:[[帕露西]]:允许无套 == 1) && ESTRUS_CYCLE([[帕露西]]) == 150
+        ;PRINTFORML [  4] - I want to have a child with you
+        PRINTFORML [  4] - 我想和帕露西生孩子
+    ELSEIF CFLAG:[[帕露西]]:允许无套 == 1
+        SETCOLOR C_L_GRAY
+        ;PRINTFORML [  4] - ????? (Become Parsee's lover, get consent for raw non-dangerous day sex, and wait until it's her dangerous day)
+        PRINTFORML [  4] - ？？？ (成为恋人，获得在非危险期进行无套性行为的许可，然后等到她的危险期)
+        RESETCOLOR
+    ELSEIF !CFLAG:[[帕露西]]:允许无套 && (TALENT:[[帕露西]]:恋人 || TALENT:[[帕露西]]:爱欲 || TALENT:[[帕露西]]:炮友)
+        ;PRINTFORML [  4] - I want to do it raw on non-dangerous days
+        PRINTFORML [  4] - 我想在非危险期进行无套性行为
+    ELSE
+        SETCOLOR C_L_GRAY
+        ;PRINTFORML [  4] - ????? (Become Parsee's lover or Fuck Buddy, and wait until it's a non-dangerous day)
+        PRINTFORML [  4] - ？？？ (成为恋人或炮友，然后在非危险期和她说话)
+        RESETCOLOR
+    ENDIF
+    ;PRINTFORML [999] - Never mind
+    PRINTFORML [999] - 没什么
+    INPUT
+    SELECTCASE RESULT
+        CASE 999
+            CALL M_KOJO_COLOR_K60
+            TIME += 5
+            RETURN 1
+        CASE 1
+            IF !TALENT:MASTER:恋人
+                CONTINUE
+            ELSE
+                CALL K60_HashihimeServices_Breakup(LOVERPEP, UnwantedLover)
+                SIF RESULT == -2
+                    RETURN -1
+            ENDIF
+        CASE 2
+            IF ABL:[[帕露西]]:亲密 < 5
+                CONTINUE
+            ELSE
+                CALL K60_HashihimeServices_ParseeChanDoesNotShutUp()
+            ENDIF
+        CASE 3
+            IF !K60_FUCKED_PARSEE()
+                CONTINUE
+            ELSE
+                CALL M_KOJO_COLOR_K60
+                CALL K60_STYLE_PUBIC_HAIR()
+                TIME += 5
+                RESETCOLOR
+            ENDIF
+        CASE 4
+            IF K60_YOU_ARE_CHEATING_ON_ONE_OF_PARSEES_FRIENDS()
+                CONTINUE
+            ELSEIF CFLAG:[[帕露西]]:允许无套 == 2
+                CONTINUE
+            ELSEIF (TALENT:[[帕露西]]:恋人 && CFLAG:[[帕露西]]:允许无套 == 1) && ESTRUS_CYCLE([[帕露西]]) == 150
+                CALL OGAMITAOSHI([[帕露西]])
+            ELSEIF CFLAG:[[帕露西]]:允许无套 == 1
+                CONTINUE
+            ELSEIF !CFLAG:[[帕露西]]:允许无套 && (TALENT:[[帕露西]]:恋人 || TALENT:[[帕露西]]:爱欲 || TALENT:[[帕露西]]:炮友)
+                CALL OGAMITAOSHI([[帕露西]])
+            ELSE
+                CONTINUE
+            ENDIF
+    ENDSELECT
+LOOP 1
+
+@K60_HashihimeServices_CalculateLOVERPEP()
+#DIM UnwantedLover
+#DIM TMP
+#DIM DYNAMIC LOVERPEP
+;Copied from MORELOVER.ERB
+;TODO: Refactor that file to split its functionality into separate functions and call them instead
+
+FOR TMP,1,CHARANUM
+    IF TALENT:TMP:7 > 0
+        LOVERPEP ++
+        UnwantedLover = TMP
+    ENDIF
+NEXT
+DEBUGPRINTFORML LOVERPEP is {LOVERPEP}
+RETURN LOVERPEP, UnwantedLover, TMP
+
+@K60_HashihimeServices_Breakup(LOVERPEP, UnwantedLover)
+#DIM BreakupPrice
+#DIM UnwantedLover
+#DIM TMP
+#DIM DYNAMIC LOVERPEP
+#DIM nLineCnt_Head
+CALL M_KOJO_COLOR_K60
+IF FIRSTTIME("ParseeBreakup")
+    nParseeLoversBrokenUpWith ++
+    IF LOVERPEP == 1
+        IF UnwantedLover == 60
+            GOTO BreakParseesHeart
+        ELSEIF GROUPMATCH(UnwantedLover, 83, 84, 64)
+            GOTO FriendBreakup
+        ENDIF
+    ENDIF
+    SELECTCASE K60_ATTITUDE()
+        CASE 0, 1
+            ;PRINTFORMW 「I know this is going to sound odd, coming from a hashihime...」
+            ;PRINTFORMW 「But you've changed me.」
+            ;PRINTFORMW 「Are you sure you want to do this? Can't you talk it out with %HIM_HER(UnwantedLover)%?」
+            ;PRINTFORMW 「...no? You're sure there's no way the two of you can make this relationship work?」
+            ;PRINTFORMDW Parsee sighs.
+            ;PRINTFORMW 「Very well. I suppose it's better than the two of you being trapped in a relationship that neither of you want.」
+            ;PRINTFORMW 「But I'm still going to charge you for it.」
+            PRINTFORMW 「虽然由我桥姬来说这些话可能有些奇怪……」
+            PRINTFORMW 「但多亏了你，我才能有所改变。」
+            PRINTFORMW 「你真的想分手吗？不能和 %CALLNAME:UnwantedLover% 好好谈谈吗？」
+            PRINTFORMW 「……不行吗？ 你们无论如何都无法重归于好了吗？」
+            PRINTFORMDW 她叹了口气，继续说道。
+            PRINTFORMW 「我明白了。总比两个人继续被困在不想要的感情里要好。」
+            PRINTFORMW 「不过，我可是要收费的哦。」
+            BreakupPrice = 5000
+        CASE 2
+            ;PRINTFORMW 「Too cowardly to tell %HIM_HER(UnwantedLover)% to %HIS_HER(UnwantedLover)% face, hm?」
+            ;PRINTFORMDW Parsee smirks.
+            ;PRINTFORMW 「Very well. But I won't do it for free.」
+            PRINTFORMW 「看来你没有勇气当面告诉 %CALLNAME:UnwantedLover% 呢？」
+            PRINTFORMDW 她得意地笑了。
+            PRINTFORMW 「好吧。不过，我可不会免费帮你。」
+            BreakupPrice = 20000
+        CASE 3
+            ;PRINTFORMW 「So it seems the two of you weren't meant to be... what a shame.」
+            ;PRINTFORMDW Parsee shakes her head.
+            ;PRINTFORMW 「Well, I can fix that... for a price.」
+            PRINTFORMW 「看来你们两个注定无缘……真是可惜。」
+            PRINTFORMDW 帕露西摇了摇头。
+            PRINTFORMW 「好吧，我可以想办法解决……只要你付钱。」
+            BreakupPrice = 10000
+    ENDSELECT
+ELSE
+    SIF TALENT:TARGET:恋人 && !TALENT:MASTER:左拥右抱
+        GOTO BreakParseesHeart
+    SELECTCASE K60_ATTITUDE()
+        CASE 0, 1
+            BreakupPrice = nParseeLoversBrokenUpWith * 5000
+        CASE 2
+            BreakupPrice = nParseeLoversBrokenUpWith * 20000
+        CASE 3
+            BreakupPrice = nParseeLoversBrokenUpWith * 10000
+    ENDSELECT
+ENDIF
+
+$BREAKUP_SELECT
+SIF LOVERPEP <= 1
+    GOTO BREAKUP
+;PRINTFORML 「Who do you want to break up with?」
+PRINTFORML 「你想和谁分手？」
+RESETCOLOR
+DRAWLINE
+nLineCnt_Head = LINECOUNT
+REDRAW 0
+FOR TMP,1,CHARANUM
+    IF TALENT:TMP:恋人 > 0
+        PRINTFORMLC [{TMP, 3}] %CALLNAME:TMP%
+    ENDIF
+NEXT
+PRINTFORML
+;PRINTFORML [-1] Cancel
+PRINTFORML [-1] 取消
+INPUT
+UnwantedLover = RESULT
+CALL M_KOJO_COLOR_K60
+$BREAKUP
+IF UnwantedLover == -1
+    ;PRINTFORMW 「Did you get cold feet all of a sudden?」
+    PRINTFORMW 「突然害怕了吗？」
+    RESETCOLOR
+    RETURN -1
+ELSEIF UnwantedLover < 0 || UnwantedLover >= CHARANUM
+    ;PRINTFORMW 「Who are you even talking about?」
+    PRINTFORMW 「你在说什么啊？」
+    GOTO BREAKUP_SELECT
+ELSEIF !TALENT:UnwantedLover:恋人
+    ;PRINTFORMW 「What are you playing at? You're not in a relationship with %HIM_HER(UnwantedLover)%.」
+    PRINTFORMW 「你在开什么玩笑？你和 %CALLNAME:UnwantedLover% 又不是恋人。」
+    GOTO BREAKUP_SELECT
+ELSEIF UnwantedLover == 0
+    ;PRINTFORMW 「What are you playing at? You can't break up with yourself.」
+    PRINTFORMW 「你在开什么玩笑？没有恋人怎么分手。」
+    GOTO BREAKUP_SELECT
+;uncomment when implmented
+[SKIPSTART]
+ELSEIF TALENT:UnwantedLover:妻
+    IF TALENT:UnwantedLover:妻 == 1
+        PRINTFORMW 「You're already gotten engaged to %HIM_HER(UnwantedLover)%. I'm not going to mess with this.」
+    ELSEIF TALENT:UnwantedLover:妻 == 2
+        PRINTFORMW 「I don't do divorces. Work things out yourself.」
+    ENDIF
+    RESETCOLOR
+    RETURN -1
+[SKIPEND]
+ELSEIF GROUPMATCH(UnwantedLover, 83, 84, 64)
+    $FriendBreakup
+    IF UnwantedLover != 64
+        ;PRINTFORMDW Parsee folds her arms and glares at you.
+        PRINTFORMDW 她抱着胳膊，怒视着你。
+    ELSE
+        ;PRINTFORMDW Parsee looks conflicted for a moment... then she folds her arms and glares at you.
+        PRINTFORMDW 她似乎犹豫了一下……然后抱着胳膊，怒视着你。
+    ENDIF
+    ;PRINTFORML 「You are aware that you're trying to break up with one of my friends, aren't you?」
+    ;PRINTFORMW 「If you want me to do that, I'm charging extra.」
+    PRINTFORML 「你知道你想分手的那个人是我的朋友吧？」
+    ;PRINTFORMW 「If you want me to do that, I'm charging extra.」
+    PRINTFORMW 「如果你非要我这么做，我会额外收费的。」
+    BreakupPrice *= 2
+ELSEIF UnwantedLover == 60
+    $BreakParseesHeart
+    ;CALL PRINT_STRL, @"「@ITALIC@WHAT?!@」"
+     CALL PRINT_STRL, @"「@ITALIC@哈？！@」"
+    IF !CFLAG:[[帕露西]]:K60EN_PARSEE_TIMES_BROKEN_UP_WITH
+        ;PRINTFORMDW Parsee looks horrified.
+        ;PRINTFORMW 「You... you don't really...?」
+        PRINTFORMDW 帕露西看起来很惊恐。
+        PRINTFORMW 「你……你不是认真的吧……？」
+        CALL ASK_YN("是认真的", "不是认真的")
+        IF RESULT
+           ; PRINTFORMDW Parsee sighs in relief.
+           ; CALL PRINT_STRW, @"「Thank goodness. I don't know what I'd do if I knew you'd grown to hate me.」"
+            PRINTFORMDW 帕露西松了一口气。
+            CALL PRINT_STRW, @"「谢天谢地。如果我知道你已经开始讨厌我了，真不知道自己会做出什么事来。」"
+            RESETCOLOR
+            RETURN -1
+        ELSE
+            ;PRINTFORMDW Parsee stares at you for a moment. She seems to be desperately hoping that it's all just a nightmare.
+            ;PRINTFORMDW When it becomes clear that you really want to break up with her, she takes a deep, shuddering breath and speaks.
+            ;PRINTFORMW 「...I understand. I don't want you to be trapped in a relationship with me if you don't love me any longer.」
+            ;PRINTFORMW 「I won't charge you for this.」
+            PRINTFORMDW 帕露西用充满恳求的眼神凝视着你。似乎希望这只是一场噩梦。
+            PRINTFORMDW 最终，当她无法再否定你真的想和她分手的事实后，她深深地吸了一口气，颤抖着说道。
+            PRINTFORMW 「……我明白了。如果你不再爱我了，我不希望你被束缚在和我这段关系中。」
+            PRINTFORMW 「这次我不会收费的。」
+            BreakupPrice = 0
+            GOTO BreakupRitual
+        ENDIF
+    ELSE
+        PRINTFORMDW 帕露西怒视着你。
+        CALL PRINT_STRW, @"「和我交往，和我分手，又@ITALIC@复合@，现在又要分手？！@」"
+        PRINTFORMDW 她看起来像是要向你倾泻弹幕一般。
+        PRINTFORMW 「你是在开玩笑吗？！如果是的话，我一点都笑不出来。」
+        CALL ASK_YN("It isn't.", "It is.")
+        CALL ASK_YN("不是玩笑。", "是玩笑。")
+        PRINTFORMDW 帕露西笑了。
+        IF RESULT
+            PRINTFORMW 「太可惜了。我们完了。我受够了你，也受够了你的破事。」
+        ELSE
+            PRINTFORMW 「很好。因为我们完了。我受够了你，也受够了你的破事。」
+        ENDIF
+        FONTITALIC
+        SETCOLOR C_RED
+        CALL KEYTYPING(@"「滚去死吧。」", "W", 200)
+        FONTREGULAR
+        CALL M_KOJO_COLOR_K60
+        PRINTFORMDW 帕露西漂浮在空中，举起一张符卡。
+        PRINTFORMDW 你为了保命而逃跑，她向你发射了一波又一波的弹幕，伴随着恶毒的辱骂。
+        LOCAL = CFLAG:[[帕露西]]:2
+        PRINTFORMDW 好感度 -{LOCAL} (Parsee)
+        CFLAG:[[帕露西]]:2 = 0
+        LOCAL = CFLAG:[[帕露西]]:4
+        PRINTFORMDW 信任度 -{LOCAL} (Parsee)
+        CFLAG:[[帕露西]]:4 = 0
+        ABL:[[帕露西]]:顺从 = 0
+        ABL:[[帕露西]]:亲密 = 0
+        JUEL:[[帕露西]]:10 = 0
+        JUEL:[[帕露西]]:16 = 0
+        JUEL:[[帕露西]]:12 = 0
+        JUEL:[[帕露西]]:20 = 0
+        PRINTFORMDW 顺从降至LV0...
+        PRINTFORMDW 亲密降至LV0...
+        TALENT:[[帕露西]]:恋人 = 0
+        TALENT:[[帕露西]]:恋慕 = 0
+        TALENT:[[帕露西]]:炮友 = 0
+        TALENT:[[帕露西]]:爱欲 = 0
+        TALENT:[[帕露西]]:思慕 = 0
+        CALL K60_GET_ANGRY(3)
+        IF CFLAG:TARGET:同行
+            CFLAG:TARGET:同行 = 0
+            CFLAG:MASTER:同行 = 0
+        ENDIF
+        CALL RUNOFF(60, 0)
+        CFLAG:[[帕露西]]:K60EN_PARSEE_TIMES_BROKEN_UP_WITH ++
+        RESETCOLOR
+        RETURN -2
+    ENDIF
+ELSEIF INRANGE(RELATION:[[帕露西]]:UnwantedLover, 1, 99)
+    SELECTCASE K60_ATTITUDE()
+        CASE 0, 1
+            ;PRINTFORMW 「I see...」
+            ;PRINTFORMDW Parsee tries to hide how relieved she looks.
+            PRINTFORMW 「我知道了……」
+            PRINTFORMDW 帕露西隐藏着一丝欣慰。
+        CASE 2, 3
+            PRINTFORMW 「很好。说实话，我真不知道你一开始看上她什么了。」
+
+    ENDSELECT
+    BreakupPrice *= ((100 - RELATION:[[帕露西]]:UnwantedLover) / 100)
+ENDIF
+;PRINTFORML 「My fee is %金额表示(BreakupPrice)%.」
+PRINTFORML 「费用是%金额表示(BreakupPrice)%。」
+IF MONEY < BreakupPrice
+    ;PRINTFORML 「...and it seems that you can't afford it.」
+    ;PRINTFORMW 「Come back later when you can.」
+    PRINTFORML 「……看来钱不够啊。」
+    PRINTFORMW 「等你攒够了钱再来吧。」
+    RESETCOLOR
+    RETURN -1
+ENDIF
+;CALL ASK_M("I changed my mind", 1, @"Break up with %CALLNAME:UnwantedLover%", 1)
+CALL ASK_M("我改变主意了", 1, @"和 %CALLNAME:UnwantedLover% 分手", 1)
+SELECTCASE RESULT
+    CASE 0
+        IF GROUPMATCH(UnwantedLover, 83, 84, 64)
+            PRINTFORMDW 帕露西皱着眉头看着你。
+            PRINTFORMW 「你最好是这样。」
+        ELSE
+            SELECTCASE K60_ATTITUDE()
+                ;CASE 0, 1
+                ;    PRINTFORMW 「That's probably for the best.」
+                ;CASE 2
+                ;    PRINTFORMW 「Then what did you waste my time for?」
+                ;CASE 3
+                ;    PRINTFORMW 「I see.」
+                ;    PRINTFORMDW Parsee looks a little disappointed.
+                CASE 0, 1
+                    PRINTFORMW 「这样最好。」
+                CASE 2
+                    PRINTFORMW 「你让我白费力气了。」
+                CASE 3
+                    PRINTFORMW 「是吗。」
+                    PRINTFORMDW 她似乎有点失望。
+            ENDSELECT
+        ENDIF
+        RESETCOLOR
+        RETURN -1
+    CASE 1
+        $BreakupRitual
+        IF FIRSTTIME("RitualCutscene")
+            ;PRINTFORMDW Parsee reaches into her pocket and pulls out a pair of wicked-looking scissors.
+            ;PRINTFORMDW They're made of a strange silvery metal you've never seen before.
+            ;PRINTFORMW 「For this ritual to succeed, you need to hold your soon-to-be-ex-lover's image in your mind's eye.」
+            ;PRINTFORMW 「Thinking about the bad times you've had makes it easier.」
+            PRINTFORMDW 帕露西从口袋里拿出了一个感觉不吉利的剪刀。
+            PRINTFORMDW 是用前所未见的奇妙银色金属制成的。
+            PRINTFORMW 「仪式需要，所以现在请你好好地想着你的前女友。」
+            PRINTFORMW 「如果能回忆起讨厌的回忆就更好了。」
+            IF UnwantedLover == 60
+                ;PRINTFORMDW Parsee laughs bitterly.
+                ;PRINTFORMW 「That shouldn't be a problem. After all, it's me we're talking about.」
+                PRINTFORMDW 露出了痛苦的笑容。
+                PRINTFORMW 「这倒不是问题呢。毕竟说的是我嘛。」
+            ENDIF
+            ;PRINTFORMW 「Now close your eyes.」
+            ;PRINTFORMDW You close your eyes and think about the bad times you had with %CALLNAME:UnwantedLover%.
+            ;PRINTFORMDW The fights, the times she got on your nerves, all her annoying little habits that you can't stand...
+            ;PRINTFORMDW You feel something tightening around your \@ IS_MALE(MASTER) ? little finger # thumb\@, and open your eyes in shock.
+            PRINTFORMW 「闭上眼睛。」
+            PRINTFORMDW 闭上眼睛，回忆和%CALLNAME:UnwantedLover%那些不好的回忆。
+            PRINTFORMDW 争吵，惹你生气的时候，所有你无法忍受的烦人小习惯...
+            IF IS_MALE(TARGET)
+                LOCALS:0 = 小指
+            ELSE
+                LOCALS:0 = 拇指
+            ENDIF
+            IF IS_MALE(MASTER)
+                LOCALS:1 = 小指
+            ELSE
+                LOCALS:1 = 拇指
+            ENDIF
+            ;PRINTFORMDW You feel something tightening around your %LOCALS%, and open your eyes in shock.
+            ;PRINTFORMDW %BREAKENG(@"There's a blue thread tied around it. \@ UnwantedLover == 60 ? It stretches over to Parsee, and the other end is tied around her %LOCALS%. It vanishes as you look at it. # It stretches off into the distance and vanishes as you look at it.\@")%
+            ;PRINTFORMDW You hear Parsee sigh, and look up at her. She looks annoyed.
+            ;PRINTFORMW 「I told you to concentrate! I can't perform this ritual if you don't focus!」
+            PRINTFORMDW 感觉%LOCALS:1%被勒紧了，不禁睁开了眼睛。
+            {
+            PRINTFORMDW %BREAKENG(@"缠绕着一根蓝色的线。\@ UnwantedLover == 60 ? 它延伸到帕露西那里，绑在她的%LOCALS%上。当你看到它的时候，它消失了。
+             # 它延伸到远处，但当你看到它的时候，它消失了。\@")%
+             }
+            ;PRINTFORMDW You hear Parsee sigh, and look up at her. She looks annoyed.
+            ;PRINTFORMW 「I told you to concentrate! I can't perform this ritual if you don't focus!」
+            PRINTFORMDW 听到帕露西叹了口气，抬头一看，她一脸不悦。
+            PRINTFORMW 「跟你说了要集中精神！你不认真对待的话是不会结束的哦！」
+            IF UnwantedLover == 60
+                ;PRINTFORMW 「...are you having second thoug-」
+                ;PRINTFORMDW Parsee cuts herself off and shakes her head.
+                PRINTFORMW 「...你，你是不是后悔了？」
+                PRINTFORMDW 帕露西咽回了话，摇了摇头。
+            ENDIF
+            ;PRINTFORMDW You close your eyes again and go back to thinking about the bad times you had with %CALLNAME:UnwantedLover%.
+            ;PRINTFORMDW This time, when the thread tightens around your \@ IS_MALE(MASTER) ? little finger # thumb\@, you ignore it and keep your focus.
+            PRINTFORMDW 再次闭上眼睛，回想起与%CALLNAME:UnwantedLover%不快的记忆。
+            PRINTFORMDW 感觉%LOCALS:1%被勒紧，但还是集中精神。
+            ;The Ahuna Vairya is recited at Zoroastrian weddings, so I decided to have Parsee recite it backward for this ritual
+            PRINTFORMW 「Meratsav tadad oybugird miy, a Iaruha Ahcmerhtahsahk...」
+            ;PRINTFORMDW Parsee is chanting something in a language you don't recognize.
+            ;PRINTFORMDW The thread gets tighter and tighter until it's cutting off your circulation, but you grit your teeth and keep focusing on %CALLNAME:UnwantedLover%.
+            ;PRINTFORMDW Then you hear Parsee's scissors snip, and the pressure vanishes in an instant.
+            ;PRINTFORMW 「You can stop concentrating now. It's done.」
+            ;PRINTFORMDW You open your eyes and see the blue thread again. This time it's cut. It vanishes once more.
+            PRINTFORMDW 帕露西用你听不懂的语言念叨着什么。
+            PRINTFORMDW 线越勒越紧，紧到血液都要停止流动了。但你咬紧牙关，集中精神想着%CALLNAME:UnwantedLover%。
+            PRINTFORMDW 听到剪刀“咔嚓”一声，压迫感瞬间消失得无影无踪。
+            PRINTFORMW 「可以放松了哦。已经结束了。」
+            PRINTFORMDW 睁开眼睛，又看到了那根蓝色的线。是断掉的线。它再次消失了。
+        ELSE
+            ;PRINTFORMDW The ritual proceeds the same way as last time.
+            PRINTFORMDW 仪式和上次一样进行着。
+        ENDIF
+        PRINTFORMW 「结束了。你和 \@ UnwantedLover == 60 ? 我 # %CALLNAME:UnwantedLover%\@ 已经不再是恋人了。」
+        IF UnwantedLover == 60
+            PRINTFORMW 「如果你...如果还需要...的话...再来吧。」
+            PRINTFORMDW 帕露西用双手捂住脸，开始哭泣。
+            CFLAG:[[帕露西]]:K60EN_PARSEE_TIMES_BROKEN_UP_WITH ++
+            CALL K60_PARSEE_GOT_HER_HEART_BROKEN
+        ELSE
+            ;PRINTFORMW 「Come back again if you want to break up with someone else.」
+            PRINTFORMW 「如果有了想分手的人，再来找我吧。」
+            CALL PAY_MONEY_YEN(BreakupPrice, 2)
+        ENDIF
+        LOVERPEP --
+        IF LOVERPEP == 0
+            CLEARBIT CFLAG:MASTER:既成事实, 2
+            TALENT:MASTER:7 = 0
+        ENDIF
+        TALENT:UnwantedLover:7 = 0
+        CLEARBIT CFLAG:UnwantedLover:13, 2
+        CLEARBIT CFLAG:UnwantedLover:13, 1
+        CLEARBIT CFLAG:UnwantedLover:既成事实, 2
+        IF GROUPMATCH(UnwantedLover, 83, 84, 64)
+            CFLAG:[[帕露西]]:推倒禁止 = CFLAG:[[帕露西]]:K60EN_PARSEE_OLD_NO_PUSHDOWN_VALUE
+            CFLAG:[[帕露西]]:既成事实 = CFLAG:[[帕露西]]:K60EN_PARSEE_OLD_CONSENT_VALUE
+            CFLAG:[[帕露西]]:ヤラせちゃった = CFLAG:[[帕露西]]:K60EN_PARSEE_OLD_BEEN_PUSHED_DOWN_VALUE
+            CFLAG:[[帕露西]]:K60EN_PARSEE_OLD_NO_PUSHDOWN_VALUE = 0
+            CFLAG:[[帕露西]]:K60EN_PARSEE_OLD_CONSENT_VALUE = 0
+            CFLAG:[[帕露西]]:K60EN_PARSEE_OLD_BEEN_PUSHED_DOWN_VALUE = 0
+        ENDIF
+        TCVAR:[[帕露西]]:K60ENC_TCVAR_DATE_REACTION = 0
+        UnwantedLover = 0
+        nParseeLoversBrokenUpWith ++
+        TIME += 30
+        RESETCOLOR
+        RETURN 1
+ENDSELECT
+
+;Parsee's longer conversations go here
+@K60_HashihimeServices_ParseeChanDoesNotShutUp()
+IF K60_ATTITUDE() == 2 || MARK:[[帕露西]]:反抗刻印 == 3 || CFLAG:[[帕露西]]:勃然大怒 == 1
+    ;PRINTFORMDW Parsee folds her arms and glares at you.
+    PRINTFORMDW 帕露西双手抱胸，怒视着你。
+    PRINTFORMW 现在她\@ K60_ATTITUDE() == 2? 没办法好好说话 # 好像很生气\@……
+    ;PRINTFORMD It looks like she's too 
+    ;IF K60_ATTITUDE() == 2
+    ;    PRINTFORMD tsundere 
+    ;ELSE
+    ;    PRINTFORMD angry 
+    ;ENDIF
+    ;PRINTFORMDW to open up to you right now...
+    TIME += 5
+    RETURN 1
+ELSE
+    DO
+        RESETCOLOR
+        DRAWLINE
+        SIF !FIRSTTIME("Parsee山女Convo", 1)
+            SETCOLOR C_L_GRAY
+        PRINTL [  0]山女
+
+        RESETCOLOR
+        SIF !FIRSTTIME("Parsee琪斯美Convo", 1)
+            SETCOLOR C_L_GRAY
+        PRINTL [  1]琪斯美
+
+        RESETCOLOR
+        SIF !FIRSTTIME("Parsee勇仪Backstory", 1)
+            SETCOLOR C_L_GRAY
+        PRINTL [  2]你怎么认识勇仪
+        RESETCOLOR
+
+        SIF !FIRSTTIME("ParseeSatoriPartialBackstory", 1)
+            SETCOLOR C_L_GRAY
+        PRINTL [  3]觉
+        RESETCOLOR
+
+        SIF !FIRSTTIME("ParseeKoishiConvo", 1)
+            SETCOLOR C_L_GRAY
+        PRINTL [  4]恋恋
+        RESETCOLOR
+
+        SIF !FIRSTTIME("ParseeOkuuBackstory", 1)
+            SETCOLOR C_L_GRAY
+        PRINTL [  5]阿空
+        RESETCOLOR
+
+        SIF !FIRSTTIME("ParseeJoonConvo", 1)
+            SETCOLOR C_L_GRAY
+        PRINTL [  6]女苑
+        RESETCOLOR
+
+        SIF !FIRSTTIME("ParseeSeijaConvo", 1)
+            SETCOLOR C_L_GRAY
+        PRINTL [  7]正邪
+        RESETCOLOR
+
+        SIF !FIRSTTIME("ParseeAlternateWorldsConvo", 1)
+            SETCOLOR C_L_GRAY
+        PRINTL [ 8]深一些的话题
+        RESETCOLOR
+
+        SIF !FIRSTTIME("ParseeThoughtsOnHumansConvo", 1)
+            SETCOLOR C_L_GRAY
+        PRINTL [ 9]你对人类的看法
+        RESETCOLOR
+    ; PRINTL []How you met 勇仪 [todo convo about 勇仪 that isn't backstory-related]
+			;-Rin
+			;-Suika
+			;-Kanako
+			;-Yuuma
+			;-Nue
+			;-Hatate and Aya (they met in Double Spoiler)
+			;-Noroiko
+			;-Eiki
+			;-Sunny, if Sunny's at Lust (her fall dialogue mentions her running into Parsee while looking for you)
+        PRINTL [999]Never mind
+        INPUT
+        LOCAL = RESULT
+        CALL M_KOJO_COLOR_K60
+        SELECTCASE LOCAL
+            CASE 0
+                CALL K60_山女_BACKSTORY()
+                TIME += 5
+                RESETCOLOR
+            CASE 1
+                CALL K60_琪斯美_CONVO()
+                TIME += 5
+                RESETCOLOR
+            CASE 2
+                IF TALENT:[[帕露西]]:恋人
+                    CALL K60_勇仪_BACKSTORY
+                    TIME += 5
+                ELSE
+                    $NOT_CLOSE_ENOUGH
+                    PRINTFORMW 「……我不太想谈论那个。」
+                    PRINTFORMDW 看来你需要和帕露西更亲近一些，她才会告诉你关于那件事……
+                ENDIF
+                RESETCOLOR
+            CASE 3
+                CALL K60_SATORI_PARTIAL_BACKSTORY()
+                TIME += 5
+                RESETCOLOR
+            CASE 4
+                CALL K60_KOISHI_CONVO()
+                TIME += 5
+                RESETCOLOR
+            CASE 5
+                CALL K60_OKUU_CONVO()
+                TIME += 5
+                RESETCOLOR
+            CASE 6
+                CALL K60_JOON_CONVO()
+                TIME += 5
+                RESETCOLOR
+            CASE 7
+                CALL K60_SEIJA_CONVO()
+                TIME += 5
+                RESETCOLOR
+            CASE 8
+                CALL K60_ALTERNATE_WORLDS_CONVO()
+                TIME += 10
+                RESETCOLOR
+            CASE 9
+                CALL K60_THOUGHTS_ON_HUMANS()
+                TIME += 5
+                RESETCOLOR
+            CASE 999
+                RESETCOLOR
+                TIME += 5
+                RETURN
+        ENDSELECT
+    LOOP 1
+ENDIF
+
+

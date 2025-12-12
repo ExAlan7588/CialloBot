@@ -1,0 +1,180 @@
+﻿@CHARAMOVE_DATA_23(ARG, ARG:2)
+LOCAL = 23
+SELECTCASE ARG
+	;连动设定（RETURN=依存する角色, RESULT:1～3=对等に连动する角色）
+	CASE 1
+		;たまに连动
+		SIF CFLAG:LOCAL:今日的运势 % 10 == 0
+			RETURN [[幽幽子]]
+	;特殊生活时间设定（CFLAG:LOCAL:生活时间补正を设定する）
+	CASE 3
+	;移动倾向（±～10=行きやすい/行きにくい, -100=行かない）
+	CASE 4
+		SELECTCASE ARG:2
+			;よく居る
+			CASE P621庭, P626厨房, P628起居室
+				RETURN 5
+			;幽幽子样の私室にはあまり入らない
+			CASE P623幽幽子私室
+				RETURN -5
+			;私室系
+			CASE P608润美的家, P609璎花的家, P615映姫的房间, P616小町的房间, P633紫私室, P635橙私室, P636八云邸澡堂, P638蓝私室, P606日狭美的家, P607残无的家
+				RETURN -100
+			CASE P643灵长园的澡堂 TO P655尤魔宅的澡堂
+				RETURN -100
+			;地狱は怖いのであんまり行かない
+			CASE P605地狱
+				RETURN -5
+			;是非曲直厅、畜生界は行きにくい
+			CASE P610是非曲直厅大堂 TO P618空的房间, P640异界的关卡 TO P655尤魔宅的澡堂
+				RETURN -5
+		ENDSELECT
+	;出现场所
+	CASE 7
+		SELECTCASE ARG:2
+			CASE 樱花道的鸟居, 神社境内, 神社走廊
+				RETURN 1
+			CASE 地藏小路, 倒垂的柳树下, 神灵庙广场, 神灵庙道场
+				RETURN 1
+			CASE 广场, 商业街, 吞屋小道, 长屋街
+				RETURN 1
+			CASE 中有之道, 三途之川, 迷途之家, 彼岸, 白玉楼庭院, 白玉楼
+				RETURN 1
+		ENDSELECT
+	;引力设定（CFLAG:LOCAL:引力点を设定する）
+	CASE 8
+ENDSELECT
+
+@EXIST_キャラデータ23
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@キャラデータ23(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "称呼"
+	CALLF MAKE_STR(V_NAME, "妖梦")
+;こっから衣装设定
+CASE "今天的睡衣"
+	CALLF MAKE_STR(V_NAME, "睡衣（襦袢）套")
+
+CASE "便装：帽子"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("帽子", "发箍"))
+CASE "便装：靴"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("靴", "靴"))
+CASE "便装：袜子"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("袜子", "袜子"))
+CASE "便装：裙子"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("裙子", "裙子"))
+CASE "便装：上身衣服２"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("上身衣服２", "女式衬衫"))
+CASE "便装：外衣"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("外衣", "背心"))
+
+CASE "固有内衣形容词"
+	CALLF MAKE_STR(V_NAME, "重视运动的")
+CASE "固有下半身内衣名"
+	CALLF MAKE_STR(V_NAME, "内衣紧身裤")
+CASE "固有内衣着用条件"
+	SIF !RAND:(3 - (2 * 胜负内衣判定([[妖梦]])))
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "固有上半身内衣"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "固有上半身内衣名"
+	CALLF MAKE_STR(V_NAME, "运动文胸")
+CASE "固有内衣半透明(前)"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "固有内衣半透明(后)"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "固有内衣布料厚度"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;料理关联
+CASE "料理：喜欢的味道"
+	CALLF MAKE_STR(V_NAME, "卵/米/煮物/酸/清淡/春物/朴素/上品/家庭的/软糯的/妖力/冥界风/和食/和食/甜/甜/甜/")
+CASE "料理：讨厌的味道"
+	CALLF MAKE_STR(V_NAME, "面包/洋食/灵障/辣/辣/青蛙/青蛙/青蛙/虫肉/虫肉/虫肉/" + "怪诞/谜料理/" * 5)
+CASE "料理：助手效果"
+	CALLF MAKE_STR(V_NAME, "切れ味/冥界风/")
+;赠り物关联
+CASE "感性：好き"
+	CALLF MAKE_STR(V_NAME, "绿/秩序/可爱的/和风/别致/" + "幽灵/死生/刃物/" * 3 + "冥界の/幽明の/幽灵の/魂の/生と死の/怀剑/护刀/" * 5)
+CASE "感性：嫌い"
+	CALLF MAKE_STR(V_NAME, "混沌/可怕的/奇妙/洋风/知的/威严/" + "弹/生体品/烟袋/机械/" * 3)
+
+;ここは依赖IDが关联しない情报
+;依赖发生率スカ2/一般3/固有5
+CASE "没有依赖发生率"
+	CALLF MAKE_INT(V_NAME, 2)
+CASE "一般依赖发生率"
+	CALLF MAKE_INT(V_NAME, 3)
+CASE "固有依赖发生率"
+	CALLF MAKE_INT(V_NAME, 5)
+CASE "固有依赖最终要素"
+	CALLF MAKE_INT(V_NAME, 101)
+CASEELSE
+	;固有依赖关联のデータにバトンタッチ
+	SIF STRCOUNT(O_DATA, "依赖")
+		CALLF 固有依赖23(ARG, O_DATA, V_NAME)
+ENDSELECT
+
+;-------------------------------------------------
+;固有料理设定
+;DISH_NAME          料理名
+;RESULTS            料理の种类（轻食/主食/甜点）
+;CALL 材料设定("")  材料の指定。"泛用"を入れると自动で泛用食材になる
+;DISH_TASTE         味の设定
+;DISH_COMMENT       （任意）一行コメント
+;DISH_TIME          （任意）调理にかかる时间
+;DISH_MAXLIMIT      （任意）料理の持续时间
+;-------------------------------------------------
+@SPECIAL_MENU_23
+DISH_NAME = 蜜豆白玉
+RESULTS = 甜点
+CALL 材料设定("冰淇淋", "草莓", "西瓜", "仙桃")
+DISH_TASTE = 和食/冰淇淋/豆/甜/清淡/冷/夏物/艺术的/上品/新鲜/扑鼻/灵障/冥界风/
+DISH_COMMENT = 妖梦模仿半灵的形状所原创的甜品。味道很淡。
+RETURN 1
+
+;IMAGE_I23_特殊表情COM(CHARA, コマンド)-------------------------------------------------------
+;直前のコマンドで变化するキャラクター特有の表情表示条件
+;时间停止中は变化しない表情はこちら
+;使用时注意点:
+;	RESULTS:0に表情を格纳
+;	RESULTS:1にマウスオーバー时の表情を格纳すること
+;	"オナニー","爱抚","性交"は本编で实装済み
+;-------------------------------------------------------------------------------------------
+@IMAGE_I23_特殊表情COM(CHARA, コマンド)
+#DIM CHARA
+#DIM コマンド
+
+IF CFLAG:CHARA:应用差分替换 == 1
+	IF !FLAG:立绘种类 && CHECK_NUDE(CHARA)
+		SELECTCASE コマンド
+		CASE 1
+			RESULTS:1 = %RESULTS%
+			RESULTS:0 = クンニ
+		CASE 60
+			RESULTS:1 = %RESULTS%
+			RESULTS:0 = 正常位
+		CASE 61
+			RESULTS:1 = %RESULTS%
+			RESULTS:0 = 后背位
+		CASE 65
+			RESULTS:1 = %RESULTS%
+			RESULTS:0 = 骑乘位
+		CASEELSE
+		ENDSELECT
+	ENDIF
+ELSE
+	;通常画像
+	IF FLAG:立绘种类
+		;颜绘
+	ELSE
+		;立绘
+	ENDIF
+ENDIF

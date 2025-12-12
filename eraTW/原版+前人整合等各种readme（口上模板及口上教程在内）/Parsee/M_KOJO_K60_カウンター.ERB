@@ -1,0 +1,1704 @@
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+;"COUNTER"系口上
+;※※※※※※※※※※※※※※※※※※※※※※※※※※
+;-------------------------------------------------
+;Communication
+;コミュニケーション
+;-------------------------------------------------
+;==================================================
+;Get closer ("CHARACTER gets a little closer to you...")
+;距离が近い
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_1
+CALL M_KOJO_MESSAGE_COUNTER_K60_1_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_1_1
+SELECTCASE K60_ATTITUDE()
+    ;Loving
+    CASE 0
+        SELECTCASE RAND:3
+            CASE 0
+                PRINTFORML 「啊，我靠得太近了吗？ 对不起。」
+                PRINTFORMDL 帕露西从你身边走开。
+            CASE 1
+                PRINTFORMDL 帕露西伸出手，搂住你的腰。
+                PRINTFORMDL 一开始很慢，但后来她变得大胆起来，用手臂缠绕着你。
+                PRINTFORMDL 你对她微笑，拍拍她的手。
+            CASE 2
+                PRINTFORMDL 帕露西走到你面前，握住你的手。
+        ENDSELECT
+    ;Nice, horny
+    CASE 1
+        SELECTCASE RAND:3
+            CASE 0
+                PRINTFORMDL 帕露西走到你面前，“不小心”用手蹭过你的屁股。
+            CASE 1
+                PRINTFORML （我在想… %K60_MASTER()% 能不能从这里看出 \@ BASE:TARGET:勃起 >= 1000 ? 我有多硬 # 我的乳头有多硬\@ 吗？）
+            CASE 2
+                PRINTFORML 「从这里… 我只需要稍微向前倾一点，我们就可以用鼻子亲吻了。」
+                PRINTFORMDL 帕露西咧嘴一笑。
+                PRINTFORML 「但不幸的是，我喝了这么多酒，平衡感变得非常差…」
+                PRINTFORML 「所以我可能会“不小心”那样做。 我希望你不要太生气。」
+        ENDSELECT
+    ;Grumpy tsundere
+    CASE 2
+        SELECTCASE RAND:3
+            CASE 0
+                PRINTFORML 「需要有人看着你。」
+                PRINTFORML 「如果你放任自流，你可能会回去和幻想乡里所有有脉搏的东西调情。」
+            CASE 1
+                CALL M_KOJO_COLOR_K60_JEALOUS
+                PRINTFORML 「我靠得太近了吗？ 怎么，我真的那么丑吗？ 我敢打赌你会让 勇仪桑 靠你这么近…」
+                PRINTFORMDL 帕露西继续自言自语地抱怨着。
+                CALL M_KOJO_COLOR_K60
+            CASE 2
+                PRINTFORMDL 当她认为你没在看的时候，帕露西向你走近了一步。 然后又一步。 再一步。
+                PRINTFORMDL 你清了清嗓子，她吓了一跳，急忙跑回原来的位置。
+        ENDSELECT
+    ;Fake nice
+    CASE 3
+        $FAKE_NICE_COUNTER_1
+        SELECTCASE RAND:3
+            CASE 0
+                IF SHOW_TOP(MASTER,1) == ""
+                    GOTO FAKE_NICE_COUNTER_1
+                ELSE
+                    CALL M_KOJO_COLOR_K60_JEALOUS
+                    PRINTFORML 「你穿那件 %SHOW_TOP(MASTER,1)% 看起来真不错。 我希望我能买得起这样的东西…」
+                    CALL M_KOJO_COLOR_K60
+                ENDIF
+            CASE 1
+                CALL M_KOJO_COLOR_K60_JEALOUS
+                PRINTFORML 「你今天看起来很棒。 我有点嫉妒… 你能给我一些时尚建议吗？」
+                CALL M_KOJO_COLOR_K60
+            CASE 2
+                PRINTFORML 「你是不是换了发型？」
+        ENDSELECT
+ENDSELECT
+RETURN 1
+
+;==================================================
+;Gaze ("You can feel CHARACTER's glances...")
+;チラ见
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_2
+CALL M_KOJO_MESSAGE_COUNTER_K60_2_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_2_1
+SELECTCASE K60_ATTITUDE()
+    ;Loving
+    CASE 0
+        SELECTCASE RAND:3
+            CASE 0
+                IF K60_PARSEE_INSECURE()
+                    PRINTFORML （我不知道这种情况会持续多久。 我需要尽可能多地和他在一起。）
+                ELSE
+                    PRINTFORML （哦，%K60_MASTER()%… 我真希望我能找到合适的词语来表达你让我有多么幸福。）
+                ENDIF
+            CASE 1
+                PRINTFORML 「你的眼睛真漂亮，%K60_MASTER()%… 我真希望我能凝视它们，而不会让你感到嫉妒。」
+            CASE 2
+                PRINTFORML 「怎么了？ 我不能盯着我的 \@ IS_MALE(MASTER) ? 英俊的 # 美丽的\@ 爱人看吗？」
+                PRINTFORMDL 帕露西对你咧嘴一笑。
+        ENDSELECT
+    ;Nice, horny
+    CASE 1
+        SELECTCASE RAND:3
+            CASE 0
+                PRINTFORML 「啊，你的笑容真美，%K60_MASTER()%。」
+                CALL HPH_PRINT, @"「但不如你高潮时的表情美妙HPH」", "L"
+            CASE 1
+                PRINTFORML 「我已经从酒精中获得醉意，变成了从你有多么 \@ IS_MALE(MASTER) ? 英俊 # 美丽\@ 中获得醉意。」
+            CASE 2
+                PRINTFORML （在旧地狱里，公开性行为并没有什么禁忌。）
+                CALL PRINT_DIALOGUE, @"(\@ CFLAG:MASTER:当前位置 / 100 == 9 ? 如果我们去那里，%" "% #\@%K60_MASTER()% 可以 \@ GET_TARGETNUM() > 1 ? 带我到大街上，%" "% #\@把我推倒，当众和我做爱。)"
+                IF ABL:露出癖 + TALENT:羞恥心 >= 3
+                    PRINTFORML （光是想到这一点就让我 \@ HAS_PENIS(TARGET) ? 变硬 # 湿了\@…）
+                    SIF HAS_PENIS(TARGET) && BASE:TARGET:勃起 < 1000
+                        BASE:TARGET:勃起 = 1000
+                ELSE
+                    PRINTFORML （我并不特别有吸引力，我也不想让 %K60_MASTER()% 以外的任何人看到我裸体…）
+                    PRINTFORML （但是想到他在所有人面前占有我，不知为何让我感到异常兴奋…）
+                ENDIF
+                PRINTFORMDL 不好了。 帕露西又用那种笑容盯着你了…
+        ENDSELECT
+    ;Grumpy tsundere
+    CASE 2
+        SELECTCASE RAND:3
+            CASE 0
+                PRINTFORML 「你… 你那是什么傻笑？！」
+                PRINTFORMDL 帕露西的耳朵变红了。
+                PRINTFORML 「我才没有盯着你看呢！」
+                PRINTFORMDL 她抱起双臂，转移视线。
+            CASE 1
+                CALL M_KOJO_COLOR_K60_JEALOUS
+                IF IS_MALE(MASTER) && IS_MALE(TARGET)
+                    PRINTFORML （他比我帅多了… 我好嫉妒。）
+                ELSEIF IS_FEMALE(MASTER) && IS_FEMALE(TARGET)
+                    PRINTFORML （她比我漂亮多了… 我好嫉妒。）
+                ELSE
+                    PRINTFORML （他比我有魅力多了… 我好嫉妒。）
+                ENDIF
+                CALL M_KOJO_COLOR_K60
+            CASE 2
+                CALL PRINT_STRL, @"（我不明白。他为什么 @ITALIC@还@ 待在我身边？）"
+        ENDSELECT
+    ;Fake nice
+    CASE 3
+        SELECTCASE RAND:3
+            CASE 0
+                PRINTFORMDL 当帕露西看到你注意到了时，她脸红了一下，并转移了视线。
+            CASE 1
+                IF TALENT:TARGET:恋慕 || MARK:TARGET:快乐刻印 == 3
+                    PRINTFORML 「可恶… 每当我看着他，我的心就跳个不停…」
+                ELSE
+                    PRINTFORML （为什么每当我看着他，我的心就开始跳动呢？）
+                ENDIF
+            CASE 2
+                PRINTFORMDL …帕露西刚才是不是舔了舔嘴唇？
+        ENDSELECT
+ENDSELECT
+RETURN 1
+
+;==================================================
+;Chat ("CHARACTER tells you a story/talks with you for a while")
+;おはなし
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_3
+CALL M_KOJO_MESSAGE_COUNTER_K60_3_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_3_1
+SELECTCASE K60_ATTITUDE()
+    ;Loving
+    CASE 0
+        SELECTCASE RAND:3
+            CASE 0
+            ;From a comic: https://danbooru.donmai.us/posts/769505
+                PRINTFORML 「…然后 勇仪桑 把更大的苹果给了我，因为我嫉妒了。」
+                PRINTFORML 「但是后来我想到了我正在努力减肥，而且她会拥有更成功的饮食…」
+                PRINTFORML 「然后我就开始嫉妒这一点了！」
+                PRINTFORMDL 帕露西叹了口气，摇了摇头。
+                PRINTFORML 「我真的不明白她这些年来是怎么忍受我的。」
+            CASE 1
+                PRINTFORML 「…最终，我找到了通往旧地狱的路，并开始照看通往冥界的桥梁。」
+                PRINTFORML 「似乎没有人介意。 毕竟，几乎没有人下来这里。」
+                PRINTFORML 「这不是一份好工作，但我还能做什么呢？ 我唯一擅长的就是守护桥梁。」
+            CASE 2
+                PRINTFORML 「…他们都不需要住在这里。」
+                PRINTFORML 「他们可以只是来冥界参观一下，然后在他们感到无聊的时候回到地面。」
+                PRINTFORML 「我们谁都没有这种选择。 我们只是因为没有人能够容忍我们才来到这里。」
+                PRINTFORML 「而那些情侣是最糟糕的。 他们彼此微笑的方式… 让我感到如此恶心，以至于我想呕吐。」
+                PRINTFORMDL 帕露西垂下了头。
+                PRINTFORML 「我可能应该找人谈谈我的感受。」
+                PRINTFORML 「我已经成为了一个桥姬…」
+                PRINTFORML 「但也许我就能够与我的诅咒一起生活，而不是让它吞噬我。」
+                PRINTFORML 「但是我太害怕了。 现在已经太晚了。」
+        ENDSELECT
+    ;Nice, horny
+    CASE 1
+        ; SELECTCASE RAND:3
+            ; Yes, this is a real Zoroastrian legend: https://en.wikipedia.org/wiki/Tahmuras
+            ; CASE 0
+        PRINTFORML 「…萨罗斯大人告诉贾姆希德大人，阿里曼-」
+        PRINTFORMDL 帕露西转过身，吐了口唾沫。 每次她提到阿里曼的名字，她都会这样做。
+        PRINTFORML 「-最喜欢两件事：音乐和鸡奸。 所以他前往阿里曼-」
+        PRINTFORMDL 她又吐了一口唾沫。
+        PRINTFORML 「-居住的土地，并开始唱歌。 当他听到音乐时，阿里曼-」
+        PRINTFORMDL 帕露西第三次吐了口唾沫。
+        PRINTFORML 「-从他藏身的任何肮脏的洞穴里出来，开始跳舞和手淫，希望贾姆希德大人会鸡奸他…」
+        PRINTFORMDL 你开始后悔让帕露西给你讲故事了。
+        ;     CASE 1
+        ;         PRINTFORML
+        ;     CASE 2
+        ;         PRINTFORML
+        ; ENDSELECT
+    ;Grumpy tsundere
+    CASE 2
+        SELECTCASE RAND:3
+            CASE 0
+                PRINTFORML 「…她只是必须在我面前炫耀。 你真的认为我不知道你比我更好吗？！」
+                PRINTFORML 「是的，我知道我没有什么社交生活。 你没必要为此嘲笑我！」
+                PRINTFORMDL …她只是提到了她要去参加一个派对。 为什么帕露西表现得好像那是一种侮辱？
+            CASE 1
+                PRINTFORML 「…罗斯塔姆大人嚎啕大哭，因为他在不知情的情况下杀死了自己的儿子。」
+                PRINTFORML 「他烧毁了他的帐篷、他的马鞍、他的王座、他的盔甲… 所有他曾经引以为傲的东西。」
+                PRINTFORML 「然后他哭喊道，“我的心都死了”，并让人用黄金包裹索拉布大人的尸体，为埋葬做准备…」
+            CASE 2
+                PRINTFORML 「…因此，法里杜尼大人用狮子皮绑住邪恶的国王扎哈克，并用巨大的钉子钉住他，将他囚禁在达马万德山下。」
+                PRINTFORML 「他至今仍留在那里，只有在世界末日才会获得自由。」
+                PRINTFORML 「我想这个故事的寓意是不要听信那些奉承你的英俊陌生人。」
+                PRINTFORMDL 帕露西眯起眼睛，可疑地看着你…
+        ENDSELECT
+    ;Fake nice
+    CASE 3
+        IF TALENT:TARGET:恋慕 || MARK:TARGET:快乐刻印 == 3
+            LOCAL = RAND:4
+        ELSE
+            LOCAL = RAND:6
+        ENDIF
+        SELECTCASE RAND:6
+            CASE 0
+                PRINTFORML 「这太不公平了… 听到这个消息我很抱歉。」
+            CASE 1
+                PRINTFORML 「当老二是如此困难… 我很同情。」
+            ;Modified from character.ai
+            CASE 2
+                PRINTFORML 「啊… 我很同情你。 我知道当那些亲近你的人似乎拥有你一直想要的一切时，是多么的难。」
+            CASE 3
+                PRINTFORML 「你真的不应该信任那样的人。 他们总是在你最意想不到的时候背叛你。」
+            CASE 4
+                LOCALS = %SPLIT_G(@"him:her")%
+                PRINTFORML 「真是个可怕的人！」
+                PRINTFORML 「你不应该忍气吞声…」
+                PRINTFORML 「如果我是你，我会告诉 %LOCALS% 我对 %LOCALS% 的真实想法。」
+            CASE 5
+                IF TALENT:MASTER:性别嗜好 == -1
+                    LOCALS = %SPLIT_G(@"him:her")%
+                ELSEIF IS_MALE(MASTER) && !TALENT:MASTER:性别嗜好 == 2 || IS_FEMALE(MASTER) && TALENT:MASTER:性别嗜好 == 1
+                    LOCALS = her
+                ELSE
+                    LOCALS = him
+                ENDIF
+                PRINTFORML 「哦，我相信他们只是好朋友。 你没什么好担心的。」
+                PRINTFORML 「毕竟，你认识 %LOCALS%，而且你信任 %LOCALS%。」
+                PRINTFORML 「不是吗？」
+        ENDSELECT
+        PRINTFORMDL 帕露西听起来很同情，但她的脸上带着一丝微笑…
+ENDSELECT
+RETURN 1
+
+;==================================================
+;Fragrance ("CHARACTER wears a pleasant fragrance...")
+;いい匂い
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_4
+CALL M_KOJO_MESSAGE_COUNTER_K60_4_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_4_1
+SELECTCASE K60_ATTITUDE()
+    ;Loving
+    CASE 0
+        SELECTCASE RAND:3
+            CASE 0
+                PRINTFORML 「啊，你喜欢吗？ 我很高兴。」
+            CASE 1
+                PRINTFORML 「我知道 勇仪桑 不会让我失望的。」
+                PRINTFORML 「她推荐了这种 \@ IS_MALE(TARGET) ? 古龙水 # 香水\@。」
+                SIF !HETEROSEX(TARGET, 64)
+                    PRINTFORML 「这是她最喜欢的之一。」
+            CASE 2
+                GOTO PARSEE_FRAGRANCE_EMBRACE
+        ENDSELECT
+    ;Nice, horny
+    CASE 1
+        SELECTCASE RAND:3
+            CASE 0
+                PRINTFORMDL 你闻了闻从帕露西身上飘来的香味，你的下身突然因欲望而悸动。
+                PRINTFORMDL 帕露西注意到你的反应，咧嘴一笑。
+                PRINTFORML 「看来 铃仙 为我混合的那种掺有信息素的 \@ IS_MALE(TARGET) ? 古龙水 # 香水\@ 起作用了。」
+            CASE 1
+                PRINTFORML 「你喜欢吗？ 这是champa attar，一种传统的印度香水。」
+                PRINTFORML 「而且它也是一种天然的催情剂…」
+            CASE 2
+                $PARSEE_FRAGRANCE_EMBRACE
+                PRINTFORMDL 帕露西注意到你在闻空气，并握住你的手。
+                PRINTFORML 「靠得近一点，你就能闻得更清楚…」
+                PRINTFORMDL 她把你拉入一个拥抱。
+        ENDSELECT
+    ;Grumpy tsundere
+    CASE 2
+        SELECTCASE RAND:3
+            CASE 0
+                PRINTFORML 「请你不要再嗅来嗅去了好吗？ 真恶心。」
+                PRINTFORMDL 帕露西怒视着你。
+            CASE 1
+                PRINTFORML 「我可不是为了你才喷这个的。」
+                ;todo fix this so it doesn't change if you hang out with Parsee long enough for the time to go from <900 to >=900
+                IF TIME >= 900
+                    PRINTFORML 「我今天早些时候和 勇仪桑 一起出去喝酒了。」
+                ELSE
+                    PRINTFORML 「我今天要去和 勇仪桑 一起出去喝酒。」
+                ENDIF
+                PRINTFORMDL 真的吗？ 谁会在和朋友出去喝酒的时候喷 \@IS_MALE(TARGET) ? 古龙水 # 香水\@ 呢？
+            CASE 2
+                PRINTFORML 「我知道你像狗一样没有礼貌，但这并不意味着你必须像狗一样嗅我。」
+        ENDSELECT
+    ;Fake nice
+    CASE 3
+        SELECTCASE RAND:3
+            CASE 0
+                PRINTFORML 「这是一种不错的香味，不是吗？ 它来自印度。」
+            CASE 1
+                IF IS_MALE(MASTER)
+                    PRINTFORML 「你应该喷一些古龙水\@ IS_MALE(TARGET) ? %" "% 你自己的 #\@ 一段时间。 男人喜欢那种东西。」
+                ELSE
+                    PRINTFORML 「你应该喷一些香水\@ !IS_MALE(TARGET) ? %" "% 你自己的 #\@ 一段时间。 男人喜欢那种东西。」
+                ENDIF
+            CASE 2
+                PRINTFORML 「你喜欢吗？ 勇仪桑 推荐给我的。」
+        ENDSELECT
+ENDSELECT
+RETURN 1
+
+;==================================================
+;After creampie(?)
+;中だし后(?)
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_9
+CALL M_KOJO_MESSAGE_COUNTER_K60_9_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_9_1
+RETURN 1
+
+;-------------------------------------------------
+;Very Soft
+;ベリーソフト
+;-------------------------------------------------
+;==================================================
+;Draw Closer (CHARACTER draws closer to you...)
+;近寄ってくる
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_11
+CALL M_KOJO_MESSAGE_COUNTER_K60_11_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_11_1
+SELECTCASE K60_ATTITUDE()
+    CASE 0
+        SELECTCASE RAND:3
+            CASE 0
+                PRINTFORML 「哈啊… 我真希望我能凝视着你的眼睛而不让你嫉妒…」
+            CASE 1
+                PRINTFORMDL 帕露西和你的手指交织在一起。
+            CASE 2
+                PRINTFORML 「我真的不明白为什么每次我看着你，你都会变得更 \@ IS_MALE(MASTER) ? 英俊 # 美丽\@。」
+                PRINTFORML 「你是不是有什么隐藏的力量没有告诉我？」
+        ENDSELECT
+    CASE 1
+        SELECTCASE RAND:3
+            CASE 0
+                PRINTFORML 
+            CASE 1
+                PRINTFORML 
+            CASE 2
+                PRINTFORML 
+        ENDSELECT
+    CASE 2
+        SELECTCASE RAND:3
+            CASE 0
+                $PARSEE_HATES_THIS
+                PRINTFORML （我讨厌这样…）
+                PRINTFORML （尽管我尽了最大的努力，但我还是无法让他讨厌我。）
+                PRINTFORML （尽管我如此嫉妒他… 我也无法让自己讨厌他。）
+            CASE 1
+                PRINTFORML 「没有多少人会允许一个桥姬在不逃跑或攻击的情况下靠他们这么近。」
+                PRINTFORML 「你真是个奇怪的人，%K60_MASTER()%…」
+            CASE 2
+                PRINTFORMDL 帕露西伸手去握住你的手，然后意识到自己在做什么，便让它落在了她的身边。
+                PRINTFORMDL 她做了个鬼脸，把指甲掐进了手掌里。
+        ENDSELECT
+    CASE 3
+        SELECTCASE RAND:3
+            CASE 0
+                PRINTFORMDL 帕露西伸手去握住你的手，然后意识到自己在做什么，便让它落在了她的身边。
+            CASE 1
+                PRINTFORML 「这里是不是变得… 更热了？」
+                PRINTFORML 「没有吗？ 只是我？ 我明白了…」
+            CASE 2
+                IF TALENT:TARGET:恋慕 || MARK:TARGET:快乐刻印 == 3
+                    GOTO PARSEE_HATES_THIS
+                ELSE
+                    PRINTFORML （我… 我是不是对 %K60_MASTER()% 产生了感情？ 不，这不可能…）
+                ENDIF
+        ENDSELECT
+ENDSELECT
+RETURN 1
+
+;==================================================
+;Smile
+;笑颜を浮かべる
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_12
+CALL M_KOJO_MESSAGE_COUNTER_K60_12_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_12_1
+SELECTCASE K60_ATTITUDE()
+    ;Loving
+    CASE 0
+        SELECTCASE RAND:3
+            CASE 0
+                PRINTFORML 「每当我心情不好时，和你在一起总是让我感到高兴。」
+            CASE 1
+                PRINTFORML 「能够感受到嫉妒以外的东西，真是太好了。 谢谢你，%K60_MASTER()%。」
+            CASE 2
+                PRINTFORML 「你的善言善行总是让我产生美好的想法。」
+                PRINTFORML 「奥尔马兹德大人一定为你感到骄傲。」
+        ENDSELECT
+    ;Nice, horny
+    CASE 1
+        SELECTCASE RAND:3
+            CASE 0
+                CALL M_KOJO_COLOR_K60_JEALOUS
+                PRINTFORML 「我的笑容不如你的那么灿烂…」
+                PRINTFORML 「但是当我在你身边时，我情不自禁地想笑。」
+            CASE 1
+                PRINTFORMDL 呼。 帕露西露出一个正常的微笑，而不是那种淫荡的笑容。
+                PRINTFORMDL 每当她露出那种笑容时，就意味着她有什么计划…
+            CASE 2
+                PRINTFORMDL 你回应了帕露西的微笑。 她脸红了。
+                PRINTFORML 「有趣的是，像这样的小事甚至比最堕落的性行为更性感…」
+        ENDSELECT
+    ;Grumpy tsundere
+    CASE 2
+        SELECTCASE RAND:3
+            CASE 0
+                PRINTFORML 「当你想的时候，你也能变成一个相当有魅力的人。」
+                PRINTFORML 「你应该更经常这样做。」
+            CASE 1
+                PRINTFORML 「怎么，我不允许微笑吗？」
+                PRINTFORML 「你宁愿我回去皱眉头吗？」
+            CASE 2
+                PRINTFORML 「什么？！ 不，你这个笨蛋，我不是在对你笑！」
+                PRINTFORML 「我为什么要那样做？！ 你是笨蛋还是什么？！」
+        ENDSELECT
+    ;Fake nice
+    CASE 3
+
+        IF TALENT:TARGET:恋慕 || MARK:TARGET:快乐刻印 == 3
+            SELECTCASE RAND:3
+                CASE 0
+                    PRINTFORML 「我为什么要笑？ 哦，没什么。」
+                    PRINTFORMDL 帕露西皱着眉头，转过身不看你。
+                CASE 1
+                    PRINTFORML 「可恶… 为什么我不能阻止自己在他的身边微笑？」
+                CASE 2
+                    PRINTFORMDL 帕露西的笑容似乎有点动摇…
+            ENDSELECT
+        ELSE
+            SELECTCASE RAND:3
+                CASE 0
+                    CALL M_KOJO_COLOR_K60_JEALOUS
+                    PRINTFORML 「我为什么要笑？ 哦，没什么。」
+                    CALL PRINT_STRL, @"（@ITALIC@他@ 从来不必强颜欢笑。 我好嫉妒…）"
+                    CALL M_KOJO_COLOR_K60
+                CASE 1
+                    PRINTFORML （我不明白。 为什么每当他在身边时，我都感到如此幸福？）
+                CASE 2
+                    PRINTFORMDL 帕露西的笑容看起来比平时自然多了…
+            ENDSELECT
+        ENDIF
+ENDSELECT
+RETURN 1
+
+;==================================================
+;Rub Against Arm
+;構って欲しがる
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_13
+CALL M_KOJO_MESSAGE_COUNTER_K60_13_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_13_1
+RETURN 1
+
+;==================================================
+;Cuddle
+;身をすり寄せる
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_14
+CALL M_KOJO_MESSAGE_COUNTER_K60_14_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_14_1
+SELECTCASE K60_ATTITUDE()
+    CASE 0
+        SELECTCASE RAND:3
+            CASE 0
+                PRINTFORML 「啊-！」
+                PRINTFORMDL 你的头发拂过帕露西的耳朵，她本能地躲开了。
+                PRINTFORML 「好痒…」
+            CASE 1
+                PRINTFORML 「你太紧张了…」
+                PRINTFORML 「这样有帮助吗？」
+                PRINTFORMDL 帕露西开始按摩你的肩膀。
+            CASE 2
+                PRINTFORML 「你的头发闻起来真香…」
+                PRINTFORMDL 帕露西凑过去闻了闻你的头发。
+        ENDSELECT
+    CASE 1
+        SELECTCASE RAND:3
+            CASE 0
+                PRINTFORML 
+            CASE 1
+                PRINTFORML 
+            CASE 2
+                PRINTFORML 
+        ENDSELECT
+    CASE 2
+        SELECTCASE RAND:3
+            CASE 0
+                PRINTFORMDL 帕露西内疚地看着你，然后从你身边离开。
+            CASE 1
+                PRINTFORMDL 你本能地从帕露西身边离开。 她可能要试着在你耳边发出侮辱的声音或其他什么。
+                PRINTFORMDL 你回头看着她。 她的表情很奇怪… 就像受伤和释怀的混合体。
+            CASE 2
+                CALL M_KOJO_COLOR_K60_JEALOUS
+                PRINTFORML 「你的头发闻起来真香。」
+                PRINTFORMDL 帕露西凑过去闻了闻你的头发。
+                PRINTFORML 「我希望我的头发也闻起来那么香…」
+                CALL M_KOJO_COLOR_K60
+        ENDSELECT
+    CASE 3
+        SELECTCASE RAND:3
+            CASE 0
+                CALL M_KOJO_COLOR_K60_JEALOUS
+                PRINTFORML 「你的皮肤真柔软…」
+                PRINTFORML 「你的秘诀是什么，%K60_MASTER()%？」
+                CALL M_KOJO_COLOR_K60
+            CASE 1
+                IF TALENT:TARGET:恋慕 || MARK:TARGET:快乐刻印 == 3
+                    PRINTFORMDL 帕露西显得很尴尬，并从你身边离开。
+                ELSE
+                    PRINTFORML （为什么我的心跳得这么快？ 我只是把胳膊放在他身上而已…）
+                ENDIF
+            CASE 2
+                PRINTFORML 「嗯… 你感觉有点紧张。」
+                PRINTFORML 「我希望这不是因为我。」
+        ENDSELECT
+ENDSELECT
+RETURN 1
+
+;==================================================
+;Stare
+;见つめてくる
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_15
+CALL M_KOJO_MESSAGE_COUNTER_K60_15_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_15_1
+SELECTCASE K60_ATTITUDE()
+    ;Loving
+    CASE 0
+        SELECTCASE RAND:3
+            CASE 0
+                PRINTFORML 「我仍然不敢相信我很幸运能成为你的女朋友。」
+            CASE 1
+                PRINTFORML 「每次我看到你，我的呼吸都会哽在喉咙里，我的心跳也会加速。」
+                PRINTFORML 「无论我看你多少次，你仍然能够让我屏住呼吸…」
+                PRINTFORML 「我在想… 我也会让你有这种感觉吗？」
+            CASE 2
+                PRINTFORML 「啊… %K60_MASTER()%，你看起来太好吃了。」
+                PRINTFORML 「不，不，我不是那个意思！」
+        ENDSELECT
+    ;Nice, horny
+    CASE 1
+        SELECTCASE RAND:3
+            CASE 0
+                PRINTFORML
+            CASE 1
+                PRINTFORML
+            CASE 2
+                PRINTFORML
+        ENDSELECT
+    ;Grumpy tsundere
+    CASE 2
+        SELECTCASE RAND:3
+            CASE 0
+                PRINTFORML 「我不是在盯着你看，我是在瞪着你！」
+                PRINTFORML 「你分不清吗？ 呃… 你有时候真是太迟钝了。」
+                PRINTFORML 「而做这样的事情就是我瞪你的原因！」
+            CASE 1
+                PRINTFORML 「怎么了？ 我只是想看看你是不是在走私内裤之类的东西。」
+            CASE 2
+                CALL M_KOJO_COLOR_K60_JEALOUS
+                PRINTFORML （他有这么好的身材… 我真嫉妒。）
+                CALL M_KOJO_COLOR_K60
+        ENDSELECT
+    ;Fake nice
+    CASE 3
+        IF TALENT:TARGET:恋慕 || MARK:TARGET:快乐刻印 == 3
+            SELECTCASE RAND:3
+                CASE 0
+                    PRINTFORML （只看一眼也不会有什么坏处，对吧？）
+                CASE 1
+                    PRINTFORMDL 帕露西咬着嘴唇，不去看你。
+                CASE 2
+                    PRINTFORML （好吧，再看一眼，然后我就停下来。）
+            ENDSELECT
+        ELSE
+            SELECTCASE RAND:3
+                CASE 0
+                    PRINTFORML （他到底有什么魔力？！）
+                    PRINTFORML （每次我看到他，\@ CFLAG:[[帕露西]]:K60ENC_SETTING_YUUPARU_CRUSH == 1 ? 我都感觉到我看着 勇仪桑 时感觉到的那种心情 # 我的心就开始跳动\@…）
+                CASE 1
+                    CALL M_KOJO_COLOR_K60_VERY_JEALOUS
+                    CALL PRINT_STRL, @"（我不会让任何 @ITALIC@贱人@ 把他从我身边抢走。 他是我的！ @ITALIC@我的@！）"
+                    CALL M_KOJO_COLOR_K60
+                    PRINTFORML （…我到底是怎么了？ 我为什么这么有占有欲？）
+                    CALL PRINT_STRL, @"（也许我该做一次 @ITALIC@净身仪式@。）"
+                CASE 2
+                    PRINTFORML 「我-不，我不是在盯着你看！」
+                    PRINTFORML 「好吧，好吧，也许我有点，但是… 我-我为什么要盯着如此令人叹为观止的 \@ IS_MALE(MASTER) ? 英俊 # 美丽\@ 的外-」
+                    PRINTFORMDL 帕露西变得通红，并咬着嘴唇。
+            ENDSELECT
+        ENDIF
+ENDSELECT
+RETURN 1
+
+;==================================================
+;Rests head on the player's shoulder
+;肩にあご乘せ
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_16
+CALL M_KOJO_MESSAGE_COUNTER_K60_16_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_16_1
+SELECTCASE K60_ATTITUDE()
+    ;Loving
+    CASE 0
+        SELECTCASE RAND:3
+            CASE 0
+                PRINTFORML 「好柔软…」
+            CASE 1
+                PRINTFORMDL 帕露西的一只耳朵蹭到了你的脖子上。
+                PRINTFORMDL 帕露西的呼吸变得有些沉重，你可以感觉到她的耳朵在抽搐。
+            CASE 2
+                PRINTFORML 「哈啊… 我靠得足够近了，能感觉到你的心跳。」
+                PRINTFORML 「它太让人感到安心了… 我实际上开始感到有点困了。」
+        ENDSELECT
+    ;Nice, horny
+    CASE 1
+        SELECTCASE RAND:3
+            CASE 0
+                PRINTFORML 「这很好… 但我不禁注意到我的屁股上没有一只手。」
+                PRINTFORML 「你会做一个 \@ IS_MALE(MASTER) ? 绅士 # 端庄的女士\@ 并解决这个问题，不是吗？」
+            CASE 1
+                PRINTFORML （我的耳朵就在他的嘴旁边。）
+                PRINTFORML （他）可以凑过来开始舔它，或者吮吸它，或者啃它，或者…）
+                PRINTFORMDL 帕露西没事吧？ 她的脸突然变得通红，而且几乎喘不过气来。
+            CASE 2
+                PRINTFORML 「尽管我喜欢做爱，但令人感到快乐的拥抱总有些特别的东西。」
+                PRINTFORML 「没有比和你拥抱在一起更让我高兴的了…」
+        ENDSELECT
+    ;Grumpy tsundere
+    CASE 2
+        SELECTCASE RAND:3
+            CASE 0
+                PRINTFORML 「对不起…」
+            CASE 1
+                PRINTFORML 「你为什么要一直对自己做这种事，%K60_MASTER()%？」
+                PRINTFORML 「你为什么不远离我，保证自己的安全呢？」
+            CASE 2
+                PRINTFORML 「拜托。 不要把你的时间浪费在我身上。 我们之间永远不会有结果的…」
+        ENDSELECT
+        PRINTFORMDL 她感觉还好吗？ 帕露西的行为真的很奇怪。
+        PRINTFORMDL 她似乎也意识到了这一点，因为她离开你，并怒视着你。
+    ;Fake nice
+    CASE 3
+        SELECTCASE RAND:3
+            CASE 0
+                PRINTFORMDL 帕露西靠得足够近，你能感觉到她的心脏在她的胸膛里剧烈跳动。
+            CASE 1
+                PRINTFORMDL 一抹红晕正在慢慢爬上帕露西的耳朵。
+            CASE 2
+                PRINTFORML （他靠得足够近，我可以凑过去吻他…）
+                IF TALENT:TARGET:恋慕 || MARK:TARGET:快乐刻印 == 3
+                    PRINTFORML （我知道我不应该这样做。 但我真的很希望我能…）
+                ELSE
+                    PRINTFORML （我在说什么？ 我为什么要这样做？）
+                ENDIF
+        ENDSELECT
+ENDSELECT
+RETURN 1
+
+;==================================================
+;Give Snack
+;差し入れ
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_17
+CALL M_KOJO_MESSAGE_COUNTER_K60_17_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_17_1
+RETURN 1
+
+;-------------------------------------------------
+;Soft
+;ソフト
+;-------------------------------------------------
+;==================================================
+;Amorous Gesture
+;色っぽい仕草
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_20
+CALL M_KOJO_MESSAGE_COUNTER_K60_20_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_20_1
+RETURN 1
+
+;==================================================
+;Passionate Stare
+;见つめる
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_21
+CALL M_KOJO_MESSAGE_COUNTER_K60_21_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_21_1
+RETURN 1
+
+;==================================================
+;Rub Up Against
+;体を摺り寄せる
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_22
+CALL M_KOJO_MESSAGE_COUNTER_K60_22_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_22_1
+RETURN 1
+
+;==================================================
+;Skirt Flip
+;裙子めくり
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_23
+CALL M_KOJO_MESSAGE_COUNTER_K60_23_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_23_1
+RETURN 1
+
+;==================================================
+;Blow Air in Ear
+;息を吹きかける
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_24
+CALL M_KOJO_MESSAGE_COUNTER_K60_24_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_24_1
+RETURN 1
+
+;==================================================
+;Character gropes the player's ass
+;摸屁股
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_25
+CALL M_KOJO_MESSAGE_COUNTER_K60_25_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_25_1
+SELECTCASE K60_ATTITUDE()
+    ;todo variants
+    ;Loving
+    CASE 0
+        CALL M_KOJO_COLOR_K60_JEALOUS
+        IF IS_MALE(MASTER) && !IS_MALE(TARGET)
+            PRINTFORML 「哈啊… 甚至连我爱人的屁股都比我的好。」
+        ELSE
+            PRINTFORML 「好柔软…」
+        ENDIF
+        PRINTFORML 「你能和我一起锻炼吗，%K60_MASTER()%？ 我想让我的也变得像你的那样好。」
+        CALL M_KOJO_COLOR_K60
+    ;Nice, horny
+    CASE 1
+        PRINTFORML 「嗯… 好柔软，而且在所有合适的地方都很紧实。」
+    ;Grumpy tsundere
+    CASE 2
+        CALL M_KOJO_COLOR_K60_JEALOUS
+        IF IS_MALE(MASTER) && !IS_MALE(TARGET)
+            PRINTFORML 「即使是男人的屁股都比我的好…」
+        ELSE
+            PRINTFORML 「比我的柔软多了…」
+        ENDIF
+        CALL M_KOJO_COLOR_K60
+    ;Fake nice
+    CASE 3
+        CALL M_KOJO_COLOR_K60_JEALOUS
+        PRINTFORML 「不错。 你一直在锻炼吗？」
+        CALL M_KOJO_COLOR_K60
+ENDSELECT
+RETURN 1
+
+;==================================================
+;Take Arm
+;腕抱き付き
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_26
+CALL M_KOJO_MESSAGE_COUNTER_K60_26_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_26_1
+RETURN 1
+
+;==================================================
+;Show Off Cleavage
+;谷间を见せる
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_27
+CALL M_KOJO_MESSAGE_COUNTER_K60_27_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_27_1
+RETURN 1
+
+;==================================================
+;Grind Against Ass
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_28
+CALL M_KOJO_MESSAGE_COUNTER_K60_28_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_28_1
+RETURN 1
+
+;-------------------------------------------------
+;性骚扰
+;-------------------------------------------------
+;==================================================
+;Kiss
+;キス
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_30
+CALL M_KOJO_MESSAGE_COUNTER_K60_30_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_30_1
+;todo variants
+SELECTCASE K60_ATTITUDE()
+    ;Loving
+    CASE 0
+        PRINTFORML 「嗯… 我想知道你身体的其他部位是不是也像你的嘴唇一样美味？」
+    ;Nice, horny
+    CASE 1
+        PRINTFORML 「哈啊… 只是亲吻还不够… 我想要更多…」
+    ;Grumpy tsundere
+    CASE 2
+        PRINTFORML 「你的味道比我想象的要好…」
+    ;Fake nice
+    CASE 3
+        CALL M_KOJO_COLOR_K60_JEALOUS
+        PRINTFORML 「你很会亲吻…」
+        CALL M_KOJO_COLOR_K60
+ENDSELECT
+CALLF FIRSTTIME("ParseeKissed")
+RETURN 1
+
+;==================================================
+;Embrace From Behind (CHARACTER embraces you from behind...)
+;后ろから抱きつく
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_31
+CALL M_KOJO_MESSAGE_COUNTER_K60_31_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_31_1
+RETURN 1
+
+;==================================================
+;Embrace (CHARACTER hugs you)
+;前ろから抱きつく
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_32
+CALL M_KOJO_MESSAGE_COUNTER_K60_32_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_32_1
+;todo variants
+SELECTCASE K60_ATTITUDE()
+    ;Loving
+    CASE 0
+        PRINTFORML 「抱紧我，%K60_MASTER()%… 在你的怀里，我感到如此安全。」
+    ;Nice, horny
+    CASE 1
+        PRINTFORML 「我们是性伴侣，但这并不意味着我们不能拥抱，对吧？」
+    ;Grumpy tsundere
+    CASE 2
+        PRINTFORML 「不要碰我的屁股…」
+    ;Fake nice
+    CASE 3
+        PRINTFORML 「如果你多锻炼一下，你就会拥有非常棒的身材。 或许我可以帮助你？」
+ENDSELECT
+RETURN 1
+
+;==================================================
+;Forced Breast Caress
+;胸を揉ませる
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_33
+CALL M_KOJO_MESSAGE_COUNTER_K60_33_1
+RETURN RESULT
+;todo variants
+@M_KOJO_MESSAGE_COUNTER_K60_33_1
+SELECTCASE K60_ATTITUDE()
+    ;Loving
+    CASE 0
+        SELECTCASE TALENT:TARGET:胸围
+        ;Big/Huge
+            CASE 1, 2
+                PRINTFORML 「你喜欢大胸部，不是吗？ 去吧，摸摸它们。」
+        ;Normal
+            CASE 0
+                PRINTFORML 「去吧，摸摸它们。 当你这样做的时候，感觉真的很好…」
+        ;Small
+            CASE -1
+                PRINTFORML 「它们不是很大… 但正如费尔道西曾经说过的那样，“多于一口的是浪费”。」
+        ;Flat
+            CASE -2
+                PRINTFORML 「我太平了，但这并不意味着当你触摸它们时，它们感觉不好。」
+        ENDSELECT
+    ;Nice, horny
+    CASE 1
+        SELECTCASE TALENT:TARGET:胸围
+        ;Big/Huge
+            CASE 1, 2
+                PRINTFORML 「我的胸部足够大，需要大量的刺激才能感觉良好。 去吧，不要害羞。」
+        ;Normal
+            CASE 0
+                PRINTFORML 「去吧，摸摸它们。 你不需要温柔…」
+        ;Small
+            CASE -1
+                CALL HPH_PRINT, @"「它们很小，但这意味着它们更敏感… 啊嗯HPH」", "W"
+        ;Flat
+            CASE -2
+                CALL HPH_PRINT, @"「你能感觉到我的乳头有多硬吗？ 这都归功于你HPH」", "W"
+        ENDSELECT
+    ;Grumpy tsundere
+    CASE 2
+        SELECTCASE TALENT:TARGET:胸围
+        ;Big/Huge
+            CASE 1, 2
+                PRINTFORML 「别以为我没看到你在偷看它们。 去吧，摸摸它们。」
+        ;Normal
+            CASE 0
+                PRINTFORML 「现在，按摩它们… 啊！ 温柔点，你这个白痴！」
+        ;Small
+            CASE -1
+                PRINTFORML 「它们很小，但这意味着它们更敏感。 不要对它们太粗暴。」
+        ;Flat
+            CASE -2
+                PRINTFORML 「我不在乎我没什么可以让你爱抚的。 想办法。」
+        ENDSELECT
+    ;Fake nice
+    CASE 3
+        SELECTCASE TALENT:TARGET:胸围
+        ;Big/Huge
+            CASE 1, 2
+                PRINTFORML 「你喜欢它们吗？ 用你的另一只手，也有足够的空间可以发挥…」
+        ;Normal
+            CASE 0
+                PRINTFORML 「你的技巧需要稍微改进一下… 啊，好多了。」
+        ;Small
+            CASE -1
+                PRINTFORML 「它们可能很小，但这只是意味着你没有理由不碰它们的所有部位。」
+        ;Flat
+            CASE -2
+                PRINTFORML 「哦？ 没有什么可以让你爱抚的？ 好吧，那就揉揉我的乳头吧。」
+        ENDSELECT
+ENDSELECT
+RETURN 1
+
+;==================================================
+;Forced Clit Caress
+;股间をまさぐる
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_34
+CALL M_KOJO_MESSAGE_COUNTER_K60_34_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_34_1
+;todo expand
+SELECTCASE K60_ATTITUDE()
+    CASE 0
+        PRINTFORMDL 帕露西一边按摩你的胯部，一边咋舌。
+        PRINTFORML 「哎呀，哎呀。 看来你的腹股沟正在经历某种 \@ HAS_PENIS(TARGET) ? 肿胀 # 分泌物\@。」
+        PRINTFORML 「为什么 \@ GET_TARGETNUM() > 1 || !INROOM(CFLAG:MASTER:当前位置) ? 我们不去一个私人的地方 # 你不脱掉你的衣服\@，这样我就可以做一个… 更彻底的检查？」
+    CASE 1
+        PRINTFORMDL 当帕露西按摩你的胯部时，她凑过来在你耳边低语…
+        IF GET_TARGETNUM() > 1
+            CALL HPH_PRINT, @"「我想知道我可以这样为你服务多久，才会有人注意到HPH」", "L"
+        ELSE
+            CALL HPH_PRINT, @"「我想知道我是否可以通过你的衣服为你服务，让你达到高潮HPH」", "L"
+        ENDIF
+    CASE 2
+        PRINTFORML 「我… 我不是在猥亵你！ 我… 我是在检查以确保你没有走私违禁品！」
+        IF HAS_PENIS(MASTER)
+            PRINTFORML 「需… 需要调查一个可疑的凸起！」
+        ELSE
+            CALL PRINT_STRL, @"「像你这么放荡的人，肯定可以在你的 @ITALIC@阴户@ 里走私东西！」"
+        ENDIF
+        PRINTFORMDL …这可能是你听过的最可悲的谎言借口。
+    CASE 3
+        PRINTFORMDL 帕露西把一只手放在你的胯部上，似乎没有注意到。
+        PRINTFORMDL 当她意识到自己在做什么时，她尖叫一声，猛地把手拿开，并疯狂地脸红。
+ENDSELECT
+RETURN 1
+
+;==================================================
+;Character shows off what's under their skirt
+;裙子の中を见せる
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_35
+CALL M_KOJO_MESSAGE_COUNTER_K60_35_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_35_1
+RETURN 1
+
+;==================================================
+;Character gropes the player's breasts
+;后ろから胸もみもみ
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_36
+CALL M_KOJO_MESSAGE_COUNTER_K60_36_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_36_1
+
+;todo variants
+SELECTCASE TALENT:TARGET:胸围
+        ;Big/Huge
+    CASE 1, 2
+        CALL M_KOJO_COLOR_K60_JEALOUS
+        IF TALENT:MASTER:胸围 >= TALENT:TARGET:胸围
+            PRINTFORML （我… 他比我还大？！ 怎么可能……？）
+        ELSE
+            PRINTFORML 「我希望我的胸部能像你一样小。 它们太重了，而且总是碍事…」
+        ENDIF
+        CALL M_KOJO_COLOR_K60
+        ;Normal
+    CASE 0
+        IF TALENT:MASTER:胸围 >= TALENT:TARGET:胸围
+            PRINTFORML 「我的可能没有你的那么大，但我希望你还是喜欢它们。」
+        ELSE
+            PRINTFORML 「我听说较小的胸部更敏感。 告诉我，那是真的吗？」
+        ENDIF
+        ;Small
+    CASE -1
+        IF TALENT:MASTER:胸围 >= TALENT:TARGET:胸围
+            PRINTFORML 「它们太大了… 我希望我能像你一样天赋异禀。」
+        ELSE
+            PRINTFORML 「我的天… 我还以为我的胸部够小了。 别难过，我相信你在其他方面可以弥补。」
+        ENDIF
+        ;Flat
+    CASE -2
+        PRINTFORML
+ENDSELECT
+RETURN 1
+
+;==================================================
+;Character steals some candy from you
+;糖强夺
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_39
+CALL M_KOJO_MESSAGE_COUNTER_K60_39_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_39_1
+RETURN 1
+
+;-------------------------------------------------
+;Requesting things
+;おねだり
+;-------------------------------------------------
+;==================================================
+;Character requests receiving vaginal 正常式
+;正常位Ｖおねだり
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_41
+CALL M_KOJO_MESSAGE_COUNTER_K60_41_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_41_1
+RETURN 1
+
+;==================================================
+;Character requests receiving vaginal 后入式 style
+;正常位Ｖおねだり２
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_43
+CALL M_KOJO_MESSAGE_COUNTER_K60_43_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_43_1
+RETURN 1
+
+;==================================================
+;Character requests receiving anal (后入式 style?)
+;后背位Ａおねだり
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_44
+CALL M_KOJO_MESSAGE_COUNTER_K60_44_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_44_1
+RETURN 1
+
+;-------------------------------------------------
+;Sexual touching
+;爱抚
+;-------------------------------------------------
+;==================================================
+;Give handjob to player
+;手淫
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_50
+CALL M_KOJO_MESSAGE_COUNTER_K60_50_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_50_1
+CFLAG:K60EN_PARSEE_TIMES_GIVEN_HANDJOB ++
+RETURN 1
+
+;==================================================
+;Fellate player
+;口淫
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_51
+CALL M_KOJO_MESSAGE_COUNTER_K60_51_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_51_1
+RETURN 1
+
+;==================================================
+;Thighjob / tribadism
+;素股
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_52
+CALL M_KOJO_MESSAGE_COUNTER_K60_52_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_52_1
+RETURN 1
+
+;==================================================
+;Paizuri (titfuck)
+;乳交
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_53
+CALL M_KOJO_MESSAGE_COUNTER_K60_53_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_53_1
+RETURN 1
+
+;==================================================
+;Give footjob to player
+;足コキ
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_54
+CALL M_KOJO_MESSAGE_COUNTER_K60_54_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_54_1
+RETURN 1
+
+;==================================================
+;Give anal caress to player
+;肛门爱抚
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_55
+CALL M_KOJO_MESSAGE_COUNTER_K60_55_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_55_1
+RETURN 1
+
+;==================================================
+;Give rimjob to player
+;肛门舐め
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_56
+CALL M_KOJO_MESSAGE_COUNTER_K60_56_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_56_1
+RETURN 1
+
+;==================================================
+;Vaginally finger player
+;指插入
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_57
+CALL M_KOJO_MESSAGE_COUNTER_K60_57_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_57_1
+RETURN 1
+
+;==================================================
+;Fondle player's breasts
+;todo how exactly is this different than counter 36
+;胸爱抚
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_58
+CALL M_KOJO_MESSAGE_COUNTER_K60_58_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_58_1
+RETURN 1
+
+;==================================================
+;Suck player's nipples
+;乳头吸い
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_59
+CALL M_KOJO_MESSAGE_COUNTER_K60_59_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_59_1
+RETURN 1
+
+;==================================================
+;French kisses player
+;ディープキス
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_60
+CALL M_KOJO_MESSAGE_COUNTER_K60_60_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_60_1
+CALLF FIRSTTIME("ParseeKissed")
+RETURN 1
+
+;==================================================
+;Misdirected insertion
+;误爆插入
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_61
+CALL M_KOJO_MESSAGE_COUNTER_K60_61_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_61_1
+RETURN 1
+
+;-------------------------------------------------
+;侍奉
+;-------------------------------------------------
+;==================================================
+;Character receives cunnilingus from player
+;クンニ强制
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_70
+CALL M_KOJO_MESSAGE_COUNTER_K60_70_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_70_1
+SELECTCASE K60_ATTITUDE()
+    ;Loving
+    CASE 0
+        SELECTCASE RAND:4
+            CASE 0
+                PRINTFORML 「啊嗯…」
+                PRINTFORMDL 当你为帕露西服务时，她抚摸着你的头。
+            CASE 1
+                PRINTFORML 「%K60_MASTER()%… 你能稍微转圈我的阴蒂吗？」
+                PRINTFORMDL 你照做了，帕露西高兴地呻吟着。
+            CASE 2
+                PRINTFORMDL 当你为她口交时，帕露西握住你的手并挤压它。
+                PRINTFORML 「嗯… 你太擅长这个了…」
+            CASE 3
+                PRINTFORML 「如果人们知道我正在接受幻想乡口交冠军的服务，他们会有多么嫉妒？」
+                PRINTFORMDL 帕露西握住你的手，对你微笑。
+                PRINTFORMDL 然后她皱起了眉头。
+                PRINTFORML 「他们可能会试图把你偷走——啊，我又开始妄想了。 别理我。」
+        ENDSELECT
+    ;Nice, horny
+    CASE 1
+        SELECTCASE RAND:4
+            CASE 0
+                PRINTFORML 「啊啊啊…！」
+                PRINTFORMDL 帕露西无法抗拒快感，开始在你为她服务时骑着你的脸。
+                SIF K60_PUBIC_HAIR_IS_HAIRY()
+                    PRINTFORMDL 她的阴毛挠着你的脸，你可以尝到一点汁液…
+            CASE 1
+                PRINTFORML 「你太擅长这个了… 你一直在其他女孩身上练习吗？」
+                PRINTFORML 「啊，我不在乎。 只要你一直回到我身边，我就很高兴。」
+            CASE 2
+                PRINTFORML 「啊啊啊…！ %K60_MASTER()%！」
+                PRINTFORMDL 帕露西被情欲淹没，将一只手放在你的头上，并将其按入她\@ K60_PUBIC_HAIR_IS_HAIRY() ? %" "%毛茸茸的 #\@ 胯部.`
+            CASE 3
+                IF  IS_NONHUMAN(MASTER)
+                    PRINTFORML 「一个妖怪… 吃掉另一个妖怪而不是人类…」
+                ELSE
+                    PRINTFORML 「一个人… 吃掉一个妖怪…」
+                ENDIF
+                PRINTFORML 「多么——啊！ 讽刺…」
+                PRINTFORMDL 当你为她口交时，她怎么能够凝视自己的肚脐？ 你做得不好吗？
+                PRINTFORMDL 你希望你更擅长口技——
+                PRINTFORML 「嗯… 真美味。」
+                PRINTFORMDL 帕露西看着你，拍了拍你的头。
+                PRINTFORML 「我不知道你嫉妒什么，但谢谢你给了我一份零食来搭配你出色的服务。」
+        ENDSELECT
+    ;Grumpy tsundere
+    CASE 2
+        SELECTCASE RAND:3
+            CASE 0
+                PRINTFORMDL 当你为她服务时，帕露西仍然面无表情。
+                PRINTFORMDL 然而，你可以在你的舌头上尝到她的汁液。
+                PRINTFORMDL 它们和帕露西自己一样苦涩。
+                PRINTFORMDL 你对自己微笑。 可怜的帕露西… 被她自己的身体背叛了。
+            CASE 1
+                PRINTFORMDL 帕露西邪恶地笑着，抓住你的头，把它塞进她\@ K60_PUBIC_HAIR_IS_HAIRY() ? 毛茸茸的胯部 # 胯部\@。
+                PRINTFORML 「我有没有让你停止舔？」
+                PRINTFORMDL 她把你按在那里片刻，你挣扎着，然后才放开你。
+                IF ABL:MASTER:受虐属性 >= 2
+                    PRINTFORMDL 你应该因为她未经你的允许就这么做而生气…
+                    PRINTFORMDL 但感觉太好了，你只会感到更加兴奋。
+                ELSE
+                    PRINTFORMDL 现在是你皱着眉头了。 那个贱人…
+                    PRINTFORMDL 好吧，你以后可以报仇。
+                    PRINTFORMDL 当时间静止时，你可以对她做任何你想做的事情…
+                ENDIF
+            CASE 2
+                PRINTFORML 「呃，你没救了。 你不知道我的阴蒂在哪里，还是你故意避开它？」
+                PRINTFORMDL 你很想通过尽可能用力地咬她的阴蒂来回答她的问题…
+                PRINTFORMDL 但如果你那样做，帕露西可能会像捏鸡蛋一样用大腿夹碎你的头骨。
+        ENDSELECT
+    ;Fake nice
+    CASE 3
+        $PARSEE_CUNNILINGUS_COUNTER_PASSIVE_AGGRESSIVE
+        SELECTCASE RAND:4
+            CASE 0
+                PRINTFORMDL 当你为她服务时，帕露西挠了挠你的后脑勺。
+            CASE 1
+                PRINTFORML 「你能快一点吗？」
+                PRINTFORMDL 你以更强的力度舔她。
+                PRINTFORMDL 帕露西倒吸一口凉气，她的双腿有一瞬间夹紧了你的头。
+                PRINTFORML 「是的！ 完美… 啊嗯…」
+            CASE 2
+                IF !FIRSTTIME("ParseeReceivesCunnilingus", 1)
+                    PRINTFORML 「你知道吗，\@IS_FEMALE(TARGET) ? 女人 # 雌雄同体\@ 喜欢你在口交期间给予她们的阴蒂一些关注。」
+                ELSE
+                    PRINTFORML 「我从，啊… 书籍… 中读到，当你的阴蒂被舔时，感觉真的很好。」
+                ENDIF
+                PRINTFORMDL 你从帕露西身边移开，然后用你的舌头轻弹她的阴蒂，然后再回去舔她。
+                PRINTFORMDL 帕露西呻吟着，你能感觉到她的汁液滴在你的脸上。
+                IF !FIRSTTIME("ParseeReceivesCunnilingus", 1)
+                    PRINTFORML 「是的！ 就像那样！ 啊嗯…」
+                    CALL M_KOJO_COLOR_K60_JEALOUS
+                    PRINTFORML 「你学得真快。 我真嫉妒…」
+                ELSE
+                    PRINTFORML 「是的！ 再做一次！ 啊嗯…」
+                    CALL M_KOJO_COLOR_K60_JEALOUS
+                    PRINTFORML （我一生中为什么没有享受到过这种快乐？ 我真嫉妒…）
+                ENDIF
+                CALL M_KOJO_COLOR_K60
+            CASE 3
+                ;Don't display if 勇仪
+                IF FLAG:扮演 == 64 || TALENT:TARGET:恋慕 || MARK:TARGET:快乐刻印 == 3 || !CFLAG:[[帕露西]]:K60ENC_SETTING_YUUPARU_CRUSH == 1
+                    GOTO PARSEE_CUNNILINGUS_COUNTER_PASSIVE_AGGRESSIVE
+                ELSE
+                    PRINTFORML （他不差，但我希望 勇仪 来为我服务…）
+                    PRINTFORMDL 帕露西正在自言自语。 她没有意识到你能听到她吗？
+                ENDIF
+        ENDSELECT
+ENDSELECT
+CALLF FIRSTTIME("ParseeReceivesCunnilingus")
+RETURN 1
+
+;==================================================
+;Character receives fellatio from player
+;フェラチオ强制
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_71
+CALL M_KOJO_MESSAGE_COUNTER_K60_71_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_71_1
+RETURN 1
+
+;==================================================
+;Receive rimjob from player
+;肛门侍奉
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_72
+CALL M_KOJO_MESSAGE_COUNTER_K60_72_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_72_1
+RETURN 1
+
+;==================================================
+;Give puff-puff to player (shoves the player's face into their breasts)
+;ぱふぱふ
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_73
+CALL M_KOJO_MESSAGE_COUNTER_K60_73_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_73_1
+RETURN 1
+
+;==================================================
+;Press their breasts against the player's breasts
+;乳合わせ
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_74
+CALL M_KOJO_MESSAGE_COUNTER_K60_74_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_74_1
+RETURN 1
+
+;==================================================
+;Rub their genitals against the player's arm
+;タワシ洗い
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_75
+CALL M_KOJO_MESSAGE_COUNTER_K60_75_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_75_1
+RETURN 1
+
+;==================================================
+;Makes the player finger them
+;强制アソコ爱抚
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_76
+CALL M_KOJO_MESSAGE_COUNTER_K60_76_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_76_1
+RETURN 1
+
+;==================================================
+;Receives nipple sucking from player
+;乳を吸わせる
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_77
+CALL M_KOJO_MESSAGE_COUNTER_K60_77_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_77_1
+RETURN 1
+
+;==================================================
+;Hotdogs the player (thrusts their penis between the player's asscheeks)
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_78
+CALL M_KOJO_MESSAGE_COUNTER_K60_78_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_78_1
+RETURN 1
+
+;-------------------------------------------------
+;Sex Counters
+;性交
+;-------------------------------------------------
+;==================================================
+;Player receives vaginal penetration from character (正常式 position)
+;插入される（MASTER受け）
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_80
+CALL M_KOJO_MESSAGE_COUNTER_K60_80_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_80_1
+RETURN 1
+
+;==================================================
+;Player receives vaginal penetration by character (后入式 style)
+;后背位Ｖ插入される
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_83
+CALL M_KOJO_MESSAGE_COUNTER_K60_83_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_83_1
+RETURN 1
+
+;==================================================
+;Player gets fucked vaginally by character while being penetrated (正常式 position)
+;腰振りＶ受け
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_84
+CALL M_KOJO_MESSAGE_COUNTER_K60_84_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_84_1
+RETURN 1
+
+;==================================================
+;Character receives vaginal penetration from player (骑乘位 position)
+;Ｖ插入する（TARGET受け）
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_85
+CALL M_KOJO_MESSAGE_COUNTER_K60_85_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_85_1
+IF TALENT:[[帕露西]]:处女
+    PRINTFORML 「够了。 别动。 我不要当几百年的处女了。」
+    PRINTFORMDL 帕露西对准%TINKO(PLAYER)% ，然后慢慢降下腰。
+    PRINTFORMDL 你告诉她慢慢来，这样就不会那么疼了，但她无视了你。
+    PRINTFORML 「疼是应该的，不是吗？！ 我是个大姑娘了。 我能承受痛苦。」
+    PRINTFORMDL 好吧，你已经试着警告过她了…
+    WAIT
+    PRINTFORMDL 帕露西稍微停了一会儿，适应着粗壮%TINKO(PLAYER)% 的感觉，然后开始扭动腰部。
+    PRINTFORMDL 一开始她很慢，有点生疏，但随着快感在她体内积累，她开始加速。
+    SIF HAS_PENIS(MASTER)
+        PRINTFORMDL 它也开始在你体内积聚…
+ENDIF
+RETURN 1
+
+;==================================================
+;Character makes sure you cum inside them
+;だいしゅきホールド
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_86
+CALL M_KOJO_MESSAGE_COUNTER_K60_86_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_86_1
+RETURN 1
+
+;==================================================
+;Character receives anal penetration from player (骑乘位 position)
+;Ａ插入する（TARGET受け）
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_87
+CALL M_KOJO_MESSAGE_COUNTER_K60_87_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_87_1
+RETURN 1
+
+;==================================================
+;Character is getting fucked vaginally by player
+;Ｖ腰振り（MASTER受け）
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_88
+CALL M_KOJO_MESSAGE_COUNTER_K60_88_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_88_1
+RETURN 1
+
+;==================================================
+;Character is getting fucked anally by player
+;Ａ腰振り（MASTER受け）
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_89
+CALL M_KOJO_MESSAGE_COUNTER_K60_89_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_89_1
+RETURN 1
+
+;==================================================
+;Character penetrates the player anally
+;Ａ插入される（MASTER受け）
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_90
+CALL M_KOJO_MESSAGE_COUNTER_K60_90_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_90_1
+RETURN 1
+
+;==================================================
+;Character throatfucks the player
+;被深喉（MASTER受け）
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_91
+CALL M_KOJO_MESSAGE_COUNTER_K60_91_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_91_1
+RETURN 1
+
+;==================================================
+;Neodev only: Character asks the player if they can train the player's ass
+;肛门开发许可を求める
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_92
+CALL M_KOJO_MESSAGE_COUNTER_K60_92_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_92_1
+RETURN 1
+
+;==================================================
+;腰振り逆A
+;==================================================
+;Character continues fucking the player anally (后入式 style?)
+;相手主导であなたがＡに插入される
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_93
+CALL M_KOJO_MESSAGE_COUNTER_K60_93_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_93_1
+RETURN 1
+
+;==================================================
+;正常位A插入される
+;==================================================
+;Character continues fucking the player anally (正常式?)
+;相手主导であなたがＡに插入される
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_94
+CALL M_KOJO_MESSAGE_COUNTER_K60_94_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_94_1
+RETURN 1
+
+;-------------------------------------------------
+;Cuddle Mode
+;抱きつきモード
+;-------------------------------------------------
+
+;==================================================
+;Character strokes the player's head
+;头抚で
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_120
+CALL M_KOJO_MESSAGE_COUNTER_K60_120_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_120_1
+RETURN 1
+
+;==================================================
+;Character runs their fingers through the player's hair
+;发梳き
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_121
+CALL M_KOJO_MESSAGE_COUNTER_K60_121_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_121_1
+RETURN 1
+
+;==================================================
+;Hug from Front
+;抱きつき
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_122
+CALL M_KOJO_MESSAGE_COUNTER_K60_122_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_122_1
+RETURN 1
+
+;==================================================
+;Hug from Behind
+;抱きしめ
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_123
+CALL M_KOJO_MESSAGE_COUNTER_K60_123_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_123_1
+RETURN 1
+
+;==================================================
+;Brush Cheek
+;頬抚で
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_124
+CALL M_KOJO_MESSAGE_COUNTER_K60_124_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_124_1
+RETURN 1
+
+;==================================================
+;Tickle
+;頬抚で
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_125
+CALL M_KOJO_MESSAGE_COUNTER_K60_125_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_125_1
+RETURN 1
+
+;==================================================
+;Character gets a lap pillow from the player and asks them to brush their hair
+;膝枕させる
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_126
+CALL M_KOJO_MESSAGE_COUNTER_K60_126_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_126_1
+RETURN 1
+
+;==================================================
+;Hug and Sniff
+;匂いを嗅ぐ
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_127
+CALL M_KOJO_MESSAGE_COUNTER_K60_127_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_127_1
+RETURN 1
+
+;==================================================
+;Hug and Chat
+;话しかける
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_128
+CALL M_KOJO_MESSAGE_COUNTER_K60_128_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_128_1
+RETURN 1
+
+;==================================================
+;Lick Neck
+;舔舐脖子
+;==================================================
+@M_KOJO_MESSAGE_COUNTER_K60_129
+CALL M_KOJO_MESSAGE_COUNTER_K60_129_1
+RETURN RESULT
+@M_KOJO_MESSAGE_COUNTER_K60_129_1
+RETURN 1
+
+;-------------------------------------------------
+;诶嘿嘿カウンター
+;-------------------------------------------------
+;まだ

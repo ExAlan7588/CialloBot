@@ -1,0 +1,165 @@
+﻿;-------------------------------------------------
+;爱抚
+;爱抚系指令　レベル2
+;-------------------------------------------------
+@COM0
+#DIM 接吻
+IF (FIRSTTIME(312,1) && FIRSTTIME(20,1)) || (MASTER_POSE(SET_M, SET_M) != TARGET && MASTER_POSE(0,4)) || (STAIN:0 >= 2 && (STAIN:0 != 16 && STAIN:0 != 17) && ASSIPLAY == 0 && TALENT:PLAYER:污臭耐性 < 2) || TEQUIP:20
+;奴隷の口的污垢があるとき接吻はない（爱液と母乳よごれはＯＫ、污臭无视か助手调教时は没问题）
+;口球使用中も无
+	接吻 = 0
+ELSEIF !CFLAG:既成事实 & 合意_接吻
+	接吻 = 0
+ELSE
+	接吻 = 1
+ENDIF
+;-------------------------------------------------
+;COM别FLAGの设定
+;-------------------------------------------------
+;行为者
+TCVAR:116 = PLAYER
+;侍奉快乐
+TCVAR:PLAYER:108 = 1
+
+;TARGETが扶她の场合には射精可能に
+CSTR:TARGET:10 += @"{PLAYER}/"
+;TCVAR:2 射精部位フラグ（-1=避孕套 1=膣内 2=肛门 3=手淫 4=口淫 5=乳交 6=素股 7=足交 8=体表 9=肛门侍奉 10=道具 11=触手 12=Ａ调教 13=Ｖ调教）
+TCVAR:TARGET:2 = 3
+;强度
+TCVAR:TARGET:4 = 1500
+
+;-------------------------------------------------
+;ソース追加处理
+;-------------------------------------------------
+;消费体力、气力
+IF FLAG:70 == 1
+	BASE:MASTER:TSP -= 20
+	SOURCE:快Ｃ = 40
+	SOURCE:快Ｂ = 40
+	;性技补正
+	SOURCE:快Ｃ += ABL:PLAYER:指 * 4
+	SOURCE:快Ｂ += ABL:PLAYER:指 * 4
+	;指を使用调教では、调教者の指使いによって、快感のソース增加
+	IF TALENT:PLAYER:灵活手指
+		TIMES SOURCE:快Ｃ , 1.50
+		TIMES SOURCE:快Ｂ , 1.50
+	ENDIF
+	IF 接吻
+		SOURCE:快Ｍ = 20
+		SOURCE:快Ｍ += ABL:PLAYER:舌 * 3
+		 SIF TALENT:PLAYER:舌头灵活
+			TIMES SOURCE:快Ｍ , 1.50
+		;接吻经验
+		EXP:PLAYER:接吻经验 ++
+		;奴隷の口⇔调教者の口的污垢が移动
+		STAIN:0 |= STAIN:PLAYER:0
+		STAIN:PLAYER:0 |= STAIN:0
+	ENDIF
+	;同性爱　レズなら返回值1ゲイなら返回值2
+	IF HETEROSEX(TARGET,PLAYER)
+		EXP:PLAYER:(50 + HETEROSEX(TARGET,PLAYER)) += 5
+	ENDIF
+
+	;调教者が猫舌持ちの场合は、调教者に嗜虐快乐经验を追加
+	SIF TALENT:PLAYER:猫舌
+		EXP:PLAYER:嗜虐快乐经验 += 1
+	;経験
+	EXP:PLAYER:手淫经验 ++
+ELSE
+
+	DOWNBASE:体力 += 10
+	DOWNBASE:气力 += 40
+	DOWNBASE:MASTER:体力 += 20
+	DOWNBASE:MASTER:气力 += 20
+
+	SOURCE:快Ｃ = 40
+	SOURCE:快Ｂ = 40
+	IF 接吻
+		SOURCE:快Ｍ = 20 + ABL:PLAYER:舌 * 3
+		SOURCE:PLAYER:快Ｍ = 20 + ABL:TARGET:舌 * 3
+	ENDIF
+	
+	SOURCE:情爱 = 50
+	SOURCE:性行动 = 60
+	SOURCE:露出 = 20
+	SOURCE:不洁 = 30
+	SOURCE:偏离正轨 = 20
+	SOURCE:反感 = 20
+
+	;性技补正
+	SOURCE:快Ｃ += ABL:PLAYER:指 * 4
+	SOURCE:快Ｂ += ABL:PLAYER:指 * 4
+
+	IF TALENT:PLAYER:灵活手指
+		TIMES SOURCE:快Ｃ , 1.50
+		TIMES SOURCE:快Ｂ , 1.50
+	ENDIF
+	SIF 接吻 && TALENT:PLAYER:舌头灵活
+		TIMES SOURCE:快Ｍ , 1.50
+
+	SIF TALENT:PLAYER:舌头灵活
+		TIMES SOURCE:情爱 , 1.50
+	;-------------------------------------------------
+	;特殊ソース处理
+	;-------------------------------------------------
+	;圧抑、抵抗持ちには、抑郁ソース追加
+	SIF TALENT:自己爱 < 0 || TALENT:抵抗
+		SOURCE:郁闷 += 20
+	;-------------------------------------------------
+	;污れの处理
+	;-------------------------------------------------
+	IF !接吻
+		SOURCE:不洁 = 0
+		SOURCE:情爱 /= 4
+		SOURCE:液体 /= 2
+	ELSE
+		;接吻经验
+		EXP:接吻经验 ++
+		EXP:PLAYER:接吻经验 ++
+		;污臭钝感
+		SIF TALENT:污臭耐性 > 0
+			SOURCE:不洁 /= 4
+		;污臭敏感
+		SIF TALENT:污臭耐性 < 0
+			SOURCE:不洁 *= 3
+		;自尊心高
+		SIF TALENT:自尊心 > 0
+			SOURCE:不洁 *= 2
+		IF STAIN:PLAYER:0
+		;主人の口的污垢があると不洁150%
+			SOURCE:不洁 *= 3
+			SOURCE:不洁 /= 2
+		ENDIF
+		;奴隷の口⇔调教者の口的污垢が移动
+		STAIN:0 |= STAIN:PLAYER:0
+		STAIN:PLAYER:0 |= STAIN:0
+	ENDIF
+
+
+	;-------------------------------------------------
+	;経験の处理
+	;-------------------------------------------------
+	;同性爱　レズなら返回值1ゲイなら返回值2
+	CALL ADD_EXP_LESNIAN(5)
+
+	;调教者が猫舌持ちの场合は、调教者に嗜虐快乐经验を追加
+	SIF TALENT:PLAYER:猫舌
+		EXP:PLAYER:嗜虐快乐经验 += 1
+	;経験
+	EXP:PLAYER:手淫经验 ++
+ENDIF
+RETURN 1
+
+;-------------------------------------------------
+;爱抚实行判定
+;-------------------------------------------------
+@COM_ABLE0
+SIF !TFLAG:100
+	RETURN 0
+;批量管理
+SIF GLOBAL_COMABLE(0)
+	RETURN RESULT
+SIF !TARGET
+	RETURN 0
+RETURN 1
+

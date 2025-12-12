@@ -1,0 +1,1277 @@
+﻿;オプション设定处理
+@OPTION
+#DIM L_COUNT
+#DIM L_FEED
+#DIM TEMP
+VARSET LOCAL
+L_FEED = LINECOUNT
+TOOLTIP_SETDELAY 100
+TEMP = CURRENTREDRAW()
+REDRAW 0
+DRAWLINEFORM =
+FOR L_COUNT, 0, 91
+	CALL OPTION_SETNAME(L_COUNT)
+	SIF !RESULT
+		CONTINUE
+	LOCAL:L_COUNT = 1
+	IF RESULTS:2 == "" 
+		PRINTFORML [{L_COUNT, 2}] - %RESULTS:0, 30, RIGHT%：%RESULTS:1%
+	ELSE
+		HTML_PRINT @"<button value='{L_COUNT}' title='%RESULTS:2%'>[{L_COUNT, 2}] - %RESULTS:0, 30, RIGHT%：%RESULTS:1%</button>"
+	ENDIF
+NEXT
+DRAWLINEFORM －
+PRINTFORML [91] - 各种补丁的启动设定
+PRINTFORML [92] - 自动喘息批量设定
+PRINTFORML [93] - 简易过滤的总设定
+PRINTFORML [94] - 画像表示设定
+PRINTFORML [95] - 登场人物的切换
+PRINTFORML [96] - 指令过滤器
+;#;PRINTFORML [97] - Counter行动フィルタ（DEBUG用）
+PRINTFORML [98] - 状态上升倍率
+;PRINTFORML [98] - 料理操作的设定
+DRAWLINE
+
+SIF DAY > 124
+	HTML_PRINT @"<button value='200' title='【警告】 此处之后的内容不宜阅读'>[200] - 败者・食尘</button>"
+PRINTFORML [999] - 设定完了
+INPUT
+SELECTCASE RESULT
+CASE 0 TO 90
+	SIF LOCAL:RESULT
+	CALL OPTION_SETTING(RESULT)
+	CLEARLINE LINECOUNT - L_FEED
+CASE 91
+	CALL OPTION_DLC
+CASE 92
+	CALL OPTION_自动喘息批量设定
+CASE 93
+	CALL 简易过滤器批量设定
+CASE  94
+	CALL OPTION_画像表示详细设定
+CASE 95
+	CALL 登场人物的切换
+CASE 96
+	CALL OPTION_COMMAND_FILTER
+[IF_DEBUG]
+CASE 97
+	TRYCALL SET_OPTION_COOKING
+[ENDIF]
+CASE 98
+	CALL OPTION_ABL_UP_RAIT
+;CASE 98
+;	CALL SET_OPTION_COOKING
+CASE  200
+		TOOLTIP_SETDELAY 500
+	IF DAY <= 124
+		REDRAW TEMP
+		RETURN
+	ENDIF
+	PRINTFORML 要返回到第一天么？？
+	PRINTL 
+	PRINTL [0]不要按下「开关」啊ーー
+	PRINTL [1]不！到极限了、按下它！就现在！
+	INPUT
+	IF RESULT == 1
+		CALL 强行开始新的游戏
+	ELSE
+;		PRINTW 虽然没能停止按下“开关”，但幸运的是只回到了选项选择，当然你也可以回头。
+	ENDIF
+CASEELSE
+	TOOLTIP_SETDELAY 500
+	REDRAW TEMP
+	RETURN
+ENDSELECT
+RESTART
+
+@OPTION_SETNAME(ARG)
+;RESULT:2	ツールチップ表记内容
+#DIM 系数
+VARSET RESULTS 
+RESULT = 1
+SELECTCASE ARG
+CASE 0
+	RESULTS:0 = 怀孕的有无
+	IF FLAG:妊娠开关
+		RESULTS:1 = 会怀孕
+		RESULTS:2 = ※你的怀孕功能未实装※
+	ELSE
+		RESULTS:1 = 不会怀孕
+	ENDIF
+CASE 1
+	RESULTS:0 = 儿童的性别
+	SELECTCASE FLAG:儿童の性别
+	CASE 0
+		RESULTS:1 = 随机
+	CASE 1
+		RESULTS:1 = 女孩子
+	CASE 2
+		RESULTS:1 = 男孩子
+	ENDSELECT
+	SIF !FLAG:妊娠开关
+		RESULT = 0
+CASE 2
+	RESULTS:0 = 儿童的描写 
+	IF FLAG:儿童描写
+		RESULTS:1 = 有
+	ELSE
+		RESULTS:1 = 无
+	ENDIF
+	SIF !FLAG:妊娠开关
+		RESULT = 0
+CASE 3
+	RESULTS:0 = 住宿事件
+	IF FLAG:住宿事件
+		RESULTS:1 = 无
+	ELSE
+		RESULTS:1 = 有
+		RESULTS:2 = 亲密的角色会搬到你的家
+	ENDIF
+CASE 4
+	RESULTS:0 = 宴会的发生
+	IF FLAG:宴会的有无
+		RESULTS:1 = 有
+	ELSE
+		RESULTS:1 = 无
+	ENDIF
+CASE 5
+	RESULTS:0 = 对方是否会告白
+	IF FLAG:告白禁止
+		RESULTS:1 = 不会告白
+	ELSE
+		RESULTS:1 = 会告白
+	ENDIF
+CASE 6
+	RESULTS:0 = 从炮友系陷落向恋慕系陷落变化
+	IF FLAG:陷落路线变化
+		RESULTS:1 = 会变化
+	ELSE
+		RESULTS:1 = 不会变化
+	ENDIF
+CASE 7
+	RESULTS:0 = 因事件而[无知]丧失
+	IF FLAG:无知自动丧失禁止
+		RESULTS:1 = 不会丧失
+	ELSE
+		RESULTS:1 = 会丧失
+	ENDIF
+CASE 8
+	RESULTS:0 = 文本设定
+	IF FLAG:情景文本设定 == 1 && FLAG:口上文本设定 == 2
+		RESULTS:1 = 口上＋情景文本
+	ELSEIF FLAG:情景文本设定 == 1 && FLAG:口上文本设定 == -1
+		RESULTS:1 = 仅情景文本
+	ELSEIF FLAG:情景文本设定 == 0 && FLAG:口上文本设定 == -1
+		RESULTS:1 = 不显示文本
+	ENDIF
+CASE 9
+	RESULTS:0 = 口上颜色
+	IF FLAG:口上色
+		RESULTS:1 = 有
+	ELSE
+		RESULTS:1 = 无
+	ENDIF
+CASE 10
+	RESULTS:0 = 污物程度表示
+	IF FLAG:垃圾显示OFF
+		RESULTS:1 = 否
+	ELSE
+		RESULTS:1 = 是
+	ENDIF
+CASE 11
+	RESULTS:0 = counter的地文会根据素质不同发生变化
+	IF FLAG:Counter地文控制
+		RESULTS:1 = 会变化
+	ELSE
+		RESULTS:1 = 不会变化
+	ENDIF
+CASE 12
+	RESULTS:0 = 描写胸部的文本
+	IF FLAG:Look表示用乳房 == 1 && FLAG:Look表示用乳头 == 1
+		RESULTS:1 = 全部固定
+	ELSEIF FLAG:Look表示用乳房 == 1 && FLAG:Look表示用乳头 == 0
+		RESULTS:1 = 仅固定乳房描写
+	ELSEIF FLAG:Look表示用乳房 == 0 && FLAG:Look表示用乳头 == 1
+		RESULTS:1 = 仅固定乳头描写
+	ELSEIF FLAG:Look表示用乳房 == 0 && FLAG:Look表示用乳头 == 0
+		RESULTS:1 = 不固定
+	ENDIF
+;CASE 13
+;	RESULTS:0 = 好意/理性之壁の表示
+;	IF FLAG:好意理性短缩
+;		RESULTS:1 = 缩短
+;	ELSE
+;		RESULTS:1 = 不缩短
+;	ENDIF
+;	RESULTS:2 = ※现在未机能※
+;CASE 14
+;	RESULTS:0 = 能力表示的标记
+;	IF FLAG:能力表记
+;		RESULTS:1 = 数字标记
+;	ELSE
+;		RESULTS:1 = 记号标记
+;	ENDIF
+;	RESULTS:2 = ※现在未机能※
+CASE 15
+	RESULTS:0 = 每回合的ABLUP
+	IF FLAG:ABLUP省略
+		RESULTS:1 = 省略
+	ELSE
+		RESULTS:1 = 不省略
+	ENDIF
+CASE 16
+	RESULTS:0 = 初吻的记录
+	SELECTCASE FLAG:ＦＫ判定
+	CASE 0
+		RESULTS:1 = 仅在亲吻时・仅在有意识时
+	CASE 1
+		RESULTS:1 = 仅在亲吻时・无意识时也算
+	CASE 2
+		RESULTS:1 = 口交时也算・仅在有意识时
+	CASE 3
+		RESULTS:1 = 口交时也算・无意识时也算
+	ENDSELECT
+CASE 17
+	RESULTS:0 = 是否会在移动时停下
+	SELECTCASE FLAG:停下脚步
+	CASE 0
+		RESULTS:1 = 无条件停下脚步
+	CASE 1
+		RESULTS:1 = 只有在口上存在的情况下会停下
+	CASE 2
+		RESULTS:1 = 不会停下脚步
+	ENDSELECT
+CASE 18
+	RESULTS:0 = 遭遇时的依赖提示
+	IF FLAG:委托无视
+		RESULTS:1 = 不显示
+	ELSE
+		RESULTS:1 = 显示
+	ENDIF
+CASE 19
+	RESULTS:0 = 消耗品自动购入
+	IF FLAG:消耗品自动购入
+		RESULTS:1 = 是
+		RESULTS:2 = 只买润滑液
+	ELSE
+		RESULTS:1 = 否
+	ENDIF
+CASE 20
+	RESULTS:0 = 自动时停移动
+	SELECTCASE FLAG:瞬间移动
+	CASE 0
+		RESULTS:1 = ＯＦＦ
+	CASE 1
+		RESULTS:1 = 仅在外出散步时
+	CASE 2
+		RESULTS:1 = 仅在据点内移动时
+	CASE 3
+		RESULTS:1 = 外出/据点内均启用
+	ENDSELECT
+CASE 21
+	RESULTS:0 = 进行能力比较来决定会不会被推倒
+	IF FLAG:推倒
+		RESULTS:1 = 有
+	ELSE
+		RESULTS:1 = 无
+	ENDIF
+CASE 22
+	RESULTS:0 = 警告牌使用
+	IF FLAG:警告牌使用
+		RESULTS:1 = 有
+		RESULTS:2 = 因为过分的性骚扰等而被发行并累积，游戏就会结束。
+	ELSE
+		RESULTS:1 = 无
+	ENDIF
+CASE 23
+	RESULTS:0 = 来访模式
+	SELECTCASE FLAG:交流来访模式
+	CASE 0
+		RESULTS:1 = 正常
+	CASE 1
+		RESULTS:1 = 好感度50以下不会来访
+	CASE 2
+		RESULTS:1 = 仅限陷落的角色
+	CASE 3
+		RESULTS:1 = 不会来访
+	ENDSELECT
+	RESULTS:2 = 角色造访自家地区的条件
+CASE 24
+	RESULTS:0 = 脱衣指令的选择
+	SELECTCASE FLAG:脱衣选择
+	CASE 0
+		RESULTS:1 = 每回选择
+	CASE 1
+		RESULTS:1 = 全裸
+	CASE 2
+		RESULTS:1 = 半脱
+	ENDSELECT
+CASE 25
+	RESULTS:0 = 时间停止时脱衣指令的选择
+	SELECTCASE FLAG:胖次泥棒
+	CASE 0
+		RESULTS:1 = 每回选择
+	CASE 1
+		RESULTS:1 = 总是占为己有
+	CASE 2
+		RESULTS:1 = 总是单单脱掉
+	ENDSELECT
+CASE 26
+	RESULTS:0 = 一部分人物的长筒袜穿戴
+	IF FLAG:长筒袜着用
+		RESULTS:1 = 有
+	ELSE
+		RESULTS:1 = 无
+	ENDIF
+CASE 27
+	RESULTS:0 = 增加色色的内衣
+	IF FLAG:性感胖次追加
+		RESULTS:1 = 增加
+	ELSE
+		RESULTS:1 = 不增加
+	ENDIF
+CASE 28
+	RESULTS:0 = 胖次收集状况表示
+	IF FLAG:胖次收集状况TYPEB
+		RESULTS:1 = 未入手的胖次也会显示
+	ELSE
+		RESULTS:1 = 仅显示入手的胖次
+	ENDIF
+CASE 29
+	RESULTS:0 = 地图的显示模式
+	IF RECOLOREDMAPS
+		IF ANIMATERECOLOREDMAPS
+			RESULTS:1 = 颜色地图 + 动画
+		ELSE
+			RESULTS:1 = 颜色地图
+		ENDIF
+	ELSE
+		RESULTS:1 = 经典
+	ENDIF
+CASE 30
+	RESULTS:0 = 角色列表表示顺序
+	IF FLAG:排序
+		RESULTS:1 = 原作顺
+	ELSE
+		RESULTS:1 = ＴＷ顺
+	ENDIF
+CASE 31
+	RESULTS:0 = 放尿和漏尿癖的有效化
+	IF FLAG:癖好有效
+		RESULTS:1 = 有效
+	ELSE
+		RESULTS:1 = 无效
+	ENDIF
+CASE 32
+	RESULTS:0 = 采集时的再抽签功能
+	IF FLAG:采集再抽选
+		RESULTS:1 = 有效
+	ELSE
+		RESULTS:1 = 无效
+	ENDIF
+CASE 33
+	RESULTS:0 = 根据日期和天气背景颜色的变化
+	IF FLAG:背景色推移
+		RESULTS:1 = 有效
+	ELSE
+		RESULTS:1 = 无效
+	ENDIF
+CASE 34
+	RESULTS:0 = 反击的惩罚
+	SELECTCASE FLAG:Counter制裁
+	CASE 0
+		RESULTS:1 = 有
+		RESULTS:2 = 一旦被抓住把柄就会偶尔发生
+	CASE 1
+		RESULTS:1 = 不采取过激的惩罚
+		RESULTS:2 = 减少使用道具的惩罚
+	CASE 2
+		RESULTS:1 = 没有
+	ENDSELECT
+CASE 35
+	RESULTS:0 = 肛门开发许可
+	SELECTCASE FLAG:肛门开发无效
+	CASE 0
+		RESULTS:1 = 许可
+	CASE 1
+		RESULTS:1 = あなた禁止
+		RESULTS:2 = あなたに快Ａソースが入るCounter行动を禁止します
+	CASE 2
+		RESULTS:1 = 相手禁止
+		RESULTS:2 = 相手に快Ａソースが入るCounter行动を禁止します
+	CASE 3
+		RESULTS:1 = あなた・相手禁止
+		RESULTS:2 = 快Ａソースが入るCounter行动を禁止します
+	ENDSELECT
+
+CASE 36
+	RESULTS:0 = 日常行动中的上升气流现象
+	IF FLAG:走光发生
+		RESULTS:1 = 有效
+	ELSE
+		RESULTS:1 = 无效
+	ENDIF
+CASE 37
+	RESULTS:0 = 误爆插入の发生
+	IF FLAG:误爆无效
+		RESULTS:1 = 无效
+		RESULTS:2 = 推倒中に相手が误って插入することがなくなります
+	ELSE
+		RESULTS:1 = 有效
+		RESULTS:2 = 推倒中に相手が误って插入することがあります
+	ENDIF
+CASE 38
+	RESULTS:0 = 妊娠期间设定
+	系数 = 1 + FLAG:妊娠日程倍率
+	SELECTCASE 系数
+		CASE 1
+			RESULTS:1 = 通常
+		CASEELSE
+			RESULTS:1 '= @"%TOSTR(系数)%倍速"
+	ENDSELECT
+
+
+CASE 50
+	RESULTS:0 = 好感度上升率
+	IF FLAG:好感度上升率 > 0
+		RESULTS:1 = X {FLAG:好感度上升率}
+	ELSEIF FLAG:好感度上升率 == 0
+		RESULTS:1 = X 1
+	ENDIF
+CASE 51
+	RESULTS:0 = 信赖度上升率
+	IF FLAG:信赖度上升率 > 0
+		RESULTS:1 = X {FLAG:信赖度上升率}
+	ELSEIF FLAG:信赖度上升率 == 0
+		RESULTS:1 = X 1
+	ENDIF
+
+
+CASEELSE
+	RESULT = 0
+ENDSELECT
+RETURN RESULT
+
+@OPTION_SETTING(ARG)
+CALL OPTION_SETNAME(ARG)
+SELECTCASE RESULTS:0
+CASE "怀孕的有无"
+	FLAG:妊娠开关 = !FLAG:妊娠开关
+CASE "文本设定"
+	IF FLAG:情景文本设定 == 1 && FLAG:口上文本设定 == 2
+		FLAG:情景文本设定 = 1
+		FLAG:口上文本设定 = -1
+	ELSEIF FLAG:情景文本设定 == 1 && FLAG:口上文本设定 == -1
+		FLAG:情景文本设定 = 0
+		FLAG:口上文本设定 = -1
+	ELSEIF FLAG:情景文本设定 == 0 && FLAG:口上文本设定 == -1
+		FLAG:情景文本设定 = 1
+		FLAG:口上文本设定 = 2
+	ENDIF
+CASE "消耗品自动购入"
+	FLAG:消耗品自动购入 = !FLAG:消耗品自动购入
+CASE "污物程度表示"
+	FLAG:垃圾显示OFF = !FLAG:垃圾显示OFF
+CASE "是否会在移动时停下"
+	CALL オプション切り替え("停下脚步", 2)
+CASE "进行能力比较来决定会不会被推倒"
+	FLAG:推倒 = !FLAG:推倒
+CASE "自动时停移动"
+	CALL オプション切り替え("瞬间移动", 3)
+CASE "住宿事件"
+	FLAG:住宿事件 = !FLAG:住宿事件
+CASE "警告牌使用"
+	FLAG:警告牌使用 = !FLAG:警告牌使用
+CASE "一部分人物的长筒袜穿戴"
+	FLAG:长筒袜着用 = !FLAG:长筒袜着用
+CASE "宴会的发生"
+	FLAG:宴会的有无 = !FLAG:宴会的有无
+CASE "来访模式"
+	CALL オプション切り替え("交流来访模式", 3)
+CASE "脱衣指令的选择"
+	CALL オプション切り替え("脱衣选择", 2)
+CASE "时间停止时脱衣指令的选择"
+	CALL オプション切り替え("胖次泥棒", 2)
+CASE "口上颜色"
+	FLAG:口上色 = !FLAG:口上色
+CASE "描写胸部的文本"
+	IF FLAG:Look表示用乳房 == 1 && FLAG:Look表示用乳头 == 1
+		FLAG:Look表示用乳房 = 1
+		FLAG:Look表示用乳头 = 0
+	ELSEIF FLAG:Look表示用乳房 == 1 && FLAG:Look表示用乳头 == 0
+		FLAG:Look表示用乳房 = 0
+		FLAG:Look表示用乳头 = 1
+	ELSEIF FLAG:Look表示用乳房 == 0 && FLAG:Look表示用乳头 == 1
+		FLAG:Look表示用乳房 = 0
+		FLAG:Look表示用乳头 = 0
+	ELSEIF FLAG:Look表示用乳房 == 0 && FLAG:Look表示用乳头 == 0
+		FLAG:Look表示用乳房 = 1
+		FLAG:Look表示用乳头 = 1
+	ENDIF
+CASE "能力表示的标记"
+	FLAG:能力表记 = !FLAG:能力表记
+CASE "counter的地文会根据素质不同发生变化"
+	FLAG:Counter地文控制 = !FLAG:Counter地文控制
+CASE "增加色色的内衣"
+	FLAG:性感胖次追加 = !FLAG:性感胖次追加
+	IF !FLAG:性感胖次追加
+		PRINTFORMW 席卷幻想乡的性感内衣热潮结束了
+		PRINTL 
+		PRINTFORML 要消除掉所拥有的性感内衣吗？
+		PRINTFORML 削除对象：超短内裤、兜裆布、T型裤、透明女式短内裤、开放型女式短内裤、创可贴、衬裤（开档）
+		PRINTL 
+		PRINTL [0] 已经不需要了
+		PRINTL [1] 珍藏起来
+		INPUT
+		IF RESULT == 0
+			CALL DELETE_SEXYPANTS
+			CLEARLINE 10
+		ELSE
+			CLEARLINE 8
+		ENDIF
+	ENDIF
+CASE "从炮友系陷落向恋慕系陷落变化"
+	FLAG:陷落路线变化 = !FLAG:陷落路线变化
+CASE "对方是否会告白"
+	FLAG:告白禁止 = !FLAG:告白禁止
+CASE "每回合的ABLUP"
+	FLAG:ABLUP省略 = !FLAG:ABLUP省略
+CASE "因事件而[无知]丧失"
+	FLAG:无知自动丧失禁止 = !FLAG:无知自动丧失禁止
+CASE "好意/理性之壁の表示"
+	FLAG:好意理性短缩 = !FLAG:好意理性短缩
+CASE "儿童的描写"
+	FLAG:儿童描写 = !FLAG:儿童描写
+CASE "儿童的性别"
+	CALL オプション切り替え("儿童の性别", 2)
+CASE "胖次收集状况表示"
+	FLAG:胖次收集状况TYPEB = !FLAG:胖次收集状况TYPEB
+CASE "初吻的记录"
+	CALL オプション切り替え("ＦＫ判定", 3)
+CASE "遭遇时的依赖提示"
+	FLAG:委托无视 = !FLAG:委托无视
+CASE "地图的显示模式"
+	IF RECOLOREDMAPS
+		IF ANIMATERECOLOREDMAPS
+			RECOLOREDMAPS = 0
+			ANIMATERECOLOREDMAPS = 0
+		ELSE
+			ANIMATERECOLOREDMAPS = 1000
+		ENDIF
+	ELSE
+		RECOLOREDMAPS = 1
+	ENDIF
+CASE "角色列表表示顺序"
+	FLAG:排序 = !FLAG:排序
+CASE "放尿和漏尿癖的有效化"
+	FLAG:癖好有效 = !FLAG:癖好有效
+CASE "采集时的再抽签功能"
+	FLAG:采集再抽选 = !FLAG:采集再抽选
+CASE "根据日期和天气背景颜色的变化"
+	FLAG:背景色推移 = !FLAG:背景色推移
+CASE "反击的惩罚"
+	CALL オプション切り替え("Counter制裁", 2)
+CASE "肛门开发许可"
+	CALL オプション切り替え("肛门开发无效", 3)
+CASE "日常行动中的上升气流现象"
+	FLAG:走光发生 = !FLAG:走光发生
+CASE "误爆插入の发生"
+	FLAG:误爆无效 = !FLAG:误爆无效
+CASE "妊娠期间设定"
+	IF GETBIT(ACCELERATE_PREGANCY_AND_RAISING_CHILD, 0) && !GETBIT(ACCELERATE_PREGANCY_AND_RAISING_CHILD, 10)
+		SETCOLOR C_YELLOW
+		FONTBOLD
+		PRINTFORML 注意：4.943版本以后eratw更新的自带的妊娠育儿加速与“加速怀孕和育儿”补丁部分功能相冲突
+		FONTREGULAR
+		RESETCOLOR
+		PRINTL
+		PRINTFORML 检测到“加速怀孕和育儿”补丁开启
+		PRINTFORML 若需应用“妊娠期间设定”功能，建议关闭“加速怀孕和育儿”补丁
+		PRINTFORML 是否需要关闭补丁？
+		VARSET RESULT
+		PRINTFORML [0] 是
+		PRINTFORML [1] 否
+		PRINTFORML [2] 取消
+		INPUT
+		IF RESULT == 0
+			VARSET ACCELERATE_PREGANCY_AND_RAISING_CHILD
+			VARSET RATE_OF_PREGNANCY_ACCELERATION
+			VARSET RATE_OF_CHILD_RAISING_ACCELERATION
+			VARSET DEBUG_INGNOREANCE_CHARACTER_VALUE_SAVE
+			PRINTFORMW 补丁已关闭
+		ELSEIF RESULT == 1
+			SETCOLOR C_YELLOW
+			FONTBOLD
+			PRINTFORMW 未关闭补丁，可能会出现意料之外的运行状况
+			FONTREGULAR
+			RESETCOLOR
+			PRINTFORML 是否关闭本冲突提示？（若需重置本设定，请点击加速怀孕和育儿补丁设置页面的“关闭”按键）
+			VARSET RESULT
+			CALL ASK_YN
+			IF RESULT == 0
+				SETBIT ACCELERATE_PREGANCY_AND_RAISING_CHILD, 10
+				SETCOLOR C_YELLOW
+				FONTBOLD
+				PRINTFORMW 已设置不再提醒“妊娠期间设定”与“加速怀孕和育儿”补丁存在冲突
+				FONTREGULAR
+				RESETCOLOR
+			ELSE
+				PRINTFORMW 未关闭“妊娠期间设定”与“加速怀孕和育儿”补丁冲突提示
+			ENDIF
+		ELSE
+			RETURN
+		ENDIF
+	ENDIF
+	CALL オプション切り替え("妊娠日程倍率", 3)
+	
+CASE "好感度上升率"
+	INPUT
+	FLAG:好感度上升率 = LIMIT(RESULT, 0, 20)
+CASE "信赖度上升率"
+	INPUT
+	FLAG:信赖度上升率 = LIMIT(RESULT, 0, 10)
+
+ENDSELECT
+
+@オプション切り替え(ARGS, ARG)
+FLAG:ARGS ++
+SIF FLAG:ARGS > ARG
+	FLAG:ARGS = 0
+
+@OPTION_自动喘息批量设定
+CALL ASK_M("全员无效",1,"全员有效（无下流）",1,"全员有效（有下流）",1, "中止",1)
+IF INRANGE(RESULT, 0, 2)
+	FOR LOCAL,1,CHARANUM
+		CFLAG:LOCAL:自动喘息 = RESULT
+	NEXT
+	PRINTFORMW 统一设定了
+ENDIF
+
+@登场人物的切换
+PRINTL 　被指定的人物将不会登场。（"*"为有口上的角色）
+DRAWLINE
+SIF FLAG:排序
+	CALL CHARASORT_EX
+FOR LOCAL:1, 1, EX_CHARANUM
+	IF FLAG:排序
+		LOCAL = RESULT:(LOCAL:1)
+		SIF LOCAL < 0
+			CONTINUE
+	ELSE
+		LOCAL = LOCAL:1
+		SIF LOCAL >= CHARANUM
+			BREAK
+	ENDIF
+	SIF TALENT:LOCAL:路人
+		CONTINUE
+	SIF CFLAG:LOCAL:出禁
+		SETCOLOR C_D_RED
+	RESULT = 0
+	TRYCALLFORM M_KOJO_K{NO:LOCAL}
+	PRINTFORMLC [{LOCAL, 3}] \@ RESULT ? * # \@%NAME_OUTPUT_TRANSLATION("CALLNAME", LOCAL)%
+	RESETCOLOR
+NEXT
+PRINTL 　
+DRAWLINE
+PRINTFORML [999] 设定结束　出禁人物：{FLAG:出禁人数}人　　[997]无口上角色批量出禁　[998]重置
+$LOOP
+INPUT
+IF RESULT >= 1 && RESULT <= CHARANUM
+	IF CFLAG:RESULT:出禁 && FLAG:扮演 != RESULT
+		CFLAG:RESULT:出禁 = 0
+		SIF CFLAG:RESULT:当前位置 == CFLAG:RESULT:初始位置 && CFLAG:RESULT:睡眠
+			LOCK:(CFLAG:RESULT:初始位置) = 1
+		FLAG:出禁人数 --
+	ELSEIF TALENT:RESULT:路人
+		PRINTFORMW 这个角色不能解除出禁
+		GOTO LOOP
+	ELSEIF FLAG:扮演 == RESULT
+		IF CFLAG:(FLAG:扮演):出禁 == 1
+			PRINTFORML 要扮演现在这个人物的话、将会变成两个%NAME_OUTPUT_TRANSLATION("CALLNAME", RESULT)%同时存在的情况…
+			PRINTL 即使这样也要登场吗？
+			PRINTL [0]是 [1]否
+			INPUT
+			IF RESULT == 0
+				CFLAG:(FLAG:扮演):出禁 = 0
+				SIF CFLAG:(FLAG:扮演):当前位置 == CFLAG:(FLAG:扮演):初始位置 && CFLAG:(FLAG:扮演):睡眠
+					LOCK:(CFLAG:(FLAG:扮演):初始位置) = 1
+				FLAG:出禁人数 --
+				PRINTFORMW %NAME_OUTPUT_TRANSLATION("CALLNAME", (FLAG:扮演))%将登场
+			ELSE
+				GOTO LOOP
+			ENDIF
+		ELSE
+			CFLAG:(FLAG:扮演):出禁 = 1
+			SIF LOCK:(CFLAG:(FLAG:扮演):初始位置) && CFLAG:(FLAG:扮演):初始位置 < 100
+				LOCK:(CFLAG:(FLAG:扮演):初始位置) = 0
+			FLAG:出禁人数 ++
+		ENDIF
+	ELSE
+		CFLAG:RESULT:出禁 = 1
+		SIF LOCK:(CFLAG:RESULT:初始位置) && CFLAG:RESULT:初始位置 < 100
+			LOCK:(CFLAG:RESULT:初始位置) = 0
+		FLAG:出禁人数 ++
+	ENDIF
+	RESTART
+ELSEIF RESULT == 999
+	PRINTW 设定完毕。
+ELSEIF RESULT == 998
+	FOR LOCAL,1,CHARANUM
+		SIF FLAG:扮演 == LOCAL
+			CONTINUE
+		SIF TALENT:LOCAL:路人
+			CONTINUE
+		CFLAG:LOCAL:出禁 = 0
+	NEXT
+	FLAG:出禁人数 = 0
+	RESTART
+ELSEIF RESULT == 997
+	FOR LOCAL,1,CHARANUM
+		SIF FLAG:扮演 == LOCAL
+			CONTINUE
+		SIF TALENT:LOCAL:路人
+			CONTINUE
+		IF !CFLAG:LOCAL:口上セレクタ
+			TRYCCALLFORM M_KOJO_K{NO:LOCAL}
+			CATCH
+				IF CFLAG:LOCAL:出禁 == 0
+					CFLAG:LOCAL:出禁 = 1
+					FLAG:出禁人数 ++
+				ENDIF
+			ENDCATCH
+		ELSE
+			TRYCCALLFORM M_KOJO_K{NO:LOCAL}_{CFLAG:LOCAL:口上セレクタ}
+			CATCH
+				IF CFLAG:LOCAL:出禁 == 0
+					CFLAG:LOCAL:出禁 = 1
+					FLAG:出禁人数 ++
+				ENDIF
+			ENDCATCH
+		ENDIF
+;			PRINTFORM %CALLNAME:LOCAL% {FLAG:出禁人数} ／
+	NEXT
+	RESTART
+ELSE
+	GOTO LOOP
+ENDIF
+
+;简易过滤器制御函数
+;仕样上の问题として、设定项目が增えすぎると设计をしなおす必要がある
+@简易过滤器批量设定
+#DIM OP_CFLAG_Ｖ过滤器
+#DIM OP_CFLAG_Ａ过滤器
+#DIM OP_CFLAG_ＳＭ过滤器
+#DIM OP_CFLAG_侍奉过滤器
+#DIM OP_CFLAG_性骚扰过滤器
+#DIM OP_SETTING
+IF !LOCAL
+	OP_CFLAG_Ｖ过滤器       = GETNUM(CFLAG, "Ｖ过滤器")
+	OP_CFLAG_Ａ过滤器       = GETNUM(CFLAG, "Ａ过滤器")
+	OP_CFLAG_ＳＭ过滤器     = GETNUM(CFLAG, "ＳＭ过滤器")
+	OP_CFLAG_侍奉过滤器     = GETNUM(CFLAG, "侍奉过滤器")
+	OP_CFLAG_性骚扰过滤器 = GETNUM(CFLAG, "性骚扰过滤器")
+	LOCAL ++
+ENDIF
+PRINTFORML ～简易过滤设定～
+PRINTFORML ※这里和单独个别指令的设定是不一样的
+PRINTFORML 
+PRINTFORML [29] 全角色的全简易过滤OFF
+PRINTFORML [28] 开放全角色的[Ｖ]
+PRINTFORML [27] 开放全角色的[Ａ]
+PRINTFORML [26] 开放全角色的[ＳＭ]
+PRINTFORML [25] 开放全角色的[侍奉]
+PRINTFORML [24] 开放全角色的[性骚扰]
+PRINTFORML [23] 开放[家事]
+PRINTFORML 
+PRINTFORML [19] 全角色的全简易过滤ON
+PRINTFORML [18] 限制全角色的[Ｖ]
+PRINTFORML [17] 限制全角色的[Ａ]
+PRINTFORML [16] 限制全角色的[ＳＭ]
+PRINTFORML [15] 限制全角色的[侍奉]
+PRINTFORML [14] 限制全角色的[性骚扰]
+PRINTFORML [13] 限制[家事]
+PRINTFORML 
+PRINTFORML [99] 设定结束
+DO
+	INPUT
+	OP_SETTING = (RESULT / 10) - 1
+	;20で1、10で0
+	SELECTCASE RESULT
+	CASE 29, 19
+		CVARSET CFLAG, OP_CFLAG_Ｖ过滤器, OP_SETTING
+		CVARSET CFLAG, OP_CFLAG_Ａ过滤器, OP_SETTING
+		CVARSET CFLAG, OP_CFLAG_ＳＭ过滤器, OP_SETTING
+		CVARSET CFLAG, OP_CFLAG_侍奉过滤器, OP_SETTING
+		CVARSET CFLAG, OP_CFLAG_性骚扰过滤器, OP_SETTING
+		FLAG:家事过滤器 = OP_SETTING
+		IF OP_SETTING
+			PRINTFORMW 全角色的所有简易过滤都设为＜OFF＞了
+		ELSE
+			PRINTFORMW 全角色的所有简易过滤都设为＜ON＞了
+		ENDIF
+	CASE 28, 18
+		CVARSET CFLAG, OP_CFLAG_Ｖ过滤器, OP_SETTING
+		IF OP_SETTING
+			PRINTFORMW 全角色的[Ｖ]指令设为＜开放＞了
+		ELSE
+			PRINTFORMW 全角色的[Ｖ]指令设为＜限制＞了
+		ENDIF
+	CASE 27, 17
+		CVARSET CFLAG, OP_CFLAG_Ａ过滤器, OP_SETTING
+		IF OP_SETTING
+			PRINTFORMW 全角色的[Ａ]指令设为＜开放＞了
+		ELSE
+			PRINTFORMW 全角色的[Ａ]指令设为＜限制＞了
+		ENDIF
+	CASE 26, 16
+		CVARSET CFLAG, OP_CFLAG_ＳＭ过滤器, OP_SETTING
+		IF OP_SETTING
+			PRINTFORMW 全角色的[ＳＭ]指令设为＜开放＞了
+		ELSE
+			PRINTFORMW 全角色的[ＳＭ]指令设为＜限制＞了
+		ENDIF
+	CASE 25, 15
+		CVARSET CFLAG, OP_CFLAG_侍奉过滤器, OP_SETTING
+		IF OP_SETTING
+			PRINTFORMW 全角色的[侍奉]指令设为＜开放＞了
+		ELSE
+			PRINTFORMW 全角色的[侍奉]指令设为＜限制＞了
+		ENDIF
+	CASE 24, 14
+		CVARSET CFLAG, OP_CFLAG_性骚扰过滤器, OP_SETTING
+		IF OP_SETTING
+			PRINTFORMW 全角色的[性骚扰]指令设为＜开放＞了
+		ELSE
+			PRINTFORMW 全角色的[性骚扰]指令设为＜限制＞了
+		ENDIF
+	CASE 23, 13
+		FLAG:家事过滤器 = OP_SETTING
+		IF OP_SETTING
+			PRINTFORMW 家事指令设为＜开放＞了
+		ELSE
+			PRINTFORMW 家事指令设为＜限制＞了
+		ENDIF
+	CASE 99
+		PRINTFORMW 简易过滤的设定完成了
+		RETURN
+	CASEELSE
+		PRINTFORML 无效输入
+		CONTINUE
+	ENDSELECT
+	BREAK
+LOOP 1
+RESTART
+
+;---------------------------------------------------------------
+;	画像详细设定
+;	设定が增えたので新设
+;---------------------------------------------------------------
+@OPTION_画像表示详细设定
+TARGET = [[灵梦]]
+FOR LOCAL, 1, 11
+	TARGET:LOCAL = LOCAL
+NEXT
+PRINTL ▼示例▼
+CALL PRINT_TARGET_IMAGE(TARGET)
+PRINTL 
+PRINTFORML [ 0] - 画像\@ FLAG:画像表示 ? 显示 # 不显示 \@
+IF FLAG:画像表示
+	PRINTFORML [ *]┬ 现在的\@ FLAG:立绘种类 ? 颜绘 # 立绘 \@的显示人数 {FLAG:画像表示}人
+	PRINTFORML [ 1]├ 增加
+	PRINTFORML [ 2]└ 减少
+	PRINTFORML [ 3] - 角色画像的类型 \@ FLAG:立绘种类 ? [颜] # [立绘] \@
+	PRINTFORML [ 4]┬ 现在的画像尺寸[\@ FLAG:多尺寸? 原尺寸 # {默认角色画像横幅} \@]：{100 + isModifier}％
+	PRINTFORML [ 5]├ 扩大
+	PRINTFORML [ 6]└ 缩小
+	PRINTFORML [ 7] - \@ FLAG:立绘种类 ? 颜绘 # 立绘 \@的显示位置 [\@ FLAG:画像表示位置 ? 左对齐 # 中央对齐 \@]
+	PRINTFORML [ 8] - 图像边框显示 \@ FLAG:画像框表示 ? ON # OFF \@
+	PRINTFORML [ 9] - \@ FLAG:巨乳差分表示? 如果角色有巨乳以上的差分画像的话就显示# 不显示巨乳差分画像\@
+	PRINTFORML [10] - \@ FLAG:追加EFFECT? 显示追加特效# 不显示追加特效\@
+	PRINTFORML [11] - 就寝后的自慰画像\@ FLAG:自慰画像非表示? 不显示# 显示\@
+	PRINTFORML [12] - 颜绘附加信息\@ 颜绘付きメッセージ ? 有 # 无\@
+	PRINTL 
+	PRINTFORML [13]\@ FLAG:插绘表示 ? ┬ # %" "%- \@ 插绘を表示する \@ FLAG:插绘表示 ? ON # OFF \@
+	IF FLAG:插绘表示
+		PRINT [14]└ 射精画像的种类
+		SELECTCASE FLAG:射精画像种类
+			CASE 0
+				PRINTL  [断面＋效果音]
+			CASE 1
+				PRINTL  [只有断面]
+			CASE 2
+				PRINTL  [只有效果音]
+		ENDSELECT
+	ELSE
+		PRINTL 
+	ENDIF
+	PRINTFORML [15]\@ FLAG:アニメーション ? ┬ # %" "%- \@动画设定 \@ FLAG:アニメーション ? 重复 {FLAG:アニメーション}回 # OFF \@
+	IF FLAG:アニメーション
+		PRINTFORML [16]└插入中每回合的动画显示：\@FLAG:插入アニメ过滤器 & アニメ过滤器_插入 ? [×]# [〇]\@
+	ELSE
+		PRINTL 
+	ENDIF
+ELSE
+	FOR LOCAL, 1, 13
+		PRINTL 
+	NEXT
+ENDIF
+PRINTFORML [999] - 返回
+INPUT
+IF RESULT == 999
+	VARSET TARGET
+	RETURN 0
+ELSEIF RESULT == 0
+	FLAG:画像表示 = !FLAG:画像表示
+ELSEIF RESULT == 1
+	FLAG:画像表示++
+	SIF FLAG:画像表示 > 10
+		FLAG:画像表示 = 10
+ELSEIF RESULT == 2
+	FLAG:画像表示--
+	SIF FLAG:画像表示 < 1
+		FLAG:画像表示 = 1
+ELSEIF RESULT == 3
+	FLAG:立绘种类 = !FLAG:立绘种类
+ELSEIF RESULT == 4
+	IF FLAG:多尺寸
+		FLAG:多尺寸 = !FLAG:多尺寸
+		默认角色画像横幅 = 180
+	ELSEIF 默认角色画像横幅 == 180
+		默认角色画像横幅 = 270
+	ELSEIF 默认角色画像横幅 == 270
+		默认角色画像横幅 = 360
+	ELSEIF 默认角色画像横幅 == 360
+		默认角色画像横幅 = 540
+	ELSEIF 默认角色画像横幅 == 540
+		默认角色画像横幅 = 720
+	ELSE
+		FLAG:多尺寸 = !FLAG:多尺寸
+	ENDIF
+ELSEIF RESULT == 5
+	isModifier = MIN(isModifier + 10, 50)
+ELSEIF RESULT == 6
+	isModifier = MAX(isModifier - 10, -50)
+ELSEIF RESULT == 7
+	FLAG:画像表示位置 = !FLAG:画像表示位置
+ELSEIF RESULT == 8
+	FLAG:画像框表示 = !FLAG:画像框表示
+ELSEIF RESULT == 9
+	FLAG:巨乳差分表示 = !FLAG:巨乳差分表示
+ELSEIF RESULT == 10
+	FLAG:追加EFFECT = !FLAG:追加EFFECT
+ELSEIF RESULT == 11
+	FLAG:自慰画像非表示 = !FLAG:自慰画像非表示
+ELSEIF RESULT == 12
+	INVERTBIT 颜绘付きメッセージ, 0
+ELSEIF RESULT == 13
+	FLAG:插绘表示 = !FLAG:插绘表示
+ELSEIF RESULT == 14 && FLAG:插绘表示
+	FLAG:射精画像种类++
+	SIF FLAG:射精画像种类 >= 3
+		FLAG:射精画像种类 = 0
+ELSEIF RESULT == 15
+	FLAG:アニメーション++
+	SIF FLAG:アニメーション >= 6
+		FLAG:アニメーション = 0
+ELSEIF RESULT == 16
+	INVERTBIT FLAG:插入アニメ过滤器, 0
+	;CALL ASK_M("插入表示切替",1,"绝顶表示切替",1,"射精表示切替",1,"射精表示切替",1,"返回",1)
+	;SIF RESULT == 4
+	;	RESTART
+	;INVERTBIT FLAG:插入アニメ过滤器, RESULT
+	RESTART
+ENDIF
+RESTART
+
+;Counter行动フィルタ
+@OPTION_COUNTER_FILTER
+#DIM CCOM_ID
+#DIM L_FEED
+#DIM TEMP
+TEMP = CURRENTREDRAW()
+REDRAW 0
+LOADGLOBAL
+CALL COLORMESSAGE, "※ 过滤过度可能会导致不良现象。 ※", C_YELLOW, 2
+DRAWLINE
+DO
+	L_FEED = LINECOUNT
+	FOR CCOM_ID, 0, CCOM_MAXNUM
+		SIF STR:(4000 + CCOM_ID) == ""
+			CONTINUE
+		CALL PRINTBUTTON_EXC(@"%STR:(4000 + CCOM_ID)%[{CCOM_ID,3}]", CCOM_ID, CCOM_FILTER:CCOM_ID)
+	NEXT
+	PRINTL 
+	DRAWLINE
+	PRINTL [500] - 全部无效
+	PRINTL [501] - 复位
+	PRINTL 
+	PRINTL [999] - 决定
+	INPUT
+	SELECTCASE RESULT
+	CASE 0 TO CCOM_MAXNUM
+		SIF STR:(4000 + RESULT) != ""
+			CCOM_FILTER:RESULT = !(CCOM_FILTER:RESULT)
+	CASE 500, 501
+		VARSET CCOM_FILTER, (RESULT == 500)
+	CASE 999
+		SAVEGLOBAL
+		REDRAW TEMP
+		RETURN
+	ENDSELECT
+	CLEARLINE LINECOUNT - L_FEED
+LOOP 1
+[SKIPSTART]
+;;料理选项设定函数
+;;0:手动决定,1:异物不可,2:药物不可
+;@SET_OPTION_COOKING
+;#DIM CONST OP_BIT_手动决定 = 0
+;#DIM CONST OP_BIT_异物不可 = 1
+;#DIM CONST OP_BIT_药物不可 = 2
+;#DIM CONST OP_BIT_打分オン = 3
+;PRINTFORML 设定料理关联的选项
+;PRINTFORML 现在的设定
+;IF GET_OPTION_COOKING("料理内容手动决定")
+;	PRINTFORML 　料理内容：手动决定
+;ELSE
+;	PRINTFORML 　料理内容：自动决定
+;ENDIF
+;IF GET_OPTION_COOKING("异物混入不可")
+;	PRINTFORML 　异物混入：否
+;ELSE
+;	PRINTFORML 　异物混入：是
+;ENDIF
+;IF GET_OPTION_COOKING("药物混入不可")
+;	PRINTFORML 　药物混入：否
+;ELSE
+;	PRINTFORML 　药物混入：是
+;ENDIF
+;SELECTCASE GET_OPTION_COOKING("自动味付け设定")
+;CASE 0
+;	PRINTFORML 　自动味付：否
+;CASE 10
+;	PRINTFORML 　自动味付：自动设为普通口味
+;CASE 11
+;	PRINTFORML 　自动味付：自动设为浓厚口味
+;CASE 12
+;	PRINTFORML 　自动味付：自动设为清淡口味
+;ENDSELECT
+;IF GET_OPTION_COOKING("打分机能オフ")
+;	PRINTFORML 　打分机能：OFF
+;ELSE
+;	PRINTFORML 　打分机能：ON
+;ENDIF
+;DO
+;	PRINTFORML [9] 料理内容の设定变更
+;	PRINTFORML [8] 异物混入の设定变更
+;	PRINTFORML [7] 药物混入の设定变更
+;	PRINTFORML [6] 自动味付の设定变更
+;	PRINTFORML [5] 打分机能の设定变更
+;	PRINTFORML 
+;	PRINTFORML 
+;	PRINTFORML [0] 决定
+;	INPUT
+;	SELECTCASE RESULT
+;	CASE 9
+;		INVERTBIT FLAG:料理选项, OP_BIT_手动决定
+;	CASE 8
+;		INVERTBIT FLAG:料理选项, OP_BIT_异物不可
+;	CASE 7
+;		INVERTBIT FLAG:料理选项, OP_BIT_药物不可
+;	CASE 6
+;		PRINTFORML 自动调味的机能设定
+;		PRINTFORML [12] 自动调味＜薄味＞
+;		PRINTFORML [11] 自动调味＜浓郁＞
+;		PRINTFORML [10] 自动调味＜普通の味＞
+;		PRINTFORML [ 0] 不使用自动调味
+;		DO
+;			INPUT
+;			SELECTCASE RESULT
+;			CASE 10, 11, 12
+;				CLEARBIT FLAG:料理选项, 10, 11, 12
+;				SETBIT   FLAG:料理选项, RESULT
+;			CASE 0
+;				CLEARBIT FLAG:料理选项, 10, 11, 12
+;			CASEELSE
+;			PRINTFORML 无效输入
+;			CONTINUE
+;			ENDSELECT
+;			BREAK
+;		LOOP 1
+;	CASE 5
+;		INVERTBIT FLAG:料理选项, OP_BIT_打分オン
+;	CASE 0
+;		RETURN 
+;	CASEELSE
+;		PRINTFORML 无效输入
+;		CONTINUE
+;	ENDSELECT
+;	BREAK
+;LOOP 1
+;RESTART
+;
+;
+;;料理选项の内容取得函数
+;@GET_OPTION_COOKING(TYPE)
+;#FUNCTION
+;#DIMS DYNAMIC TYPE
+;#DIM CONST OP_BIT_手动决定 = 0
+;#DIM CONST OP_BIT_异物混入不可 = 1
+;#DIM CONST OP_BIT_药物混入不可 = 2
+;#DIM CONST OP_BIT_打分机能オン = 3
+;#DIM CONST OP_BIT_自动味付け_普通 = 10
+;#DIM CONST OP_BIT_自动味付け_浓い = 11
+;#DIM CONST OP_BIT_自动味付け_单薄的 = 12
+;SELECTCASE TYPE
+;CASE "料理内容手动决定"
+;	SIF GETBIT(FLAG:料理选项, OP_BIT_手动决定)
+;		RETURNF 1
+;CASE "料理内容自动决定"
+;	RETURNF !GET_OPTION_COOKING("料理内容手动决定")
+;
+;CASE "异物混入不可"
+;	SIF GETBIT(FLAG:料理选项, OP_BIT_异物混入不可)
+;		RETURNF 1
+;CASE "异物混入可能"
+;	RETURNF !GET_OPTION_COOKING("异物混入不可")
+;
+;CASE "药物混入不可"
+;	SIF GETBIT(FLAG:料理选项, OP_BIT_药物混入不可)
+;		RETURNF 1
+;CASE "药物混入可能"
+;	RETURNF !GET_OPTION_COOKING("药物混入不可")
+;CASE "自动味付け设定"
+;	SIF GETBIT(FLAG:料理选项, OP_BIT_自动味付け_普通)
+;		RETURNF OP_BIT_自动味付け_普通
+;	SIF GETBIT(FLAG:料理选项, OP_BIT_自动味付け_浓い)
+;		RETURNF OP_BIT_自动味付け_浓い
+;	SIF GETBIT(FLAG:料理选项, OP_BIT_自动味付け_单薄的)
+;		RETURNF OP_BIT_自动味付け_单薄的
+;CASE "打分机能オン"
+;	SIF GETBIT(FLAG:料理选项, OP_BIT_打分机能オン)
+;		RETURNF 1
+;CASE "打分机能オフ"
+;	RETURNF !GET_OPTION_COOKING("打分机能オン")
+;CASEELSE
+;	THROW 不明なTYPE%TYPE%
+;ENDSELECT
+;RETURNF 0
+[SKIPEND]
+
+
+@SIMATTYAUOJISAN
+;TW414_移动パッチにて右クリックやマクロによるスキップもしまっちゃうように修正
+;PRINTでのウェイトをなくすかわりにFORCEWAITでスキップ解除するように
+;
+FORCEWAIT
+PRINT 「输入画面上不可能显示的数字的孩子就在这吗？」
+FORCEWAIT
+PRINT 没收叔叔出现了！
+FORCEWAIT
+PRINT 「那么、输入画面上不可能显示的数字的孩子的钱、就这样没收了哦」
+FORCEWAIT
+PRINTFORM 没收叔叔把%NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%的现金没收了
+MONEY = 0
+FORCEWAIT
+PRINT 「输入画面上不可能显示的数字的孩子的道具也、就这样没收了哦」
+FORCEWAIT
+PRINTFORM %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%的道具被没收了
+;FOR LOCAL,0,500
+;	ITEM:LOCAL = 0
+;NEXT
+FORCEWAIT
+PRINT 「输入画面上不可能显示的数字的孩子的技巧也、就这样没收了哦」
+FORCEWAIT
+PRINTFORM %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%的技巧被没收了
+FORCEWAIT
+;FOR LOCAL,0,100
+;	ABL:0:LOCAL = 0
+;NEXT
+PRINT 「输入画面上不可能显示的数字的孩子的经验也、就这样没收了哦」
+FORCEWAIT
+PRINTFORM %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%的经验被没收了
+FORCEWAIT
+;FOR LOCAL,0,100
+;	EXP:0:LOCAL = 0
+;NEXT
+;せっかくだし收藏もしまっちゃいましょう（eraTW4.15胖次对策パッチにて追加）
+;
+PRINT 「输入画面上不可能显示的数字的孩子的内裤藏品也、就这样没收了哦」
+FORCEWAIT
+PRINTFORM %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%殚精竭智收集到的宝贝般的内裤藏品被没收了
+FORCEWAIT
+;FLAG:700 = 0
+;FOR LOCAL,1,CHARANUM
+;	FOR LOCAL:1,0,MAXPANTS
+;		CFLAG:LOCAL:(LOCAL:1 + 胖次管理) = 0
+;	NEXT
+;NEXT
+;信赖都能没收?太ntr了,注释了
+PRINT 「输入画面上不可能显示的数字的孩子的信赖也、就这样没收了哦」
+FORCEWAIT
+PRINTFORM %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%获得的少女们的信赖被没收了
+FOR LOCAL,1,CHARANUM
+	CFLAG:LOCAL:信赖度 = 0
+NEXT
+FORCEWAIT
+
+PRINT 「输入画面上不可能显示的数字的孩子的能力值也、就这样没收了哦」
+FORCEWAIT
+PRINTFORM %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%的能力被没收了
+;FOR LOCAL,0,9
+	;最大体力算了,这样只能读档了
+	; MAXBASE:0:LOCAL = 99
+;	BASE:0:LOCAL = min(99,BASE:0:LOCAL)
+;NEXT
+; さすがにやり过ぎは良くないと思ったのでクリック连打で许してみた
+; 作者样へ　胜手に当てたパッチですので不愉快でしたらこの部分だけパッチ前に戻してくださって构いません。
+;
+;
+FORCEWAIT
+PRINTW 不要再这样啦～～～～
+PRINTL
+PRINTL
+PRINTL
+PRINTL
+PRINTFORMW 好了，其实什么都没有改变
+PRINTFORML 这个是老版本tw的防作弊功能
+PRINTFORML 现在已经没有必要使用了
+PRINTFORML 但也算是个有趣的东西
+PRINTFORMW 就保留了
+
+;セクシー胖次削除
+@DELETE_SEXYPANTS
+#DIM 对象
+#DIM 种类
+#DIM 所有数
+
+VARSET RESULT
+
+FOR 对象,1,CHARANUM
+	FOR 种类,20,26
+		所有数 = CFLAG:对象:(种类 + 100)
+		IF 所有数 >= 1
+			RESULT:0 += (所有数)
+			CFLAG:对象:(种类 + 100) = 0
+		ENDIF
+	NEXT
+NEXT
+
+;振动棒胖次削除
+@DELETE_VIBEPANTS
+#DIM 对象
+#DIM 种类
+#DIM 所有数
+
+VARSET RESULT
+
+FOR 对象,1,CHARANUM
+	FOR 种类,27,30
+		所有数 = CFLAG:对象:(种类 + 100)
+		IF 所有数 >= 1
+			RESULT:0 += (所有数)
+			CFLAG:对象:(种类 + 100) = 0
+		ENDIF
+	NEXT
+NEXT
+
+

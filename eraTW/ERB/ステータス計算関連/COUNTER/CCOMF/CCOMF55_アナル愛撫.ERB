@@ -1,0 +1,112 @@
+﻿;*********************************************************************************************
+;Counter指令：肛门爱抚
+;ARG = 对象の角色番号
+;*********************************************************************************************
+@CCOMF55(ARG)
+
+	;体势の变更
+	;=============================
+	CALL TOUCH_SET(SET_FROM_YUBI,7,ARG)
+	TFLAG:MASTERのＡ使用中 ++
+	
+	;ソース计算および内部处理系统
+	;=============================
+	IF TEQUIP:PLAYER:0 & 12
+		CALL DATUI_BOTTOM(ARG,2)
+	ELSEIF TEQUIP:PLAYER:0 & 2
+		SIF RAND:2
+			CALL DATUI_BOTTOM(ARG,1)
+	ENDIF
+	SOURCE:ARG:性行动 += 150
+	SOURCE:ARG:施虐 = 500
+	SOURCE:ARG:诱惑 += 100
+	SOURCE:ARG:挑衅 += 100
+	SOURCE:ARG:侍奉 += 100
+	SOURCE:ARG:征服 += 600
+	SOURCE:PLAYER:快Ａ += 300
+	EXP:ARG:手淫经验 ++
+	;侍奉FLAG
+	TCVAR:ARG:108 = 1
+	TCVAR:ARG:嗜虐フラグ = 1
+	;性交中は69にならない
+	IF MASTER_POSE(SET_V,SET_P) == ARG || MASTER_POSE(SET_A,SET_P) == ARG || MASTER_POSE(SET_P,SET_V) == ARG || MASTER_POSE(SET_P,SET_A) == ARG
+		LOCAL = 0
+	ELSE
+		LOCAL = 2
+	ENDIF
+	CALL EVENT_COUNTER_POSE_69(ARG,LOCAL)
+
+	;マ斯塔Counter制御
+	;(ビット立ちで不可 0=摸屁股 1=拥抱 2=接吻 3=胸爱抚 4=肛门爱抚 5=阴蒂爱抚 6=指插入れ 7=掀裙子)
+	;=============================
+	SIF EQUIP:PLAYER:51 < 0
+		CALL Counter插入され继续中处理(ARG)
+	IF TEQUIP:MASTER:体位 == 2
+		SETBIT TCVAR:ARG:26 ,0
+		SETBIT TCVAR:ARG:26 ,1
+		SETBIT TCVAR:ARG:26 ,2
+		SETBIT TCVAR:ARG:26 ,3
+		SETBIT TCVAR:ARG:26 ,4
+		SETBIT TCVAR:ARG:26 ,5
+		SETBIT TCVAR:ARG:26 ,6
+	ELSEIF TEQUIP:MASTER:体位 == 5
+		SETBIT TCVAR:ARG:26 ,0
+		SETBIT TCVAR:ARG:26 ,1
+		SETBIT TCVAR:ARG:26 ,3
+		SETBIT TCVAR:ARG:26 ,4
+		SETBIT TCVAR:ARG:26 ,5
+		SETBIT TCVAR:ARG:26 ,6
+	ELSEIF TEQUIP:MASTER:体位 == 3 || TEQUIP:MASTER:体位 == 1
+		SETBIT TCVAR:ARG:26 ,4
+		SETBIT TCVAR:ARG:26 ,5
+		SETBIT TCVAR:ARG:26 ,6
+	ELSEIF TEQUIP:MASTER:体位 == 4
+		SETBIT TCVAR:ARG:26 ,5
+		SETBIT TCVAR:ARG:26 ,6
+	ENDIF
+	SETBIT TCVAR:ARG:26 ,7
+
+RETURN 1
+
+;*********************************************************************************************
+;Counter实行可否出力函数
+;ARG = 对象の角色番号
+;*********************************************************************************************
+@CCOM_ABLE55(ARG)
+
+	SIF FLAG:肛门开发无效
+		RETURN 0
+	SIF TFLAG:64
+		RETURN 0
+	SIF ABL:ARG:指 < 1
+		RETURN 0
+	SIF TEQUIP:MASTER:51 >= 0
+		RETURN 0
+	SIF PALAM:MASTER:润滑 < PALAMLV:2
+		RETURN 0
+
+RETURN 1
+
+;*********************************************************************************************
+;Counter实行判定值算出函数
+;ARG = 对象の角色番号
+;*********************************************************************************************
+@CCOM_ORDER55(指令番号, ARG, 基本值)
+#DIM 指令番号
+#DIM 基本值
+#DIMS Counterタイプ
+
+	;Counterタイプ设定
+	;=============================
+	Counterタイプ = 脱衣爱抚
+
+	;实行判定值算出式
+	;=============================
+	LOCAL = (基本值 + 2 * TALENT:ARG:灵活手指 + ABL:ARG:指) * SIGN(EXP:ARG:Ａ经验)
+
+	;Counterタイプ别计算处理 实质实行判定处理を含む
+	;=============================
+	LOCAL = MAX(LOCAL + COUNTER_SIKOU:ARG:指令番号, 1)
+	LOCAL *= COUNTER_TYPE(Counterタイプ, ARG)
+
+RETURN LOCAL

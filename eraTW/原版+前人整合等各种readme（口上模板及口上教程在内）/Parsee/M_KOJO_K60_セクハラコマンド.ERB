@@ -1,0 +1,1334 @@
+;※※※※※※※※※※※※※※※※※※※※※※※※※
+;性骚扰系コマンド
+;※※※※※※※※※※※※※※※※※※※※※※※※※
+;==================================================
+;310,Butt Caress
+;TFLAG:193 is how they react (1: uncomfortable, or crying if they have the [Timid] trait; 2 and 3: blushing, or startled if they have the
+;[Misandrist] trait; 4: embarrassed but let you continue)
+;CFLAG:诶嘿嘿==2&&TCVAR:20 means they're going commando: if 70, forced cunnilingus; if 71, forced fellatio; if 72, forced analingus
+; if 35, they're wearing a skirt but no underwear; if 52, they're bottomless
+;CFLAG:诶嘿嘿==2&&TEQUIP:シックスナイン means you're 69ing
+;PREVCOM(305=膝枕 means the last command was a lap pillow
+;TFLAG:400(1=デート先or地底のモブが反応する) is for if DATE_HITOGOMI got called (someone nearby reacts to you and your date: ex. "a young youkai girl looks on, visibly shocked")
+;310,摸屁股
+;TFLAG:193(1=不快(TALENT:臆病なら涙目) 2&&3=恥ずかしがる(TALENT:男嫌い兼MASTERが男なら、身をすくめる) 4=されるがまま)
+;CFLAG:诶嘿嘿==2&&TCVAR:20(パンツ无し颜面骑乘(70=クンニ强制 71=フェラチオ强制 72=肛门侍奉) 35=裙子内见せつけ 52=素股)
+;CFLAG:诶嘿嘿==2&&TEQUIP:シックスナイン(パンツありTCVAR:20(70～72)はこちら)
+;PREVCOM(305=膝枕
+;TFLAG:400(1=デート先or地底のモブが反応する)
+;==================================================
+@M_KOJO_SUCCESS_COM_K60_310
+;成否判定
+;TFLAG:192(-2=コマンド结束、-1＝强制失败、0=COM依存、1=强制成功or大成功
+TFLAG:192 =0
+
+@M_KOJO_MESSAGE_COM_K60_310
+CALL M_KOJO_MESSAGE_COM_K60_310_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K60_310_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+;Structure stolen from Yuuka's dialogue
+IF LOCAL
+    IF FLAG:70
+        IF FIRSTTIME("TimestopAssGrope")
+            PRINTFORMDL 帕露西的屁股出乎意料地紧实。
+            PRINTFORMDL 看来所有那些桥梁巡逻都让她保持了身材。
+            PRINTFORMDW 而且由于时间停止了，你可以尽情地爱抚它…
+        ELSE
+            PRINTFORMDL 你爱抚着帕露西紧实的屁股。
+            PRINTFORMDL 你随意地想知道爱抚它是否会有助于使它更紧实。
+            PRINTFORMDW 而且由于时间停止了，你可以尽情地爱抚它…
+        ENDIF
+    ELSEIF CFLAG:MASTER:恶作剧 == 2
+        PRINTFORMDW 你把睡着的帕露西翻过来，并开始抚摸她的屁股。
+        SELECTCASE K60_ATTITUDE()
+			;Loving
+            CASE 0
+                PRINTFORMW 「啊嗯… %K60_MASTER()%…」
+                $PARSEE_BUTT_CARESS_SLEEPING_FREEZE_UP
+                PRINTFORMDL 你瞬间僵住了，但帕露西没有睁开她的眼睛。
+                PRINTFORMDW 她一定是在梦见你，并认为这只是她梦的一部分。
+			;Nice, horny
+            CASE 1
+                PRINTFORMW 「啊啊啊… %K60_MASTER()%… 更多…」
+                GOTO PARSEE_BUTT_CARESS_SLEEPING_FREEZE_UP
+			;Grumpy tsundere
+            CASE 2, 3
+                PRINTFORMW 「啊嗯… 嗯…」
+        ENDSELECT
+        PRINTFORMDW 当你抚摸她时，帕露西继续在她的睡梦中呻吟…
+        ;Character is drunk
+    ;Conscious rape
+    ELSEIF (TCVAR:强行 || CFLAG:强行内射)
+        RETURN 1
+    ELSEIF TCVAR:TARGET:烂醉 == 1
+        SELECTCASE RAND:3
+            CASE 0
+                PRINTFORML 
+            CASE 1
+                PRINTFORML 
+            CASE 2
+                PRINTFORML 
+        ENDSELECT
+        RETURN 1
+    ELSE
+        ;Other cases
+        ;Misclick :devilish:
+        IF GROUPMATCH(PREVCOM, 300, 302, 301) && GROUPMATCH(TFLAG:193, -5, -3)
+            CALL K60_MISCLICK(310)
+        ENDIF
+        IF FIRSTTIME("ButtCaressConscious")
+            PRINTFORMW 「啊～！」
+            SELECTCASE K60_ATTITUDE()
+                CASE 0, 1
+                    PRINTFORMDW %CALLNAME:[[帕露西]]% 跳了起来，然后对你咧嘴一笑。
+                CASE 2, 3
+                    PRINTFORMDW %CALLNAME:[[帕露西]]% 怒视着你。
+            ENDSELECT
+            SELECTCASE K60_ATTITUDE()
+                CASE 0
+                    PRINTFORMW 「我没有意识到你那么喜欢我的屁股…」
+                    PRINTFORMW （是的！ 我知道和 勇仪桑 一起做所有那些深蹲会有回报的！）
+                CASE 1
+                    PRINTFORMW 「你认为你在做什么？」
+                    PRINTFORMW 「我没有告诉你停下来，不是吗～？」
+                CASE 2
+                    PRINTFORMW 「再碰它一下，我就打断你的手。」
+                    SIF SOURCE:反感 < 500
+                        PRINTFORMDW 尽管她的话很毒，但她似乎并没有真的那么生气。
+
+                CASE 3
+                    PRINTFORMW 「你在做什么？！ 不要只是从莫名其妙地抓住一个女人的屁股！」
+                    SIF SOURCE:反感 < 500
+                        PRINTFORMDW 尽管她的话很毒，但她似乎并没有真的那么生气。
+            ENDSELECT
+        ELSE
+            SELECTCASE K60_ATTITUDE()
+                CASE 0
+                    SELECTCASE RAND:3
+                        CASE 0
+                            PRINTFORML 
+                        CASE 1
+                            PRINTFORML 
+                        CASE 2
+                            PRINTFORML 
+                        ENDSELECT
+                CASE 1
+                    SELECTCASE RAND:3
+                        CASE 0
+                            PRINTFORML 
+                        CASE 1
+                            PRINTFORML 
+                        CASE 2
+                            PRINTFORML 
+                        ENDSELECT
+                CASE 2
+                    SELECTCASE RAND:3
+                        CASE 0
+                            PRINTFORML 
+                        CASE 1
+                            PRINTFORML 
+                        CASE 2
+                            PRINTFORML 
+                        ENDSELECT
+                CASE 3
+                    SELECTCASE RAND:3
+                        CASE 0
+                            PRINTFORML 
+                        CASE 1
+                            PRINTFORML 
+                        CASE 2
+                            PRINTFORML 
+                        ENDSELECT
+            ENDSELECT
+        ENDIF
+    ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;Embrace
+;TFLAG:193(1=great success 0=success -1=failure)
+;CFLAG:诶嘿嘿==2&&TCVAR:20 is for if you're doing it during sex and what the last command was (32=Embrace?, 60=Deep kiss, 73=Puff-puff, 74=Titjob, 77=Nipple sucking, 85=V insert, 87=A insert, 88=Move Waist V 89=Move Waist A, 86=character makes sure you cum inside them)
+;TFLAG:400(1=デート先or地底のモブが反応する) is for if DATE_HITOGOMI got called (someone nearby reacts to you and your date: ex. "a young youkai girl looks on, visibly shocked")
+;311,抱き付く
+;TFLAG:193(1=大成功 0=成功 -1=失败)
+;CFLAG:诶嘿嘿==2&&TCVAR:20(32=前から抱きつく 60=ディープキス 73=ぱふぱふ 74=乳合わせ 77=乳を吸わせる ＶＡ性交(85=Ｖ插入する 87=Ａ插入する 88=腰振りＶ 89=腰振りＡ) 86=だいしゅきホールド)
+;TFLAG:400(1=デート先or地底のモブが反応する)
+;==================================================
+@M_KOJO_SUCCESS_COM_K60_311
+;成否判定
+;TFLAG:192(-2=コマンド结束、-1＝强制失败、0=COM依存、1=强制成功or大成功
+TFLAG:192 =0
+
+@M_KOJO_MESSAGE_COM_K60_311
+CALL M_KOJO_MESSAGE_COM_K60_311_1
+CALL K60_ERECTION_RESPONSE()
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K60_311_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+    ;基本セット
+        ;Time stop
+        ;时奸中
+    IF FLAG:70
+        TCVAR:[[帕露西]]:K60ENC_TCVAR_TIMESTOP_HUGS ++
+        RETURN 1
+        ;睡奸中
+        ;Sleep rape
+    ELSEIF CFLAG:MASTER:恶作剧 == 2
+        SELECTCASE RAND:3
+            CASE 0
+                PRINTFORML 
+            CASE 1
+                PRINTFORML 
+            CASE 2
+                PRINTFORML 
+        ENDSELECT
+        RETURN 1
+        ;Character is drunk
+    ;Conscious rape
+    ELSEIF (TCVAR:强行 || CFLAG:强行内射)
+        RETURN 1
+    ELSEIF TCVAR:TARGET:烂醉 == 1
+        SELECTCASE RAND:3
+            CASE 0
+                PRINTFORML 
+            CASE 1
+                PRINTFORML 
+            CASE 2
+                PRINTFORML 
+        ENDSELECT
+        RETURN 1
+    ELSEIF ABL:亲密 <= 5
+        RETURN 1
+    ELSEIF CHK_DATENOW(CFLAG:LOCAL:约会中)
+	;I am going to do everything in my power to make Parsee's love route even more sickeningly lovey-dovey than Yuuka's
+    ELSEIF CFLAG:TARGET:陪睡中 && SHIRAHU(60)
+        SELECTCASE K60_ATTITUDE()
+            CASE 0
+                SELECTCASE RAND:3
+                    CASE 0
+                        PRINTFORMW 「嗯…」
+                        PRINTFORMDW 帕露西微笑着依偎着你。
+                        PRINTFORMW 「没有什么比你抱着我时更让我感到幸福的了。」
+                        PRINTFORMW 「我感到如此安全，如此安心… 而且这是我为数不多的不会嫉妒任何事物的时候。」
+                        PRINTFORMW 「我有什么好嫉妒的呢？ 我正在和我爱的男人拥抱… 我不需要任何其他东西。」
+                    CASE 1
+                        PRINTFORMDW 帕露西微笑着，充满爱意地蹭着你。
+                        PRINTFORMW 「你给的拥抱是最好的…」
+                        PRINTFORMW 「通常我会嫉妒这一点，但我现在太高兴了，无法感受到任何其他东西。」
+                    CASE 2
+                        PRINTFORMDW 帕露西微微皱了皱眉头。
+                        PRINTFORMW 「我想在你抱着我的时候，凝视着你的眼睛入睡… 但那样我会让你嫉妒。」
+                        PRINTFORMW 「我无法关闭我的能力…」
+                        PRINTFORMW 「我还是盯着你的微笑吧。」
+                        PRINTFORMDW 她亲吻你的额头。
+                ENDSELECT
+            CASE 1
+                SELECTCASE RAND:3
+                    CASE 0
+                    CASE 1
+                    CASE 2
+                ENDSELECT
+            CASE 2
+                SELECTCASE RAND:3
+                    CASE 0
+                        PRINTFORML
+                    CASE 1
+                        PRINTFORML
+                    CASE 2
+                        PRINTFORML
+                ENDSELECT
+            CASE 3
+                SELECTCASE RAND:3
+                    CASE 0
+                        PRINTFORML
+                    CASE 1
+                        PRINTFORML
+                    CASE 2
+                        PRINTFORML
+                ENDSELECT
+        ENDSELECT
+    ELSEIF FIRSTTIME("WannaHugTheGreenEyedMonster", 1)
+        SELECTCASE K60_ATTITUDE()
+            CASE 0
+                PRINTFORMDW 帕露西拥抱你，并将你的脸埋在她的肩膀里。
+                PRINTFORMDW 她满足地叹了口气，蹭着你的脖子。
+                PRINTFORMDW 你笑了。 当然，帕露西会是一个完全喜欢拥抱的人…
+            CASE 1
+                PRINTFORMW 「嗯…」
+                PRINTFORMDW 当你拥抱她时，帕露西微笑着蹭着你。
+                PRINTFORMW 「尽管我喜欢和你做爱… 但我最喜欢这些亲密的小时刻。」
+            CASE 2
+                PRINTFORMDW 你期望帕露西推开你并对你大喊大叫… 但她没有。
+                PRINTFORMDW 她实际上是在拥抱你。 并把她的脸埋在你的肩膀里。 而且… 她现在是在哭吗？
+                PRINTFORMDW 现在她在嘟囔着什么…
+                CALL PRINT_STRL, @"「对不起，%CALLNAME:MASTER%-桑。 我非常抱歉。 @ITALIC@Aasheghetam...@」"
+                PRINTFORMDW 哦，原来是这样。 她正在进行逆向心理，所以你不会再想拥抱她了。
+                PRINTFORMDW …不是吗？
+                PRINTFORML
+                PRINTFORMDW 这件事真的很奇怪。 你离开了她。
+                PRINTFORMDW 帕露西怒视着你片刻，然后她的表情变得柔和了。
+                PRINTFORMW 「…谢谢。」
+                PRINTFORML
+                PRINTFORMDW 好的，那个女人肯定有什么奇怪的地方。 正常人不会对拥抱做出这样的反应。
+                PRINTFORMDW 你再次想知道为什么帕露西会这样行动…
+                PRINTFORMDW 有些东西告诉你，这也不会是你最后一次想知道这一点。
+            CASE 3
+                PRINTFORMDW 帕露西拥抱你，并将你的脸埋在她的肩膀里。
+                PRINTFORMDW 哇。 你没有想到这一点。
+                PRINTFORMDW 你们就这样待了一会儿，然后帕露西离开了你。
+                PRINTFORMW 「原谅我，%K60_MASTER()%。 只是… 我不经常被拥抱。」
+                PRINTFORMW 「感觉真好…」
+        ENDSELECT
+        CALLF FIRSTTIME("WannaHugTheGreenEyedMonster")
+    ELSE
+        SELECTCASE K60_ATTITUDE()
+            CASE 0
+                SELECTCASE RAND:3
+                    CASE 0
+                        PRINTFORMDW 帕露西拥抱你。 更紧… 更紧… 太紧了！
+                        PRINTFORMDW 在有什么东西断裂之前，你挣扎着想让她离开。
+                        PRINTFORMW 「啊！ 对不起，%K60_MASTER()%！」
+                        PRINTFORMDW 帕露西猛地离开了你，并开始爱抚你的身体，以确保没有任何东西断裂。
+                        PRINTFORMW 「你没事吧？！」
+                        PRINTFORMW 「请原谅我… 我只是太爱你了，以至于我有点太兴奋了…」
+                    CASE 1
+                        PRINTFORMW 「你的身体真温暖…」
+                        PRINTFORMDW 帕露西拥抱你，并摩擦你的肩膀。
+                    CASE 2
+                        PRINTFORMDW 帕露西微笑着，在你拥抱时亲吻你的脸颊。
+                ENDSELECT
+            CASE 1
+                SELECTCASE RAND:3
+                    CASE 0
+                        PRINTFORML 
+                    CASE 1
+                        PRINTFORML 
+                    CASE 2
+                        PRINTFORML 
+                ENDSELECT
+            CASE 2
+                SELECTCASE RAND:3
+                    CASE 0
+                        PRINTFORMW 「符卡规则的存在是有原因的，你这个白痴。」
+                        PRINTFORMW 「如果你想和我战斗，就不要试图把我挤死，好好战斗。」
+                        PRINTFORMW 「或者你想让我打断你的手臂？」
+                    CASE 1
+                        PRINTFORMW 「（…我讨厌这种感觉有多好。）」
+                        PRINTFORMDW 帕露西小声地嘟囔着。
+                    CASE 2
+                        PRINTFORMDL 帕露西拥抱你。
+                        PRINTFORMDL 她开始用一只手摩擦你的背，并蹭着你的脸颊…
+                        PRINTFORMDW 在她意识到自己在做什么之前，她离开了，并脸红了。
+                        PRINTFORML 「只是为了说明白，我，啊…」
+                        PRINTFORMW 「正在检查你的皮肤，看看你是否从你睡的那些女孩身上感染了什么疾病。」
+                        PRINTFORMW 「别说我从没为你做过任何事！」
+                ENDSELECT
+            CASE 3
+                SELECTCASE RAND:4
+                    CASE 0
+                        PRINTFORMW 「嗯…」
+                        PRINTFORMDW 帕露西在你拥抱她时笑了。
+                    CASE 1
+                        PRINTFORMW 「你没有 勇仪 那么擅长拥抱… 但很少有人能做到。」
+                    CASE 2
+                        PRINTFORMDW 当你们拥抱时，帕露西摩擦你的背。
+                    CASE 3
+                        CALL M_KOJO_COLOR_K60_JEALOUS
+                        PRINTFORMW 「你也这样拥抱其他女孩吗？」
+                        CALL M_KOJO_COLOR_K60
+                ENDSELECT
+        ENDSELECT
+    ENDIF
+
+ENDIF
+RETURN 1
+;==================================================
+;Kiss
+;TFLAG:193(99=Can't kiss 1=great success 0=success -1=failure)
+;CFLAG:诶嘿嘿==2&&TCVAR:20 is for if you're doing it during sex and what the last command was (32=Embrace?, 50=handjob, 60=kiss, 85=V insert, 87=A insert, 88=Move Waist V 89=Move Waist A, 86=Character makes sure you cum inside them)
+;PREVCOM(305=膝枕 means the last command was a lap pillow
+;TFLAG:400(1=デート先or地底のモブが反応する) is for if DATE_HITOGOMI got called (someone nearby reacts to you and your date: ex. "a young youkai girl looks on, visibly shocked")
+;312,キスする
+;TFLAG:193(99=拒绝(キス不可) 1=大成功 0=成功 -1=失败)
+;CFLAG:诶嘿嘿==2&&TCVAR:20(32=前から抱きつく 50=手淫 60=キス 性交(85=Ｖ插入する 87=Ａ插入する 88=腰振りＶ 89=腰振りＡ) 86=だいしゅきホールド)
+;PREVCOM(305=膝枕
+;TFLAG:400(1=デート先or地底のモブが反応する)
+;==================================================
+@M_KOJO_SUCCESS_COM_K60_312
+;成否判定
+;TFLAG:192(-2=コマンド结束、-1＝强制失败、0=COM依存、1=强制成功or大成功
+TFLAG:192 =0
+
+@M_KOJO_MESSAGE_COM_K60_312
+CALL M_KOJO_MESSAGE_COM_K60_312_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K60_312_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+;基本セット
+    ;Time stop
+    ;时奸中
+    IF FLAG:70
+        PRINTFORML
+        RETURN 1
+    ;睡奸中
+    ;Sleep rape
+    ELSEIF CFLAG:MASTER:恶作剧 == 2
+        SELECTCASE RAND:3
+            CASE 0
+                PRINTFORML 
+            CASE 1
+                PRINTFORML 
+            CASE 2
+                PRINTFORML 
+        ENDSELECT
+        RETURN 1
+    ;Character is drunk
+    ;Conscious rape
+    ELSEIF (TCVAR:强行 || CFLAG:强行内射)
+        RETURN 1
+    ELSEIF TCVAR:TARGET:烂醉 == 1
+        SELECTCASE RAND:3
+            CASE 0
+                PRINTFORML 
+            CASE 1
+                PRINTFORML 
+            CASE 2
+                PRINTFORML 
+        ENDSELECT
+        RETURN 1
+    ELSEIF FIRSTTIME("ParseeKissed", 1)
+        SELECTCASE K60_ATTITUDE()
+            CASE 0
+                PRINTFORMW 「你终于吻了我…」
+                PRINTFORMDW 帕露西对你微笑。
+                PRINTFORMW 「谢谢你，%K60_MASTER()%。 我担心我做了什么让你生气的事情。」
+                PRINTFORMW 「我希望它不是太糟糕。 我，啊… 从未吻过。」
+                PRINTFORMDW 她脸红了。
+                PRINTFORMW 「你愿意帮我练习吗？」
+            CASE 1
+                PRINTFORMW 「啊嗯… 啊嗯…」
+                PRINTFORMDW 帕露西起初有点惊讶，但一旦她意识到发生了什么事，她就全力以赴了。
+                PRINTFORMDW 她把她的舌头塞进你的嘴里，到处摸索。 然后她缩回她的舌头，并在你自己的舌头前吮吸了一点
+                PRINTFORMDW 然后她缩回她的舌头，并在你自己的舌头前吮吸了一点，然后她开始摩擦你。
+                PRINTFORMDW 她到底是从哪里学会这样接吻的？！
+            CASE 2
+                PRINTFORMW 「你… 吻了我。」
+                PRINTFORMDW 帕露西难以置信地盯着你。
+                CALL PRINT_STRW, @"「为什么？ 为什么你要吻 @ITALIC@我@？ 你是笨蛋还是什么？！」"
+                PRINTFORMW 「怎么，你是因为我从未吻过而可怜我吗——」
+                PRINTFORMDW 她变得通红，抱起胳膊，然后转过身背对着你。
+            CASE 3
+                PRINTFORMDW 帕露西在你亲吻她时绷紧了身体，然后她放松下来，并靠向你。
+                PRINTFORMDW 她不是很擅长接吻。 她主要只是用她的嘴唇挤压你，并让你做所有的工作。
+                PRINTFORMDW 这是她的初吻吗？
+        ENDSELECT
+        CALLF FIRSTTIME("ParseeKissed")
+    ELSE
+        SELECTCASE K60_ATTITUDE()
+            CASE 0
+                SELECTCASE RAND:3
+                    CASE 0
+                        PRINTFORMDL 当你亲吻她时，帕露西将她的手滑到你的背上。
+                        PRINTFORMDW 她停下来，让它放在你的屁股上…
+                    CASE 1
+                        PRINTFORMW 「嗯… 你的嘴唇真柔软…」
+                    CASE 2
+                        PRINTFORMDW 当你亲吻她时，帕露西轻轻地舔你的舌头。
+                ENDSELECT
+            CASE 1
+                SELECTCASE RAND:3
+                    CASE 0
+                        PRINTFORML 
+                    CASE 1
+                        PRINTFORML 
+                    CASE 2
+                        PRINTFORML 
+                ENDSELECT
+            CASE 2
+                SELECTCASE RAND:3
+                    CASE 0
+                        PRINTFORMW 「你事后会漱口吗？」
+                    CASE 1
+                        PRINTFORMW 「呃… 我不想去想你那张嘴去过哪里…」
+                    CASE 2
+                        PRINTFORMW 「不，不要用你的舌头！ 你这个好色的笨蛋…」
+                        PRINTFORMDW 当你法式亲吻她时，帕露西脸红了。
+                ENDSELECT
+            CASE 3
+                IF TALENT:TARGET:恋慕 || MARK:TARGET:快乐刻印 == 3
+                    PRINTFORMDW 帕露西看起来有点矛盾，但这并没有阻止她亲吻你。
+                ELSE
+                    SELECTCASE RAND:3
+                        CASE 0
+                            PRINTFORMDW 当你亲吻她时，帕露西小心翼翼地将她的舌头伸进你的嘴里。
+                        CASE 1
+                            PRINTFORMDW 当你亲吻她时，帕露西微笑着脸红了。
+                        CASE 2
+                            PRINTFORMW 「嗯…」
+                            PRINTFORMDW 当你亲吻时，帕露西微笑着用她的鼻子蹭你的鼻子。
+                    ENDSELECT
+                ENDIF
+        ENDSELECT
+    ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;Breast Caress
+;313,胸爱抚
+;CFLAG:UFUFU==2&&TCVAR:20 is for if you're doing it during sex and what the last command was (27=show cleavage 33=breast rubbing 53=paizuri (see 小分岐は地の文EVENT_MESSAGE_COM_性骚扰.ERB for specifics) 73=Puff-Puff 77=Sucking tits
+;intercourse(85=V insert 87=A insert 88=Move Hips V 89=Move Hips 86=Character makes sure you cum inside them)
+;ABL:Ｂ感觉 is B Sensitivity (<2=not very aroused, <5=somewhat aroused, >5=Pleasure)
+;TFLAG:400(1=デート先or地底のモブが反応する) is for if DATE_HITOGOMI got called (someone nearby reacts to you and your date: ex. "a young youkai girl looks on, visibly shocked")
+;See EVENT_MESSAGE_COM_性骚扰.ERB as it may also vary with breast size.
+;CFLAG:诶嘿嘿==2&&TCVAR:20(27=谷间を见せる 33=胸を揉ませる 53=乳交(小分岐は地の文EVENT_MESSAGE_COM_性骚扰.ERB参照) 73=ぱふぱふ 77=乳を吸わせる 性交(85=Ｖ插入する 87=Ａ插入する 88=腰振りＶ 89=腰振りＡ) 86=だいしゅきホールド)
+;ABL:Ｂ感觉(2未满=性的には感じてない 5未满=多少感じてる 5以上=カイカン)
+;TFLAG:400(1=デート先or地底のモブが反応する)
+;乳のサイズでも变わる场合があるので、地の文EVENT_MESSAGE_COM_性骚扰.ERB参照
+;==================================================
+@M_KOJO_SUCCESS_COM_K60_313
+;成否判定
+;TFLAG:192(-1＝强制失败
+TFLAG:192 =0
+
+@M_KOJO_MESSAGE_COM_K60_313
+CALL M_KOJO_MESSAGE_COM_K60_313_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K60_313_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+    ;基本セット
+        ;Time stop
+        ;时奸中
+    IF FLAG:70
+        PRINTFORML
+        RETURN 1
+        ;睡奸中
+        ;Sleep rape
+    ELSEIF CFLAG:MASTER:恶作剧 == 2
+        SELECTCASE RAND:3
+            CASE 0
+                PRINTFORML 
+            CASE 1
+                PRINTFORML 
+            CASE 2
+                PRINTFORML 
+        ENDSELECT
+        RETURN 1
+        ;Character is drunk
+    ;Conscious rape
+    ELSEIF (TCVAR:强行 || CFLAG:强行内射)
+        RETURN 1
+    ELSEIF TCVAR:TARGET:烂醉 == 1
+        SELECTCASE RAND:3
+            CASE 0
+                PRINTFORML 
+            CASE 1
+                PRINTFORML 
+            CASE 2
+                PRINTFORML 
+        ENDSELECT
+        RETURN 1
+    ELSEIF FIRSTTIME("Enlightitment", 1) && K60_ATTITUDE() == 2
+        PRINTFORML 「至少有人认为这些愚蠢的东西值得触摸。」
+        PRINTFORMDL 帕露西继续抱怨，但你无视了她。
+        PRINTFORMDL 任何在她身边待足够久的人，要么学会如何做到这一点，要么只能离她而去。
+        PRINTFORMDL 她的声音逐渐变成嗡嗡声，然后变成微弱的低语，然后什么也没有了。 只有你和她的胸部。
+        PRINTFORMDL 它们现在是你的整个世界。
+        PRINTFORMDL 当你爱抚和揉捏它们，将你全部的注意力都集中在它们身上时，你感觉你正处于某种顿悟的边缘——
+        PRINTFORMDL 有什么东西击中了你的头部，你发现自己被迫回到了现实。 帕露西怒视着你。
+        CALL RECOVER(MASTER, -200, "体力", " ")
+        PRINTFORMW 「你是聋了？！ 还是蠢了？！ 还是两者都是？！」
+        PRINTFORMW %BREAKENG(@"「我至少告诉过你三次停止抚摸我，但你只是无视我，并像有什么隐藏的宝藏埋在我的乳沟里一样，一直摸着我的胸部！」")%
+        PRINTFORMDW 好吧，说句公道话，确实有那么点意思。 你正处于发现宇宙真理的边缘！ 或者是其他什么真理。
+        PRINTFORMDW 就像那个外国先知在他失落的岁月里所做的那样，或者 P = NP 是否成立——
+        PRINTFORMW 「——你很幸运你选择爱抚的是我。 任何其他妖怪都会毫不犹豫地吞噬你——」
+        PRINTFORMDL 哦，她又开始咆哮了。
+        PRINTFORMDL 你再次无视了帕露西，并试图回到她打你之前的精神状态… 但没用。
+        PRINTFORMDW 失去了抚摸帕露西胸部的感觉，那就不可能实现。
+        PRINTFORMDW 真可惜。 也许你可以在其他时间实现“开悟”。 当她不那么生气的时候。
+        CALL K60_GET_ANGRY()
+        CALLF FIRSTTIME("Enlightitment")
+    ELSEIF FIRSTTIME("ParseeBoobaCaress", 1)
+        SELECTCASE K60_ATTITUDE()
+            CASE 0
+            CASE 1
+            CASE 2
+            CASE 3
+        ENDSELECT
+        CALLF FIRSTTIME("ParseeBoobaCaress")
+    ELSE
+        SELECTCASE K60_ATTITUDE()
+            CASE 0
+                SELECTCASE RAND:3
+                    CASE 0
+                        PRINTFORML 
+                    CASE 1
+                        PRINTFORML 
+                    CASE 2
+                        PRINTFORML 
+                ENDSELECT
+            CASE 1
+                SELECTCASE RAND:3
+                    CASE 0
+                        PRINTFORML 
+                    CASE 1
+                        PRINTFORML 
+                    CASE 2
+                        PRINTFORML 
+                ENDSELECT
+            CASE 2
+                SELECTCASE RAND:3
+                    CASE 0
+                        PRINTFORML 
+                    CASE 1
+                        PRINTFORML 
+                    CASE 2
+                        PRINTFORML 
+                ENDSELECT
+            CASE 3
+                SELECTCASE RAND:3
+                    CASE 0
+                        PRINTFORML 
+                    CASE 1
+                        PRINTFORML 
+                    CASE 2
+                        PRINTFORML 
+                ENDSELECT
+        ENDSELECT
+    ENDIF
+
+
+ENDIF
+RETURN 1
+;==================================================
+;Anal Caress
+;CFLAG:诶嘿嘿==2&&TCVAR:20 is for if you're doing it during sex and what the last command was (72=forced analingus
+;CFLAG:诶嘿嘿==2&&TEQUIP:シックスナイン is for if you're doing it during sex and you're 69ing (TCVAR:20(70-72) with panties on is here)
+;ABL:Ａ感觉 is A Sensitivity (<2=not very aroused, <5=somewhat aroused, >5=Pleasure)
+;TFLAG:400(1=デート先or地底のモブが反応する) is for if DATE_HITOGOMI got called (someone nearby reacts to you and your date: ex. "a young youkai girl looks on, visibly shocked")
+;314,肛门爱抚
+;CFLAG:诶嘿嘿==2&&TCVAR:20(72=肛门侍奉
+;CFLAG:诶嘿嘿==2&&TEQUIP:シックスナイン(パンツありTCVAR:20(70～72)はこちら)
+;ABL:Ａ感觉(2未满=受け入れられない 4未满=异物感に翻弄 4以上=カイカン)
+;TFLAG:400(1=デート先or地底のモブが反応する)
+;==================================================
+@M_KOJO_SUCCESS_COM_K60_314
+;成否判定
+;TFLAG:192(-1＝强制失败
+TFLAG:192 =0
+
+@M_KOJO_MESSAGE_COM_K60_314
+CALL M_KOJO_MESSAGE_COM_K60_314_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K60_314_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+;基本セット
+    ;Time stop
+    ;时奸中
+    IF FLAG:70
+        PRINTFORML
+        RETURN 1
+    ;睡奸中
+    ;Sleep rape
+    ELSEIF CFLAG:MASTER:恶作剧 == 2
+        SELECTCASE RAND:3
+            CASE 0
+                PRINTFORML 
+            CASE 1
+                PRINTFORML 
+            CASE 2
+                PRINTFORML 
+        ENDSELECT
+        RETURN 1
+    ;Character is drunk
+    ;Conscious rape
+    ELSEIF (TCVAR:强行 || CFLAG:强行内射)
+        RETURN 1
+    ELSEIF TCVAR:TARGET:烂醉 == 1
+        SELECTCASE RAND:3
+            CASE 0
+                PRINTFORML 
+            CASE 1
+                PRINTFORML 
+            CASE 2
+                PRINTFORML 
+        ENDSELECT
+        RETURN 1
+    ELSE
+    ;Other cases
+    ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;Clit Caress/Penis Caress
+;CFLAG:诶嘿嘿==2&&TCVAR:20 is for if you're doing it during sex and what the last command was (35=Flip Skirt, 70=Clit Caress, 85=V insert, 86=character makes sure you cum inside them, 87=A insert, 88=Move Waist V, 89=Move Waist A)
+;ABL:Ｃ感觉 is C Sensitivity (<2=not very aroused, <5=somewhat aroused, >5=Pleasure)
+;TFLAG:400(1=デート先or地底のモブが反応する) is for if DATE_HITOGOMI got called (someone nearby reacts to you and your date: ex. "a young youkai girl looks on, visibly shocked")
+;315,クリ爱抚
+;CFLAG:诶嘿嘿==2&&TCVAR:20(35=裙子の中を见せる 70=クンニ强制 85=Ｖ插入する 86=だいしゅきホールド 87=Ａ插入する 88=腰振りＶ 89=腰振り
+;ABL:Ｃ感觉(4未满=くすぐったい 6未满=ちょっといいかも 6以上=カイカン)
+;TFLAG:400(1=デート先or地底のモブが反応する)
+;==================================================
+@M_KOJO_SUCCESS_COM_K60_315
+;成否判定
+;TFLAG:192(-1＝强制失败
+TFLAG:192 =0
+
+@M_KOJO_MESSAGE_COM_K60_315
+CALL M_KOJO_MESSAGE_COM_K60_315_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K60_315_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+    ;基本セット
+        ;Time stop
+        ;时奸中
+    IF FLAG:70
+        PRINTFORML
+        RETURN 1
+        ;睡奸中
+        ;Sleep rape
+    ELSEIF CFLAG:MASTER:恶作剧 == 2
+        SELECTCASE RAND:3
+            CASE 0
+                PRINTFORML 
+            CASE 1
+                PRINTFORML 
+            CASE 2
+                PRINTFORML 
+        ENDSELECT
+        RETURN 1
+        ;Character is drunk
+    ;Conscious rape
+    ELSEIF (TCVAR:强行 || CFLAG:强行内射)
+        RETURN 1
+    ELSEIF TCVAR:TARGET:烂醉 == 1
+        SELECTCASE RAND:3
+            CASE 0
+                PRINTFORML 
+            CASE 1
+                PRINTFORML 
+            CASE 2
+                PRINTFORML 
+        ENDSELECT
+        RETURN 1
+    ELSE
+        ;Other cases
+    ENDIF
+
+ENDIF
+RETURN 1
+;==================================================
+;Fingering
+;CFLAG:诶嘿嘿==2&&TCVAR:20 is for if you're doing it during sex and what the last command was (35=Flip Skirt, 70=Clit Caress, 87=A insert, 89=Move Waist A)
+;ABL:Ｃ感觉 is C Sensitivity (<2=not very aroused, <5=somewhat aroused, >5=Pleasure)
+;TFLAG:400(1=デート先or地底のモブが反応する) is for if DATE_HITOGOMI got called (someone nearby reacts to you and your date: ex. "a young youkai girl looks on, visibly shocked")
+;316,指插入れ
+;CFLAG:诶嘿嘿==2&&TCVAR:20(35=裙子の中を见せる 70=クンニ强制 87=Ａ插入する 89=腰振りＡ
+;TALENT:处女(指插入れ连续时丧失注意、基本拒否ぎみ)
+;ABL:Ｖ感觉(1未满=違和感に戸惑う 5未满=ちょっと气持ちいい 5以上＝カイカン)
+;TFLAG:400(1=デート先or地底のモブが反応する)
+;==================================================
+@M_KOJO_SUCCESS_COM_K60_316
+;成否判定
+;TFLAG:192(-1＝强制失败
+TFLAG:192 =0
+
+@M_KOJO_MESSAGE_COM_K60_316
+CALL M_KOJO_MESSAGE_COM_K60_316_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K60_316_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+;基本セット
+	;睡奸中
+    IF FLAG:70
+	;Sleep rape
+    ELSEIF CFLAG:MASTER:恶作剧 == 2
+        SELECTCASE RAND:3
+            CASE 0
+                CALL PRINT_STRW, @"「Wh... my @ITALIC@pussy@...」"
+            CASE 1
+                PRINTFORMW 「Don' touch me there... only %K60_MASTER()%...」
+            CASE 2
+                PRINTFORMW 「Ahn... tickles...」
+        ENDSELECT
+        RETURN 1
+	;Character is drunk
+    ;Conscious rape
+    ELSEIF (TCVAR:强行 || CFLAG:强行内射)
+        RETURN 1
+    ELSEIF TCVAR:TARGET:烂醉 == 1
+        SELECTCASE RAND:3
+            CASE 0
+                IF CFLAG:没穿内裤 == 1
+                    PRINTFORMW 「我的内裤去哪儿了？」
+                ELSE
+                    PRINTFORMW 「我的内裤里有什么？」
+                ENDIF
+            CASE 1
+                PRINTFORMW 「停下来…」
+            CASE 2
+                PRINTFORMW 「好痒…」
+        ENDSELECT
+        RETURN 1
+    ELSEIF FIRSTTIME("ParseeSeiharaFingering", 1)
+        SELECTCASE K60_ATTITUDE()
+			;Loving
+            CASE 0
+                PRINTFORMW 「啊-！」
+                PRINTFORMDW 帕露西似乎有点惊讶，但并没有阻止你用手指爱抚她。
+                SIF (CFLAG:TARGET:当前位置 == 940 || CFLAG:TARGET:当前位置 == CFLAG:TARGET:初始位置)
+                    PRINTFORMW 「你一定要在这里做吗？ 如果有人撞见我们怎么办？」
+			;Nice, horny
+            CASE 1
+                PRINTFORMW 「啊嗯…」
+                PRINTFORMDW 帕露西的脸涨红了，她看着你。
+                PRINTFORMW 「别忘了我的阴蒂…」
+                PRINTFORMDW 你开始用你的拇指绕着她的阴蒂转圈，同时用手指爱抚她。
+                PRINTFORMDW 帕露西倒吸一口凉气，你可以感觉到她的湿润在你的手指上。
+			;Grumpy tsundere
+            CASE 2
+                PRINTFORMDW 当你将一根手指滑入她\@ K60_PUBIC_HAIR_IS_HAIRY() ? %" "%毛茸茸的 #\@ 阴唇时，帕露西怒视着你。
+			;Passive-aggressive
+            CASE 3
+                PRINTFORMW 「啊-！」
+                PRINTFORMDW 当你将一根手指滑入 \@ K60_PUBIC_HAIR_IS_HAIRY() ? 她毛茸茸的阴道 # 她的阴道\@时，帕露西绷紧了身体，你停了下来。
+                PRINTFORMW 「继续。 我只是… 有点惊讶。」
+                PRINTFORMDW 你点点头，并继续用手指爱抚她。
+                PRINTFORMDW 帕露西的呼吸变得更加沉重，你可以感觉到你的手指上有一些水分。
+        ENDSELECT
+        CALLF FIRSTTIME("ParseeSeiharaFingering")
+    ELSE
+	;Other cases
+        SELECTCASE K60_ATTITUDE()
+            CASE 0
+                SELECTCASE RAND:3
+                    CASE 0
+                        PRINTFORML 「啊嗯… 你离得很近…」
+                        PRINTFORMW 「请… 把你的手指再向上倾斜一点…」
+                        PRINTFORMDW 你这样做了，帕露西的大腿不自觉地收紧了。 湿润滴到你的手指上。
+                        PRINTFORMW 「是的！ 继续刺激我那里… 啊嗯…」
+                    CASE 1
+                        PRINTFORMW 「一根手指不够…」
+                        PRINTFORMDW 你又加了一根手指，并开始用手指更快地爱抚她。
+                        PRINTFORMDW 帕露西倒吸一口凉气，她的内壁收紧，夹住了你的手指。
+                        PRINTFORMW 「你太擅长这个了…」
+                    CASE 2
+                        PRINTFORMW 「这感觉比我自己做的时候好多了…」
+                ENDSELECT
+            CASE 1
+                SELECTCASE RAND:3
+                    CASE 0
+                        PRINTFORMDL 你决定在进入帕露西之前，通过缓慢地在她的腿上描绘你的路线来戏弄她一下。
+                        PRINTFORMDW 当你越来越接近她的入口时，帕露西的呼吸变得越来越粗重，直到——
+                        PRINTFORMW 「%SLUR(MOAN("m"), -2)%!!!」
+                        PRINTFORMDW 你抽出你的手指，并满意地微笑，因为它回来时湿漉漉的。
+                        PRINTFORMDW 然后你把它滑回去，连同第二根，并开始真正地刺激她。
+                    CASE 1
+                        PRINTFORMDL 你停顿了一下，停止用手指爱抚帕露西，并调整你的手，使你的手掌朝上。
+                        PRINTFORMDW 然后你开始用你的手指爱抚她的G点，然后在滑出它们之前，在途中刷过她的阴蒂。
+                        PRINTFORMDW 它们回来时绝对是湿透的，帕露西发出了一阵阵愉悦的喘息声。
+                        PRINTFORMDW 你把你的手指放进你的嘴里，并吮吸掉她的汁液，品尝着淡淡的咸味。
+                        PRINTFORMDL 然后，最后，你在滑回你的手指之前，在她的腿上描绘你的路线。
+                        PRINTFORMDW %BREAKENG(@"帕露西咬住她的嘴唇，以抑制一声呻吟，她的双腿用力收紧，让你觉得她高潮了。")%
+                        PRINTFORML 「我离得很近…」
+                        PRINTFORMW 「你怎么这么擅长这个？！ 我从没想过仅仅用手指就能感觉这么好…」
+                    CASE 2
+                        PRINTFORMW 「我想尝试在这里采取主动…」
+                        PRINTFORMDL 帕露西伸出手，抓住你的手，在你用手指爱抚她时将其固定到位。
+                        PRINTFORMDW 然后她开始在你的手指上磨蹭。\@ K60_PUBIC_HAIR_IS_HAIRY() ? %" "%%她的阴毛有点挠痒。 #\@
+                        PRINTFORMW 「啊嗯… 当你这样做时，感觉不是那么好，但我想让你稍微休息一下。」
+                ENDSELECT
+		;Grumpy tsundere
+            CASE 2
+                SELECTCASE RAND:3
+                    CASE 0
+                        PRINTFORML 「我以为你应该用你的手指来刺激我。 感觉更像是你在摸索宝藏。」
+                        CALL PRINT_STRW, @"「不管怎样，你期望在桥姬的 @ITALIC@小穴@ 中找到什么样的宝藏？」"
+                    CASE 1
+                        PRINTFORMDW 帕露西痛苦地嘶嘶作响。
+                        PRINTFORMW 「你是蠢了还是什么？！ 在把你的手指伸进我的肉洞之前，先修剪你的指甲！」
+                    CASE 2
+                        PRINTFORMW 「如果我想要这种刺激，我可以自己做。」
+                        CALL M_KOJO_COLOR_K60_VERY_JEALOUS
+                        CALL PRINT_STRW, @"「我不配你用 \@ HAS_PENIS(MASTER) ? @ITALIC@鸡巴@ # 舌头\@吗？」"
+                        CALL M_KOJO_COLOR_K60
+                ENDSELECT
+		;Fake nice
+            CASE 3
+                SELECTCASE RAND:3
+                    CASE 0
+                        PRINTFORMW 「请… 再加一根手指…」
+                    CASE 1
+                        PRINTFORML 「更高… 再高一点…」
+                        PRINTFORMW 「%SLUR(MOAN("m"), -2)%！ 是的！ 继续这样做…」
+                    CASE 2
+                        PRINTFORMW 「为什么你这样做比我自慰时感觉好多了？」
+                        CALL M_KOJO_COLOR_K60_JEALOUS
+                        PRINTFORMW 「我太嫉妒你的技巧了…」
+                        CALL M_KOJO_COLOR_K60
+                ENDSELECT
+        ENDSELECT
+    ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;Move Hips（Ｖ）
+;ABL:Ｖ感觉 is V Sensitivity (<2=not very aroused, <5=somewhat aroused, >5=Pleasure)
+;317,腰を动かす
+;ABL:Ｖ感觉(2未满=まだ气持ち良くない 5未满=ちょっと气持ちいい 5以上=カイカン
+;==================================================
+@M_KOJO_MESSAGE_COM_K60_317
+CALL M_KOJO_MESSAGE_COM_K60_317_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K60_317_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+;基本セット
+    ;Time stop
+    ;时奸中
+    IF FLAG:70
+        PRINTFORML
+        RETURN 1
+    ;睡奸中
+    ;Sleep rape
+    ELSEIF CFLAG:MASTER:恶作剧 == 2
+        SELECTCASE RAND:3
+            CASE 0
+                PRINTFORML 
+            CASE 1
+                PRINTFORML 
+            CASE 2
+                PRINTFORML 
+        ENDSELECT
+        RETURN 1
+    ;Character is drunk
+    ;Conscious rape
+    ELSEIF (TCVAR:强行 || CFLAG:强行内射)
+        RETURN 1
+    ELSEIF TCVAR:TARGET:烂醉 == 1
+        SELECTCASE RAND:3
+            CASE 0
+                PRINTFORML 
+            CASE 1
+                PRINTFORML 
+            CASE 2
+                PRINTFORML 
+        ENDSELECT
+        RETURN 1
+    ELSE
+    ;Other cases
+    ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;Move Hips（Ａ）
+;318,腰を动かす（Ａ）
+;==================================================
+@M_KOJO_MESSAGE_COM_K60_318
+CALL M_KOJO_MESSAGE_COM_K60_318_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K60_318_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+    ;基本セット
+        ;Time stop
+        ;时奸中
+    IF FLAG:70
+        PRINTFORML
+        RETURN 1
+        ;睡奸中
+        ;Sleep rape
+    ELSEIF CFLAG:MASTER:恶作剧 == 2
+        SELECTCASE RAND:3
+            CASE 0
+                PRINTFORML 
+            CASE 1
+                PRINTFORML 
+            CASE 2
+                PRINTFORML 
+        ENDSELECT
+        RETURN 1
+        ;Character is drunk
+    ;Conscious rape
+    ELSEIF (TCVAR:强行 || CFLAG:强行内射)
+        RETURN 1
+    ELSEIF TCVAR:TARGET:烂醉 == 1
+        SELECTCASE RAND:3
+            CASE 0
+                PRINTFORML 
+            CASE 1
+                PRINTFORML 
+            CASE 2
+                PRINTFORML 
+        ENDSELECT
+        RETURN 1
+    ELSE
+        SELECTCASE TFLAG:194
+		;Player's hip skill less than 3
+            CASE 0
+                SELECTCASE K60_ATTITUDE()
+			;Loving
+                    CASE 0
+                        SELECTCASE RAND:3
+                            CASE 0
+                                PRINTFORMDW 帕露西咬紧牙关。 你停下来，问她是否没事。
+                                PRINTFORMW 「是… 是的，我没事… 但你能稍微慢一点吗，求你了？」
+                                PRINTFORMDW 你点点头，并以较慢的速度继续抽动。
+                            CASE 1
+                                PRINTFORMW 「如果我请你拔出来，你不会生气吧？ 我觉得这行不通…」
+                            CASE 2
+                                PRINTFORMW 「我不确定我为什么会认为这是一个好主意…」
+                        ENDSELECT
+			;Nice, horny
+                    CASE 1
+                        SELECTCASE RAND:3
+                            CASE 0
+                                PRINTFORMW 「这就是我不听玛兹达大人 的话的下场…」
+                            CASE 1
+                                PRINTFORMW 「你能尝试以不同的角度抽动吗？ 它会更多地刺激 \@ HAS_PENIS(TARGET) ? 我的前列腺 # 我\@。」
+                            CASE 2
+                                PRINTFORMW 「你能慢一点吗？ 有点疼…」
+                        ENDSELECT
+			;Grumpy tsundere
+                    CASE 2
+                        SELECTCASE RAND:3
+                            CASE 0
+                                PRINTFORMDW 帕露西翻了个白眼。
+                                PRINTFORMW 「哦，太棒了，我们俩都不知道自己在做什么。」
+                            CASE 1
+                                PRINTFORMW 「我们能再试试润滑剂吗？ 也许几桶清酒的量？」
+                            CASE 2
+                                PRINTFORMW 「别再像试图把什么东西钉在上面一样猛烈地敲打我的肛门了！ 我发誓…」
+                        ENDSELECT
+			;Fake nice
+                    CASE 3
+                        SELECTCASE RAND:3
+                            CASE 0
+                                PRINTFORMW 「我们能尝试其他的事情吗？ 求你了？」
+                            CASE 1
+                                PRINTFORMW 「慢一点！ 你太粗暴了！」
+                            CASE 2
+                                PRINTFORMW 「我们现在只做阴道性交可以吗？」
+                        ENDSELECT
+                ENDSELECT
+		;Rough
+            CASE 1
+                SELECTCASE K60_ATTITUDE()
+			;Loving
+                    CASE 0
+                        SELECTCASE RAND:3
+                            CASE 0
+                                IF ABL:TARGET:肛门 >= 3
+                                    PRINTFORMW 「我很高兴我已经习惯了这种方式… 你真的很享受，不是吗？」
+                                ELSE
+                                    PRINTFORMW 「我仍然不太习惯这种方式… 但你显然很享受，所以我不介意。」
+                                    PRINTFORMW （我必须为了他忍受它，否则…）
+                                ENDIF
+                            CASE 1
+                                PRINTFORMW 「以你现在的速度，我一个星期都坐不下来了…」
+                                PRINTFORMW 「你只能到处公主抱了～」
+                            CASE 2
+                                IF HAS_PENIS(TARGET) || ABL:TARGET:肛门 >= 3
+                                    PRINTFORMW 「%SLUR(MOAN("l"), -1)%… 疼，但感觉也很好…」
+                                ELSE
+                                    PRINTFORMW 「你能… 慢一点吗，求你了？ 或者至少多涂一些润滑剂？」
+                                ENDIF
+                        ENDSELECT
+			;Nice, horny
+                    CASE 1
+                        SELECTCASE RAND:3
+                            CASE 0
+                                IF ABL:TARGET:肛门 >= 3
+                                    PRINTFORMW 「我很高兴我现在已经习惯了这种方式。 终于，我可以像你一样享受它了～」
+                                ELSE
+                                    PRINTFORMW 「这对你来说感觉好吗？ 因为这有点疼… 我想我们需要更多的润滑剂。」
+                                ENDIF
+                            CASE 1
+                                PRINTFORMW 「%SLUR(MOAN("l"), -1)%… 玛兹达大人，请原谅我…」
+                            CASE 2
+                                IF ABL:TARGET:肛门 >= 3
+                                    PRINTFORMW 「是的！ 更多… 请，给我更多！」
+                                ELSE
+                                    PRINTFORMW 「%SLUR(MOAN("l"), -1)%… 你能慢一点吗？ 我有点喜欢它，但你太粗暴了…」
+                                ENDIF
+                        ENDSELECT
+			;Grumpy tsundere
+                    CASE 2
+                        SELECTCASE RAND:3
+                            CASE 0
+                                PRINTFORMDW 当你插入她的肛门时，帕露西痛苦地咬紧牙关…
+                                PRINTFORMW 「难怪 阿赫里曼——」
+                                PRINTFORMDW 她转过身，吐了口唾沫。
+                                PRINTFORMW 「——这么喜欢这个…」
+                            CASE 1
+                                PRINTFORMW 「哎呦呦呦呦！ 慢点，你这个白痴！ 我那里很敏感！」
+                            CASE 2
+                                PRINTFORMW 「呃… 你绝对没有使用足够的润滑剂…」
+                        ENDSELECT
+			;Fake nice
+                    CASE 3
+                        SELECTCASE RAND:3
+                            CASE 0
+                                CALL M_KOJO_COLOR_K60_JEALOUS
+                                PRINTFORMW 「哎呦！ 我希望我能更习惯肛交… 我太嫉妒了。」
+                                CALL M_KOJO_COLOR_K60
+                                PRINTFORMW 「等等，我在说什么？ 玛兹达大人，请原谅我…」
+                            CASE 1
+                                IF ABL:TARGET:肛门 >= 3
+                                    PRINTFORMW 「啊！ 慢点！ 我不介意你粗暴一点，但不能这么粗暴！」
+                                ELSE
+                                    PRINTFORMW 「啊！ 慢点！ 疼！」
+                                ENDIF
+                            CASE 2
+                                PRINTFORMW 「我们可以休息一下，涂抹更多的润滑剂吗？\@ABL:TARGET:肛门 < 3 ? %" "%你在伤害我…#\@」
+                        ENDSELECT
+                ENDSELECT
+		;Steady
+            CASE 2
+                SELECTCASE K60_ATTITUDE()
+			;Loving
+                    CASE 0
+                        SELECTCASE RAND:3
+                            CASE 0
+                                PRINTFORMW 「啊嗯… 我对喜欢这个感到内疚。」
+                                PRINTFORMW 「我希望 玛兹达大人 原谅我…」
+                            CASE 1
+                                PRINTFORMW 「我没想到我会这么喜欢这个…」
+                            CASE 2
+                                PRINTFORMW 「你能再慢一点吗？」
+                                PRINTFORMW 「啊… 太完美了～」
+                        ENDSELECT
+			;Nice, horny
+                    CASE 1
+                        SELECTCASE RAND:3
+                            CASE 0
+                                PRINTFORMW 「我可以习惯这个…」
+                                PRINTFORMW 「呃，我在说什么？ 玛兹达大人，请原谅我…」
+                            CASE 1
+                                PRINTFORMDW 当你插入她的肛门时，帕露西开始用她的臀部撞击你。
+                                PRINTFORMDW 她过了一会儿停了下来，她的脸变红了。
+                            CASE 2
+                                IF ABL:TARGET:肛门 >= 3
+                                    PRINTFORMW 「你能更快一点吗？ 我可以承受～」
+                                ELSE
+                                    PRINTFORMW 「不要比现在更快了，好吗？ 我仍然不习惯这样做。」
+                                ENDIF
+                        ENDSELECT
+			;Grumpy tsundere
+                    CASE 2
+                        SELECTCASE RAND:3
+                            CASE 0
+                                PRINTFORMW 「这几乎令人愉快。 几乎。」
+                                PRINTFORMW 「我可以看书或什么的，直到你完成吗？」
+                            CASE 1
+                                PRINTFORMW 「甚至不要想着比现在更粗暴。」
+                                PRINTFORMW 「我不是一个玩偶，你知道。」
+                            CASE 2
+                                PRINTFORMW 「在我们完成后，提醒我为这个地方祈祷。 我确信我们正在吸引数百个魔鬼…」
+                        ENDSELECT
+			;Fake nice
+                    CASE 3
+                        SELECTCASE RAND:3
+                            CASE 0
+                                PRINTFORMW 「你能稍微慢一点吗？ 是的，就像那样… 啊啊啊…」
+                            CASE 1
+                                PRINTFORML 「我希望这不会感觉这么好。」
+                                PRINTFORMW 「玛兹达大人，请原谅我…」
+                            CASE 2
+                                PRINTFORMDW 帕露西用一种你听不懂的语言小声地嘟囔着什么。
+                                PRINTFORMDW 她的脸上带着一种奇怪的内疚和快乐的混合…
+                        ENDSELECT
+                ENDSELECT
+		;Grind
+            CASE 3
+                SELECTCASE K60_ATTITUDE()
+			;Loving
+                    CASE 0
+					; SELECTCASE RAND:3
+					; 	CASE 0
+                        IF HAS_PENIS(TARGET)
+                            PRINTFORMW 「啊嗯～ 你的东西在我里面感觉真好…」
+                        ELSE
+                            CALL M_KOJO_COLOR_K60_JEALOUS
+                            CALL PRINT_STRW, @"「如果我有@ITALIC@鸡巴@，可能会更舒服… 我太嫉妒了。」"
+                            CALL M_KOJO_COLOR_K60
+                        ENDIF
+					; 	CASE 1
+					; 		PRINTFORMW 
+					; 	CASE 2
+					; 		PRINTFORMW 
+					; ENDSELECT
+			;Nice, horny
+                    CASE 1
+                        SELECTCASE RAND:3
+                            CASE 0
+                                PRINTFORMW 
+                            CASE 1
+                                PRINTFORMW 
+                            CASE 2
+                                PRINTFORMW 
+                        ENDSELECT
+			;Grumpy tsundere
+                    CASE 2
+					; SELECTCASE RAND:3
+					; 	CASE 0
+                        PRINTFORMW 「你为什么要绕圈移动？ 你最好不要试图召唤 阿赫里曼。」
+                        PRINTFORMDW 她转过身，吐了口唾沫。
+					; 	CASE 1
+					; 		PRINTFORMW 
+					; 	CASE 2
+					; 		PRINTFORMW 
+					; ENDSELECT
+			;Fake nice
+				; CASE 3
+				; 	SELECTCASE RAND:3
+				; 		CASE 0
+                        PRINTFORMW 「你在做什么？ 你为什么绕圈移动？」
+					; 	CASE 1
+					; 		PRINTFORMW 
+					; 	CASE 2
+					; 		PRINTFORMW 
+					; ENDSELECT
+                ENDSELECT
+        ENDSELECT
+    ENDIF
+ENDIF
+RETURN 1
+
+;====================================================================================================
+;Partner-led 正常式
+;320,相手主导正常位
+;====================================================================================================
+@M_KOJO_MESSAGE_COM_K60_320
+CALL M_KOJO_MESSAGE_COM_K60_320_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K60_320_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+    PRINTFORMW 
+ENDIF
+RETURN 1
+;====================================================================================================
+;Partner-led 后入式
+;322,相手主导后背位
+;====================================================================================================
+@M_KOJO_MESSAGE_COM_K60_322
+CALL M_KOJO_MESSAGE_COM_K60_322_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K60_322_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+    PRINTFORMW 
+ENDIF
+RETURN 1
+;==================================================
+;Flip Their Skirt
+;TFLAG:193(-5=Angry (slap) -3=Angry (pinch) -1=annoyed 0=annoyed (but secretly happy) 1=accepted)
+;TFLAG:193=1&&&ABL:露出癖 is for Exposure level (-5 or more=Rolls up her own skirt in a public place, 4 or less=weakly resists when flipped in a public place, 3 or more=Rolls up her own skirt in a private place, Less than 3=weakly resists when flipped)
+;TFLAG:400(1=デート先or地底のモブが反応する) is for if DATE_HITOGOMI got called (someone nearby reacts to you and your date: ex. "a young youkai girl looks on, visibly shocked")
+;330,裙子めくり
+;TFLAG:193(-5=拒绝（ビンタ） -3=拒绝（つねり） -1=いやがる 0=いやがる（嬉しげ） 1=受け入れ)
+;TFLAG:193=1&&ABL:露出癖(5以上=人目のある场所で、自ら裙子をまくり上げる 4以下=人目のある场所でめくられるさいに弱い抵抗 3以上=人目のない场所で自ら裙子をまくり上げる 3未满=弱い抵抗)
+;TFLAG:400(1=デート先or地底のモブが反応する)
+;后ろからピラリ、ではなく、前からペラって感じ（そうじゃなかったら、めくり上げようとするのを止めて即座にビンタとか无理、めくり上げられた后にしかならないしその状况ならビンタ食らうより普通に弹幕で一发ＫＯにならないほうがおかしい
+;==================================================
+@M_KOJO_MESSAGE_COM_K60_330
+CALL M_KOJO_MESSAGE_COM_K60_330_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K60_330_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+    ;基本セット
+        ;Time stop
+        ;时奸中
+    IF FLAG:70
+        PRINTFORML
+        RETURN 1
+        ;睡奸中
+        ;Sleep rape
+    ELSEIF CFLAG:MASTER:恶作剧 == 2
+        SELECTCASE RAND:3
+            CASE 0
+                PRINTFORML 
+            CASE 1
+                PRINTFORML 
+            CASE 2
+                PRINTFORML 
+        ENDSELECT
+        RETURN 1
+        ;Character is drunk
+    ;Conscious rape
+    ELSEIF (TCVAR:强行 || CFLAG:强行内射)
+        RETURN 1
+    ELSEIF TCVAR:TARGET:烂醉 == 1
+        SELECTCASE RAND:3
+            CASE 0
+                PRINTFORML 
+            CASE 1
+                PRINTFORML 
+            CASE 2
+                PRINTFORML 
+        ENDSELECT
+        RETURN 1
+    ELSE
+        ;Other cases
+        IF GROUPMATCH(PREVCOM, 300, 302, 301) && GROUPMATCH(TFLAG:193, -5, -3)
+            CALL K60_MISCLICK(330)
+        ENDIF
+    ENDIF
+ENDIF
+RETURN 1

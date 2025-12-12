@@ -1,0 +1,3042 @@
+
+[SKIPSTART]
+;-------------------------------------------------
+;育儿イベントの地の文。口上色はここで付けてください。
+;CFLAG等のキャラ变量を使う场合、キャラ番号の指定が必要になります。
+;置き换えではありません。必要な场合は上下のSKIPSTART~SKIPENDを外してください。
+;-------------------------------------------------
+@M_KOJO_EVENT_K139_CHILD_RAISING_恢复
+;-------------------------------------------------
+
+;-------------------------------------------------
+[SKIPEND]
+
+[SKIPSTART]
+;-------------------------------------------------
+;育儿イベントの地の文。口上色はここで付けてください。
+;CFLAG等のキャラ变量を使う场合、キャラ番号の指定が必要になります。
+;デフォルトのものと置き换えたい场合は上下のSKIPSTART~SKIPENDを外してください。
+;置き换える气がないならスルー。
+;-------------------------------------------------
+@M_KOJO_EVENT_K139_CHILD_RAISING_离乳
+;-------------------------------------------------
+
+;-------------------------------------------------
+[SKIPEND]
+
+[SKIPSTART]
+;-------------------------------------------------
+;育儿イベントの地の文。口上色はここで付けてください。
+;CFLAG等のキャラ变量を使う场合、キャラ番号の指定が必要になります。
+;デフォルトのものと置き换えたい场合は上下のSKIPSTART~SKIPENDを外してください。
+;置き换える气がないならスルー。
+;-------------------------------------------------
+@M_KOJO_EVENT_K139_CHILD_RAISING_玩具
+;-------------------------------------------------
+
+;-------------------------------------------------
+[SKIPEND]
+
+[SKIPSTART]
+;-------------------------------------------------
+;育儿イベントの地の文。口上色はここで付けてください。
+;CFLAG等のキャラ变量を使う场合、キャラ番号の指定が必要になります。
+;デフォルトのものと置き换えたい场合は上下のSKIPSTART~SKIPENDを外してください。
+;置き换える气がないならスルー。
+;-------------------------------------------------
+@M_KOJO_EVENT_K139_CHILD_RAISING_つかまり立ち
+;-------------------------------------------------
+
+;-------------------------------------------------
+[SKIPEND]
+
+[SKIPSTART]
+;-------------------------------------------------
+;育儿イベントの地の文。口上色はここで付けてください。
+;CFLAG等のキャラ变量を使う场合、キャラ番号の指定が必要になります。
+;デフォルトのものと置き换えたい场合は上下のSKIPSTART~SKIPENDを外してください。
+;置き换える气がないならスルー。
+;-------------------------------------------------
+@M_KOJO_EVENT_K139_CHILD_RAISING_蹒跚学步
+;-------------------------------------------------
+
+;-------------------------------------------------
+[SKIPEND]
+
+[SKIPSTART]
+;-------------------------------------------------
+;育儿イベントの地の文。口上色はここで付けてください。
+;CFLAG等のキャラ变量を使う场合、キャラ番号の指定が必要になります。
+;デフォルトのものと置き换えたい场合は上下のSKIPSTART~SKIPENDを外してください。
+;置き换える气がないならスルー。これは复数回发生します。
+;-------------------------------------------------
+@M_KOJO_EVENT_K139_CHILD_RAISING_会话寸前
+;-------------------------------------------------
+
+;-------------------------------------------------
+[SKIPEND]
+
+[SKIPSTART]
+;-------------------------------------------------
+;育儿イベントの地の文。口上色はここで付けてください。
+;CFLAG等のキャラ变量を使う场合、キャラ番号の指定が必要になります。
+;デフォルトのものと置き换えたい场合は上下のSKIPSTART~SKIPENDを外してください。
+;置き换える气がないならスルー。
+;-------------------------------------------------
+@M_KOJO_EVENT_K139_CHILD_RAISING_说话
+;-------------------------------------------------
+
+;-------------------------------------------------
+[SKIPEND]
+
+;-------------------------------------------------
+;育儿イベントの地の文。口上色はここで付けてください。
+;CFLAG等のキャラ变量を使う场合、キャラ番号の指定が必要になります。
+;デフォルトのものと置き换えたい场合は上下のSKIPSTART~SKIPENDを外してください。
+;置き换える气がないならスルー。
+;-------------------------------------------------同伴
+@M_KOJO_EVENT_K139_CHILD_RAISING_词汇
+;-------------------------------------------------
+
+;-------------------------------------------------
+SELECTCASE RAND:3
+CASE 0
+	PRINTFORML 「想要让你明白♪」
+	PRINTFORML 「想要ー让你知道的♪」
+	PRINTW 
+	PRINTFORML 「啊ー、说出不该说的了♪」
+	PRINTFORML 「啊ー、不小心说出来了♪」
+	PRINTW 
+	PRINTFORML 「这是这里的秘密喔♪」
+	PRINTFORML 「嘘ー♪」
+	PRINTW 
+	PRINTFORML …典教了%CHILDNAME:139:(TALENT:139:育儿中)%什么东西呢…
+CASE 1
+	SELECTCASE RAND:2
+	CASE 0
+		PRINTFORML 「这是？」
+		PRINTFORML 『爸爸♪』
+		PRINTW 
+		PRINTFORML 「…那么、这是？」
+		PRINTFORML 『爸爸♪』
+		PRINTW 
+		PRINTFORML 「呵呵…、那、那这个是？」
+		PRINTFORML 『爸爸♪』
+		PRINTW 
+		PRINTFORML 典终于放声大笑了。典会这样笑真是少见的一幕
+		PRINTFORML 「就算这孩子被什么东西给迷住、也全都会变成%CALLNAME:MASTER%大人呢♪」
+		PRINTFORML 「算了、这证明了他对%CALLNAME:MASTER%大人爱呢。但作为母亲的我、有一点嫉妒呢♪」
+		PRINTW 
+	CASE 1 
+		PRINTFORML 「这是？」
+		PRINTFORML 『妈妈♪』
+		PRINTW 
+		PRINTFORML 「…那么、这是？」
+		PRINTFORML 『妈妈♪』
+		PRINTW 
+		PRINTFORML 「那么、这个人是？」
+		PRINTFORML 『妈妈♪』
+		PRINTW 
+		PRINTFORML 典拼命地忍住笑声
+		PRINTFORML 没想到自己也会被叫成「妈妈」啊…
+		PRINTFORM 「这个年纪的小孩子总是喜欢用他们喜欢的名子称呼人呢♪」
+		PRINTFORML 有点沮丧呢…
+		PRINTW 
+	ENDSELECT
+CASE 2
+	PRINTFORML 『めんめ！』（幼儿语的「看」之类的）
+	PRINTFORM %CHILDNAME:139:(TALENT:139:育儿中)%找到
+	SELECTCASE RAND:7
+	CASE 0
+		PRINTL 一只螳螂并指着
+		PRINTFORML 『好痛好痛！』
+		PRINTL 
+	CASE 1
+		PRINTL 一只蚱蜢并指着
+		PRINTFORML 『跳跳！』
+		PRINTL 
+	CASE 2
+		PRINTL 一只椿象并指着
+		PRINTFORML 『咻咻！』（应该是指椿象会喷东西吧）
+		PRINTL 
+	CASE 3
+		PRINTL 一只鼠妇并指着
+		PRINTFORML 『滚滚！』
+		PRINTL 
+	CASE 4
+		PRINTL 一只瓢虫并指着
+		PRINTFORML 『ちょんちょん！』（有形容小东西很轻快并有节奏性移动的意思）
+		PRINTL 
+	CASE 5
+		PRINTL 一只蜜蜂并指着
+		PRINTFORML 『嗡嗡！』
+		PRINTL 
+	CASE 6
+		PRINTL 一条蚯蚓并指着
+		PRINTFORML 『にょろにょろ！』（有形容蚯蚓蠕动的意味）
+		PRINTL 
+	ENDSELECT
+	PRINTFORML 「没错呢、%CHILDNAME:139:(TALENT:139:育儿中)%了解的很清楚呢」
+	PRINTFORML 典轻轻抚摸着%CHILDNAME:139:(TALENT:139:育儿中)%的头
+	PRINTL 
+ENDSELECT
+[SKIPSTART]
+;-------------------------------------------------
+;育儿イベントの地の文。口上色はここで付けてください。
+;CFLAG等のキャラ变量を使う场合、キャラ番号の指定が必要になります。
+;デフォルトのものと置き换えたい场合は上下のSKIPSTART~SKIPENDを外してください。
+;置き换える气がないならスルー。
+;-------------------------------------------------
+@M_KOJO_EVENT_K139_CHILD_RAISING_管教
+;-------------------------------------------------
+
+;-------------------------------------------------
+[SKIPEND]
+
+;-------------------------------------------------
+;育儿イベントの地の文。口上色はここで付けてください。
+;CFLAG等のキャラ变量を使う场合、キャラ番号の指定が必要になります。
+;デフォルトのものと置き换えたい场合は上下のSKIPSTART~SKIPENDを外してください。
+;置き换える气がないならスルー。
+;-------------------------------------------------
+@M_KOJO_EVENT_K139_CHILD_RAISING_就学
+;-------------------------------------------------
+;8时～14时が授业
+;※日常系コマンドCOM337に移植
+;-------------------------------------------------
+
+
+
+[SKIPSTART]
+;育儿イベントの地の文。口上色はここで付けてください。
+;CFLAG等のキャラ变量を使う场合、キャラ番号の指定が必要になります。
+;デフォルトのものと置き换えたい场合は上下のSKIPSTART~SKIPENDを外してください。
+;置き换える气がないならスルー。
+;-------------------------------------------------
+@M_KOJO_EVENT_K139_CHILD_RAISING_自立前
+;-------------------------------------------------
+
+;-------------------------------------------------
+[SKIPEND]
+
+[SKIPSTART]
+;-------------------------------------------------
+;育儿イベントの地の文。口上色はここで付けてください。
+;CFLAG等のキャラ变量を使う场合、キャラ番号の指定が必要になります。
+;デフォルトのものと置き换えたい场合は上下のSKIPSTART~SKIPENDを外してください。
+;置き换える气がないならスルー。
+;-------------------------------------------------
+@M_KOJO_EVENT_K139_CHILD_RAISING_自立
+;-------------------------------------------------
+
+;-------------------------------------------------
+[SKIPEND]
+
+
+;-------------------------------------------------
+;育儿イベント登下校时の地の文。
+;-------------------------------------------------
+@M_KOJO_EVENT_K139_CHILD_RAISING_登下校(ARGS,ARG,ARG:1)
+IF !ARG
+	CALL K139_FATHERNAME
+	;登校时
+	;受け入れフラグON
+	IF CFLAG:139:1996 == 1
+		;性格倾向
+		SELECTCASE CFLAG:1983
+		CASE 1
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 『%MASTERNAME:139%、我走啰♪』
+				PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%用双手轻轻挽住%CALLNAME:MASTER%的脸、轻吻了一下
+				PRINTFORML 『欸嘿嘿♪　我今天也会加油的♪』
+				PRINTW 
+			CASE 1
+				PRINTFORML 『真希望能和%MASTERNAME:139%一整天在一起啊…』
+				PRINTFORML 我把%CHILDNAME:139:(TALENT:139:育儿中)%放在一旁、并轻声告诫她要好好去上学
+				PRINTFORML 『好的…但是、我回来后可要做很多舒服的事情哦…♪』
+				PRINTW 
+			CASE 2
+				PRINTDATAL
+					DATAFORM 『%MASTERNAME:139%、我走啰♪　等回来后、再教我做色色的事情吧…♪』
+					DATAFORM 『%MASTERNAME:139%、我走啰♪　等回来后、要好好教我健康与体育哦…♪』
+					DATAFORM 『%MASTERNAME:139%、我走啰♪　等回来后、再来做舒服的事情吧…♪』
+					DATAFORM 『%MASTERNAME:139%、我走啰♪　等回来后、再来瞒着妈妈做舒服的事情吧…♪』
+					DATAFORM 『%MASTERNAME:139%、我走啰♪　等回来后、请来多多触摸%CHILDNAME:139:(TALENT:139:育儿中)%的身体吧♪』
+					DATAFORM 『%MASTERNAME:139%、我走啰♪　等回来后、一起去约会吧♪』
+					DATAFORM 『%MASTERNAME:139%、我走啰♪　等回来后、我们来玩新婚夫妇吧…♪』
+					DATAFORM 『%MASTERNAME:139%、我走啰♪　等回来后、来造孩子吧…♪』
+					DATAFORM 『%MASTERNAME:139%、我走啰♪　等回来后、让我们做很多色色的事情吧…♪』
+				ENDDATA
+			ENDSELECT
+		CASE 2
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 『%MASTERNAME:139%、我出门啰！』
+				PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%热情洋溢的亲了%CALLNAME:MASTER%的脸颊
+				PRINTFORML 『诶嘿嘿♪　%MASTERNAME:139%、最喜欢了！』
+				PRINTW 
+			CASE 1
+				PRINTFORML 『%MASTERNAME:139%…那个、那个呢』
+				PRINTFORML 『从、从学校回来后…能再、做些让人轻飘飘的事情吗？』
+				PRINTW 
+			CASE 2
+				PRINTFORML 『好像和%CALLNAME:MASTER%待在一起啊ー…』
+				PRINTFORML 被告知要好好去上学后、%CHILDNAME:139:(TALENT:139:育儿中)%带着些许的不情愿点了点头
+				PRINTW 
+			ENDSELECT
+		CASE 3
+			SELECTCASE RAND:3
+			CASE 0
+				PRINTFORML 『%MASTERNAME:139%…出门了啰』
+				PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%有些局促不安、期待地眨巴着眼睛看着%CALLNAME:MASTER%
+				PRINTFORML 轻轻亲了一下后、%CHILDNAME:139:(TALENT:139:育儿中)%的脸颊瞬间红透…
+				PRINTW 
+			CASE 1
+				PRINTFORML 『%MASTERNAME:139%…如果、我努力读书的话…那个、那个…』
+				PRINTFORML 摸了摸头并对她说了要好好去学校后、%CHILDNAME:139:(TALENT:139:育儿中)%的身体微微颤抖、脸上露出一脸荡漾
+				PRINTW 
+			CASE 2
+				PRINTFORML 『%MASTERNAME:139%…』
+				PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%像是很舍不得暂时分离般地拥抱着%CALLNAME:MASTER%…
+				PRINTFORML …假的、实际上只是想闻闻气味并摸遍全身…
+				PRINTW 
+			ENDSELECT
+		CASE 4
+			SELECTCASE RAND:3
+			CASE 0
+				CALL HPH_PRINT,@"『%MASTERNAME:139%HPH　看起来好寂寞HPH　虽然年纪不小但还是忍不住孤独吧HPH』","L"
+				CALL HPH_PRINT,@"『如果真耐不住的话我会陪着你的HPH』","L"
+				PRINTFORML 当父亲说着自己没问题让我去上学时、我带着沉闷的表情答应着『好…』后向学校走去…
+				PRINTW 
+			CASE 1
+				CALL HPH_PRINT,@"『%MASTERNAME:139%HPH　是个会对女儿出手的变态HPH』","L"
+				CALL HPH_PRINT,@"『如果我去学校了的话、肯定会因为没人陪而闷闷不乐的HPH』","L"
+				PRINTFORML 『如果%MASTERNAME:139%非常想要的话、我就请假不去学校吧…』这样说着、
+				PRINTFORML 当提醒那些偷懒的孩子如果不去学校都不会有什么好事后、她带着绝望的表情转向学校走去…
+				PRINTW 
+			CASE 2
+				CALL HPH_PRINT,@"『%MASTERNAME:139%、出门前亲一个ーHPH』","L"
+				CALL HPH_PRINT,@"『啊～HPH　真以为我会亲吗ーHPH　想得太天真了ーHPH』","L"
+				CALL HPH_PRINT,@"『因为%MASTERNAME:139%很可怜所以这次就真的亲一下吧HPH』","L"
+				PRINTW 
+			ENDSELECT
+		ENDSELECT
+	ELSEIF (CFLAG:139:1997 == 1 || CFLAG:139:1997 >= 3) && CHILD_LOVE:139:(TALENT:139:育儿中) > 0 && CHILD_SEX:139:(TALENT:139:育儿中) == 1
+		PRINTFORML 『%MASTERNAME:139%、我走啰♪』
+		SELECTCASE RAND:3
+		CASE 0
+			PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%%TEXTR("紧紧地环抱住%CALLNAME:MASTER%的脖子/蹭了蹭%CALLNAME:MASTER%的脸颊/往%CALLNAME:MASTER%的脸颊上亲了一口")%、然后满怀笑容地去上学了
+			PRINTW 
+		CASE 1
+			PRINTFORML 在出门之际、%CHILDNAME:139:(TALENT:139:育儿中)%将裙子提起露出了绝对领域…
+			PRINTW 
+		CASE 2
+			PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%噘起了嘴巴所以就挤了挤她的小脸
+			PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%带着些许不满的表情去上学了…
+			PRINTW 
+		ENDSELECT
+		
+	ELSE
+		IF CHILD_LOVE:139:(TALENT:139:育儿中) >= 300
+			SELECTCASE RAND:2
+			CASE 0
+				PRINTFORML 『爸爸、我走啰♪』
+				PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%%TEXTR("紧紧地环抱住%CALLNAME:MASTER%的脖子/蹭了蹭%CALLNAME:MASTER%的脸颊")%、然后满怀笑容地去上学了
+				PRINTW 
+			CASE 1
+				PRINTDATAL
+					DATAFORM 『爸爸、我走啰♪　我回来后请陪我玩吧♪』
+					DATAFORM 『爸爸、我走啰♪　我回来后请陪我一起做实验吧♪』
+					DATAFORM 『爸爸、我走啰♪　我回来后请和我一起进行弹幕游戏吧♪』
+					DATAFORM 『爸爸、我走啰♪　我回来后请帮我检查一下作业吧♪』
+					DATAFORM 『爸爸、我走啰♪　我回来后请和我聊聊天吧♪』
+					DATAFORM 『爸爸、我走啰♪　我回来后请和我一起去山上探险吧♪』
+					DATAFORM 『爸爸、我走啰♪　我回来后一起来玩捉迷藏吧♪』
+				ENDDATA
+				PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%元气满满地挥了挥手后走上上学的路
+				PRINTW 
+			ENDSELECT
+		;恋慕じゃないと同居できないからこれは死に分岐？
+		ELSEIF CHILD_LOVE:139:(TALENT:139:育儿中) >= 100
+			PRINTFORML 『爸爸、我走啰』
+			PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%露出害羞的笑容、向%CALLNAME:MASTER%挥了挥手后出发去上学了
+			PRINTW 
+		;こっちも状况的にないと思うけど一応
+		ELSE
+			PRINTFORML 『我走啰』
+			PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%对%CALLNAME:MASTER%用了一种「这是谁？」的眼神瞥了一眼后、就出发去上学了
+		ENDIF
+	ENDIF
+ELSE
+	IF (CFLAG:139:1997 == 3 || CFLAG:139:1997 == 5) && CHILD_LOVE:139:(TALENT:139:育儿中) > 0 && CHILD_SEX:139:(TALENT:139:育儿中) == 1
+		PRINTFORML 在回家的途中…
+		;下校时
+		SELECTCASE RAND:4
+		CASE 0
+			PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%凭借着从母亲遗传的非凡嗅觉、捡到了许多被人丢弃的色情书刊…
+			PRINTFORML 同学们将%CHILDNAME:139:(TALENT:139:育儿中)%奉为饭纲大明神崇拜着…
+			PRINTL 
+		CASE 1
+			PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%和男孩们混在一起、在废弃小屋里观赏被人丢弃的色情书刊…
+			SELECTCASE RAND:2
+			CASE 0
+				PRINTFORML 『想看看男孩的自慰』以娇滴滴的眼神恳求着、数名男子当即开始高兴地掏出鸡鸡自慰
+				PRINTFORML 即使%CHILDNAME:139:(TALENT:139:育儿中)%故意发出夸张的尖叫声、但仍然透过手指的缝隙偷窥着自慰行为…
+			CASE 1
+				PRINTFORML 男孩们对%CHILDNAME:139:(TALENT:139:育儿中)%非常在意
+			ENDSELECT
+			PRINTL 
+		CASE 2
+			PRINTFORM %CHILDNAME:139:(TALENT:139:育儿中)%将%TEXTR("弱气的高年级生/内向的同学/年下的男孩")%带进了废弃小屋里头、
+			SELECTCASE RAND:16
+			CASE 0
+				PRINTFORML 全身裸体的玩「医生游戏」…
+			CASE 1
+				CALL HPH_PRINT,@"喊着『加油HPH　加油HPHHPH』的应援并看着他自慰…","L"
+			CASE 2
+				PRINTFORML 从背后拥抱住并为小鸡鸡加油打气…
+			CASE 3
+				PRINTFORML 将内裤拉下、用舌头舔舐着未成熟的小鸡鸡…
+			CASE 4
+				PRINTFORML 彼此都裸露着下半身、享受着性器的摩蹭…
+			CASE 5
+				PRINTFORML 将自己脱光光玩「医生游戏」…
+			CASE 6
+				PRINTFORML 称这为『保健课的继续』、互相展示着性器官并互相触摸…
+			CASE 7
+				PRINTFORML 两人全裸着、互相舔对方的性器…
+			CASE 8
+				PRINTFORML 亲吻对方的脸颊、享受着「恋人游戏」…
+			CASE 9
+				CALL HPH_PRINT,@"『让我们来造孩子吧、亲・爱・的HPH』这样诱惑着、并互相摩擦着性器就如同真的在做爱一样…","L"
+			CASE 10
+				PRINTFORML 用手一次又一次引导着鸡鸡射精、以此来实验究竟能射多少次…
+			CASE 11
+				PRINTFORML 轻轻拥抱对方、确认彼此的温度…
+			CASE 12
+				PRINTFORML 让他把自己的裸体当配菜、并强迫他在这里自慰…
+			CASE 13
+				PRINTFORML 试图模仿妈妈口交鸡鸡、但因无法引导至射精而有些沮丧…
+			CASE 14
+				PRINTFORML 试图模仿妈妈口交鸡鸡、因成功引导鸡鸡射精而高兴了起来…
+			CASE 15
+				CALL HPH_PRINT,@"虽然嘴上骂着『变态HPH　变态HPHHPH』、但同时又允许他将手指插进屁穴里…","L"
+			ENDSELECT
+		CASE 3
+			PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%正和朋友在缓缓流动的小河中玩耍时…
+			SELECTCASE RAND:5
+			CASE 0
+				PRINTFORML 有一位女孩在犹豫是否要脱掉衣服、所以就借势帮她脱掉了
+				PRINTFORML 暴露在男生们众目睽睽之下的女孩、羞愧得当场蹲下来…
+				PRINTL 
+			CASE 1
+				PRINTFORML 注意到有个男孩的鸡鸡勃起了、取笑了一下后男孩害羞地遮掩着下体
+				PRINTL 
+			CASE 2
+				PRINTFORML 将一位男孩勾引到大岩石背面、让他仔细观察一下自己性器
+				SELECTCASE RAND:2
+				CASE 0
+					PRINTFORML 男孩的鼻子和鸡鸡因兴奋而膨胀、他的呼吸在距离女性器只有一息之遥时变得急促…
+				CASE 1
+					PRINTFORML 作为回礼也仔细的观察了男孩的鸡鸡、而男孩似觉醒了什么奇怪的东西
+				ENDSELECT
+				PRINTL 
+			CASE 3
+				PRINTFORML 互相泼着对方水、天真无邪地玩乐着…
+				PRINTL 
+			CASE 4
+				PRINTFORML 和一位男孩比游泳。失败者需要听从赢方的话
+				SELECTCASE RAND:2
+				CASE 0
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%输了…
+					SELECTCASE RAND:3
+					CASE 0
+						PRINTFORML 男孩脸红红地说、「我想吸%CHILDNAME:139:(TALENT:139:育儿中)%的胸部」这么请求着
+						PRINTL 
+						PRINTFORML 本来以为会被要求更过分的事情、既松了一口气但又有种失望的复杂情绪涌上心头
+						PRINTFORML 内心感到羞愧与挣扎、闷了一会后脸红红的说「……可以」
+						PRINTL 
+						PRINTFORML 男孩的鸡鸡早已高高举起、然后颤抖着吸吮%CHILDNAME:139:(TALENT:139:育儿中)%的乳头
+						PRINTFORML 在被吸的一瞬间、不禁发出『嗯…』的声音
+						PRINTL 
+						PRINTFORML 说实话男孩吸的很痛很想让他马上停下来、但是看着男孩那吸着奶头一脸满足的表情时又纠结了起来
+						PRINTFORML 虽然觉得这样不太适合自己、但还是抚摸着男孩的头让他吸到他满意为止
+						PRINTFORML 当注意到的时候、男孩的鸡鸡已经软下来了
+						PRINTL 
+					CASE 1
+						PRINTFORML 男孩脸红红地说、「我想看%CHILDNAME:139:(TALENT:139:育儿中)%的阴道」这么请求着
+						PRINTFORML 『不是已经看过了吗』这么恢复、「想在贴近一点观察」他坚持说
+						PRINTL 
+						PRINTFORML 虽然自已喜欢主动展示自己、但被人观察总觉得有些不舒服…但既然答应条件了就必须遵守承诺
+						PRINTFORML 内心感到羞愧与挣扎、闷了一会后脸红红的说「……可以」
+						PRINTL 
+						PRINTFORML 男孩的鼻子和鸡鸡因兴奋而膨胀、他的呼吸在距离女性器只有一息之遥时变得急促…
+						PRINTFORML 对这样没有任何女性身体知识的男孩、『这里是尿道』『这里是阴蒂』这样一一教导着
+						PRINTW 
+						PRINTFORML 最后、男孩说了「我想把阴道打开看看」
+						PRINTFORML 虽然稍微犹豫了一下、给了他『打开、可以哟』的许可
+						PRINTL 
+						PRINTFORML 男孩用颤抖的手触摸着%CHILDNAME:139:(TALENT:139:育儿中)%的阴唇、轻轻地左右撑开就像在处理易碎品一样
+						PRINTFORML 也许是因为羞耻心在作祟、%CHILDNAME:139:(TALENT:139:育儿中)%的脸红得像煮熟的虾一样
+						PRINTL 
+						PRINTFORML 「…湿湿的」男孩低声嘟囔着
+						PRINTFORM 似乎在无意之中感到了性兴奋。从%CHILDNAME:139:(TALENT:139:育儿中)%秘裂中、一滴透明的液体缓缓滴下
+						PRINTL 
+						PRINTFORML 而男孩却像着了魔般的将手指插入秘裂之中
+						PRINTFORML 由于阴道尚未充分润滑而感到了些许疼痛
+						PRINTL 
+						PRINTFORML 听到%CHILDNAME:139:(TALENT:139:育儿中)%发出呻吟、男孩慌忙地收回了手
+						PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%提醒说『我说过可以看、但没说过可以将手指插进去』、
+						PRINTFORML 男孩沉默了
+						PRINTL
+						PRINTFORML 『今天到此为止吧』这么宣告、男孩露骨地显露出失望的表情
+						PRINTFORML 看来还不懂「今天」是什么意思、果然是小孩子啊、%CHILDNAME:139:(TALENT:139:育儿中)%这么想着…
+						PRINTL 
+					CASE 2
+						PRINTFORML 男孩脸红红地说、「我想揉%CHILDNAME:139:(TALENT:139:育儿中)%的胸部」这么请求着
+						PRINTL 
+						PRINTFORML 只是被摸一两下胸部、对男人来说应该不是什么大不了的事！虽然这么想着的、
+						PRINTFORML 但还是要有些羞耻心比较好、做好心理准备后脸红红地说「……可以」
+						PRINTL 
+						PRINTFORML 男孩的鸡鸡早已高高举起、颤抖的手触摸着%CHILDNAME:139:(TALENT:139:育儿中)%的胸部
+						PRINTFORML 说实话、一点也不舒服只是有一点点微妙的痒感、但看到男孩那满脸感动的样子就让他揉到满意为止
+						PRINTL 
+					ENDSELECT
+				CASE 1
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%赢了！
+					PRINTFORML 看着男孩紧张的表情、%CHILDNAME:139:(TALENT:139:育儿中)%下达了命令
+					SELECTCASE RAND:3
+					CASE 0
+						PRINTFORML 『让我碰碰你的鸡鸡吧♪』
+						PRINTW 
+						PRINTFORML 搜搜、搜搜…
+						PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%开心地用手套弄着男孩的小鸡鸡
+						PRINTL 
+						PRINTFORML 『啊哈、从尿道口冒出透明黏黏的东西了…♪』
+						PRINTFORML 『被同学套弄着小鸡鸡舒服吗？　兴奋吗？』
+						PRINTL 
+						PRINTFORML 手交和言语责骂的同时攻击、对于快感毫无抵抗力的男孩瞬间达到高潮
+						PRINTFORML 『咦？　已经快要射了吗？　没关系、就这样射出来吧♪』
+						PRINTW 
+						PRINTFORML GYUUUUU～！！！（捏紧）
+						PRINTFORML 『怎么可能～～、你以为我会答应吗♪　离让你射精还早的很呢～～～～♪』
+						PRINTL 
+						PRINTFORML 就在射精的终点线前被紧紧的抓住了尿道、男孩抓着地板脸上满是迷茫的表情
+						PRINTFORML 『再忍耐一下吧、这样等下射出来时的快感会变得更好喔♪　作为男孩子、应该是可以忍耐住的吧♪』
+						PRINTL 
+						PRINTFORML 这是从母亲那里学到的。透过自己的手掌掌控住射精、便能将对方置于控制之下
+						PRINTFORML 即使是不成熟的%CHILDNAME:139:(TALENT:139:育儿中)%、对于同样不成熟的同学效果也是立竿见影
+						PRINTL 
+						PRINTFORML 『看来快要射精了呢♪　那么就撸撸撸撸～～♪』
+						PRINTFORML 『好～～停～～♪　还没呢♪　还要再忍耐哦♪』
+						PRINTW 
+						CALL HPH_PRINT,@"『紧紧抓住根部、然后只磨蹭前端～～HPHHPH』","L"
+						CALL HPH_PRINT,@"『因为变得又湿又滑的所以鸡鸡比刚刚又更舒服了呢HPHHPH』","L"
+						PRINTL 
+						CALL HPH_PRINT,@"『紧紧抓住根部、然后只磨蹭前端～～HPHHPH』","L"
+						CALL HPH_PRINT,@"『因为变得又湿又滑的所以鸡鸡比刚刚又更舒服了呢HPHHPH』","L"
+						PRINTL 
+						CALL HPH_PRINT,@"紧～…『我不是说还不可以吗？』GYUUUUUUU『为什么还要尝试射出来呢？HPHHPH』","L"
+						CALL HPH_PRINT,@"汼啾HPH咕啾HPH咕啾HPH汼咕HPH汼咕HPH汼噜HPH","L"
+						CALL HPH_PRINT,@"『忍耐着的表情、真的好可爱喔HPH　加油HPH　加油HPHHPH』","L"
+						PRINTL 
+						CALL HPH_PRINT,@"『不仅输了游泳比赛、连小鸡鸡也输了呢…HPH　已经不能算是个男孩子了呢HPHHPH』","L"
+						CALL HPH_PRINT,@"『以后你会好好听我的话吗？HPH　如果你能答应的话就让你舒服的射出来HPH』","L"
+						PRINTL 
+						CALL HPH_PRINT,@"『乖巧的●●君、真是可爱呀HPH　那么、现在就来将你的小鸡鸡给玩坏吧HPH开始啰～～HPH』","L"
+						CALL HPH_PRINT,@"『三～～HPH』咕啾咕啾咕啾咕啾咕啾咕啾咕啾咕啾","L"
+						CALL HPH_PRINT,@"『二～～HPHHPH』努钦努钦努钦努钦努钦努钦努钦努钦","L"
+						CALL HPH_PRINT,@"『一～～HPHHPHHPH』古楚古楚古楚古楚古楚古楚古楚古楚古楚古楚古楚","L"
+						CALL HPH_PRINT,@"『零～HPHHPHHPHHPH』","L"
+						PRINTW 
+						CALL HPH_PRINT,@"『哇～好厉害好厉害HPH　飞得好高啊HPHHPHHPH』","L"
+						CALL HPH_PRINT,@"『好大量…HPH　精液～原来能出来这么多啊…HPHHPH』","L"
+						PRINTL 
+						CALL HPH_PRINT,@"『接下来就继续做吧～HPH　为什么？　我刚刚不是说了吗、我要来玩坏你的小鸡鸡…HPH』","L"
+						CALL HPH_PRINT,@"『而且、你刚刚答应会乖乖听话的对吧…HPH　哈啊、居然小便失禁了HPH　欸HPH　欸HPHHPH』","L"
+						PRINTL 
+						CALL HPH_PRINT,@"『果然如爸爸所言…HPH　男孩子、再射精之后都会变得特别敏感呢…HPHHPH』","L"
+						CALL HPH_PRINT,@"『来开始我们第二次的射精吧HPH　同学我会好好看着的HPH　来吧HPH　出来HPH　射出来HPHHPHHPH』","L"
+						PRINTL 
+						PRINTFORML …最后、男孩在被连续射精了十次以上后才得到解脱…
+						PRINTL 
+					CASE 1
+						PRINTFORML 『请告诉我、你喜欢的是谁吧♪』
+						PRINTW 
+						SELECTCASE RAND:3
+						CASE 0
+							PRINTFORML 男孩表示自己喜欢的是%CHILDNAME:139:(TALENT:139:育儿中)%…
+							PRINTFORML 『欸？　欸欸？？？』
+							PRINTFORML 面对意想不到的告白、%CHILDNAME:139:(TALENT:139:育儿中)%的思考一度停摆
+							PRINTL 
+							PRINTFORML 『又再开玩笑了…♪　你是在认真地把我当成恋爱对象吗？』
+							PRINTFORML 男孩虽然颤抖着但还是毫不犹豫地表明他是认真的
+							PRINTL 
+							PRINTFORML 『啊啊啊啊这种事情、不应该在鸡鸡露出来的状况下说出来的啦…』
+							PRINTFORML 『回答？　呃～～、这个～～、那个～～』
+							PRINTFORML 『再见了～～～！！！！』
+							PRINTL 
+						CASE 1
+							PRINTFORML 男孩告诉了%CHILDNAME:139:(TALENT:139:育儿中)%他心仪女生的名字
+							PRINTFORML 『齁齁…她有点特别的嗜好呢…啊不对、应该是她喜欢的东西』
+							PRINTL 
+							PRINTFORML 『嗯、她非常喜欢花、所以送她自己种的花应该会讨她开心哦』
+							PRINTFORML 『另外她也经常在照顾寺子屋的花园、如果你去帮忙的话、绝对能提高好感的』
+							PRINTL 
+							PRINTFORML 『虽然例子不是这么好♪　但是…』
+							PRINTFORML 『如果成功的话、之后请告诉我你的初吻或初体验的内容♪』
+							PRINTL 
+							PRINTFORML 『为什么呢…因为知道别人的秘密很有趣啊♪』
+							PRINTFORML 『总之、祝你性交、呸呸、祝你成功呢♪　请加油哦♪』
+							PRINTL 
+						CASE 2
+							PRINTFORML 男孩告诉了%CHILDNAME:139:(TALENT:139:育儿中)%他心仪女生的名字
+							PRINTFORML 『欸欸～～是那个女孩啊。原来如此原来如此♪』
+							PRINTL 
+							PRINTFORML 『嗯、她虽然嘴上总是在说下流的东西、但其实她挺纯情的』
+							PRINTFORML 『来仔细回想一下。她、是不是只会对那些低年级生讲那些下流话对吧？』
+							PRINTL 
+							PRINTFORML 『那其实是她对她觉得害羞的事情的反映啦♪』
+							PRINTFORML 『所以、如果你积极一点的话、她或许会很容易就答应了哦♪』
+							PRINTL 
+							PRINTFORML 『嗯…比如、像在两个人独处时、可以露出你引以为傲的勃起鸡鸡给她看…♪』
+							PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%轻轻在男子的肉棒上游走、开始上下套弄
+							PRINTL 
+							PRINTFORML 『然后用这根又硬又热的东西轻轻磨蹭她的屁股和私处』
+							PRINTFORML 『这样一来、她可能一下子就会爱上你了哦…♪』
+							PRINTW 
+							PRINTFORML 『…………』
+							PRINTFORML 『啊～、开玩笑好像被拆穿了呢♪　我什么都不懂哦～♪』
+							PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%这么说着、看着远走的男孩、眯起了眼睛…
+							PRINTL 
+						ENDSELECT
+					CASE 2
+						PRINTFORML 『请让我看看射精的样子吧♪』
+						PRINTW 
+						PRINTFORML 『嗯ー、男生果然就是会这么玩自己的小鸡鸡呢』
+						PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%近距离注视着男孩的自慰行为
+						PRINTL 
+						PRINTFORML 『还不行喔♪　我说过要看到你射精出来为止哦♪』
+						PRINTFORML 『如果嘴巴有闲情逸致还在那边讲话的话、那就应该好好动动你的手♪』
+						PRINTW 
+						PRINTFORML 『…还是、有了刺激会更兴奋呢？』
+						PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%这么说着、坐在岩石上张开双腿
+						PRINTL 
+						CALL HPH_PRINT,@"『这样、怎么样呢…HPH　这是同学的小穴哟、是・小・穴・哦HPH』","L"
+						PRINTFORML 男孩还是有生以来第一次看到女性器、顿时握着鸡鸡的手加快了速度
+						PRINTL 
+						CALL HPH_PRINT,@"『快一点快一点HPH　小鸡鸡变更大了呢HPH』","L"
+						CALL HPH_PRINT,@"『只能看而已哦HPH　如果碰到的话、我就会放声大叫把人吸引过来哦HPH』","L"
+						PRINTL 
+						PRINTFORML 男孩眼睛充血、呼吸急促、专心地搓揉着已经硬到极限的肉棒
+						PRINTFORML 男孩的身体颤抖着、鸡鸡更加地膨胀
+						PRINTW 
+						PRINTFORML 噗噜…
+						CALL HPH_PRINT,@"『哇HPH　射出来了HPHHPH』","L"
+						PRINTL 
+						PRINTFORML 被用力释放出的精液在空中画出一道抛物线、洒落在%CHILDNAME:139:(TALENT:139:育儿中)%胸上、肚子和下腹部
+						PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%用手指撮起来一点、带到鼻子前闻了闻
+						PRINTL 
+						PRINTFORML 『呜哇、好臭……老实说我不太喜欢这气味…味道呢…嗯』
+						PRINTFORML 『！？　呜恶恶恶恶、恶心！！！！　好糟糕的味道啊！』
+						PRINTL 
+						PRINTFORML 『呜～～……还能感觉到舌头有些刺刺的…』
+						PRINTFORML 『明明妈妈都把爸爸的精子当美味的东西喝下去的…』
+						PRINTL 
+						PRINTFORML 『……咦？　你还在这里喔？　已经可以回去那边了喔♪　谢谢』
+						PRINTFORML 男孩被单方面宣告结束、带着复杂的情感回到朋友聚集的地方了…
+						PRINTW 
+						PRINTFORML 『……唔ーー、真是又臭又难吃呢…』
+						PRINTFORML 『长大后会喜欢这种味道吗…』
+						PRINTFORML 『还是说、只有爸爸的会比较好吃呢…』
+						PRINTL 
+					ENDSELECT
+				ENDSELECT
+			ENDSELECT
+		ENDSELECT
+	ELSE
+		SELECTCASE RAND:5
+		CASE 0
+			PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%独自一人在废弃的房子里、欣赏不知道谁遗弃的色情书刊…
+			PRINTFORML 『哇啊…女人里面有男人的小鸡鸡进去了…』
+		CASE 1
+			PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%正试图用巧妙的语言技巧打探旁边女孩的心怡对象的名子…
+		CASE 2
+			PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%跟同学们在杂货店买点心享用…
+		CASE 3
+			PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%躲在岩石背后、观察男孩赤裸着在水里嬉戏…
+		CASE 4
+			PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%在建议胸大的同学、穿内衣可以保持形状还能避免乳头凸显…
+		ENDSELECT
+	ENDIF
+	PRINTW 
+ENDIF
+
+;-------------------------------------------------
+;育儿イベント食事时。
+;-------------------------------------------------
+@M_KOJO_EVENT_K139_CHILD_RAISING_食事(ARGS,ARG,ARG:1)
+;子ども空腹度が120を超すと发生
+IF ARGS == "授乳"
+	PRINTFORML 
+ELSEIF ARGS == "离乳食"
+	PRINTFORML 
+ELSEIF (ARGS == "幼少期" || ARGS == "自立前")
+	IF (CFLAG:139:1997 == 1 || CFLAG:139:1997 >= 3) && CHILD_LOVE:139:(TALENT:139:育儿中) > 0 && CHILD_SEX:139:(TALENT:139:育儿中) == 1
+		SELECTCASE RAND:3
+		CASE 0
+			CALL HPH_PRINT,@"『爸爸、我会努力做出好吃的东西的HPH』","L"
+			PRINTFORML 能吃到女儿亲手做料理真是太开心了、%CALLNAME:MASTER%感动的看着%CHILDNAME:139:(TALENT:139:育儿中)%的身姿…将喝在嘴里的茶给喷了出来
+			PRINTL 
+			PRINTFORML 因为%CHILDNAME:139:(TALENT:139:育儿中)%正全身上下只穿着围裙没穿内衣的在做料理
+			PRINTFORML 为什么！！？？　是裸体围裙啊！！！？？？
+			PRINTL 
+			CALL HPH_PRINT,@"『妈妈说、为最喜欢的人做料理时就要穿着这样的服装HPH』","L"
+			CALL HPH_PRINT,@"『%CHILDNAME:139:(TALENT:139:育儿中)%最喜欢爸爸了HPH　所以没问题HPHHPH』","L"
+			PRINTL 
+			PRINTFORML 不用担心、一点问题都没有
+			PRINTFORML 虽然是这么想着的、但又总觉得这样会伤害了可爱的女儿、父亲全力避免自己看向女儿…
+			PRINTL 
+		CASE 1
+			CALL HPH_PRINT,@"『爸爸HPH　好吃吗HPH』","L"
+			PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%做的料理确实还不错。将来一定会成为一个好妻子的
+			CALL HPH_PRINT,@"『欸嘿嘿…HPH　结婚什么的、还太早了啦HPH』","L"
+			PRINTL 
+			PRINTFORML 然而、这个菜单存在个问题
+			PRINTFORML 牡蛎、松子、核桃、大蒜烤肉、蛤蜊味增汤、鳗鱼…菜式豪无统一性
+			PRINTL 
+			PRINTFORML 而且…还在吃东西时………怎么说……那个…有些下流的…哈哈……勃起了呢…
+			PRINTFORML %CALLNAME:MASTER%的下半身的东西、开始在餐桌底下蠢蠢欲动了
+			PRINTL 
+			CALL HPH_PRINT,@"『这是我跟妈妈学来的HPH　听说是能让人精力非常充沛的料理HPH』","L"
+			CALL HPH_PRINT,@"『怎么样呢？　爸爸？　精神涌出了吗？HPH』","L"
+			PRINTL 
+			PRINTFORML 为了不被面前的女儿发现勃起了、%CALLNAME:MASTER%紧张兮兮地赶紧把饭菜吃完了…
+			PRINTL 
+		CASE 2
+			CALL HPH_PRINT,@"『来、啊ーHPH』","L"
+			PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%在%CHILDNAME:139:(TALENT:139:育儿中)%旁边、用心地将食物送入口中…
+			PRINTFORML 仿佛像是一位深深爱着丈夫的新婚妻子一样…
+			PRINTL 
+		ENDSELECT
+	ENDIF
+	PRINTW 
+ELSE
+	PRINTFORML 
+ENDIF
+
+;-------------------------------------------------
+;育儿イベント入浴
+;-------------------------------------------------
+@M_KOJO_EVENT_K139_CHILD_RAISING_BATH(ARGS,ARG,ARG:1)
+;当前位置がお澡堂なら发生
+IF ARGS == "幼儿期"
+	PRINTFORML 
+ELSEIF (ARGS == "幼少期" || ARGS == "自立前")
+	CALL K139_FATHERNAME
+	IF CFLAG:139:1996 == 1
+		PRINTFORML %CALLNAME:MASTER%被%CHILDNAME:139:(TALENT:139:育儿中)%纠缠着、一起洗了澡
+		PRINTL 
+		SELECTCASE CFLAG:1983
+		CASE 1
+			SELECTCASE RAND:4
+			CASE 0
+				SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 父亲温暖的手、洗过背部和手臂
+					PRINTFORML 父亲温暖的手从胸前滑过
+					CALL HPH_PRINT,@"『呼呜HPH　嗯HPH　嗯呜…HPH』","L"
+					PRINTFORML 指尖如同绘画一个圆圈一样描着乳晕转、每次摩擦乳头时%CHILDNAME:139:(TALENT:139:育儿中)%都会发出妖娆的吐息
+					PRINTL 
+					PRINTFORML 手指从胸部滑向腹部、再滑到下腹部、每一个动作、都让%CHILDNAME:139:(TALENT:139:育儿中)%的胸口宛如早钟般一样激动
+					PRINTFORML 自从那天合而为一体后、父亲尽管有些迷茫但还是会爱抚着%CHILDNAME:139:(TALENT:139:育儿中)%
+					PRINTL 
+					CALL HPH_PRINT,@"『嗯HPH　啊呀HPH　哈啊嗯HPH』","L"
+					PRINTFORML 父亲的手指捏着%CHILDNAME:139:(TALENT:139:育儿中)%的乳头、一会拉起一会搓揉的
+					PRINTW 
+					CALL HPH_PRINT,@"『爸爸…请…HPH　把下面、也洗干净吧…HPH』","L"
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%轻轻地张开双腿、使幼小的花蕾绽放而出
+					PRINTL 
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%的娇嫩唇瓣微微张开、开始从深处滴下蜜汁
+					PRINTFORML %CALLNAME:MASTER%将中指插入到第一关节、用指腹轻轻按压着凹凸的部分
+					PRINTL 
+					CALL HPH_PRINT,@"『那里HPH　被洗的好舒服HPH　啊啊HPH』","L"
+					CALL HPH_PRINT,@"『唔啊HPH　不要发出啾啾声音呀HPH　好害羞、呀HPH』","L"
+					PRINTW 
+					CALL HPH_PRINT,@"『哈啊HPH　啊HPH　不行HPH　呜～～～HPH　哇HPHHPH』","L"
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%的大腿颤抖不已、迎来了高潮
+					PRINTFORML 与此同时、不禁漏尿了
+					PRINTL 
+					CALL HPH_PRINT,@"『呀啊HPH　　呀啦HPH　不行HPH　爸爸请不要看HPHHPH』","L"
+					CALL HPH_PRINT,@"『尿失禁HPH　停不下来了HPH』","L"
+					PRINTW 
+					PRINTL ……
+					CALL HPH_PRINT,@"『爸爸的手手…真的好舒服HPH』","L"
+					CALL HPH_PRINT,@"『但是…失禁了真的好羞耻…HPH』","L"
+					PRINTL 
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%在浴缸中露出陶醉的表情、依偎在%CALLNAME:MASTER%身边…
+					CALL HPH_PRINT,@"『再多摸摸我一下吧HPH』","L"
+					PRINTW 
+				CASE 1
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%正与父亲一同放松地泡汤
+					PRINTL 
+					SELECTCASE RAND:2
+					CASE 0
+						CALL HPH_PRINT,@"『……HPH』","L"
+						PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%假装放松、故意张开双腿
+						PRINTFORML 那充满童真的、未曾经历男性的秘裂在水面下摇摆
+						PRINTL 
+						PRINTFORML 父亲的目光牢牢锁定在%CHILDNAME:139:(TALENT:139:育儿中)%的私密处上…
+						PRINTFORML 最重要的是、受到父亲的阴茎开始发胀时、尽管身处于幼年也还是满足了%CHILDNAME:139:(TALENT:139:育儿中)%的女性自尊心…
+						PRINTW 
+					CASE 1
+						PRINTFORML 以背靠父亲的姿势，%CHILDNAME:139:(TALENT:139:育儿中)%伸展着身体
+						PRINTFORML 父亲苦笑着说太窄了没法放松下来呢。也感叹她长大了。
+						PRINTL 
+						PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%的屁股、在父亲的肉棒上磨蹭
+						PRINTFORML 它早已硬得坚硬挺立、已经明显的意识到%CHILDNAME:139:(TALENT:139:育儿中)%是一名女性
+						PRINTW 
+						CALL HPH_PRINT,@"『……HPH』","L"
+						PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%将带有些硬度的屁股紧紧压在父亲的下体上
+						PRINTFORML 当父亲的阴茎摩擦过臀部的分缝时、阵阵快感涌上心头
+						PRINTL 
+						CALL HPH_PRINT,@"『爸爸…HPH　如果觉得很辛苦的话、插进去也没问题喔…HPH』","L"
+						PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%的动作变得大胆、有时龟头会被小小的阴道口勾住
+						PRINTL 
+						CALL HPH_PRINT,@"『哈啊HPH　哈HPH　哈HPH　哈HPH　啊HPH』","L"
+						CALL HPH_PRINT,@"『小鸡鸡HPH　被小鸡鸡摩擦的感觉好舒服HPH』","L"
+						PRINTW 
+					ENDSELECT
+				CASE 2
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%像跨坐在父亲身上一样面对面。
+					PRINTFORML 简直就像恋人之间在澡堂玩闹的姿势。
+					PRINTL 
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%紧贴着父亲，将胸部和股间蹭来蹭去。
+					PRINTFORML 她说：“经常看到爸爸和妈妈这样”，父亲露出了害羞又困扰的表情。
+					PRINTW 
+					CALL HPH_PRINT,@"“可以插进去吗…HPH”","L"
+					PRINTFORML 注意到父亲的肉棒变硬，%CHILDNAME:139:(TALENT:139:育儿中)%用秘唇夹住了竿的部分…
+					PRINTW 
+				ENDSELECT
+			CASE 1
+				SELECTCASE RAND:2
+				CASE 0
+					PRINTFORML 刚洗完澡的%CHILDNAME:139:(TALENT:139:育儿中)%裸着身体在房间里晃来晃去…
+					PRINTFORML 当提醒她快点把衣服穿上时、不知为何%CHILDNAME:139:(TALENT:139:育儿中)%露出了失望的表情…
+					PRINTL
+				CASE 1
+					PRINTFORML 刚洗完澡的%CHILDNAME:139:(TALENT:139:育儿中)%经过了%CALLNAME:MASTER%的眼前
+					PRINTFORML 『…………%UNICODE(0x2665) *1%』
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%在父亲的眼前让浴巾脱落
+					PRINTL 
+					IF TALENT:胸围 >= 1
+						PRINTFORML 从典遗传的、对小孩子来说相当丰满的胸部溢了出来、晃动着
+					ELSEIF TALENT:TARGET:胸围 == -2
+						PRINTFORML 可悲的是、正在发育期的%CHILDNAME:139:(TALENT:139:育儿中)%的胸部、除了突出的顶部外看起来像个少年
+					ELSE
+						PRINTFORML 虽然还在发育中、但能明显地察觉到乳房的稍稍隆起
+					ENDIF
+					PRINTFORML 看见父亲的目光专注地注视着自己的身体、%CHILDNAME:139:(TALENT:139:育儿中)%感到一股愉悦…
+					PRINTL 
+				ENDSELECT
+			CASE 2
+				SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%将身上涂满肥皂后、
+					PRINTFORML 从后面抱住父亲用\@ TALENT:139:胸围 >= 1 ? 对年龄来说过大的 # 还在发育中的 \@胸部搓洗着…
+					PRINTL 
+					CALL HPH_PRINT,@"『摩擦着前端HPH　好舒服哦HPH』","L"
+					CALL HPH_PRINT,@"『爸爸HPH　你的背也一样舒服吗HPH』","L"
+					PRINTW 
+				CASE 1
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%将肥皂涂抹在胸部上后贴在父亲的背上磨擦、
+					PRINTFORML 并一边抚摸着父亲的乳头…
+					PRINTL 
+					CALL HPH_PRINT,@"『爸爸的胸部也一样舒服吗…HPH』","L"
+					CALL HPH_PRINT,@"『小鸡鸡、已经变得硬邦邦的了哦…HPH』","L"
+					PRINTW 
+				CASE 2
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%决定帮父亲洗背
+					PRINTFORML 虽然表面上声称是『为了感谢平常为家庭奔波的爸爸♪』
+					PRINTFORML 动机虽然不明确但内心并未说谎、所以应该没问题吧
+					PRINTL 
+					PRINTFORML 将自身涂抹上肥皂后、从后面抱住了父亲并用\@ TALENT:139:胸围 >= 1 ? 对年龄来说过大的 # 还在发育中的 \@胸部搓洗着
+					PRINTFORML 对这个小时候经常揹起自己的背部、怀抱着欲望和爱意搓洗出泡沫
+					PRINTL 
+					PRINTFORML 父亲虽微微吃惊了一下、但并未阻止并任由事态继续发展下去
+					PRINTFORML 不久后、%CHILDNAME:139:(TALENT:139:育儿中)%的乳头、由柔软变得硬挺
+					PRINTFORML 同时间、%CHILDNAME:139:(TALENT:139:育儿中)%的呼吸也开始变得急促
+					PRINTW 
+					CALL HPH_PRINT,@"『全部、洗干净了呢…HPH』","L"
+					PRINTFORML 甜蜜的刺激从乳头涌向全身、使%CHILDNAME:139:(TALENT:139:育儿中)%变得站立不稳而依靠在父亲的身体上
+					PRINTL 
+					CALL HPH_PRINT,@"『前面、要不要洗呢…？HPH』","L"
+					PRINTFORML 面对%CHILDNAME:139:(TALENT:139:育儿中)%的提议、父亲答应了
+					PRINTW 
+					CALL HPH_PRINT,@"『爸爸、失礼了…HPH』","L"
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%跨坐在父亲身上、从那爆筋的东西上慢慢坐了下去
+					PRINTL 
+					CALL HPH_PRINT,@"『好硬…HPH　爸爸的、好硬、好烫哦…HPH』","L"
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%一边胸贴胸的磨蹭、一边在父亲身上上下晃动
+					PRINTW 
+					CALL HPH_PRINT,@"『呀HPH　啊HPHHPH　唔HPH』","L"
+					PRINTFORML 在稚嫩的呻叫声中、并未显露出痛苦的痕迹。或许正因为是半妖、所以对痛苦的承受力似乎很强
+					PRINTFORML 啪嚓、啪嚓淫的淫秽的声音从结合处传出
+					PRINTL 
+					PRINTFORML 虽然还不熟练、但那诚挚且全身心投入的摆腰、让父亲的性感度逐渐高涨
+					PRINTFORML 宣告了快要高潮后、%CHILDNAME:139:(TALENT:139:育儿中)%紧紧地抱住了父亲
+					PRINTL 
+					CALL HPH_PRINT,@"『就这样HPH　就这样射在里面吧HPH』","L"
+					CALL ASK_YN("中出","外放")
+					IF !RESULT
+						PRINTW 
+						PRINTFORML 听从心爱的女儿的要求、%CALLNAME:MASTER%将大量的子种喷洒进少女的肉穴之中
+						CALL HPH_PRINT,@"『好热的HPH　涌出来了HPH　呜啊啊～～～～HPHHPH』","L"
+						PRINTFORML 在深爱的父亲播种下、%CHILDNAME:139:(TALENT:139:育儿中)%露出了幸福的表情
+						PRINTL 
+						CALL HPH_PRINT,@"『哈啊、哈啊…好多、都出来了呢…HPH』","L"
+						CALL HPH_PRINT,@"『爸爸、啾啾ー、拜托了…HPH　呣…HPH』","L"
+						PRINTFORML 不是说亲也不是说吻、现在说的「啾ー」尽显幼稚、与先前的行为成鲜明对比
+						PRINTW 
+						CALL HPH_PRINT,@"『欸嘿嘿、肚子里都装满了呢…HPH』","L"
+						CALL HPH_PRINT,@"『爸爸、再来、洗一次怎么样呢…HPH』","L"
+						PRINTW 
+					ELSE
+						PRINTW 
+						PRINTFORML 果然这样还是太危险了、在临界点之前将肉棒从膣内抽了出来、射出精液
+						PRINTFORML 精液在空中划出一条弧线、洒落在%CHILDNAME:139:(TALENT:139:育儿中)%的胸部和肚子上
+						PRINTW 
+						PRINTFORML 『哈啊…哈啊…真是的、爸爸好小气哦…』
+						PRINTFORML 因为没有中出在里面、%CHILDNAME:139:(TALENT:139:育儿中)%生气地嘟起了嘴巴
+						PRINTFORML 摸了摸头说「等长大一点再说吧」、%CHILDNAME:139:(TALENT:139:育儿中)%回『我们约好了哦？』亲了亲%CALLNAME:MASTER%…
+						PRINTW 
+					ENDIF
+				ENDSELECT
+			CASE 3
+				SELECTCASE RAND:2
+				CASE 0
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%全心全意地清洗着父亲的下体…
+					PRINTL 
+				CASE 1
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%声称是为了洗身体、执意地来回用手掌搓揉父亲的龟头…
+					PRINTL 
+				CASE 2
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%正专心的为父亲洗净身体
+					PRINTFORML 用着充满肥皂泡沫的手温柔地搓揉着父亲的男性象征
+					PRINTFORML 父亲苦恼地说「够了、不用了」、%CHILDNAME:139:(TALENT:139:育儿中)%却摇了摇头
+					PRINTW 
+					CALL HPH_PRINT,@"『不可以喔HPH　不好好清洁小鸡鸡的话可是会生病的、妈妈曾这么说过HPH』","L"
+					CALL HPH_PRINT,@"『特别是小鸡鸡前端的伞状沟这里…会比较容易积存污垢呢HPH』","L"
+					CALL HPH_PRINT,@"『要像这样用手指撸撸、撸撸不然不行呢HPH』","L"
+					PRINTL 
+					CALL HPH_PRINT,@"『爸爸、小鸡鸡变硬了呢。为什么会变硬呢？HPH』","L"
+					CALL HPH_PRINT,@"『是因为被洗得很舒服吗？　那我会更加拼命的洗得HPH』","L"
+					CALL HPH_PRINT,@"『嘿嘿嘿HPH　要像这样、从根部到尖端、全部好好的擦洗呢HPH』","L"
+					PRINTW 
+					CALL HPH_PRINT,@"『要出来了？　要出来什么呢？HPH』","L"
+					CALL HPH_PRINT,@"『请告诉我吧HPH　是想要小便吗？　在浴室里小便是不可以的哟HPH』","L"
+					CALL HPH_PRINT,@"『咦？　小鸡鸡在一跳一跳的…咿呀！？HPH』","L"
+					PRINTL 
+					CALL HPH_PRINT,@"『小鸡鸡的前端、流出了白白黏黏的液体呢…HPH』","L"
+					CALL HPH_PRINT,@"『爸爸、光是被洗小鸡鸡就会射出来呢HPH』","L"
+					PRINTW 
+					PRINTFORML 『唔诶、味道、怪怪的…』
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%舔了舔飞溅到嘴角的精液、脸上露出了困惑的表情
+					PRINTFORML 毕竟是个小孩子对味觉还是相当敏感。即使是成年女性也会不喜欢这种味道
+					PRINTL 
+					PRINTFORML 虽然被告知说可以吐出来、但%CHILDNAME:139:(TALENT:139:育儿中)%摇了摇并将精液咽了下去
+					PRINTFORML 『呜诶诶…妈妈她真厉害呢。总是将这样东西喝下去呢…』
+					PRINTFORML 『不过、如果是爸爸的话我会努力咽下去的。%CHILDNAME:139:(TALENT:139:育儿中)%会加油的♪』
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%无忧无虑地笑了笑…
+					PRINTW 
+				ENDSELECT
+			ENDSELECT
+		CASE 2
+		CASE 3
+		CASE 4
+		ENDSELECT
+	ELSEIF (CFLAG:139:1997 == 1 || CFLAG:139:1997 >= 3) && CHILD_LOVE:139:(TALENT:139:育儿中) > 0 && CHILD_SEX:139:(TALENT:139:育儿中) == 1
+		PRINTFORML %CALLNAME:MASTER%被%CHILDNAME:139:(TALENT:139:育儿中)%央求、两人一起进了浴室
+		PRINTL 
+		SELECTCASE CFLAG:1983
+		CASE 1
+			SELECTCASE RAND:4
+			CASE 0
+				SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 父亲温暖的手、清洗着背部和手臂
+					PRINTFORML 当表示希望也洗洗前面时父亲显得有些为难、但在撒娇之后最终还是同意了
+					PRINTW 
+					PRINTFORML 父亲的手在胸前轻轻滑过
+					PRINTFORML 每当手掌在乳头上来回摩擦时%CHILDNAME:139:(TALENT:139:育儿中)%都会发出妖艳的喘息声
+					PRINTL 
+					PRINTFORML 手掌从胸部滑向腹部再到下腹部时、%CHILDNAME:139:(TALENT:139:育儿中)%的胸脯都会如同急速敲打的钟一般跳动
+					PRINTFORML 捉弄父亲的念头早已烟消云散、%CHILDNAME:139:(TALENT:139:育儿中)%的内心、只剩下让父亲温柔抚摸的愿望
+					PRINTL 
+					PRINTFORML 最终、父亲的手触摸到了除自己以外未曾被碰触过的秘密花园
+					PRINTFORML 终于、摸到自己的女性的部位了──
+					PRINTL 
+					PRINTFORML ……然而、原以为父亲会仔细地触摸、但结果只是简单地在周围轻轻洗了一下
+					PRINTFORML 「妳妈妈她说过、女生的性器被过度清洗也不太好」被这样告知
+					PRINTL 
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%忍不住对母亲有些怀恨在心
+					PRINTL 
+				CASE 1
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%与父亲一同泡在浴缸里放松身心
+					PRINTL 
+					SELECTCASE RAND:2
+					CASE 0
+						CALL HPH_PRINT,@"『……HPH』","L"
+						PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%假装放松、故意张开双腿
+						PRINTFORML 那还不知男人的幼小秘裂处在水下摇摆着
+						PRINTL 
+						PRINTFORML 期待父亲会有些反应、但他只是茫然地看着这边
+						PRINTFORML 似乎并不是在盯着%CHILDNAME:139:(TALENT:139:育儿中)%的大腿间看、而是完全陶醉于泡澡之中…
+						PRINTL 
+						PRINTFORML 因为生气了、%CHILDNAME:139:(TALENT:139:育儿中)%用水枪将父亲的脸喷个湿透
+						PRINTW 
+					CASE 1
+						PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%靠在父亲身上、伸展着身体
+						PRINTFORML 父亲苦笑着说这里有些拥挤了呢。真是长大了呢
+						PRINTL 
+						PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%的屁股、碰触到父亲的肉棒
+						PRINTFORML 但很可惜的是还依然软软的、似乎还没有意识到%CHILDNAME:139:(TALENT:139:育儿中)%是个女人
+						PRINTW 
+						CALL HPH_PRINT,@"『……HPH』","L"
+						PRINTFORML 不满的%CHILDNAME:139:(TALENT:139:育儿中)%、将既柔软又有些硬的屁股压向父亲的大腿间
+						PRINTFORML 每当父亲的肉棒磨过屁股的间隙时、就会有一种不应该的感觉──后来才明白那是背德的感觉──涌上心头
+						PRINTL 
+						PRINTFORML 父亲轻声抱怨着「这样压着很难受的」、并轻轻按住了%CHILDNAME:139:(TALENT:139:育儿中)%
+						PRINTFORML 因为不想被父亲讨厌、%CHILDNAME:139:(TALENT:139:育儿中)%轻轻地退开
+						PRINTL 
+						PRINTFORML 然而、眼角瞥见父亲的阴茎正微微挺立着、
+						PRINTFORML 于是%CHILDNAME:139:(TALENT:139:育儿中)%偷笑了起来…
+						PRINTW 
+					ENDSELECT
+				CASE 2
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%骑在了父亲的身上面对面相看着
+					PRINTFORML 如同恋人们在浴室里嬉戏的姿态一般
+					PRINTL 
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%的感受、无论是察觉到了或是未察觉到、父亲都不置可否地苦笑着
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%永远都是个小可爱啊…
+					PRINTW 
+					PRINTFORML 如果父亲总是把自己当作孩子看待的话、那么就反过来利用这一点好了
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%紧贴着父亲、用胸部和下体磨蹭着
+					PRINTL 
+					PRINTFORML 『经常看到爸爸和妈妈大这样做呢』这样说时、父亲露出了一种尴尬又困扰的表情
+					PRINTFORML 看着匆匆离去的父亲、%CHILDNAME:139:(TALENT:139:育儿中)%不悦地撅起嘴巴…
+					PRINTL 
+				ENDSELECT
+			CASE 1
+				SELECTCASE RAND:2
+				CASE 0
+					PRINTFORML 刚出浴的%CHILDNAME:139:(TALENT:139:育儿中)%裸露着身体在房间内晃荡…
+					PRINTFORML 当被提醒赶快穿上衣服时、%CHILDNAME:139:(TALENT:139:育儿中)%露出了一副失望的表情…
+					PRINTL
+				CASE 1
+					PRINTFORML 刚出浴的%CHILDNAME:139:(TALENT:139:育儿中)%裸露地走过%CALLNAME:MASTER%的面前…
+					PRINTFORML 『…………%UNICODE(0x2665) *1%』
+					PRINTFORML 突然、%CHILDNAME:139:(TALENT:139:育儿中)%的浴巾[掉落]到了地上
+					PRINTL 
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%一边露出浅浅的乳沟、一边缓慢地弯下身子捡起浴巾
+					PRINTFORML 看着父亲只是淡淡地瞥了一眼似乎完全没兴趣、%CHILDNAME:139:(TALENT:139:育儿中)%不悦地撅起了嘴巴
+					PRINTL 
+				ENDSELECT
+			CASE 2
+				SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%将肥皂涂满整个身体后、
+					PRINTFORML 从背后搂着父亲用\@ TALENT:139:胸围 >= 1 ? 不合年龄的 # 发育之中的 \@胸部摩擦着…
+					PRINTL 
+				CASE 1
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%将胸部抹满肥皂后搂住父亲的背摩擦、
+					PRINTFORML 并轻抚着父亲的乳头…
+					PRINTL 
+				CASE 2
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%决定替父亲擦背
+					PRINTFORML 名目上宣称是『为了感激父亲为家庭做出的贡献』
+					PRINTFORML 虽然动机不明但内心未对父亲说谎所以应该没问题
+					PRINTL 
+					PRINTFORML 将自己全身涂上肥皂后、从背后搂住父亲并用\@ TALENT:139:胸围 >= 1 ? 不符年龄的 # 发育之中的 \@胸部轻轻磨蹭着
+					PRINTFORML 望着这个小时候经常揹起自己的背部、抱有着欲望和爱意搓洗起泡沫
+					PRINTL 
+					PRINTFORML 父亲一时茫然失措、但却没有阻止并安静地顺从着
+					PRINTFORML 不久后、%CHILDNAME:139:(TALENT:139:育儿中)%的乳头由柔软变得硬挺
+					PRINTFORML 伴随着这变化、%CHILDNAME:139:(TALENT:139:育儿中)%的呼吸变得急促
+					PRINTL 
+					CALL HPH_PRINT,@"『全都、洗好了…HPH』","L"
+					PRINTFORML 甜美的刺激从乳头快速传遍全身、顿时站立不稳的%CHILDNAME:139:(TALENT:139:育儿中)%倚靠在父亲身上
+					PRINTW 
+					CALL HPH_PRINT,@"『前面、也要洗吗…？HPH』","L"
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%的提议、被父亲十分委婉地拒绝了、并表示「已经足够了、谢谢」
+					PRINTL 
+					PRINTFORML 然后粗略地冲洗身体后、匆匆离开浴室
+					PRINTFORML 并留下了一句话、说「%CHILDNAME:139:(TALENT:139:育儿中)%不想感冒的话就快点起来吧」
+					PRINTL 
+					PRINTFORML 『…爸爸真是软弱呢』说完、%CHILDNAME:139:(TALENT:139:育儿中)%不满地噘起了嘴巴
+					PRINTFORML 但那个生气噘嘴的表情、逐渐转变成不符合可爱少女的淫荡表情
+					PRINTL 
+					CALL HPH_PRINT,@"『好开心、好开心HPH』","L"
+					CALL HPH_PRINT,@"『爸爸他、当把我当作个女人看待了HPH』","L"
+					PRINTL 
+					PRINTFORML 因为──
+					PRINTFORML 离去之际的爸爸的胯下的东西、变得好大好大的
+					PRINTL 
+				ENDSELECT
+			CASE 3
+				SELECTCASE RAND:2
+				CASE 0
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%全心全意地清洗着父亲的下体…
+					PRINTL 
+				CASE 1
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%声称是为了洗身体、执意地来回用手掌搓揉父亲的龟头…
+					PRINTL 
+				CASE 2
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%正专心的为父亲洗净身体
+					PRINTFORML 用着充满肥皂泡沫的手温柔地搓揉着父亲的男性象征
+					PRINTFORML 父亲苦恼地说「够了、不用了」、%CHILDNAME:139:(TALENT:139:育儿中)%却摇了摇头
+					PRINTL 
+					CALL HPH_PRINT,@"『不可以喔HPH　不好好清洁小鸡鸡的话可是会生病的、妈妈曾这么说过HPH』","L"
+					CALL HPH_PRINT,@"『特别是小鸡鸡前端的伞状沟这里…会比较容易积存污垢呢HPH』","L"
+					CALL HPH_PRINT,@"『要像这样用手指撸撸、撸撸不然不行呢HPH』","L"
+					PRINTL 
+					CALL HPH_PRINT,@"『爸爸、小鸡鸡变硬了呢。为什么会变硬呢？HPH』","L"
+					CALL HPH_PRINT,@"『是因为被洗得很舒服吗？　那我会更加拼命的洗得HPH』","L"
+					CALL HPH_PRINT,@"『嘿嘿嘿HPH　要像这样、从根部到尖端、全部好好的擦洗呢HPH』","L"
+					PRINTL 
+					CALL HPH_PRINT,@"『要出来了？　要出来什么呢？HPH』","L"
+					CALL HPH_PRINT,@"『在浴室尿尿可不行哦？　妈妈会骂人的哦HPH』","L"
+					CALL HPH_PRINT,@"『咦？　小鸡鸡在一跳一跳的…咿呀！？HPH』","L"
+					PRINTL 
+					CALL HPH_PRINT,@"『小鸡鸡的前端、流出了白白黏黏的液体呢…HPH』","L"
+					CALL HPH_PRINT,@"『嗅、嗅…闻起来怪怪的HPH　不过…我并不讨厌哦HPH』","L"
+					PRINTL 
+					CALL HPH_PRINT,@"『爸爸、这是什么？　这就是精液吗？HPH』","L"
+					CALL HPH_PRINT,@"『把鸡鸡洗得非常干净的话就会出来吗♪HPH』","L"
+					CALL HPH_PRINT,@"『诶嘿嘿HPH　%CHILDNAME:139:(TALENT:139:育儿中)%、成功的把鸡鸡洗得非常干净了HPH』","L"
+					PRINTL 
+					CALL HPH_PRINT,@"『爸爸、我下次也会努力把鸡鸡洗得很干净的HPH』","L"
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%无忧无虑地笑了笑…
+					PRINTL 
+				ENDSELECT
+			ENDSELECT
+			PRINTW 
+		CASE 2
+			SELECTCASE RAND:8
+			CASE 0
+				PRINTFORML 『这样大概会比较快吧♪』
+				PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%将全身涂满肥皂后、扑在%CALLNAME:MASTER%身上撒娇玩耍
+			CASE 1
+				PRINTFORML 『啊哈哈♪　%MASTERNAME:139%的鸡鸡、变得好大哦♪』
+				PRINTFORML 当%CHILDNAME:139:(TALENT:139:育儿中)%的手洗到%CALLNAME:MASTER%的阴茎时它挺立了起来
+				PRINTFORML 见到这一幕的、%CHILDNAME:139:(TALENT:139:育儿中)%无邪地笑了
+			CASE 2
+				PRINTFORML 『明明%MASTERNAME:139%有小鸡鸡、为什么%CHILDNAME:139:(TALENT:139:育儿中)%却没有呢？』
+				PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%用手指拨弄着自己阴唇、与父亲的性器做比较…
+			CASE 3
+				PRINTFORML 『…………』
+				PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%兴致勃勃地看着父亲的阴茎…
+			CASE 4
+				PRINTFORML 『%MASTERNAME:139%♪　帮我洗♪　帮我洗♪』
+				PRINTFORML 是想对父亲撒娇呢、还是单纯懒得自己来呢、也或许两边都有。%CHILDNAME:139:(TALENT:139:育儿中)%让爸爸帮自己清洗身体
+				PRINTFORML 『嗯……！』
+				PRINTFORML 然而、当手指掠过樱花色地突起或尚未成熟的小肉豆时、%CHILDNAME:139:(TALENT:139:育儿中)%便会发出含有一丝艳色的声音…
+			CASE 5
+				PRINTFORML 『%MASTERNAME:139%的鸡鸡、软绵绵的♪　哎呀、变硬了！』
+				PRINTFORML 不听%CALLNAME:MASTER%的制止、%CHILDNAME:139:(TALENT:139:育儿中)%依然用手指戳捏龟头玩弄着…
+			CASE 6
+				PRINTFORML 『诶嘿嘿ー♪』
+				PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%将屁股肉紧贴在%CALLNAME:MASTER%的股间上、享受着泡澡的乐趣…
+			CASE 7
+				PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%光着身子在家里到处乱走…
+				PRINTFORML 当催促着她穿上衣服时、她说着『很热不要！』的反抗着
+			ENDSELECT
+			PRINTL 
+		CASE 3
+			SELECTCASE RAND:8
+			CASE 0
+				CALL HPH_PRINT,@"『……HPH』","L"
+				PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%鼓起勇气、恳求着%CALLNAME:MASTER%用手温柔地帮她洗洗
+				PRINTFORML 每当父亲沾满肥皂的手划过敏感的地方时、%CHILDNAME:139:(TALENT:139:育儿中)%都会拼命压抑住快要泄露出的甜美呻吟…
+			CASE 1
+				PRINTFORML 『%MASTERNAME:139%的背需要洗一洗哦…♪』
+				PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%一边搓着父亲的背、一边从背后偷偷瞄着肉棒…
+			CASE 2
+				PRINTFORML 『…………』
+				PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%在浴缸中悄悄地把细长的双腿自然地左右张开
+				PRINTFORML 向最爱的父亲、把自己最重要的地方暴露出来、此时%CHILDNAME:139:(TALENT:139:育儿中)%的胸口如早晨的闹钟般跳动
+				PRINTFORML 然而、%CALLNAME:MASTER%沉浸在泡汤的愉悦之中、似乎根本没注意到的样子…
+			CASE 3
+				PRINTFORML 『…………』
+				PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%在浴缸中移动着脚、用脚尖轻轻触碰着父亲的性器…
+			CASE 4
+				PRINTFORML 『…………鸡鸡、好厉害……』
+				PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%在浴缸中偷偷地瞄着父亲毫无防备的暴露出的下半身…
+			CASE 5
+				PRINTFORML 『这里……洗不干净……请帮我洗吧……』
+				PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%坐在浴椅上、用手指将未成熟的小穴左右掰了开来…
+			CASE 6
+				CALL HPH_PRINT,@"『……HPH　……嗯HPH』","L"
+				PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%靠在%CALLNAME:MASTER%身上、悄悄在浴缸里自慰…
+			CASE 7
+				PRINTFORML 看起来%CHILDNAME:139:(TALENT:139:育儿中)%是想要帮自己洗…
+				PRINTFORML ……但是、她执着地只洗下半身、而且%CHILDNAME:139:(TALENT:139:育儿中)%还一直盯着阴茎看感觉有点吓人…
+			ENDSELECT
+			PRINTL 
+		CASE 4
+			SELECTCASE RAND:8
+			CASE 0
+				CALL HPH_PRINT,@"『想跟年轻的女儿一起进浴室洗澡真是恶心呢HPH』","L"
+				PRINTFORML 先前才说过『%MASTERNAME:139%不一起进去浴室就不洗澡』的人是%CHILDNAME:139:(TALENT:139:育儿中)%才对吧…
+			CASE 1
+				CALL HPH_PRINT,@"『对女儿的裸体产生情欲的%MASTERNAME:139%、真是糟糕啊HPH』","L"
+				PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%在浴缸中、将还有些硬度的身体押了过来…好挤啊…
+			CASE 2
+				CALL HPH_PRINT,@"『%MASTERNAME:139%、前面的头发稀稀疏疏的HPH　下季复出的希望几乎是绝望的啊HPH』","L"
+				PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%洗完%CALLNAME:MASTER%的头后、开始用小手细心地给头皮做按摩…
+			CASE 3
+				CALL HPH_PRINT,@"『居然会对女儿产生情欲还让鸡鸡硬起来～好变态～HPH　要被侵犯了～HPH』","L"
+				PRINTFORML 浸泡在浴缸中的%CHILDNAME:139:(TALENT:139:育儿中)%、用着屁股磨蹭着父亲仍然软软的阴茎…
+			CASE 4
+				CALL HPH_PRINT,@"『趁洗澡时偷摸女儿的身体可是刑事案件哦HPH　严重到要叫天狗警察HPH　来把这个人逮捕起来哦HPH』","L"
+				PRINTFORML 被要求着要细心的擦洗身体、却因为用的海绵而不是手而叫了起来、被谜一般理由的威胁了…
+			CASE 5
+				CALL HPH_PRINT,@"『让女儿看见鸡鸡可谓相当糟糕的哦…HPH　真是最差劲的父亲HPH』","L"
+				PRINTFORML 虽然盯着眼前父亲的阴茎的眼神炯炯有神的、但%CHILDNAME:139:(TALENT:139:育儿中)%还是一边骂着%CALLNAME:MASTER%一边看…
+			CASE 6
+				CALL HPH_PRINT,@"『一个人连背都洗不干净真是糟糕啊HPH　我来示范怎么洗吧HPH』","L"
+				PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%毫不犹豫、全心全意地给父亲洗背…
+			CASE 7
+				CALL HPH_PRINT,@"『明明只是帮忙洗一下的、鸡鸡居然还勃起了、真是糟糕啊HPH　变态的%MASTERNAME:139%HPH』","L"
+				PRINTFORML 被%CHILDNAME:139:(TALENT:139:育儿中)%细心地洗过性器后、%CALLNAME:MASTER%不由自主地勃起了
+				PRINTFORML 然而、%CHILDNAME:139:(TALENT:139:育儿中)%与嘴上说的相反看起来很高兴的样子…
+			ENDSELECT
+			PRINTL 
+		ENDSELECT
+	ELSE
+		IF CHILD_SEX:139:(TALENT:139:育儿中) == 1
+			PRINTFORML 　　 /＼／＼/＼∧
+			PRINTFORML 　 ＜　呼呜ー嗯　＞
+			PRINTFORML 　　 Ｖ＼/＼／＼/
+			PRINTFORML ＼　　　　｜　　　 ／
+			PRINTFORML 　＼　　 ＿＿_　 ／
+			PRINTFORML 　　　　/　　 ヽ
+			PRINTFORML ＼　ｍ {0}/ヽ{0}ｍ ／
+			PRINTFORML 　 ｜っ| ヽ_ノ　と｜
+			PRINTFORML 　／ ム　 `ｰ′　ム ＼
+			PRINTFORML （＿＿　　　　　_＿＿)
+			PRINTFORML ＿＿ ｜　　　　｜＿＿＿
+			PRINTFORML 　　／　　　　 /
+			PRINTFORML 　 /　　　　 ／
+			PRINTFORML 　｜　/＼＿ノ￣￣ヽ
+			PRINTFORML ／｜ ｜　　￣￣/　ﾉ
+			PRINTFORML 　/　ﾉ　　　　｜ /　＼
+			PRINTFORML `/ ／　　　　 ﾉ /
+			PRINTFORML / ｜ 　　　　(_ ＼
+			PRINTFORML ＼_) 　　　　　＼_)
+			PRINTFORML 
+			PRINTFORML 女儿赤裸着身体摆出了妖艳的姿势
+			PRINTFORML 但女儿啊、那不是妖艳、那是ジュウシマツ住職啊…
+			PRINTW 
+		ENDIF
+	ENDIF
+ELSE
+	PRINTFORML 
+ENDIF
+
+;-------------------------------------------------
+;育儿イベント就寝
+;-------------------------------------------------
+@M_KOJO_EVENT_K139_CHILD_RAISING_SLEEPING(ARGS,ARG,ARG:1)
+CALL K139_FATHERNAME
+IF (CFLAG:139:1997 == 1 || CFLAG:139:1997 >= 3) && CHILD_LOVE:139:(TALENT:139:育儿中) > 0 && (ARGS == "幼少期" || ARGS == "自立前")
+	PRINTFORML ──%CHILDNAME:139:(TALENT:139:育儿中)%某一天的日记
+	SELECTCASE CFLAG:1983
+	CASE 1, 3, 4
+		SELECTCASE RAND:10
+		CASE 0
+			PRINTFORML %MASTERNAME:139%和妈妈的关系很好
+			PRINTFORML 虽然关系很好很不错、但是太好了也是个问题
+			PRINTL 
+			PRINTFORML 当我在深夜努力学习的时候、闭起了拉门就开始做爱真的很困扰着我
+			PRINTFORML 他们两人或许认为我听不到的、但这房子很小、声音当然会传出来
+			PRINTW 
+			PRINTFORML 不过我也放下了书本偷窥起两人的行为、所以算是势均力敌吧
+			PRINTFORML 而且、%MASTERNAME:139%之外、有时妈妈她似乎也察觉到了我在偷窥
+			PRINTL 
+			PRINTFORML 就好像他们在正在实践着男女间的性爱是多么美好的事情一样
+			PRINTFORML 如果真是这样的话、妈妈的[英才教育]可说是开花结果了
+			PRINTL 
+			PRINTFORML 有问题的是、我还没有像马麻那样、找到一个能真心相爱的对象
+			PRINTFORML 或许、有一天、那样的人会出现在我生命之中吗？
+			PRINTL 
+		CASE 1
+			PRINTFORML 正在帮忙打扫家里时、发现了从未见过的玩具
+			PRINTFORML 我问%MASTERNAME:139%时、%MASTERNAME:139%尴尬地避开视线并走开了
+			PRINTL 
+			PRINTFORML 当我问妈妈时、妈妈直接了当的告诉了我这东西的用途与使用方法
+			PRINTFORML 妈妈果然是个变态呢
+			PRINTW 
+			PRINTFORML 说「妳也已经够大了呢」、并将一个未曾使用的跳蛋送给了我
+			PRINTFORML 虽然我其实是比较想要电动按摩棒的、「那样还太早了」妈妈如此说道
+			PRINTL 
+			PRINTFORML 总而言之、这真的很舒服
+			PRINTFORML 妈妈她每天想必都能享受到这样的舒服感吧。老实说、我好羡慕妈妈
+			PRINTFORML 我希望有一天也能体验真正的性爱呢
+			PRINTW 
+		CASE 2
+			PRINTFORML 在浴室里观察了%MASTERNAME:139%的鸡鸡
+			IF TALENT:MASTER:形状 == 6 || TALENT:MASTER:形状 == 10
+				PRINTFORML %MASTERNAME:139%的鸡鸡非常的大。即使没有硬起来也比我的手臂粗呢
+				PRINTFORML 能把那样的东西放进嘴里或下面的妈妈真的太疯狂了。真的超级疯狂的
+			ELSEIF TALENT:MASTER:形状 == 1 || TALENT:MASTER:形状 == 2
+				PRINTFORML %MASTERNAME:139%的鸡鸡看起来像小孩子的一样。因为我曾来没有见过正常成年人的鸡鸡过所以无法比较呢
+				PRINTFORML 之前还说过『%MASTERNAME:139%的鸡鸡比○○君的还要小』结果让他崩溃不已。我真的做错事了前
+			ELSEIF TALENT:MASTER:形状 == 5
+				PRINTFORML 从朋友那借来的小薄本里、看起来就像是哥布林的鸡鸡一样。我当时哭了
+				PRINTFORML 红魔馆的哥布林们非常温柔、他们的鸡鸡真的是长那样吗
+			ELSEIF TALENT:MASTER:形状 == 4
+				PRINTFORML 真是耀眼啊
+				PRINTFORML 这是我有记忆以来第一次看到它时的第一个反应
+				PRINTFORML 难道%MASTERNAME:139%其实不是人类、而是萤火虫妖怪之类的吗
+			ELSE
+				PRINTFORML 与班上的同学不同、是很壮观的大人的鸡鸡
+				PRINTFORML 而且它还会变得更大这还真是令人惊讶。而且它还会进入女性的身体内、这让我惊讶了第二次
+			ENDIF
+			PRINTFORML 如果盯得太久、%MASTERNAME:139%就会迅速将鸡鸡藏起来
+			PRINTFORML 被看到又不会少一块肉、希望女儿我的一点点小小心愿能够实现吧
+			PRINTL 
+		CASE 3
+			PRINTFORML 妈妈曾教过我说「只要掌握了男人的胃跟蛋蛋、就能轻松抓住他喔♪」
+			SELECTCASE CFLAG:1983
+			CASE 1
+				PRINTFORML 寺所以我就在寺子屋里抓住了同学的蛋蛋、然后被慧音老师捶了一下头。真是不甘心啊
+			CASE 3
+				PRINTFORML 烹饪课虽然可以努力一下、但的确想知道同学的鸡鸡摸起来是什么感觉呢
+				PRINTFORML 如果是%MASTERNAME:139%的话应该会让我摸的吧
+			CASE 4
+				PRINTFORML 抓住胃应该还好、但总觉得抓住蛋蛋的话就要社会性死亡了
+				PRINTFORML 由于妈妈是个妖怪、道德观应该也跟常人不同呢
+			ENDSELECT
+			PRINTL 
+		CASE 4
+			IF (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行)
+				PRINTFORML 话说回来、%MASTERNAME:139%一直都像是个小孩子一样
+				PRINTFORML 身高也早就超过爸爸了
+				PRINTFORML 询问了妈妈后、妈妈居然说「%MASTERNAME:139%他是永远年轻的喔♪」
+				PRINTFORML 这怎么可能、好可怕
+				PRINTL 
+			ELSEIF TALENT:MASTER:年龄 == 2
+				PRINTFORML %MASTERNAME:139%他、虽然自小时候起就一直是老爷爷的模样
+				PRINTFORML 不过、我很担心爸爸他的寿命很快就会结束了
+				PRINTFORML 询问了妈妈后、妈妈居然说「%MASTERNAME:139%他是永远年轻的喔♪」
+				PRINTFORML 难道爸爸他是仙人什么的吗？
+				PRINTL 
+			ELSE
+				PRINTFORML %MASTERNAME:139%他、自我小时候到现在外貌就没有改变过
+				PRINTFORML 而妈妈因为是妖怪的关系没有寿命有限的问题。所以连外表都不会改变
+				PRINTFORML 难道、只有我会变老然后死去吗？　当我吓得哭出来时、妈妈这样安慰着我
+				PRINTFORML 「没问题的喔♪　等到妳独立之后就不会再变老了喔♪」
+				PRINTFORML 我不太理解妈妈说得是什么意思
+				PRINTL 
+			ENDIF
+		CASE 5
+			;（TK作者写的Zzz...）
+			PRINTFORML 从寺子屋的朋友那里借到了一本叫做「ダブルズボズボ淫乱」的书
+			PRINTFORML 书中的天狗长的像是文姐姐和姬海棠姐姐一模一样
+			SELECTCASE CFLAG:1983
+			CASE 1
+				PRINTFORML 文姐姐（假）做了很多很坏的事情让我有些不安
+				PRINTFORML 但最后姬海棠姐姐（假）看起来也非常幸福、所以我觉得也没关系吧
+				PRINTL 
+				PRINTFORML 过了几天、当我告诉朋友这本书很有趣的时候、他推荐了「ダブルヌポヌポ淫乱」的续集
+				PRINTFORML 这东西居然还有续集…
+			CASE 3
+				PRINTFORML 看着那些长得跟熟人一样的人做爱着怪让人兴奋的
+				PRINTFORML 虽然明知道这样不应该、但一边看着书一边玩弄阴蒂的感觉真的相当舒服
+				PRINTL 
+				PRINTFORML 之后还书的时候被问及「书页边缘怎么湿湿的？」时
+				PRINTFORML 一股做色色的事情被抓包的感觉从心底冒出…顿时间就感觉到下身股间处一阵热热的
+			CASE 4
+				PRINTFORML 看这个是侵犯隐私的行为吗？　我这样思考着
+				PRINTFORML 啊、不过、或许这是他们自愿的、也有这个可能性呢
+				PRINTFORML 如果是他们自己允许的话、那天狗是不是都是些好色的人呢
+			ENDSELECT
+		CASE 6
+			PRINTFORML 街上似乎正发生着一个奇怪的异变、年轻女孩被不明人士进行淫荡的恶作剧
+			IF MARK:1:时奸刻印 == 3
+				IF MARK:31:时奸刻印 == 3
+					PRINTFORML 不过、守使的女巫和博丽的女巫似乎都没有打算认真去解决这个问题
+				ELSE
+					PRINTFORML 不过、博丽的巫女似乎也没有打算认真去解决这个问题
+				ENDIF
+			ELSE
+				PRINTFORML 看起来虽然并未受到伤害、但是却从穴中喷出了不是血液的液体然后当场昏厥
+				PRINTFORML 有些虽然没有这么严重。但却被偷走了内裤（这也一样糟糕）
+				PRINTL 
+				PRINTFORML 很担心妈妈她会不会也受害了呢、
+				IF MARK:139:时奸刻印 == 3
+					PRINTFORML 「…要我告诉妳吗？」妈妈微笑着问道
+					PRINTFORML 那微笑的方式有点可怕所以我停止继续问下去、但我想妈妈她多半也是受害者吧
+				ELSEIF MARK:139:时奸刻印 == 0
+					PRINTFORML 「或许应该算是幸运吧…但对女性来说心情相当复杂呢」
+					SELECTCASE CFLAG:1983
+					CASE 1, 4
+						PRINTFORML 能说出这种话的妈妈真是太厉害了。或者说、太疯狂了
+					CASE 3
+						PRINTFORML 不知不觉间我也开始理解妈妈的想法了
+					ENDSELECT
+				ELSE
+					PRINTFORML 「啊ー…这是我和%MASTERNAME:139%的秘密哦…」、妈妈偷偷地告诉了我
+					SELECTCASE CFLAG:1983
+					CASE 1
+						PRINTFORML 我也有点希望自己也能成为受害者了
+					CASE 3
+						PRINTFORML 如果很舒服的话希望他能来找我呢…会这么想的我真是坏小孩啊
+					CASE 4
+						PRINTFORML 希望他不要来找我呢
+					ENDSELECT
+				ENDIF
+				PRINTL 
+			ENDIF
+		CASE 7
+			PRINTFORML 地底有一间叫做「爱之旅馆」的地方、里面男女们好像在进行性爱的活动
+			PRINTFORML 据说那所设施是地上是难以想像的。让人好奇不已
+			PRINTL 
+			PRINTFORML 由于好奇、我问了妈妈一句「能和%MASTERNAME:139%一起去吗？」、
+			PRINTFORML 「%MASTERNAME:139%是妈妈的财产、我不会借给别人的哦♪」被这样警告了
+			PRINTL 
+		CASE 8
+			IF CFLAG:1998 == 1
+				PRINTFORML 我不知道…
+				PRINTFORML 妈妈曾经有跟%MASTERNAME:139%交往过
+				PRINTFORML 「嘛、这也什么必要特意提起呢」妈妈苦笑的说道
+				PRINTL 
+				PRINTFORML 妈妈说并不是因为争吵或其他不和原因而分手的
+				PRINTFORML 而是由于附身的对象被摧毁了、与前任的关系也就自然消逝了
+				PRINTL 
+				PRINTFORML 「嘛、无论如何也共计生了七十三个孩子了、关系应该不会差呢」
+				PRINTFORML …什么？
+				PRINTL 
+				PRINTFORML 换句话说…我有超过七十个的兄弟姊妹！？
+				PRINTL 
+			ELSE
+				PRINTFORML 讯问了妈妈、在遇到%MASTERNAME:139%之前、有没有和其他人交往过
+				PRINTFORML 「没有、那种事情的哦♪　 再说了、我可是妖怪呢」
+				PRINTL 
+				PRINTFORML 基本上妖怪是不会变老或者死亡的（好像啦）
+				PRINTFORML 所以、不像人类或者其他生物一样有繁殖后代的必要性
+				PRINTL 
+				PRINTFORML 那么、为什么会和%MASTERNAME:139%在一起呢？
+				PRINTFORML 这样问道时、妈妈微微偏了头
+				PRINTL 
+				PRINTFORML 「当时并没有考虑那么多…但我想、这就是一见钟情呢」
+				PRINTFORML 「而现在已经完全深陷于爱河之中了呢♪」
+				PRINTFORML 自豪地散发着恋爱气息的妈妈真让人羡慕呢
+				PRINTL 
+			ENDIF
+		CASE 9
+			PRINTFORML 「如果要交往就应该找和性生活相性好的人来交往」这是母亲的话
+			PRINTFORML 「缺点和短处我可以被视而不见、甚至用优点来掩盖」」
+			PRINTFORML 「但是、如果性生活不和谐的话、吵架后和好的契机就减少了呢」
+			PRINTFORML 「%CHILDNAME:139:(TALENT:139:育儿中)%和妈妈都很相似都很喜欢色色的事情、所以这点更加重要」妈妈是这么说的
+			PRINTL 
+			PRINTFORML 「嘛、妈妈确实找到了像%MASTERNAME:139%这样最棒的伴侣所以无话可说呢♪」
+			SELECTCASE CFLAG:1983
+			CASE 1
+				PRINTFORML 那种目中无人又沾沾自喜的妈妈有时候真让人生气
+			CASE 3
+				PRINTFORML 虽然我觉得我藏得很好、但妈妈似乎察觉到我对色色的事情感兴趣了
+			CASE 4
+				PRINTFORML 不我才没那么…如果对方是%MASTERNAME:139%的话或许会有一点点…算了、我还是别继续说下去好了
+			ENDSELECT
+			PRINTL 
+		ENDSELECT
+	;无邪气
+	CASE 2
+		SELECTCASE RAND:10
+		CASE 0
+			PRINTFORML %MASTERNAME:139%和妈妈关系很良好
+			PRINTFORML 但是一到晚上却经常打架
+			PRINTL 
+			PRINTFORML 从隔扇那边传来砰砰砰的声音、妈妈着发出像是在哭又像是在呻吟的声音
+			PRINTFORML 他们都以为我听不到的、但我的听力很好我全都听见了
+			PRINTW 
+			PRINTFORML 因为有次实在太在意了、就偷偷从隔扇的缝隙偷偷往里面看
+			PRINTFORML 结果发现、裸着的%MASTERNAME:139%和妈妈在被子上像是在扭打一样
+			PRINTL 
+			PRINTFORML 仔细一看、%MASTERNAME:139%的鸡鸡变得好大好大、反复的进出着妈妈的屁股
+			PRINTFORML 每当这样时、妈妈就会发出像是在哭泣又像是在呻吟的、那种奇怪的声音
+			PRINTFORML 有时候是%MASTERNAME:139%在上面、又有时候是妈妈骑在上面
+			PRINTW 
+			PRINTFORML 不知道为什么、看着这一幕我的心跳加速了起来
+			PRINTFORML 腹部下面也感觉紧紧的、有些痒痒的。不讨厌、但感觉好怪
+			PRINTW 
+			PRINTFORML 结束格斗后的妈妈在隔天时总是心情很好、会紧紧依偎在%MASTERNAME:139%身上
+			PRINTFORML 我想、那应该不是打架而是恋人间的行为吧
+			PRINTFORML 我也、想让%MASTERNAME:139%对我做做看呢
+			PRINTL 
+		CASE 1
+			PRINTFORML 正在帮忙打扫家里时、发现了从未见过的玩具
+			PRINTFORML 我问%MASTERNAME:139%时、%MASTERNAME:139%尴尬地避开视线并走开了
+			PRINTL 
+			PRINTFORML 当我问妈妈时、妈妈直接了当的告诉了我这东西的用途与使用方法
+			PRINTFORML 妈妈果然是个变态呢
+			PRINTW 
+			PRINTFORML 说「妳也已经够大了呢」、并将一个未曾使用的跳蛋送给了我
+			PRINTFORML 虽然我其实是比较想要电动按摩棒的、「那样还太早了」妈妈如此说道
+			PRINTL 
+			PRINTFORML 总而言之、这真的很舒服
+			PRINTFORML 妈妈她每天想必都能享受到这样的舒服感吧。老实说、我好羡慕妈妈
+			PRINTFORML 我希望有一天也能体验真正的性爱呢
+			PRINTW 
+		CASE 2
+			PRINTFORML 在浴室里观察了%MASTERNAME:139%的鸡鸡
+			IF TALENT:MASTER:形状 == 6 || TALENT:MASTER:形状 == 10
+				PRINTFORML %MASTERNAME:139%的鸡鸡非常的大。即使没有硬起来也比我的手臂粗呢
+				PRINTFORML 能把那样的东西放进嘴里或下面的妈妈真的太疯狂了。真的超级疯狂的
+			ELSEIF TALENT:MASTER:形状 == 1 || TALENT:MASTER:形状 == 2
+				PRINTFORML %MASTERNAME:139%的鸡鸡看起来像小孩子的一样。因为我曾来没有见过正常成年人的鸡鸡过所以无法比较呢
+				PRINTFORML 之前还说过『%MASTERNAME:139%的鸡鸡比○○君的还要小』结果让他崩溃不已。我真的做错事了前
+			ELSEIF TALENT:MASTER:形状 == 5
+				PRINTFORML 从朋友那借来的小薄本里、看起来就像是哥布林的鸡鸡一样。我当时哭了
+				PRINTFORML 红魔馆的哥布林们非常温柔、他们的鸡鸡真的是长那样吗
+			ELSEIF TALENT:MASTER:形状 == 4
+				PRINTFORML 真是耀眼啊
+				PRINTFORML 这是我有记忆以来第一次看到它时的第一个反应
+				PRINTFORML 难道%MASTERNAME:139%其实不是人类、而是萤火虫妖怪之类的吗
+			ELSE
+				PRINTFORML 与班上的同学不同、是很壮观的大人的鸡鸡
+				PRINTFORML 而且它还会变得更大这还真是令人惊讶。而且它还会进入女性的身体内、这让我惊讶了第二次
+			ENDIF
+			PRINTFORML 如果盯得太久、%MASTERNAME:139%就会迅速将鸡鸡藏起来
+			PRINTFORML 被看到又不会少一块肉、希望女儿我的一点点小小心愿能够实现吧
+			PRINTL 
+		CASE 3
+			PRINTFORML 妈妈曾教过我说「只要掌握了男人的胃跟蛋蛋、就能轻松抓住他喔♪」
+			PRINTFORML 寺所以我就在寺子屋里抓住了同学的蛋蛋、然后被慧音老师捶了一下头。真是不甘心啊
+			PRINTL 
+		CASE 4
+			IF (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行)
+				PRINTFORML 话说回来、%MASTERNAME:139%一直都像是个小孩子一样
+				PRINTFORML 身高也早就超过爸爸了
+				PRINTFORML 询问了妈妈后、妈妈居然说「%MASTERNAME:139%他是永远年轻的喔♪」
+				PRINTFORML 这怎么可能、好可怕
+				PRINTL 
+			ELSEIF TALENT:MASTER:年龄 == 2
+				PRINTFORML %MASTERNAME:139%他、虽然自小时候起就一直是老爷爷的模样
+				PRINTFORML 不过、我很担心爸爸他的寿命很快就会结束了
+				PRINTFORML 询问了妈妈后、妈妈居然说「%MASTERNAME:139%他是永远年轻的喔♪」
+				PRINTFORML 难道爸爸他是仙人什么的吗？
+				PRINTL 
+			ELSE
+				PRINTFORML %MASTERNAME:139%他、自我小时候到现在外貌就没有改变过
+				PRINTFORML 而妈妈因为是妖怪的关系没有寿命有限的问题。所以连外表都不会改变
+				PRINTFORML 难道、只有我会变老然后死去吗？　当我吓得哭出来时、妈妈这样安慰着我
+				PRINTFORML 「没问题的喔♪　等到妳独立之后就不会再变老了喔♪」
+				PRINTFORML 我不太理解妈妈说得是什么意思
+				PRINTL 
+			ENDIF
+		CASE 5
+			PRINTFORML 从寺子屋的朋友那里借到了一本叫做「ダブルズボズボ淫乱」的书
+			PRINTFORML 书中的天狗长的像是文姐姐和姬海棠姐姐一模一样
+			PRINTFORML 文姐姐（假）做了很多很坏的事情让我有些不安
+			PRINTFORML 但最后姬海棠姐姐（假）看起来也非常幸福、所以我觉得也没关系吧
+			PRINTL 
+			PRINTFORML 过了几天、当我告诉朋友这本书很有趣的时候、他推荐了「ダブルヌポヌポ淫乱」的续集
+			PRINTFORML 这东西居然还有续集…
+			PRINTL 
+		CASE 6
+			PRINTFORML 街上似乎正发生着一个奇怪的异变、年轻女孩被不明人士进行淫荡的恶作剧
+			IF MARK:1:时奸刻印 == 3
+				IF MARK:31:时奸刻印 == 3
+					PRINTFORML 不过、守使的女巫和博丽的女巫似乎都没有打算认真去解决这个问题
+				ELSE
+					PRINTFORML 不过、博丽的巫女似乎也没有打算认真去解决这个问题
+				ENDIF
+			ELSE
+				PRINTFORML 看起来虽然并未受到伤害、但是却从穴中喷出了不是血液的液体然后当场昏厥
+				PRINTFORML 有些虽然没有这么严重。但却被偷走了内裤（这也一样糟糕）
+				PRINTL 
+				PRINTFORML 很担心妈妈她会不会也受害了呢、
+				IF MARK:139:时奸刻印 == 3
+					PRINTFORML 「…要我告诉妳吗？」妈妈微笑着问道
+					PRINTFORML 那微笑的方式有点可怕所以我停止继续问下去、但我想妈妈她多半也是受害者吧
+				ELSEIF MARK:139:时奸刻印 == 0
+					PRINTFORML 「或许应该算是幸运吧…但对女性来说心情相当复杂呢」
+					PRINTFORML 能说出这种话的妈妈真厉害。应该说太糟糕了
+				ELSE
+					PRINTFORML 「啊ー…这是我和%MASTERNAME:139%的秘密哦…」、妈妈偷偷地告诉了我
+					PRINTFORML 我也想当当被害者体验一下了
+				ENDIF
+				PRINTL 
+			ENDIF
+		CASE 7
+			PRINTFORML 地底有一间叫做「爱之旅馆」的地方、里面男女们好像在进行性爱的活动
+			PRINTFORML 据说那所设施是地上是难以想像的。让人好奇不已
+			PRINTL 
+			PRINTFORML 由于好奇、我问了妈妈一句「能和%MASTERNAME:139%一起去吗？」、
+			PRINTFORML 「%MASTERNAME:139%是妈妈的财产、我不会借给别人的哦♪」被这样警告了
+			PRINTL 
+		CASE 8
+			IF CFLAG:1998 == 1
+				PRINTFORML 我不知道…
+				PRINTFORML 妈妈曾经有跟%MASTERNAME:139%交往过
+				PRINTFORML 「嘛、这也什么必要特意提起呢」妈妈苦笑的说道
+				PRINTL 
+				PRINTFORML 妈妈说并不是因为争吵或其他不和原因而分手的
+				PRINTFORML 而是由于附身的对象被摧毁了、与前任的关系也就自然消逝了
+				PRINTL 
+				PRINTFORML 「嘛、无论如何也共计生了七十三个孩子了、关系应该不会差呢」
+				PRINTFORML …什么？
+				PRINTL 
+				PRINTFORML 换句话说…我有超过七十个的兄弟姊妹！？
+				PRINTL 
+			ELSE
+				PRINTFORML 讯问了妈妈、在遇到%MASTERNAME:139%之前、有没有和其他人交往过
+				PRINTFORML 「没有、那种事情的哦♪　 再说了、我可是妖怪呢」
+				PRINTL 
+				PRINTFORML 基本上妖怪是不会变老或者死亡的（好像啦）
+				PRINTFORML 所以、不像人类或者其他生物一样有繁殖后代的必要性
+				PRINTL 
+				PRINTFORML 那么、为什么会和%MASTERNAME:139%在一起呢？
+				PRINTFORML 这样问道时、妈妈微微偏了头
+				PRINTL 
+				PRINTFORML 「当时并没有考虑那么多…但我想、这就是一见钟情呢」
+				PRINTFORML 「而现在已经完全深陷于爱河之中了呢♪」
+				PRINTFORML 自豪地散发着恋爱气息的妈妈真让人羡慕呢
+				PRINTL 
+			ENDIF
+		CASE 9
+			PRINTFORML 「如果要交往就应该找和性生活相性好的人来交往」这是母亲的话
+			PRINTFORML 「缺点和短处我可以被视而不见、甚至用优点来掩盖」」
+			PRINTFORML 「但是、如果性生活不和谐的话、吵架后和好的契机就减少了呢」
+			PRINTFORML 「%CHILDNAME:139:(TALENT:139:育儿中)%和妈妈都很相似都很喜欢色色的事情、所以这点更加重要」妈妈是这么说的
+			PRINTL 
+			PRINTFORML 「嘛、妈妈确实找到了像%MASTERNAME:139%这样最棒的伴侣所以无话可说呢♪」
+			PRINTFORML 那种目中无人又沾沾自喜的妈妈有时候真让人生气
+			PRINTL 
+		ENDSELECT
+	ENDSELECT
+	
+	IF ARGS == "幼少期"
+		;あなたと典が回家済み
+		IF (CFLAG:当前位置 == CFLAG:初始位置) &&  (CFLAG:MASTER:当前位置 == CFLAG:当前位置)
+			CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人～HPH　%CALLNAME:MASTER%大人～HPHHPH」","L"
+			PRINTFORML 今晚、父亲和母亲裸体相拥、深爱着彼此
+			PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%从拉门的间隙中偷看着这一切
+			PRINTL 
+			PRINTFORML 我已经忘了是从什么时候开始的
+			PRINTFORML 不知不觉间、窥探父母的情事变成了每天的例行公事
+			PRINTL 
+			CALL HPH_PRINT,@"「啊啊HPH　啊HPH　啊HPHHPH」","L"
+			PRINTFORML 白天、母亲发出了我从未听过的下流呻吟声、并淫荡地摆动着腰部
+			PRINTFORML 就如字面意义上的一样、像个野兽一般
+			PRINTL 
+			PRINTFORML 父亲也一边喘着粗气、一边用硬梆梆的鸡鸡从后面不停地刺入母亲
+			PRINTFORML 从他们的相连处、传来了、啾噗、滋噗之类的水声传出
+			PRINTL 
+			PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%听着这声音、开始隔着内裤磨擦着私密处
+			PRINTFORML 在触碰之前、那里已经湿润得相当明显
+			PRINTFORML 看着父母的性爱场面、即使还年幼却也产生了情欲
+			PRINTW 
+			CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人HPH　喜欢HPH　好爱你HPH」","L"
+			CALL HPH_PRINT,@"「今天也HPH　好强烈HPH　啊HPHHPH　啊啊HPHHPH」","L"
+			PRINTL 
+			CALL HPH_PRINT,@"听着碰HPH碰HPH的肉体撞击声、随之加快了手指在秘所上的摩擦速度","L"
+			PRINTFORML 之后、才在寺子屋的课堂上得知了这种行为叫做「自慰」
+			PRINTL 
+			SELECTCASE RAND:2
+			CASE 0
+				CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人HPH　再多一个人HPH　来吧HPHHPH」","L"
+				CALL HPH_PRINT,@"「中出HPHHPHHPH　射出来HPH　在膣内HPHHPH　射出来也没关系的啦HPHHPH」","L"
+			CASE 1
+				CALL HPH_PRINT,@"「%CALLNAME:MASTER%大人HPH　让我怀上你的孩子吧HPHHPHHPH」","L"
+				CALL HPH_PRINT,@"「会生下来的～HPH　我会生下你的孩子的～HPHHPHHPH　中出进来吧～HPHHPH」","L"
+			CASE 2
+				CALL HPH_PRINT,@"「啊啊啊HPH　让我怀上HPH　%CALLNAME:MASTER%大人的孩子吧HPHHPH」","L"
+				CALL HPH_PRINT,@"「在子宫里HPH　将你最浓郁的一发射出来吧～HPHHPHHPH」","L"
+			ENDSELECT
+			PRINTL 
+			PRINTFORML [中出]
+			PRINTFORML 对%CHILDNAME:139:(TALENT:139:育儿中)%来说、这个词听起来很是甜蜜
+			PRINTFORML 如果我也被[中出]的话、是否能像母亲一样感到愉悦呢？%CHILDNAME:139:(TALENT:139:育儿中)%这样思考着
+			PRINTW 
+			CALL HPH_PRINT,@"「去了HPH　要高潮了HPHHPH　啊HPH　啊啊～～～～～～～～～～～～～～～～～～～HPHHPHHPH　HPHHPHHPH」","L"
+			PRINTFORML 母亲在不断呼喊「高潮」的同时、父亲更加用力地推进的瞬间、弓起了背部剧烈地颤抖着
+			PRINTL 
+			PRINTFORML 双亲保持着相同的姿势多久呢
+			PRINTFORML 父亲深深地呼出一口气、然后与母亲分离显得有些依依不舍
+			PRINTFORML 母亲慢慢地瘫在了被子上喘着粗气
+			PRINTL 
+			PRINTFORML 母亲趴在那里看向了这边。与%CHILDNAME:139:(TALENT:139:育儿中)%四目相交
+			PRINTFORML 母亲的头发被汗水沾湿贴在额头上、满足地微笑着
+			PRINTFORML 仿佛在说「妳有一天也会体会到这份喜悦的」
+			PRINTL 
+		ELSE
+			SELECTCASE RAND:5
+			CASE 0
+				PRINTFORML 一边回想着父亲和母亲的情事、%CHILDNAME:139:(TALENT:139:育儿中)%一边搓弄着秘所…
+				PRINTL 
+			CASE 1
+				CALL HPH_PRINT,@"『%MASTERNAME:139%…HPH　%MASTERNAME:139%…HPHHPH』","L"
+				PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%在被深爱的父亲抱了的幻想中、躺在被窝里自慰…
+				PRINTL 
+			CASE 2
+				CALL HPH_PRINT,@"碰HPH　碰HPH　碰HPH","L"
+				CALL HPH_PRINT,@"『%MASTERNAME:139%～HPH　%MASTERNAME:139%～HPHHPH』","L"
+				PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%将父亲推倒、陶醉地摆动着腰部
+				PRINTL 
+				IF TALENT:MASTER:形状 >= 0 
+					CALL HPH_PRINT,@"『好大HPH　好大HPH　好大HPHHPHHPH』","L"
+				ELSE
+					CALL HPH_PRINT,@"『好舒服HPH　好舒服HPH　好舒服～～HPHHPHHPH』","L"
+				ENDIF
+				PRINTFORML 只是稍微痛了一瞬。有血缘关系的亲子的身体、相性怎会如此契合呢
+				PRINTFORML 只是用阴道在鸡鸡上磨擦而已、居然会这么舒服
+				PRINTL 
+				PRINTFORML 妈妈居然一直在独自享受这样舒服的感觉都不告诉我。好不公平。好不公平。好不公平
+				PRINTFORML 我很喜欢妈妈、但心中涌现出了不能原谅她的阴影
+				PRINTL 
+				PRINTFORML 在%CHILDNAME:139:(TALENT:139:育儿中)%身下的父亲、无力地试图制止
+				PRINTFORML ──停下来？　为什么？
+				PRINTL 
+				CALL HPH_PRINT,@"『%MASTERNAME:139%的小鸡鸡、在%CHILDNAME:139:(TALENT:139:育儿中)%的身体里、一直在说着「不要停下来」哦？HPH』","L"
+				CALL HPH_PRINT,@"『亲生女儿的小穴、很舒服对吧？　近亲相奸后、有这种感觉对吧？HPH』","L"
+				PRINTL 
+				PRINTFORML 还试图表达些什么、于是用嘴唇强行堵住
+				PRINTFORML 就这样将舌头伸入其中、与父亲的舌头缠绕在一起
+				PRINTW 
+				CALL HPH_PRINT,@"『妈妈和我的比HPH　哪边的小穴更舒服呢？』","L"
+				CALL HPH_PRINT,@"『当然是我的吧？HPH　因为、这可是为了%MASTERNAME:139%所特意保留下来的嘛HPHHPH』","L"
+				PRINTL 
+				PRINTFORML 一边用舌头轻轻舔着乳头、一边用手指轻轻摩擦另一颗乳头一边摆动着腰部、父亲在%CHILDNAME:139:(TALENT:139:育儿中)%体内的肉棒顿时发狂般的振荡
+				PRINTFORML 虽然这是我的第一次、但是我的遗传因子告诉了我、告诉了我怎么样才能让父亲的身体愉悦起来
+				PRINTL 
+				CALL HPH_PRINT,@"『啊哈HPH　快要出来了对吧？HPH　小鸡鸡在里面抽搐不已呢HPHHPH』","L"
+				CALL HPH_PRINT,@"『该怎么办呢？HPH　要在亲生女儿的阴道里射精吗？HPH　要做出不该做出的事情吗？HPHHPH』","L"
+				CALL HPH_PRINT,@"『可以喔HPH　在女儿的阴道里中出吧HPH　用%MASTERNAME:139%的精子HPH　将这里播的满满的吧HPHHPH』","L"
+				PRINTL 
+				PRINTFORML 父亲恳求着不要这样。因为他爱着我
+				PRINTFORMW 『%MASTERNAME:139%、如果你真爱着我的话…』
+				PRINTL 
+				PRINTFORML 『那
+				PRINTFORML 　这
+				PRINTFORML 　样
+				PRINTFORML 　的
+				PRINTFORML 　话
+				PRINTFORML 　、
+				PRINTFORML 　既
+				PRINTFORML 　然
+				PRINTFORML 　这
+				PRINTFORML 　么
+				PRINTFORML 　爱
+				PRINTFORML 　着
+				PRINTFORML 　就
+				PRINTFORML 　应
+				PRINTFORML 　该
+				PRINTFORML 　让
+				PRINTFORML 　她
+				PRINTFORML 　怀
+				PRINTFORML 　孕
+				PRINTFORML 　吧
+				CALL HPH_PRINT,@"　HPH』","L"
+				PRINTL 
+				PRINTW 
+				CALL HPH_PRINT,@"碰HPH　碰HPH　碰HPH　碰HPH","L"
+				CALL HPH_PRINT,@"『你看HPH　蛋蛋都在膨胀了HPH　因为它非常想要对心爱的女儿播下种子呢HPHHPH』","L"
+				CALL HPH_PRINT,@"『被女儿推倒的杂鱼%MASTERNAME:139%HPH　是变态HPH　是大变态HPHHPH』","L"
+				PRINTL 
+				CALL HPH_PRINT,@"碰HPH　碰HPH　碰HPH　碰HPH","L"
+				CALL HPH_PRINT,@"『%CHILDNAME:139:(TALENT:139:育儿中)%已经来过月经了哟HPH　知道这是什么意思对吧HPHHPH』","L"
+				CALL HPH_PRINT,@"『这表示我已经可以怀孕了HPHHPH　可以生下和%MASTERNAME:139%的小宝宝了HPHHPHHPH』","L"
+				PRINTL 
+				CALL HPH_PRINT,@"『来HPH我要开始倒数了、准备好射精吧PH　杂鱼%MASTERNAME:139%HPH』","L"
+				CALL HPH_PRINT,@"『三～HPH』『%MASTERNAME:139%的腿都在抖了HPH　真的到极限了呢HPH』","W"
+				CALL HPH_PRINT,@"『二～HPH』『杂鱼蛋蛋里的东西、会全部榨出来的HPH　会用子宫全部接住的HPH』","W"
+				CALL HPH_PRINT,@"『一～HPH』『%CALLNAME:MASTER%大人…%CHILDNAME:139:(TALENT:139:育儿中)%只爱您一个人…HPH』","W"
+				PRINTW 
+				CALL HPH_PRINT,@"唗咕唗咕唗咕HPH　噗噜噜噜噜噜噜HPH","L"
+				CALL HPH_PRINT,@"噗ーーーーーHPH　噗噗ーーーーーHPH","L"
+				PRINTL 
+				CALL HPH_PRINT,@"『好热啊HPHHPH　这就是HPH　男人的射精HPH　精液HPH　在阴道里出来了HPHHPH』","L"
+				CALL HPH_PRINT,@"『啊ー啊HPH　在不该射出来的地方里射出来了HPH』","L"
+				PRINTL 
+				CALL HPH_PRINT,@"噗ーHPH　噗ーHPH","L"
+				CALL HPH_PRINT,@"唗噗HPH　唗噗HPH","L"
+				PRINTL 
+				CALL HPH_PRINT,@"『啊HPH　啊HPH　啊啊啊HPH　它还在出来…HPH』","L"
+				PRINTL 
+				CALL HPH_PRINT,@"唗噗…唗噗…HPH","L"
+				CALL HPH_PRINT,@"『我的肚子里…%MASTERNAME:139%的精液、进入了…HPH　好幸福…HPH』","L"
+				PRINTL 
+				CALL HPH_PRINT,@"『我最喜欢%MASTERNAME:139%了…HPH』","L"
+				PRINTW 
+				PRINTFORML 『……希望不会变成那样啊……』
+				PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%看着自己满是爱液的手、空洞地低语
+				PRINTL 
+				PRINTFORML 直到刚才还被无比的幸福感所笼罩、但一旦妄想结束、强烈的疲惫和空虚感袭上%CHILDNAME:139:(TALENT:139:育儿中)%的心头
+				PRINTFORML 即便明白是多么的痛苦、但%CHILDNAME:139:(TALENT:139:育儿中)%仍然无法停止这种行为
+				PRINTL 
+				PRINTFORML 『如果我能更成熟一点、如果我能更勇敢一点』
+				PRINTFORML 『%MASTERNAME:139%、他会不会抱了我呢』
+				PRINTFORML 怀着对父亲的思慕和一丝罪恶感、%CHILDNAME:139:(TALENT:139:育儿中)%陷入了沉睡之中…
+				PRINTW 
+			CASE 3
+				PRINTFORM %CHILDNAME:139:(TALENT:139:育儿中)%充满期待地等待着父亲的夜访
+				SELECTCASE RAND:3
+				CASE 0
+					PRINTL 并且没穿着内衣的
+				CASE 1
+					PRINTL 并且只穿着内衣的
+				CASE 2
+					PRINTL 并且一丝不挂的
+				ENDSELECT
+				PRINTFORML 进入了梦乡…
+			CASE 4
+				PRINTFORM 在微弱的光线下、%CHILDNAME:139:(TALENT:139:育儿中)%偷偷躲在被窝里看着
+				IF TALENT:MASTER:年龄 == 2
+					PRINTFORM 一位憔悴平凡的中年父亲\@ (TALENT:MASTER:形状 >= 6) ? （但有着异常巨大的肉棒） #  \@、与他那位不屈不挠地支持着他的女儿彼此相爱着
+				ELSEIF (TALENT:MASTER:年龄 == -1 || TALENT:MASTER:幼儿／幼儿退行)
+					SELECTCASE RAND:4
+					CASE 0
+						PRINTFORML 与未成年做爱造孩子
+					CASE 1
+						PRINTFORML 最喜欢做爱的姐姐将弟弟的处男夺走
+					CASE 2
+						PRINTFORML 小孩子之间进行不应该的游戏
+					CASE 3
+						PRINTFORML 小恶魔般的妹妹帮助可怜的哥哥破处
+					ENDSELECT
+				ELSE
+					IF TALENT:MASTER:体型 >= 1
+						SELECTCASE RAND:3
+						CASE 0
+							PRINTFORML 女儿为性欲怪兽的父亲做早晨的性处理
+						CASE 1
+							PRINTFORML 被性欲旺盛的父亲给抱了的女儿
+						CASE 2
+							PRINTFORML 妻子离家出走后、被性欲旺盛的父亲强奸的女儿
+						ENDSELECT
+					ELSEIF TALENT:MASTER:体型 <= -1
+						PRINTFORML 软弱的父亲被女儿逆强奸
+					ELSE
+						SELECTCASE RAND:4
+						CASE 0
+							PRINTFORML 诱惑着深爱的父亲与自己的发展肉体关系的女儿
+						CASE 1
+							PRINTFORML 被母亲目睹与父亲的不伦之事后、逐渐陷入性爱之中的家庭
+						CASE 2
+							PRINTFORML 爱上女儿的父亲在罪恶感的煎熬中坚持做到最后
+						CASE 3
+							PRINTFORML 与家人欢快做爱
+						ENDSELECT
+					ENDIF
+				ENDIF
+				PRINTFORML 的色情漫画并陶醉其中…
+			ENDSELECT
+		ENDIF
+	ENDIF
+ENDIF
+
+;-----------------------------------------------------
+;育儿イベント川の字でおやすみ
+;子どもがよちよち以上、９～１４时でなければ就寝时发生
+;-----------------------------------------------------
+@M_KOJO_EVENT_K139_CHILD_RAISING_OYASUMI(ARGS,ARG,ARG:1)
+CALL K139_FATHERNAME
+;近亲イベント
+;性的フラグが4以上かつ爱情度が300を超えており、娘が幼少期以上かつ受け入れ/拒绝イベントを见ていない
+;典とあなたの初始位置が同じでないとダメ
+IF CFLAG:139:1997 >= 4 && CHILD_LOVE:139:(TALENT:139:育儿中) > 300 && ARGS >= "幼少期" && CFLAG:139:1996 == 0 && (CFLAG:MASTER:初始位置 == CFLAG:初始位置) && (CFLAG:MASTER:当前位置 == CFLAG:初始位置)
+	CALL K139_INCEST
+ENDIF
+
+;娘と一线越えON
+IF CFLAG:139:1996 == 1
+
+	;亲子狐丼はいかが
+	;「ある亲娘狐の会话」发生済みだと发生
+	IF CFLAG:1043 == 1
+		;亲子狐丼はいかが
+		CALL K139_OYAKODON
+		CFLAG:1043 = 2
+	ENDIF
+
+	;ある亲娘狐の会话
+	;娘のVまたはA性交经验の合计が50を超えており、かつCVAB経験の合计が100以上かつ爱情度が500以上
+	;典のCVAB経験の合计が1000を超えており、かつ爱情经验が500以上
+{
+	IF CFLAG:1043 == 0 && CFLAG:139:1997 >= 4
+	&& ((CFLAG:1988 + CFLAG:1989) > 50) && ((CFLAG:1984 + CFLAG:1985 + CFLAG:1986 + CFLAG:1987) > 50) && CHILD_LOVE:139:(TALENT:139:育儿中) >= 500
+	&& (EXP:Ｃ经验 + EXP:Ｖ经验 + EXP:Ａ经验 + EXP:Ｂ经验 >= 1000) && EXP:爱情经验 >= 500
+}
+		CALL K139_FOXTALK
+		CFLAG:1043 = 1
+	ENDIF
+
+;性的フラグON
+ELSEIF (CFLAG:139:1997 == 1 || CFLAG:139:1997 >= 3) && CHILD_LOVE:139:(TALENT:139:育儿中) > 0
+	IF ARGS >= "自立前"
+		IF CHILD_SEX:139:(TALENT:139:育儿中) == 1 && (TALENT:MASTER:性别 == 2 || TALENT:MASTER:性别 == 3)
+			PRINTFORML 从小时候开始就是个撒娇鬼的%CHILDNAME:139:(TALENT:139:育儿中)%、即使长大了也未曾改变过
+			PRINTFORML 若有所改变、那可能是因为身体长大了吧
+			PRINTL 
+			PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%现在、还会抱着%CALLNAME:MASTER%的手臂入睡
+			PRINTFORML 睡袍里的内衣微微敞开、仿佛被柔软的胸部夹紧在其中
+			PRINTL 
+			PRINTFORML 加上、%CHILDNAME:139:(TALENT:139:育儿中)%修长的双腿爱抚着%CALLNAME:MASTER%的下体
+			PRINTFORML 在无法移开的情况下、%CALLNAME:MASTER%度过了一个焦虑的夜晚…
+			PRINTW 
+		ENDIF
+	ELSEIF ARGS == "幼少期"
+		IF CHILD_SEX:139:(TALENT:139:育儿中) == 1 && (TALENT:MASTER:性别 == 2 || TALENT:MASTER:性别 == 3)
+			SELECTCASE RAND:3
+			CASE 0
+				CALL HPH_PRINT,@"「妳看看。如果这样做的话、它就会…HPH」","L"
+				IF TALENT:MASTER:形状 == 6 || TALENT:MASTER:形状 == 10
+					CALL HPH_PRINT,@"『好、好厉害…HPH　就像小马一样.…HPHHPH』","L"
+				ELSEIF TALENT:MASTER:形状 == 1 || TALENT:MASTER:形状 == 2
+					CALL HPH_PRINT,@"『变得硬硬的了HPH　但是、%MASTERNAME:139%的小鸡鸡、好可爱HPH』","L"
+				ELSE
+					;光る
+					IF TALENT:MASTER:形状 == 4
+						PRINTFORML 「好大啊…不过、这样不会有点刺眼吗…」
+					ELSEIF TALENT:MASTER:形状 == 5
+						CALL HPH_PRINT,@"「好大、而且形状看起来好危险…HPH」","L"
+						CALL HPH_PRINT,@"「曾在书上看过、像是哥布林一样的肉棒…HPH」","L"
+					ELSE
+						CALL HPH_PRINT,@"「好大啊…HPH　这就是、%MASTERNAME:139%的肉棒…HPHHPH」","L"
+					ENDIF
+				ENDIF
+				PRINTL 
+				PRINTFORML 典和%CHILDNAME:139:(TALENT:139:育儿中)%等待着%CALLNAME:MASTER%沉睡后、
+				PRINTFORML 就开始仔细观察起%CALLNAME:MASTER%的阴茎…
+				PRINTW 
+				SELECTCASE RAND:2
+				CASE 0
+				CASE 1
+					IF TALENT:MASTER:形状 >= 3
+						CALL HPH_PRINT,@"『这么大的东西、居然进入过妈妈的身体里面吗…？HPH』","L"
+						CALL HPH_PRINT,@"「没错喔…HPH　它将妈妈的子宫、咕砰HPH　咕砰HPH　地刺入了内部喔HPH」","L"
+					ELSE
+						CALL HPH_PRINT,@"『这根小鸡鸡、居然进入过妈妈的身体里面吗…？HPH』","L"
+						CALL HPH_PRINT,@"「没错喔…HPH　它将妈妈的子宫、啾HPH啾HPH地亲了个遍哦…HPH」","L"
+					ENDIF
+					CALL HPH_PRINT,@"「啊啊、被这个人鸡巴侵犯的感觉…HPH　确切地感受到了HPH」","L"
+					PRINTL 
+					CALL HPH_PRINT,@"『真好啊…HPH　%CHILDNAME:139:(TALENT:139:育儿中)%也想要加入…HPH』","L"
+					CALL HPH_PRINT,@"「不可以喔。对%CHILDNAME:139:(TALENT:139:育儿中)%来说太大了、而且这根肉棒是属于妈妈的东西HPH」","L"
+					PRINTL 
+					PRINTFORML 「妈妈真是小气鬼。就算偶尔分点给我用一下也不会怎么样的吧」
+					CALL HPH_PRINT,@"「所以我不是偶尔会让妳观察一下、碰碰它一下吗。妳就忍耐一下吧HPH」","L"
+					PRINTW 
+					IF TALENT:爱欲 || TALENT:炮友
+						CALL HPH_PRINT,@"「这样啊…那么、今天就特别允许妳舔一下肉棒吧HPH」","L"
+						CALL HPH_PRINT,@"『真的吗！？HPH　妈妈好温柔、好喜欢HPH』","L"
+						PRINTFORML 「刚才还在说我小气鬼什么的、现在很心情不错呢…♪」
+						PRINTL 
+						CALL HPH_PRINT,@"『嗯呣…呸啾…呸噜…HPH』","L"
+						IF TALENT:MASTER:形状 == 6 || TALENT:MASTER:形状 == 10
+							PRINTFORML 『呼呜、妈妈、我完全放不进嘴里…』
+							CALL HPH_PRINT,@"「当然啦HPH　%MASTERNAME:139%的肉棒在整个幻想乡里可以算是最大的呢…HPH」","L"
+						ELSEIF TALENT:MASTER:形状 == 1 || TALENT:MASTER:形状 == 2
+							CALL HPH_PRINT,@"『整根都能够含进口中…HPH　好可爱HPHHPH』","L"
+							CALL HPH_PRINT,@"「真的就如同小孩子的肉棒一样呢HPH　嘛、这也是我喜欢的一点HPH」","L"
+						ELSE
+							CALL HPH_PRINT,@"『太大了、根本进不到底部…HPH』","L"
+							CALL HPH_PRINT,@"「不习惯的话是这样的哦HPH　迟早会学会如何吞到根部的HPH」","L"
+						ENDIF
+						PRINTL 
+						CALL HPH_PRINT,@"「没错…从根部开始用舌头轻轻舔动…HPH」","L"
+						CALL HPH_PRINT,@"「龟头用舌头轻舔…用嘴唇轻轻套弄…HPH」","L"
+						CALL HPH_PRINT,@"「不仅仅是速度快就好哦。也要改变节奏和吸吮的力道…HPH」","L"
+						PRINTL 
+						CALL HPH_PRINT,@" 『妈妈、%MASTERNAME:139%的小鸡鸡开始膨胀了HPH』","L"
+						CALL HPH_PRINT,@"「看来快要射精了呢…HPH　%CHILDNAME:139:(TALENT:139:育儿中)%、记得要好好吞下去哦HPH」","L"
+						CALL HPH_PRINT,@"「这可是非常珍贵的、%MASTERNAME:139%的浓厚精子汁哦…HPH」","L"
+						PRINTL 
+						CALL HPH_PRINT,@"『呼啊…HPH　嗯呣HPH　咕嘟HPH　啾噜HPH　嗯嗯HPH』","L"
+						CALL HPH_PRINT,@"「来了HPH再坚持一下HPH　为了让%MASTERNAME:139%做个美梦、用心地让他唗噗HPH唗噗HPH地吧HPH」","L"
+						PRINTL 
+						CALL HPH_PRINT,@"噗噜噜HPH","L"
+						CALL HPH_PRINT,@"　　噗咕噗咕HPH","L"
+						PRINTL 
+						CALL HPH_PRINT,@"『！！　嗯嗯HPH　嗯嗯～～～～～HPH』","L"
+						SELECTCASE RAND:2
+						CASE 0
+							PRINTFORML 『咳、咳咳…%MASTERNAME:139%的精液、不小心溅出来了…』
+							CALL HPH_PRINT,@"「啊ー啊、溅出来了HPH　真是太浪费了」","L"
+							CALL HPH_PRINT,@"「嘛、%MASTERNAME:139%的精液本来就多又黏稠所以才会溅出来了呢…HPH」","L"
+							PRINTL 
+							CALL HPH_PRINT,@"「为了有一天能够全部吞下去、要更加努力哦、%CHILDNAME:139:(TALENT:139:育儿中)%HPH」","L"
+							CALL HPH_PRINT,@"『好的、妈妈…HPH』","L"
+							PRINTL 
+						CASE 1
+							CALL HPH_PRINT,@"『嗯……嗯嗯……HPH』","L"
+							CALL HPH_PRINT,@"「真不错、居然没有搞得到处都是呢…HPH　现在、张开嘴巴…HPH」","L"
+							PRINTL 
+							CALL HPH_PRINT,@"『啊～～～～……HPH』","L"
+							CALL HPH_PRINT,@"「呵呵、嘴巴里满满的都是子种汁呢HPH　可以了喔。快点吞下去吧HPH」","L"
+							PRINTL 
+							CALL HPH_PRINT,@"『嗯咕、嗯咕、咕噜…HPH　喝、喝完了…HPH』","L"
+							CALL HPH_PRINT,@"「做得很好哦、%CHILDNAME:139:(TALENT:139:育儿中)%HPH」","L"
+							PRINTW 
+							PRINTFORML 『那个、妈妈…』「不可以哦♪」
+							PRINTFORML 『只要前端、只要前端一点点就可以了…』「这根肉棒、是妈妈的东西♪」
+							PRINTL 
+							PRINTFORML 「而且呢、%CHILDNAME:139:(TALENT:139:育儿中)%」
+							PRINTFORML 「自开天辟地以来、就从未有人遵守过『只进去前端』的承诺哦。请牢记在心♪」
+							PRINTFORML 『好啦～……』
+							PRINTFORML 「只要明白就好了♪」
+							PRINTL 
+						ENDSELECT
+					ENDIF
+				ENDSELECT
+			CASE 1
+				PRINTFORML 等%CALLNAME:MASTER%意识到的时、双臂分别被夹在典和%CHILDNAME:139:(TALENT:139:育儿中)%的胸部与大腿之间…
+				PRINTFORML 这就是、桃源乡啊…！
+				PRINTFORML 次日清晨、由于身体被固定住所以双臂有些僵硬了…
+				PRINTL 
+			CASE 2
+				CALL HPH_PRINT,@"「呼呼～嗯…HPH　%CALLNAME:MASTER%大人…HPH」","L"
+				CALL HPH_PRINT,@"『%MASTERNAME:139%啊…HPH』","L"
+				PRINTFORML 典和%CHILDNAME:139:(TALENT:139:育儿中)%在熟睡时、轻抚着%CALLNAME:MASTER%的下体...
+			ENDSELECT
+		ENDIF
+	ENDIF
+	PRINTW 
+;性的フラグOFF
+ELSE
+ENDIF
+
+;-------------------------------------------------
+;育儿イベント玩具
+;-------------------------------------------------
+@M_KOJO_EVENT_K139_CHILD_RAISING_TOY(ARGS,ARG,ARG:1)
+IF ARGS == "幼儿期"
+	SELECTCASE RAND:2
+	CASE 0
+		IF ITEM:跳蛋
+			PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%看着震动的粉红色物体、嘻嘻哈哈地笑着…
+		ELSEIF ITEM:振动棒 || ITEM:肛用振动棒
+			PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%将发出刺耳振动声的震动器插在障子上、无邪气地玩耍着…
+		ELSEIF ITEM:电动按摩棒
+			PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%将发出嘈杂声音的按摩器放在地板上、每次奇怪的声音响起时都嘻嘻笑着…
+		ELSEIF ITEM:飞机杯
+			PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%将水灌入飞机杯中、然后像水枪一样噗噗地喷泉玩耍着…
+		ELSEIF ITEM:避孕套
+			PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%将保险套误以为是气球吹起气来…
+		ELSEIF ITEM:阴蒂夹
+			PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%将阴核帽贴在指尖上、每次被紧紧夹住时都会发出「哦ー？　哦ー？」的惊叹声
+		ENDIF
+	CASE 1
+		PRINTDATAL
+			DATAFORM %CHILDNAME:139:(TALENT:139:育儿中)%在玩玩具「敲打达摩」时敲得太过用力飞了出去、结果打破了茶碗、现在一片混乱…
+			DATAFORM %CHILDNAME:139:(TALENT:139:育儿中)%大喊「超ー电ー磁ー炮！」、并将陀螺打在粗木条上玩耍…
+			DATAFORM %CHILDNAME:139:(TALENT:139:育儿中)%用积木再现了新阿姆斯特朗回旋加速喷气式阿姆斯特朗大砲…完成度相当的高啊
+			DATAFORM %CHILDNAME:139:(TALENT:139:育儿中)%将泥球放在大片叶子上、然后将水倒入玩具杯中、旁边放了两根树枝…
+			DATAFORM %CHILDNAME:139:(TALENT:139:育儿中)%踢出的球%TEXTR("被风吸下悬崖…/撞到树上后、反弹直击了%CHILDNAME:139:(TALENT:139:育儿中)%/飞向了意想不到的方向…/飞得又直又好")%
+			DATAFORM %CHILDNAME:139:(TALENT:139:育儿中)%玩着木制动物拼图%TEXTR("并且轻松地将拼图拼在了一起/并且正在艰难地拼着拼图/然后厌倦了拼拼图决定让动物们互相对战")%
+		ENDDATA
+	ENDSELECT
+ELSEIF ARGS == "幼少期"
+	PRINTFORML 『爸爸、来一起玩玩具吧♪』
+ELSE
+	PRINTFORML 
+ENDIF
+
+;-------------------------------------------------
+;育儿イベントその他。一番よく表示される。
+;-------------------------------------------------
+@M_KOJO_EVENT_K139_CHILD_RAISING_OTHER(ARGS,ARG,ARG:1)
+CALL K139_FATHERNAME
+IF ARGS == "幼儿期"
+	PRINTFORML 
+ELSEIF ARGS == "幼少期" || ARGS == "自立前"
+	IF (CFLAG:139:1997 == 1 || CFLAG:139:1997 >= 3) && CHILD_LOVE:139:(TALENT:139:育儿中) > 0 && CHILD_SEX:139:(TALENT:139:育儿中) == 1
+		;自宅
+		IF CFLAG:MASTER:当前位置 == CFLAG:TARGET:初始位置
+			SELECTCASE RAND:15
+			CASE 0
+				PRINTFORML 『%MASTERNAME:139%、我的身体有些怪怪的…』
+				PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%向父亲咨询身体的问题
+				PRINTFORML 父亲面露难色、但在我说『是妈妈说让%MASTERNAME:139%看看的（骗）』的情况下、勉强答应了
+				PRINTL 
+				CALL HPH_PRINT,@"『这里的形状…和朋友的不一样…HPH』","L"
+				PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%将内裤挂在一边腿上、并张开双腿露出自己的性器…
+				PRINTL 
+				CALL HPH_PRINT,@" 『%CHILDNAME:139:(TALENT:139:育儿中)%的形状、是不是怪怪的呢？　没问题吗？HPH』","L"
+				PRINTFORML 向父亲展示着最为羞耻的部分、%CHILDNAME:139:(TALENT:139:育儿中)%的胸口如同钟声般怦然而动
+				PRINTL 
+				CALL HPH_PRINT,@"『这个像豆子的东西…是不是比别人的大呢？HPH』","L"
+				CALL HPH_PRINT,@"『朋友的那里有突出来的东西。%CHILDNAME:139:(TALENT:139:育儿中)%没有突出是正常的吗？HPH』","L"
+				CALL HPH_PRINT,@"『这里有个洞、形状是不是怪怪的呢？HPH』","L"
+				CALL HPH_PRINT,@"『有时候从洞里会漏出不是尿液的透明液体、那是不是生病了呢？HPH』","L"
+				PRINTL 
+				PRINTFORML 对着亲生父亲、面带悲壮的表情、但内心却充满了兴奋、提问着身体的问题
+				PRINTFORML 父亲错误地以为心爱的女儿感到不安、认真地说着「没事的」「非常漂亮哦」等柔和的言辞安慰着
+				PRINTL 
+				PRINTFORML 当自己撑开阴唇露出了从未向任何人展示过的阴道口时、几乎快忍不住的高潮
+				PRINTFORML 『%MASTERNAME:139%、真是温柔呢…对不起』、略感罪恶的同时、%CHILDNAME:139:(TALENT:139:育儿中)%思考接下来该使用什么手法
+				PRINTL 
+			CASE 1
+				PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%将手放在肚子上水平测量着什么、父亲问道「妳在做什么？」时
+				CALL HPH_PRINT,@"『我在确认、如果%MASTERNAME:139%的小鸡鸡进入我的身体里时、大概会到哪里呢HPH』这样回答后","L"
+				PRINTFORML 父亲如野兔般迅速逃离了现场……
+				PRINTL 
+			CASE 2
+				CALL HPH_PRINT,@"『%MASTERNAME:139%、这件适不适合%CHILDNAME:139:(TALENT:139:育儿中)%呢HPH』","L"
+				PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%随便借用了母亲的性感内衣并穿在身上、向父亲炫耀着…
+				PRINTL 
+			CASE 3
+				CALL HPH_PRINT,@"『%MASTERNAME:139%、这是要用来做什么的呢HPH』","L"
+				IF ITEM:避孕套 > 0
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%带着一副无邪的笑容、拿着的是一个保险套（0.02mm）
+					SELECTCASE RAND:2
+					CASE 0
+						PRINTFORML 那是…对、气球！　如此解释着
+						PRINTFORML 『我知道的气球有很多不一样的形状…原来还有这样的形状呢♪』
+						PRINTL 
+						PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%这样说着、尝试吮吸着保险套上的精液
+						CALL HPH_PRINT,@"『四像、这样组吗？HPH』","L"
+						PRINTFORML 这丫头绝对是故意的吧…好可怕的丫头！　父亲感到战栗
+					CASE 1
+						PRINTFORML 『等长大再说什么的。%CHILDNAME:139:(TALENT:139:育儿中)%现在就想知道』
+						PRINTFORML 被心爱的女儿纠缠着的父亲、看起来相当的困扰…
+					ENDSELECT
+					PRINTL 
+				ELSEIF ITEM:振动棒 > 0
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%带着一副无邪的笑容、拿着的是一根疯狂震动着的震动棒
+					CALL HPH_PRINT,@"『在%MASTERNAME:139%和妈妈的房间里找到的HPH它动得非常厉害HPH』","L"
+					PRINTFORML 『不过这个形状、感觉在哪里见过一样呢…』
+					PRINTFORML 父亲支支吾吾地拼命逃避着回答…
+					PRINTL 
+				ELSEIF ITEM:电动按摩棒 > 0
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%带着一副无邪的笑容、拿出来的是一根电动按摩棒（每分钟高达３２００转）
+					PRINTFORML 父亲说是用来缓解肩颈疲劳的、于是%CHILDNAME:139:(TALENT:139:育儿中)%将它放在肩膀上打开了开关
+					CALL HPH_PRINT,@"『哈啊啊啊啊啊啊嗯HPHHPHHPH』","L"
+					PRINTL 
+				ELSEIF ITEM:跳蛋 > 0
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%带着一副无邪的笑容、拿出来的是粉红色跳蛋（三连弹丸式、就是一次三颗版）
+					CALL HPH_PRINT,@"『颜色那么可爱、而且还会震动HPH%CHILDNAME:139:(TALENT:139:育儿中)%可以收下吗？』","L"
+					PRINTFORML 将来或许会用到但现在对女儿来说还太早了…！
+					PRINTFORML 父亲说「不行」并没收了后、%CHILDNAME:139:(TALENT:139:育儿中)%不满地鼓起了脸颊…
+					PRINTL 
+				ELSEIF ITEM:肛用振动棒 > 0
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%带着一副无邪的笑容、拿出来的是肛门震动棒
+				ELSEIF ITEM:阴蒂夹 > 0
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%带着一幅无邪的笑容、拿出来的是阴蒂帽（总之就是吸阴蒂的东西）
+					PRINTFORML 没错…这个是可以吸在小指上玩的玩具…
+					PRINTFORML 父亲亲自示范后、%CHILDNAME:139:(TALENT:139:育儿中)%说了句『这东西既简单又无聊呢』并失去了兴趣…
+				ELSEIF ITEM:乳头夹 > 0
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%带着一副无邪的笑容、拿出来的是乳头夹
+					PRINTFORML 这是…没错…在与天狗的饮酒会上用来表演用的玩具.…
+					PRINTFORML 因为%CHILDNAME:139:(TALENT:139:育儿中)%用着一副天使一样的微笑说着『我想看我想看♪』、父亲亲自示范了一下
+					PRINTFORML 父亲获得了[Ｂ经验]…
+					PRINTL 
+					CALL AddEXP("Ｂ经验", MASTER, 1)
+				ELSEIF ITEM:飞机杯 > 0
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%带着一副无邪的笑容、拿出来的是飞机杯（四倍螺旋）
+					CALL HPH_PRINT,@"『这里有个看起来可以插进去的洞洞呢HPH』、%CHILDNAME:139:(TALENT:139:育儿中)%说道并用手指噗滋噗滋的插了起来","L"
+					CALL HPH_PRINT,@"『而且这个洞洞的形状…跟%CHILDNAME:139:(TALENT:139:育儿中)%的这里很像呢…HPH』","L"
+					PRINTFORML 这么说着的%CHILDNAME:139:(TALENT:139:育儿中)%轻轻地把飞机杯放在自己的下体上
+					PRINTFORML 想像了一下女儿的雌穴后、父亲为了斩断世俗的欲望、猛力用右钩击打自己的脸颊
+					PRINTFORML 『%MASTERNAME:139%！？　%MASTERNAME:139%！？』
+					PRINTL 
+				ELSEIF ITEM:排卵诱发剂 > 0
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%带着一副无邪的笑容、拿出的是排卵诱发剂
+					PRINTFORML 这是…用来帮助肠道通畅的药物（意译）这样解释到
+					PRINTL 
+					PRINTFORML 『原来如此呢…其实%CHILDNAME:139:(TALENT:139:育儿中)%、这是有些粗俗的话题、但是我的便秘问题很严重呢…这正好合适呢♪』
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%正准备吃药时慌张的马上抢走
+					PRINTFORML 这样不行。如果未成年人使用的话会使肚子爆炸四散、然后就等着说掰掰了！父亲以拼命的表情解释
+					PRINTFORML 因为神情太过严肃、%CHILDNAME:139:(TALENT:139:育儿中)%感到压力后乖乖的回答『我知道了』
+					PRINTL 
+				ELSEIF ITEM:媚药 > 0
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%带着一副无邪的笑容、拿出来的一是瓶春药（实际上是维生素剂）
+					PRINTFORML 解释说这只是普通的营养剂（事实）
+					PRINTL 
+					PRINTFORML 『原来如此…事实上、最近我有点过度疲劳、所以请分一些给我吧』
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%这么说着吞下了一颗
+					PRINTL 
+					PRINTFORML 媚药游戏专用的维生素、而且对孩子也没有副作用、是永远亭（考虑特定团体）的安全之选
+					PRINTFORML 知道她即使在半夜也在努力学习（暗示）…父亲在心中同情女儿
+					PRINTL 
+					PRINTFORML 『…………』
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%的样子有点奇怪。不禁让人注意到她的脸红红的、呼吸也变得急促
+					PRINTL 
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%倚靠在父亲身上
+					SETCOLOR 0xFF69B4
+					CALL HPH_PRINT,@"『%MASTERNAME:139%…HPH　%CHILDNAME:139:(TALENT:139:育儿中)%、身体好热啊…HPHHPH』","L"
+					RESETCOLOR
+					PRINTFORML 父亲看到滚动着的媚药（实际上是维生素补充剂）的标签
+					PRINTFORML 是媚药（媚药）
+					PRINTL 
+					SETCOLOR 0xFF69B4
+					CALL HPH_PRINT,@"『%MASTERNAME:139%…HPH　我的肚子周围好痒哦…HPHHPH　请帮帮我吧…HPHHPH』","L"
+					RESETCOLOR
+					PRINTFORML 在激烈的攻守战后、父亲成功保护了心爱女儿的贞操…
+					PRINTL 
+				ELSEIF ITEM:点心盒 > 0
+					PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%带着一副无邪的笑容、拿来的是糖果礼盒
+					PRINTFORML 『看起来好吃、我可以吃吗？？』
+					PRINTFORML 不可以…！　这是用来应对不小心摸到初见的人的屁股时被打上反发刻印的应对物品…！
+					PRINTFORML 『我明明告诉过你要设定指令过滤器的…』
+					PRINTL 
+				ENDIF
+			CASE 4
+				PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%像恋人一样、热情地与父亲牵手欢笑…
+				PRINTL 
+			CASE 5
+				PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%以亲密行为之名、在父亲的脸上降下了一阵吻…
+				PRINTL 
+			CASE 6
+				PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%将大腿露出并让父亲枕在大腿上
+				PRINTL 
+			CASE 7
+				PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%陶醉地闻着父亲未洗的衣服上的气味…
+			CASE 8
+				PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%在父母曾经相爱的床单上、闻着浸透其中的气味、
+				PRINTFORML 并期望父母不会发现的偷偷自慰…
+				PRINTL 
+			CASE 9
+				PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%躺在有着父亲气味的被子上、偷偷地自慰…
+				PRINTL 
+			CASE 10
+				PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%穿上和典一模一样的衣服并在镜子前摆弄姿势
+				PRINTFORML 从旁边看起来、简直一模一样…
+				PRINTL 
+			CASE 11
+				PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%身穿不整正在看书然后被父亲责备了…
+				PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%坏笑着、张开双腿秀出内裤…
+				SELECTCASE RAND:2
+				CASE 0
+					PRINTFORML 还将手指伸进内裤边缘、将处女的秘所左右划分而开%UNICODE(0x2665) *1%…
+				CASE 1
+					PRINTFORML 还从内裤上方、将秘唇左右划分而开%UNICODE(0x2665) *1%…
+				ENDSELECT
+				PRINTL 
+			CASE 12
+				PRINTFORML 未来的梦想是什么呢？　父亲问道
+				PRINTFORM %CHILDNAME:139:(TALENT:139:育儿中)%开口道
+				SELECTCASE RAND:6
+				CASE 0
+					CALL HPH_PRINT,@"『我要成为%MASTERNAME:139%的飞机杯HPHHPH』笑着回答、父亲像野兔一样急忙逃跑了","L"
+				CASE 1
+					CALL HPH_PRINT,@"『成为%MASTERNAME:139%的…妻子HPH』害羞地回答、父亲露出复杂的微笑","L"
+				CASE 2
+					CALL HPH_PRINT,@"『%MASTERNAME:139%的第二夫人HPH』开心地回答、父亲开始感到困扰…","L"
+				CASE 3
+					CALL HPH_PRINT,@"『我会将%MASTERNAME:139%囚禁起来、一辈子照顾和宠爱%MASTERNAME:139%HPH』用清澈的眼神回答着。父亲感到战栗","L"
+				CASE 4
+					CALL HPH_PRINT,@"『我想找份可以做很多色色的事情的工作HPH』这样回答、父亲说「绝对不行！」","L"
+				CASE 5
+					PRINTFORML 『我想成为像妈妈一样优秀的秘书』
+					PRINTFORML 虽然很想支持她、但她学习典的方式可能会引来麻烦呢…
+					PRINTL 
+				CASE 6
+					IF ABL:清扫技能 >= 4 && ABL:MASTER:清扫技能 >= 4
+						PRINTFORML 『我在考虑试试看做清洁服务呢～』
+						PRINTFORML 『如果是像红魔馆那样大的房子应该能被雇用吧』
+						PRINTL 
+					ELSEIF ABL:话术技能 >= 4 && ABL:MASTER:话术技能 >= 4
+						PRINTFORML 『我在考虑当演说家呢、觉得那挺不错的』
+						PRINTFORML 『因为、我很喜欢说话呢』
+						PRINTL 
+					ELSEIF ABL:战斗能力 >= 4 && ABL:MASTER:战斗能力 >= 4
+						PRINTFORML 『硬要说的话…应该是成为幻想乡最强、吧…』
+						PRINTFORML 『想要和地狱的女神啦、月之都公主之类的人比试一下♪　那真令人兴奋呢♪』
+						PRINTFORML 女儿已经战斗民族化了呢…
+						PRINTL 
+					ELSEIF ABL:教养 >= 4 && ABL:MASTER:教养 >= 4
+						PRINTFORML 『寺子屋的老师啦、家庭教师啦…想要从事教导别人的工作呢』
+						PRINTFORML 『虽然外表看不出来、但我可是很善长在寺子屋里教导低年级生的哦♪』
+						PRINTFORML 虽然没有丝毫怀疑、但女儿的这个授业它正经吗…父亲心里想
+						PRINTL 
+					ELSEIF ABL:料理技能 >= 4 && ABL:MASTER:料理技能 >= 4
+						PRINTFORML 『想成为料理人…希望有一天、能够拥有自己的店铺呢♪』
+						PRINTFORML 如果实现了的话、第一位客人应该是爸爸和妈妈吧？
+						PRINTFORML 『当然了♪　请敬请期待着吧♪』
+					ELSEIF ABL:MASTER:音乐技能 >= 4
+						PRINTFORML 『想成为音乐家…。另外身边有乐器也是一个原因』
+						PRINTFORML 『也因为%MASTERNAME:139%总是弹奏美妙音乐的关系呢♪』
+						PRINTL 
+					ELSEIF TALENT:采集Lv >= 4 && TALENT:MASTER:采集Lv >= 4
+						PRINTFORML 『想成为猎人呢…』
+						PRINTFORML 『幸好、我对山很熟悉呢』
+						PRINTL 
+					ELSEIF TALENT:钓鱼Lv >= 4 && TALENT:MASTER:钓鱼Lv >= 4
+						PRINTFORML 『想尝试当渔夫呢～』
+						PRINTFORML 『或许可以拜三途川的渔夫为师呢』
+						PRINTL 
+					ELSEIF TALENT:调合Lv >= 4 && TALENT:MASTER:调合Lv >= 4
+						PRINTFORML 『我想成为药师呢』
+						PRINTFORML 『从妈妈那里学了一些调配的基礎、去永远亭学习更高深的技术或许是个好主意呢』
+						PRINTL 
+					ENDIF
+				ENDSELECT
+				PRINTL 
+			CASE 13
+				PRINTFORML 『%MASTERNAME:139%…肚子痛痛请摸摸好吗』%CHILDNAME:139:(TALENT:139:育儿中)%用泪目恳求着…
+				PRINTFORML %CALLNAME:MASTER%从了%CHILDNAME:139:(TALENT:139:育儿中)%、轻柔地抚摸着光滑的肚子…
+				PRINTL 
+				CALL HPH_PRINT,@"『谢谢…接下来、可以轻轻地拍拍这里吗HPH』","L"
+				PRINTFORML 这样说着、%CHILDNAME:139:(TALENT:139:育儿中)%用手指轻轻触摸着子宫周围…
+				PRINTL 
+			CASE 14
+				PRINTFORML 『%MASTERNAME:139%、这本书里面有很多难懂的地方、请教教我吧』
+				PRINTFORML 女儿这么说着拿出了一本健康教育的书
+				PRINTL 
+				CALL HPH_PRINT,@"『%MASTERNAME:139%、这个该怎么读呢？　是不是念作「阴茎」呢。小鸡鸡就叫做阴茎对吧HPH』","L"
+				CALL HPH_PRINT,@"『那这个该怎么读呢？　这边是「阴核」这边是「阴道口」对吧HPH』","L"
+				PRINTL 
+				CALL HPH_PRINT,@"『男性、在性兴奋时会阴茎会…「勃起」呢。欸～～HPH』","L"
+				CALL HPH_PRINT,@"『%MASTERNAME:139%也会、在兴奋的时候、那个、也会勃起吗？HPH』","L"
+				CALL HPH_PRINT,@"『我想看我想看…HPH　不行…是吗？　%MASTERNAME:139%真小气…』","L"
+				PRINTL 
+			ENDSELECT
+		;连れ込み宿
+		ELSEIF CFLAG:MASTER:当前位置 == 225
+			SELECTCASE RAND:2
+			CASE 0
+				PRINTFORML %MASTERNAME:139%和妈妈、带着我去了一家男女做可疑事情的旅馆
+				PRINTFORML 据妈妈说「妳也是时候该学习一下男女之事了、这对妳以后可能会有帮助」
+				PRINTFORML 老实说、这对普通的家庭来说是相当异常的、但在我家却是相当「普通」的事情…
+				PRINTL 
+			CASE 1
+				IF TCVAR:发情
+					IF !TALENT:妊娠
+						SETCOLOR 0xFF69B4
+						CALL HPH_PRINT,@"「%CHILDNAME:139:(TALENT:139:育儿中)%、%MASTERNAME:139%和妈妈的危险日造孩子的过程…请牢记在心哦HPH」","L"
+						CALL HPH_PRINT,@"「现在、我们将要培养出妳的新弟弟或新妹妹了…HPH」","L"
+						RESETCOLOR
+						PRINTL 
+						PRINTFORML 一踏入可疑的建筑物内部、%MASTERNAME:139%和妈妈就马上在我面前开始亲密拥吻、并用淫荡的手法触摸对方的身体…
+						PRINTFORML 父母如此生动的情绪、使得我内心深处的欲望沸腾、开始为了迎接小鸡鸡而做着准备…
+						PRINTFORML 我也想与%MASTERNAME:139%一同感受愉快的时光、但在妈妈的威压下我一步也无法挪动…
+						PRINTL 
+					ELSE
+						SETCOLOR 0xFF69B4
+						CALL HPH_PRINT,@"「%CHILDNAME:139:(TALENT:139:育儿中)%、%MASTERNAME:139%和妈妈的激情性爱…请牢记在心哦…HPH」","L"
+						CALL HPH_PRINT,@"「字面意义上的野兽、会让你看个够的…HPH」","L"
+						RESETCOLOR
+						PRINTL 
+						PRINTFORML 一踏入可疑的建筑物内部、%MASTERNAME:139%和妈妈就马上在我面前开始亲密拥吻、并用淫荡的手法触摸对方的身体…
+						PRINTFORML 即使身体负担重大、妈妈的性欲仍然旺盛。难道是因为怀孕了才更加炽烈的吗
+						PRINTFORML 我也很想要享受愉快的事情、但迫于两人的威压下我一步也无法挪动…
+						PRINTL 
+					ENDIF
+				ELSE
+					CALL HPH_PRINT,@"「%CHILDNAME:139:(TALENT:139:育儿中)%、%MASTERNAME:139%和妈妈爱爱的场面、请牢记在心哦…HPH」","L"
+					PRINTFORML 在那座可疑的建筑里、%MASTERNAME:139%和妈妈仿佛在确认彼此的爱交织着吻、并用下流的手法触碰彼此的身体…
+					PRINTFORML 虽然我也很想加入、但被妈妈给拒绝了
+				ENDIF
+			ENDSELECT
+		;ラブホ
+		ELSEIF CFLAG:MASTER:当前位置 == 950
+			SELECTCASE RAND:2
+			CASE 0
+				PRINTFORML %MASTERNAME:139%和妈妈、带着我来到了一间男女进行不检点活动的地方
+				PRINTFORML 他们告诉我这叫『爱之旅馆』、是一个不必在周围顾虑、专供性爱使用的地方
+				PRINTL 
+				PRINTFORML 据妈妈说「妳也是时候该学习一下男女之事了、这对妳以后可能会有帮助」
+				PRINTFORML 老实说、这对普通的家庭来说是相当异常的、但在我家却是相当「普通」的事情…
+				PRINTL 
+			CASE 1
+				IF TCVAR:发情
+					IF !TALENT:妊娠
+						SETCOLOR 0xFF69B4
+						CALL HPH_PRINT,@"「%CHILDNAME:139:(TALENT:139:育儿中)%、%MASTERNAME:139%和妈妈的危险日造孩子的过程…请牢记在心哦HPH」","L"
+						CALL HPH_PRINT,@"「现在、我们将要培养出妳的新弟弟或新妹妹了…HPH」","L"
+						RESETCOLOR
+						PRINTL 
+						PRINTFORML 一踏入可疑的建筑物内部、%MASTERNAME:139%和妈妈就马上在我面前开始亲密拥吻、并用淫荡的手法触摸对方的身体…
+						PRINTFORML 父母如此生动的情绪、使得我内心深处的欲望沸腾、开始为了迎接小鸡鸡而做着准备…
+						PRINTFORML 我也想与%MASTERNAME:139%一同感受愉快的时光、但在妈妈的威压下我一步也无法挪动…
+						PRINTL 
+					ELSE
+						SETCOLOR 0xFF69B4
+						CALL HPH_PRINT,@"「%CHILDNAME:139:(TALENT:139:育儿中)%、%MASTERNAME:139%和妈妈的激情性爱…请牢记在心哦…HPH」","L"
+						CALL HPH_PRINT,@"「字面意义上的野兽、会让你看个够的…HPH」","L"
+						RESETCOLOR
+						PRINTL 
+						PRINTFORML 一踏入可疑的建筑物内部、%MASTERNAME:139%和妈妈就马上在我面前开始亲密拥吻、并用淫荡的手法触摸对方的身体…
+						PRINTFORML 即使身体负担重大、妈妈的性欲仍然旺盛。难道是因为怀孕了才更加炽烈的吗
+						PRINTFORML 我也很想要享受愉快的事情、但迫于两人的威压下我一步也无法挪动…
+						PRINTL 
+					ENDIF
+				ELSE
+					CALL HPH_PRINT,@"「%CHILDNAME:139:(TALENT:139:育儿中)%、%MASTERNAME:139%和妈妈爱爱的场面、请牢记在心哦…HPH」","L"
+					PRINTFORML 在那座可疑的建筑里、%MASTERNAME:139%和妈妈仿佛在确认彼此的爱交织着吻、并用下流的手法触碰彼此的身体…
+					PRINTFORML 虽然我也很想加入、但被妈妈给拒绝了
+				ENDIF
+			ENDSELECT
+		;自宅、ラブホ、连れ込み宿以外
+		ELSE
+			SELECTCASE RAND:3
+			CASE 0
+				;冬
+				IF DAY:2 == 4
+					;屋内
+					IF INROOM(CFLAG:MASTER:当前位置)
+						SELECTCASE RAND:3
+						CASE 0
+							PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%躲进父亲的腿间、在火炉旁温暖地度过时光…
+						CASE 1
+							CALL HPH_PRINT,@"『因为很冷、所以可以用体温温暖我吗…HPH』这样向父亲请求着、","L"
+							PRINTFORML 父亲温柔地拥抱后、让%CHILDNAME:139:(TALENT:139:育儿中)%有些紧张了起来…
+						CASE 2
+							PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%卷缩在炬燵里、与父亲聊着天
+							PRINTFORML 然而、她却在被子底下玩弄着秘裂
+							PRINTL 
+						ENDSELECT
+					;完全な屋外
+					ELSEIF OUTROOF(CFLAG:MASTER:当前位置) == 1
+						SELECTCASE RAND:5
+						CASE 0
+							CALL HPH_PRINT,@"『因为很冷、所以可以用体温温暖我吗…HPH』这样向父亲请求着、","L"
+							PRINTFORML 父亲温柔地拥抱后、让%CHILDNAME:139:(TALENT:139:育儿中)%有些紧张了起来…
+							PRINTL 
+						CASE 1
+							PRINTFORML 父亲的手冷冰冰的、于是我轻轻握住了
+							PRINTFORML 父亲回以握手、%CHILDNAME:139:(TALENT:139:育儿中)%害羞地笑了…
+							PRINTL 
+						CASE 2
+							PRINTFORML 当我把手伸进父亲的背后时、他发出了像秃鹰一样的惨叫声
+							PRINTFORML 作为报复他伸手进我的背后时、%CHILDNAME:139:(TALENT:139:育儿中)%不禁呼吸急促了起来
+							PRINTL 
+						CASE 3
+							PRINTFORML 因为积雪的关系、和父亲一起制作了雪雕
+							SELECTCASE RAND:2
+							CASE 0
+								PRINTFORML 这不是「新阿姆斯特朗回旋加速喷气式阿姆斯特朗砲」嘛、还原度还真高啊
+								PRINTFORML 看来成果相当不错、父亲抚摸了我的头
+								PRINTL 
+							CASE 1
+								PRINTFORML ( ﾟ∀ﾟ)o彡゜奶子！奶子！
+								PRINTFORML ( ﾟ∀ﾟ)o彡゜奶子！奶子！
+								PRINTL
+								PRINTFORML ( ﾟ∀ﾟ)o彡゜奶子！奶子！
+								PRINTFORML ( ﾟ∀ﾟ)o彡゜奶子！奶子！
+								PRINTL 
+							ENDSELECT
+						CASE 4
+							PRINTFORML 外面比我想的还要冷、我还打了个喷嚏、父亲就将身上的外套脱下来给我穿
+							PRINTFORML 心动了起来
+							PRINTL 
+						ENDSELECT
+					;轩先など
+					ELSE
+						SELECTCASE RAND:3
+						CASE 0
+							PRINTFORML 『呜呜…好冷啊…』
+							PRINTFORML 当我冷着发抖时、父亲就将身上的外套脱下来给我穿
+							PRINTFORML 连心情也变得温暖了
+							PRINTL 
+						CASE 1
+							PRINTFORML 父亲的手冷冰冰的、于是我轻轻握住了
+							PRINTFORML 父亲回以握手、%CHILDNAME:139:(TALENT:139:育儿中)%害羞地笑了…
+							PRINTL 
+						CASE 2
+							PRINTFORML 『%MASTERNAME:139%、我好冷喔、可以抱紧我吗』
+							PRINTFORML 当被轻轻拥抱时、%CHILDNAME:139:(TALENT:139:育儿中)%有些怦然心动了…
+						ENDSELECT
+					ENDIF
+				;夏
+				ELSEIF DAY:2 == 2
+					;屋内
+					IF CFLAG:MASTER:当前位置 == CFLAG:MASTER:初始位置
+						SELECTCASE RAND:2
+						CASE 0
+							PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%全裸的在父亲面前晃来晃去…
+							PRINTFORML 感觉良心受到了谴责、但她却『%MASTERNAME:139%如果也裸体就好了…♪』这样说了后就离开了
+							PRINTL 
+						CASE 1
+							SELECTCASE RAND:2
+							CASE 0
+								PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%穿着内衣在父亲面前晃来晃去…
+								PRINTL 
+							CASE 1
+								PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%仅穿着一条内裤在父亲面前晃来晃去…
+							ENDSELECT
+						ENDSELECT
+					;完全な屋外
+					ELSEIF OUTROOF(CFLAG:MASTER:当前位置) == 1
+						IF GROUPMATCH(CFLAG:MASTER:当前位置 , 343, 347, 703, 708, 735, 806, 814)
+							SELECTCASE RAND:2
+							CASE 0
+								PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%正笑容满面地享受着沐浴
+								PRINTFORML 湿透的衣服紧贴在\@ TALENT:139:胸围 >= 1 ? 对年龄说丰满的 # 不成熟的 \@身体上、凸显出身体曲线…
+								PRINTL 
+							CASE 1
+								PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%正笑容满面地享受着沐浴
+								PRINTFORML 看着年轻女儿的裸体总得有些尴尬、但父亲为了确保安全还是用眼角看着并没有直视
+								PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%虽然感到有些遗憾、但同时也很高兴爸爸意识到我的女性身体…
+								PRINTL 
+							ENDSELECT
+						ELSE
+							SELECTCASE RAND:3
+							CASE 0
+								PRINTFORML 因为父亲邀请去吃刨冰、%CHILDNAME:139:(TALENT:139:育儿中)%开心的抱了上去
+								PRINTFORML 尽管苦笑着说要离开、但父亲并没有试图将%CHILDNAME:139:(TALENT:139:育儿中)%推开
+								PRINTL 
+							CASE 1
+								PRINTFORML 受到炎热的天气影响%CHILDNAME:139:(TALENT:139:育儿中)%拿起了水壶喝水
+								PRINTFORML 嘴巴里的水滴下来、沿着喉咙滑落、将胸前弄湿了
+								PRINTL 
+								PRINTFORML 『%MASTERNAME:139%也喝一些吧♪』并递了过去、父亲感谢完后喝光了剩下的水
+								PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%在心中摆出了胜利的手势
+								PRINTL 
+							CASE 2
+								PRINTFORML 因为太热了%CHILDNAME:139:(TALENT:139:育儿中)%卷起裙子的下摆拍打着来降温、但被父亲责骂并制止了…
+							ENDSELECT
+						ENDIF
+					;轩先など
+					ELSE
+						SELECTCASE RAND:2
+						CASE 0
+							PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%正吃着的冰棒融化、滴落到胸前…
+							PRINTFORML 『%MASTERNAME:139%、可以帮我舔掉吗…♪』的请求着、但被礼貌的断然拒绝了
+						CASE 1
+							PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%将自己正在舔得冰棒分给了父亲吃
+							PRINTFORML 看着父亲嘴亲到她曾经咬过的部分时、%CHILDNAME:139:(TALENT:139:育儿中)%的心跳加速了一点
+						ENDSELECT
+					ENDIF
+				;夏、冬以外
+				ELSE
+					PRINTFORML 『%MASTERNAME:139%、一起来玩吧♪』
+				ENDIF
+			CASE 1
+				CALL HPH_PRINT,@"『%MASTERNAME:139%、这件内衣适合我吗HPH』","L"
+				PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%掀起裙子并将对年纪来说过于大胆的内裤秀给了父亲看…
+				PRINTL 
+			CASE 2
+				CALL HPH_PRINT,@"「%MASTERNAME:139%、%CHILDNAME:139:(TALENT:139:育儿中)%的胸部、是不是变大了许多呢…HPH」","L"
+				PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%牵着父亲的手、按在自己\@ TALENT:139:胸围 >= 0 ? 对年龄来说过大的 # 还在发育中的 \@胸部上…
+				PRINTL 
+			ENDSELECT
+		ENDIF
+	;幼少期／自立前健全（？）版
+	ELSE
+		;自宅
+		IF CFLAG:MASTER:当前位置 == CFLAG:TARGET:初始位置
+			PRINTDATAL
+				DATAFORM %CHILDNAME:139:(TALENT:139:育儿中)%成功创造出与父母相同的弹幕而高兴不已…
+				DATAFORM %CHILDNAME:139:(TALENT:139:育儿中)%将自己采的药草临摹在纸上并写下说明…
+				DATAFORM %CHILDNAME:139:(TALENT:139:育儿中)%在四处寻找周围是否有药草等东西…
+				DATAFORM %CHILDNAME:139:(TALENT:139:育儿中)%偷偷吃掉了%TEXTR("%CALLNAME:MASTER%/典")%保存在橱柜里的食物…
+				DATAFORM %CHILDNAME:139:(TALENT:139:育儿中)%正在房子周围打扫…
+				DATAFORM %CHILDNAME:139:(TALENT:139:育儿中)%学着母亲的方式进行着调和…
+				DATAFORM %CHILDNAME:139:(TALENT:139:育儿中)%进行着料理的修行…
+				DATAFORM %CHILDNAME:139:(TALENT:139:育儿中)%正在练习做母亲传授的狐狸饭…
+				DATAFORM %CHILDNAME:139:(TALENT:139:育儿中)%找到了母亲的情趣玩具、虽然有些惊慌、但仍兴趣浓厚地观察着形状…
+				DATAFORM %CHILDNAME:139:(TALENT:139:育儿中)%找到了母亲的情趣内衣、虽然有些惊慌但还是在仔细地观察着…
+				DATAFORM %CHILDNAME:139:(TALENT:139:育儿中)%唱着「叮叮叮叮叮叮叮叮叮叮…」的谜之歌曲
+			ENDDATA
+		;连れ込み宿
+		ELSEIF CFLAG:MASTER:当前位置 == 225
+			PRINTDATAL
+				DATAFORM %CHILDNAME:139:(TALENT:139:育儿中)%看着建筑内部、显得有些不安…
+				DATAFORM 每当男女的娇声从中传出时、%CHILDNAME:139:(TALENT:139:育儿中)%的耳朵都会抽动几下…
+				DATAFORM 对于父母在这里做些什么、%CHILDNAME:139:(TALENT:139:育儿中)%感到期待和不安…
+			ENDDATA
+		;ラブホ
+		ELSEIF CFLAG:MASTER:当前位置 == 950
+			PRINTDATAL
+				DATAFORM %CHILDNAME:139:(TALENT:139:育儿中)%看着建筑内部、显得有些不安…
+				DATAFORM %CHILDNAME:139:(TALENT:139:育儿中)%在软绵绵的床上、跳来跳去、尽情欢闹…
+				DATAFORM %CHILDNAME:139:(TALENT:139:育儿中)%对这里有一个大浴池而感到惊讶…
+				DATAFORM 对于父母在这里做些什么、%CHILDNAME:139:(TALENT:139:育儿中)%感到期待和不安…
+			ENDDATA
+		;自宅、连れ込み宿、ラブホ以外
+		ELSE
+			PRINTDATAL
+				DATAFORM %CHILDNAME:139:(TALENT:139:育儿中)%在四处寻找有趣的东西…
+				DATAFORM %CHILDNAME:139:(TALENT:139:育儿中)%在四处寻找周围是否有药草等东西…
+				DATAFORM %CHILDNAME:139:(TALENT:139:育儿中)%在轻松慢跑以消除缺乏运动的状况…
+				DATAFORM %CHILDNAME:139:(TALENT:139:育儿中)%在尝试创造各种形状的弹幕…
+				DATAFORM %CHILDNAME:139:(TALENT:139:育儿中)%的大型兽耳轻轻动着、聆听周遭的声音…
+				DATAFORM %CHILDNAME:139:(TALENT:139:育儿中)%在练习某种舞蹈…
+				DATAFORM %CHILDNAME:139:(TALENT:139:育儿中)%在凝视着天空…
+			ENDDATA
+		ENDIF
+	ENDIF
+;幼儿、幼少、自立前以外
+ELSE
+ENDIF
+
+[SKIPSTART]
+;-------------------------------------------------
+;口上専用手纸イベント。口上色はここで付けてください。
+;CFLAG等のキャラ变量を使う场合、キャラ番号の指定が必要になります。
+;専用イベントを作りたい场合は上下のSKIPSTART~SKIPENDを外してください。
+;手纸イベント时に1/2の概率でこちらが发生します。
+;ARG 儿童の番号（例：儿童_姓名は『%CHILDNAME:X:ARG%』）
+;-------------------------------------------------
+@M_KOJO_EVENT_K139_CHILD_DAIRY_口上手纸(ARG)
+;-------------------------------------------------
+
+;-------------------------------------------------
+[SKIPEND]
+
+[SKIPSTART]
+;-------------------------------------------------
+;手纸イベントの地の文。口上色はここで付けてください。
+;CFLAG等のキャラ变量を使う场合、キャラ番号の指定が必要になります。
+;デフォルトのものと置き换えたい场合は上下のSKIPSTART~SKIPENDを外してください。
+;置き换える气がないならスルー。
+;ARG	儿童の番号（例：儿童_姓名は『%CHILDNAME:X:ARG%』）
+;-------------------------------------------------
+@M_KOJO_EVENT_K139_CHILD_DAIRY_共通手纸(ARG, ARGS)
+;-------------------------------------------------
+IF ARGS == "すけこまし"
+	
+ELSEIF ARGS == "金の无心"
+	
+ELSEIF ARGS == "仕送り"
+	
+ENDIF
+
+;-------------------------------------------------
+[SKIPEND]
+
+;-------------------------------------------------
+;デイリーイベント：儿童が寺子屋で
+;ARG	儿童の番号（例：儿童_姓名は『%CHILDNAME:X:ARG%』）
+;-------------------------------------------------
+@M_KOJO_EVENT_K139_CHILD_DAIRY_寺子屋(ARGS,ARG,ARG:1)
+IF ARGS == "怪我させた"
+ELSEIF ARGS == "褒められた"
+	CALL HPH_PRINT,@"『欸嘿嘿、为了让爸爸夸夸我可是努力了很多哦HPH』","L"
+	PRINTFORML 当称赞并摸摸%CHILDNAME:139:(TALENT:139:育儿中)%的头时、%CHILDNAME:139:(TALENT:139:育儿中)%高兴地瞇起了眼睛
+	PRINTL 
+	IF CHILD_LOVE:139:(TALENT:139:育儿中) > 0 && CHILD_SEX:139:(TALENT:139:育儿中) == 1
+		IF CFLAG:1996 == 1
+			PRINTFORML 『所以、爸爸、%CHILDNAME:139:(TALENT:139:育儿中)%、想要一些奖励…』
+			PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%害羞地在%CALLNAME:MASTER%的手掌上、用手指写了几个字…
+			PRINTW 
+		ELSEIF (CFLAG:139:1997 == 3 || CFLAG:139:1997 == 5) 
+		ELSE
+		ENDIF
+	ENDIF
+ENDIF
+
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+@DAUGHTER_SKINSHIP
+;影狼口上のスキンシップ独自函数を参考にさせていただいています
+IF (CFLAG:MASTER:当前位置 == CFLAG:139:当前位置) && GET_TARGETNUM() == 1
+	PRINTL [0] 亲吻　　　　[1]胸爱抚　　　[2]抚摸屁股　　　[3]爱抚阴蒂　　　[4]爱抚肛门
+	PRINTL [5] 舔阴　　　　[6]手指插入　　[7]手淫　　　　　[8]口交　　　　　[9]口交　　　　
+	PRINTL [10]自慰　　　　[11]足交　　　 [12]素股　　　　 [13]Ｖ性交　　　 [14]Ａ性交　　　
+	PRINTL [15]秘贝开帐　　[16]肛门开帐　 [17]身体接触　　 [18]３Ｐ
+	DRAWLINE
+	PRINTFORML [998] 改变称呼方式
+	PRINTFORML [999] %CHILDNAME:139:(TALENT:139:育儿中)%的状态
+	INPUT
+	SELECTCASE RESULT
+	CASE 0 TO 18
+		RETURN RESULT
+	CASE 998
+		CALL K139_FATHER_NAME
+	CASE 999
+		CALL K139_DAUGHTER_STATUS
+	CASEELSE
+	ENDSELECT
+ELSE
+	PRINTL [0] 接吻　　　　[1]胸爱抚　　　[2]抚摸屁股　　　[3]抚摸肛门　　　[4]抚摸阴蒂　　
+	PRINTL [5] 舔阴　　　　[6]指交　　　　[7]手交　　　　　[8]口交　　　　　[9]乳交　　
+	PRINTL [10]自慰　　　　[11]足交　　　 [12]素股　　　　 [13]Ｖ性交　　　 [14]Ａ性交　　
+	PRINTL [15]秘贝开帐　　[16]肛门开帐　 [17]身体接触
+	DRAWLINE
+	PRINTFORML [998] 改变称呼方式
+	PRINTFORML [999] %CHILDNAME:139:(TALENT:139:育儿中)%的状态
+	INPUT
+	SELECTCASE RESULT
+	CASE 0 TO 17
+		RETURN RESULT
+	CASE 998
+		CALL K139_FATHER_NAME
+	CASE 999
+		CALL K139_DAUGHTER_STATUS
+	CASEELSE
+	ENDSELECT
+ENDIF
+RESTART
+
+;あなたの呼び方を变えてもらう
+@K139_FATHER_NAME
+PRINTFORML 要%CHILDNAME:139:(TALENT:139:育儿中)%叫你什么呢
+PRINTL 
+PRINTL [0]爸爸　　　[1]父亲　　　[2]父亲大人　[3]父上　　　　[4]老爸　　
+PRINTL [5]阿爹　　　[6]爹爹　　　[7]爹哋　　　[8]达达　　　　[9]老头　　
+PRINTL [10]亲爱的　　[11]达令　　 [12]老公　　 [13]兄长　　　 [14]直呼其名　　
+PRINTFORML 汉化者前言：如感觉哪里怪怪的完全是因为我不知道该怎么翻这些同义词就乱塞了　　
+INPUT
+SELECTCASE RESULT
+CASE 0
+	SELECTCASE CFLAG:1983
+	CASE 1
+		PRINTFORML 『好♪　我会称呼你为爸爸的♪』
+	CASE 2
+		PRINTFORML 『爸爸、原来可以称呼呀！』
+	CASE 3
+		PRINTFORML 『好的、爸爸…♪』
+	CASE 4
+		PRINTFORML 『想被称呼为爸爸～？　真拿你没办法啊♪』
+	ENDSELECT
+	MASTERNAME:139 = 爸爸
+CASE 1
+	SELECTCASE CFLAG:1983
+	CASE 1
+		PRINTFORML 『父亲♪』
+		PRINTFORML 『诶嘿嘿、这样称呼也不错呢♪』
+	CASE 2
+		PRINTFORML 『父、父亲…』
+		PRINTFORML 『怎么、感觉有些害羞呢』
+	CASE 3
+		PRINTFORML 『父亲…♪』
+	CASE 4
+		PRINTFORML 『我会称呼你为父亲的♪』
+	ENDSELECT
+	MASTERNAME:139 = 父亲
+CASE 2
+	SELECTCASE CFLAG:1983
+	CASE 1
+		CALL HPH_PRINT,@"『父亲大人…HPH』","L"
+		PRINTFORML 『呵呵、感觉变成大小姐了呢♪』
+	CASE 2
+		PRINTFORML 『父亲大人…感觉不太适合我来说呢、不能叫阿爸就好了吗？』
+	CASE 3
+		PRINTFORML 『父亲大人…就像平时一样呢♪』
+	CASE 4
+		PRINTFORML 『虽然不太像父亲大人的感觉、但因为你很喜欢那就这么叫吧♪』
+	ENDSELECT
+	MASTERNAME:139 = 父亲大人
+CASE 3
+	SELECTCASE CFLAG:1983
+	CASE 1
+		PRINTFORML 『了解了、父上』
+		PRINTFORML 『啊啊…这样叫的话平常的爸爸感觉似乎变得严厉了起来…啊、刚刚说了爸爸了』
+	CASE 2
+		PRINTFORML 『叫父上的话、感觉有点强硬呢！』
+	CASE 3
+		PRINTFORML 『父上…这样感觉好可怕』
+	CASE 4
+		PRINTFORML 『诶～、我可没见过这么凶巴巴的父上呢ー♪』
+	ENDSELECT
+	MASTERNAME:139 = 父上
+CASE 4
+	SELECTCASE CFLAG:1983
+	CASE 1
+		PRINTFORML 『知道了、老爸』
+		PRINTFORML 『顺带提一下、之前不是约好不用这么叫的吗…』
+	CASE 2
+		PRINTFORML 『知道了、老爸！』
+	CASE 3
+		PRINTFORML 『知道了、老爸』
+	CASE 4
+		PRINTFORML 『叫老爸这个词不是很难讲吗？　啊～真麻烦呀ー』
+	ENDSELECT
+	MASTERNAME:139 = 老爸
+CASE 5
+	SELECTCASE CFLAG:1983
+	CASE 1
+		PRINTFORML 『好的♪　阿爹♪』
+		PRINTFORML 『不会感觉太幼稚了吗？　嗯～～…』
+	CASE 2
+		PRINTFORML 『诶嘿嘿、果然还是比较喜欢叫阿爹呢♪』
+	CASE 3
+		PRINTFORML 『阿爹…这样称呼父亲就好了吗』
+	CASE 4
+		PRINTFORML 『阿爹、虽然不太习惯这样说…但是、既然你坚持的话那我就这样称呼吧。阿爹♪』
+	ENDSELECT
+	MASTERNAME:139 = 阿爹
+CASE 6
+	SELECTCASE CFLAG:1983
+	CASE 1
+		PRINTFORML 『好的♪　爹爹♪』
+		PRINTFORML 『不会感觉太幼稚了吗？　嗯～～…』
+	CASE 2
+		PRINTFORML 『加上「お」的话感觉有点威风呢！』
+	CASE 3
+		PRINTFORML 『爹爹…这样的话感觉父亲比较…不、我什么都没说』
+	CASE 4
+		PRINTFORML 『爹爹、虽然不太习惯这样说…但是、既然你坚持的话那我就这样称呼吧。爹爹♪』
+	ENDSELECT
+	MASTERNAME:139 = 爹爹
+CASE 7
+	SELECTCASE CFLAG:1983
+	CASE 1
+		PRINTFORML 『好的♪　爹哋♪』
+		PRINTFORML 『虽然感觉像小孩子、但不知怎么的有总奇妙的感觉呢…♪　爹・哋♪』
+	CASE 2
+		PRINTFORML 『嗯、爹哋！　叫起来很顺口呢♪』
+	CASE 3
+		PRINTFORML 『好的、爹哋…♪　这种称呼、我也很喜欢哦…♪』
+	CASE 4
+		PRINTFORML 『果然还是这样称呼最好了、爹・哋♪』
+	ENDSELECT
+	MASTERNAME:139 = 爹哋
+CASE 8
+	SELECTCASE CFLAG:1983
+	CASE 1
+		PRINTFORML 『好的♪　达达♪』
+		PRINTFORML 『%CHILDNAME:139:(TALENT:139:育儿中)%、我好喜欢达达♪』
+		PRINTFORML 听起来也有其他意味…
+	CASE 2
+		PRINTFORML 『嗯、那我就达达吧』
+	CASE 3
+		PRINTFORML 『知道了。我会称呼你为达达的』
+	CASE 4
+		PRINTFORML 『这个称呼是怎么回事呢～。是受到书本的影响吗ー？　真肤浅啊♪』
+	ENDSELECT
+	MASTERNAME:139 = 达达
+CASE 9
+	SELECTCASE CFLAG:1983
+	CASE 1
+		PRINTFORML 『知道了、老头』
+		PRINTFORML 『呜ー嗯…果然不太习惯呢…不过、我会努力去适应的、老头』
+	CASE 2
+		PRINTFORML 『嗯、老不修、我知道了！』
+	CASE 3
+		PRINTFORML 『称呼父亲为老头、还是不太习惯呢…』
+	CASE 4
+		PRINTFORML 『诶诶～？　感觉不太像老头呢♪　是不是该考虑换个称呼呢♪』
+	ENDSELECT
+	PRINTL 
+	MASTERNAME:139 = 老头
+CASE 10
+	SELECTCASE CFLAG:1983
+	CASE 1
+		CALL HPH_PRINT,@"『好的、亲・爱・的HPH』","L"
+		CALL HPH_PRINT,@"『诶嘿嘿、这样的称呼让人感觉像新婚夫妇一样呢…感觉真好HPH』","L"
+	CASE 2
+		PRINTFORML 『明明是爸爸却要叫亲爱的？　感觉好怪啊』
+	CASE 3
+		CALL HPH_PRINT,@"『好的、亲爱的…HPH』","L"
+		CALL HPH_PRINT,@"『既然可以这样称呼、那就是、代表那样的意思、对吧…HPH』","L"
+	CASE 4
+		PRINTFORML 『想跟女儿玩夫妻游戏也太糟糕了吧♪』
+		PRINTFORML 『……难道是因为跟妈妈关系不好之类的吗？　不对？　应该没问题？』
+	ENDSELECT
+	MASTERNAME:139 = 亲爱的
+CASE 11
+	SELECTCASE CFLAG:1983
+	CASE 1
+		CALL HPH_PRINT,@"『好的、达令HPH』","L"
+		CALL HPH_PRINT,@"『诶嘿嘿、这样的称呼让人感觉像新婚夫妇一样呢…感觉真好HPH』","L"
+	CASE 2
+		PRINTFORML 『嗯、就称呼你为达令了！』
+		PRINTFORML 『对了、达令是什么意思呢？』
+	CASE 3
+		CALL HPH_PRINT,@"『好的、达令…HPH』","L"
+		CALL HPH_PRINT,@"『感觉真的像是爸爸的太太一样…好幸福HPH』","L"
+	CASE 4
+		PRINTFORML 『想跟女儿玩夫妻游戏也太糟糕了吧♪』
+		CALL HPH_PRINT,@"『……达令HPH　最爱你了HPH』","L"
+	ENDSELECT
+	MASTERNAME:139 = 达令
+CASE 12
+	SELECTCASE CFLAG:1983
+	CASE 1
+		CALL HPH_PRINT,@"『好的、老公…HPH』","L"
+		CALL HPH_PRINT,@"『这样称呼的话、感觉像成了爸爸的妻子了呢、这样好喜欢…HPH』","L"
+	CASE 2
+		PRINTFORML 『啊啊ー、感觉很有威严呢！　老公！』
+	CASE 3
+		CALL HPH_PRINT,@"『好的、老公…HPH』","L"
+		CALL HPH_PRINT,@"『感觉就像成了父亲的所有物一样…有些、心跳加速呢…HPH』","L"
+	CASE 4
+		PRINTFORML 『委婉说的话、让女儿叫自己老公的爸爸、恶心♪』
+		CALL HPH_PRINT,@"『呀嗯、要被生气的老公惩罚一遍了…HPH』","L"
+	ENDSELECT
+	MASTERNAME:139 = 老公
+CASE 13
+	SELECTCASE CFLAG:1983
+	CASE 1
+		PRINTFORML 『兄长、对吧…？』
+		PRINTFORML 『明明是亲子关系、感觉好奇怪。不过、我很喜欢这样的称呼呢。兄长♪』
+	CASE 2
+		PRINTFORML 『兄长♪　诶嘿嘿、明明是爸爸却称其为兄长、感觉好反常呢♪』
+	CASE 3
+		CALL HPH_PRINT,@"『兄长…HPH』","L"
+		CALL HPH_PRINT,@"『以兄妹关系的方式…又会以一种有别于亲子关系的让心跳加速…HPH』","L"
+	CASE 4
+		CALL HPH_PRINT,@"『知道了、杂鱼的兄长HPH』","L"
+	ENDSELECT
+	MASTERNAME:139 = 兄长
+CASE 14
+	SELECTCASE CFLAG:1983
+	CASE 1
+		PRINTFORML 『直接爸爸的名字吗…哇、感觉都紧张起来了』
+		PRINTFORML 『嗯、嗯ー爸…%CALLNAME:MASTER%…？』
+		CALL HPH_PRINT,@"『诶、诶嘿嘿…HPH　有种、成了恋人的感觉呢…HPH』","L"
+	CASE 2
+		PRINTFORML 『那我就叫你%CALLNAME:MASTER%了♪』
+	CASE 3
+		CALL HPH_PRINT,@"『%CALLNAME:MASTER%…HPH』","L"
+		PRINTFORML 『直接喊名字、感觉很特别呢。就像恋人一样…』
+	CASE 4
+		PRINTFORML 『好～好～、%CALLNAME:MASTER%』
+		CALL HPH_PRINT,@"（啊～、直呼其名感觉好特别、感觉挺不错的…HPH）","L"
+	ENDSELECT
+
+	MASTERNAME:139 = %CALLNAME:MASTER%
+ENDSELECT
+
+
+;子どもの性的ステータスを表示する
+@K139_DAUGHTER_STATUS
+PRINTFORML %CHILDNAME:139:(TALENT:139:育儿中)%的状态
+DRAWLINE
+PRINTFORML [豆豆感度]：
+SELECTCASE CFLAG:1984
+CASE IS > 100
+	CALL HPH_PRINT,@"只要被%MASTERNAME:139%触摸一下就要高潮了HPH","L"
+CASE IS > 50
+	CALL HPH_PRINT,@"被%MASTERNAME:139%触摸着的感觉非常舒服HPH","L"
+CASE IS > 20
+	CALL HPH_PRINT,@"被%MASTERNAME:139%触摸着的感觉很舒服HPH","L"
+CASEELSE
+	CALL HPH_PRINT,@"虽然有时候还会有一点痛痛的、但还是想%MASTERNAME:139%摸摸HPH","L"
+ENDSELECT
+DRAWLINE
+PRINTFORML [膣感度]：
+SELECTCASE CFLAG:1985
+CASE IS > 100
+	CALL HPH_PRINT,@"光是想到%MASTERNAME:139%阴道就又痛了起来呢…HPH","L"
+CASE IS > 50
+	CALL HPH_PRINT,@"被%MASTERNAME:139%触摸时就马上湿了呢…HPH","L"
+CASE IS > 20
+	CALL HPH_PRINT,@"被%MASTERNAME:139%的手指或小鸡鸡碰触时就会很舒服呢…HPH","L"
+CASEELSE
+	CALL HPH_PRINT,@"虽然还有一点点痛、但被%MASTERNAME:139%温柔对待时就会舒服起来呢…HPH","L"
+ENDSELECT
+DRAWLINE
+PRINTFORML [肛门感度]：
+SELECTCASE CFLAG:1986
+CASE IS > 100
+	CALL HPH_PRINT,@"%CHILDNAME:139:(TALENT:139:育儿中)%、感觉屁股已经变成坏孩子了…HPH","L"
+CASE IS > 50
+	CALL HPH_PRINT,@"用屁股做、可能喜欢…HPH","L"
+CASE IS > 20
+	CALL HPH_PRINT,@"虽然不太习惯手指或小鸡鸡、但并不讨厌…HPH","L"
+CASEELSE
+	CALL HPH_PRINT,@"仍然很难忍受手指或小鸡鸡的插入呢…","L"
+ENDSELECT
+DRAWLINE
+PRINTFORML [胸感度]：
+SELECTCASE CFLAG:1987
+CASE IS > 100
+	CALL HPH_PRINT,@"被吸乳头或被手指拨弄、很容易就高潮了…HPH","L"
+CASE IS > 50
+	CALL HPH_PRINT,@"乳头被揉捏的感觉、喜欢…HPH","L"
+CASE IS > 20
+	CALL HPH_PRINT,@"优被温柔撮弄或被吸乳头的感觉、喜欢…HPH","L"
+CASEELSE
+	CALL HPH_PRINT,@"被触摸的时候有一点点痒…还有一点点痛呢？","L"
+ENDSELECT
+DRAWLINE
+PRINTFORML [Ｖ性交经验]：
+SELECTCASE CFLAG:1988
+CASE IS > 100
+	CALL HPH_PRINT,@"被%MASTERNAME:139%的小鸡鸡插入时、就会非常幸福呢…HPH","L"
+CASE IS > 50
+	CALL HPH_PRINT,@"和%MASTERNAME:139%的性爱、非常舒服…HPH","L"
+CASE IS > 20
+	CALL HPH_PRINT,@"渐渐的、变得舒服了起来呢…HPH","L"
+CASEELSE
+	CALL HPH_PRINT,@"虽然在插入的时候有一点点痛、但如果是%MASTERNAME:139%的话、我可以忍受","L"
+ENDSELECT
+DRAWLINE
+PRINTFORML [Ａ性交经验]：
+SELECTCASE CFLAG:1989
+CASE IS > 100
+	CALL HPH_PRINT,@"被%MASTERNAME:139%突刺屁股的感觉、最喜欢了…HPH","L"
+CASE IS > 50
+	CALL HPH_PRINT,@"用屁股做的感觉….也蛮舒服的…HPH","L"
+CASE IS > 20
+	CALL HPH_PRINT,@"虽然还有一点怪怪的、但已经不会痛了","L"
+CASEELSE
+	CALL HPH_PRINT,@"用屁股做还是会痛呢…","L"
+ENDSELECT
+DRAWLINE
+PRINTFORML [自慰经验]：
+SELECTCASE CFLAG:1990
+CASE IS > 100
+	CALL HPH_PRINT,@"自己玩弄胸部和小穴的感觉、最喜欢了…HPH","L"
+CASE IS > 50
+	CALL HPH_PRINT,@"明知道会变成笨蛋、不应该太常做的…HPH","L"
+CASE IS > 20
+	CALL HPH_PRINT,@"当我回忆起被%MASTERNAME:139%抱了的时候、就喜欢玩弄我的下面…HPH","L"
+CASEELSE
+	CALL HPH_PRINT,@"偶尔、当我偷窥%MASTERNAME:139%和妈妈相爱的样子时、我也会…HPH","L"
+ENDSELECT
+DRAWLINE
+PRINTFORML [手淫经验]：
+SELECTCASE CFLAG:1991
+CASE IS > 100
+	CALL HPH_PRINT,@"%MASTERNAME:139%的小鸡鸡、我用这双手让它喷射了很多次呢…HPH","L"
+CASE IS > 50
+	CALL HPH_PRINT,@"用手让小鸡鸡射出来、越来越熟练了呢…HPH","L"
+CASE IS > 20
+	CALL HPH_PRINT,@"小鸡鸡、居然这么热这么硬啊…HPH","L"
+CASEELSE
+	CALL HPH_PRINT,@"让%MASTERNAME:139%的小鸡鸡舒服起来、真的很难呢…","L"
+ENDSELECT
+DRAWLINE
+PRINTFORML [口淫经验]：
+SELECTCASE CFLAG:1992
+CASE IS > 100
+	CALL HPH_PRINT,@"%MASTERNAME:139%的小鸡鸡、不论是吸它还是咽下去、我都很喜欢…HPH","L"
+CASE IS > 50
+	CALL HPH_PRINT,@"当我用舌头舔小鸡鸡的时候、%MASTERNAME:139%的脸会变得非常可爱呢…HPH","L"
+CASE IS > 20
+	CALL HPH_PRINT,@"舔小鸡鸡的方式、似乎掌握到一点诀窍了呢…","L"
+CASEELSE
+	CALL HPH_PRINT,@"%MASTERNAME:139%的小鸡鸡、我不想含在嘴里…","L"
+ENDSELECT
+DRAWLINE
+PRINTFORML [乳交经验]：
+SELECTCASE CFLAG:1993
+CASE IS > 100
+	CALL HPH_PRINT,@"%CHILDNAME:139:(TALENT:139:育儿中)%的胸部、因为%MASTERNAME:139%的精液而几乎快窒息了…HPH","L"
+CASE IS > 50
+	CALL HPH_PRINT,@"当我用胸部摩擦小鸡鸡时、%MASTERNAME:139%都很舒服的样子呢…HPH","L"
+CASE IS > 20
+	CALL HPH_PRINT,@"或许有摸到点诀窍了…","L"
+CASEELSE
+	CALL HPH_PRINT,@"用胸部摩擦小鸡鸡的难度很高呢…","L"
+ENDSELECT
+DRAWLINE
+PRINTFORML [亲吻经验]：
+SELECTCASE CFLAG:1994
+CASE IS > 100
+	CALL HPH_PRINT,@"光是被亲吻、就头脑感到恍惚、下面湿答答的呢…HPH","L"
+CASE IS > 50
+	CALL HPH_PRINT,@"当舌头吻进来时、就让心脏怦怦跳动…HPH","L"
+CASE IS > 20
+	CALL HPH_PRINT,@"%MASTERNAME:139%柔情的吻、喜欢…HPH","L"
+CASEELSE
+	CALL HPH_PRINT,@"偶尔会碰到牙齿有点痛…","L"
+ENDSELECT
+DRAWLINE
+PRINTW 
+
+;父亲の名前が空だった场合自动で割り振り
+@K139_FATHERNAME
+IF MASTERNAME:139 == ""
+	SELECTCASE CFLAG:1983
+	CASE 1
+		MASTERNAME:139 = 爸爸
+	CASE 2
+		MASTERNAME:139 = 老爸
+	CASE 3
+		MASTERNAME:139 = 父亲
+	CASE 4
+		MASTERNAME:139 = 爹爹
+	ENDSELECT
+ENDIF

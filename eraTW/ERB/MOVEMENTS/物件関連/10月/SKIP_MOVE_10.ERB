@@ -1,0 +1,232 @@
+﻿;-----------------------------------------------------------
+;远距离移动の设定
+;ARG     目的地
+;ARG:1   现在地
+;RETURN  次の目的地
+;-----------------------------------------------------------
+@SKIP_MOVE_10(ARG, ARG:1)
+#DIM 现在的位置
+;当前位置取得
+IF ARG:1
+	现在的位置 = ARG:1
+ELSE
+	现在的位置 = CFLAG:MASTER:当前位置
+ENDIF
+
+;目的地に直接移动できる场合そこに移动
+SIF CAN_MOVE(现在的位置, ARG) & 1
+	RETURN ARG
+
+;袋小路から行ける场所は固定なので、そこを目指す
+SELECTCASE 现在的位置
+	CASE P1006探女宅・寝室
+		RETURN P1005探女宅・起居室
+	CASE P1007闲置的房子
+		RETURN P1002月之都
+	CASE P1008铃瑚宅, P1009清兰宅
+		RETURN P1003玉兔街
+	CASE P1012酒屋, P1013蔬菜店
+		RETURN P1004广场
+	CASE P1023门卫值班室
+		RETURN P1020绵月亭・门
+	CASE P1025玉兔值班室
+		RETURN P1024玉兔食堂
+	CASE P1030绵月亭・澡堂
+		RETURN P1029绵月亭・更衣间
+	CASE P1031宝物库, P1032铃仙二号私室, P1033绵月亭・空的房间
+		RETURN P1022一层回廊
+	CASE P1036凉亭
+		RETURN P1035中庭
+	CASE P1041丰姫私室, P1042依姫私室, P1043书斋, P1044会客厅
+		RETURN P1040二层回廊
+	CASE P1051哆来咪宅・寝室, P1052哆来咪宅・仓库
+		RETURN P1050哆来咪宅・起居室
+	CASE P1054哆来咪宅・澡堂, P1055哆来咪宅・厕所
+		RETURN P1053哆来咪宅・盥洗间
+	CASE P1062厨房, P1063纯狐邸・空的房间, P1064克劳恩皮丝私室, P1065库房, P1068纯狐邸・中庭
+		RETURN P1061起居室
+	CASE P1067纯狐邸・澡堂
+		RETURN P1066纯狐邸・更衣间
+	CASE P1071纯狐私室, P1072赫卡提亚私室
+		RETURN P1070屋上
+ENDSELECT
+
+;直接移动できない场合、1つ近い位置を暂定目的地に设定し直してループ
+;基本的に最短で行けるコースを设定する
+;现在地によってコースが变わることも考虑して对応する
+SELECTCASE ARG
+	CASE P1001槐安通路
+		SELECTCASE 现在的位置
+		CASE P1051哆来咪宅・寝室 TO P1055哆来咪宅・厕所
+			RETURN P1050哆来咪宅・起居室
+		CASEELSE
+			RETURN P1002月之都
+		ENDSELECT
+	CASE P1002月之都
+		SELECTCASE 现在的位置
+		CASE P1006探女宅・寝室
+			RETURN P1005探女宅・起居室
+		CASE P1021绵月亭・玄关 TO P1044会客厅
+			RETURN P1020绵月亭・门
+		CASE P1050哆来咪宅・起居室 TO P1055哆来咪宅・厕所
+			RETURN P1001槐安通路
+		CASEELSE
+			RETURN P1003玉兔街
+		ENDSELECT
+	CASE P1003玉兔街
+		SELECTCASE 现在的位置
+		CASE P1012酒屋, P1013蔬菜店
+			RETURN P1004广场
+		CASE P1015沙滩, P1016入海口, P1060纯狐邸・玄关 TO P1072赫卡提亚私室
+			RETURN P1014桃林
+		CASEELSE
+			RETURN P1002月之都
+		ENDSELECT
+	CASE P1004广场
+		RETURN P1003玉兔街
+	CASE P1005探女宅・起居室, P1007闲置的房子
+		RETURN P1002月之都
+	CASE P1006探女宅・寝室
+		RETURN P1005探女宅・起居室
+	CASE P1008铃瑚宅, P1009清兰宅
+		RETURN P1003玉兔街
+	CASE P1010饭店, P1011甜品店
+		SELECTCASE 现在的位置
+		CASE P1012酒屋, P1013蔬菜店
+			RETURN P1004广场
+		CASEELSE
+			RETURN P1003玉兔街
+		ENDSELECT
+	CASE P1012酒屋, P1013蔬菜店
+		RETURN P1004广场
+	CASE P1014桃林
+		SELECTCASE 现在的位置
+		CASE P1016入海口, P1060纯狐邸・玄关 TO P1072赫卡提亚私室
+			RETURN P1015沙滩
+		CASEELSE
+			RETURN P1003玉兔街
+		ENDSELECT
+	CASE P1015沙滩
+		SELECTCASE 现在的位置
+		CASE P1060纯狐邸・玄关 TO P1072赫卡提亚私室
+			RETURN P1016入海口
+		CASEELSE
+			RETURN P1014桃林
+		ENDSELECT
+	CASE P1016入海口
+		SELECTCASE 现在的位置
+		CASE P1060纯狐邸・玄关 TO P1072赫卡提亚私室
+			RETURN P1060纯狐邸・玄关
+		CASEELSE
+			RETURN P1015沙滩
+		ENDSELECT
+
+	CASE P1020绵月亭・门
+		SELECTCASE 现在的位置
+		CASE P1025玉兔值班室
+			RETURN P1024玉兔食堂
+		CASE P1021绵月亭・玄关 TO P1044会客厅
+			RETURN P1021绵月亭・玄关
+		CASEELSE
+			RETURN P1002月之都
+		ENDSELECT
+	CASE P1021绵月亭・玄关
+		SELECTCASE 现在的位置
+		CASE P1025玉兔值班室
+			RETURN P1024玉兔食堂
+		CASE P1027厨房
+			RETURN P1028食料库
+		CASE P1021绵月亭・玄关 TO P1044会客厅
+			RETURN P1022一层回廊
+		CASEELSE
+			RETURN P1020绵月亭・门
+		ENDSELECT
+	CASE P1022一层回廊
+		SELECTCASE 现在的位置
+		CASE P1027厨房
+			RETURN P1026食堂
+		CASE P1036凉亭
+			RETURN P1035中庭
+		CASE P1030绵月亭・澡堂
+			RETURN P1029绵月亭・更衣间
+		CASE P1041丰姫私室 TO P1044会客厅
+			RETURN P1040二层回廊
+		CASEELSE
+			RETURN P1021绵月亭・玄关
+		ENDSELECT
+	CASE P1023门卫值班室
+		RETURN P1020绵月亭・门
+	CASE P1024玉兔食堂
+		SELECTCASE 现在的位置
+		CASE P1022一层回廊, P1026食堂 TO P1044会客厅
+			RETURN P1021绵月亭・玄关
+		CASEELSE
+			RETURN P1020绵月亭・门
+		ENDSELECT
+	CASE P1025玉兔值班室
+		RETURN P1024玉兔食堂
+	CASE P1026食堂
+		SELECTCASE 现在的位置
+		CASE P1028食料库
+			RETURN P1027厨房
+		CASEELSE
+			RETURN P1022一层回廊
+		ENDSELECT
+	CASE P1027厨房
+		SELECTCASE 现在的位置
+		CASE P1022一层回廊, P1029绵月亭・更衣间 TO P1044会客厅
+			RETURN P1026食堂
+		CASEELSE
+			RETURN P1028食料库
+		ENDSELECT
+	CASE P1028食料库
+		SELECTCASE 现在的位置
+		CASE P1026食堂
+			RETURN P1027厨房
+		CASEELSE
+			RETURN P1021绵月亭・玄关
+		ENDSELECT
+	CASE P1029绵月亭・更衣间, P1031宝物库, P1032铃仙二号私室, P1033绵月亭・空的房间, P1035中庭, P1040二层回廊
+		RETURN P1022一层回廊
+	CASE P1030绵月亭・澡堂
+		RETURN P1029绵月亭・更衣间
+	CASE P1036凉亭
+		RETURN P1035中庭
+	CASE P1041丰姫私室, P1042依姫私室, P1043书斋, P1044会客厅
+		RETURN P1040二层回廊
+
+	CASE P1050哆来咪宅・起居室
+		SELECTCASE 现在的位置
+		CASE P1054哆来咪宅・澡堂, P1055哆来咪宅・厕所
+			RETURN P1053哆来咪宅・盥洗间
+		CASEELSE
+			RETURN P1001槐安通路
+		ENDSELECT
+	CASE P1051哆来咪宅・寝室, P1052哆来咪宅・仓库, P1053哆来咪宅・盥洗间
+		RETURN P1050哆来咪宅・起居室
+	CASE P1054哆来咪宅・澡堂, P1055哆来咪宅・厕所
+		RETURN P1053哆来咪宅・盥洗间
+
+	CASE P1060纯狐邸・玄关
+		SELECTCASE 现在的位置
+		CASE P1060纯狐邸・玄关 TO P1072赫卡提亚私室
+			RETURN P1061起居室
+		CASEELSE
+			RETURN P1016入海口
+		ENDSELECT
+	CASE P1061起居室
+		SELECTCASE 现在的位置
+		CASE P1067纯狐邸・澡堂
+			RETURN P1066纯狐邸・更衣间
+		CASE P1071纯狐私室 TO P1072赫卡提亚私室
+			RETURN P1070屋上
+		CASEELSE
+			RETURN P1060纯狐邸・玄关
+		ENDSELECT
+	CASE P1062厨房, P1063纯狐邸・空的房间, P1064克劳恩皮丝私室, P1065库房, P1066纯狐邸・更衣间, P1068纯狐邸・中庭, P1070屋上
+		RETURN P1061起居室
+	CASE P1067纯狐邸・澡堂
+		RETURN P1066纯狐邸・更衣间
+	CASE P1071纯狐私室, P1072赫卡提亚私室
+		RETURN P1070屋上
+ENDSELECT

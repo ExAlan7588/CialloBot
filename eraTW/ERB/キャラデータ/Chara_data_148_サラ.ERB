@@ -1,0 +1,106 @@
+﻿@CHARAMOVE_DATA_148(ARG, ARG:2)
+LOCAL = 148
+SELECTCASE ARG
+	;连动设定（RETURN=依存する角色, RESULT:1～3=对等に连动する角色）
+	CASE 1
+	;特殊生活时间设定（CFLAG:LOCAL:生活时间补正を设定する）
+	CASE 3
+	;移动倾向（±～10=行きやすい/行きにくい, -100=行かない）
+	CASE 4
+		SELECTCASE ARG:2
+			;魔理沙家,アリス家,エレン家,妖怪的栖息处
+			; CASE P510雾雨魔法店 TO P515魔理沙宅・仓库, P521人形の馆・アリスの房间 TO P531人形の馆・空的房间
+				; RETURN -100
+			; CASE P535エレン宅・寝室 TO P537エレン宅・澡堂, P541朱鹭子的栖息处, P543ルーミア的栖息处, P544成美的小屋
+				; RETURN -100
+		ENDSELECT
+	;出现场所
+	CASE 7
+		SELECTCASE ARG:2
+			CASE 广场, 商业街, 吞屋小道, 正门
+				RETURN 1
+			CASE 森林的入口, 香霖堂, 古木的大树, 再思之道, 无缘冢
+				RETURN 1
+		ENDSELECT
+	;引力设定（CFLAG:LOCAL:引力点を设定する）
+	CASE 8
+ENDSELECT
+
+@EXIST_キャラデータ148
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+@キャラデータ148(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "称呼"
+	CALLF MAKE_STR(V_NAME, "萨拉")
+;こっから衣装设定
+CASE "今天的睡衣"
+	CALLF MAKE_STR(V_NAME, "睡衣（裤子）套")
+
+CASE "便装：靴"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("靴", "靴"))
+CASE "便装：袜子"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("袜子", "袜子"))
+CASE "便装：连衣裙"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("连衣裙", "连衣裙"))
+CASE "便装：上身衣服２"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("上身衣服２", "女式衬衫"))
+CASE "便装：其他１"
+	CALLF MAKE_INT(V_NAME, CLOTHES_ID("其他１", "结丝巾"))
+
+CASE "固有内衣形容词"
+	CALLF MAKE_STR(V_NAME, "embarrassingly childish")
+CASE "固有下半身内衣名"
+	CALLF MAKE_STR(V_NAME, "teddy bear scanties")
+CASE "固有上半身内衣"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "固有上半身内衣名"
+	CALLF MAKE_STR(V_NAME, "flexible chest protector")
+CASE "固有内衣着用条件"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "固有内衣半透明(前)"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "固有内衣半透明(后)"
+	CALLF MAKE_INT(V_NAME, 1)
+CASE "固有内衣布料厚度"
+	CALLF MAKE_INT(V_NAME, 2)
+
+;料理关联
+CASE "料理：喜欢的味道"
+	CALLF MAKE_STR(V_NAME, "叶物/野菜/野趣/酸/健康/简易/清淡/家庭的/新鲜/怪诞/魔界风/外界风/甜/甜/辣/辣/")
+CASE "料理：讨厌的味道"
+	CALLF MAKE_STR(V_NAME, "垃圾/油/青蛙/青蛙/青蛙/虫肉/虫肉/虫肉/")
+CASE "料理：助手效果"
+	CALLF MAKE_STR(V_NAME, "魔界风/")
+;赠り物关联
+CASE "感性：好き"
+	CALLF MAKE_STR(V_NAME, "粉色/赤/紫/朴素/充满力量/魔界蝶の/灵知の/" + "魔法/自然/魔界の/" * 3 + "地上の/乐园の/春风の/守护の/" * 5)
+CASE "感性：嫌い"
+	CALLF MAKE_STR(V_NAME, "奇妙/怀旧/充满力量/洛丽塔/狂热/" + "知的/" * 3 + "刃物/弹/幼心地の/" * 3)
+ENDSELECT
+
+;-------------------------------------------------
+;固有料理设定
+;DISH_NAME          料理名
+;RESULTS            料理の种类（轻食/主食/甜点）
+;CALL 材料设定("")  材料の指定。"泛用"を入れると自动で泛用食材になる
+;DISH_TASTE         味の设定
+;DISH_COMMENT       （任意）一行コメント
+;DISH_TIME          （任意）调理にかかる时间
+;DISH_MAXLIMIT      （任意）料理の持续时间
+;-------------------------------------------------
+@SPECIAL_MENU_148
+;DISH_NAME = Sara's Salad
+DISH_NAME = 萨拉沙拉
+RESULTS = 轻食
+CALL 材料设定("卷心菜", "番茄", "胡萝卜", "黄瓜", "芜菁", "白菜", "南瓜", "山菜")
+DISH_TASTE = 叶物/野菜/酸/简易/健康/新鲜/家庭的/春物/野趣/松脆/松脆/朴素/朴素/朴素/朴素/朴素/药效/
+;DISH_COMMENT = A fresh salad made with various vegetables that are easy to cut. It's light and crunchy, but also has a tangy flavor that stimulates the appetite. Suitable for beginners in cooking and eating healthy.
+DISH_COMMENT =  一种容易切制而成的多种蔬菜混搭的沙拉，分量轻口感脆，同时有着很浓烈的酸味来刺激胃口，十分适合做菜和健康饮食方面的新手
+RETURN 1

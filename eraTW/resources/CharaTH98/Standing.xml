@@ -1,0 +1,39 @@
+﻿<?xml version='1.0' encoding='utf_8_sig'?>
+<sprites>
+    <i name="立绘_服_通常_135" src="TR/CharaTH98/135.webp" param="0,0,180,180" />
+    <i name="立绘_服_笑颜_135" src="TR/CharaTH98/135.webp" param="180,0,180,180" />
+    <i name="立绘_服_愤怒_135" src="TR/CharaTH98/135.webp" param="360,0,180,180" />
+    <i name="立绘_裸_通常_135" src="TR/CharaTH98/135.webp" param="0,180,180,180" />
+    <i name="立绘_裸_笑颜_135" src="TR/CharaTH98/135.webp" param="180,180,180,180" />
+    <i name="立绘_裸_愤怒_135" src="TR/CharaTH98/135.webp" param="360,180,180,180" />
+    <i name="立绘_服_通常_136" src="TR/CharaTH98/136.webp" param="0,0,180,180" />
+    <i name="立绘_服_笑颜_136" src="TR/CharaTH98/136.webp" param="180,0,180,180" />
+    <i name="立绘_服_愤怒_136" src="TR/CharaTH98/136.webp" param="360,0,180,180" />
+    <i name="立绘_裸_通常_136" src="TR/CharaTH98/136.webp" param="0,180,180,180" />
+    <i name="立绘_裸_笑颜_136" src="TR/CharaTH98/136.webp" param="180,180,180,180" />
+    <i name="立绘_裸_愤怒_136" src="TR/CharaTH98/136.webp" param="360,180,180,180" />
+    <i name="立绘_服_通常_137" src="TR/CharaTH98/137.webp" param="0,0,180,180" />
+    <i name="立绘_服_笑颜_137" src="TR/CharaTH98/137.webp" param="180,0,180,180" />
+    <i name="立绘_服_愤怒_137" src="TR/CharaTH98/137.webp" param="360,0,180,180" />
+    <i name="立绘_裸_通常_137" src="TR/CharaTH98/137.webp" param="0,180,180,180" />
+    <i name="立绘_裸_笑颜_137" src="TR/CharaTH98/137.webp" param="180,180,180,180" />
+    <i name="立绘_裸_愤怒_137" src="TR/CharaTH98/137.webp" param="360,180,180,180" />
+    <i name="立绘_服_通常_138" src="TR/CharaTH98/138.webp" param="0,0,180,180" />
+    <i name="立绘_服_笑颜_138" src="TR/CharaTH98/138.webp" param="180,0,180,180" />
+    <i name="立绘_服_愤怒_138" src="TR/CharaTH98/138.webp" param="360,0,180,180" />
+    <i name="立绘_裸_通常_138" src="TR/CharaTH98/138.webp" param="0,180,180,180" />
+    <i name="立绘_裸_笑颜_138" src="TR/CharaTH98/138.webp" param="180,180,180,180" />
+    <i name="立绘_裸_愤怒_138" src="TR/CharaTH98/138.webp" param="360,180,180,180" />
+    <i name="立绘_服_通常_139" src="TR/CharaTH98/139.webp" param="0,0,180,180" />
+    <i name="立绘_服_笑颜_139" src="TR/CharaTH98/139.webp" param="180,0,180,180" />
+    <i name="立绘_服_愤怒_139" src="TR/CharaTH98/139.webp" param="360,0,180,180" />
+    <i name="立绘_裸_通常_139" src="TR/CharaTH98/139.webp" param="0,180,180,180" />
+    <i name="立绘_裸_笑颜_139" src="TR/CharaTH98/139.webp" param="180,180,180,180" />
+    <i name="立绘_裸_愤怒_139" src="TR/CharaTH98/139.webp" param="360,180,180,180" />
+    <i name="立绘_服_通常_140" src="TR/CharaTH98/140.webp" param="0,0,180,180" />
+    <i name="立绘_服_笑颜_140" src="TR/CharaTH98/140.webp" param="180,0,180,180" />
+    <i name="立绘_服_愤怒_140" src="TR/CharaTH98/140.webp" param="360,0,180,180" />
+    <i name="立绘_裸_通常_140" src="TR/CharaTH98/140.webp" param="0,180,180,180" />
+    <i name="立绘_裸_笑颜_140" src="TR/CharaTH98/140.webp" param="180,180,180,180" />
+    <i name="立绘_裸_愤怒_140" src="TR/CharaTH98/140.webp" param="360,180,180,180" />
+</sprites>

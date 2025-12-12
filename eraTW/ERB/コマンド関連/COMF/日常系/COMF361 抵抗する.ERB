@@ -1,0 +1,41 @@
+﻿;-------------------------------------------------
+;抵抗
+;日常系指令、レベル3
+;-------------------------------------------------
+@COM361
+TIME += 10
+IF TALENT:TARGET:施虐狂
+	LOCAL = 1
+ELSE
+	LOCAL = -1
+ENDIF
+IF COUNTER_SIKOU:TARGET:(TCVAR:TARGET:Counter行动) < 0 && (TALENT:TARGET:施虐狂 || ABL:TARGET:施虐属性 >= 10)
+	LOCAL *= 3
+ELSEIF COUNTER_SIKOU:TARGET:(TCVAR:TARGET:Counter行动) > 0
+	LOCAL *= 3
+ENDIF
+SIF TALENT:TARGET:态度 < 0 || TALENT:TARGET:习得速度 > 0
+	LOCAL *= 2
+COUNTER_SIKOU:TARGET:(TCVAR:TARGET:Counter行动) = LIMIT(COUNTER_SIKOU:TARGET:(TCVAR:TARGET:Counter行动) + LOCAL, -10, 10)
+RETURN 1
+
+;-------------------------------------------------
+;实行判定
+;-------------------------------------------------
+
+@COM_ABLE361
+;停止中は不可
+SIF FLAG:70
+	RETURN 0
+;なすがまま实行判定
+SIF !TFLAG:100
+	RETURN 0
+;批量管理
+SIF GLOBAL_COMABLE(361)
+	RETURN RESULT
+SIF CFLAG:诶嘿嘿 != 2
+	RETURN 0
+;气力0
+SIF BASE:MASTER:气力 <= 0
+	RETURN 0
+RETURN 1

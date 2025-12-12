@@ -1,0 +1,200 @@
+﻿;-------------------------------------------------
+;肛门拳交
+;系指令、レベル
+;-------------------------------------------------
+@COM142
+;-------------------------------------------------
+;COM别FLAGの设定
+;-------------------------------------------------
+;行为者
+TCVAR:116 = PLAYER
+
+CSTR:TARGET:10 += @"{PLAYER}/"
+;TCVAR:2 射精部位フラグ（-1=避孕套 1=膣内 2=肛门 3=手淫 4=口淫 5=乳交 6=素股 7=足交 8=体表 9=肛门侍奉 10=道具 11=触手 12=Ａ调教 13=Ｖ调教）
+TCVAR:TARGET:2 = 12
+;强度
+TCVAR:TARGET:4 = 1600
+
+;-------------------------------------------------
+;ソース追加处理
+;-------------------------------------------------
+;消费体力、气力
+IF FLAG:70 == 1
+	BASE:MASTER:TSP -= 300
+	SOURCE:快Ａ = 200
+	SOURCE:苦痛 = 750
+
+	;フィストなどのAへの大きな苦痛は先に处理しておく
+	;EXP:Ａ经验をみる
+	IF EXP:Ａ经验 < EXPLV:1
+		TIMES SOURCE:苦痛 , 3.00
+	ELSEIF EXP:Ａ经验 < EXPLV:2
+		TIMES SOURCE:苦痛 , 2.50
+	ELSEIF EXP:Ａ经验 < EXPLV:3
+		TIMES SOURCE:苦痛 , 2.40
+	ELSEIF EXP:Ａ经验 < EXPLV:4
+		TIMES SOURCE:苦痛 , 2.00
+	ELSEIF EXP:Ａ经验 < EXPLV:5
+		TIMES SOURCE:苦痛 , 1.80
+	ELSEIF EXP:Ａ经验 >= EXPLV:5
+		TIMES SOURCE:苦痛 , 1.60
+	ENDIF
+
+	;PALAM:润滑をみる
+	IF PALAM:润滑 < PALAMLV:1
+		TIMES SOURCE:苦痛 , 3.00
+	ELSEIF PALAM:润滑 < PALAMLV:2
+		TIMES SOURCE:苦痛 , 2.50
+	ELSEIF PALAM:润滑 < PALAMLV:3
+		TIMES SOURCE:苦痛 , 2.00
+	ELSEIF PALAM:润滑 < PALAMLV:4
+		TIMES SOURCE:苦痛 , 1.50
+	ELSEIF PALAM:润滑 >= PALAMLV:4
+		TIMES SOURCE:苦痛 , 1.00
+	ENDIF
+
+ELSE
+
+	DOWNBASE:体力 += 300
+	DOWNBASE:气力 += 150
+
+	SOURCE:快Ａ = 200
+	SOURCE:苦痛 = 1500
+	SOURCE:露出 = 100
+	SOURCE:屈从 = 1200
+	SOURCE:偏离正轨 = 1200
+	SOURCE:反感 = 1200
+
+
+	;-------------------------------------------------
+	;特殊ソース处理
+	;-------------------------------------------------
+	;フィストなどのAへの大きな苦痛は先に处理しておく
+	;EXP:Ａ经验をみる
+	IF EXP:Ａ经验 < EXPLV:1
+		TIMES SOURCE:苦痛 , 3.00
+		TIMES SOURCE:反感 , 4.00
+	ELSEIF EXP:Ａ经验 < EXPLV:2
+		TIMES SOURCE:苦痛 , 2.50
+		TIMES SOURCE:反感 , 3.50
+	ELSEIF EXP:Ａ经验 < EXPLV:3
+		TIMES SOURCE:苦痛 , 2.40
+		TIMES SOURCE:反感 , 3.00
+	ELSEIF EXP:Ａ经验 < EXPLV:4
+		TIMES SOURCE:苦痛 , 2.00
+		TIMES SOURCE:反感 , 2.50
+	ELSEIF EXP:Ａ经验 < EXPLV:5
+		TIMES SOURCE:苦痛 , 1.80
+		TIMES SOURCE:反感 , 2.00
+	ELSEIF EXP:Ａ经验 >= EXPLV:5
+		TIMES SOURCE:苦痛 , 1.60
+		TIMES SOURCE:反感 , 1.50
+	ENDIF
+
+	;PALAM:润滑をみる
+	IF PALAM:润滑 < PALAMLV:1
+		TIMES SOURCE:苦痛 , 3.00
+		TIMES SOURCE:反感 , 2.00
+	ELSEIF PALAM:润滑 < PALAMLV:2
+		TIMES SOURCE:苦痛 , 2.50
+		TIMES SOURCE:反感 , 1.50
+	ELSEIF PALAM:润滑 < PALAMLV:3
+		TIMES SOURCE:苦痛 , 2.00
+		TIMES SOURCE:反感 , 1.20
+	ELSEIF PALAM:润滑 < PALAMLV:4
+		TIMES SOURCE:苦痛 , 1.50
+	ELSEIF PALAM:润滑 >= PALAMLV:4
+		TIMES SOURCE:苦痛 , 1.00
+	ENDIF
+
+ENDIF
+;-------------------------------------------------
+;経験の处理
+;-------------------------------------------------
+;Ａ经验
+EXP:Ａ经验 += 24
+
+;Ａ扩张经验
+IF !EXP:Ｖ扩张经验 && !EXP:Ａ扩张经验 && !CFLAG:3 & 异常_扩张
+	EXP:异常经验 += 1
+	CFLAG:3 |= 异常_扩张
+ENDIF
+
+EXP:Ａ扩张经验 += 5
+;同性爱　レズなら返回值1ゲイなら返回值2
+IF FLAG:70 == 1
+	IF HETEROSEX(TARGET,PLAYER)
+		EXP:PLAYER:(50 + HETEROSEX(TARGET,PLAYER)) += 1
+	ENDIF
+ELSE
+	IF HETEROSEX(TARGET,PLAYER)
+		EXP:(50 + HETEROSEX(TARGET,PLAYER)) += 1
+		EXP:PLAYER:(50 + HETEROSEX(TARGET,PLAYER)) += 1
+	ENDIF
+ENDIF
+RETURN 1
+
+;-------------------------------------------------
+;实行判定
+;-------------------------------------------------
+@COM_ABLE142
+;肛门拳交
+SIF !TFLAG:100
+	RETURN 0
+;批量管理
+SIF GLOBAL_COMABLE(142)
+	RETURN RESULT
+;肛用振动棒使用中は不可
+SIF TEQUIP:14
+	RETURN 0
+;浣肠＋肛塞使用中は不可
+SIF TEQUIP:21
+	RETURN 0
+;ASSIの场合、顺从3以上か施虐狂じゃないとできない。
+IF ASSIPLAY
+	SIF ABL:ASSI:顺从 < 4 && TALENT:ASSI:施虐狂 == 0
+	RETURN 0
+ENDIF
+IF FLAG:70 == 1
+ELSE
+;一定のＡ经验が必要
+SIF EXP:1 < 150
+	RETURN 0
+;矮小体型なら顺从が4以上かつ受虐属性が4以上じゃないと实行できない
+IF TALENT:体型 < 0
+	SIF ABL:顺从 <= 3 || ABL:受虐属性 <= 3
+		RETURN 0
+ENDIF
+ENDIF
+;调教对象が小人体型の场合は主人が禁断的知识持ちじゃないとダメ
+SIF ABS(TALENT:体型 - TALENT:PLAYER:体型) > 2 && TALENT:MASTER:禁断的知识 == 0
+	RETURN 0
+
+;下半身着衣
+SIF TEQUIP:0 > 1
+	RETURN 0
+;后庭拉珠使用中は不可
+SIF TEQUIP:15
+	RETURN 0
+;バルーン使用中は不可
+SIF TEQUIP:22
+	RETURN 0
+;电极使用中は不可
+SIF TEQUIP:23
+	RETURN 0
+;淋浴中はダメ
+SIF TEQUIP:32
+	RETURN 0
+;浴室PLAY中は气垫床が无いとダメ
+IF TEQUIP:31
+	SIF ITEM:20 == 0 && NOITEM == 0
+		RETURN 0
+ENDIF
+;新妻PLAY中はダメ
+SIF TEQUIP:33
+	RETURN 0
+;ベッドルームでないとダメ
+SIF !BEDROOM(CFLAG:PLAYER:当前位置)
+	RETURN 0
+RETURN 1
+

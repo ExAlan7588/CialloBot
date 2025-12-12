@@ -1,0 +1,100 @@
+﻿;-------------------------------------------------
+;揉胸
+;爱抚系指令、レベル1
+;-------------------------------------------------
+@COM712
+;着脱の处理
+TEQUIP:PLAYER:揉胸自慰 = !TEQUIP:PLAYER:揉胸自慰
+
+;-------------------------------------------------
+;COM别FLAGの设定
+;-------------------------------------------------
+;行为者
+TCVAR:116 = PLAYER
+;-------------------------------------------------
+;ソース追加处理
+;-------------------------------------------------
+;消费体力、气力
+
+	DOWNBASE:PLAYER:体力 += 10
+	DOWNBASE:PLAYER:气力 += 50
+
+	SOURCE:PLAYER:情爱 = 15
+	SOURCE:PLAYER:露出 = 20
+	SOURCE:PLAYER:偏离正轨 = 30
+	SOURCE:PLAYER:反感 = 50
+
+	SOURCE:PLAYER:快Ｂ += ABL:PLAYER:指 * 20 + 30
+
+	SIF ABL:PLAYER:亲密 >= 7
+		SOURCE:PLAYER:情爱 += (ABL:PLAYER:亲密 * 10)
+
+	SIF TALENT:PLAYER:灵活手指
+		TIMES SOURCE:PLAYER:快Ｂ , 1.50
+
+	;-------------------------------------------------
+	;特殊ソース处理
+	;-------------------------------------------------
+	;圧抑、抵抗持ちには、抑郁ソース追加
+	SIF TALENT:PLAYER:自己爱 < 0 || TALENT:PLAYER:抵抗
+		SOURCE:PLAYER:郁闷 += 100
+
+;-------------------------------------------------
+;経験の处理
+;-------------------------------------------------
+SIF !FLAG:时间停止
+	TIME += 5
+;自慰经验
+CFLAG:PLAYER:自慰过了 ++
+;手淫经验
+EXP:PLAYER:手淫经验 ++
+RETURN 1
+;-------------------------------------------------
+;装着继续の处理
+;-------------------------------------------------
+@EQUIP_COM712(PLAYER)
+
+SELECTCASE SELECTCOM
+	CASE 700 TO 709,711,740 TO 748
+		PRINTL ＜揉胸解除(慰)＞
+		TEQUIP:PLAYER:揉胸自慰 = !TEQUIP:PLAYER:揉胸自慰
+	CASEELSE
+;揉胸中
+PRINTL ＜揉胸中(慰)＞
+;-------------------------------------------------
+;ソース追加处理
+;-------------------------------------------------
+
+	DOWNBASE:PLAYER:体力 += 5
+	DOWNBASE:PLAYER:气力 += 20
+	SOURCE:PLAYER:快Ｂ += (ABL:PLAYER:指 + 1) * 10
+	SOURCE:PLAYER:露出 = 20
+	SOURCE:PLAYER:偏离正轨 = 30
+	SOURCE:PLAYER:反感 = 30
+	SOURCE:PLAYER:情爱 += ABL:PLAYER:指 * 5
+
+EXP:PLAYER:手淫经验 ++
+ENDSELECT
+RETURN 1
+
+@MESSAGE_EQUIP_COM712
+	PRINTFORM 揉着%OPPAI_DESCRIPTION(PLAYER)%的同时
+
+;-------------------------------------------------
+;实行可能判定
+;-------------------------------------------------
+@COM_ABLE712
+;揉胸实行判定
+SIF !TFLAG:100
+	RETURN 0
+;批量管理
+SIF GLOBAL_COMABLE(712)
+	RETURN RESULT
+;乳房电极装着中はダメ
+SIF TEQUIP:24
+	RETURN 0
+;[绝壁]だと不可
+SIF TALENT:胸围 == -2
+	RETURN 0
+RETURN 1
+

@@ -1,0 +1,802 @@
+﻿;FileName_SOURCE1.ERB ------------------------------ Rev1.00
+;快Ｃのソース处理
+;CALL		USER
+;ARG		角色NO
+;RETURN		VOID
+;COMMENT	
+;-----------------------------------------------------------
+@SOURCE_快Ｃ(ARG)
+VARSET LOCAL
+;Ｃ敏感とＣ钝感はここで处理
+IF TALENT:ARG:Ｃ感度 == -1 && TALENT:MASTER:Ｃ钝感无视
+ELSE
+SOURCE:ARG:快Ｃ = SOURCE:ARG:快Ｃ * (2 + TALENT:ARG:Ｃ感度) / 2
+ENDIF
+
+;C感觉
+SOURCE:ARG:快Ｃ = SOURCE:ARG:快Ｃ * SOURCE_REVISION1(ABL:ARG:Ｃ感觉) / 10
+SIF FLAG:异常气象 == 1
+	TIMES SOURCE:ARG:快Ｃ , 1.50
+LOCAL = SOURCE:ARG:快Ｃ
+;PALAM:情欲をみる
+IF PALAM:ARG:情欲 < PALAMLV:1
+	TIMES LOCAL , 0.80
+ELSEIF PALAM:ARG:情欲 < PALAMLV:3
+	TIMES LOCAL , 1.00
+ELSEIF PALAM:ARG:情欲 < PALAMLV:5
+	TIMES LOCAL , 1.20
+ELSEIF PALAM:ARG:情欲 < PALAMLV:7
+	TIMES LOCAL , 1.40
+ELSEIF PALAM:ARG:情欲 >= PALAMLV:7
+	TIMES LOCAL , 1.60
+ENDIF
+CUP:ARG:快Ｃ += LOCAL
+
+LOCAL = SOURCE:ARG:快Ｃ
+;ABL:欲望をみる
+LOCAL = LOCAL * SOURCE_REVISION2(ABL:ARG:欲望) / 100
+
+CUP:ARG:情欲 += LOCAL
+
+;FileName_SOURCE1.ERB ------------------------------ Rev1.00
+;快Ｖのソース处理
+;CALL		USER
+;ARG		角色NO
+;RETURN		VOID
+;COMMENT	
+;-----------------------------------------------------------
+@SOURCE_快Ｖ(ARG)
+VARSET LOCAL
+;Ｖ敏感とＶ钝感はここで处理
+IF TALENT:ARG:Ｖ感度 == -1 && TALENT:MASTER:Ｖ钝感无视
+ELSE
+SOURCE:ARG:快Ｖ = SOURCE:ARG:快Ｖ * (2 + TALENT:ARG:Ｖ感度) / 2
+ENDIF
+
+;V感觉
+SOURCE:ARG:快Ｖ = SOURCE:ARG:快Ｖ * SOURCE_REVISION1(ABL:ARG:Ｖ感觉) / 10
+SIF FLAG:异常气象 == 2
+	TIMES SOURCE:ARG:快Ｖ , 1.50
+;EXP:Ｖ经验をみる
+IF EXP:ARG:Ｖ经验 < EXPLV:1
+	TIMES SOURCE:ARG:快Ｖ , 0.30
+ELSEIF EXP:ARG:Ｖ经验 < EXPLV:2
+	TIMES SOURCE:ARG:快Ｖ , 0.50
+ELSEIF EXP:ARG:Ｖ经验 < EXPLV:3
+	TIMES SOURCE:ARG:快Ｖ , 0.80
+ELSEIF EXP:ARG:Ｖ经验 < EXPLV:4
+	TIMES SOURCE:ARG:快Ｖ , 1.00
+ELSEIF EXP:ARG:Ｖ经验 < EXPLV:5
+	TIMES SOURCE:ARG:快Ｖ , 1.20
+ELSEIF EXP:ARG:Ｖ经验 >= EXPLV:5
+	TIMES SOURCE:ARG:快Ｖ , 1.50
+ENDIF
+
+;PALAM:润滑をみる
+IF PALAM:ARG:润滑 < PALAMLV:1
+	TIMES SOURCE:ARG:快Ｖ , 0.10
+ELSEIF PALAM:ARG:润滑 < PALAMLV:2
+	TIMES SOURCE:ARG:快Ｖ , 0.30
+ELSEIF PALAM:ARG:润滑 < PALAMLV:3
+	TIMES SOURCE:ARG:快Ｖ , 0.40
+ELSEIF PALAM:ARG:润滑 < PALAMLV:4
+	TIMES SOURCE:ARG:快Ｖ , 0.75
+ELSEIF PALAM:ARG:润滑 < PALAMLV:5
+	TIMES SOURCE:ARG:快Ｖ , 0.90
+ELSE
+	TIMES SOURCE:ARG:快Ｖ , 1.00
+ENDIF
+
+LOCAL = SOURCE:ARG:快Ｖ
+LOCAL:1 = SOURCE:ARG:快Ｖ
+
+;PALAM:情欲をみる
+IF PALAM:ARG:情欲 < PALAMLV:1
+	TIMES LOCAL , 0.60
+ELSEIF PALAM:ARG:情欲 < PALAMLV:3
+	TIMES LOCAL , 0.80
+ELSEIF PALAM:ARG:情欲 < PALAMLV:5
+	TIMES LOCAL , 1.00
+ELSEIF PALAM:ARG:情欲 < PALAMLV:7
+	TIMES LOCAL , 1.20
+ELSEIF PALAM:ARG:情欲 >= PALAMLV:7
+	TIMES LOCAL , 1.50
+ENDIF
+
+;ABL:欲望をみる
+LOCAL:1 = LOCAL:1 * SOURCE_REVISION2(ABL:ARG:欲望) / 100
+
+;小人体型
+IF TALENT:ARG:体型 < -2
+	TIMES LOCAL , 0.80
+	TIMES LOCAL:1 , 1.20
+ENDIF
+
+CUP:ARG:快Ｖ += LOCAL
+CUP:ARG:情欲 += LOCAL:1
+
+;FileName_SOURCE1.ERB ------------------------------ Rev1.00
+;快Ａのソース处理
+;CALL		USER
+;ARG		角色NO
+;RETURN		VOID
+;COMMENT	
+;-----------------------------------------------------------
+@SOURCE_快Ａ(ARG)
+VARSET LOCAL
+
+;Ａ敏感とＡ钝感はここで处理
+IF TALENT:ARG:Ａ感度 == -1 && TALENT:MASTER:Ａ钝感无视
+ELSE
+SOURCE:ARG:快Ａ = SOURCE:ARG:快Ａ * (2 + TALENT:ARG:Ａ感度) / 2
+ENDIF
+SIF FLAG:异常气象 == 3
+	TIMES SOURCE:ARG:快Ａ , 1.50
+;A感觉
+SOURCE:ARG:快Ａ = SOURCE:ARG:快Ａ * SOURCE_REVISION1(ABL:ARG:Ａ感觉) / 10
+;EXP:Ａ经验をみる
+IF EXP:ARG:Ａ经验 < EXPLV:1
+	TIMES SOURCE:ARG:快Ａ , 0.30
+ELSEIF EXP:ARG:Ａ经验 < EXPLV:2
+	TIMES SOURCE:ARG:快Ａ , 0.50
+ELSEIF EXP:ARG:Ａ经验 < EXPLV:3
+	TIMES SOURCE:ARG:快Ａ , 0.80
+ELSEIF EXP:ARG:Ａ经验 < EXPLV:4
+	TIMES SOURCE:ARG:快Ａ , 1.00
+ELSEIF EXP:ARG:Ａ经验 < EXPLV:5
+	TIMES SOURCE:ARG:快Ａ , 1.20
+ELSEIF EXP:ARG:Ａ经验 >= EXPLV:5
+	TIMES SOURCE:ARG:快Ａ , 1.50
+ENDIF
+
+;PALAM:润滑をみる
+IF PALAM:ARG:润滑 < PALAMLV:1
+	TIMES SOURCE:ARG:快Ａ , 0.10
+ELSEIF PALAM:ARG:润滑 < PALAMLV:2
+	TIMES SOURCE:ARG:快Ａ , 0.20
+ELSEIF PALAM:ARG:润滑 < PALAMLV:3
+	TIMES SOURCE:ARG:快Ａ , 0.40
+ELSEIF PALAM:ARG:润滑 < PALAMLV:4
+	TIMES SOURCE:ARG:快Ａ , 0.75
+ELSEIF PALAM:ARG:润滑 < PALAMLV:5
+	TIMES SOURCE:ARG:快Ａ , 0.90
+ELSE
+	TIMES SOURCE:ARG:快Ａ , 1.00
+ENDIF
+
+LOCAL = SOURCE:ARG:快Ａ
+LOCAL:1 = SOURCE:ARG:快Ａ
+
+;PALAM:情欲をみる
+;快ＡはあまりPALAM:情欲では差が出ない
+IF PALAM:ARG:情欲 < PALAMLV:1
+	TIMES LOCAL , 0.90
+ELSEIF PALAM:ARG:情欲 < PALAMLV:3
+	TIMES LOCAL , 1.00
+ELSEIF PALAM:ARG:情欲 < PALAMLV:5
+	TIMES LOCAL , 1.10
+ELSEIF PALAM:ARG:情欲 < PALAMLV:7
+	TIMES LOCAL , 1.20
+ELSEIF PALAM:ARG:情欲 >= PALAMLV:7
+	TIMES LOCAL , 1.30
+ENDIF
+
+;ABL:欲望をみる
+LOCAL:1 = LOCAL:1 * SOURCE_REVISION2(ABL:ARG:欲望) / 100
+
+;小人体型
+IF TALENT:ARG:体型 < -2
+	TIMES LOCAL , 0.50
+	TIMES LOCAL:1 , 1.50
+ENDIF
+
+;快Aのソースが0以上で处女で贞操重视のとき、屈服のソースを三分の一にする
+IF EXP:ARG:Ｖ经验 == 0 && TALENT:ARG:贞操 > 0 && SOURCE:ARG:快Ａ > 0
+	SOURCE:ARG:屈从 /= 3
+ENDIF
+
+CUP:ARG:快Ａ += LOCAL
+CUP:ARG:情欲 += LOCAL:1
+
+;FileName_SOURCE1.ERB ------------------------------ Rev1.00
+;快Ｂのソース处理
+;CALL		USER
+;ARG		角色NO
+;RETURN		VOID
+;COMMENT	
+;-----------------------------------------------------------
+@SOURCE_快Ｂ(ARG)
+VARSET LOCAL
+;Ｂ敏感とＢ钝感はここで处理
+IF TALENT:ARG:Ｂ感度 == -1 && TALENT:MASTER:Ｂ钝感无视
+ELSE
+SOURCE:ARG:快Ｂ = SOURCE:ARG:快Ｂ * (2 + TALENT:ARG:Ｂ感度) / 2
+ENDIF
+
+;B感觉
+SOURCE:ARG:快Ｂ = SOURCE:ARG:快Ｂ * SOURCE_REVISION1(ABL:ARG:Ｂ感觉) / 10
+SIF FLAG:异常气象 == 4
+	TIMES SOURCE:ARG:快Ｂ , 1.50
+LOCAL = SOURCE:ARG:快Ｂ
+
+;PALAM:情欲をみる
+IF PALAM:ARG:情欲 < PALAMLV:1
+	TIMES LOCAL , 0.80
+ELSEIF PALAM:ARG:情欲 < PALAMLV:3
+	TIMES LOCAL , 1.00
+ELSEIF PALAM:ARG:情欲 < PALAMLV:5
+	TIMES LOCAL , 1.20
+ELSEIF PALAM:ARG:情欲 < PALAMLV:7
+	TIMES LOCAL , 1.40
+ELSEIF PALAM:ARG:情欲 >= PALAMLV:7
+	TIMES LOCAL , 1.60
+ENDIF
+
+CUP:ARG:快Ｂ += LOCAL
+
+LOCAL = SOURCE:ARG:快Ｂ
+;ABL:欲望をみる
+LOCAL = LOCAL * SOURCE_REVISION2(ABL:ARG:欲望) / 100
+
+CUP:ARG:情欲 += LOCAL
+
+;FileName_SOURCE1.ERB ------------------------------ Rev1.00
+;快Ｍのソース处理
+;CALL		USER
+;ARG		角色NO
+;RETURN		VOID
+;COMMENT	
+;-----------------------------------------------------------
+@SOURCE_快Ｍ(ARG)
+VARSET LOCAL
+;Ｍ敏感とＭ钝感はここで处理
+IF TALENT:ARG:Ｍ感度 == -1 && TALENT:MASTER:Ｍ钝感无视
+ELSE
+SOURCE:ARG:快Ｍ = SOURCE:ARG:快Ｍ * (2 + TALENT:ARG:Ｍ感度) / 2
+ENDIF
+SIF FLAG:异常气象 == 5
+	TIMES SOURCE:ARG:快Ｍ , 2.50
+;M感觉
+SOURCE:ARG:快Ｍ = SOURCE:ARG:快Ｍ * SOURCE_REVISION1(ABL:ARG:Ｍ感觉) / 10
+;EXP:Ｍ经验をみる
+IF EXP:ARG:Ｍ经验 < EXPLV:1
+	TIMES SOURCE:ARG:快Ｍ , 0.25
+ELSEIF EXP:ARG:Ｍ经验 < EXPLV:2
+	TIMES SOURCE:ARG:快Ｍ , 0.50
+ELSEIF EXP:ARG:Ｍ经验 < EXPLV:3
+	TIMES SOURCE:ARG:快Ｍ , 1.00
+ELSEIF EXP:ARG:Ｍ经验 < EXPLV:4
+	TIMES SOURCE:ARG:快Ｍ , 2.00
+ELSEIF EXP:ARG:Ｍ经验 < EXPLV:5
+	TIMES SOURCE:ARG:快Ｍ , 3.00
+ELSEIF EXP:ARG:Ｍ经验 >= EXPLV:5
+	TIMES SOURCE:ARG:快Ｍ , 5.00
+ENDIF
+
+
+LOCAL = SOURCE:ARG:快Ｍ
+LOCAL:1 = SOURCE:ARG:快Ｍ
+
+;PALAM:情欲をみる
+IF PALAM:ARG:情欲 < PALAMLV:1
+	TIMES LOCAL , 0.60
+ELSEIF PALAM:ARG:情欲 < PALAMLV:3
+	TIMES LOCAL , 0.80
+ELSEIF PALAM:ARG:情欲 < PALAMLV:5
+	TIMES LOCAL , 1.00
+ELSEIF PALAM:ARG:情欲 < PALAMLV:7
+	TIMES LOCAL , 1.20
+ELSEIF PALAM:ARG:情欲 >= PALAMLV:7
+	TIMES LOCAL , 1.50
+ENDIF
+
+;ABL:欲望をみる
+LOCAL:1 = LOCAL:1 * SOURCE_REVISION2(ABL:ARG:欲望) / 100
+
+
+
+CUP:ARG:快Ｍ += LOCAL
+CUP:ARG:情欲 += LOCAL:1
+
+;-----------------------------------------------------
+;与快CVABM
+;-----------------------------------------------------
+;FileName_SOURCE1.ERB ------------------------------ Rev1.00
+;与快Ｃのソース处理
+;CALL		USER
+;ARG		角色NO
+;RETURN		VOID
+;COMMENT	
+;-----------------------------------------------------------
+@SOURCE_与快Ｃ(ARG)
+VARSET LOCAL
+;Ｃ敏感とＣ钝感はここで处理
+IF TALENT:ARG:Ｃ感度 == -1 && TALENT:MASTER:Ｃ钝感无视
+ELSE
+SOURCE:ARG:与快Ｃ = SOURCE:ARG:与快Ｃ * (2 + TALENT:PLAYER:Ｃ感度) / 2
+ENDIF
+
+;C感觉
+SOURCE:ARG:与快Ｃ = SOURCE:ARG:与快Ｃ * SOURCE_REVISION1(ABL:PLAYER:Ｃ感觉) / 10
+
+LOCAL = SOURCE:ARG:与快Ｃ
+
+SIF SELECTCOM == 21
+	TIMES LOCAL , 1.40
+
+;PALAM:情欲をみる
+IF PALAM:PLAYER:情欲 < PALAMLV:1
+	TIMES LOCAL , 0.80
+ELSEIF PALAM:PLAYER:情欲 < PALAMLV:3
+	TIMES LOCAL , 1.00
+ELSEIF PALAM:PLAYER:情欲 < PALAMLV:5
+	TIMES LOCAL , 1.20
+ELSEIF PALAM:PLAYER:情欲 < PALAMLV:7
+	TIMES LOCAL , 1.40
+ELSEIF PALAM:PLAYER:情欲 >= PALAMLV:7
+	TIMES LOCAL , 1.60
+ENDIF
+CUP:PLAYER:快Ｃ += LOCAL
+TCVAR:MASTER:4 += GET_REVISION2(LOCAL, 2000, 25000)
+
+LOCAL:1 = SOURCE:ARG:与快Ｃ
+;ABL:欲望をみる
+LOCAL:1 = LOCAL * SOURCE_REVISION2(ABL:PLAYER:欲望) / 100
+
+CUP:PLAYER:情欲 += LOCAL:1
+
+;FileName_SOURCE1.ERB ------------------------------ Rev1.00
+;与快Ｖのソース处理
+;CALL		USER
+;ARG		角色NO
+;RETURN		VOID
+;COMMENT	
+;-----------------------------------------------------------
+@SOURCE_与快Ｖ(ARG)
+VARSET LOCAL
+;Ｖ敏感とＶ钝感はここで处理
+IF TALENT:ARG:Ｖ感度 == -1 && TALENT:MASTER:Ｖ钝感无视
+ELSE
+SOURCE:ARG:与快Ｖ = SOURCE:ARG:与快Ｖ * (2 + TALENT:PLAYER:Ｖ感度) / 2
+ENDIF
+
+;V感觉
+SOURCE:ARG:与快Ｖ = SOURCE:ARG:与快Ｖ * SOURCE_REVISION1(ABL:PLAYER:Ｖ感觉) / 10
+
+SIF SELECTCOM == 21
+	TIMES SOURCE:ARG:与快Ｖ , 1.40
+
+;EXP:Ｖ经验をみる
+IF EXP:PLAYER:Ｖ经验 < EXPLV:1
+	TIMES SOURCE:ARG:与快Ｖ , 0.30
+ELSEIF EXP:PLAYER:Ｖ经验 < EXPLV:2
+	TIMES SOURCE:ARG:与快Ｖ , 0.50
+ELSEIF EXP:PLAYER:Ｖ经验 < EXPLV:3
+	TIMES SOURCE:ARG:与快Ｖ , 0.80
+ELSEIF EXP:PLAYER:Ｖ经验 < EXPLV:4
+	TIMES SOURCE:ARG:与快Ｖ , 1.00
+ELSEIF EXP:PLAYER:Ｖ经验 < EXPLV:5
+	TIMES SOURCE:ARG:与快Ｖ , 1.20
+ELSEIF EXP:PLAYER:Ｖ经验 >= EXPLV:5
+	TIMES SOURCE:ARG:与快Ｖ , 1.50
+ENDIF
+
+;PALAM:润滑をみる
+IF PALAM:PLAYER:润滑 < PALAMLV:1
+	TIMES SOURCE:ARG:与快Ｖ , 0.10
+ELSEIF PALAM:PLAYER:润滑 < PALAMLV:2
+	TIMES SOURCE:ARG:与快Ｖ , 0.40
+ELSEIF PALAM:PLAYER:润滑 < PALAMLV:3
+	TIMES SOURCE:ARG:与快Ｖ , 0.60
+ELSEIF PALAM:PLAYER:润滑 < PALAMLV:4
+	TIMES SOURCE:ARG:与快Ｖ , 0.80
+ELSEIF PALAM:PLAYER:润滑 >= PALAMLV:4
+	TIMES SOURCE:ARG:与快Ｖ , 1.00
+ENDIF
+
+LOCAL = SOURCE:ARG:与快Ｖ
+LOCAL:1 = SOURCE:ARG:与快Ｖ
+
+;PALAM:情欲をみる
+IF PALAM:PLAYER:情欲 < PALAMLV:1
+	TIMES LOCAL , 0.60
+ELSEIF PALAM:PLAYER:情欲 < PALAMLV:3
+	TIMES LOCAL , 0.80
+ELSEIF PALAM:PLAYER:情欲 < PALAMLV:5
+	TIMES LOCAL , 1.00
+ELSEIF PALAM:PLAYER:情欲 < PALAMLV:7
+	TIMES LOCAL , 1.20
+ELSEIF PALAM:PLAYER:情欲 >= PALAMLV:7
+	TIMES LOCAL , 1.50
+ENDIF
+
+;ABL:欲望をみる
+LOCAL:1 = LOCAL:1 * SOURCE_REVISION2(ABL:PLAYER:欲望) / 100
+
+;小人体型
+IF TALENT:PLAYER:体型 < -2
+	TIMES LOCAL , 0.80
+	TIMES LOCAL:1 , 1.20
+ENDIF
+TCVAR:MASTER:4 += GET_REVISION2(LOCAL, 1000, 30000)
+CUP:PLAYER:快Ｖ += LOCAL
+CUP:PLAYER:情欲 += LOCAL:1
+
+;FileName_SOURCE1.ERB ------------------------------ Rev1.00
+;与快Ａのソース处理
+;CALL		USER
+;ARG		角色NO
+;RETURN		VOID
+;COMMENT	
+;-----------------------------------------------------------
+@SOURCE_与快Ａ(ARG)
+VARSET LOCAL
+
+;Ａ敏感とＡ钝感はここで处理
+IF TALENT:ARG:Ａ感度 == -1 && TALENT:MASTER:Ａ钝感无视
+ELSE
+SOURCE:ARG:与快Ａ = SOURCE:ARG:与快Ａ * (2 + TALENT:PLAYER:Ａ感度) / 2
+ENDIF
+
+;A感觉
+SOURCE:ARG:与快Ａ = SOURCE:ARG:与快Ａ * SOURCE_REVISION1(ABL:PLAYER:Ａ感觉) / 10
+
+SIF SELECTCOM == 21
+	TIMES SOURCE:ARG:与快Ａ , 1.40
+;EXP:Ａ经验をみる
+IF EXP:PLAYER:Ａ经验 < EXPLV:1
+	TIMES SOURCE:ARG:与快Ａ , 0.30
+ELSEIF EXP:PLAYER:Ａ经验 < EXPLV:2
+	TIMES SOURCE:ARG:与快Ａ , 0.50
+ELSEIF EXP:PLAYER:Ａ经验 < EXPLV:3
+	TIMES SOURCE:ARG:与快Ａ , 0.80
+ELSEIF EXP:PLAYER:Ａ经验 < EXPLV:4
+	TIMES SOURCE:ARG:与快Ａ , 1.00
+ELSEIF EXP:PLAYER:Ａ经验 < EXPLV:5
+	TIMES SOURCE:ARG:与快Ａ , 1.20
+ELSEIF EXP:PLAYER:Ａ经验 >= EXPLV:5
+	TIMES SOURCE:ARG:与快Ａ , 1.50
+ENDIF
+
+;PALAM:润滑をみる
+IF PALAM:PLAYER:润滑 < PALAMLV:1
+	TIMES SOURCE:ARG:与快Ａ , 0.40
+ELSEIF PALAM:PLAYER:润滑 < PALAMLV:2
+	TIMES SOURCE:ARG:与快Ａ , 0.60
+ELSEIF PALAM:PLAYER:润滑 < PALAMLV:3
+	TIMES SOURCE:ARG:与快Ａ , 0.80
+ELSEIF PALAM:PLAYER:润滑 < PALAMLV:4
+	TIMES SOURCE:ARG:与快Ａ , 0.90
+ELSEIF PALAM:PLAYER:润滑 >= PALAMLV:4
+	TIMES SOURCE:ARG:与快Ａ , 1.00
+ENDIF
+
+LOCAL = SOURCE:ARG:与快Ａ
+LOCAL:1 = SOURCE:ARG:与快Ａ
+
+;PALAM:情欲をみる
+;快ＡはあまりPALAM:情欲では差が出ない
+IF PALAM:PLAYER:情欲 < PALAMLV:1
+	TIMES LOCAL , 0.90
+ELSEIF PALAM:PLAYER:情欲 < PALAMLV:3
+	TIMES LOCAL , 1.00
+ELSEIF PALAM:PLAYER:情欲 < PALAMLV:5
+	TIMES LOCAL , 1.10
+ELSEIF PALAM:PLAYER:情欲 < PALAMLV:7
+	TIMES LOCAL , 1.20
+ELSEIF PALAM:PLAYER:情欲 >= PALAMLV:7
+	TIMES LOCAL , 1.30
+ENDIF
+
+;ABL:欲望をみる
+LOCAL:1 = LOCAL:1 * SOURCE_REVISION2(ABL:PLAYER:欲望) / 100
+
+;小人体型
+IF TALENT:PLAYER:体型 < -2
+	TIMES LOCAL , 0.50
+	TIMES LOCAL:1 , 1.50
+ENDIF
+
+TCVAR:MASTER:4 += GET_REVISION2(LOCAL, 2000, 30000)
+CUP:PLAYER:快Ａ += LOCAL
+CUP:PLAYER:情欲 += LOCAL:1
+
+;FileName_SOURCE1.ERB ------------------------------ Rev1.00
+;与快Ｂのソース处理
+;CALL		USER
+;ARG		角色NO
+;RETURN		VOID
+;COMMENT	
+;-----------------------------------------------------------
+@SOURCE_与快Ｂ(ARG)
+VARSET LOCAL
+;Ｂ敏感とＢ钝感はここで处理
+IF TALENT:ARG:Ｂ感度 == -1 && TALENT:MASTER:Ｂ钝感无视
+ELSE
+SOURCE:ARG:与快Ｂ = SOURCE:ARG:与快Ｂ * (2 + TALENT:PLAYER:Ｂ感度) / 2
+ENDIF
+
+;B感觉
+SOURCE:ARG:与快Ｂ = SOURCE:ARG:与快Ｂ * SOURCE_REVISION1(ABL:PLAYER:Ｂ感觉) / 10
+
+LOCAL = SOURCE:ARG:与快Ｂ
+
+SIF SELECTCOM == 21
+	TIMES LOCAL , 1.40
+
+;PALAM:情欲をみる
+IF PALAM:PLAYER:情欲 < PALAMLV:1
+	TIMES LOCAL , 0.80
+ELSEIF PALAM:PLAYER:情欲 < PALAMLV:3
+	TIMES LOCAL , 1.00
+ELSEIF PALAM:PLAYER:情欲 < PALAMLV:5
+	TIMES LOCAL , 1.20
+ELSEIF PALAM:PLAYER:情欲 < PALAMLV:7
+	TIMES LOCAL , 1.40
+ELSEIF PALAM:PLAYER:情欲 >= PALAMLV:7
+	TIMES LOCAL , 1.60
+ENDIF
+LOCAL = SOURCE:ARG:与快Ｂ
+;ABL:欲望をみる
+LOCAL = LOCAL * SOURCE_REVISION2(ABL:PLAYER:欲望) / 100
+
+TCVAR:MASTER:4 += GET_REVISION2(LOCAL, 800, 30000)
+CUP:PLAYER:快Ｂ += LOCAL
+CUP:PLAYER:情欲 += LOCAL
+;FileName_SOURCE1.ERB ------------------------------ Rev1.00
+;与快Ｍのソース处理
+;CALL		USER
+;ARG		角色NO
+;RETURN		VOID
+;COMMENT	
+;-----------------------------------------------------------
+@SOURCE_与快Ｍ(ARG)
+VARSET LOCAL
+;Ｍ敏感とＭ钝感はここで处理
+IF TALENT:ARG:Ｍ感度 == -1 && TALENT:MASTER:Ｍ钝感无视
+ELSE
+SOURCE:ARG:与快Ｍ = SOURCE:ARG:与快Ｍ * (2 + TALENT:PLAYER:Ｍ感度) / 2
+ENDIF
+
+;M感觉
+SOURCE:ARG:与快Ｍ = SOURCE:ARG:与快Ｍ * SOURCE_REVISION1(ABL:PLAYER:Ｍ感觉) / 10
+
+SIF SELECTCOM == 21
+	TIMES SOURCE:ARG:与快Ｍ , 1.40
+
+;EXP:Ｍ经验をみる
+IF EXP:PLAYER:Ｍ经验 < EXPLV:1
+	TIMES SOURCE:ARG:与快Ｍ , 0.30
+ELSEIF EXP:PLAYER:Ｍ经验 < EXPLV:2
+	TIMES SOURCE:ARG:与快Ｍ , 0.50
+ELSEIF EXP:PLAYER:Ｍ经验 < EXPLV:3
+	TIMES SOURCE:ARG:与快Ｍ , 0.80
+ELSEIF EXP:PLAYER:Ｍ经验 < EXPLV:4
+	TIMES SOURCE:ARG:与快Ｍ , 1.00
+ELSEIF EXP:PLAYER:Ｍ经验 < EXPLV:5
+	TIMES SOURCE:ARG:与快Ｍ , 1.20
+ELSEIF EXP:PLAYER:Ｍ经验 >= EXPLV:5
+	TIMES SOURCE:ARG:与快Ｍ , 1.50
+ENDIF
+
+
+LOCAL = SOURCE:ARG:与快Ｍ
+LOCAL:1 = SOURCE:ARG:与快Ｍ
+
+;PALAM:情欲をみる
+IF PALAM:PLAYER:情欲 < PALAMLV:1
+	TIMES LOCAL , 0.60
+ELSEIF PALAM:PLAYER:情欲 < PALAMLV:3
+	TIMES LOCAL , 0.80
+ELSEIF PALAM:PLAYER:情欲 < PALAMLV:5
+	TIMES LOCAL , 1.00
+ELSEIF PALAM:PLAYER:情欲 < PALAMLV:7
+	TIMES LOCAL , 1.20
+ELSEIF PALAM:PLAYER:情欲 >= PALAMLV:7
+	TIMES LOCAL , 1.50
+ENDIF
+
+;ABL:欲望をみる
+LOCAL:1 = LOCAL:1 * SOURCE_REVISION2(ABL:PLAYER:欲望) / 100
+
+;小人体型
+IF TALENT:PLAYER:体型 < -2
+	TIMES LOCAL , 0.80
+	TIMES LOCAL:1 , 1.20
+ENDIF
+TCVAR:MASTER:4 += GET_REVISION2(LOCAL, 500, 20000)
+CUP:PLAYER:快Ｍ += LOCAL
+CUP:PLAYER:情欲 += LOCAL:1
+;FileName_SOURCE1.ERB ------------------------------ Rev1.00
+;其他系ソース处理
+;CALL		USER
+;ARG		角色NO
+;RETURN		VOID
+;COMMENT	
+;-----------------------------------------------------------
+@SOURCE_CVAB_EXTRA(ARG)
+VARSET LOCAL
+;-------------------------------------------------
+;气力０による上下の处理（快乐系）
+;-------------------------------------------------
+;IF BASE:ARG:气力 <= 0
+;	;UP:0,1,2,3は绝顶に络むので先に处理してある
+;	CUP:ARG:快Ｃ /= 2
+;	CUP:ARG:快Ｖ /= 2
+;	CUP:ARG:快Ａ /= 2
+;	CUP:ARG:快Ｂ /= 2
+;	CUP:ARG:快Ｍ /= 2
+;ENDIF
+;-------------------------------------------------
+;相性による上下の处理（快乐系）
+;-------------------------------------------------
+R = NO:PLAYER
+IF RELATION:ARG:R != 0
+	CUP:ARG:快Ｃ *= RELATION:ARG:R
+	CUP:ARG:快Ｃ /= 100
+	CUP:ARG:快Ｖ *= RELATION:ARG:R
+	CUP:ARG:快Ｖ /= 100
+	CUP:ARG:快Ａ *= RELATION:ARG:R
+	CUP:ARG:快Ａ /= 100
+	CUP:ARG:快Ｂ *= RELATION:ARG:R
+	CUP:ARG:快Ｂ /= 100
+	CUP:ARG:快Ｍ *= RELATION:ARG:R
+	CUP:ARG:快Ｍ /= 100
+ENDIF
+;-------------------------------------------------
+;否定快感は、快ソースの数值に応じて、抑郁增加（淫乱で无效）
+;-------------------------------------------------
+SIF TALENT:ARG:快感应答 < 0 && !TALENT:ARG:淫乱
+	SOURCE:ARG:郁闷 += (CUP:ARG:快Ｃ + CUP:ARG:快Ｖ + CUP:ARG:快Ａ + CUP:ARG:快Ｂ)/10
+
+;-------------------------------------------------
+;素質などによる上下の处理（快乐系）
+;-------------------------------------------------
+;媚药
+IF TCVAR:ARG:媚药 || TCVAR:ARG:发情
+	TIMES CUP:ARG:快Ｃ , 1.30
+	TIMES CUP:ARG:快Ｖ , 1.30
+	TIMES CUP:ARG:快Ａ , 1.30
+	TIMES CUP:ARG:快Ｂ , 1.30
+	TIMES CUP:ARG:快Ｍ , 1.30
+ENDIF
+	;利尿剂
+IF TCVAR:ARG:利尿剂
+	TIMES CUP:ARG:快Ｃ , 0.70
+	TIMES CUP:ARG:快Ｖ , 0.70
+	TIMES CUP:ARG:快Ａ , 0.70
+	TIMES CUP:ARG:快Ｂ , 0.70
+	TIMES CUP:ARG:快Ｍ , 0.70
+ENDIF
+;仙香玉兔、毒气花园
+IF IsInsenceValid(ARG)
+	TIMES CUP:ARG:快Ｃ , 1.30
+	TIMES CUP:ARG:快Ｖ , 1.30
+	TIMES CUP:ARG:快Ａ , 1.30
+	TIMES CUP:ARG:快Ｂ , 1.30
+	TIMES CUP:ARG:快Ｍ , 1.30
+ELSEIF IsGardenValid(ARG)
+	TIMES CUP:ARG:快Ｃ , 1.20
+	TIMES CUP:ARG:快Ｖ , 1.20
+	TIMES CUP:ARG:快Ａ , 1.20
+	TIMES CUP:ARG:快Ｂ , 1.20
+	TIMES CUP:ARG:快Ｍ , 1.20
+ENDIF
+
+;-------------------------------------------------
+;睡眠中の上下の处理（快乐系）
+;-------------------------------------------------
+	;睡眠
+IF CFLAG:ARG:睡眠
+	TIMES CUP:ARG:快Ｃ , 0.50
+	TIMES CUP:ARG:快Ｖ , 0.50
+	TIMES CUP:ARG:快Ａ , 0.50
+	TIMES CUP:ARG:快Ｂ , 0.50
+	TIMES CUP:ARG:快Ｍ , 0.50
+ENDIF
+;-------------------------------------------------
+;陷落素質
+;-------------------------------------------------
+;淫乱
+IF TALENT:ARG:淫乱
+	TIMES CUP:ARG:快Ｃ , 1.20
+	TIMES CUP:ARG:快Ｖ , 1.20
+	TIMES CUP:ARG:快Ａ , 1.20
+	TIMES CUP:ARG:快Ｂ , 1.20
+	TIMES CUP:ARG:快Ｍ , 1.10
+ENDIF
+;-------------------------------------------------
+;素質
+;-------------------------------------------------
+;自制心
+IF TALENT:ARG:自制心
+	TIMES CUP:ARG:快Ｃ , 0.70
+	TIMES CUP:ARG:快Ｖ , 0.90
+	TIMES CUP:ARG:快Ａ , 1.00
+	TIMES CUP:ARG:快Ｂ , 0.70
+	TIMES CUP:ARG:快Ｍ , 1.10
+ENDIF
+	;容易高潮
+IF TALENT:ARG:容易高潮
+	TIMES CUP:ARG:快Ｃ , 2.00
+	TIMES CUP:ARG:快Ｖ , 2.00
+	TIMES CUP:ARG:快Ａ , 2.00
+	TIMES CUP:ARG:快Ｂ , 2.00
+	TIMES CUP:ARG:快Ｍ , 1.80
+ENDIF
+;自慰狂
+SIF TALENT:ARG:自慰狂
+	TIMES CUP:ARG:快Ｃ , 1.20
+;淫壶
+SIF TALENT:ARG:淫壶
+	TIMES CUP:ARG:快Ｖ , 1.20
+;尻穴狂
+SIF TALENT:ARG:尻穴狂
+	TIMES CUP:ARG:快Ａ , 1.20
+;淫乳
+SIF TALENT:ARG:淫乳
+	TIMES CUP:ARG:快Ｂ , 1.20
+	;男人
+IF !(TALENT:ARG:2 & 1)
+	TIMES CUP:ARG:快Ａ , 1.30
+SIF TALENT:ARG:接吻魔
+	TIMES CUP:ARG:快Ｍ , 1.30
+ENDIF
+;-------------------------------------------------
+;指令
+;-------------------------------------------------
+;指令补正
+CUP:ARG:快Ｃ = CUP:ARG:快Ｃ * (100 + TCVAR:ARG:指令Ｃ补正) / 100
+CUP:ARG:快Ｖ = CUP:ARG:快Ｖ * (100 + TCVAR:ARG:指令Ｖ补正) / 100
+CUP:ARG:快Ａ = CUP:ARG:快Ａ * (100 + TCVAR:ARG:指令Ａ补正) / 100
+CUP:ARG:快Ｂ = CUP:ARG:快Ｂ * (100 + TCVAR:ARG:指令Ｂ补正) / 100
+CUP:ARG:快Ｍ = CUP:ARG:快Ｍ * (100 + TCVAR:ARG:指令Ｍ补正) / 100
+
+;-------------------------------------------------
+;难易度による上下の处理（快乐系）
+;-------------------------------------------------
+CUP:ARG:快Ｃ = CUP:ARG:快Ｃ * (16 - 4 * FLAG:4) / 10
+CUP:ARG:快Ｖ = CUP:ARG:快Ｖ * (16 - 4 * FLAG:4) / 10
+CUP:ARG:快Ａ = CUP:ARG:快Ａ * (16 - 4 * FLAG:4) / 10
+CUP:ARG:快Ｂ = CUP:ARG:快Ｂ * (16 - 4 * FLAG:4) / 10
+CUP:ARG:快Ｍ = CUP:ARG:快Ｍ * (16 - 4 * FLAG:4) / 10
+;-------------------------------------------------
+;爱液处理
+;-------------------------------------------------
+LOCAL:1 = CUP:ARG:快Ｃ + CUP:ARG:快Ｖ + CUP:ARG:快Ａ + CUP:ARG:快Ｂ + CUP:ARG:快Ｍ
+;快Ｃ＋快Ｖ＋快Ａ＋快Ｂが合わせて100以上上升ならその20%の液体のソースが加わる（男人はダメ）
+IF LOCAL:1 > 100
+	;容易湿と不易湿はここで处理
+	LOCAL:1 = LOCAL:1 * (10 + 5 * TALENT:ARG:弄湿难易) / 10
+	SOURCE:ARG:液体 += LOCAL:1 / 5
+ENDIF
+
+;-------------------------------------------------
+;烙印系统
+;-------------------------------------------------
+IF TATTO_SYSTEM && exist_st:ARG:0
+    ; 主纹
+    SELECTCASE st_m_id:ARG:0
+        CASE 1
+            TIMES CUP:ARG:快Ｃ, 1.50
+            ; PRINTL [DEBUG] 快C之纹启动
+        CASE 2
+            TIMES CUP:ARG:快Ｖ, 1.50
+            ; PRINTL [DEBUG] 快V之纹启动
+        CASE 3
+            TIMES CUP:ARG:快Ａ, 1.50
+            ; PRINTL [DEBUG] 快A之纹启动
+        CASE 4
+            TIMES CUP:ARG:快Ｂ, 1.50
+            ; PRINTL [DEBUG] 快B之纹启动
+    ENDSELECT
+    ; 辅纹
+    ; CUP:ARG:[0..4] 对应 CVABM
+    ; 辅纹ID 0..3 对应 CVAB（截至 2024-02，快M之纹没有实现）
+    FOR LOCAL:1, 0, 4
+        IF st_a_lv:ARG:(LOCAL:1) > 0
+            CUP:ARG:(LOCAL:1) = CUP:ARG:(LOCAL:1) * (100 + st_a_lv:ARG:(LOCAL:1) * 10) / 100
+            ; PRINTFORML [DEBUG] 辅纹 {LOCAL:1} 启动，等级为 {st_a_lv:ARG:(LOCAL:1)}
+        ENDIF
+    NEXT
+ENDIF

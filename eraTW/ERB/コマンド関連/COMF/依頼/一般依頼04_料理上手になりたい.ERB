@@ -1,0 +1,135 @@
+﻿;存否函数
+;F函数はTRYCALL系が使えないので通常函数で存否配列を作っちゃう
+@EXIST_一般依赖4
+#LOCALSIZE 1
+#LOCALSSIZE 1
+
+;オブジェクト本体
+;ここでARGで渡されるのはCLIENT_IDです
+@一般依赖4(ARG, O_DATA, V_NAME)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS O_DATA
+#DIMS V_NAME
+SELECTCASE O_DATA
+CASE "依赖名"
+	CALLF MAKE_STR(V_NAME, "想要学习料理")
+CASE "依赖内容表示"
+	CALLF MAKE_STR(V_NAME, @"指导%NAME_OUTPUT_TRANSLATION("CALLNAME", ARG)%练习料理")
+CASE "依赖报酬表示"
+	CALLF MAKE_STR(V_NAME, @"%金额表示(500)%")
+CASE "依赖实行指令名"
+	CALLF MAKE_STR(V_NAME, "料理")
+CASE "依赖备考表示"
+	CALLF MAKE_STR(V_NAME, "首先移动到可以料理的场所吧")
+
+CASE "依赖内容"
+	CALLF MAKE_INT(V_NAME, MAKE_IRAI_DATA(0, "作业"))
+CASE "依赖サブ"
+CASE "依赖期限"
+;发生时ではなく受托时に确定します
+CASE "依赖发生率"
+;これは他の一般依赖との相对概率なんで10％ではありません
+	CALLF MAKE_INT(V_NAME, 10)
+CASE "依赖发生条件"
+	SIF ABL:ARG:料理技能 < ABL:MASTER:料理技能 && ABL:MASTER:料理技能 >=2 && ABL:ARG:亲密 >= 3
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "依赖受托可能条件"
+	IF DISH_NAME != ""
+	ELSEIF CFLAG:ARG:宴会参加
+	ELSEIF GET_MAPID(CFLAG:MASTER:当前位置) == MAIN_MAP
+		CALLF MAKE_INT(V_NAME, 1)
+	ENDIF
+CASE "依赖实行可能条件"
+	SIF DISH_NAME == "" && KITCHEN(CFLAG:MASTER:当前位置)
+		CALLF MAKE_INT(V_NAME, 1)
+;成功/失败处理はCARRYOUTで直接书く
+;SOURCEやITEM入手、消费が烦杂になるので
+CASE "依赖消灭条件"
+	SIF RAND:100 < 30
+		CALLF MAKE_INT(V_NAME, 1)
+CASE "依赖人连れ出し可能"
+	CALLF MAKE_INT(V_NAME, 1)
+ENDSELECT
+
+
+
+@IRAI_一般4(CHARA, IRAI_ID, SCENE)
+#DIM  CHARA
+#DIM  IRAI_ID
+#DIMS SCENE
+#DIM  CLIENT_ID
+CLIENT_ID = IRAI_ID_TO_CLIENT(IRAI_ID)
+SELECTCASE SCENE
+CASE "依赖条件表示"
+;何か専用の表示情报を设けたい时用
+;受托済みの依赖表示で使用されます
+;
+;PRINT系だけでSOURCEとかは入れちゃダメ、WAITも无しで
+;ここ以外の表示项目は
+;PRINTFORML 　　　　　：
+;となっているのでスペースを揃えたほうが见栄えが良いです
+
+CASE "依赖实行时"
+;このCASEに限り、RESULTが意味を持ちます
+;依赖实行时のRESULTにはIRAI_CONST_RESULT()を使用してください
+;可能な参数は"中止", "实行して成功", "实行して失败", "实行して未解决"です
+;独自处理を仕込みたい时は"实行して未解决"で先延ばしするなりしてください
+;
+;"依赖实行时"に限っていえば、CHARAはTARGETと同一であり、必ずしもCLIENT_IDと一致するとは限りません
+;个々のケースで确认する必要があります
+;この依赖は「作业」扱いであり、CLIENTがTARGETになっている时のみ实行できます
+;
+;
+	SOURCE:欢乐 = 500
+	TIME += 20
+	DOWNBASE:体力 = 50
+	DOWNBASE:气力 = 50
+	DOWNBASE:MASTER:体力 = 50
+	DOWNBASE:MASTER:气力 = 50
+	CALL 一般依赖4_COOKING(TARGET)
+	PRINTFORML %NAME_OUTPUT_TRANSLATION("CALLNAME", MASTER)%和%NAME_OUTPUT_TRANSLATION("CALLNAME", TARGET)%一起制作着%DISH_NAME%
+	RETURN IRAI_CONST_RESULT("实行して成功")
+CASE "依赖成功时"
+;成功报告时の报酬など
+	CALL CHANGE_CFLAG(2, TARGET, 20)
+	CALL CHANGE_CFLAG(4, TARGET, 20)
+	EXP:TARGET:料理经验 += 5 * (ABL:MASTER:料理技能 - ABL:TARGET:料理技能)
+	PRINTFORML 
+	;PRINTFORML 「いただきます」
+	PRINTFORML 「我开动了」
+	CALL 吃饭(TARGET)
+	CALL 吃饭(MASTER)
+	CALL GET_MONEY_YEN(500, 2)
+	CALL RESET_DISH
+CASE "依赖失败时"
+;失败报告时の处理
+	CALL CHANGE_CFLAG(2, TARGET, -10)
+	CALL CHANGE_CFLAG(4, TARGET, -10)
+	EXP:TARGET:料理经验 ++
+ENDSELECT
+
+
+;おまかせ料理と料理生成の复合
+@一般依赖4_COOKING(CHARA)
+#DIM CHARA
+CALL RESET_DISH
+IF !RAND:3 && ABL:MASTER:料理技能 >= 3
+	DISH_TYPE = 甜点
+ELSEIF !RAND:2 && ABL:MASTER:料理技能 >= 2
+	DISH_TYPE = 主食
+ELSE
+	DISH_TYPE = 轻食
+ENDIF
+CALL FISHER_YATES_SHAFFLE(400 + CHARANUM)
+FOR LOCAL, 1, 400 + CHARANUM + 1
+	CALL DISHDATA(SHAFFLE_ARRAY:LOCAL + 100, DISH_TYPE)
+	SIF STRCOUNT(DISH_TASTE, "过季/")
+		CONTINUE
+	SIF STRCOUNT(DISH_TASTE, "谜料理/")
+		CONTINUE
+	SIF RESULT >= 1
+		BREAK
+NEXT
+CALL 料理生成(DISH_NAME, CHARA, "练习")

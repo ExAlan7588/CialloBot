@@ -1,0 +1,303 @@
+﻿;-------------------------------------------------
+;素股
+;侍奉系指令、レベル1
+;-------------------------------------------------
+@COM83
+;-------------------------------------------------
+;特殊派生处理(未实装)
+;-------------------------------------------------
+;调教者が主人で、前回の调教が贝あわせ(助手)か双重素股だと双重素股に
+;SIF ASSIPLAY == 0 && (PREVCOM == 510 || (TFLAG:150 && PREVCOM == 121))
+;	JUMP COM510
+
+;-------------------------------------------------
+;COM别FLAGの设定
+;-------------------------------------------------
+;行为者
+TCVAR:116 = TARGET
+;侍奉快乐
+TCVAR:108 = 1
+
+CSTR:PLAYER:10 += @"{TARGET}/"
+;TCVAR:2 射精部位フラグ（-1=避孕套 1=膣内 2=肛门 3=手淫 4=口淫 5=乳交 6=素股 7=足交 8=体表 9=肛门侍奉 10=道具 11=触手 12=Ａ调教 13=Ｖ调教）
+TCVAR:PLAYER:2 = 6
+;强度
+TCVAR:PLAYER:4 =900
+
+;-------------------------------------------------
+;ソース追加处理
+;-------------------------------------------------
+;消费体力、气力
+IF FLAG:70 == 1
+	BASE:MASTER:TSP -= 80
+	SOURCE:PLAYER:快Ｃ = 150
+	SOURCE:快Ｃ = 150
+
+ELSE
+
+	DOWNBASE:体力 += 40
+	DOWNBASE:气力 += 130
+	SOURCE:PLAYER:快Ｃ = 150
+
+	SOURCE:快Ｃ = 150
+	SOURCE:情爱 = 80
+	SOURCE:性行动 = 250
+	SOURCE:达成 = 50
+	SOURCE:屈从 = 500
+	SOURCE:偏离正轨 = 120
+	SOURCE:反感 = 120
+
+	;上のほうで计算した污れデータ
+	SOURCE:不洁 = Y*10 + 60
+
+	;-------------------------------------------------
+	;特殊ソース处理
+	;-------------------------------------------------
+	;圧抑、抵抗持ちには、抑郁ソース追加
+	SIF TALENT:自己爱 < 0 || TALENT:抵抗
+		SOURCE:郁闷 += 300
+ENDIF
+;-------------------------------------------------
+;污れの处理
+;-------------------------------------------------
+;射精に关系なく行われる处理はここから
+;奴隷のＶ⇔调教者のＰ的污垢が移动
+STAIN:3 |= STAIN:PLAYER:2
+STAIN:PLAYER:2 |= STAIN:3
+
+;-------------------------------------------------
+;経験の处理
+;-------------------------------------------------
+;同性爱　レズなら返回值1ゲイなら返回值2
+IF FLAG:70 == 1
+	IF HETEROSEX(TARGET,PLAYER)
+		EXP:PLAYER:(50 + HETEROSEX(TARGET,PLAYER)) += 7
+	ENDIF
+ELSE
+	IF HETEROSEX(TARGET,PLAYER)
+		EXP:(50 + HETEROSEX(TARGET,PLAYER)) += 7
+		EXP:PLAYER:(50 + HETEROSEX(TARGET,PLAYER)) += 7
+	ENDIF
+ENDIF
+RETURN 1
+
+
+@CAN_COM83(ARG)
+SKIPDISP ARG
+PRINTL 素股
+;-------------------------------------------------
+;实行判定处理
+;-------------------------------------------------
+IF FLAG:70 == 1
+
+ELSE
+
+A = 0
+S = 0
+
+;全部の命令に共通の要素を考虑
+;(顺从が高いと命令に从いやすいなど)
+CALL COM_ORDER
+
+;ABL:欲望
+IF ABL:欲望
+	SIF S
+		PRINT  + 
+	A += ABL:欲望 * 2
+	PRINT 欲望
+	PRINTV 'LV,ABL:欲望,'(,ABL:欲望 * 2,')
+	S = 1
+ENDIF
+;ABL:侍奉精神
+IF ABL:侍奉精神
+	SIF S
+		PRINT  + 
+	A += ABL:侍奉精神 * 4
+	PRINT 侍奉精神
+	PRINTV 'LV,ABL:侍奉精神,'(,ABL:侍奉精神 * 4,')
+	S = 1
+ENDIF
+;ABL:精液中毒
+IF ABL:精液中毒
+	SIF S
+		PRINT  + 
+	A += ABL:精液中毒 * 1
+	PRINT 精液中毒
+	PRINTV 'LV,ABL:精液中毒,'(,ABL:精液中毒 * 1,')
+	S = 1
+ENDIF
+
+IF MARK:快乐刻印
+	SIF S
+		PRINT  + 
+	A += MARK:快乐刻印 * 2
+	PRINT 快乐刻印
+	PRINTV 'LV,MARK:快乐刻印,'(,MARK:快乐刻印 * 2,')
+	S = 1
+ENDIF
+;PALAM:情欲
+IF GETPALAMLV(PALAM:情欲,5)
+	SIF S
+		PRINT  + 
+	A += GETPALAMLV(PALAM:情欲,5) * 1
+	PRINT 情欲
+	PRINTV 'LV,GETPALAMLV(PALAM:情欲,5),'(,GETPALAMLV(PALAM:情欲,5) * 1,')
+	S = 1
+ENDIF
+;害羞
+IF TALENT:羞耻心 > 0
+	PRINT  - 
+	A -= 1
+	PRINT 害羞
+	PRINTV '(,1,')
+	S = 1
+ENDIF
+;否定快感（淫乱、娼妇で无效）
+IF TALENT:快感应答 < 0 && !TALENT:淫乱
+	PRINT  - 
+	A -= 3
+	PRINT 否定快感
+	PRINTV '(,3,')
+	S = 1
+ENDIF
+;讨厌男人（恋慕、亲爱で无效）
+IF OTOKOGIRAI(TARGET)
+	PRINT  - 
+	A -= 7
+	PRINT 讨厌男人
+	PRINTV '(,7,')
+	S = 1
+ENDIF
+;恋慕
+IF TALENT:恋慕 && ASSIPLAY == 0
+	SIF S
+		PRINT  + 
+	A += 3
+	PRINT 恋慕
+	PRINTV '(,3,')
+	S = 3
+ENDIF
+;亲爱
+IF TALENT:恋慕 > 1 && ASSIPLAY == 0
+	SIF S
+		PRINT  + 
+	A += 3
+	PRINT 亲爱
+	PRINTV '(,3,')
+	S = 3
+ENDIF
+
+;调教者が扶她
+IF (TALENT:PLAYER:2 & 3) == 3
+	SIF S
+		PRINT  + 
+	A += 8
+	PRINT 扶她
+	PRINTV '(,8,')
+	S = 1
+ENDIF
+
+;媚药
+IF TCVAR:媚药
+	SIF S
+		PRINT  + 
+	A += 6
+	PRINT 媚药
+	PRINTV '(,6,')
+	S = 1
+ENDIF
+
+Y = 0
+;爱液的污垢
+SIF STAIN:PLAYER:2 & 1
+	Y += 1
+;精液的污垢
+SIF STAIN:PLAYER:2 & 4
+	Y += 3
+;肛门的污垢
+SIF STAIN:PLAYER:2 & 8
+	Y += 7
+SIF STAIN:PLAYER:2 & 16
+	Y += 15
+
+Y = Y * (2 - TALENT:污臭耐性) / 2
+
+;有污垢
+IF Y
+	PRINT  - 
+	A -= Y
+	PRINT 有污垢
+	;污臭钝感
+	IF TALENT:污臭耐性 > 0
+		PRINT 、污臭钝感
+	ELSEIF TALENT:污臭耐性 < 0
+		PRINT 、污臭敏感
+	ENDIF
+	PRINTV '(,Y,')
+	S = 1
+ENDIF
+
+;合计を表示(20以上で实行)
+PRINT  = 
+PRINTV A
+
+V = 20
+SIF A < V
+	PRINT  < 
+SIF A == V
+	PRINT  = 
+SIF A > V
+	PRINT  > 
+PRINT 实行值
+PRINTV V
+
+WAIT
+SKIPDISP 0
+;实行できない
+SIF A < V
+	RETURN 0
+ENDIF
+RETURN 1
+
+;-------------------------------------------------
+;实行判定
+;-------------------------------------------------
+@COM_ABLE83
+;素股实行判定
+SIF !TFLAG:100
+	RETURN 0
+;批量管理
+SIF GLOBAL_COMABLE(83)
+	RETURN RESULT
+;润滑が高くないとダメ
+SIF PALAM:润滑 < 2000
+	RETURN 0
+;调教者が男人か半人半妖か扶她じゃないとダメ
+SIF !HAS_PENIS(PLAYER)
+	RETURN 0
+;TARGETに男性器があるとだめ
+SIF HAS_PENIS(TARGET)
+	RETURN 0
+;振动棒插入中はダメ
+SIF TEQUIP:13
+	RETURN 0
+;时间停止中は许可
+IF FLAG:70 != 1
+	;绳使用中は不可
+	SIF TEQUIP:绳
+		RETURN 0
+ENDIF
+
+;睡眠奸中
+SIF CFLAG:恶作剧 > 1
+	RETURN 0
+;下半身着衣
+SIF TEQUIP:0 > 1
+	RETURN 0
+;浴室PLAY中は气垫床が无いとダメ
+IF TEQUIP:31
+	SIF ITEM:20 == 0 && NOITEM == 0
+		RETURN 0
+ENDIF
+RETURN 1
+

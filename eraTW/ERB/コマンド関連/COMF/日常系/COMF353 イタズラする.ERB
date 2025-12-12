@@ -1,0 +1,58 @@
+﻿;-------------------------------------------------
+;猥亵
+;日常系指令、レベル1
+;-------------------------------------------------
+@COM353
+;复数を想定しているようだがABLEの方で多人数を弹いてる
+FOR LOCAL, 1, GET_TARGETNUM() + 1
+	CALL SET_PRANK(1, TARGET:LOCAL, 1)
+NEXT
+SIF CFLAG:TARGET:睡眠奸 < 1
+	CFLAG:TARGET:睡眠奸 = 1
+SIF CFLAG:MASTER:隐密中
+	CFLAG:MASTER:隐密中 = 0	
+SIF CFLAG:TARGET:隐密中
+	CFLAG:TARGET:隐密中 = 0	
+RETURN 1
+
+;-------------------------------------------------
+;实行判定
+;-------------------------------------------------
+@COM_ABLE353
+;恶作剧实行判定
+SIF !TFLAG:100
+	RETURN 0
+;批量管理
+SIF GLOBAL_COMABLE(353)
+	RETURN RESULT
+;睡眠中のみ
+SIF CFLAG:睡眠 == 0
+	RETURN 0
+;ターゲットの私室でのみ
+SIF CFLAG:MASTER:当前位置 != CFLAG:311
+	RETURN 0
+
+;时间停止中不可
+SIF FLAG:70
+	RETURN 0
+;すでに恶作剧モード
+SIF CFLAG:恶作剧
+	RETURN 0
+;陪睡中は出来ない
+SIF CFLAG:陪睡中
+	RETURN 0
+;他に谁か居る
+SIF GET_TARGETNUM() > 1
+	RETURN 0
+;魔改睡奸去除体力限制
+;气力0
+;SIF BASE:MASTER:气力 <= 0
+;	RETURN 0
+;弱ってたら无し
+SIF CFLAG:衰弱 > 0
+	RETURN 0
+;甲斐性无しにそんな度胸はない
+SIF FLAG:甲斐性无
+	RETURN 0
+RETURN 1
+

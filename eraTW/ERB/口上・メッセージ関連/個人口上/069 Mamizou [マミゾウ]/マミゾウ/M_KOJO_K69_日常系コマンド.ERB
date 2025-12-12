@@ -1,0 +1,2596 @@
+﻿;※※※※※※※※※※※※※※※※※※※※※※※※※
+;日常系指令
+;※※※※※※※※※※※※※※※※※※※※※※※※※
+;==================================================
+;300,会话
+;==================================================
+;==================================================
+;Optional: Determines if the standard description should be skipped.
+;Return 0 if description and KOJO should be shown, 1 if description should be hidden and KOJO shown, 2 if description should be shown and KOJO hidden, and 3 if both description and KOJO should be hidden.
+;==================================================
+@M_KOJO_MESSAGE_MESSAGECHECK_COM_K69_300
+RETURN 1
+
+@M_KOJO_MESSAGE_COM_K69_300
+;指令共通メッセージ(TRAIN_MESSAGE) 
+;削除すると「～说着话。」とかが消えます
+IF CFLAG:勃然大怒 && !FLAG:70
+	PRINTFORML 
+	PRINTFORML 「…………」
+	PRINTFORML 猯藏一脸不悦地移开了视线。
+	RETURN 1
+ELSE
+	CALL TRAIN_MESSAGE
+ENDIF
+;口上メイン呼出
+IF FLAG:70
+ELSE
+	CALL M_KOJO_MESSAGE_COM_K69_300_1
+ENDIF
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_300_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORML 
+	IF 陷落状态() >= 4
+		IF CFLAG:MASTER:当前位置 == CFLAG:70:当前位置 && ((MAIN_MAP != 2 && CFLAG:MASTER:当前位置 == 220) || MAIN_MAP == 2)
+			SELECTCASE RAND:2
+				CASE 0
+					PRINTFORML 『今天也关系很好呢。』
+					PRINTFORML 「呵呵，有伴侣在身边真是好啊。」
+					PRINTFORMW 这么说着，猯藏便依偎了过来。
+					PRINTFORML 『肯定是的吧。我好像没有那个缘分。』
+					PRINTFORML 「好好打扮一下，姑娘你也能找到好对象。虽然不如这家伙。」
+					PRINTFORMW 这么说着，小铃一脸羡慕地看着抱上来的猯藏。
+				CASE 1
+					PRINTFORML 「姑娘你，没有好的对象吗？」
+					PRINTFORML 为了回应猯藏的话，小铃困扰地笑了笑，手臂也缠了上来。
+					PRINTFORMW 『我还早呢。而且，对散发霉味的书籍感兴趣的男性也不多吧。』
+					PRINTFORML 「这么说的话，会错过良缘的哦？」
+					PRINTFORML 『嗯，现在比起那个，还有更多有趣的事情。』
+					PRINTFORMW 虽然这么说，还是带着羡慕的表情看着两人缠在一起的手臂。
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 「呵呵，我的话，又有什么有趣的呢。」
+					PRINTFORML 为了回应猯藏的话，%CALLNAME:MASTER%一脸认真地说不是这样的。
+					PRINTFORML 「唔，被你这么一说，总觉得有点不好意思呢。」
+					PRINTFORMW 这么说着，猯藏微微红了脸，%CALLNAME:MASTER%的心脏也随之跳动了一下。
+				CASE 1
+					PRINTFORML 「啊啊，你知道我说的事吗。……我可没说哦，真的哦。」
+					PRINTFORML 在无法询问她指的是什么的气氛中，只是苦笑。
+					PRINTFORML 「姆，不相信我吗。那只是为了寻找逃跑的借口而已。」
+					PRINTFORMW 看到她气鼓鼓的样子，%CALLNAME:MASTER%反而觉得也许是真的。
+				CASE 2
+					PRINTFORML 「呵呵，活了这么久，还能再次找到伴侣呢。」
+					PRINTFORML 这么嘟囔着的猯藏，露出了稍微带着阴影的笑容。
+					PRINTFORML 「嗯？怎么了，那是什么担心的表情？」
+					PRINTFORMW 回答说没什么，并对猯藏露出了笑容。
+			ENDSELECT
+		ENDIF
+	ELSEIF 陷落状态() >= 2
+		IF CFLAG:MASTER:当前位置 == CFLAG:70:当前位置 && ((MAIN_MAP != 2 && CFLAG:MASTER:当前位置 == 220) || MAIN_MAP == 2)
+			SELECTCASE RAND:2
+				CASE 0
+					PRINTFORML 『你好，今天有什么事吗？』
+					PRINTFORML 「呵呵，约会哦，羡慕吧？ 姑娘你也找个好对象啊。」
+					PRINTFORMW 这么说着，猯藏挽住了手臂，小铃则露出了苦笑。
+				CASE 1
+					PRINTFORML 「哦，姑娘\@ ((MAIN_MAP != 2 && CFLAG:MASTER:当前位置 == 220) || (MAIN_MAP == 2 && CFLAG:MASTER:当前位置 == 213)) ? 这么打扮，是打算去哪里？ # 很少在外面见到你呢，打算去哪里？ \@」
+					PRINTFORML 『你好。稍微应朋友邀请去她家做客\@ ((MAIN_MAP != 2 && CFLAG:MASTER:当前位置 == 220) || (MAIN_MAP == 2 && CFLAG:MASTER:当前位置 == 213)) ? 不过，有什么需要我做的吗？ #  \@』
+					PRINTFORMW 看着两人开心地笑着，%CALLNAME:MASTER%总觉得有些被疏远了。
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML 「呵呵，能与你相遇，是件好事呢。」
+					PRINTFORMW 不知为何感到脸颊发热的同时，对猯藏的话语含糊地应了一声。
+				CASE 1
+					PRINTFORML 「唔，嘛，就我来说，并不讨厌这里的生活。」
+					PRINTFORMW 看着乐滋滋的猯藏，%CALLNAME:MASTER%不知为何也感到高兴。
+				CASE 2
+					PRINTFORML 「来到这里，确实是件好事。」
+					PRINTFORMW 这么嘟囔着的猯藏，眼神看向了远方。
+			ENDSELECT
+		ENDIF
+	[SKIPSTART]
+	ELSEIF 陷落状态() == 1
+		IF CFLAG:MASTER:当前位置 == CFLAG:70:当前位置 && ((MAIN_MAP != 2 && CFLAG:MASTER:当前位置 == 220) || MAIN_MAP == 2)
+			SELECTCASE RAND:2
+				CASE 0
+				CASE 1
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:3
+				CASE 0
+				CASE 1
+				CASE 2
+			ENDSELECT
+		ENDIF
+	[SKIPEND]
+	ELSE
+		IF CFLAG:MASTER:当前位置 == CFLAG:70:当前位置 && ((MAIN_MAP != 2 && CFLAG:MASTER:当前位置 == 220) || MAIN_MAP == 2)
+			SELECTCASE RAND:2
+				CASE 0
+					PRINTFORML 『啊，最近进了一些有趣的书，要不要看看？』
+					PRINTFORMW 「唔，让我看看\@ CFLAG:MASTER:当前位置 == 280 ? 吧 # 去看看 \@。」
+				CASE 1
+					PRINTFORML 『你好，今天也关系很好呢』
+					PRINTFORMW 「呵呵，实际情况怎么样就不知道了。」
+			ENDSELECT
+		ELSE
+			SELECTCASE RAND:3
+				CASE 0
+					PRINTFORMW 「唔，幻想乡真是个有趣的地方啊。」
+				CASE 1
+					PRINTFORMW 「外面的世界？ 也没什么大不了的。」
+				CASE 2
+					PRINTFORMW 「说实话，在外面人类比妖怪更可怕。」
+			ENDSELECT
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;301,泡茶
+;==================================================
+;==================================================
+;Optional: Determines if the standard description should be skipped.
+;Return 0 if description and KOJO should be shown, 1 if description should be hidden and KOJO shown, 2 if description should be shown and KOJO hidden, and 3 if both description and KOJO should be hidden.
+;==================================================
+@M_KOJO_MESSAGE_MESSAGECHECK_COM_K69_301
+RETURN 1
+
+@M_KOJO_MESSAGE_COM_K69_301
+IF CFLAG:勃然大怒 && !FLAG:70
+	PRINTFORML 
+	PRINTFORML 「…………」
+	PRINTFORML 猯藏一脸不悦地移开了视线。
+	RETURN 1
+ELSE
+	CALL TRAIN_MESSAGE
+ENDIF
+;口上メイン呼出
+IF FLAG:70
+ELSE
+	CALL M_KOJO_MESSAGE_COM_K69_301_1
+ENDIF
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_301_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORML 
+	IF GETBIT(CFLAG:1690,4)
+		IF 陷落状态() >= 4
+			PRINTFORML 「嗅嗅，唔，好像没放药呢。」
+			PRINTFORML 猯藏坏笑着，我连忙低头道歉。
+			PRINTFORML 「没事，我没放在心上。呵呵，嘛，就当是自作自受，被摆弄一下吧。」
+			PRINTFORMW 听到这话，我无力地垂下了肩膀。
+		ELSEIF 陷落状态() >= 2
+			PRINTFORML 「唔，今天，什么都没放呢。」
+			PRINTFORMW 为了回应猯藏的嗤笑，我流下了冷汗。
+		ELSEIF 陷落状态() == 1
+		ELSE
+			PRINTFORMW 「没有偷偷放什么东西吧。」
+		ENDIF
+	ELSE
+		IF TFLAG:193 < 0
+			PRINTFORMW 「要更加精进啊。」
+		ELSEIF 陷落状态() >= 4
+			PRINTFORML 「唔，真好喝真好喝。恋人泡的就是不一样啊。」
+			PRINTFORML 就在我小声嘀咕着「只是想看到你的笑容才泡的」的时候，猯藏撅起了嘴。
+			PRINTFORML 「那种害羞的事情不要说出来。」
+			PRINTFORMW 看着似乎生气了，实际上却很害羞的猯藏，我露出了苦笑。
+		ELSEIF 陷落状态() >= 2
+			PRINTFORML 「唔，味道真不错。满足满足。」
+			PRINTFORMW 这么说着，猯藏真的非常美味地喝光了，我露出了笑容。
+		;ELSEIF 陷落状态() == 1
+		ELSE
+			PRINTFORMW 「唔，味道不错。要是再来点茶点就好了。」
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;302,身体接触
+;==================================================
+;==================================================
+;Optional: Determines if the standard description should be skipped.
+;Return 0 if description and KOJO should be shown, 1 if description should be hidden and KOJO shown, 2 if description should be shown and KOJO hidden, and 3 if both description and KOJO should be hidden.
+;==================================================
+@M_KOJO_MESSAGE_MESSAGECHECK_COM_K69_302
+RETURN 1
+
+@M_KOJO_MESSAGE_COM_K69_302
+IF CFLAG:勃然大怒 && !FLAG:70
+	PRINTFORML 
+	PRINTFORML 「…………」
+	PRINTFORML 猯藏一脸不悦地移开了视线。
+	RETURN 1
+ELSE
+	CALL TRAIN_MESSAGE
+ENDIF
+;口上メイン呼出
+IF FLAG:70
+ELSE
+	CALL M_KOJO_MESSAGE_COM_K69_302_1
+ENDIF
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_302_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORML 
+	IF BATHROOM()
+		IF 陷落状态() >= 4
+			PRINTFORML 「唔，那么也让%MASTERNAME%来帮我洗洗吧。」
+			PRINTFORML 猯藏转过身，大大地张开腿，用手指拨开私处，摇晃着乳房。
+			PRINTFORML 「要用手指精心清洗哦？ 啊！ 呵呵，和恋人一起泡澡，真开心啊。」
+			PRINTFORMW 忍住涌上心头的冲动，%CALLNAME:MASTER%帮猯藏清洗身体。
+		ELSEIF 陷落状态() >= 2
+			PRINTFORML 「嗯……，呵呵，有人帮忙搓背真是好啊。」
+			PRINTFORMW 我对开心地笑着的猯藏报以微笑，并给她浇了热水。
+		;ELSEIF 陷落状态() == 1
+		ELSE
+			PRINTFORMW 「……要是做了奇怪的事情我会生气的哦。」
+		ENDIF
+	ELSEIF CFLAG:MASTER:当前位置 == CFLAG:70:当前位置 && ((MAIN_MAP != 2 && CFLAG:MASTER:当前位置 == 220) || MAIN_MAP == 2)
+		SIF ((MAIN_MAP != 2 && CFLAG:MASTER:当前位置 != 220) || (MAIN_MAP == 2 && CFLAG:MASTER:当前位置 != 213))
+			PRINTFORML %CALLNAME:MASTER%一行人，偶然遇到了小铃。
+		IF 陷落状态() >= 4
+			PRINTFORML 『光是看着你们两个就觉得很幸福了。』
+			PRINTFORML 「呵呵，和伴侣在一起就是这样的哦。对吧，%MASTERNAME%」
+			PRINTFORMW 听到猯藏愉快的话语，%CALLNAME:MASTER%点了点头回应。
+			PRINTFORML 『真好啊，要是我也有能让我这么确定的对象就好了。』
+			PRINTFORML 「嘛，姑娘你的话，书就是恋人了吧。」
+			PRINTFORMW 看着猯藏和小铃的互动，我不由自主地露出了苦笑。
+		ELSEIF 陷落状态() >= 2
+			PRINTFORML 「这，小铃在这里呢，我说你差不多得了。」
+			PRINTFORML 『虽然这么说，但看起来你也不是完全不愿意呢。』
+			PRINTFORMW 看着笑眯眯的小铃，猯藏撅起了嘴。
+		ELSEIF 陷落状态() == 1
+		ELSE
+			PRINTFORML 『你们两个，关系真好啊。』
+			PRINTFORML 「只是这家伙不分场合而已，喂你差不多得了。」
+		ENDIF
+	ELSEIF (GET_TARGETNUM() == 1 && TFLAG:400) || GET_TARGETNUM() >= 2
+		IF 陷落状态() >= 4
+			PRINTFORML 「呵呵，向周围的人炫耀我属于%MASTERNAME%，感觉真不错。」
+			PRINTFORML 猯藏撒娇似的贴近我的样子，让周围的人皱起了眉头。
+			PRINTFORML 「来，%MASTERNAME%也随便对我做什么都可以哦。」
+			PRINTFORMW 看着一边说着一边蹭着脸颊的猯藏，我无视周围的目光，把手放在了她的腰上。
+		ELSEIF 陷落状态() >= 2
+			PRINTFORML 「哈啊……，不要在人前黏黏糊糊的，笨蛋。」
+			PRINTFORMW 虽然嘴上抱怨着，猯藏却并没有想要离开。
+		;ELSEIF 陷落状态() == 1
+		ELSE
+			PRINTFORML 「……你想要在有人的地方做什么啊？」
+		ENDIF
+	ELSE
+		IF 陷落状态() >= 4
+			PRINTFORML 「……唔，明明是情侣，不做更过激的事情吗？」
+			PRINTFORML 我苦笑着看着撅着嘴的猯藏，只是继续轻轻地触碰着她。
+			PRINTFORML 「真是的，老是这样的话，我可要反过来推倒你咯？」
+			PRINTFORMW 虽然心里想着那样也不错，但我还是和猯藏一起笑了出来。
+		ELSEIF 陷落状态() >= 2
+			PRINTFORML 「呵呵，干嘛这么黏着我。真是个可爱的家伙。」
+			PRINTFORMW 猯藏露出了笑容，接受了%CALLNAME:MASTER%。
+		;ELSEIF 陷落状态() == 1
+		ELSE
+			PRINTFORMW 「我说，再亲密也要讲礼仪吧，不要贴过来。」
+		ENDIF
+	ENDIF
+
+ENDIF
+RETURN 1
+;==================================================
+;303,道歉
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_303
+CALL M_KOJO_MESSAGE_COM_K69_303_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_303_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORML 
+	IF TFLAG:193 < 0
+		IF 陷落状态() >= 4
+			PRINTFORML 「真是的，让恋人生气什么的，也太没用了吧。」
+			PRINTFORML 一边抱怨着，一边靠近的猯藏挽住了我的手臂。
+			PRINTFORML 「……如果说是反省了，那就拿出证据给我看。」
+			PRINTFORMW 这么说着，闭上眼睛撅起嘴的猯藏，我吻了上去。
+		ELSEIF 陷落状态() >= 2
+			PRINTFORML 「真是没办法。不要太让人家生气了。」
+			PRINTFORMW 看着笑着的猯藏，我再一次低下了头。
+		;ELSEIF 陷落状态() == 1
+		ELSE
+			PRINTFORMW 「嘛，以后要注意了哦。」
+		ENDIF
+	ELSEIF TFLAG:193 == 0
+		IF 陷落状态() >= 4
+			PRINTFORML 「即使是情侣，也有不能逾越的底线。」
+			PRINTFORML 被轻轻地敲了一下头，又被轻轻地弹了一下脑门。
+			PRINTFORML 「但是，看在你诚心诚意道歉的份上，就原谅你吧。」
+			PRINTFORMW 看着松了一口气的%CALLNAME:MASTER%，猯藏深深地叹了口气。
+		ELSEIF 陷落状态() >= 2
+			PRINTFORML 「哈啊……，不要以为下次也会被原谅。」
+			PRINTFORMW 听到这句话，我内心松了一口气，%CALLNAME:MASTER%再一次低下了头。
+		;ELSEIF 陷落状态() == 1
+		ELSE
+			PRINTFORMW 「……以后要注意了。」
+		ENDIF
+	ELSE
+		IF 陷落状态() >= 4
+			PRINTFORML 「即使是和恋人，也有能做的事情和不能做的事情。」
+			PRINTFORML 面对真的生气了的猯藏，我只是低下了头。
+			PRINTFORML 「以为光是低头就能解决问题，你的这种想法我很不爽。」
+			PRINTFORMW 面对油盐不进的猯藏，我冒着冷汗更加诚恳地道了歉。
+		ELSEIF 陷落状态() >= 2
+			PRINTFORML 「觉得是自己错了？哼，别只在对自己有利的时候才说，我可不相信。」
+			PRINTFORMW 猯藏不悦地哼了一声，把脸转向了一边。
+		;ELSEIF 陷落状态() == 1
+		ELSE
+			PRINTFORMW 「……我才不会原谅你。」
+		ENDIF
+	ENDIF
+
+ENDIF
+RETURN 1
+;==================================================
+;304,帮忙干活
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_304
+CALL M_KOJO_MESSAGE_COM_K69_304_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_304_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;305,索求膝枕
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_305
+;口上メイン呼出
+IF FLAG:70
+ELSE
+	CALL M_KOJO_MESSAGE_COM_K69_305_1
+ENDIF
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_305_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORML 
+	IF ABL:TARGET:亲密 > 5
+		IF 陷落状态() >= 4
+			PRINTFORML 「呵呵呵，膝枕，加上摸头，如果再来个接吻，那就是一对笨蛋情侣了。」
+			PRINTFORML 这么低语着的猯藏把脸凑了过来。
+			PRINTFORML 「你说，难道不是吗？」
+			PRINTFORMW 猯藏亲了一下期待着甜吻的%CALLNAME:MASTER%的鼻尖，然后把脸移开了。
+		ELSEIF 陷落状态() >= 2
+			PRINTFORML 「……唔，有那么舒服吗？」
+			PRINTFORMW 面对从正上方注视着自己的猯藏，%CALLNAME:MASTER%理所当然地回答道。
+		;ELSEIF 陷落状态() == 1
+		ELSE
+			PRINTFORML 「嗯？呵呵，只是稍微一时兴起而已。」
+		ENDIF
+	ELSEIF ABL:TARGET:亲密 > 2
+		IF 陷落状态() >= 4
+			PRINTFORML 「呵呵，简直像个小孩子一样。」
+			PRINTFORML 因为膝枕的舒适感，以及被抚摸头顶的快感，我不由自主地露出了笑容。
+			PRINTFORML 「不过，偶尔这样也不错呢。」
+			PRINTFORMW 猯藏露出愉快的笑容，抚摸着我的头。
+		ELSEIF 陷落状态() >= 2
+			PRINTFORML 「真是个可爱的家伙。」
+			PRINTFORMW 猯藏露出有些开心的笑容，抚摸着我的头。
+		;ELSEIF 陷落状态() == 1
+		ELSE
+			PRINTFORMW 「真是个没办法的家伙。」
+		ENDIF
+	ELSE
+		IF 陷落状态() >= 2
+			PRINTFORML 「真是的，突然说什么呢。」
+			PRINTFORML 抱怨着的猯藏的大腿，因为紧张而僵硬。
+		;ELSEIF 陷落状态() == 1
+		ELSE
+			PRINTFORMW 「这、这样可以吗？」
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;306,抚摸肚子
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_306
+;口上メイン呼出
+IF FLAG:70
+ELSE
+	CALL M_KOJO_MESSAGE_COM_K69_306_1
+ENDIF
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_306_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;307,捏脸蛋
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_307
+;口上メイン呼出
+IF FLAG:70
+ELSE
+	CALL M_KOJO_MESSAGE_COM_K69_307_1
+ENDIF
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_307_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;308,捅脸颊
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_308
+CALL M_KOJO_MESSAGE_COM_K69_308_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_308_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;309,摸头
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_309
+;口上メイン呼出
+IF FLAG:70
+ELSE
+	CALL M_KOJO_MESSAGE_COM_K69_309_1
+ENDIF
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_309_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORML 
+	IF CFLAG:TARGET:睡眠
+		IF 陷落状态() >= 4
+			PRINTFORML 「嗯……呼呼……唔……」
+			PRINTFORML 每次移动放在她头上的手，猯藏的嘴角都会自然地放松。
+			PRINTFORML 「唔……喜欢%MASTERNAME%……」
+			PRINTFORMW 看着她平静的睡颜和甜美的声音，我的心脏跳动得异常快速。
+		ELSE
+			PRINTFORML 「嗯……还要更多……唔……」
+			PRINTFORML 猯藏神情愉悦，放松了脸颊，在梦呓中嘟囔着，我感到非常高兴，于是更加温柔地抚摸着她的头。
+		ENDIF
+	ELSEIF CFLAG:MASTER:当前位置 == CFLAG:70:当前位置 && ((MAIN_MAP != 2 && CFLAG:MASTER:当前位置 == 220) || MAIN_MAP == 2)
+		SIF ((MAIN_MAP != 2 && CFLAG:MASTER:当前位置 != 220) || (MAIN_MAP == 2 && CFLAG:MASTER:当前位置 != 213))
+			PRINTFORML %CALLNAME:MASTER%一行人，偶然遇到了小铃。
+		IF ABL:亲密 > 5
+			IF 陷落状态() >= 4
+				PRINTFORML 「……真是的，这种事情不要在人前做。」
+				PRINTFORML 『但是，其实你很高兴吧，你看起来非常安心哦。』
+				PRINTFORML 听到小铃咯咯地笑着，猯藏苦笑了一下。
+				PRINTFORML 「不管怎么说，我已经成了她的伴侣了。」
+				PRINTFORML 『呵呵，真好啊。』
+				PRINTFORMW 看着笑着的两人，%CALLNAME:MASTER%也不由自主地露出了笑容。
+			ELSEIF 陷落状态() >= 2
+				PRINTFORML 「真是的，都说了不要这样了……要吃了你哦，这个不知羞耻的家伙。」
+				PRINTFORML 听到小铃的话，猯藏叹了口气，然后狠狠地瞪了这边一眼。
+			;ELSEIF 陷落状态() == 1
+			ENDIF
+		ELSEIF ABL:亲密 > 2
+			IF 陷落状态() >= 2
+				PRINTFORML 「喂，让人家丢脸你很开心吗，你这个白痴。」
+				PRINTFORML 『虽然这么说，但你看起来很高兴哦。你们关系真好呢。』
+				PRINTFORML 听到小铃的吐槽，猯藏害羞地移开了视线。
+			;ELSEIF 陷落状态() == 1
+			ELSE
+				PRINTFORML 「差不多得了，笨蛋，小铃还在呢。」
+				PRINTFORML 『啊，不用在意我哦。』
+			ENDIF
+		ELSE
+			PRINTFORML 「差不多得了，你这个笨蛋！」
+			PRINTFORML 『不可以欺负约会的对象哦。』
+		ENDIF
+	ELSEIF (GET_TARGETNUM() == 1 && TFLAG:400) || GET_TARGETNUM() >= 2
+		IF ABL:亲密 > 5
+			IF 陷落状态() >= 4
+				PRINTFORML 「都说了不要这样了。」
+				PRINTFORML 深深叹了口气的同时，猯藏露出了愉悦的笑容。
+				PRINTFORML 「呵呵，真是个没办法的家伙呢，%MASTERNAME%。」
+				PRINTFORML 无视了周围传来的「不要秀恩爱」的声音。
+			ELSEIF 陷落状态() >= 2
+				PRINTFORML 「真是的，在有人的地方做什么啊。」
+				PRINTFORML 无视周围吃惊的视线，%CALLNAME:MASTER%抚摸着猯藏的头。
+			;ELSEIF 陷落状态() == 1
+			ENDIF
+		ELSEIF ABL:亲密 > 2
+			IF 陷落状态() >= 2
+				PRINTFORML 「我不想被人看到啊。都说了不要这样了。」
+				PRINTFORML 嘴上抱怨着，却并没有想要逃脱的猯藏，被我尽情地抚摸着头。
+			ELSEIF 陷落状态() == 1
+			ELSE
+				PRINTFORML 「喂，差不多得了。有人在呢……」
+			ENDIF
+		ELSE
+			PRINTFORML 「喂！你们在人前做什么啊！」
+		ENDIF
+	ELSE
+		IF ABL:亲密 > 5
+			IF 陷落状态() >= 4
+				PRINTFORML 「呵呵，被恋人抚摸，真是意想不到的幸福呢。」
+				PRINTFORML 看着开心地嘟囔着的猯藏，我歪了歪头。
+				PRINTFORML 「没必要在意。比起那个，要做更多的事情吗？」
+				PRINTFORML 看着嘴角放松的猯藏，我不由自主地露出了笑容。
+			ELSEIF 陷落状态() >= 2
+				PRINTFORML 「唔，虽然不讨厌，但总觉得有些不甘心呢。」
+				PRINTFORML 这么说着，这次轮到猯藏抚摸我的头了。
+			;ELSEIF 陷落状态() == 1
+			ELSE
+				PRINTFORML 「呵呵，偶尔这样也不错呢。」
+			ENDIF
+		ELSEIF ABL:亲密 > 2
+			IF 陷落状态() >= 2
+				PRINTFORML 「你到底想做什么啊，真是的。」
+				PRINTFORML 嘴上抱怨着，却放松了嘴角，露出了开心的笑容的猯藏。
+			;ELSEIF 陷落状态() == 1
+			ELSE
+				PRINTFORML 「唔，我可是比你年长很多啊……」
+			ENDIF
+		ELSE
+			PRINTFORML 「……干什么突然。不要随便碰我。」
+		ENDIF
+	ENDIF
+
+ENDIF
+RETURN 1
+;==================================================
+;310,摸屁股
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_310
+;口上メイン呼出
+IF FLAG:70
+ELSE
+	CALL M_KOJO_MESSAGE_COM_K69_310_1
+ENDIF
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_310_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORML 
+	IF CFLAG:TARGET:睡眠 == 1
+		IF 陷落状态() >= 4
+			PRINTFORML 「唔……嗯……好舒服……」
+			PRINTFORML 听到猯藏在梦呓中低语，我的情绪不由自主地高涨起来，手中的力道也加重了。
+			PRINTFORML %CALLNAME:MASTER%揉捏着充满张力和弹性的臀部。
+			PRINTFORMW 「……唔，%MASTERNAME%……」
+		ELSE
+			PRINTFORML 「唔……？……诶，色色的……」
+			PRINTFORMW 听到睡梦中的猯藏的声音，我感到一股热流涌上心头，尽情地揉捏着她的臀部。
+		ENDIF
+	ELSEIF CFLAG:诶嘿嘿 == 2
+		IF 陷落状态() >= 4
+			PRINTFORML 「呵呵，我的屁股有那么舒服吗？」
+			PRINTFORML 为了回应猯藏的话，我点了点头，用手掌好好地感受着它的弹性。
+			PRINTFORML 「啊呜……，喂……你、你的手法，太下流了吧。」
+			PRINTFORMW 看着舒服地笑着的猯藏，为了让她更舒服，我更加卖力地动着手。
+		ELSEIF 陷落状态() >= 2
+			PRINTFORML 「哈啊！ 嗯……呵呵，真开心啊。」
+			PRINTFORMW 为了回应猯藏喜悦的话语，%CALLNAME:MASTER%也变得高兴起来。
+		;ELSEIF 陷落状态() == 1
+		ENDIF
+	ELSEIF CFLAG:MASTER:当前位置 == CFLAG:70:当前位置 && ((MAIN_MAP != 2 && CFLAG:MASTER:当前位置 == 220) || MAIN_MAP == 2)
+		SIF ((MAIN_MAP != 2 && CFLAG:MASTER:当前位置 != 220) || (MAIN_MAP == 2 && CFLAG:MASTER:当前位置 != 213))
+			PRINTFORML %CALLNAME:MASTER%一行人，偶然遇到了小铃。
+		IF FIRSTTIME("310A")
+			PRINTFORML 「呀！你你你、你你你做什么，这个白痴」
+			PRINTFORML 『啊啦，发生什么了吗？』
+			PRINTFORMW 「啊，啊哈哈，没什么。小姑娘不用在意哦。」
+			PRINTFORML 猯藏一边对小铃笑着，一边用手肘狠狠地顶了一下我的肋部。
+			PRINTFORML 猯藏把脸凑到仍然执着地动着手的%CALLNAME:MASTER%的耳边说道。
+			PRINTFORMW 「……想被吃掉吗？」
+			PRINTFORML 突然响起低沉沙哑的声音，让%CALLNAME:MASTER%不由自主地松开了手。
+			PRINTFORML 『这就是情话吗。好厉害』
+			PRINTFORMW 看着眼睛闪闪发光的小铃，猯藏慌忙解释说不是，我不禁苦笑起来。
+		ELSEIF ABL:亲密 > 5
+			IF 陷落状态() >= 4
+				PRINTFORML 「呼，呼……求求你，停、停下来」
+				PRINTFORML 『……咕……那个，要、要不要我准备些茶水？』
+				PRINTFORMW 看着脸颊发红，时不时颤抖的猯藏，小铃的脸颊也微微泛红。
+				PRINTFORML 「没、没事的，不用、不用在意，……呼、呜……」
+				PRINTFORML 『那、那个，不好意思，我稍微离开一下』
+				PRINTFORMW 小铃一消失，我就尽情地享受着猯藏靠过来的屁股。
+			ELSEIF 陷落状态() >= 2
+				PRINTFORML 「嗯，呼……这、这个，停下来……嗯呼……」
+				PRINTFORML 『那个，你脸好红，没事吗？』
+				PRINTFORMW 我尽情地享受着猯藏慌忙点头的，充满弹性的圆润屁股。
+			;ELSEIF 陷落状态() == 1
+			ENDIF
+		ELSEIF ABL:亲密 > 2
+			IF 陷落状态() >= 4
+				PRINTFORML 「再不适可而止，我真的要生气了哦」
+				PRINTFORML 『啊啦，发生什么了吗？』
+				PRINTFORMW 「没、没没没，什么都没有」
+				PRINTFORML 面对小铃的询问，猯藏慌忙回答，手却被她捏着手背甩开了。
+				PRINTFORML 『那个，嘛，关系好是好事啦』
+				PRINTFORMW 我一边忍着手上的疼痛，一边对苦笑着的小铃露出笑容。
+			ELSEIF 陷落状态() >= 2
+				PRINTFORML 「给我停下来，你这个笨蛋」
+				PRINTFORML 『那个，你在做什么吗？』
+				PRINTFORMW 面对小铃的询问，猯藏慌忙装作什么都没发生，却被我甩开了手。
+			;ELSEIF 陷落状态() == 1
+			ENDIF
+		ELSE
+			PRINTFORML 『啊啦，怎么了吗？』
+			PRINTFORMW 「没、没什么哦。停、停下来，你这个笨蛋」
+		ENDIF
+	ELSEIF (GET_TARGETNUM() == 1 && TFLAG:400) || GET_TARGETNUM() >= 2
+		IF FIRSTTIME("310B")
+			PRINTFORML 「呀！这、这个，在有人的地方突然做什么」
+			PRINTFORML 轻轻地抚摸着她的屁股，猯藏顿时挺直了背，瞪着我。
+			PRINTFORMW %CALLNAME:MASTER%回答说因为猯藏太漂亮了，忍不住。
+			PRINTFORML 「……什么，漂亮，什么漂亮」
+			PRINTFORML 猯藏的耳朵都红了，她低下头，好像要避开我的视线。
+			PRINTFORMW 「你这个，白痴」
+		ELSEIF ABL:亲密 > 5
+			IF 陷落状态() >= 4
+				PRINTFORML 「你这个笨蛋，你是想向其他家伙炫耀到什么程度」
+				PRINTFORML 每次揉捏着她柔软的屁股，猯藏的呼吸都变得急促起来。
+				PRINTFORML 「呵呵，不过，这样也好。这样其他家伙也能知道我是你的东西了」
+				PRINTFORMW 这么低语的同时，猯藏更加贴近了我。
+			ELSEIF 陷落状态() >= 2
+				PRINTFORML 「呵呵，你这个变态。在这种地方就兴奋起来了」
+				PRINTFORMW 虽然嘴上抱怨着，猯藏却把屁股撅了过来。
+			;ELSEIF 陷落状态() == 1
+			ELSE
+				PRINTFORMW 「唔……，被其他家伙看到了也可以吗？」
+			ENDIF
+		ELSEIF ABL:亲密 > 2
+			IF 陷落状态() == 1
+				PRINTFORML 「喂、喂！在这种地方想做什么！」
+				PRINTFORMW 看着她害羞的样子，我感到心跳加速。
+			ELSE
+				PRINTFORMW 「！这、这个！在这种地方想做什么！」
+			ENDIF
+		ELSE
+			PRINTFORMW 「……脑子里长蛆了吗？在想什么」
+		ENDIF
+	ELSE
+		IF ABL:亲密 > 5
+			IF 陷落状态() >= 4
+				PRINTFORML 「嗯呜……，呵呵，真是个可爱的家伙，啊呜……」
+				PRINTFORML 每次用劲地揉捏着她的屁股，猯藏的口中都会发出娇声。
+				PRINTFORML 「哈啊！ 喂，不要、不要太用力了，哼！」
+				PRINTFORMW 我更加激烈地动着手，猯藏反而把屁股贴了过来。
+			ELSEIF 陷落状态() >= 2
+				PRINTFORML 「呜、嗯……，呵呵，你这个色鬼」
+				PRINTFORMW 她开心地嘟囔着，自己把腰往后顶了过来。
+			;ELSEIF 陷落状态() == 1
+			ELSE
+				PRINTFORMW 「嗯，啊呜……，真是的」
+			ENDIF
+		ELSEIF ABL:亲密 > 2
+			IF 陷落状态() == 1
+				PRINTFORML 「都说了不要这样了，真是的」
+				PRINTFORMW 猯藏啪的一声拍开了我的手，脸上却带着一丝遗憾的表情。
+			ELSE
+				PRINTFORMW 「喂，不要这么轻易地碰我」
+			ENDIF
+		ELSE
+			PRINTFORML 「……对女人的屁股伸出咸猪手，不知羞耻，不知羞耻」
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;311,拥抱
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_311
+;口上メイン呼出
+IF FLAG:70
+ELSE
+	CALL M_KOJO_MESSAGE_COM_K69_311_1
+ENDIF
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_311_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORML 
+	IF CFLAG:TARGET:睡眠
+		IF ABL:亲密 >= 8
+			IF 陷落状态() >= 4
+				PRINTFORML 「唔……嗯……喜欢……唔」
+				PRINTFORML 猯藏把脸埋在我的胸前，听到她甜美的梦呓，我的心跳加速。
+				PRINTFORML 「嗯……不要……离开……不要……」
+				PRINTFORMW 我只是抚摸着猯藏的头，她似乎在梦呓中寻求着什么。
+			ELSE
+				PRINTFORML 「唔……嗯啾……喜欢……」
+				PRINTFORMW 听到她一边蹭着脸颊一边嘟囔着，%CALLNAME:MASTER%的脸变得滚烫。
+			ENDIF
+		ELSEIF ABL:亲密 >= 4
+			IF 陷落状态() >= 4
+				PRINTFORML 「唔……嗯……喜欢……嗯……」
+				PRINTFORML 猯藏撒娇似的把手臂环绕在%CALLNAME:MASTER%的背上。
+				PRINTFORML 「不要……离开……不要……唔……」
+				PRINTFORMW 听到她甜腻的声音，我的心跳越来越快。
+			ELSE
+				PRINTFORML 「不要……抱抱……唔」
+				PRINTFORMW 听到她稚嫩的语气，感受到与平时的反差，我的心脏异常喧嚣。
+			ENDIF
+		ENDIF
+	ELSEIF CFLAG:MASTER:当前位置 == CFLAG:70:当前位置 && ((MAIN_MAP != 2 && CFLAG:MASTER:当前位置 == 220) || MAIN_MAP == 2)
+		SIF ((MAIN_MAP != 2 && CFLAG:MASTER:当前位置 != 220) || (MAIN_MAP == 2 && CFLAG:MASTER:当前位置 != 213))
+			PRINTFORML %CALLNAME:MASTER%一行人，偶然遇到了小铃。
+		IF FIRSTTIME("311A")
+		ELSEIF ABL:亲密 >= 8
+			IF 陷落状态() >= 4
+				PRINTFORML 「给小姑娘看这个，我觉得对所谓的早期教育不好。」
+				PRINTFORML 『那个那个，那个，那个……』
+				PRINTFORM 紧紧拥抱在一起的猯藏，在%CALLNAME:MASTER%的
+				IF TALENT:MASTER:体型 < 0
+					PRINTFORM 额头上
+				ELSE
+					PRINTFORM 脖子上
+				ENDIF
+				PRINTFORMW 轻轻地亲吻了一下。
+				PRINTFORML 「呵呵，我可没错哦？错的是这家伙。」
+				PRINTFORML 『那个，那个，那个，那种害羞的事情，如果可以的话，请不要做了。』
+				PRINTFORMW 看着脸变得通红的小铃，我轻轻地低了下头，然后放开了猯藏。
+			ELSEIF 陷落状态() >= 2
+				PRINTFORML 「真是个害羞的家伙。」
+				PRINTFORML 『那个，我觉得以那种姿势说这种话不太好吧。』
+				PRINTFORMW 猯藏黏糊糊地贴着我，甚至还蹭着脸颊，小铃露出了无奈的笑容。
+			;ELSEIF 陷落状态() == 1
+			ENDIF
+		ELSEIF ABL:亲密 >= 4
+			IF 陷落状态() >= 4
+				PRINTFORML 「真是的，都说了不要这样了，你这个笨蛋。」
+				PRINTFORML 『其实你很高兴吧？呵呵，你们很般配呢。』
+				PRINTFORMW 听到小铃开心的言语，猯藏的脸颊微微泛红，然后移开了视线。
+				PRINTFORML 「……结果，爱得深的人就输了，没办法。」
+				PRINTFORMW 为了回应猯藏的话，%CALLNAME:MASTER%嘟囔着说自己才是爱得更深的那一方。
+				PRINTFORMW 『啊哈哈哈，你们真的很般配。』
+			ELSEIF GETBIT(CFLAG:1,0) || 陷落状态() >= 2
+				PRINTFORML 「……喂，不要在人前拥抱。」
+				PRINTFORML 『但是，你并不讨厌吧。』
+				PRINTFORMW 听到小铃的话，猯藏的脸颊微微泛红，然后把脸转向了别处。
+			ELSE
+				PRINTFORML 「真是的，小姑娘还在呢，赶紧回别馆去。」
+				PRINTFORMW 『但是，你看起来很高兴哦。』
+			ENDIF
+		ELSE
+			IF 陷落状态() >= 2
+				PRINTFORML 「你这个笨蛋，赶紧回别馆去！」
+				PRINTFORML 『但是，你并不讨厌吧。』
+				PRINTFORMW 面对小铃的吐槽，赌气的猯藏强行把我推开了。
+			;ELSEIF 陷落状态() == 1
+			ELSE
+				PRINTFORML 「喂！差不多得了！回别馆去！」
+				PRINTFORMW 『呵呵，很少看到客人这么慌张呢。』
+			ENDIF
+		ENDIF
+	ELSEIF (GET_TARGETNUM() == 1 && TFLAG:400) || GET_TARGETNUM() >= 2
+		IF FIRSTTIME("311B")
+			PRINTFORML 「给我停下来，你这个笨蛋」
+			PRINTFORML 猯藏用不悦的表情强行把我推开。
+			PRINTFORML 「在这种人多的地方拥抱什么的……，不知羞耻，不知羞耻。」
+			PRINTFORML 虽然这么说着，猯藏的嘴角却稍微开心地放松了一下。
+			PRINTFORML 觉得如果指出来的话会被她生气，%CALLNAME:MASTER%只好勉强地和猯藏保持了一点距离。
+		ELSEIF ABL:亲密 >= 8
+			IF 陷落状态() >= 4
+				PRINTFORML 「……呵呵……，没想到我竟然会这么投入。」
+				PRINTFORML 猯藏一边开心地低语着，一边紧紧地抱着我。
+				PRINTFORML 「……我爱你，%MASTERNAME%」
+				PRINTFORMW 在耳边听到这句话，我的心脏以奇妙的节奏跳动着。
+			ELSEIF 陷落状态() >= 2
+				PRINTFORML 「呵呵，光是我一个人享受就太可惜了。抱起来感觉真不错呢。」
+				PRINTFORMW 我对咯咯笑着的猯藏报以微笑，然后紧紧地拥抱了一会儿。
+			;ELSEIF 陷落状态() == 1
+			ENDIF
+		ELSEIF ABL:亲密 >= 4
+			IF 陷落状态() >= 4
+				PRINTFORML 「明明有人在，真是个没办法的家伙，这么喜欢疼爱恋人吗？」
+				PRINTFORML 为了回应猯藏的话，我一本正经地回答说当然，片刻后哑口无言。
+				PRINTFORML 「………………真是个害羞的家伙。」
+				PRINTFORMW 看着她脸变得通红，却仍然开心地笑着的样子，实在是太可爱了。
+			ELSEIF 陷落状态() == 1
+				PRINTFORML 「真是的，在有人的地方做这种事情。」
+				PRINTFORMW 猯藏虽然无奈地眯起了眼睛，嘴角却带着笑容。
+			ELSE
+				PRINTFORML 「喂，都说了不要这样了……，真是个没办法的家伙。」
+			ENDIF
+		ELSE
+			PRINTFORML 「这、这个、你做什么，放开我，放开我！」
+		ENDIF
+	ELSE
+		IF ABL:亲密 >= 8
+			IF 陷落状态() >= 4
+				PRINTFORML 「真是的，我的拥抱有那么舒服吗？」
+				PRINTFORML 为了回应紧紧地抱住我的猯藏，%CALLNAME:MASTER%回答说当然。
+				PRINTFORML 「你这么直白地说出来，反而让我……啊，没什么。」
+				PRINTFORML 看着%CALLNAME:MASTER%说如果停在那里反而会让他在意，猯藏只是露出了微笑。
+			ELSEIF 陷落状态() >= 2
+				PRINTFORML 「被你这么做，也是你的目的吧？」
+				PRINTFORML 咯咯笑着的猯藏，紧紧地抱住了我。
+			;ELSEIF 陷落状态() == 1
+			ELSE
+				PRINTFORML 「……呵呵，这样也不错吧？」
+			ENDIF
+		ELSEIF ABL:亲密 >= 4
+			IF 陷落状态() >= 4
+				PRINTFORML 「嘛，毕竟是恋人嘛。」
+				PRINTFORML 猯藏露出了不知为何有些开心的样子，苦笑了一下。
+				PRINTFORML 「不过嘛，总是被你抱着，多少会有点痒痒的感觉呢。」
+				PRINTFORMW 虽然这么说着，却没有要放开我的意思。
+			ELSEIF 陷落状态() >= 2
+				PRINTFORML 「呵呵，真是没办法。来，随便你吧。」
+				PRINTFORMW 猯藏苦笑着，放松了身体，接受了我。
+			;ELSEIF 陷落状态() == 1
+			ELSE
+				PRINTFORML 「……真是的，真是个没办法的家伙。」
+			ENDIF
+		ELSE
+			IF 陷落状态() == 1
+				PRINTFORML 「真害羞，快回别馆去。」
+				PRINTFORMW 我无视她的抱怨，继续拥抱着她。
+			ELSE
+				PRINTFORML 「喂，不要这么黏过来。」
+			ENDIF
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;312,接吻
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_312
+;口上メイン呼出
+IF FLAG:70
+ELSE
+	CALL M_KOJO_MESSAGE_COM_K69_312_1
+ENDIF
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_312_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORML 
+	IF !GETBIT(CFLAG:1,0) && TFLAG:193 != 99 && !(CFLAG:MASTER:当前位置 == CFLAG:70:当前位置 && ((MAIN_MAP != 2 && CFLAG:MASTER:当前位置 == 220) || MAIN_MAP == 2))
+		IF ABL:亲密 >= 5
+			PRINTFORML 「嗯……，突然做什么啊，你这个笨蛋」
+			PRINTFORML 猯藏用与平时不同，略带水润的眼神注视着我。
+			PRINTFORML 「既然都做这种事情了，做什么都可以了吧？」
+			PRINTFORMW 即使稍微感到有些害怕，%CALLNAME:MASTER%还是点了点头。
+		ELSE
+			PRINTFORML 「……嗯？ 啊！？ 你、你突然做什么！」
+			PRINTFORML 猯藏睁大了眼睛，慌忙把我推开。
+			PRINTFORML 「真是的，突然接吻是什么意思，你这个笨蛋！」
+			PRINTFORMW 虽然嘴上抱怨着，嘴角却开心地放松了下来。
+		ENDIF
+	ELSEIF CFLAG:TARGET:睡眠
+		IF 陷落状态() >= 4
+			PRINTFORML 「唔……，%NAME:MASTER%……还要、更多……」
+			PRINTFORML 听到她在梦中呼唤我的名字，还提出了要求，%CALLNAME:MASTER%露出了笑容。
+			PRINTFORML 「唔……啾……嗯……」
+			PRINTFORMW 我在嘴角放松的猯藏的嘴唇上，反复地亲吻着。
+		ELSE
+			PRINTFORML 「嗯唔……唔……，嗯……」
+			PRINTFORMW 看着即使在睡眠中也很开心的猯藏，我不由自主地露出了笑容。
+		ENDIF
+	ELSEIF CFLAG:TARGET:陪睡中
+		IF ABL:亲密 >= 8
+			IF 陷落状态() >= 4
+				PRINTFORML 「呵呵，我的嘴唇有那么美味吗？」
+				PRINTFORML 面对咯咯笑着的猯藏，%CALLNAME:MASTER%回答说当然。
+				PRINTFORML 「你真会说话，我很高兴哦。」
+				PRINTFORMW 看着靠近过来的猯藏的笑容，我的心跳不由自主地加速。
+			ELSE
+				PRINTFORML 「哼，给你，你想要这样吧。啾……」
+				PRINTFORMW 为了回应露出愉快笑容的猯藏，我感到一阵羞涩涌上心头。
+			ENDIF
+		ELSEIF ABL:亲密 >= 5
+			IF 陷落状态() >= 4
+				PRINTFORML 「唔……，虽然不能说不好，但我觉得这样不太好吧。」
+				PRINTFORML 猯藏眼含泪光地嘟囔着。
+				PRINTFORML 「虽然不能说讨厌，但还是会害羞啦。」
+				PRINTFORMW 虽然嘴上抱怨着，猯藏看着%CALLNAME:MASTER%的眼神却很温柔。
+			ELSEIF 陷落状态() >= 2
+				PRINTFORML 「嗯……真是的，这么捉弄我，你很开心吗？」
+				PRINTFORMW 虽然嘴上说着不高兴，嘴角却开心地放松了下来。
+			;ELSEIF 陷落状态() == 1
+			ENDIF
+		ENDIF
+	ELSEIF TFLAG:193 == 99
+		PRINTFORML 「……想做什么，你这个白痴」
+		PRINTFORMW 我被猯藏用力地推开，强行地离开了她。
+	ELSEIF CFLAG:MASTER:当前位置 == CFLAG:70:当前位置 && ((MAIN_MAP != 2 && CFLAG:MASTER:当前位置 == 220) || MAIN_MAP == 2)
+		SIF ((MAIN_MAP != 2 && CFLAG:MASTER:当前位置 != 220) || (MAIN_MAP == 2 && CFLAG:MASTER:当前位置 != 213))
+			PRINTFORML %CALLNAME:MASTER%一行人，偶然遇到了小铃。
+		IF FIRSTTIME("312A")
+			PRINTFORML 『…………』
+			PRINTFORML 我无视了僵硬的小铃，尽情地享受着猯藏的嘴唇。
+			PRINTFORML 「……你这个，大笨蛋！」
+			PRINTFORMW 刚一分开，脸上就被狠狠地扇了一巴掌。
+			PRINTFORML 『啊，那个，客人』
+			PRINTFORML 「你在想什么，你这个大笨蛋！在有其他人在的地方，有些事情是不能做的吧！」
+			PRINTFORML 猯藏的脸变得更红，声音也变得粗了起来。
+			PRINTFORMW 「还是说，你觉得和我的接吻是廉价到可以给别人看的吗！」
+			PRINTFORML 『……嗯，我觉得应该不是。』
+			PRINTFORML 不知为何，小铃插话了，猯藏把视线转向了她。
+			PRINTFORML 『那个，怎么说呢，你的同伴好像有点控制不住自己的感情了。』
+			PRINTFORMW 小铃点了点头表示赞同，然后被猯藏狠狠地瞪了一眼。
+			PRINTFORML 『而且，其实客人也很高兴吧？』
+			PRINTFORMW 「嗯……，我只有一点要说，这家店的风气变坏了，我可不会负责的哦。」
+			PRINTFORMW 猯藏鼓起了脸，依偎了过来。
+			SETBIT CFLAG:1904,2
+		ELSEIF ABL:欲望 >= 5 && RAND:2 == 0
+			IF 陷落状态() >= 4
+				PRINTFORML 「嗯，啾，咧咯，啾噗啾噜啾……」
+				PRINTFORML 『哇——哇——哇——』
+				PRINTFORMW 脸变得通红的小铃，仍然目不转睛地凝视着。
+				PRINTFORML 「嗯呜……真是的，你真是个趣味恶劣的家伙。」
+				PRINTFORML 『……好、厉害』
+				PRINTFORMW 猯藏苦笑着抚摸着呆然，却又带着羡慕表情的小铃的头。
+			ELSEIF 陷落状态() >= 2
+				PRINTFORML 「啾噜啾啪……啾噜，嗯，真是美味啊。」
+				PRINTFORML 『……接吻，好厉害……』
+				PRINTFORMW 脸变得通红的小铃，一动不动地盯着这边。
+			;ELSEIF 陷落状态() == 1
+			ENDIF
+		ELSEIF ABL:亲密 >= 5
+			IF 陷落状态() >= 4
+				PRINTFORML 「嗯，……呼……所以才说，不要在小姑娘面前做这种事情。」
+				PRINTFORML 『……接吻，原来是这么美妙的事情啊，要是我也有对象就好了。』
+				PRINTFORMW 我对着眼睛闪闪发光地注视着我们的小铃苦笑了一下，然后再次夺走了猯藏的嘴唇。
+				PRINTFORML 「这、这个！嗯……呼……嗯……」
+				PRINTFORML 『哇…………』
+				PRINTFORMW 想要阻止，最终却接受了的猯藏，小铃露出了羡慕的表情。
+			ELSEIF 陷落状态() >= 2
+				PRINTFORML 『……哇……，好棒』
+				PRINTFORML 「嗯…………呼，你这个白痴」
+				PRINTFORMW 嘴唇刚一分开，额头就被猯藏轻轻地敲了一下。
+			;ELSEIF 陷落状态() == 1
+			ENDIF
+		ELSE
+			IF 陷落状态() >= 4
+				PRINTFORML 「啾，嗯……，真是的，你这个笨蛋」
+				PRINTFORML 『真好啊……』
+				PRINTFORMW 「嗯？ 怎么了，你要是那么想接吻的话，要不要把这家伙借给你？」
+				PRINTFORML 『啊，啊哈哈，你还是别说这种言不由衷的话了比较好』
+				PRINTFORMW 小铃和猯藏笑着说道。
+				PRINTFORMW 总觉得，小铃的视线集中在了猯藏的嘴唇上。
+			ELSEIF 陷落状态() >= 2
+				PRINTFORML 「嗯啾……，真是的，你这个白痴」
+				PRINTFORML 『但是，客人看起来很高兴。真让人羡慕啊』
+				PRINTFORMW %CALLNAME:MASTER%一瞬间，很想问一下，到底羡慕什么。
+			;ELSEIF 陷落状态() == 1
+			ENDIF
+		ENDIF
+	ELSEIF (GET_TARGETNUM() == 1 && TFLAG:400) || GET_TARGETNUM() >= 2
+		IF FIRSTTIME("312B")
+			PRINTFORML 刚一亲上嘴唇，猯藏就停止了动作。
+			PRINTFORML 「咯咯咯咯咯」
+			PRINTFORML 我还以为她在模仿鸡叫？结果，头上挨了一下。
+			PRINTFORML 「你这个笨蛋、白痴、傻瓜！在这种、人多的地方，你在想什么！」
+			PRINTFORML 听到猯藏的声音，所有人都投来了疑惑的视线。
+			PRINTFORML 「……你这个，白痴」
+			PRINTFORML 猯藏害羞地低下了头。
+			PRINTFORML 我看到她的手抚摸着自己的嘴唇。
+			SETBIT CFLAG:1903,2
+		ELSEIF ABL:欲望 >= 5 || TCVAR:20 == 60
+			IF 陷落状态() >= 4
+				PRINTFORML 「嗯，咧咯，啾噜……，嗯，你的舌头，又甜又棒。」
+				PRINTFORML 嘴唇刚一分开，银色的桥梁就断了，听到这句话，我感到非常高兴。
+				PRINTFORML 「来，再来一次。让人看到也是一件很开心的事。」
+				PRINTFORMW 对于这句话，我无视周围皱着眉头的目光，再次和她深吻了起来。
+			ELSEIF 陷落状态() >= 2
+				PRINTFORML 「咧咯，啾噗……嗯，呵呵，在这种地方，你真是个好色之徒。」
+				PRINTFORMW 猯藏无视周围惊愕的目光，和我舌吻了起来。
+			;ELSEIF 陷落状态() == 1
+			ENDIF
+		ELSEIF ABL:亲密 >= 5
+			IF 陷落状态() >= 4
+				PRINTFORML 「啾，嗯……，呵呵，真是个可爱的家伙。」
+				PRINTFORML 只是轻轻地亲了一下嘴唇，猯藏就紧紧地抱住了我。
+				PRINTFORML 「呵呵，光让你一个人做，也太卑鄙了吧。」
+				PRINTFORMW 她话音刚落，这次轮到猯藏主动亲吻我了。
+			ELSEIF 陷落状态() >= 2
+				PRINTFORML 「啾……，真是的，稍微在意一下别人的目光好不好。」
+				PRINTFORMW 猯藏嘟囔着，嘴角却开心地放松了下来。
+			;ELSEIF 陷落状态() == 1
+			ELSE
+				PRINTFORMW 「嗯，啾…………，真是个没办法的家伙啊。」
+			ENDIF
+		ELSE
+			IF 陷落状态() == 1
+				PRINTFORML 「啾……嗯，真是的，在众目睽睽之下，你怎么能做出这种事情。」
+				PRINTFORMW 猯藏害羞地移开了视线。
+			ELSE
+				PRINTFORMW 「嗯……，喂，在有人的地方做什么」
+			ENDIF
+		ENDIF
+	ELSE
+		IF 陷落状态() >= 4
+			IF ABL:欲望 >= 5 || TCVAR:20 == 60
+				PRINTFORML 「啊呜，嗯啾，咧咯……啾噜……嗯呜，噗哈」
+				PRINTFORML 散落地舌吻过后，嘴唇分开，猯藏的嘴角浮现出愉悦的表情。
+				PRINTFORML 「你的嘴里真美味，呵呵，再来一次。」
+				PRINTFORMW 她话音刚落，再次把嘴唇贴了上来，和我舌吻。
+			ELSEIF ABL:亲密 >= 5
+				PRINTFORML 「嗯呜，……噗哈……，嗯，呵呵，和%NAME:MASTER%接吻，真让人高兴。」
+				PRINTFORML 猯藏脸颊染红，轻声说道，%CALLNAME:MASTER%也回答说自己也很高兴。
+				PRINTFORML 「……呵呵，只是说说而已吗？」
+				PRINTFORMW 面对挑衅的话语，我毫不犹豫地再次吻了上去。
+			ENDIF
+		ELSEIF 陷落状态() >= 2
+			IF ABL:欲望 >= 5 || TCVAR:20 == 60
+				PRINTFORML 「咧咯……嗯，啾噜噜……啾，噗哈。呵呵，真美味。」
+				PRINTFORMW 我用笑容回应猯藏的笑容，然后再次主动地吻了上去。
+			ELSEIF ABL:亲密 >= 5
+				PRINTFORML 「嗯……，呼……，这种事情，多少有点害羞呢。」
+				PRINTFORMW 我含糊地表示同意，然后轻轻地亲吻了她的脸颊。
+			ELSE
+				PRINTFORML 「！？ 你、你突然做什么啊」
+				PRINTFORMW 猯藏一边抱怨着，一边迅速地离开了。
+			ENDIF
+		;ELSEIF 陷落状态() == 1
+		ELSE
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;313,胸爱抚
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_313
+;口上メイン呼出
+IF FLAG:70
+ELSE
+	CALL M_KOJO_MESSAGE_COM_K69_313_1
+ENDIF
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_313_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	IF CFLAG:TARGET:睡眠 == 1
+		IF ABL:Ｂ感觉 <= 1
+			IF 陷落状态() >= 4
+				PRINTFORML 「唔……」
+				PRINTFORML 猯藏微微皱起眉头，身体颤抖着。
+				PRINTFORML 「唔……嗯……」
+				PRINTFORMW 感觉到她似乎有些抗拒，%CALLNAME:MASTER%悄悄地松开了手。
+			ELSE
+				PRINTFORML 「唔……」
+				PRINTFORMW 猯藏微微扭动身体，想要从%CALLNAME:MASTER%的手中挣脱。
+			ENDIF
+		ELSEIF ABL:Ｂ感觉 <= 3
+			IF 陷落状态() >= 4
+				PRINTFORML 「唔……嗯……啊……嗯……」
+				PRINTFORML 猯藏的身体一颤一颤的，身体稍微放松了一些。
+				PRINTFORML 「唔……哈呼……嗯……」
+				PRINTFORMW 猯藏的嘴角浮现出淡淡的笑容。
+			ELSE
+				PRINTFORML 「唔……嗯……哈呼……」
+				PRINTFORMW 听到猯藏口中发出的甜美叹息，我的心脏剧烈地跳动着。
+			ENDIF
+		ELSE
+			IF 陷落状态() >= 4
+				PRINTFORML 「唔……嗯……%MASTERNAME%，喜欢……」
+				PRINTFORML 享受着柔软触感的%CALLNAME:MASTER%，听到猯藏的梦呓，一瞬间僵住了。
+				PRINTFORML 「喜欢，所以……再……多……」
+				PRINTFORMW 猯藏一边甜甜地说着梦话，一边把手叠在我的手上，我不由自主地咽了口唾沫。
+			ELSE
+				PRINTFORML 「唔……嗯……喜欢……」
+				PRINTFORMW 看着嘴角流着口水，神情愉悦地低语着的猯藏，我无法停止手指的动作。
+			ENDIF
+		ENDIF
+[SKIPSTART]
+	ELSEIF CFLAG:MASTER:当前位置 == CFLAG:70:当前位置 && ((MAIN_MAP != 2 && CFLAG:MASTER:当前位置 == 220) || MAIN_MAP == 2)
+		SIF ((MAIN_MAP != 2 && CFLAG:MASTER:当前位置 != 220) || (MAIN_MAP == 2 && CFLAG:MASTER:当前位置 != 213))
+			PRINTFORML %CALLNAME:MASTER%达は、小铃とたまたま出会った
+		IF !GETBIT(CFLAG:1904,3)
+			SETBIT CFLAG:1904,3
+		ELSEIF 陷落状态() >= 4
+		ELSEIF GETBIT(CFLAG:1,0) || 陷落状态() >= 2
+		ELSE
+		ENDIF
+[SKIPEND]
+	ELSEIF (GET_TARGETNUM() == 1 && TFLAG:400) || GET_TARGETNUM() >= 2
+		IF !GETBIT(CFLAG:1903,3)
+			PRINTFORML 为了更充分地享受那柔软的触感，%CALLNAME:MASTER%的手掌更加用力了。
+			PRINTFORML 紧接着，脸上挨了一巴掌。
+			PRINTFORML 「……我可不想在这种人多的地方做这种事，你这个笨蛋」
+			PRINTFORML 看着眼角挂着泪珠的猯藏，我轻轻地低了下头，回答说因为太可爱了，忍不住。
+			PRINTFORML 「什么可爱，什么可爱。我可不会被这种话蒙混过关。」
+			PRINTFORMW 虽然这么说着，猯藏的嘴角却开心地放松了下来。
+			SETBIT CFLAG:1903,3
+		ELSEIF ABL:Ｂ感觉 <= 1
+			IF 陷落状态() >= 4
+				PRINTFORML 「嗯，这、这个，在有人的地方摸哪里啊」
+				PRINTFORML 面对害羞地移开视线的猯藏，我一边保持着笑容，一边用手掌抚摸着她的乳房。
+				PRINTFORML 「喂，差不多得了。就算你是%MASTERNAME%，也不能做这种事情。」
+				PRINTFORMW 虽然嘴上抱怨着，猯藏的嘴角却挂着笑容。
+			ELSEIF GETBIT(CFLAG:1,0) || 陷落状态() >= 2
+				PRINTFORML 「你这个白痴，在有人的地方，有些事情是不能做的吧」
+				PRINTFORML 猯藏不情愿地嘟囔着，却没有把我的手推开。
+			ENDIF
+		ELSEIF ABL:Ｂ感觉 <= 3
+			IF 陷落状态() >= 4
+				PRINTFORML 「哈啊哈啊……嗯……你这个笨蛋……在这种地方，嗯呜……」
+				PRINTFORML %CALLNAME:MASTER%动着手，尽情地享受着巨乳的柔软。
+				PRINTFORML 「至少，在没人的地方，啊可恶……差不多得了，不然我生气了哦。」
+				PRINTFORMW 猯藏害羞地红着脸，垂下了眼帘，我感到一阵爱意涌上心头。
+			ELSEIF 陷落状态() >= 2
+				PRINTFORML 「嗯呜，你这个变态，啊，你这个色鬼，嗯呜……哈啊哈啊」
+				PRINTFORML 猯藏一边骂骂咧咧，一边在每次被揉捏胸部的时候发出甜美的叹息。
+			;ELSEIF 陷落状态() == 1
+			ENDIF
+		ELSE
+			IF 陷落状态() >= 4
+				PRINTFORML 「呼啊！ 嗯呜！ 还要，还要更多！」
+				PRINTFORML 面对想要自己解开衣服的猯藏，%CALLNAME:MASTER%慌忙阻止了她。
+				PRINTFORML 「唔，不能直接摸吗？那就让我更舒服一点吧。」
+				PRINTFORMW 在她说出这句话的同时，自己摇晃着乳房，猯藏开始甜甜地娇声叫了起来。
+			ELSEIF GETBIT(CFLAG:1,0) || 陷落状态() >= 2
+				PRINTFORML 「啊可恶，嗯呜……呵呵，还要，还要更多，拜托了」
+				PRINTFORMW 看着她放荡的声音和表情，我忘记了地点，激烈地揉捏着猯藏的胸部。
+			ENDIF
+		ENDIF
+	ELSE
+		IF ABL:Ｂ感觉 <= 1
+			IF 陷落状态() >= 4
+				PRINTFORML 「嗯……，真是的，我的胸部有那么让你喜欢吗？」
+				PRINTFORML 面对抚摸着胸部的%CALLNAME:MASTER%，猯藏苦笑着问道。
+				PRINTFORML 「……呵呵，与其说是舒服，不如说是有点痒痒的。」
+				PRINTFORMW 这么说着，猯藏放松了身体，任由我摆布。
+			ELSEIF GETBIT(CFLAG:1,0)
+				PRINTFORML 「嗯……，有点痒痒的。」
+				PRINTFORMW 虽然嘴上抱怨着，猯藏却并没有想要逃开。
+			ENDIF
+		ELSEIF ABL:Ｂ感觉 <= 3
+			IF 陷落状态() >= 4
+				PRINTFORML 「嗯呼……，唔，没想到会这么舒服。」
+				PRINTFORML 每次像支撑着柔软的乳房一样地揉捏时，猯藏的嘴角都会开心地放松。
+				PRINTFORML 「呼啊，嗯呜……呵呵，真是个可爱的家伙。」
+				PRINTFORMW 听到这句话的同时，我的头被抚摸着，%CALLNAME:MASTER%露出了笑容。
+			ELSEIF GETBIT(CFLAG:1,0)
+				PRINTFORML 「呼……，呵呵，我的胸部很棒吧？」
+				PRINTFORMW 我对咯咯笑着的猯藏点了点头，然后更加尽情地享受着那份柔软。
+			ENDIF
+		ELSE
+			IF 陷落状态() >= 4
+				PRINTFORML 「呼啊！ 嗯呜！ 啊呼！ 好棒，再多来点，再多来点！」
+				PRINTFORML 猯藏用迷离的眼神低语着，自己也把手放了上去，开始揉捏。
+				PRINTFORML 「呼啊，啊呼……喜欢，喜欢被你这么做。」
+				PRINTFORMW 享受着巨大的乳房的柔软，%CALLNAME:MASTER%露出了笑容。
+			ELSEIF GETBIT(CFLAG:1,0)
+				PRINTFORML 「啊呼！ 嗯呜！ 没想到会这么舒服，呼啊！！」
+				PRINTFORMW 每次五指用力揉捏时，都会传来柔软的反抗和娇声，热量不断涌上心头。
+			ENDIF
+		ENDIF
+	ENDIF
+
+ENDIF
+RETURN 1
+;==================================================
+;314,肛门爱抚
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_314
+;口上メイン呼出
+IF FLAG:70
+ELSE
+	CALL M_KOJO_MESSAGE_COM_K69_314_1
+ENDIF
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_314_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	IF FIRSTTIME(SELECTCOM) && EXP:Ａ经验 == 0 && !CFLAG:10 && ((GET_TARGETNUM() == 1 && !TFLAG:400) || GET_TARGETNUM() < 2)
+		PRINTFORML 「呀！？」
+		PRINTFORML 当我把手指伸进她屁股的缝隙里，并向上抚摸时，猯藏发出了一声奇怪的尖叫。
+		PRINTFORML 「你、你、你这个白痴！」
+		PRINTFORMW 我被耳朵都红了的猯藏狠狠地敲了一下头。
+		PRINTFORML 「不、不要把手伸到那种不洁之门里去！」
+		IF GETBIT(CFLAG:1961,0)
+			PRINTFORML %CALLNAME:MASTER%苦笑着，心想明明自己也做过。
+		ELSE
+			PRINTFORML %CALLNAME:MASTER%断言说猯藏的身体没有肮脏的地方。
+		ENDIF
+		PRINTFORML 「不是、不是、不是那种问题啦，你这个白痴。」
+		PRINTFORMW 猯藏脸红着，突然把视线移开。
+		PRINTFORML 但是，她的嘴角却带着一丝笑容。
+		IF GETBIT(CFLAG:1961,0)
+			PRINTFORML 「……难道说，我也必须让你做吗？」
+		ELSE
+			PRINTFORML 「……你真的，是这么想的吗？」
+		ENDIF
+		PRINTFORML 面对胆怯地询问着的猯藏，我笑着点了点头。
+		PRINTFORML 「……哈啊……、我知道了，随你便吧。」
+		PRINTFORMW 猯藏深深地叹了口气，但还是露出了开心的笑容。
+	ELSEIF FIRSTTIME(SELECTCOM) && !GETBIT(CFLAG:1961,0) && !CFLAG:10 && ((GET_TARGETNUM() == 1 && !TFLAG:400) || GET_TARGETNUM() < 2)
+		PRINTFORML 「……不、不许笑哦？ 一想到会被%MASTERNAME%这么做，就觉得很害羞。」
+		PRINTFORML 嘟囔着的猯藏的脸颊，像苹果一样红彤彤的。
+		PRINTFORML 「……即使如此，能被你玩弄不洁之门，我还是很高兴。」
+		PRINTFORML 听到这句话，情欲涌上心头。
+		PRINTFORMW 「所以，可以，哦。」
+	ELSEIF FIRSTTIME(SELECTCOM) && !CFLAG:10 && ((GET_TARGETNUM() == 1 && !TFLAG:400) || GET_TARGETNUM() < 2)
+		PRINTFORML 「呼，我知道了，随你便吧。」
+		PRINTFORMW 这么嘟囔着的猯藏的嘴角，不知为何开心地放松着。
+	ELSEIF CFLAG:诶嘿嘿 == 2 && (TCVAR:20 == 72 || TEQUIP:六九式)
+		IF 陷落状态() >= 4
+			PRINTFORML 「嗯……啊……很好，再深入一点」
+			PRINTFORML 面对猯藏下流的央求，我理所当然地把舌头伸进了她的菊花里。
+			PRINTFORML 「呼啊！ 嗯呜！ 啊呼，呀啊啊啊啊！！」
+			PRINTFORMW 舌头被紧紧地夹着，感觉血液都快要停止流动了，虽然感到痛苦，但我还是继续侍奉着猯藏。
+		ELSEIF GETBIT(CFLAG:1,0) || 陷落状态() >= 2
+			PRINTFORML 「呼啊！ 嗯，啊……竟然会自己舔舐不洁之门啊。」
+			PRINTFORMW 面对只用眼神告诉我「你这个变态」的猯藏，我苦笑了一下。
+		ENDIF
+	ELSE
+[SKIPSTART]
+		IF CFLAG:MASTER:当前位置 == CFLAG:70:当前位置 && ((MAIN_MAP != 2 && CFLAG:MASTER:当前位置 == 220) || MAIN_MAP == 2)
+			SIF ((MAIN_MAP != 2 && CFLAG:MASTER:当前位置 != 220) || (MAIN_MAP == 2 && CFLAG:MASTER:当前位置 != 213))
+				PRINTFORML %CALLNAME:MASTER%达は、小铃とたまたま出会った
+			IF FIRSTTIME("314A")
+			ELSEIF 陷落状态() >= 4
+			ELSEIF 陷落状态() >= 2
+			;ELSEIF 陷落状态() == 1
+			ENDIF
+		ELSE
+[SKIPEND]
+		IF (GET_TARGETNUM() == 1 && TFLAG:400) || GET_TARGETNUM() >= 2
+			IF FIRSTTIME("314B")
+				PRINTFORML 「呀！！」
+				PRINTFORML 轻轻地抚摸她的屁股缝隙的瞬间，猯藏发出了一声突如其来的叫声，引来了周围的注意。
+				PRINTFORML 「你你你你你你在想什么！」
+				PRINTFORMW 面对脸变得通红，怒吼着的猯藏，%CALLNAME:MASTER%不由自主地说出了「是你的错」。
+				PRINTFORML 在我说出猯藏太漂亮了，所以才忍不住伸出手的时候，被她用手肘狠狠地顶了一下肋部。
+				PRINTFORMW 「你这个、白痴！ 不要用让人害羞的台词来蒙混过关！」
+			ELSEIF ABL:Ａ感觉 <= 1
+				IF 陷落状态() >= 4
+					PRINTFORML 「这、这个，不要这样。 不要这样，在这种地方……」
+					PRINTFORMW 猯藏虽然抱怨着，却没有抵抗，我更加用力地玩弄着她的菊花周围。
+					PRINTFORML 「唔……这、这个……适可而止，不然我要生气了哦。」
+					PRINTFORMW %CALLNAME:MASTER%一边呢喃着「好可爱」，一边继续动着手指，看着因害羞而脸颊泛红的猯藏。
+				ELSEIF 陷落状态() >= 2
+					PRINTFORML 「呜……这、这个，在这种地方做什么」
+					PRINTFORMW 我没有回答脸红的猯藏，而是继续玩弄着她的菊花，不让周围的人注意到。
+				;ELSEIF 陷落状态() == 1
+				ENDIF
+			ELSEIF ABL:Ａ感觉 <= 3
+				IF 陷落状态() >= 4
+					PRINTFORML 「别、别这样，……拜托了，那个地方不要，嗯」
+					PRINTFORML 每次揉捏着她的菊花，猯藏都会颤抖着肩膀。
+					PRINTFORML 「都、都说了不要这样了……呀、被别人看到了……」
+					PRINTFORMW 每次有人影经过，猯藏都会小小地颤抖，看起来非常可爱。
+				ELSEIF 陷落状态() >= 2
+					PRINTFORML 「那、那个……，那个地方不要，嗯，啊……，拜托了，不要这样……」
+					PRINTFORMW 猯藏用虚弱的声音嘟囔着，但似乎无法阻止偶尔泄露出来的甜美喘息。
+				;ELSEIF 陷落状态() == 1
+				ENDIF
+			ELSE
+				IF 陷落状态() >= 4
+					PRINTFORML 「呜哈！ ……嗯，啊……你这个、变态……呀！！」
+					PRINTFORML 擦身而过的人影，一瞬间把视线转向了这边。
+					PRINTFORML 「你、你这个笨蛋，被人看到了……呀，嗯呜」
+					PRINTFORMW 我对着变得通红，环顾四周的猯藏露出了笑容，然后更加深入地把手指插了进去。
+				ELSEIF 陷落状态() >= 2
+					PRINTFORML 「……嗯呜，笨蛋，你是想让别人都看到吗？」
+					PRINTFORMW 灵活地转动着插入的手指，%CALLNAME:MASTER%说道想要炫耀可爱的猯藏
+				;ELSEIF 陷落状态() == 1
+				ENDIF
+			ENDIF
+		ELSE
+			IF ABL:Ａ感觉 <= 1
+				IF 陷落状态() >= 4
+					PRINTFORML 「即使是恋人，嗯……也不该对不净之门……」
+					PRINTFORML 猯藏小幅度地颤抖着身体嘟囔着
+					PRINTFORML 「无关乎舒服与否……」
+					PRINTFORMW 猯藏似乎想说什么般地抿着嘴唇，但却没有推开我的手
+				ELSEIF 陷落状态() >= 2
+					PRINTFORML 「喂，适可而止，不然我要生气了。」
+					PRINTFORMW 猯藏不悦地瞪着我
+				;ELSEIF 陷落状态() == 1
+				ENDIF
+			ELSEIF ABL:Ａ感觉 <= 3
+				IF 陷落状态() >= 4
+					PRINTFORML 「你、你这个笨蛋……，哈啊……，这、这次是因为舒服，才不是哦。」
+					PRINTFORML 猯藏红着脸嘟囔着，却又像是在期待后续般地撅起屁股
+					PRINTFORML 「嗯库，不要，都说了……，拜托了，%MASTERNAME:69%，不要……呜嗯！」
+					PRINTFORMW %CALLNAME:MASTER%对着如乞求般小声低语的猯藏露出笑容，继续玩弄着她的菊花
+				ELSEIF 陷落状态() >= 2
+					PRINTFORML 「呜嗯……，那里，那里啊……哈啊……哈……」
+					PRINTFORMW 猯藏颤抖着身体，却并不想逃开
+				;ELSEIF 陷落状态() == 1
+				ENDIF
+			ELSE
+				IF 陷落状态() >= 4
+					PRINTFORML 「哈啊！不净、的，啊嗯！门、却！！」
+					PRINTFORML 猯藏贪婪地紧咬着完全没入的中指，快乐地发出叫声
+					PRINTFORML 「都是%MASTERNAME:69%的错！我、我变成在这种、不净的、门里也能感觉到的变态了！！」
+					PRINTFORMW 即使气呼呼地眯起眼睛，但快乐地流着口水的猯藏，看起来很可爱
+				ELSEIF 陷落状态() >= 2
+					PRINTFORML 「啊嗯！嗯啾！你的手指，直到里面，哈啊啊啊！！」
+					PRINTFORMW 猯藏一边痉挛着身体，一边因为菊花传来的愉悦而哭泣
+				;ELSEIF 陷落状态() == 1
+				ENDIF
+			ENDIF
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;315,阴蒂爱抚
+;==================================================
+;==================================================
+;Optional: Determines if the standard description should be skipped.
+;Return 0 if description and KOJO should be shown, 1 if description should be hidden and KOJO shown, 2 if description should be shown and KOJO hidden, and 3 if both description and KOJO should be hidden.
+;==================================================
+@M_KOJO_MESSAGE_MESSAGECHECK_COM_K69_315
+IF (GET_TARGETNUM() == 1 && TFLAG:400) || GET_TARGETNUM() >= 2 && !FLAG:70
+	PRINTFORM %CALLNAME:PLAYER%\@ TCVAR:20 == 34 ?  #  \@，为了不让周围人察觉，隔着衣服，在猯藏的、股间附近
+	IF ABL:Ｃ感觉 <= 1
+		PRINTFORML 轻轻地抚摸了起来
+	ELSEIF ABL:Ｃ感觉 <= 3
+		PRINTFORML 用手指用力地摩擦…
+	ELSE
+		PRINTFORML 咕噜咕噜地刺激着…
+	ENDIF
+	PRINT 猯藏
+	IF ABL:Ｃ感觉 <= 1
+		PRINTFORML 似乎觉得有点痒…
+	ELSEIF ABL:Ｃ感觉 <= 4
+		PRINTFORML 因为爱抚开始发出急促的呼吸声…
+	ELSE
+		PRINTFORML 露出了迷离的高潮脸任凭摆布…
+	ENDIF
+ELSE
+	RETURN 0
+ENDIF
+RETURN 1
+
+@M_KOJO_MESSAGE_COM_K69_315
+;口上メイン呼出
+IF FLAG:70
+ELSE
+	CALL M_KOJO_MESSAGE_COM_K69_315_1
+ENDIF
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_315_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	IF FIRSTTIME(SELECTCOM) && ((GET_TARGETNUM() == 1 && !TFLAG:400) || GET_TARGETNUM() < 2)
+		PRINTFORML 「呜……，库、呜……，那里，稍微，温柔一点，可以吗」
+		PRINTFORML 猯藏一边小声地颤抖着肩膀一边嘟囔着
+		PRINTFORML 「不、并不是，不喜欢哦。只是，那里太敏感了，因为，嘛」
+		PRINTFORMW %CALLNAME:MASTER%听了这句话，笑着点了点头
+	ELSE
+[SKIPSTART]
+		IF CFLAG:MASTER:当前位置 == CFLAG:70:当前位置 && ((MAIN_MAP != 2 && CFLAG:MASTER:当前位置 == 220) || MAIN_MAP == 2)
+			SIF ((MAIN_MAP != 2 && CFLAG:MASTER:当前位置 != 220) || (MAIN_MAP == 2 && CFLAG:MASTER:当前位置 != 213))
+				PRINTFORML %CALLNAME:MASTER%达は、小铃とたまたま出会った
+			IF FIRSTTIME("315A")
+			ELSEIF 陷落状态() >= 4
+			ELSEIF 陷落状态() >= 2
+			;ELSEIF 陷落状态() == 1
+			ENDIF
+		ELSE
+[SKIPEND]
+		IF (GET_TARGETNUM() == 1 && TFLAG:400) || GET_TARGETNUM() >= 2
+			IF FIRSTTIME("315B")
+				PRINTFORML 「你、你你你你在想什么啊！」
+				PRINTFORML 猯藏熟练地小声怒吼着，抓住这边的胳膊拉到胸前
+				PRINTFORML 而且，还不知从哪里拿出一个较大的钱褡袋，遮盖住了股间附近
+				PRINTFORML 「就算%MASTERNAME%你，也有能做和不能做的事情哦！」
+				PRINTFORML 猯藏红着脸嘟囔着，%CALLNAME:MASTER%在她耳边低语说那是她不好
+				PRINTFORML 接着低语说猯藏太可爱了也是不对的，她就眼含泪水地瞪了过来
+				PRINTFORML 「但、但是，在这里，人太多了……嗯，所以，不要动手指啊」
+				PRINTFORML 听到与平时不同的撒娇声音，自然而然地浮现出笑容
+				PRINTFORML 「……你这个，痴汉……」
+				PRINTFORMW 眼角含着泪水的猯藏，卸下全身的力气任由摆布
+			ELSEIF ABL:Ｃ感觉 <= 1
+				IF 陷落状态() >= 4
+					PRINTFORML 「嗯，不要、不要这样，你这个痴汉」
+					PRINTFORML 猯藏抱着这边的胳膊，以此来蒙混过周围的耳目
+					PRINTFORML 「人太多、嗯库、的地方……，都、都说了」
+					PRINTFORMW 嘴上说着抱怨的话，猯藏却并不想抵抗
+				ELSEIF 陷落状态() >= 2
+					PRINTFORML 「库、姆……，你这个笨蛋，在这种地方做什么啊……」
+					PRINTFORMW 猯藏眼含泪水地瞪着这边，在用眼神道歉的同时，继续动着手指
+				;ELSEIF 陷落状态() == 1
+				ENDIF
+			ELSEIF ABL:Ｃ感觉 <= 4
+				IF 陷落状态() >= 4
+					PRINTFORML 「……哈啊哈啊……、嗯库……哈啊……嗯……够了，停、停下来啊」
+					PRINTFORML 无视了猯藏吐露出热气的声音
+					PRINTFORML 「哈啊！　呜呜……哈啊……、拜托了，不要再弄了，%MASTERNAME%」
+					PRINTFORMW 与话语相反的甜美声音，手指的力量只会增强，不会减弱
+				ELSEIF 陷落状态() >= 2
+					PRINTFORML 「哈啊！　……不要啊，都说了不要啊，嗯库呜呜呜！！」
+					PRINTFORMW 每次拨动手指，猯藏都会抽搐着肩膀，不自觉地就更加用力了
+				;ELSEIF 陷落状态() == 1
+				ENDIF
+			ELSE
+				IF 陷落状态() >= 4
+					PRINTFORML 「嗯库呜……，哈啊、哈、嗯……哈啊……好舒服……」
+					PRINTFORML 水润的瞳孔，放松了嘴角，猯藏凝视着这边
+					PRINTFORML 「更多，再多做一点，拜托了，%MASTERNAME%」
+					PRINTFORMW 对于无视周围目光的不知羞耻的恳求，%CALLNAME:MASTER%更加用力地摩擦着秘处
+				ELSEIF 陷落状态() >= 2
+					PRINTFORML 「哈啊哈啊……、嗯……变态……哈啊，都说了有人在……」
+					PRINTFORMW 这样嘟囔着的猯藏，眼神迷离，舒服地挺着腰
+				;ELSEIF 陷落状态() == 1
+				ENDIF
+			ENDIF
+		ELSE
+			IF ABL:Ｃ感觉 <= 1
+				IF 陷落状态() >= 4
+;「ん……ふぅ……、まだ、それほど、きもちよくは、んくっ」
+;そう言いつつも、猯藏の腰は自然と前に突き出されてくる
+;「く、ふ、……ふふ……じゃが、%MASTERNAME%がしてくると思うと、うれしい、のう、んっ」
+;その言叶に、露出笑容%CALLNAME:MASTER%は秘处を何度も抚でさすった
+				ELSEIF 陷落状态() >= 2
+;「あふっ、ん……、哈啊……、まだ、まだじゃな」
+;どこか乐しげな表情で、猯藏が腰を突き出してきた
+				ELSEIF 陷落状态() == 1
+				ENDIF
+			ELSEIF ABL:Ｃ感觉 <= 4
+				IF 陷落状态() >= 4
+;「」
+				ELSEIF GETBIT(CFLAG:1,0) || 陷落状态() >= 2
+				ENDIF
+;					PRINTFORML %CALLNAME:TARGET%因为爱抚开始呼出火热的气息…
+			ELSE
+				IF 陷落状态() >= 4
+				ELSEIF GETBIT(CFLAG:1,0) || 陷落状态() >= 2
+				ENDIF
+;					PRINTFORML %CALLNAME:TARGET%は露出了迷离的高潮脸任凭摆布…
+			ENDIF
+		ENDIF
+	ENDIF
+
+ENDIF
+RETURN 1
+;==================================================
+;316,指插入れ
+;==================================================
+;==================================================
+;Optional: Determines if the standard description should be skipped.
+;Return 0 if description and KOJO should be shown, 1 if description should be hidden and KOJO shown, 2 if description should be shown and KOJO hidden, and 3 if both description and KOJO should be hidden.
+;==================================================
+@M_KOJO_MESSAGE_MESSAGECHECK_COM_K69_316
+IF (GET_TARGETNUM() == 1 && TFLAG:400) || GET_TARGETNUM() >= 2 && !FLAG:70
+	PRINTFORM %CALLNAME:PLAYER%\@ TCVAR:20 == 34 ?  #  \@
+	PRINTFORM 从裙子的下摆伸入手，猯藏的
+	IF PALAM:润滑 > PALAMLV:3
+		PRINT 充分湿润的
+	ELSEIF PALAM:情欲 > PALAMLV:3
+		PRINT 开始发热的
+	ENDIF
+	PRINTFORM 秘处，
+	IF ABL:Ｖ感觉 < 1
+		PRINTFORML 慢慢地插入了手指…
+	ELSEIF ABL:Ｖ感觉 <= 4
+		PRINTFORML 插入手指，摩擦着性感带…
+	ELSE
+		PRINTFORML 将手指沉入淫肉里，胡乱地搅动着……
+	ENDIF
+	IF ABL:Ｖ感觉 < 1
+		PRINTFORML %CALLNAME:TARGET%似乎因为异物感太强烈身体紧绷起来…
+	ELSEIF ABL:Ｖ感觉 <= 4
+		PRINTFORML %CALLNAME:TARGET%因为爱抚开始呼出火热的气息…
+	ELSE
+		PRINTFORML %CALLNAME:TARGET%流着口水、把自己的腰送上来贪婪索求着快乐…
+	ENDIF
+ELSE
+	RETURN 0
+ENDIF
+RETURN 1
+
+@M_KOJO_MESSAGE_COM_K69_316
+IF FLAG:70
+ELSE
+	CALL M_KOJO_MESSAGE_COM_K69_316_1
+ENDIF
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_316_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;317,Ｖ腰を振る
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_317
+;口上メイン呼出
+IF FLAG:70
+ELSE
+	CALL M_KOJO_MESSAGE_COM_K69_317_1
+ENDIF
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_317_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;318,Ａ腰を振る
+;==================================================
+;@M_KOJO_MESSAGE_COM_K69_318
+;CALL TRAIN_MESSAGE
+;CALL M_KOJO_MESSAGE_COM_K69_318_1
+;RETURN RESULT
+
+;@M_KOJO_MESSAGE_COM_K69_318_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+;LOCAL = 0
+;-------------------------------------------------
+;IF LOCAL
+
+;ENDIF
+;RETURN 1
+;==================================================
+;330,掀裙子
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_330
+;口上メイン呼出
+IF FLAG:70
+ELSE
+	CALL M_KOJO_MESSAGE_COM_K69_330_1
+ENDIF
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_330_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;331,泡茶（下药）
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_331
+;口上メイン呼出
+IF FLAG:70
+ELSE
+	CALL M_KOJO_MESSAGE_COM_K69_331_1
+ENDIF
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_331_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	IF TFLAG:193 < 0
+		IF 陷落状态() >= 4
+			PRINTFORML 「嗯，总觉得味道很奇怪……，你拿着给恋人喝的药想做什么？」
+			PRINTFORML 猯藏一脸无奈的表情，让人冷汗直流
+			PRINTFORML 「真是的，不要依赖药物啊，真没用」
+			PRINTFORMW 被退回的茶只能含泪处理掉
+		ELSEIF 陷落状态() >= 2
+			PRINTFORML 「……哼，竟然依赖这种东西，真没用」
+			PRINTFORMW 猯藏狠狠地瞪了一眼，一边冒着冷汗一边接过了茶碗
+		ELSEIF 陷落状态() == 1
+		ELSE
+			PRINTFORMW 「真是的，不知羞耻」
+		ENDIF
+		SETBIT CFLAG:1690,4
+	ELSE
+		IF 陷落状态() >= 4
+		ELSEIF 陷落状态() >= 2
+		ELSEIF 陷落状态() == 1
+		ELSE
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;332,劝酒
+;==================================================
+;==================================================
+;Optional: Determines if the standard description should be skipped.
+;Return 0 if description and KOJO should be shown, 1 if description should be hidden and KOJO shown, 2 if description should be shown and KOJO hidden, and 3 if both description and KOJO should be hidden.
+;==================================================
+@M_KOJO_MESSAGE_MESSAGECHECK_COM_K69_332
+RETURN 1
+
+@M_KOJO_MESSAGE_COM_K69_332
+IF CFLAG:MASTER:当前位置 == CFLAG:55:当前位置 && (MAIN_MAP == 1 || (MAIN_MAP != 1 && (CFLAG:MASTER:当前位置 == 130 || CFLAG:MASTER:当前位置 == 140))) && !FLAG:70
+	PRINTFORML 
+	PRINTFORMW 皱着眉头的猯藏，把酒给没收了
+	RETURN 0
+ELSEIF !CFLAG:勃然大怒
+	CALL TRAIN_MESSAGE
+ELSE
+	PRINTFORML 
+	PRINTFORML 「…………」
+	PRINTFORMW 猯藏一脸不悦地移开了视线。
+	RETURN 1
+ENDIF
+;口上メイン呼出
+IF FLAG:70
+ELSE
+	CALL M_KOJO_MESSAGE_COM_K69_332_1
+ENDIF
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_332_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	PRINTFORML 
+	[SKIPSTART]
+	;宴会
+	IF GET_TARGETNUM() > 3
+		IF 陷落状态() >= 4
+			PRINTFORML 「ふふ、さて、酒を饮むならば、こうせねばのう」
+			PRINTFORML 杯を倾け口中に酒を溜めた猯藏が、唇を押し付けてきた
+			PRINTFORML 「んちゅ……れろ……ちゅぷ」
+			PRINTFORMW そのまま口移しされる酒を饮み干し、周りが红着脸いることに遅れて气付いた
+		ELSEIF 陷落状态() >= 2
+			PRINTFORML 「ふむ、宴会は人が多い方が乐しいものよ、のう？」
+			PRINTFORMW 猯藏の问い挂けに、%CALLNAME:MASTER%は颔きを返す
+		;ELSEIF 陷落状态() == 1
+		ELSE
+			PRINTFORMW 「ふふ、たまには皆で酒盛りというのもおつではないかの？」
+		ENDIF
+	;其他
+	ELSE
+	[SKIPEND]
+		IF 陷落状态() >= 4
+			PRINTFORML 「来，间接接吻哦」
+			PRINTFORML 这样说的同时，猯藏把杯子递过来，我苦笑着喝了一口酒
+			PRINTFORML 「嗯？　……啾、噜……」
+			PRINTFORMW 就那样靠近脸庞，强行嘴对嘴地也分给了猯藏一点
+		ELSEIF 陷落状态() >= 2
+			PRINTFORML 「呵呵，怎么，想用酒把我灌醉，然后做坏事吗？」
+			PRINTFORMW 我告诉%CALLNAME:MASTER%没有那种事，不知为何猯藏却略感不足地笑了
+		;ELSEIF 陷落状态() == 1
+		ELSE
+			PRINTFORMW 「酒啊，好啊」
+		ENDIF
+	;ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;350,推倒（时奸时猥亵
+;TFLAG:194 (0=成功 1=人目がある　2=野外は嫌でござりまする　3=多人数プレイは勘弁　4=合意があっても情绪が足りぬ）
+;TCVAR:初次拥抱　1=普通に合意ゲット　2=先に接吻ぐらいしろよ　3=媚药or发情には胜てなかったよお…　4=悔しい…刻印さえなければﾋﾞｸﾋﾞｸﾝ
+;5=强引に迫られると断れぬ(素質胆怯持ち専用) 6=まんざらでもない　7=駄目　8=论外
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_350
+;口上メイン呼出
+IF FLAG:70
+ELSE
+	CALL M_KOJO_MESSAGE_COM_K69_350_1
+ENDIF
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_350_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;351,带出去
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_351
+;连れ出しにはTRAIN_MESSAGEが无い
+;口上メイン呼出
+IF FLAG:70
+ELSE
+	CALL M_KOJO_MESSAGE_COM_K69_351_1
+ENDIF
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_351_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;352,告白
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_352
+;口上メイン呼出
+IF FLAG:70
+ELSE
+	CALL M_KOJO_MESSAGE_COM_K69_352_1
+ENDIF
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_352_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;353,猥亵
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_353
+;口上メイン呼出
+IF FLAG:70
+ELSE
+	CALL M_KOJO_MESSAGE_COM_K69_353_1
+ENDIF
+CALL M_KOJO_MESSAGE_COM_K69_353_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_353_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;354,陪睡（相手は起きて被褥に招く感じ）
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_354
+;口上メイン呼出
+IF FLAG:70
+ELSE
+	CALL M_KOJO_MESSAGE_COM_K69_354_1
+ENDIF
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_354_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	IF 陷落状态() >= 4
+		IF CFLAG:衰弱
+			PRINTFORML 「嗯……，呼咪…………」
+			PRINTFORML 是相当疲惫了吗，猯藏没有要醒来的样子
+			PRINTFORML 「呼咪呜…………呼……」
+			PRINTFORMW 只是，朝这边伸出手臂，轻轻地抱了过来
+		ELSE
+			PRINTFORML 「呵呵，真是个可爱的家伙。来来，能和我在一起就这么高兴吗？」
+			PRINTFORML 对猯藏的话点了点头
+			PRINTFORML 「……稍微有点害羞啊，真没趣」
+			PRINTFORMW 一边抱怨着，猯藏的脸颊却微微泛红
+		ENDIF
+	ELSE
+		IF CFLAG:衰弱
+			PRINTFORML 「……呼咪呜……，嗯……」
+			PRINTFORML 对着沉浸在梦乡中的猯藏，轻轻低下头，钻进了被窝
+		ELSE
+			PRINTFORML 「怎么，我的身边就那么好吗？」
+			PRINTFORMW 对于横躺着的猯藏的招手，我笑着钻进了被窝		ENDIF
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+;==================================================
+;355,时止め（地の文の改变程度に留めるべき
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_355
+CALL M_KOJO_MESSAGE_COM_K69_355_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_355_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;360,任凭摆布
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_360
+CALL M_KOJO_MESSAGE_COM_K69_360_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_360_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;363,朗读（[幼稚]持ち）
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_363
+CALL M_KOJO_MESSAGE_COM_K69_363_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_363_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;364,撒豆子(萃香、勇仪、斯卡雷特姊妹用
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_364
+CALL M_KOJO_MESSAGE_COM_K69_364_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_364_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;365,向守矢神社移动(早苗、神奈子、诹访子用
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_365
+CALL M_KOJO_MESSAGE_COM_K69_365_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_365_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;402,就寝（添い寝时）
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_402
+;就寝にTRAIN_MESSAGEは无い
+CALL M_KOJO_MESSAGE_COM_K69_402_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_402_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;403,休憩
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_403
+CALL M_KOJO_MESSAGE_COM_K69_403_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_403_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;405,外出(同行时约会に外出
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_405
+;外出にTRAIN_MESSAGEは无い
+CALL M_KOJO_MESSAGE_COM_K69_405_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_405_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;410,扫除
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_410
+CALL M_KOJO_MESSAGE_COM_K69_410_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_410_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;411,战斗训练
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_411
+CALL M_KOJO_MESSAGE_COM_K69_411_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_411_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;412,学习
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_412
+CALL M_KOJO_MESSAGE_COM_K69_412_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_412_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;413,料理
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_413
+;料理にTRAIN_MESSAGEは无い
+CALL M_KOJO_MESSAGE_COM_K69_413_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_413_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;414,吃饭
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_414
+CALL M_KOJO_MESSAGE_COM_K69_414_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_414_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;415,招待吃饭
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_415
+CALL M_KOJO_MESSAGE_COM_K69_415_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_415_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;416,演奏(冻结中？
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_416
+CALL M_KOJO_MESSAGE_COM_K69_416_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_416_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;417,午睡をする
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_417
+CALL M_KOJO_MESSAGE_COM_K69_417_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_417_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;421,祈愿する
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_421
+CALL M_KOJO_MESSAGE_COM_K69_421_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_421_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;431,在浴室里放松
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_431
+CALL M_KOJO_MESSAGE_COM_K69_431_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_431_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;440,等待
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_440
+CALL M_KOJO_MESSAGE_COM_K69_440_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_440_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;441,听课(慧音専用？
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_441
+CALL M_KOJO_MESSAGE_COM_K69_441_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_441_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;442,采伐
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_442
+CALL M_KOJO_MESSAGE_COM_K69_442_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_442_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+
+;※※※※※※※※※※※※※※※※※※※※※※※※※
+;约会系指令
+;※※※※※※※※※※※※※※※※※※※※※※※※※
+[SKIPSTART]
+;现状未实装
+;==================================================
+;600,约会会话
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_600
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K69_600_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_600_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+
+;==================================================
+;601,约会身体接触
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_601
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K69_601_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_601_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+
+;==================================================
+;602,约会接吻
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_602
+CALL TRAIN_MESSAGE
+CALL M_KOJO_MESSAGE_COM_K69_602_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_602_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+[SKIPEND]
+;==================================================
+;603,牵手
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_603
+CALL M_KOJO_MESSAGE_COM_K69_603_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_603_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+
+;==================================================
+;604,散步
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_604
+;散步にはTRAIN_MESSAGEが无い
+;口上メイン呼出
+IF FLAG:70
+ELSE
+	CALL M_KOJO_MESSAGE_COM_K69_604_1
+ENDIF
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_604_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 1
+;-------------------------------------------------
+IF LOCAL
+	DRAWLINE
+	PRINTFORML %CALLNAME:MASTER%\@ TARGET ? 一行 #  \@%STR:(6000 + (CFLAG:MASTER:当前位置 / 10))%到达了
+	IF FIRSTTIME("604A") && CFLAG:MASTER:当前位置 == CFLAG:70:当前位置 && ((MAIN_MAP != 2 && CFLAG:MASTER:当前位置 == 220) || MAIN_MAP == 2)
+		PRINTFORML 「喂，打扰啦」
+		PRINTFORML 『啊，欢迎光临……，哎呀，真是稀奇的组合呢』
+		IF 陷落状态() >= 4
+			PRINTFORML 「呵呵，这家伙是老身的伴侣嘛」
+			PRINTFORML 『真好啊』
+		ELSEIF 陷落状态() >= 2
+			PRINTFORML 「嘛，算是相当特别的熟人啦」
+			PRINTFORML 『关系真好呢』
+		ELSEIF 陷落状态() == 1
+		ELSE
+			PRINTFORML 「只是普通朋友啦」
+			PRINTFORML 『可不像是那样呢』
+		ENDIF
+		PRINTFORML 看着猯藏和小铃亲密地笑着，%CALLNAME:MASTER%也轻轻点头
+		PRINTFORML 「呵呵，这里有很多好东西，%MASTERNAME:69%也看看吧」
+		PRINTFORML 『今后也请多多关照』
+		PRINTFORML %CALLNAME:MASTER%自然地对笑容满面的小铃报以微笑，再次低下头
+		SETBIT CFLAG:1904,0
+	ELSEIF CFLAG:MASTER:当前位置 == 280
+		PRINTFORML 『欢迎光临。啊，今天进了一些特别的书哦！』
+		PRINTFORML 「哦吼，那我就看看吧」
+		PRINTFORML 稍微感到无聊的同时，眺望着谈笑风生的猯藏和小铃
+	ELSE
+		PRINTFORML 「嗯，这样随便逛逛也挺开心的」
+	ENDIF
+
+ENDIF
+RETURN 1
+;==================================================
+;605,绕道
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_605
+;绕道にはTRAIN_MESSAGEが无い
+;口上メイン呼出
+IF FLAG:70
+ELSE
+	CALL M_KOJO_MESSAGE_COM_K69_605_1
+ENDIF
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_605_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+
+;==================================================
+;610,请吃饭
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_610
+CALL M_KOJO_MESSAGE_COM_K69_610_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_610_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+
+;==================================================
+;613,赚钱
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_613
+CALL M_KOJO_MESSAGE_COM_K69_613_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_613_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;614,采购食材
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_614
+;口上メイン呼出
+IF FLAG:70
+ELSE
+	CALL M_KOJO_MESSAGE_COM_K69_614_1
+ENDIF
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_614_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;615,吃便当
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_615
+CALL M_KOJO_MESSAGE_COM_K69_615_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_615_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;617,甜品店に诱う
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_617
+CALL M_KOJO_MESSAGE_COM_K69_617_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_617_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;618,花屋
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_618
+CALL M_KOJO_MESSAGE_COM_K69_618_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_618_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;620,铃奈庵
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_620
+CALL M_KOJO_MESSAGE_COM_K69_620_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_620_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;660,读书
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_660
+CALL M_KOJO_MESSAGE_COM_K69_660_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_660_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;698,进入房间
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_698
+CALL M_KOJO_MESSAGE_COM_K69_698_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_698_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;699,外出
+;==================================================
+@M_KOJO_MESSAGE_COM_K69_699
+CALL M_KOJO_MESSAGE_COM_K69_699_1
+RETURN RESULT
+
+@M_KOJO_MESSAGE_COM_K69_699_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+
+;※※※※※※※※※※※※※※※※※※※※※※※※※
+;派生指令
+;※※※※※※※※※※※※※※※※※※※※※※※※※
+;==================================================
+;60,掏耳朵
+;==================================================
+@M_KOJO_MESSAGE_SCOM_K69_60
+CALL M_KOJO_MESSAGE_SCOM_K69_60_1
+RETURN RESULT
+@M_KOJO_MESSAGE_SCOM_K69_60_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;61,抱き枕
+;==================================================
+@M_KOJO_MESSAGE_SCOM_K69_61
+CALL M_KOJO_MESSAGE_SCOM_K69_61_1
+RETURN RESULT
+@M_KOJO_MESSAGE_SCOM_K69_61_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;62,亲额头
+;==================================================
+@M_KOJO_MESSAGE_SCOM_K69_62
+CALL M_KOJO_MESSAGE_SCOM_K69_62_1
+RETURN RESULT
+@M_KOJO_MESSAGE_SCOM_K69_62_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;63,更多的接吻
+;==================================================
+@M_KOJO_MESSAGE_SCOM_K69_63
+CALL M_KOJO_MESSAGE_SCOM_K69_63_1
+RETURN RESULT
+@M_KOJO_MESSAGE_SCOM_K69_63_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1
+;==================================================
+;80,拉手
+;==================================================
+@M_KOJO_MESSAGE_SCOM_K69_80
+CALL M_KOJO_MESSAGE_SCOM_K69_80_1
+RETURN RESULT
+@M_KOJO_MESSAGE_SCOM_K69_80_1
+;-------------------------------------------------
+;记入チェック（=0, 非表示、1, 表示）
+LOCAL = 0
+;-------------------------------------------------
+IF LOCAL
+
+ENDIF
+RETURN 1

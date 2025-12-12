@@ -1,0 +1,224 @@
+﻿;＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+;地点の属性设定
+;场所_ワンルーム   家主が不在のとき键がかかる,被窝・屋内・厨房・勉强・休憩・饮食・プライベートが自动で付与
+;场所_被窝         休憩が自动で付与
+;场所_洋室         屋内だけど靴を履いたまま,屋内が自动で付与
+;场所_屋内         
+;场所_屋根         屋外だけど屋根がある场所,屋内でも屋根でも无い场合は野外判定（旧露天）
+;场所_广阔         
+;场所_赏月         屋内や屋根があっても月が见える场所
+;场所_休憩         
+;场所_澡堂         
+;场所_厕所       
+;场所_厨房         つまみ食いが自动で付与
+;场所_训练         
+;场所_学习         
+;场所_天之声       
+;场所_菜园         
+;场所_打水       
+;场所_身体测定     
+;场所_物干し       风景描写用
+;场所_饮食         自由行动用
+;场所_つまみ食い   自由行动用
+;场所_留まらない   あまり角色が留まらない（移动しやすい）
+;场所_过疎         あまり角色が立ち入らない（移动されにくい）
+;场所_プライベート 节度のある角色は入ってこない,主に私室と澡堂・厕所
+;场所_炬燵         自由行动用
+;场所_公共の场     推倒てこない
+;＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+@ROOMSETTING_9
+#DIM ROOM
+VARSET ROOMDATA
+MAXROOM = 950
+ENTRANCE = P948竖井底部
+SUMIKOMI_ROOM = P937空屋
+避难处 = P943茅屋
+SIF GET_MAPID(据点_酒虫) != MAIN_MAP
+	据点_酒虫 = P943茅屋
+MAP_PAGES = 3
+MAPNAME:1 = 地灵殿
+MAPNAME:2 = 旧都
+MAPNAME:3 = 旧地狱
+
+FOR LOCAL, MINROOM(), MAXROOM
+	ROOM = LOCAL % 100
+	SELECTCASE LOCAL
+	;被窝・屋内・厨房・勉强・休憩・饮食・プライベートが自动で付与
+	CASE P936勇仪的家, P940帕露西的家, P941山女的家, P942琪斯美的家, P947血枪的栖息处
+		ROOMDATA:ROOM |= 场所_ワンルーム
+	;自室になると被窝,勉强,プライベートが付与
+	CASE P943茅屋, P937空屋
+		ROOMDATA:ROOM |= 场所_屋内
+		ROOMDATA:ROOM |= 场所_厨房
+		ROOMDATA:ROOM |= 场所_休憩
+		ROOMDATA:ROOM |= 场所_饮食
+	CASE P901地灵殿前
+		ROOMDATA:ROOM |= 场所_屋根
+		ROOMDATA:ROOM |= 场所_广阔
+		ROOMDATA:ROOM |= 场所_训练
+	CASE P904大会堂
+		ROOMDATA:ROOM |= 场所_洋室
+		ROOMDATA:ROOM |= 场所_广阔
+		ROOMDATA:ROOM |= 场所_休憩
+		ROOMDATA:ROOM |= 场所_过疎
+	CASE P905一层走廊, P914二层走廊
+		ROOMDATA:ROOM |= 场所_洋室
+		ROOMDATA:ROOM |= 场所_留まらない
+	CASE P906一层厕所, P917二层厕所
+		ROOMDATA:ROOM |= 场所_洋室
+		ROOMDATA:ROOM |= 场所_厕所
+	CASE P909厨房
+		ROOMDATA:ROOM |= 场所_洋室
+		ROOMDATA:ROOM |= 场所_厨房
+	CASE P910食料库
+		ROOMDATA:ROOM |= 场所_洋室
+		ROOMDATA:ROOM |= 场所_过疎
+		ROOMDATA:ROOM |= 场所_つまみ食い
+	CASE P911阿空私室, P912阿燐私室, P918恋私室, P919觉私室
+		ROOMDATA:ROOM |= 场所_洋室
+		ROOMDATA:ROOM |= 场所_被窝
+		ROOMDATA:ROOM |= 场所_プライベート
+	CASE P913食堂
+		ROOMDATA:ROOM |= 场所_洋室
+		ROOMDATA:ROOM |= 场所_休憩
+		ROOMDATA:ROOM |= 场所_学习
+		ROOMDATA:ROOM |= 场所_饮食
+	CASE P915露台
+		ROOMDATA:ROOM |= 场所_屋根
+		ROOMDATA:ROOM |= 场所_饮食
+		ROOMDATA:ROOM |= 场所_物干し
+	;自室になると被窝,勉强,プライベートが付与
+	CASE P916库房
+		ROOMDATA:ROOM |= 场所_洋室
+		ROOMDATA:ROOM |= 场所_过疎
+	CASE P920书斋
+		ROOMDATA:ROOM |= 场所_洋室
+		ROOMDATA:ROOM |= 场所_学习
+	CASE P921澡堂
+		ROOMDATA:ROOM |= 场所_洋室
+		ROOMDATA:ROOM |= 场所_澡堂
+		ROOMDATA:ROOM |= 场所_プライベート
+	CASE P922更衣间
+		ROOMDATA:ROOM |= 场所_洋室
+		ROOMDATA:ROOM |= 场所_身体测定
+		ROOMDATA:ROOM |= 场所_留まらない
+		ROOMDATA:ROOM |= 场所_プライベート
+	CASE P923后院
+		ROOMDATA:ROOM |= 场所_屋根
+		ROOMDATA:ROOM |= 场所_广阔
+		ROOMDATA:ROOM |= 场所_训练
+		ROOMDATA:ROOM |= 场所_菜园
+		ROOMDATA:ROOM |= 场所_打水
+	CASE P925薔薇园
+		ROOMDATA:ROOM |= 场所_屋根
+		ROOMDATA:ROOM |= 场所_饮食
+	CASE P926中庭
+		ROOMDATA:ROOM |= 场所_屋根
+		ROOMDATA:ROOM |= 场所_广阔
+		ROOMDATA:ROOM |= 场所_训练
+	CASE P928灼热地狱遗迹, P929地狱的人工太阳, P930旧血池地狱
+		ROOMDATA:ROOM |= 场所_屋根
+		ROOMDATA:ROOM |= 场所_过疎
+	CASE P931大街, P932后街, P944街道, P946桥
+		ROOMDATA:ROOM |= 场所_屋根
+	CASE P933酒场
+		ROOMDATA:ROOM |= 场所_屋内
+		ROOMDATA:ROOM |= 场所_休憩
+		ROOMDATA:ROOM |= 场所_饮食
+		ROOMDATA:ROOM |= 场所_公共の场
+	CASE P934温泉
+		ROOMDATA:ROOM |= 场所_屋内
+		ROOMDATA:ROOM |= 场所_休憩
+		ROOMDATA:ROOM |= 场所_打水
+		ROOMDATA:ROOM |= 场所_身体测定
+		ROOMDATA:ROOM |= 场所_公共の场
+	CASE P935情人旅馆
+		ROOMDATA:ROOM |= 场所_屋内
+		ROOMDATA:ROOM |= 场所_被窝
+		ROOMDATA:ROOM |= 场所_プライベート
+	CASE P938鬼的聚集场所
+		ROOMDATA:ROOM |= 场所_屋内
+		ROOMDATA:ROOM |= 场所_休憩
+		ROOMDATA:ROOM |= 场所_饮食
+		ROOMDATA:ROOM |= 场所_公共の场
+	CASE P939小胡同
+		ROOMDATA:ROOM |= 场所_屋根
+		ROOMDATA:ROOM |= 场所_留まらない
+		ROOMDATA:ROOM |= 场所_过疎
+	CASE P945河岸
+		ROOMDATA:ROOM |= 场所_屋根
+		ROOMDATA:ROOM |= 场所_广阔
+		ROOMDATA:ROOM |= 场所_训练
+		ROOMDATA:ROOM |= 场所_打水
+	CASE P948竖井底部
+		ROOMDATA:ROOM |= 场所_屋根
+		ROOMDATA:ROOM |= 场所_天之声
+	CASE P949托卡马克装置核心
+		ROOMDATA:ROOM |= 场所_屋内
+		ROOMDATA:ROOM |= 场所_被窝
+		ROOMDATA:ROOM |= 场所_过疎
+		ROOMDATA:ROOM |= 场所_留まらない
+	ENDSELECT
+NEXT
+
+;-----------------------------------------
+;默认の初始位置と大家の设定
+;-----------------------------------------
+@DEFAULT_OWNER_9
+默认初始位置 = P943茅屋
+据点_家主 = [[觉]]
+
+;-----------------------------------------
+;お出かけMapの设定
+;ARG   对象の地点
+;ARGS  判定文字典数
+;-----------------------------------------
+@ODEKAKEMAP_SETTING_9(ARG, ARGS)
+#FUNCTION
+;＼1 2 3 4 5 6 7 8 9 
+;01　　　５　　　　　
+;02１２　３　　　　　
+;03　　　４６　　　　
+;04　　　　　　　　　
+;05　　　　　　　　　
+;06　　　　７　　　　
+;07　　　　　　　　　
+;08　　　　　　　　　
+;09　　　　　　　　　
+SELECTCASE ARG
+CASE 幻想风穴
+	SIF ARGS == "座标"
+		RETURNF 12
+	SIF GROUPMATCH(ARGS, "屋根", "广阔")
+		RETURNF 1
+CASE 地狱的深道
+	SIF ARGS == "座标"
+		RETURNF 22
+	SIF GROUPMATCH(ARGS, "屋根")
+		RETURNF 1
+CASE 旧地狱街道
+	SIF ARGS == "座标"
+		RETURNF 42
+	SIF GROUPMATCH(ARGS, "屋根", "广阔", "路人")
+		RETURNF 1
+CASE 旧地狱温泉
+	SIF ARGS == "座标"
+		RETURNF 43
+	SIF GROUPMATCH(ARGS, "屋内", "广阔", "澡堂", "身体测定", "打水", "路人")
+		RETURNF 1
+CASE 情人旅馆
+	SIF ARGS == "座标"
+		RETURNF 41
+	SIF GROUPMATCH(ARGS, "被窝", "屋内", "洋室", "休憩")
+		RETURNF 1
+CASE 地灵殿
+	SIF ARGS == "座标"
+		RETURNF 53
+	SIF GROUPMATCH(ARGS, "屋内", "洋室", "广阔")
+		RETURNF 1
+CASE 灼热地狱遗迹
+	SIF ARGS == "座标"
+		RETURNF 56
+	SIF GROUPMATCH(ARGS, "屋根", "广阔", "训练")
+		RETURNF 1
+ENDSELECT

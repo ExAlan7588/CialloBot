@@ -1,0 +1,322 @@
+﻿;-------------------------------------------------
+;真空口交
+;侍奉系指令、レベル2
+;-------------------------------------------------
+@COM88
+;-------------------------------------------------
+;COM别FLAGの设定
+;-------------------------------------------------
+;行为者
+TCVAR:116 = TARGET
+;侍奉快乐
+TCVAR:108 = 1
+
+CSTR:PLAYER:10 += @"{TARGET}/"
+;TCVAR:2 射精部位フラグ（-1=避孕套 1=膣内 2=肛门 3=手淫 4=口淫 5=乳交 6=素股 7=足交 8=体表 9=肛门侍奉 10=道具 11=触手 12=Ａ调教 13=Ｖ调教）
+TCVAR:PLAYER:2 = 4
+;强度
+TCVAR:PLAYER:4 = 1500
+
+;-------------------------------------------------
+;ソース追加处理
+;-------------------------------------------------
+;消费体力、气力
+IF FLAG:70 == 1
+	BASE:MASTER:TSP -= 50
+	SOURCE:PLAYER:快Ｃ = 110
+	SOURCE:快Ｍ = 80
+ELSE
+	DOWNBASE:体力 += 30
+	DOWNBASE:气力 += 150
+	SOURCE:PLAYER:快Ｃ = 110
+	SOURCE:快Ｍ = 80
+	SOURCE:情爱 = 100
+	SOURCE:性行动 = 350
+	SOURCE:达成 = 150
+	SOURCE:屈从 = 800
+	SOURCE:偏离正轨 = 300
+	SOURCE:反感 = 650
+
+	;上のほうで计算した污れデータ
+	SOURCE:不洁 = Y*10 + 60
+
+	;-------------------------------------------------
+	;特殊ソース处理
+	;-------------------------------------------------
+	;圧抑、抵抗持ちには、抑郁ソース追加
+	SIF TALENT:自己爱 < 0 || TALENT:抵抗
+		SOURCE:郁闷 += 400
+ENDIF
+
+;-------------------------------------------------
+;污れの处理
+;-------------------------------------------------
+;射精に关系なく行われる处理はここから
+;奴隷の指⇔调教者のＰ的污垢が移动
+STAIN:0 |= STAIN:PLAYER:2
+STAIN:PLAYER:2 |= STAIN:0
+
+;-------------------------------------------------
+;経験の处理
+;-------------------------------------------------
+;口交经验
+EXP:口淫经验 += 3
+;SOURCEに快Ｍがあると自动で経験追加されるので、实质、経験＋２扱いは变ではないかと
+;EXP:Ｍ经验 += 1
+
+;同性爱　レズなら返回值1ゲイなら返回值2
+IF FLAG:70 == 1
+	IF HETEROSEX(TARGET,PLAYER)
+		EXP:PLAYER:(50 + HETEROSEX(TARGET,PLAYER)) += 7
+	ENDIF
+	EXP:PLAYER:时奸经验 += 1
+ELSE
+	IF HETEROSEX(TARGET,PLAYER)
+		EXP:(50 + HETEROSEX(TARGET,PLAYER)) += 7
+		EXP:PLAYER:(50 + HETEROSEX(TARGET,PLAYER)) += 7
+	ENDIF
+
+	;爱情经验
+	SIF TALENT:恋慕 && ASSIPLAY == 0
+		EXP:爱情经验 += 1
+ENDIF
+
+;奴隷が猫舌持ちの场合は、调教者に嗜虐快乐经验を追加
+SIF TALENT:TARGET:猫舌
+	EXP:嗜虐快乐经验 += 1
+
+;精液污れ
+SIF TCVAR:PLAYER:112 == 1 || TCVAR:PLAYER:112 == 2
+	EXP:精饮经验 ++
+TCVAR:TARGET:ＦＫ丧失 = 2
+
+RETURN 1
+
+
+@CAN_COM88(ARG)
+SKIPDISP ARG
+PRINTL 真空口交
+;-------------------------------------------------
+;实行判定处理
+;-------------------------------------------------
+IF FLAG:70 == 1
+
+ELSE
+A = 0
+S = 0
+
+;全部の命令に共通の要素を考虑
+;(顺从が高いと命令に从いやすいなど)
+CALL COM_ORDER
+
+;ABL:欲望
+IF ABL:欲望
+	SIF S
+		PRINT  + 
+	A += ABL:欲望 * 1
+	PRINT 欲望
+	PRINTV 'LV,ABL:欲望,'(,ABL:欲望 * 1,')
+	S = 1
+ENDIF
+;ABL:侍奉精神
+IF ABL:侍奉精神
+	SIF S
+		PRINT  + 
+	A += ABL:侍奉精神 * 4
+	PRINT 侍奉精神
+	PRINTV 'LV,ABL:侍奉精神,'(,ABL:侍奉精神 * 4,')
+	S = 1
+ENDIF
+;ABL:精液中毒
+IF ABL:精液中毒
+	SIF S
+		PRINT  + 
+	A += ABL:精液中毒 * 3
+	PRINT 精液中毒
+	PRINTV 'LV,ABL:精液中毒,'(,ABL:精液中毒 * 3,')
+	S = 1
+ENDIF
+
+IF MARK:快乐刻印
+	SIF S
+		PRINT  + 
+	A += MARK:快乐刻印 * 1
+	PRINT 快乐刻印
+	PRINTV 'LV,MARK:快乐刻印,'(,MARK:快乐刻印 * 1,')
+	S = 1
+ENDIF
+;PALAM:情欲
+IF GETPALAMLV(PALAM:情欲,5)
+	SIF S
+		PRINT  + 
+	A += GETPALAMLV(PALAM:情欲,5) * 1
+	PRINT 情欲
+	PRINTV 'LV,GETPALAMLV(PALAM:情欲,5),'(,GETPALAMLV(PALAM:情欲,5) * 1,')
+	S = 1
+ENDIF
+;害羞
+IF TALENT:羞耻心 > 0
+	PRINT  - 
+	A -= 1
+	PRINT 害羞
+	PRINTV '(,1,')
+	S = 1
+ENDIF
+;污臭钝感
+IF TALENT:污臭耐性 > 0
+	SIF S
+		PRINT  + 
+	A += 1
+	PRINT 污臭钝感
+	PRINTV '(,1,')
+	S = 1
+ENDIF
+;污臭敏感
+IF TALENT:污臭耐性 < 0
+	PRINT  - 
+	A -= 3
+	PRINT 污臭敏感
+	PRINTV '(,3,')
+	S = 1
+ENDIF
+;献身的
+IF TALENT:献身的
+	SIF S
+		PRINT  + 
+	A += 6
+	PRINT 献身的
+	PRINTV '(,6,')
+	S = 1
+ENDIF
+;否定快感（淫乱、娼妇で无效）
+IF TALENT:快感应答 < 0 && !TALENT:淫乱
+	PRINT  - 
+	A -= 1
+	PRINT 否定快感
+	PRINTV '(,1,')
+	S = 1
+ENDIF
+;讨厌男人（恋慕、亲爱で无效）
+IF OTOKOGIRAI(TARGET)
+	PRINT  - 
+	A -= 12
+	PRINT 讨厌男人
+	PRINTV '(,12,')
+	S = 1
+ENDIF
+;恋慕
+IF TALENT:恋慕 && ASSIPLAY == 0
+	SIF S
+		PRINT  + 
+	A += 5
+	PRINT 恋慕
+	PRINTV '(,5,')
+	S = 5
+ENDIF
+;亲爱
+IF TALENT:恋慕 > 1 && ASSIPLAY == 0
+	SIF S
+		PRINT  + 
+	A += 5
+	PRINT 亲爱
+	PRINTV '(,5,')
+	S = 5
+ENDIF
+
+;调教者が扶她
+IF (TALENT:PLAYER:2 & 3) == 3
+	SIF S
+		PRINT  + 
+	A += 8
+	PRINT 扶她
+	PRINTV '(,8,')
+	S = 1
+ENDIF
+
+Y = 0
+;爱液的污垢
+SIF STAIN:PLAYER:2 & 1
+	Y += 1
+;精液的污垢
+SIF STAIN:PLAYER:2 & 4
+	Y += 3
+;肛门的污垢
+SIF STAIN:PLAYER:2 & 8
+	Y += 7
+SIF STAIN:PLAYER:2 & 16
+	Y += 15
+
+Y = Y * (2 - TALENT:污臭耐性) / 2
+
+;有污垢
+IF Y
+	PRINT  - 
+	A -= Y
+	PRINT 有污垢
+	;污臭钝感
+	IF TALENT:污臭耐性 > 0
+		PRINT 、污臭钝感
+	ELSEIF TALENT:污臭耐性 < 0
+		PRINT 、污臭敏感
+	ENDIF
+	PRINTV '(,Y,')
+	S = 1
+ENDIF
+
+;合计を表示(30以上で实行)
+PRINT  = 
+PRINTV A
+
+V = 30
+SIF A < V
+	PRINT  < 
+SIF A == V
+	PRINT  = 
+SIF A > V
+	PRINT  > 
+PRINT 实行值
+PRINTV V
+
+WAIT
+SKIPDISP 0
+;实行できない
+SIF A < V
+	RETURN 0
+ENDIF
+RETURN 1
+
+
+
+;-------------------------------------------------
+;实行判定
+;-------------------------------------------------
+@COM_ABLE88
+;真空口交实行判定
+SIF !TFLAG:100
+	RETURN 0
+;批量管理
+SIF GLOBAL_COMABLE(88)
+	RETURN RESULT
+;技巧Lv1以上必要
+SIF ABL:技巧 < 1
+	RETURN 0
+;猫舌の奴隷の场合は技巧Lv2以上必要
+SIF TALENT:猫舌 && ABL:技巧 < 2
+	RETURN 0
+;口球使用中は不可
+SIF TEQUIP:口球
+	RETURN 0
+;舌技能3以上必要
+SIF ABL:舌 < 3
+	RETURN 0
+;调教者が男人か半人半妖か扶她じゃないとダメ
+SIF !(TALENT:PLAYER:2 & 2)
+	RETURN 0
+;睡眠奸中
+SIF CFLAG:恶作剧 > 1
+	RETURN 0
+;停止中は不可
+SIF FLAG:70 == 1
+	RETURN 0
+RETURN 1
+
