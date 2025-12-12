@@ -14,14 +14,14 @@ from loguru import logger
 
 class InterceptHandler(logging.Handler):
     """攔截標準 logging 模組的日誌並重定向到 loguru。
-    
+
     這個處理器會捕獲所有通過標準 logging 模組記錄的日誌
     （包括第三方庫如 discord.py），並將它們轉發到 loguru。
     """
 
     def emit(self, record: logging.LogRecord) -> None:
         """處理日誌記錄。
-        
+
         Args:
             record: 標準 logging 的日誌記錄
         """
@@ -39,4 +39,6 @@ class InterceptHandler(logging.Handler):
             depth += 1
 
         # 使用 loguru 記錄日誌
-        logger.opt(depth=depth, exception=record.exc_info).log(level, record.getMessage())
+        logger.opt(depth=depth, exception=record.exc_info).log(
+            level, record.getMessage()
+        )
