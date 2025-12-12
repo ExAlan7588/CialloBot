@@ -25,14 +25,16 @@ _tasks_set: set[asyncio.Task[Any] | asyncio.Future[Any]] = set()
 
 def wrap_task_factory() -> None:
     """包裝 asyncio 的任務工廠，為每個任務添加全域錯誤處理器。
-    
+
     這確保了通過 `asyncio.create_task()` 創建的背景任務
     如果發生未捕獲的異常，能夠被記錄下來，而不是悄無聲息地失敗。
     """
     loop = asyncio.get_running_loop()
     original_factory = loop.get_task_factory()
 
-    async def coro_wrapper(coro: Coroutine[Any, Any, Any], name: str | None = None) -> Any:
+    async def coro_wrapper(
+        coro: Coroutine[Any, Any, Any], name: str | None = None
+    ) -> Any:
         """包裝協程，添加異常處理。"""
         try:
             return await coro
@@ -67,13 +69,13 @@ def wrap_task_factory() -> None:
 
 def setup_logging(log_file: str = "logs/bot.log", log_level: str = "INFO") -> None:
     """設定 loguru 日誌系統。
-    
+
     此函數會：
     1. 移除 loguru 的預設處理器
     2. 添加控制台輸出（彩色）
     3. 添加文件輸出（自動輪轉）
     4. 攔截所有標準 logging 模組的日誌（包括 discord.py）
-    
+
     Args:
         log_file: 日誌文件路徑，預設為 "logs/bot.log"
         log_level: 日誌等級，預設為 "INFO"
