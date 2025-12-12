@@ -1,8 +1,0 @@
-discord.py
-aiohttp
-python-dateutil
-pycountry
-aiofiles
-rosu-pp-py
-matplot
-loguru

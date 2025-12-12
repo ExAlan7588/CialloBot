@@ -1,0 +1,19 @@
+[project]
+name = "ciallobot"
+version = "0.1.0"
+description = "osu! Discord Bot"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "discord-py>=2.0",
+    "aiohttp>=3.0",
+    "python-dateutil>=2.8",
+    "pycountry>=22.0",
+    "aiofiles>=23.0",
+    "rosu-pp-py>=1.0",
+    "matplotlib>=3.0",
+    "loguru>=0.7",
+]
+
+[tool.uv]
+dev-dependencies = []
