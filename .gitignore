@@ -1,0 +1,36 @@
+# Private configuration files (contains secrets)
+# Ignore all files in private/ except sample files and __init__.py
+private/*
+!private/__init__.py
+!private/*.sample.py
+!private/*.sample.json
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Logs
+logs/
+*.log
+
+# Virtual environment
+venv/
+.venv/
+env/
+.env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+temp/
+*.tmp
