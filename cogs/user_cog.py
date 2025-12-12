@@ -40,12 +40,7 @@ MODE_EMOJI_STRINGS = {
 }
 
 # New: Fallback text for modes if localized name is problematic, to accompany emoji
-MODE_FALLBACK_TEXT = {
-    0: "osu!",
-    1: "Taiko",
-    2: "Catch",
-    3: "Mania",
-}
+MODE_FALLBACK_TEXT = {0: "osu!", 1: "Taiko", 2: "Catch", 3: "Mania"}
 
 
 # 用於將國家代碼轉換為旗幟 Emoji
@@ -74,7 +69,9 @@ def get_country_name(country_code: str, lang: str = "en") -> str:
             ):  # common_name might be better for Chinese
                 # Try to get specific chinese name if available, else official
                 try:
-                    return country.name  # pycountry might have some chinese names in .name for some countries
+                    return (
+                        country.name
+                    )  # pycountry might have some chinese names in .name for some countries
                 except KeyError:
                     pass  # fall through
             return country.name
@@ -103,9 +100,7 @@ class UserCog(commands.Cog):
             logger.warning(
                 "[USER_COG] lstr returned unexpected placeholder for 'value_not_available' (matched exact error string). Forced to '無法取得'."
             )
-            return (
-                "無法取得"  # Forcing zh_TW N/A as a temporary fix for the user's case
-            )
+            return "無法取得"  # Forcing zh_TW N/A as a temporary fix for the user's case
 
         # Original checks for other error conditions
         if (
@@ -127,9 +122,7 @@ class UserCog(commands.Cog):
         placeholder_if_key_truly_missing = f"__LSTR_KEY_ERROR__{key}__"
 
         # Attempt to get the translation
-        raw_translation = lstr(
-            user_id_for_l10n, key, placeholder_if_key_truly_missing, *args
-        )
+        raw_translation = lstr(user_id_for_l10n, key, placeholder_if_key_truly_missing, *args)
 
         # Check if the placeholder was returned (meaning key was not found by lstr)
         # or if lstr indicated a missing translation or formatting error.
@@ -138,9 +131,7 @@ class UserCog(commands.Cog):
             or "<translation_missing" in raw_translation
             or "<formatting_error" in raw_translation
         ):
-            return self.get_na_value(
-                user_id_for_l10n
-            )  # Fallback to "N/A" or its translation
+            return self.get_na_value(user_id_for_l10n)  # Fallback to "N/A" or its translation
         return raw_translation
 
     def get_mode_name(self, mode_int: int, user_id_for_l10n: int) -> str:
@@ -152,13 +143,9 @@ class UserCog(commands.Cog):
         localized_name = self._get_lstr_with_na_fallback(user_id_for_l10n, l10n_key)
 
         # If localized name is N/A or key is unknown, try to use a more generic English fallback
-        if (
-            localized_name == self.get_na_value(user_id_for_l10n)
-            or l10n_key == "mode_unknown"
-        ):
+        if localized_name == self.get_na_value(user_id_for_l10n) or l10n_key == "mode_unknown":
             base_name = MODE_FALLBACK_TEXT.get(
-                mode_int,
-                self._get_lstr_with_na_fallback(user_id_for_l10n, "mode_unknown"),
+                mode_int, self._get_lstr_with_na_fallback(user_id_for_l10n, "mode_unknown")
             )
             final_display_name = base_name
         else:
@@ -168,10 +155,7 @@ class UserCog(commands.Cog):
         return final_display_name
 
     def format_datetime_obj(
-        self,
-        dt_obj: datetime.datetime,
-        user_id_for_l10n: int,
-        format_key: str = "date_format",
+        self, dt_obj: datetime.datetime, user_id_for_l10n: int, format_key: str = "date_format"
     ) -> str:
         if not dt_obj:
             return "N/A"  # Should use self.get_na_value(user_id_for_l10n) ideally
@@ -190,9 +174,7 @@ class UserCog(commands.Cog):
                 format_str = "%Y-%m-%d %H:%M:%S"
             return dt_obj.strftime(format_str.strip())
         except Exception as e:
-            logger.error(
-                f"[USER_COG format_datetime_obj] Error formatting datetime: {e}"
-            )
+            logger.error(f"[USER_COG format_datetime_obj] Error formatting datetime: {e}")
             return str(dt_obj)  # Fallback to simple string conversion
 
     def time_since(
@@ -218,9 +200,7 @@ class UserCog(commands.Cog):
         formatted_parts = []
         for comp in potential_components:
             if comp["value"] > 0:
-                unit_str = lstr(
-                    user_id_for_l10n, comp["unit_key"], comp["default_unit"]
-                )
+                unit_str = lstr(user_id_for_l10n, comp["unit_key"], comp["default_unit"])
                 formatted_parts.append(f"{comp['value']}{unit_str}")
 
         # Handle seconds if no other larger units were added, or if all are zero until seconds
@@ -267,6 +247,7 @@ class UserCog(commands.Cog):
 
         def l(k, *a):
             return self._get_lstr_with_na_fallback(user_id_for_l10n, k, *a)
+
         na = self.get_na_value(user_id_for_l10n)
 
         lines = []
@@ -274,7 +255,9 @@ class UserCog(commands.Cog):
         mode_emoji = MODE_EMOJI_STRINGS.get(current_mode_int, "")
         mode_name = self.get_mode_name(current_mode_int, user_id_for_l10n)
         game_mode_label = l("user_profile_game_mode", "Game Mode")
-        lines.extend((f"**{game_mode_label}:** {mode_emoji} {mode_name}", ""))  # Add a blank line for spacing
+        lines.extend(
+            (f"**{game_mode_label}:** {mode_emoji} {mode_name}", "")
+        )  # Add a blank line for spacing
 
         # 1. Status 區塊
         # Variable definitions (most are already in place, ensure all needed are here before building status_item_lines)
@@ -284,9 +267,7 @@ class UserCog(commands.Cog):
         pp_country_rank = mode_stats.get("country_rank") if mode_stats else None
         rank_str = f"`#{pp_rank:,}`" if pp_rank is not None else na
         country_rank_str = (
-            f"{country_flag} `#{pp_country_rank:,}`"
-            if pp_country_rank is not None
-            else na
+            f"{country_flag} `#{pp_country_rank:,}`" if pp_country_rank is not None else na
         )
 
         level = mode_stats.get("level", {}) if mode_stats else {}
@@ -319,18 +300,14 @@ class UserCog(commands.Cog):
         avg_score_val = None
         if total_score and playcount and playcount > 0:
             avg_score_val = total_score / playcount
-        avg_score_display = (
-            f"`{avg_score_val:,.2f}`" if avg_score_val is not None else na
-        )
+        avg_score_display = f"`{avg_score_val:,.2f}`" if avg_score_val is not None else na
 
         ranked_score = mode_stats.get("ranked_score") if mode_stats else None
         ranked_score_display = f"`{ranked_score:,}`" if ranked_score is not None else na
         avg_ranked_val = None
         if ranked_score and playcount and playcount > 0:
             avg_ranked_val = ranked_score / playcount
-        avg_ranked_display = (
-            f"`{avg_ranked_val:,.2f}`" if avg_ranked_val is not None else na
-        )
+        avg_ranked_display = f"`{avg_ranked_val:,.2f}`" if avg_ranked_val is not None else na
 
         total_hits = mode_stats.get("total_hits") if mode_stats else None
         total_hits_display = f"`{total_hits:,}`" if total_hits is not None else na
@@ -347,7 +324,24 @@ class UserCog(commands.Cog):
 
         status_item_lines = []
         # Order based on user request
-        status_item_lines.extend((f"**{l('user_profile_global_rank')}:** {rank_str} ({country_rank_str})", f"**{l('user_profile_level')}:** {level_str}", f"**PP:** {pp_str} {l('user_profile_accuracy')}: {acc_str}", f"**{l('user_profile_grades')}:** {grades}", f"**{l('user_profile_accuracy')}:** {acc_str}", f"**{l('user_profile_play_count')}:** {playcount_str}", f"**{l('user_profile_total_score')}:** {total_score_display}", f"**{l('user_profile_avg_score', 'Avg. Score')}:** {avg_score_display}/{l('user_profile_play_short', 'Play')}", f"**{l('user_profile_ranked_score')}:** {ranked_score_display}", f"**{l('user_profile_avg_ranked_score', 'Avg. Ranked Score')}:** {avg_ranked_display}/{l('user_profile_play_short', 'Play')}", f"**{l('user_profile_total_hits')}:** {total_hits_display}", f"**{l('user_profile_avg_hits', 'Avg. Hits')}:** {avg_hits_display}/{l('user_profile_play_short', 'Play')}", f"**{l('user_profile_max_combo')}:** {max_combo_str}", f"**{l('user_profile_replays_watched')}:** {replays_str}"))
+        status_item_lines.extend(
+            (
+                f"**{l('user_profile_global_rank')}:** {rank_str} ({country_rank_str})",
+                f"**{l('user_profile_level')}:** {level_str}",
+                f"**PP:** {pp_str} {l('user_profile_accuracy')}: {acc_str}",
+                f"**{l('user_profile_grades')}:** {grades}",
+                f"**{l('user_profile_accuracy')}:** {acc_str}",
+                f"**{l('user_profile_play_count')}:** {playcount_str}",
+                f"**{l('user_profile_total_score')}:** {total_score_display}",
+                f"**{l('user_profile_avg_score', 'Avg. Score')}:** {avg_score_display}/{l('user_profile_play_short', 'Play')}",
+                f"**{l('user_profile_ranked_score')}:** {ranked_score_display}",
+                f"**{l('user_profile_avg_ranked_score', 'Avg. Ranked Score')}:** {avg_ranked_display}/{l('user_profile_play_short', 'Play')}",
+                f"**{l('user_profile_total_hits')}:** {total_hits_display}",
+                f"**{l('user_profile_avg_hits', 'Avg. Hits')}:** {avg_hits_display}/{l('user_profile_play_short', 'Play')}",
+                f"**{l('user_profile_max_combo')}:** {max_combo_str}",
+                f"**{l('user_profile_replays_watched')}:** {replays_str}",
+            )
+        )
 
         lines.append(f"{BLACK_CIRCLE} {l('profile_section_status') or 'Status'}")
         for i, item_content in enumerate(status_item_lines):
@@ -358,9 +352,7 @@ class UserCog(commands.Cog):
         lines.append(f"\n{BLACK_CIRCLE} {l('profile_section_other') or '其他'}")
         # 以前的名字
         prev_names = player_data.get("previous_usernames")
-        prev_names_str = (
-            ", ".join(prev_names) if prev_names else na
-        )  # Not numerical, no backticks
+        prev_names_str = ", ".join(prev_names) if prev_names else na  # Not numerical, no backticks
         lines.append(f"{TREE} **{l('user_profile_previous_names')}:** {prev_names_str}")
         # 好友/追蹤者
         followers = player_data.get("follower_count")
@@ -368,18 +360,14 @@ class UserCog(commands.Cog):
         lines.append(f"{TREE} **{l('user_profile_followers')}:** {followers_str}")
         # 慣用
         playstyle = player_data.get("playstyle")
-        playstyle_str = (
-            ", ".join(playstyle) if playstyle else na
-        )  # Not numerical, no backticks
+        playstyle_str = ", ".join(playstyle) if playstyle else na  # Not numerical, no backticks
         lines.append(f"{TREE} **{l('user_profile_playstyle')}:** {playstyle_str}")
         # 成就
         achievements_raw = player_data.get("user_achievements")
         logger.debug(
             f"[USER_COG _build_profile_detail_section] Raw achievements data: {achievements_raw}"
         )
-        achievements_str = (
-            f"`{len(achievements_raw)}`" if achievements_raw is not None else na
-        )
+        achievements_str = f"`{len(achievements_raw)}`" if achievements_raw is not None else na
         lines.append(f"{TREE} **{l('user_profile_achievements')}:** {achievements_str}")
         # 總遊玩時間
         total_seconds = mode_stats.get("play_time") if mode_stats else None
@@ -395,16 +383,12 @@ class UserCog(commands.Cog):
         join_date_display_str = na  # Default to N/A
         if join_date_api_val:
             try:
-                join_dt_obj = datetime.datetime.fromisoformat(
-                    join_date_api_val
-                )
+                join_dt_obj = datetime.datetime.fromisoformat(join_date_api_val)
                 formatted_date = self.format_datetime_obj(join_dt_obj, user_id_for_l10n)
                 relative_time = self.time_since(
                     join_dt_obj, user_id_for_l10n
                 )  # short=True by default
-                logger.debug(
-                    f"Join date: Formatted='{formatted_date}', Relative='{relative_time}'"
-                )
+                logger.debug(f"Join date: Formatted='{formatted_date}', Relative='{relative_time}'")
                 if (
                     formatted_date
                     and relative_time
@@ -412,16 +396,18 @@ class UserCog(commands.Cog):
                 ):
                     join_date_display_str = f"{formatted_date} ({relative_time})"
                 else:
-                    join_date_display_str = formatted_date  # Fallback to just date if relative time is weird
+                    join_date_display_str = (
+                        formatted_date  # Fallback to just date if relative time is weird
+                    )
             except Exception as e:
                 logger.warning(
                     f"Could not parse or format join_date for detail view: {join_date_api_val}. Error: {e}"
                 )
-                join_date_display_str = join_date_api_val  # Fallback to raw string from API if parsing/formatting fails
+                join_date_display_str = (
+                    join_date_api_val  # Fallback to raw string from API if parsing/formatting fails
+                )
 
-        lines.append(
-            f"{END} **{l('user_profile_join_date')}:** {join_date_display_str}"
-        )
+        lines.append(f"{END} **{l('user_profile_join_date')}:** {join_date_display_str}")
 
         # 個人連結 - New Independent Section
         link_detail_lines = []
@@ -494,28 +480,20 @@ class UserCog(commands.Cog):
         elif osu_user:
             user_identifier = osu_user.strip()
             identifier_type_for_api = "username"
-            logger.debug(
-                f"Profile lookup: osu_user='{user_identifier}', type='username'"
-            )
+            logger.debug(f"Profile lookup: osu_user='{user_identifier}', type='username'")
         else:
-            bound_osu_id_val = await user_data_manager.get_user_binding(
-                interaction.user.id
-            )
+            bound_osu_id_val = await user_data_manager.get_user_binding(interaction.user.id)
             if bound_osu_id_val:
                 user_identifier = str(bound_osu_id_val)
                 identifier_type_for_api = "id"
-                logger.debug(
-                    f"Profile lookup: bound_user_id='{user_identifier}', type='id'"
-                )
+                logger.debug(f"Profile lookup: bound_user_id='{user_identifier}', type='id'")
             else:
                 await interaction.followup.send(
                     lstr(user_id_for_l10n, "error_osu_user_not_provided_or_bound")
                 )
                 return
 
-        actual_mode_int = (
-            mode.value if mode and hasattr(mode, "value") else config.DEFAULT_OSU_MODE
-        )
+        actual_mode_int = mode.value if mode and hasattr(mode, "value") else config.DEFAULT_OSU_MODE
         api_mode_for_get_user = (
             OSU_MODES_INT_TO_STRING.get(actual_mode_int) if mode is not None else None
         )
@@ -548,13 +526,9 @@ class UserCog(commands.Cog):
 
         if mode is None and player_data.get("playmode"):
             returned_mode_str_from_api = player_data.get("playmode")
-            REVERSE_OSU_MODES_INT_TO_STRING = {
-                v: k for k, v in OSU_MODES_INT_TO_STRING.items()
-            }
+            REVERSE_OSU_MODES_INT_TO_STRING = {v: k for k, v in OSU_MODES_INT_TO_STRING.items()}
             if returned_mode_str_from_api in REVERSE_OSU_MODES_INT_TO_STRING:
-                overridden_mode_int = REVERSE_OSU_MODES_INT_TO_STRING[
-                    returned_mode_str_from_api
-                ]
+                overridden_mode_int = REVERSE_OSU_MODES_INT_TO_STRING[returned_mode_str_from_api]
                 if overridden_mode_int != actual_mode_int:
                     logger.debug(
                         f"Mode override: User didn't specify mode. API playmode='{returned_mode_str_from_api}'. Overriding actual_mode_int from {actual_mode_int} to {overridden_mode_int}."
@@ -565,9 +539,7 @@ class UserCog(commands.Cog):
                     f"API returned unrecognized playmode: '{returned_mode_str_from_api}'. Sticking with default/initial mode: {actual_mode_int}"
                 )
 
-        self.get_mode_name(
-            actual_mode_int, user_id_for_l10n
-        )
+        self.get_mode_name(actual_mode_int, user_id_for_l10n)
         player_data.get("username") or self.get_na_value(user_id_for_l10n)
         user_id_from_api = player_data.get("id")
 
@@ -584,12 +556,8 @@ class UserCog(commands.Cog):
         ):  # Fallback for older API or different structure
             playcount = player_data.get("play_count")
 
-        level_current = (
-            mode_stats.get("level", {}).get("current") if mode_stats else None
-        )
-        level_progress = (
-            mode_stats.get("level", {}).get("progress", 0.0) if mode_stats else 0.0
-        )
+        level_current = mode_stats.get("level", {}).get("current") if mode_stats else None
+        level_progress = mode_stats.get("level", {}).get("progress", 0.0) if mode_stats else 0.0
         level_display = (
             f"{level_current}.{int(level_progress):02d}"
             if level_current is not None
@@ -607,9 +575,7 @@ class UserCog(commands.Cog):
         if actual_player_username and actual_player_username != "N/A":
             english_title_format = f"{actual_player_username}'s OSU! Profile"
             template_key = "user_profile_title"
-            localized_template = lstr(
-                user_id_for_l10n, template_key, english_title_format
-            )
+            localized_template = lstr(user_id_for_l10n, template_key, english_title_format)
             if (
                 localized_template != english_title_format
                 and "{}" in localized_template
@@ -626,13 +592,9 @@ class UserCog(commands.Cog):
             else:
                 embed_title = english_title_format
         else:
-            embed_title = lstr(
-                user_id_for_l10n, "user_profile_title_na", "OSU! Profile"
-            )
+            embed_title = lstr(user_id_for_l10n, "user_profile_title_na", "OSU! Profile")
 
-        embed_url = (
-            f"https://osu.ppy.sh/users/{user_id_from_api}" if user_id_from_api else None
-        )
+        embed_url = f"https://osu.ppy.sh/users/{user_id_from_api}" if user_id_from_api else None
         group_colour_hex = player_data.get("profile_colour")
 
         if not group_colour_hex and player_data.get("is_supporter", False):
@@ -663,24 +625,18 @@ class UserCog(commands.Cog):
                 f"Raw rank_history for graph decision: {'Exists and has data' if rank_history_from_player_data and rank_history_from_player_data.get('data') else 'Missing or no data'}"
             )
 
-            rank_has_data = (
-                rank_history_from_player_data
-                and rank_history_from_player_data.get("data")
+            rank_has_data = rank_history_from_player_data and rank_history_from_player_data.get(
+                "data"
             )
 
             if rank_has_data:  # Only rank graph is generated now
                 try:
-                    combined_graph_buf, generated_rank = (
-                        self._generate_profile_combined_graph(
-                            rank_history_from_player_data, user_id_for_l10n
-                        )
+                    combined_graph_buf, generated_rank = self._generate_profile_combined_graph(
+                        rank_history_from_player_data, user_id_for_l10n
                     )
                     has_rank_data_for_graph = generated_rank
                 except Exception as e:
-                    logger.error(
-                        f"Error during profile graph generation call: {e}",
-                        exc_info=True,
-                    )
+                    logger.error(f"Error during profile graph generation call: {e}", exc_info=True)
 
             detail_text = self._build_profile_detail_section(
                 player_data,
@@ -693,9 +649,7 @@ class UserCog(commands.Cog):
 
             files_to_send = []
             if combined_graph_buf:
-                graph_file = discord.File(
-                    combined_graph_buf, filename="profile_graph.png"
-                )
+                graph_file = discord.File(combined_graph_buf, filename="profile_graph.png")
                 embed.set_image(url="attachment://profile_graph.png")
                 files_to_send.append(graph_file)
 
@@ -709,9 +663,7 @@ class UserCog(commands.Cog):
             embed.set_image(url=cover_url)
 
         pp_display = (
-            f"{pp_raw:,.2f}pp"
-            if pp_raw is not None
-            else self.get_na_value(user_id_for_l10n)
+            f"{pp_raw:,.2f}pp" if pp_raw is not None else self.get_na_value(user_id_for_l10n)
         )
         embed.add_field(
             name=self._get_lstr_with_na_fallback(user_id_for_l10n, "user_profile_pp"),
@@ -720,35 +672,25 @@ class UserCog(commands.Cog):
         )
 
         accuracy_display = (
-            f"{accuracy:,.2f}%"
-            if accuracy is not None
-            else self.get_na_value(user_id_for_l10n)
+            f"{accuracy:,.2f}%" if accuracy is not None else self.get_na_value(user_id_for_l10n)
         )
         embed.add_field(
-            name=self._get_lstr_with_na_fallback(
-                user_id_for_l10n, "user_profile_accuracy"
-            ),
+            name=self._get_lstr_with_na_fallback(user_id_for_l10n, "user_profile_accuracy"),
             value=accuracy_display,
             inline=True,
         )
 
         embed.add_field(
-            name=self._get_lstr_with_na_fallback(
-                user_id_for_l10n, "user_profile_level"
-            ),
+            name=self._get_lstr_with_na_fallback(user_id_for_l10n, "user_profile_level"),
             value=level_display,
             inline=True,
         )
 
         global_rank_display = (
-            f"#{pp_rank:,}"
-            if pp_rank is not None
-            else self.get_na_value(user_id_for_l10n)
+            f"#{pp_rank:,}" if pp_rank is not None else self.get_na_value(user_id_for_l10n)
         )
         embed.add_field(
-            name=self._get_lstr_with_na_fallback(
-                user_id_for_l10n, "user_profile_global_rank"
-            ),
+            name=self._get_lstr_with_na_fallback(user_id_for_l10n, "user_profile_global_rank"),
             value=global_rank_display,
             inline=True,
         )
@@ -759,22 +701,16 @@ class UserCog(commands.Cog):
             else self.get_na_value(user_id_for_l10n)
         )
         embed.add_field(
-            name=self._get_lstr_with_na_fallback(
-                user_id_for_l10n, "user_profile_country_rank"
-            ),
+            name=self._get_lstr_with_na_fallback(user_id_for_l10n, "user_profile_country_rank"),
             value=country_rank_display,
             inline=True,
         )
 
         playcount_display = (
-            f"{playcount:,}"
-            if playcount is not None
-            else self.get_na_value(user_id_for_l10n)
+            f"{playcount:,}" if playcount is not None else self.get_na_value(user_id_for_l10n)
         )
         embed.add_field(
-            name=self._get_lstr_with_na_fallback(
-                user_id_for_l10n, "user_profile_play_count"
-            ),
+            name=self._get_lstr_with_na_fallback(user_id_for_l10n, "user_profile_play_count"),
             value=playcount_display,
             inline=True,
         )
@@ -782,9 +718,7 @@ class UserCog(commands.Cog):
         join_date_display = self.get_na_value(user_id_for_l10n)
         if join_date_str:
             try:
-                join_dt = datetime.datetime.fromisoformat(
-                    join_date_str
-                )
+                join_dt = datetime.datetime.fromisoformat(join_date_str)
                 join_date_display = (
                     self.format_datetime_obj(join_dt, user_id_for_l10n)
                     + f" ({self.time_since(join_dt, user_id_for_l10n)})"
@@ -793,9 +727,7 @@ class UserCog(commands.Cog):
                 logger.warning(f"Could not parse join_date_str: {join_date_str}")
                 join_date_display = join_date_str
         embed.add_field(
-            name=self._get_lstr_with_na_fallback(
-                user_id_for_l10n, "user_profile_join_date"
-            ),
+            name=self._get_lstr_with_na_fallback(user_id_for_l10n, "user_profile_join_date"),
             value=join_date_display,
             inline=False,
         )
@@ -803,9 +735,7 @@ class UserCog(commands.Cog):
         mode_emoji = MODE_EMOJI_STRINGS.get(actual_mode_int, "")
         mode_display_name = self.get_mode_name(actual_mode_int, user_id_for_l10n)
         embed.add_field(
-            name=self._get_lstr_with_na_fallback(
-                user_id_for_l10n, "user_profile_game_mode"
-            ),
+            name=self._get_lstr_with_na_fallback(user_id_for_l10n, "user_profile_game_mode"),
             value=f"{mode_emoji} {mode_display_name}".strip(),
             inline=False,
         )
@@ -837,26 +767,19 @@ class UserCog(commands.Cog):
 
         fig.patch.set_facecolor("#23272A")
 
-        title_rank = lstr(
-            user_id_for_l10n, "graph_title_rank_history", "Rank History (90 days)"
-        )
+        title_rank = lstr(user_id_for_l10n, "graph_title_rank_history", "Rank History (90 days)")
         logger.debug(f"Graph title_rank for legend: '{title_rank}'")
 
-        ax_rank.plot(
-            list(range(1, len(rank_data) + 1)), rank_data, color="#bfaaff", linewidth=2
-        )
+        ax_rank.plot(list(range(1, len(rank_data) + 1)), rank_data, color="#bfaaff", linewidth=2)
         ax_rank.set_title(title_rank, fontsize=12, color="white", pad=10)
-        ax_rank.set_ylabel(
-            lstr(user_id_for_l10n, "graph_ylabel_rank", "Rank"), color="white"
-        )
+        ax_rank.set_ylabel(lstr(user_id_for_l10n, "graph_ylabel_rank", "Rank"), color="white")
         ax_rank.invert_yaxis()
         ax_rank.tick_params(axis="x", colors="white")
         ax_rank.tick_params(axis="y", colors="white")
 
         ax_rank.grid(alpha=0.3)
         ax_rank.set_xlabel(
-            lstr(user_id_for_l10n, "graph_xlabel_days", "Days (Most Recent)"),
-            color="white",
+            lstr(user_id_for_l10n, "graph_xlabel_days", "Days (Most Recent)"), color="white"
         )
 
         ax_rank.set_facecolor("#23272A")
@@ -865,24 +788,19 @@ class UserCog(commands.Cog):
 
         plt.tight_layout(pad=2.0)
         buf = io.BytesIO()
-        plt.savefig(
-            buf, format="png", bbox_inches="tight", facecolor=fig.get_facecolor()
-        )
+        plt.savefig(buf, format="png", bbox_inches="tight", facecolor=fig.get_facecolor())
         buf.seek(0)
         plt.close(fig)
-        logger.info(
-            f"Successfully generated profile rank graph. Has rank data: {has_rank_data}"
-        )
+        logger.info(f"Successfully generated profile rank graph. Has rank data: {has_rank_data}")
         return buf, has_rank_data
 
-    @app_commands.command(
-        name="mapper", description="Shows osu! mapping statistics for a user."
-    )
-    @app_commands.describe(
-        osu_user="osu! username (optional)", osu_id="osu! user ID (optional)"
-    )
+    @app_commands.command(name="mapper", description="Shows osu! mapping statistics for a user.")
+    @app_commands.describe(osu_user="osu! username (optional)", osu_id="osu! user ID (optional)")
     async def mapper(
-        self, interaction: discord.Interaction, osu_user: str | None = None, osu_id: int | None = None
+        self,
+        interaction: discord.Interaction,
+        osu_user: str | None = None,
+        osu_id: int | None = None,
     ) -> None:
         await interaction.response.defer()
         user_id_for_l10n = interaction.user.id
@@ -901,9 +819,7 @@ class UserCog(commands.Cog):
             if user_identifier.isdigit():
                 identifier_type = "username"
         else:
-            bound_osu_user = await user_data_manager.get_user_binding(
-                interaction.user.id
-            )
+            bound_osu_user = await user_data_manager.get_user_binding(interaction.user.id)
             if bound_osu_user:
                 user_identifier = str(bound_osu_user)
             else:
@@ -934,18 +850,10 @@ class UserCog(commands.Cog):
             f"[USER_COG /mapper] Fetched user: ID {actual_user_id}, Username: {actual_username}"
         )
 
-        beatmap_types_to_fetch = [
-            "ranked",
-            "loved",
-            "graveyard",
-            "pending",
-            "nominated",
-        ]
+        beatmap_types_to_fetch = ["ranked", "loved", "graveyard", "pending", "nominated"]
         all_beatmapsets = {}
 
-        logger.debug(
-            f"[USER_COG /mapper] Starting to fetch beatmapsets for user {actual_user_id}"
-        )
+        logger.debug(f"[USER_COG /mapper] Starting to fetch beatmapsets for user {actual_user_id}")
         for bs_type in beatmap_types_to_fetch:
             logger.debug(f"[USER_COG /mapper] Fetching type: {bs_type}")
             offset = 0
@@ -960,10 +868,7 @@ class UserCog(commands.Cog):
                     f"[USER_COG /mapper] Fetching {bs_type} - offset: {offset}, current_fetches_for_type: {current_fetches_for_type}"
                 )
                 beatmapsets_page = await self.osu_api.get_user_beatmapsets(
-                    user_id=actual_user_id,
-                    beatmap_type=bs_type,
-                    limit=limit,
-                    offset=offset,
+                    user_id=actual_user_id, beatmap_type=bs_type, limit=limit, offset=offset
                 )
 
                 if beatmapsets_page is None:
@@ -997,9 +902,7 @@ class UserCog(commands.Cog):
                     )
                     break
 
-        logger.debug(
-            f"[USER_COG /mapper] Total unique beatmapsets fetched: {len(all_beatmapsets)}"
-        )
+        logger.debug(f"[USER_COG /mapper] Total unique beatmapsets fetched: {len(all_beatmapsets)}")
 
         hosted_mapsets_list = list(all_beatmapsets.values())
 
@@ -1008,9 +911,7 @@ class UserCog(commands.Cog):
         total_favourites = 0
 
         # Get additional stats from the player_data (user object)
-        kudosu_total = player_data.get("kudosu", {}).get(
-            "total"
-        )  # Can be None if not present
+        kudosu_total = player_data.get("kudosu", {}).get("total")  # Can be None if not present
         followers_count = player_data.get("follower_count")  # Can be None
         guest_diffs_count = player_data.get("guest_beatmapset_count")  # Can be None
         # also player_data.get('ranked_beatmapset_count') and player_data.get('loved_beatmapset_count') exist
@@ -1040,9 +941,7 @@ class UserCog(commands.Cog):
             if date_str_to_parse:
                 try:
                     # API v2 dates are ISO 8601 with Z (UTC) e.g. "2023-01-15T10:30:00+00:00" or "2023-01-15T10:30:00Z"
-                    current_bm_date = datetime.datetime.fromisoformat(
-                        date_str_to_parse
-                    )
+                    current_bm_date = datetime.datetime.fromisoformat(date_str_to_parse)
                     if (
                         latest_submission_date_obj is None
                         or current_bm_date > latest_submission_date_obj
@@ -1055,9 +954,7 @@ class UserCog(commands.Cog):
                     ):
                         earliest_submission_date_obj = current_bm_date
                 except ValueError:
-                    logger.warning(
-                        f"[USER_COG /mapper] Could not parse date: {date_str_to_parse}"
-                    )
+                    logger.warning(f"[USER_COG /mapper] Could not parse date: {date_str_to_parse}")
 
         mapping_duration_str = self._get_lstr_with_na_fallback(
             user_id_for_l10n, "value_not_available"
@@ -1084,9 +981,7 @@ class UserCog(commands.Cog):
             )
         ):
             try:
-                embed_title_to_use = localized_template_candidate.format(
-                    actual_username
-                )
+                embed_title_to_use = localized_template_candidate.format(actual_username)
             except Exception as e:
                 logger.error(
                     f"[USER_COG /mapper] Formatting localized mapper title ('{localized_template_candidate}') failed: {e}. Falling back to English title."
@@ -1103,9 +998,7 @@ class UserCog(commands.Cog):
         embed = discord.Embed(color=discord.Color.purple())
 
         # Set the author with the mapper's name, profile link, and avatar
-        embed.set_author(
-            name=author_name, url=author_profile_url, icon_url=author_icon_display_url
-        )
+        embed.set_author(name=author_name, url=author_profile_url, icon_url=author_icon_display_url)
 
         # Thumbnail is no longer needed as avatar is in author icon.
         # Old embed.url (to beatmapsets/extra) is also removed.
@@ -1117,23 +1010,17 @@ class UserCog(commands.Cog):
             inline=True,
         )
         embed.add_field(
-            name=self._get_lstr_with_na_fallback(
-                user_id_for_l10n, "mapper_ranked_loved"
-            ),
+            name=self._get_lstr_with_na_fallback(user_id_for_l10n, "mapper_ranked_loved"),
             value=str(ranked_loved_sets_count),
             inline=True,
         )
         guest_diffs_display = (
             str(guest_diffs_count)
             if guest_diffs_count is not None
-            else self._get_lstr_with_na_fallback(
-                user_id_for_l10n, "value_not_available"
-            )
+            else self._get_lstr_with_na_fallback(user_id_for_l10n, "value_not_available")
         )
         embed.add_field(
-            name=self._get_lstr_with_na_fallback(
-                user_id_for_l10n, "mapper_guest_difficulties"
-            ),
+            name=self._get_lstr_with_na_fallback(user_id_for_l10n, "mapper_guest_difficulties"),
             value=guest_diffs_display,
             inline=True,
         )
@@ -1144,24 +1031,18 @@ class UserCog(commands.Cog):
             else self._get_lstr_with_na_fallback(user_id_for_l10n, "never_uploaded")
         )
         embed.add_field(
-            name=self._get_lstr_with_na_fallback(
-                user_id_for_l10n, "mapper_first_upload"
-            ),
+            name=self._get_lstr_with_na_fallback(user_id_for_l10n, "mapper_first_upload"),
             value=first_upload_display,
             inline=True,
         )
         embed.add_field(
-            name=self._get_lstr_with_na_fallback(
-                user_id_for_l10n, "mapper_mapping_duration"
-            ),
+            name=self._get_lstr_with_na_fallback(user_id_for_l10n, "mapper_mapping_duration"),
             value=mapping_duration_str,
             inline=True,
         )
 
         embed.add_field(
-            name=self._get_lstr_with_na_fallback(
-                user_id_for_l10n, "mapper_total_favourites"
-            ),
+            name=self._get_lstr_with_na_fallback(user_id_for_l10n, "mapper_total_favourites"),
             value=f"{total_favourites:,}",
             inline=True,
         )
@@ -1169,9 +1050,7 @@ class UserCog(commands.Cog):
         followers_display = (
             f"{followers_count:,}"
             if followers_count is not None
-            else self._get_lstr_with_na_fallback(
-                user_id_for_l10n, "value_not_available"
-            )
+            else self._get_lstr_with_na_fallback(user_id_for_l10n, "value_not_available")
         )
         embed.add_field(
             name=self._get_lstr_with_na_fallback(user_id_for_l10n, "mapper_followers"),
@@ -1187,9 +1066,7 @@ class UserCog(commands.Cog):
         kudosu_display = (
             f"{kudosu_total:,}"
             if kudosu_total is not None
-            else self._get_lstr_with_na_fallback(
-                user_id_for_l10n, "value_not_available"
-            )
+            else self._get_lstr_with_na_fallback(user_id_for_l10n, "value_not_available")
         )
         embed.add_field(
             name=self._get_lstr_with_na_fallback(user_id_for_l10n, "mapper_kudosu"),
@@ -1213,7 +1090,9 @@ class UserCog(commands.Cog):
 
             latest_submission_display_value = ""
             if lb_url:
-                latest_submission_display_value = f"[{lb_artist} - {lb_title}]({lb_url})\n"  # CORRECTED to single backslash
+                latest_submission_display_value = (
+                    f"[{lb_artist} - {lb_title}]({lb_url})\n"  # CORRECTED to single backslash
+                )
             else:
                 latest_submission_display_value = (
                     f"{lb_artist} - {lb_title}\n"  # CORRECTED to single backslash
@@ -1225,9 +1104,7 @@ class UserCog(commands.Cog):
                 )
 
             embed.add_field(
-                name=self._get_lstr_with_na_fallback(
-                    user_id_for_l10n, "mapper_latest_submission"
-                ),
+                name=self._get_lstr_with_na_fallback(user_id_for_l10n, "mapper_latest_submission"),
                 value=latest_submission_display_value,
                 inline=False,
             )
@@ -1263,7 +1140,10 @@ class UserCog(commands.Cog):
         osu_user="Your osu! username (optional)", osu_id="Your osu! user ID (optional)"
     )
     async def setuser(
-        self, interaction: discord.Interaction, osu_user: str | None = None, osu_id: int | None = None
+        self,
+        interaction: discord.Interaction,
+        osu_user: str | None = None,
+        osu_id: int | None = None,
     ) -> None:
         user_id_for_l10n = str(interaction.user.id)
         await interaction.response.defer(ephemeral=True)
@@ -1290,9 +1170,7 @@ class UserCog(commands.Cog):
 
         if not identifier_to_use:
             # Check if user has an existing binding to display
-            existing_binding = await user_data_manager.get_user_binding(
-                interaction.user.id
-            )
+            existing_binding = await user_data_manager.get_user_binding(interaction.user.id)
             if existing_binding:
                 # Attempt to get the osu! user object to display the current official username
                 try:
@@ -1365,9 +1243,7 @@ class UserCog(commands.Cog):
             )  # Store ID for consistency if possible, or username if ID fetch fails
 
             # Use osu_id_to_store for binding as it's more reliable, but display official_osu_username
-            await user_data_manager.set_user_binding(
-                interaction.user.id, osu_id_to_store
-            )
+            await user_data_manager.set_user_binding(interaction.user.id, osu_id_to_store)
             await interaction.followup.send(
                 lstr(
                     user_id_for_l10n,
@@ -1391,8 +1267,7 @@ class UserCog(commands.Cog):
             )
 
     @app_commands.command(
-        name="unsetuser",
-        description="Unbind your Discord account from your osu! account.",
+        name="unsetuser", description="Unbind your Discord account from your osu! account."
     )
     async def unsetuser(self, interaction: discord.Interaction) -> None:
         user_id_for_l10n = str(interaction.user.id)

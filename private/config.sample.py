@@ -3,9 +3,7 @@ from __future__ import annotations
 DISCORD_BOT_TOKEN = "YOUR_DISCORD_BOT_TOKEN_HERE"
 
 DEFAULT_LANGUAGE = "en"
-DEFAULT_OSU_MODE = (
-    0  # 0 for osu!standard, 1 for Taiko, 2 for CatchTheBeat, 3 for osu!mania
-)
+DEFAULT_OSU_MODE = 0  # 0 for osu!standard, 1 for Taiko, 2 for CatchTheBeat, 3 for osu!mania
 
 # 支援的語言列表，對應 locales 文件夾中的文件名 (不含 .json)
 SUPPORTED_LANGUAGES = {"en": "English", "zh_TW": "繁體中文"}

@@ -81,14 +81,16 @@ class OsuAPI:
         return True
 
     async def _request(
-        self, method: str, endpoint: str, params: dict | None = None, json_payload: dict | None = None
+        self,
+        method: str,
+        endpoint: str,
+        params: dict | None = None,
+        json_payload: dict | None = None,
     ) -> dict | list | None:
         """發送異步請求到 osu! API v2"""
         logger.debug(f"[OSU_API] Preparing request: {method} {endpoint}")
         if not await self._ensure_token():
-            logger.error(
-                "[OSU_API] Failed to ensure valid access token. Aborting request."
-            )
+            logger.error("[OSU_API] Failed to ensure valid access token. Aborting request.")
             return None
 
         await self.setup()  # 確保 session 已初始化
@@ -115,19 +117,13 @@ class OsuAPI:
                 logger.debug(f"[OSU_API] Request sent. URL: {response.url}")
                 logger.debug(f"[OSU_API] Request Headers: {headers}")
                 if response.status == 204:
-                    logger.debug(
-                        f"[OSU_API] Response Status: 204 No Content for URL: {url}"
-                    )
+                    logger.debug(f"[OSU_API] Response Status: 204 No Content for URL: {url}")
                     return {}
 
                 response_text = await response.text()
-                logger.debug(
-                    f"[OSU_API] Response Status: {response.status} for URL: {url}"
-                )
+                logger.debug(f"[OSU_API] Response Status: {response.status} for URL: {url}")
                 # Limit logging large responses in debug, show first 500 chars
-                logger.debug(
-                    f"[OSU_API] Response Text (first 500 chars): {response_text[:500]}"
-                )
+                logger.debug(f"[OSU_API] Response Text (first 500 chars): {response_text[:500]}")
 
                 if response.status >= 400:
                     # Error already logged in the previous log, this one is more for raising the exception
@@ -136,12 +132,8 @@ class OsuAPI:
                     )
                     response.raise_for_status()
 
-                if (
-                    not response_text and response.status == 200
-                ):  # Empty success response
-                    logger.debug(
-                        f"[OSU_API] Empty successful response (200 OK) for URL: {url}"
-                    )
+                if not response_text and response.status == 200:  # Empty success response
+                    logger.debug(f"[OSU_API] Empty successful response (200 OK) for URL: {url}")
                     return {}  # Or None, depending on expectation for empty 200s
 
                 return await response.json()
@@ -214,9 +206,7 @@ class OsuAPI:
         # 示例，需要根據 v2 文檔調整參數
         endpoint = f"/users/{user_id}/scores/recent"
         params = {"limit": limit, "include_fails": "1" if include_fails else "0"}
-        if (
-            mode
-        ):  # osu! API v2 scores endpoints usually require mode as a query parameter
+        if mode:  # osu! API v2 scores endpoints usually require mode as a query parameter
             params["mode"] = mode
         if offset is not None:
             params["offset"] = offset
@@ -224,7 +214,11 @@ class OsuAPI:
         return await self._request("GET", endpoint, params=params)
 
     async def get_user_best(
-        self, user_id: int | str, mode: str | None = None, limit: int = 100, offset: int | None = None
+        self,
+        user_id: int | str,
+        mode: str | None = None,
+        limit: int = 100,
+        offset: int | None = None,
     ) -> list | None:
         """
         獲取使用者的最佳表現。支援自動分頁獲取最多實際請求的 limit 數量。
@@ -250,9 +244,7 @@ class OsuAPI:
         total_limit_to_fetch = limit
 
         while len(all_scores) < total_limit_to_fetch:
-            actual_request_limit = min(
-                page_limit, total_limit_to_fetch - len(all_scores)
-            )
+            actual_request_limit = min(page_limit, total_limit_to_fetch - len(all_scores))
             if (
                 actual_request_limit <= 0
             ):  # Should not happen if loop condition is correct, but as a safeguard
@@ -304,9 +296,7 @@ class OsuAPI:
         logger.debug(
             f"[get_user_best] Fetched a total of {len(all_scores)} scores for user {user_id}."
         )
-        return (
-            all_scores or []
-        )  # Return empty list if nothing found, or None if error earlier
+        return all_scores or []  # Return empty list if nothing found, or None if error earlier
 
     async def get_user_beatmapsets(
         self, user_id: int | str, beatmap_type: str, limit: int = 50, offset: int = 0
@@ -494,9 +484,7 @@ class OsuAPI:
             accuracy = ((c300 * 300 + c100 * 100 + c50 * 50) / (total_hits * 300)) * 100
             return round(accuracy, 2)
         if mode == "taiko":
-            total_hits = (
-                c300 + c100 + cmiss
-            )  # c50 is not used, geki/katu are part of c300/c100
+            total_hits = c300 + c100 + cmiss  # c50 is not used, geki/katu are part of c300/c100
             if total_hits == 0:
                 return 0.0
             # Taiko accuracy: ( (greats * 1) + (goods * 0.5) ) / total_notes
@@ -539,11 +527,7 @@ class OsuAPI:
             # geki = MAX, katu = 300s in some contexts, but API stats are count_geki, count_300, count_katu, count_100, count_50, count_miss
             # For mania: count_geki (MAX/300g), count_300 (300), count_katu (200/!200), count_100 (100), count_50 (50), count_miss (Miss)
             total_score_points = (
-                (c_geki * 320)
-                + (c300 * 300)
-                + (c_katu * 200)
-                + (c100 * 100)
-                + (c50 * 50)
+                (c_geki * 320) + (c300 * 300) + (c_katu * 200) + (c100 * 100) + (c50 * 50)
             )
             total_possible_points = (c_geki + c300 + c_katu + c100 + c50 + cmiss) * 320
             if total_possible_points == 0:
@@ -553,14 +537,10 @@ class OsuAPI:
         # If API v2 provides accuracy directly in the score object, prefer that.
         # score_data.get('accuracy') might be e.g. 0.9876, so multiply by 100.
         return (
-            statistics.get("accuracy", 0.0) * 100
-            if statistics.get("accuracy") is not None
-            else 0.0
+            statistics.get("accuracy", 0.0) * 100 if statistics.get("accuracy") is not None else 0.0
         )
 
-    async def get_score_v1(
-        self, beatmap_id: int, user_id: int | str, mode: int = 0
-    ) -> dict | None:
+    async def get_score_v1(self, beatmap_id: int, user_id: int | str, mode: int = 0) -> dict | None:
         """
         從 osu! API v1 獲取指定 beatmap 和用戶的最高分數。
         API v1 端點: /get_scores
@@ -568,9 +548,7 @@ class OsuAPI:
         只獲取用戶在該圖上的最佳成績 (limit=1)。
         """
         if not self.api_v1_key:
-            logger.warning(
-                "[get_score_v1] API v1 key is not configured. Skipping fallback."
-            )
+            logger.warning("[get_score_v1] API v1 key is not configured. Skipping fallback.")
             return None
 
         endpoint = f"{OSU_API_V1_BASE_URL}/get_scores"
@@ -591,9 +569,7 @@ class OsuAPI:
                         f"[get_score_v1] Successfully fetched score from API v1: {data[0]} for beatmap {beatmap_id}, user {user_id}, mode {mode}"
                     )
                     return data[0]  # Return the first (and only) score
-                if (
-                    isinstance(data, list) and not data
-                ):  # Successfully fetched an empty list
+                if isinstance(data, list) and not data:  # Successfully fetched an empty list
                     logger.info(
                         f"[get_score_v1] API v1 returned an empty list for beatmap {beatmap_id}, user {user_id}, mode {mode}. No score data found."
                     )
@@ -612,8 +588,7 @@ class OsuAPI:
             return None
         except Exception as e:
             logger.error(
-                f"[get_score_v1] Unexpected error during API v1 request: {e}",
-                exc_info=True,
+                f"[get_score_v1] Unexpected error during API v1 request: {e}", exc_info=True
             )
             return None
 

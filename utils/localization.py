@@ -20,15 +20,11 @@ def _load_user_preferences() -> None:
     """從 JSON 文件加載用戶語言偏好到內存"""
     global _user_lang_preferences
     if not pathlib.Path(USER_PREFS_FILE).exists():
-        logger.info(
-            f"'{USER_PREFS_FILE}' not found. Starting with empty user preferences."
-        )
+        logger.info(f"'{USER_PREFS_FILE}' not found. Starting with empty user preferences.")
         _user_lang_preferences = {}
         return
     try:
-        with (
-            _prefs_lock
-        ):  # Ensure thread-safe reading, though less critical than writing
+        with _prefs_lock:  # Ensure thread-safe reading, though less critical than writing
             with pathlib.Path(USER_PREFS_FILE).open(encoding="utf-8") as f:
                 content = f.read()
                 if not content:  # File is empty
@@ -39,9 +35,7 @@ def _load_user_preferences() -> None:
                 else:
                     _user_lang_preferences = json.loads(content)
                     # Ensure keys are strings if they were stored as ints from interaction.user.id
-                    _user_lang_preferences = {
-                        str(k): v for k, v in _user_lang_preferences.items()
-                    }
+                    _user_lang_preferences = {str(k): v for k, v in _user_lang_preferences.items()}
                     logger.info(f"已成功從 '{USER_PREFS_FILE}' 加載用戶語言偏好。")
     except json.JSONDecodeError:
         logger.error(f"錯誤：解析 '{USER_PREFS_FILE}' 失敗。將使用空的用戶偏好。")
@@ -88,17 +82,13 @@ def load_language(lang_code: str) -> None:
             logger.error(f"[L10N] Failed to parse language file {lang_code}.json.")
             _translations[lang_code] = {}
     else:
-        logger.debug(
-            f"[L10N] Language {lang_code} already in _translations. Skipping load."
-        )
+        logger.debug(f"[L10N] Language {lang_code} already in _translations. Skipping load.")
 
     # DEBUG: Print current state of _translations cache after any load attempt or skip
     logger.debug(f"[L10N] Current _translations keys: {list(_translations.keys())}")
     for lc, trans_dict in _translations.items():
         test_key_val = trans_dict.get("user_profile_game_mode", "<TEST_KEY_MISSING>")
-        logger.debug(
-            f"[L10N]   _translations['{lc}']['user_profile_game_mode']: '{test_key_val}'"
-        )
+        logger.debug(f"[L10N]   _translations['{lc}']['user_profile_game_mode']: '{test_key_val}'")
 
 
 def get_user_language(user_id: int | str) -> str:
@@ -106,17 +96,13 @@ def get_user_language(user_id: int | str) -> str:
     # Ensure all keys in the global preferences are strings before attempting to get.
     # This is a safeguard against potential pollution from other parts of the code.
     global _user_lang_preferences  # Explicitly state we are working with the global
-    current_prefs_copy = dict(
-        _user_lang_preferences
-    )  # Work on a copy to iterate and modify safely
+    current_prefs_copy = dict(_user_lang_preferences)  # Work on a copy to iterate and modify safely
     cleaned_prefs = {str(k): v for k, v in current_prefs_copy.items()}
     if len(cleaned_prefs) != len(current_prefs_copy):
         logger.warning(
             f"[L10N] Cleaned _user_lang_preferences due to mixed key types. Original count: {len(current_prefs_copy)}, Cleaned count: {len(cleaned_prefs)}"
         )
-        _user_lang_preferences = (
-            cleaned_prefs  # Update the global with the cleaned version
-        )
+        _user_lang_preferences = cleaned_prefs  # Update the global with the cleaned version
 
     logger.debug(f"[L10N] Called for user_id: '{user_id}'")
     # Now _user_lang_preferences should only have string keys.
@@ -148,11 +134,7 @@ def set_user_language(user_id: int | str, lang_code: str) -> bool:
 
 
 def get_localized_string(
-    user_id_or_lang_code: int | str | None,
-    key: str,
-    default_fallback: str = "",
-    *args,
-    **kwargs,
+    user_id_or_lang_code: int | str | None, key: str, default_fallback: str = "", *args, **kwargs
 ) -> str:
     """根據用戶的語言偏好或預設語言獲取翻譯後的文本。
 
@@ -184,27 +166,20 @@ def get_localized_string(
                 "[L10N] Reload failed, _translations still empty. Returning raw key or fallback."
             )
             # Cannot format if translations are missing. Return unformatted key or fallback.
-            return (
-                default_fallback or f"<missing_translations_for_key: {key}>"
-            )
+            return default_fallback or f"<missing_translations_for_key: {key}>"
 
     localized_string = _translations.get(lang_code, {}).get(key)
 
     if localized_string is None:
         # Try fallback to default language (e.g., English) if not already using it
-        if (
-            lang_code != config.DEFAULT_LANGUAGE
-            and config.DEFAULT_LANGUAGE in _translations
-        ):
+        if lang_code != config.DEFAULT_LANGUAGE and config.DEFAULT_LANGUAGE in _translations:
             localized_string = _translations[config.DEFAULT_LANGUAGE].get(key)
 
         # If still not found, use the provided default_fallback
         if localized_string is None:
             localized_string = default_fallback
             # If default_fallback was also empty, it means the key is truly missing.
-            if (
-                not localized_string
-            ):  # Checks if default_fallback was also empty or None
+            if not localized_string:  # Checks if default_fallback was also empty or None
                 logger.warning(
                     f"[L10N] Key '{key}' not found in lang '{lang_code}' or default '{config.DEFAULT_LANGUAGE}', and no fallback string provided. Returning placeholder."
                 )
@@ -220,15 +195,9 @@ def get_localized_string(
         if args or kwargs:  # Only call format if there are args or kwargs
             return localized_string.format(*args, **kwargs)
         return localized_string
-    except (
-        IndexError,
-        KeyError,
-        TypeError,
-    ) as e:  # Added TypeError for bad keyword args
+    except (IndexError, KeyError, TypeError) as e:  # Added TypeError for bad keyword args
         # logger.error(f"[L10N] Formatting key='{key}', raw_string='{localized_string}', args={args}, kwargs={kwargs} FAILED: {e}")
-        return (
-            f"<formatting_error: {key} ({e.__class__.__name__})>"  # Include error type
-        )
+        return f"<formatting_error: {key} ({e.__class__.__name__})>"  # Include error type
 
 
 # 初始加載預設語言 和用戶偏好
