@@ -74,9 +74,7 @@ class MessageTracker:
         for message_id in old_messages:
             del self._messages[message_id]
 
-        logger.info(
-            f"🧹 清理了 {cleanup_count} 條舊訊息記錄 (剩餘: {len(self._messages)})"
-        )
+        logger.info(f"🧹 清理了 {cleanup_count} 條舊訊息記錄 (剩餘: {len(self._messages)})")
 
     def get_stats(self) -> dict[str, int]:
         """獲取統計信息

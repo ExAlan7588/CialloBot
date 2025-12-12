@@ -64,9 +64,7 @@ class DeleteMessageView(discord.ui.View):
         return bool(member.guild_permissions.administrator)
 
     @discord.ui.button(label="刪除", style=discord.ButtonStyle.danger, emoji="🗑️")
-    async def delete_button(
-        self, interaction: Interaction, button: discord.ui.Button
-    ) -> None:
+    async def delete_button(self, interaction: Interaction, button: discord.ui.Button) -> None:
         """刪除按鈕回調
 
         Args:
@@ -85,8 +83,7 @@ class DeleteMessageView(discord.ui.View):
                 "❌ 只有觸發此指令的用戶或管理員才能刪除此訊息！", ephemeral=True
             )
             logger.debug(
-                f"🚫 用戶 {interaction.user} 嘗試刪除訊息但無權限 "
-                f"(觸發者: {self.trigger_user_id})"
+                f"🚫 用戶 {interaction.user} 嘗試刪除訊息但無權限 (觸發者: {self.trigger_user_id})"
             )
             return
 
@@ -101,18 +98,12 @@ class DeleteMessageView(discord.ui.View):
             )
 
             # 發送確認訊息（因為原訊息已刪除，所以用 ephemeral）
-            await interaction.response.send_message(
-                "✅ 已成功刪除訊息！", ephemeral=True
-            )
+            await interaction.response.send_message("✅ 已成功刪除訊息！", ephemeral=True)
         except discord.NotFound:
-            await interaction.response.send_message(
-                "❌ 訊息已被刪除或不存在。", ephemeral=True
-            )
+            await interaction.response.send_message("❌ 訊息已被刪除或不存在。", ephemeral=True)
             logger.warning(f"⚠️ 用戶 {interaction.user} 嘗試刪除訊息但訊息不存在")
         except discord.Forbidden:
-            await interaction.response.send_message(
-                "❌ 機器人沒有權限刪除此訊息。", ephemeral=True
-            )
+            await interaction.response.send_message("❌ 機器人沒有權限刪除此訊息。", ephemeral=True)
             logger.error(f"❌ 機器人沒有權限刪除訊息 (ID: {interaction.message.id})")
         except Exception as e:
             logger.error(f"❌ 刪除訊息時發生錯誤: {e}", exc_info=True)
@@ -126,6 +117,4 @@ class DeleteMessageView(discord.ui.View):
             if isinstance(item, discord.ui.Button):
                 item.disabled = True
 
-        logger.debug(
-            f"⏱️ DeleteMessageView 超時，按鈕已禁用 (觸發者: {self.trigger_user_id})"
-        )
+        logger.debug(f"⏱️ DeleteMessageView 超時，按鈕已禁用 (觸發者: {self.trigger_user_id})")
