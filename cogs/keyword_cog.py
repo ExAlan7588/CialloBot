@@ -26,9 +26,7 @@ class DeleteConfirmView(discord.ui.View):
     """刪除確認視圖"""
 
     def __init__(
-        self,
-        message_to_delete: discord.Message,
-        requester: discord.User | discord.Member,
+        self, message_to_delete: discord.Message, requester: discord.User | discord.Member
     ) -> None:
         """初始化確認視圖
 
@@ -42,9 +40,7 @@ class DeleteConfirmView(discord.ui.View):
         self.value: bool | None = None
 
     @discord.ui.button(label="確認刪除", style=discord.ButtonStyle.danger, emoji="🗑️")
-    async def confirm(
-        self, interaction: Interaction, button: discord.ui.Button
-    ) -> None:
+    async def confirm(self, interaction: Interaction, button: discord.ui.Button) -> None:
         """確認刪除按鈕
 
         Args:
@@ -68,18 +64,12 @@ class DeleteConfirmView(discord.ui.View):
             tracker = get_message_tracker()
             tracker.remove_message(message_id)
 
-            await interaction.response.send_message(
-                "✅ 已成功刪除訊息！", ephemeral=True
-            )
+            await interaction.response.send_message("✅ 已成功刪除訊息！", ephemeral=True)
             logger.info(f"🗑️ 用戶 {self.requester} 刪除了機器人訊息 (ID: {message_id})")
         except discord.NotFound:
-            await interaction.response.send_message(
-                "❌ 訊息已被刪除或不存在。", ephemeral=True
-            )
+            await interaction.response.send_message("❌ 訊息已被刪除或不存在。", ephemeral=True)
         except discord.Forbidden:
-            await interaction.response.send_message(
-                "❌ 機器人沒有權限刪除此訊息。", ephemeral=True
-            )
+            await interaction.response.send_message("❌ 機器人沒有權限刪除此訊息。", ephemeral=True)
         except Exception as e:
             logger.error(f"❌ 刪除訊息時發生錯誤: {e}", exc_info=True)
             await interaction.response.send_message(
@@ -154,9 +144,7 @@ class KeywordAddModal(Modal, title="新增關鍵詞"):
         response = self.response_input.value.strip()
 
         if not interaction.guild:
-            await interaction.response.send_message(
-                "❌ 此命令只能在伺服器中使用！", ephemeral=True
-            )
+            await interaction.response.send_message("❌ 此命令只能在伺服器中使用！", ephemeral=True)
             return
 
         # 獲取伺服器關鍵詞
@@ -177,8 +165,7 @@ class KeywordAddModal(Modal, title="新增關鍵詞"):
         self.cog.save_keywords()
 
         await interaction.response.send_message(
-            f"✅ 成功添加關鍵詞！\n**關鍵詞：** `{keyword}`\n**回覆：** {response}",
-            ephemeral=True,
+            f"✅ 成功添加關鍵詞！\n**關鍵詞：** `{keyword}`\n**回覆：** {response}", ephemeral=True
         )
 
         logger.info(
@@ -200,9 +187,7 @@ class KeywordAddModal(Modal, title="新增關鍵詞"):
                 "❌ 處理請求時發生錯誤，請稍後再試。", ephemeral=True
             )
         except discord.InteractionResponded:
-            await interaction.followup.send(
-                "❌ 處理請求時發生錯誤，請稍後再試。", ephemeral=True
-            )
+            await interaction.followup.send("❌ 處理請求時發生錯誤，請稍後再試。", ephemeral=True)
 
 
 class KeywordCog(commands.Cog):
@@ -221,8 +206,7 @@ class KeywordCog(commands.Cog):
 
         # 添加 Message Context Menu（通用刪除功能）
         self.ctx_menu = app_commands.ContextMenu(
-            name="刪除此訊息",
-            callback=self.delete_bot_message,
+            name="刪除此訊息", callback=self.delete_bot_message
         )
         self.bot.tree.add_command(self.ctx_menu)
 
@@ -233,9 +217,7 @@ class KeywordCog(commands.Cog):
                 with pathlib.Path(self.keywords_file).open("r", encoding="utf-8") as f:
                     data = json.load(f)
                     # 過濾掉註釋和格式說明
-                    self.keywords = {
-                        k: v for k, v in data.items() if not k.startswith("_")
-                    }
+                    self.keywords = {k: v for k, v in data.items() if not k.startswith("_")}
                 logger.info(f"✅ 已載入 {len(self.keywords)} 個伺服器的關鍵詞配置")
             else:
                 self.keywords = {}
@@ -302,9 +284,7 @@ class KeywordCog(commands.Cog):
             self.keywords[guild_id_str] = {}
         return self.keywords[guild_id_str]
 
-    async def delete_bot_message(
-        self, interaction: Interaction, message: discord.Message
-    ) -> None:
+    async def delete_bot_message(self, interaction: Interaction, message: discord.Message) -> None:
         """刪除機器人訊息（Message Context Menu 回調）
 
         支持兩種類型的訊息：
@@ -331,9 +311,7 @@ class KeywordCog(commands.Cog):
         # 方式 1：檢查是否為回覆（reply）- 用於關鍵詞
         if message.reference and message.reference.message_id:
             try:
-                original_message = await message.channel.fetch_message(
-                    message.reference.message_id
-                )
+                original_message = await message.channel.fetch_message(message.reference.message_id)
                 trigger_user_id = original_message.author.id
                 message_type = "keyword"
                 original_content = original_message.content
@@ -418,13 +396,9 @@ class KeywordCog(commands.Cog):
                 logger.error(f"❌ 發送關鍵詞回覆失敗: {e}", exc_info=True)
 
     # Slash Commands 群組
-    keyword_group = app_commands.Group(
-        name="keyword", description="關鍵詞管理命令（僅管理員）"
-    )
+    keyword_group = app_commands.Group(name="keyword", description="關鍵詞管理命令（僅管理員）")
 
-    @keyword_group.command(
-        name="add", description="添加新的關鍵詞觸發（使用彈出式表單）"
-    )
+    @keyword_group.command(name="add", description="添加新的關鍵詞觸發（使用彈出式表單）")
     async def keyword_add(self, interaction: Interaction) -> None:
         """添加新的關鍵詞（使用 Modal）
 
@@ -439,9 +413,7 @@ class KeywordCog(commands.Cog):
             return
 
         if not interaction.guild:
-            await interaction.response.send_message(
-                "❌ 此命令只能在伺服器中使用！", ephemeral=True
-            )
+            await interaction.response.send_message("❌ 此命令只能在伺服器中使用！", ephemeral=True)
             return
 
         # 顯示 Modal
@@ -456,9 +428,7 @@ class KeywordCog(commands.Cog):
             interaction: Discord 互動對象
         """
         if not interaction.guild:
-            await interaction.response.send_message(
-                "❌ 此命令只能在伺服器中使用！", ephemeral=True
-            )
+            await interaction.response.send_message("❌ 此命令只能在伺服器中使用！", ephemeral=True)
             return
 
         # 獲取伺服器關鍵詞
@@ -466,8 +436,7 @@ class KeywordCog(commands.Cog):
 
         if not guild_keywords:
             await interaction.response.send_message(
-                "📝 此伺服器還沒有設定任何關鍵詞。\n"
-                "管理員可以使用 `/keyword add` 添加關鍵詞。",
+                "📝 此伺服器還沒有設定任何關鍵詞。\n管理員可以使用 `/keyword add` 添加關鍵詞。",
                 ephemeral=True,
             )
             return
@@ -482,15 +451,11 @@ class KeywordCog(commands.Cog):
         # 添加關鍵詞字段（最多顯示 25 個）
         for _i, (keyword, response) in enumerate(list(guild_keywords.items())[:25]):
             # 截斷過長的回覆
-            display_response = (
-                response if len(response) <= 100 else response[:97] + "..."
-            )
+            display_response = response if len(response) <= 100 else response[:97] + "..."
             embed.add_field(name=f"🔑 {keyword}", value=display_response, inline=False)
 
         if len(guild_keywords) > 25:
-            embed.set_footer(
-                text=f"僅顯示前 25 個關鍵詞，共有 {len(guild_keywords)} 個"
-            )
+            embed.set_footer(text=f"僅顯示前 25 個關鍵詞，共有 {len(guild_keywords)} 個")
 
         await interaction.response.send_message(embed=embed, ephemeral=True)
 

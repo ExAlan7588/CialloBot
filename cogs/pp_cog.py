@@ -30,19 +30,13 @@ def format_mods_for_display(mod_list: list[str]) -> str:
 class ModSelect(discord.ui.Select):
     def __init__(self, parent_view, available_mods) -> None:
         self.parent_view = parent_view
-        options = [
-            discord.SelectOption(label=mod.upper(), value=mod) for mod in available_mods
-        ]
+        options = [discord.SelectOption(label=mod.upper(), value=mod) for mod in available_mods]
         # Add "No Mods" option
-        options.insert(
-            0, discord.SelectOption(label="-- No Mods --", value="_no_mods_")
-        )
+        options.insert(0, discord.SelectOption(label="-- No Mods --", value="_no_mods_"))
 
         if not options:
             options = [
-                discord.SelectOption(
-                    label="No Mods Available", value="_disabled", default=True
-                )
+                discord.SelectOption(label="No Mods Available", value="_disabled", default=True)
             ]
             super().__init__(
                 placeholder="No mods applicable...",
@@ -97,18 +91,14 @@ class ModSelectView(discord.ui.View):
 
         if self.all_maps_in_set and self.current_difficulty_index is not None:
             # If pagination is active, add pagination buttons
-            prev_label = lstr(
-                self.user_id_for_l10n, "button_prev_difficulty", "⬅️ Prev Diff"
-            )
+            prev_label = lstr(self.user_id_for_l10n, "button_prev_difficulty", "⬅️ Prev Diff")
             self.prev_difficulty_button = discord.ui.Button(
                 label=prev_label, style=discord.ButtonStyle.secondary, row=1
             )
             self.prev_difficulty_button.callback = self.prev_difficulty_callback
             self.add_item(self.prev_difficulty_button)
 
-            next_label = lstr(
-                self.user_id_for_l10n, "button_next_difficulty", "Next Diff ➡️"
-            )
+            next_label = lstr(self.user_id_for_l10n, "button_next_difficulty", "Next Diff ➡️")
             self.next_difficulty_button = discord.ui.Button(
                 label=next_label, style=discord.ButtonStyle.secondary, row=1
             )
@@ -326,20 +316,12 @@ class PpCog(commands.Cog):
         # lstr is already available in the calling scope of pp command, let's ensure it's passed or accessible
         # User ID for l10n is already available as user_id_for_l10n
 
-        status_display_string = get_beatmap_status_display(
-            raw_status,
-            user_id_for_l10n,
-            lstr,
-        )
+        status_display_string = get_beatmap_status_display(raw_status, user_id_for_l10n, lstr)
 
         stars_raw = attributes_data.get("star_rating")
         pp_100_raw = attributes_data.get("pp")
-        max_combo_from_api_attrs = attributes_data.get(
-            "max_combo"
-        )  # From /attributes POST
-        if (
-            max_combo_from_api_attrs is None
-        ):  # Fallback to beatmap details if not in /attributes
+        max_combo_from_api_attrs = attributes_data.get("max_combo")  # From /attributes POST
+        if max_combo_from_api_attrs is None:  # Fallback to beatmap details if not in /attributes
             max_combo_from_api_attrs = target_beatmap.get("max_combo")
 
         osu_file_path = None  # To store path of downloaded .osu file
@@ -362,9 +344,7 @@ class PpCog(commands.Cog):
                         # No need to check if osu_file_path is None, as download_osu_file now raises on error.
 
                         # Parse metadata from .osu file and use it
-                        parsed_metadata = beatmap_utils.parse_osu_file_metadata(
-                            osu_file_path
-                        )
+                        parsed_metadata = beatmap_utils.parse_osu_file_metadata(osu_file_path)
                         artist = parsed_metadata.get("artist", artist)
                         title = parsed_metadata.get("title", title)
                         version = parsed_metadata.get("version", version)
@@ -373,11 +353,7 @@ class PpCog(commands.Cog):
                         )
 
                         rosu_pp_result = await beatmap_utils.calculate_pp_with_rosu(
-                            osu_file_path,
-                            selected_mods_list,
-                            accuracy=100.0,
-                            combo=None,
-                            misses=0,
+                            osu_file_path, selected_mods_list, accuracy=100.0, combo=None, misses=0
                         )
                         # No need to check if rosu_pp_result is None, as calculate_pp_with_rosu now raises on error.
 
@@ -395,9 +371,7 @@ class PpCog(commands.Cog):
                     except beatmap_utils.RosuPpCalculationError as e:
                         logger.error(f"[PpCog] Error calculating PP with rosu-pp: {e}")
                         rosu_pp_error_message_key = "error_rosupp_calculation_failed"
-                    except (
-                        Exception
-                    ) as e:  # Catch any other unexpected errors during this block
+                    except Exception as e:  # Catch any other unexpected errors during this block
                         logger.error(
                             f"[PpCog] Unexpected error during rosu-pp processing: {type(e).__name__} - {e}"
                         )
@@ -406,9 +380,7 @@ class PpCog(commands.Cog):
                         if osu_file_path and pathlib.Path(osu_file_path).exists():
                             beatmap_utils.delete_osu_file(osu_file_path)
             else:
-                logger.warning(
-                    "[PpCog] osu_api.session not available for .osu download."
-                )
+                logger.warning("[PpCog] osu_api.session not available for .osu download.")
                 # This case might also warrant a user-facing message if it implies rosu-pp cannot be attempted.
                 # For now, it only logs.
 
@@ -435,7 +407,9 @@ class PpCog(commands.Cog):
             key_display_line = f"Key: `{cs}` "
             cs_display = "N/A"
 
-        attributes_line = f"CS: `{cs_display}` AR: `{ar_display}` HP: `{hp_display}` OD: `{od_display}`".strip()
+        attributes_line = (
+            f"CS: `{cs_display}` AR: `{ar_display}` HP: `{hp_display}` OD: `{od_display}`".strip()
+        )
         if key_display_line:
             attributes_line = f"{key_display_line}{attributes_line}"
 
@@ -504,9 +478,7 @@ class PpCog(commands.Cog):
             estimated_suffix = lstr(user_id_for_l10n, "pp_estimated_suffix", "(估算值)")
             pp_100_field_name += f" {estimated_suffix}"  # Add to field name for clarity
 
-        embed.add_field(
-            name=pp_100_field_name, value=f"`{pp_value_string}`", inline=False
-        )
+        embed.add_field(name=pp_100_field_name, value=f"`{pp_value_string}`", inline=False)
 
         # If there was an error during rosu-pp processing, send a follow-up message
         if rosu_pp_error_message_key:
@@ -551,9 +523,7 @@ class PpCog(commands.Cog):
 
         return embed
 
-    @app_commands.command(
-        name="pp", description="Shows PP information for an osu! beatmap."
-    )
+    @app_commands.command(name="pp", description="Shows PP information for an osu! beatmap.")
     @app_commands.describe(
         url="The URL of the osu! beatmap (either beatmapset or specific difficulty)."
     )
@@ -598,19 +568,14 @@ class PpCog(commands.Cog):
             def sort_key(bm):
                 mode_priority = {"osu": 0, "taiko": 1, "fruits": 2, "mania": 3}
                 # Sort by mode, then by difficulty_rating ASCENDING (Easy -> Hard)
-                return (
-                    mode_priority.get(bm.get("mode"), 4),
-                    float(bm.get("difficulty_rating", 0)),
-                )
+                return (mode_priority.get(bm.get("mode"), 4), float(bm.get("difficulty_rating", 0)))
 
             if beatmap_id:  # Specific difficulty URL
                 if not beatmapset_id:
                     temp_beatmap_details = await self.osu_api.get_beatmap_details(
                         beatmap_id=beatmap_id
                     )
-                    if not temp_beatmap_details or not temp_beatmap_details.get(
-                        "beatmapset_id"
-                    ):
+                    if not temp_beatmap_details or not temp_beatmap_details.get("beatmapset_id"):
                         await interaction.followup.send(
                             lstr(
                                 user_id_for_l10n,
@@ -621,9 +586,7 @@ class PpCog(commands.Cog):
                         return
                     beatmapset_id = temp_beatmap_details.get("beatmapset_id")
 
-                beatmapset_data = await self.osu_api.get_beatmapset(
-                    beatmapset_id=beatmapset_id
-                )
+                beatmapset_data = await self.osu_api.get_beatmapset(beatmapset_id=beatmapset_id)
                 if not beatmapset_data or not beatmapset_data.get("beatmaps"):
                     await interaction.followup.send(
                         lstr(
@@ -658,24 +621,18 @@ class PpCog(commands.Cog):
                     logger.warning(
                         f"[PpCog] beatmap_id {beatmap_id} not found in its own sorted beatmapset (ascending sort). Defaulting to index 0."
                     )
-                    initial_difficulty_index = (
-                        0  # Fallback, though ideally should always be found
-                    )
+                    initial_difficulty_index = 0  # Fallback, though ideally should always be found
 
                 if initial_difficulty_index >= len(
                     all_maps_in_set_for_pagination
                 ):  # Should not happen with StopIteration logic
                     initial_difficulty_index = 0
 
-                target_beatmap = all_maps_in_set_for_pagination[
-                    initial_difficulty_index
-                ]
+                target_beatmap = all_maps_in_set_for_pagination[initial_difficulty_index]
                 # beatmap_id is the one user requested, ensure target_beatmap reflects this specific one.
 
             elif beatmapset_id:  # Beatmapset URL (no specific difficulty initially)
-                beatmapset_data = await self.osu_api.get_beatmapset(
-                    beatmapset_id=beatmapset_id
-                )
+                beatmapset_data = await self.osu_api.get_beatmapset(beatmapset_id=beatmapset_id)
                 if not beatmapset_data or not beatmapset_data.get("beatmaps"):
                     await interaction.followup.send(
                         lstr(
@@ -712,9 +669,7 @@ class PpCog(commands.Cog):
                 initial_difficulty_index = (
                     0  # For beatmapset URL, start with the first (easiest after sort)
                 )
-                target_beatmap = all_maps_in_set_for_pagination[
-                    initial_difficulty_index
-                ]
+                target_beatmap = all_maps_in_set_for_pagination[initial_difficulty_index]
                 beatmap_id = target_beatmap.get(
                     "id"
                 )  # Update beatmap_id to reflect the initial target
@@ -747,10 +702,7 @@ class PpCog(commands.Cog):
                 beatmap_id=beatmap_id, mods=[], ruleset_id=current_ruleset_id
             )
 
-            if (
-                not initial_beatmap_attributes
-                or "attributes" not in initial_beatmap_attributes
-            ):
+            if not initial_beatmap_attributes or "attributes" not in initial_beatmap_attributes:
                 await interaction.followup.send(
                     lstr(
                         user_id_for_l10n,

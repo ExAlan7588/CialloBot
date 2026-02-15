@@ -43,9 +43,7 @@ class CopypastaCog(commands.Cog):
                     )
                     self.copypastas = {}
             else:
-                logger.error(
-                    f"[CopypastaCog] {COPASTA_FILE} not found. No copypastas loaded."
-                )
+                logger.error(f"[CopypastaCog] {COPASTA_FILE} not found. No copypastas loaded.")
                 self.copypastas = {}
         except json.JSONDecodeError:
             logger.error(
@@ -59,8 +57,7 @@ class CopypastaCog(commands.Cog):
             self.copypastas = {}
 
     @app_commands.command(
-        name="copypasta",
-        description="Sends a random copypasta based on your language preference.",
+        name="copypasta", description="Sends a random copypasta based on your language preference."
     )
     async def send_copypasta(self, interaction: discord.Interaction) -> None:
         if not self.copypastas:
@@ -94,12 +91,8 @@ class CopypastaCog(commands.Cog):
 
         # 2. If preferred language had no pastas (or lang key didn't exist) AND it's not the copypasta default, try copypasta default
         if not pastas_to_choose_from and preferred_lang != copypasta_default_lang_key:
-            if (
-                self.copypastas.get(copypasta_default_lang_key)
-            ):
-                pastas_to_choose_from = list(
-                    self.copypastas[copypasta_default_lang_key].values()
-                )
+            if self.copypastas.get(copypasta_default_lang_key):
+                pastas_to_choose_from = list(self.copypastas[copypasta_default_lang_key].values())
                 logger.debug(
                     f"[CopypastaCog] User {user_id} preferred {preferred_lang} (no pastas), falling back to {copypasta_default_lang_key}. Found {len(pastas_to_choose_from)} pastas."
                 )

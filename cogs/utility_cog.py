@@ -28,10 +28,7 @@ def get_language_display_name(lang_code: str, target_lang_code: str) -> str:
         "en": {"en": "English", "zh_TW": "英語"},
         "zh_TW": {"en": "Traditional Chinese", "zh_TW": "繁體中文"},
     }
-    if (
-        lang_code in predefined_names
-        and target_lang_code in predefined_names[lang_code]
-    ):
+    if lang_code in predefined_names and target_lang_code in predefined_names[lang_code]:
         return predefined_names[lang_code][target_lang_code]
     return lang_code  # Fallback to code
 
@@ -41,13 +38,14 @@ class UtilityCog(commands.Cog):
         self.bot = bot
 
     @app_commands.command(
-        name="lang",
-        description="Sets or shows your preferred language for bot responses.",
+        name="lang", description="Sets or shows your preferred language for bot responses."
     )
     @app_commands.describe(
         language_code="The language code to set (e.g., en, zh_TW). Leave empty to see current."
     )
-    async def lang(self, interaction: discord.Interaction, language_code: str | None = None) -> None:
+    async def lang(
+        self, interaction: discord.Interaction, language_code: str | None = None
+    ) -> None:
         user_id = interaction.user.id
         current_user_lang = get_user_language(user_id)
 
@@ -59,29 +57,21 @@ class UtilityCog(commands.Cog):
 
         if language_code is None:
             # Display current language and available languages
-            current_lang_display = get_language_display_name(
-                current_user_lang, current_user_lang
-            )
+            current_lang_display = get_language_display_name(current_user_lang, current_user_lang)
 
             # Directly use the translations for the current user's language for this response.
             response_message = "Failed to construct current language message."
             try:
                 translations_for_current_lang = _translations.get(current_user_lang, {})
-                message_template = translations_for_current_lang.get(
-                    "lang_no_code_provided"
-                )
+                message_template = translations_for_current_lang.get("lang_no_code_provided")
 
                 if message_template:
                     response_message = message_template.format(
                         current_lang_display, available_langs_str
                     )
                 else:  # Fallback if the template itself is missing
-                    default_lang_translations = _translations.get(
-                        config.DEFAULT_LANGUAGE, {}
-                    )
-                    fallback_template = default_lang_translations.get(
-                        "lang_no_code_provided"
-                    )
+                    default_lang_translations = _translations.get(config.DEFAULT_LANGUAGE, {})
+                    fallback_template = default_lang_translations.get("lang_no_code_provided")
                     if fallback_template:
                         response_message = fallback_template.format(
                             current_lang_display, available_langs_str
@@ -89,9 +79,7 @@ class UtilityCog(commands.Cog):
                     else:  # Ultimate fallback
                         response_message = f"No language code provided. Current: {current_lang_display}. Available: {available_langs_str}"
             except Exception as e:
-                logger.error(
-                    f"[UtilityCog] Error formatting lang_no_code_provided: {e}"
-                )
+                logger.error(f"[UtilityCog] Error formatting lang_no_code_provided: {e}")
                 response_message = f"No language code provided. Your current language is **{current_lang_display}**. Available languages: {available_langs_str}"  # Fallback to English structure
 
             await interaction.response.send_message(response_message, ephemeral=True)
@@ -129,25 +117,17 @@ class UtilityCog(commands.Cog):
                 # This ensures the confirmation message itself is in the new language.
                 response_message = "Language setting failed to construct message."
                 try:
-                    translations_for_new_lang = _translations.get(
-                        final_code_to_check, {}
-                    )
+                    translations_for_new_lang = _translations.get(final_code_to_check, {})
                     message_template = translations_for_new_lang.get("lang_set_success")
 
                     if message_template:
                         response_message = message_template.format(new_lang_display)
                     else:  # Fallback if the template itself is missing in the new language
                         # Try default language as a secondary fallback for the template
-                        default_lang_translations = _translations.get(
-                            config.DEFAULT_LANGUAGE, {}
-                        )
-                        fallback_template = default_lang_translations.get(
-                            "lang_set_success"
-                        )
+                        default_lang_translations = _translations.get(config.DEFAULT_LANGUAGE, {})
+                        fallback_template = default_lang_translations.get("lang_set_success")
                         if fallback_template:
-                            response_message = fallback_template.format(
-                                new_lang_display
-                            )
+                            response_message = fallback_template.format(new_lang_display)
                         else:  # Ultimate fallback if no template is found anywhere
                             response_message = (
                                 f"Language set to: {new_lang_display}"  # Non-localized
@@ -155,13 +135,9 @@ class UtilityCog(commands.Cog):
                 except Exception as e:
                     logger.error(f"[UtilityCog] Error formatting lang_set_success: {e}")
                     # Fallback to a simple English message if formatting fails
-                    response_message = (
-                        f"Your language has been set to: **{new_lang_display}**."
-                    )
+                    response_message = f"Your language has been set to: **{new_lang_display}**."
 
-                await interaction.response.send_message(
-                    response_message, ephemeral=True
-                )
+                await interaction.response.send_message(response_message, ephemeral=True)
             else:
                 # This case should ideally not be reached if final_code_to_check in SUPPORTED_LANGUAGES
                 # but set_user_language might have other internal checks in the future.
@@ -189,17 +165,14 @@ class UtilityCog(commands.Cog):
         display_lang_for_choices = get_user_language(interaction.user.id)
 
         for lang_code_supported in config.SUPPORTED_LANGUAGES:
-            display_name = get_language_display_name(
-                lang_code_supported, display_lang_for_choices
-            )
+            display_name = get_language_display_name(lang_code_supported, display_lang_for_choices)
             if (
                 current.lower() in lang_code_supported.lower()
                 or current.lower() in display_name.lower()
             ):
                 choices.append(
                     app_commands.Choice(
-                        name=f"{display_name} ({lang_code_supported})",
-                        value=lang_code_supported,
+                        name=f"{display_name} ({lang_code_supported})", value=lang_code_supported
                     )
                 )
         return choices[:25]  # Autocomplete can show max 25 choices
