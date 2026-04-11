@@ -14,6 +14,7 @@ from utils.localization import get_user_language
 # Define the desired order of commands
 DESIRED_COMMAND_ORDER = [
     "help",
+    "ping",
     "lang",
     "setuser",
     "unsetuser",

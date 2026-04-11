@@ -41,6 +41,25 @@ class UtilityCog(commands.Cog):
         self.bot = bot
 
     @app_commands.command(
+        name="ping",
+        description="Shows the bot's current Discord gateway latency.",
+    )
+    async def ping(self, interaction: discord.Interaction) -> None:
+        user_id = interaction.user.id
+        gateway_latency_ms = round(self.bot.latency * 1000)
+
+        # 简体注释：这里只展示 Discord gateway 心跳延迟，不是完整 HTTP 往返时间。
+        await interaction.response.send_message(
+            lstr(
+                user_id,
+                "ping_response_gateway",
+                "🏓 Discord gateway latency: **{gateway_ms} ms**",
+                gateway_ms=gateway_latency_ms,
+            ),
+            ephemeral=True,
+        )
+
+    @app_commands.command(
         name="lang",
         description="Sets or shows your preferred language for bot responses.",
     )

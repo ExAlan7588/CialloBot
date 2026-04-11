@@ -114,6 +114,7 @@
   "help_no_description": "No description available.",
   "help_no_commands_found": "No slash commands found.",
   "cmd_desc_help": "Displays all available slash commands and their descriptions.",
+  "cmd_desc_ping": "Shows the bot's current Discord latency.",
   "cmd_desc_recent": "Shows the most recent score for a player.",
   "cmd_desc_best": "Shows a player's top score.",
   "cmd_desc_profile": "Shows a player's profile.",
@@ -123,6 +124,7 @@
   "cmd_desc_copypasta": "Sends a random copypasta based on your language preference.",
   "cmd_desc_pp": "Shows PP information for an osu! beatmap (not 100% correct).",
   "cmd_desc_unsetuser": "Unbinds your Discord account from your osu! account.",
+  "ping_response_gateway": "🏓 Discord gateway latency: **{gateway_ms} ms**",
 
   "mapper_no_maps_found": "{0} has no public beatmaps.",
 

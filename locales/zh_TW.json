@@ -113,6 +113,7 @@
   "help_no_description": "無可用描述。",
   "help_no_commands_found": "未找到任何斜線指令。",
   "cmd_desc_help": "顯示所有可用的斜線指令及其描述。",
+  "cmd_desc_ping": "顯示機器人目前的 Discord 延遲。",
   "cmd_desc_recent": "顯示玩家最近的遊玩紀錄。",
   "cmd_desc_best": "顯示一名玩家的最佳成績。",
   "cmd_desc_profile": "顯示玩家的個人檔案。",
@@ -122,6 +123,7 @@
   "cmd_desc_copypasta": "根據您的語言偏好隨機發送一段複製文。",
   "cmd_desc_pp": "顯示 osu! 譜面的 PP 資訊（非100%準確）。",
   "cmd_desc_unsetuser": "解除您的 Discord 帳號與 osu! 帳號的綁定。",
+  "ping_response_gateway": "🏓 Discord gateway 延遲：**{gateway_ms} ms**",
 
   "beatmap_status_loved": "Loved",
   "beatmap_status_qualified": "Qualified",
