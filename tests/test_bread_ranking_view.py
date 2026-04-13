@@ -25,7 +25,7 @@ class BreadRankingViewTitleTests(unittest.IsolatedAsyncioTestCase):
                 page=1,
                 total_pages=1,
                 total_entries=1,
-                item_name="可頌",
+                group_item_name="可頌",
                 entries=[
                     RankingEntry(
                         rank=1,
@@ -53,7 +53,7 @@ class BreadRankingViewTitleTests(unittest.IsolatedAsyncioTestCase):
                 page=1,
                 total_pages=1,
                 total_entries=1,
-                item_name="面包",
+                group_item_name=None,
                 entries=[
                     RankingEntry(
                         rank=1,

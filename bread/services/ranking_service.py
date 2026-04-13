@@ -34,7 +34,7 @@ class RankingPage:
     page: int
     total_pages: int
     total_entries: int
-    item_name: str
+    group_item_name: str | None
     entries: list[RankingEntry]
 
 
@@ -83,7 +83,7 @@ async def get_ranking_page(
             page=current_page,
             total_pages=total_pages,
             total_entries=total_entries,
-            item_name=item_name,
+            group_item_name=item_name,
             entries=entries,
         )
 
@@ -112,6 +112,6 @@ async def get_ranking_page(
         page=current_page,
         total_pages=total_pages,
         total_entries=total_entries,
-        item_name=DEFAULT_ITEM_NAME,
+        group_item_name=None,
         entries=entries,
     )

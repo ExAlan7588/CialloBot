@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Final
 
 import discord
 
@@ -9,6 +9,8 @@ from utils.base_view import BaseView
 
 if TYPE_CHECKING:
     from discord.ext import commands
+
+MISSING_GROUP_ITEM_NAME_ERROR: Final = "group ranking page 缺少 group_item_name"
 
 
 class BreadRankingView(BaseView):
@@ -46,7 +48,9 @@ class BreadRankingView(BaseView):
             title = f"Bread {scope_name}"
             description = "全局榜按同一位玩家跨群匯總。"
         else:
-            title = f"{ranking_page.item_name} {scope_name}"
+            if ranking_page.group_item_name is None:
+                raise ValueError(MISSING_GROUP_ITEM_NAME_ERROR)
+            title = f"{ranking_page.group_item_name} {scope_name}"
             description = "排序規則：先等級，再物品數量。"
 
         embed = discord.Embed(

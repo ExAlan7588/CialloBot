@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import unittest
 from types import SimpleNamespace
-from typing import cast
+from typing import Any, cast
 from unittest.mock import AsyncMock, patch
 
 from discord import app_commands
@@ -108,6 +108,22 @@ class BreadCogActorNicknameTests(unittest.IsolatedAsyncioTestCase):
                 send_message.assert_awaited_once()
                 embed = send_message.await_args.kwargs["embed"]
                 self.assertEqual(embed.author.name, case["expected_author"])
+
+    async def test_bread_nickname_uses_fallback_nickname_argument(self) -> None:
+        interaction = self._build_interaction()
+        with patch(
+            "cogs.bread_cog.set_bread_nickname",
+            AsyncMock(return_value=SimpleNamespace(old_nickname="Old", new_nickname="New")),
+        ) as mocked_set_bread_nickname:
+            callback = cast(Any, BreadCog.bread_nickname.callback)
+            await callback(self.cog, interaction, "New")
+
+        mocked_set_bread_nickname.assert_awaited_once_with(
+            guild_id=123,
+            user_id=456,
+            fallback_nickname="DiscordActor",
+            new_nickname="New",
+        )
 
     @staticmethod
     def _build_interaction() -> SimpleNamespace:

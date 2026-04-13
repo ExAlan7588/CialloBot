@@ -5,6 +5,7 @@ from discord import app_commands
 from discord.ext import commands
 from loguru import logger
 
+from bread.constants import GESTURE_PAPER, GESTURE_ROCK, GESTURE_SCISSORS
 from bread.repositories.bootstrap_repository import ensure_bread_schema
 from bread.services.bet_service import bet_items
 from bread.services.buy_service import buy_items
@@ -13,9 +14,8 @@ from bread.services.give_service import give_items
 from bread.services.profile_service import get_profile_data
 from bread.services.rob_service import rob_items
 from bread.services.settings_service import set_bread_nickname, set_guild_item_name
-from bread.constants import GESTURE_PAPER, GESTURE_ROCK, GESTURE_SCISSORS
-from bread.views.record_view import create_record_response
 from bread.views.ranking_view import create_ranking_response
+from bread.views.record_view import create_record_response
 from utils.exceptions import BusinessError
 from utils.response_embeds import SuccessEmbed, WarningEmbed
 
@@ -111,9 +111,11 @@ class BreadCog(commands.Cog):
         member: discord.Member | None = None,
     ) -> None:
         if member is not None and member.id == interaction.user.id:
-            raise BusinessError("無法送自己哦。", author_name="操作失敗")
+            error_message = "無法送自己哦。"
+            raise BusinessError(error_message, author_name="操作失敗")
         if member is not None and member.bot:
-            raise BusinessError("不能贈送給機器人哦。", author_name="操作失敗")
+            error_message = "不能贈送給機器人哦。"
+            raise BusinessError(error_message, author_name="操作失敗")
 
         target_id = member.id if member else None
         result = await give_items(
@@ -144,9 +146,11 @@ class BreadCog(commands.Cog):
         member: discord.Member | None = None,
     ) -> None:
         if member is not None and member.id == interaction.user.id:
-            raise BusinessError("無法搶自己哦。", author_name="操作失敗")
+            error_message = "無法搶自己哦。"
+            raise BusinessError(error_message, author_name="操作失敗")
         if member is not None and member.bot:
-            raise BusinessError("不能搶機器人哦。", author_name="操作失敗")
+            error_message = "不能搶機器人哦。"
+            raise BusinessError(error_message, author_name="操作失敗")
 
         target_id = member.id if member else None
         result = await rob_items(
@@ -215,7 +219,7 @@ class BreadCog(commands.Cog):
         result = await set_bread_nickname(
             guild_id=interaction.guild_id,
             user_id=interaction.user.id,
-            display_name=interaction.user.display_name,
+            fallback_nickname=interaction.user.display_name,
             new_nickname=name,
         )
         embed = SuccessEmbed(

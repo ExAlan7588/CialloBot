@@ -37,7 +37,7 @@ ITEM_NAME_UPDATE_ERROR: Final = "更新 Bread 群物品名稱失敗。"
 
 
 async def set_bread_nickname(
-    *, guild_id: int | None, user_id: int, display_name: str, new_nickname: str
+    *, guild_id: int | None, user_id: int, fallback_nickname: str, new_nickname: str
 ) -> NicknameUpdateResult:
     resolved_guild_id = ensure_guild_supported(guild_id)
     normalized_nickname = new_nickname.strip()
@@ -51,7 +51,7 @@ async def set_bread_nickname(
         context = await get_or_create_player_context(
             guild_id=resolved_guild_id,
             user_id=user_id,
-            nickname=display_name,
+            nickname=fallback_nickname,
             default_item_name=DEFAULT_ITEM_NAME,
             default_allow_random_rob=DEFAULT_ALLOW_RANDOM_ROB,
             default_allow_random_give=DEFAULT_ALLOW_RANDOM_GIVE,
