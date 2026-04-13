@@ -45,7 +45,6 @@ async def give_items(
     actor_user_id: int,
     actor_nickname: str,
     target_user_id: int | None,
-    target_nickname: str | None,
 ) -> GiveResult:
     resolved_guild_id = ensure_guild_supported(guild_id)
     now = datetime.now(timezone.utc)
@@ -98,7 +97,7 @@ async def give_items(
         )
 
     target_id = int(target_row["user_id"])
-    target_name = str(target_nickname or target_row["nickname"])
+    target_name = str(target_row["nickname"])
     target_previous_item_count = int(target_row["item_count"])
 
     actor_cost = give_amount

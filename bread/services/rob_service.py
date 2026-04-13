@@ -47,7 +47,6 @@ async def rob_items(
     actor_user_id: int,
     actor_nickname: str,
     target_user_id: int | None,
-    target_nickname: str | None,
 ) -> RobResult:
     resolved_guild_id = ensure_guild_supported(guild_id)
     now = datetime.now(timezone.utc)
@@ -94,7 +93,7 @@ async def rob_items(
         )
 
     target_id = int(target_row["user_id"])
-    target_name = str(target_nickname or target_row["nickname"])
+    target_name = str(target_row["nickname"])
     target_previous_item_count = int(target_row["item_count"])
     if target_previous_item_count < rob_amount:
         raise BusinessError(f"該玩家沒有那麼多 {item_name} 可以搶。", author_name="存貨不足")

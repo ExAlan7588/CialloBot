@@ -116,13 +116,11 @@ class BreadCog(commands.Cog):
             raise BusinessError("不能贈送給機器人哦。", author_name="操作失敗")
 
         target_id = member.id if member else None
-        target_nickname = member.display_name if member else None
         result = await give_items(
             guild_id=interaction.guild_id,
             actor_user_id=interaction.user.id,
             actor_nickname=interaction.user.display_name,
             target_user_id=target_id,
-            target_nickname=target_nickname,
         )
 
         embed = SuccessEmbed(
@@ -151,13 +149,11 @@ class BreadCog(commands.Cog):
             raise BusinessError("不能搶機器人哦。", author_name="操作失敗")
 
         target_id = member.id if member else None
-        target_nickname = member.display_name if member else None
         result = await rob_items(
             guild_id=interaction.guild_id,
             actor_user_id=interaction.user.id,
             actor_nickname=interaction.user.display_name,
             target_user_id=target_id,
-            target_nickname=target_nickname,
         )
 
         embed_cls = SuccessEmbed if result.actor_delta > 0 else WarningEmbed
