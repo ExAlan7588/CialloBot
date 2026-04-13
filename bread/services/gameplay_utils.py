@@ -36,6 +36,7 @@ def build_feature_disabled_error() -> BusinessError:
 
 
 def build_player_state(row: Any) -> dict[str, Any]:
+    # 统一复制 Bread 玩家可写状态，避免 service 直接改到 asyncpg.Record 引用。
     return {key: deepcopy(row[key]) for key in PLAYER_STATE_KEYS}
 
 
@@ -71,6 +72,7 @@ def resolve_state_change_conflict(
         raise_state_changed_error()
 
     latest_cooldown_until = latest_row[cooldown_key]
+    # 如果最新状态已经进入冷却，优先回报真实冷却原因；否则才给通用重试提示。
     if isinstance(latest_cooldown_until, datetime) and latest_cooldown_until > now:
         raise_cooldown_error(
             action_name=action_name,

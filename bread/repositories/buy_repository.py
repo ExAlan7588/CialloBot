@@ -81,6 +81,7 @@ async def execute_buy_transaction(
             )
 
             updated_item_count = int(player_row["item_count"]) + delta
+            # buy 流程只改库存与 buy 冷却，所以保留字段级 compare-and-swap，不复用整份 state overwrite。
             updated_row = await conn.fetchrow(
                 """
                 UPDATE bread_players
@@ -111,6 +112,7 @@ async def execute_buy_transaction(
                 expected_buy_cooldown_until,
             )
             if updated_row is None:
+                # 竞争失败后回读完整玩家状态，让上层沿用统一的冷却/重试判断。
                 latest_player_row = await conn.fetchrow(
                     """
                     SELECT

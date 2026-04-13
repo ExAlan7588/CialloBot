@@ -50,6 +50,7 @@ async def execute_single_player_action(
         async with pool.acquire() as conn:
             try:
                 async with conn.transaction():
+                    # 单人操作必须先按旧版 updated_at 做 compare-and-swap，再记 action log。
                     updated_row = await _update_player_state(
                         conn,
                         guild_id=guild_id,
@@ -73,6 +74,7 @@ async def execute_single_player_action(
                         now=now,
                     )
             except _StateChangedError:
+                # 事务内竞争失败后回读最新状态，让 service 层决定是冷却冲突还是一般重试。
                 latest_row = await fetch_player(conn, guild_id=guild_id, user_id=user_id)
                 return {"updated_row": None, "latest_row": latest_row, "state_changed": True}
     except DatabaseOperationError:
@@ -105,6 +107,7 @@ async def execute_transfer_action(
         async with pool.acquire() as conn:
             try:
                 async with conn.transaction():
+                    # 双人操作要求双方状态与日志在同一事务内提交，避免只更新其中一人。
                     actor_updated_row = await _update_player_state(
                         conn,
                         guild_id=guild_id,
@@ -139,6 +142,7 @@ async def execute_transfer_action(
                         now=now,
                     )
             except _StateChangedError:
+                # 任一玩家 compare-and-swap 失配都回读双方最新状态，统一走上层冲突处理。
                 latest_actor_row = await fetch_player(
                     conn, guild_id=guild_id, user_id=actor_user_id
                 )
@@ -178,6 +182,7 @@ async def _update_player_state(
 ) -> asyncpg.Record | None:
     _validate_state(new_state)
 
+    # 这里故意只接受完全匹配的 updated_at，避免不同指令互相覆盖整份玩家状态。
     return await conn.fetchrow(
         """
         UPDATE bread_players
