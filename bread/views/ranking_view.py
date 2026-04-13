@@ -153,8 +153,4 @@ async def create_ranking_response(
         view.stop()
         raise
 
-    if not view.total_pages:
-        view.total_pages = 1
-        view._refresh_button_states()
-
     return embed, view
