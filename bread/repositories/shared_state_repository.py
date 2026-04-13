@@ -1,18 +1,21 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Final
+from typing import TYPE_CHECKING, Any, Final
 
 from utils.exceptions import DatabaseOperationError
 
 if TYPE_CHECKING:
     import asyncpg
+    BreadConnection = asyncpg.Connection | asyncpg.pool.PoolConnectionProxy
+else:
+    BreadConnection = Any
 
 MISSING_GUILD_CONFIG_ERROR: Final = "找不到 Bread 群設定。"
 MISSING_PLAYER_ERROR: Final = "找不到 Bread 玩家資料。"
 
 
 async def upsert_and_get_guild_config(
-    conn: asyncpg.Connection,
+    conn: BreadConnection,
     *,
     guild_id: int,
     default_item_name: str,
@@ -50,7 +53,7 @@ async def upsert_and_get_guild_config(
 
 
 async def upsert_and_get_player(
-    conn: asyncpg.Connection, *, guild_id: int, user_id: int, nickname: str
+    conn: BreadConnection, *, guild_id: int, user_id: int, nickname: str
 ) -> asyncpg.Record:
     await conn.execute(
         """
@@ -95,7 +98,7 @@ async def upsert_and_get_player(
 
 
 async def fetch_player(
-    conn: asyncpg.Connection, *, guild_id: int, user_id: int
+    conn: BreadConnection, *, guild_id: int, user_id: int
 ) -> asyncpg.Record | None:
     return await conn.fetchrow(
         """
@@ -121,7 +124,7 @@ async def fetch_player(
 
 
 async def count_candidate_players(
-    conn: asyncpg.Connection, *, guild_id: int, exclude_user_id: int, min_item_count: int
+    conn: BreadConnection, *, guild_id: int, exclude_user_id: int, min_item_count: int
 ) -> int:
     total = await conn.fetchval(
         """
@@ -140,7 +143,7 @@ async def count_candidate_players(
 
 
 async def fetch_candidate_player_by_offset(
-    conn: asyncpg.Connection,
+    conn: BreadConnection,
     *,
     guild_id: int,
     exclude_user_id: int,

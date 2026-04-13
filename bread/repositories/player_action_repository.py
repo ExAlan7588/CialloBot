@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, Final
 
-from bread.repositories.shared_state_repository import fetch_player
+from bread.repositories.shared_state_repository import BreadConnection, fetch_player
 from database.postgresql.async_manager import get_pool
 from utils.exceptions import DatabaseOperationError
 
@@ -168,7 +168,7 @@ async def execute_transfer_action(
 
 
 async def _update_player_state(
-    conn: asyncpg.Connection,
+    conn: BreadConnection,
     *,
     guild_id: int,
     user_id: int,
@@ -224,7 +224,7 @@ async def _update_player_state(
 
 
 async def _insert_action_log(
-    conn: asyncpg.Connection,
+    conn: BreadConnection,
     *,
     guild_id: int,
     actor_user_id: int,
