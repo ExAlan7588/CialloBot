@@ -1,12 +1,17 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Final
 
 from database.postgresql.async_manager import get_pool
 from utils.exceptions import DatabaseOperationError
 
 if TYPE_CHECKING:
     import asyncpg
+
+COUNT_GROUP_PLAYERS_ERROR: Final = "統計群排行榜人數失敗。"
+FETCH_GROUP_RANKING_ERROR: Final = "讀取群排行榜失敗。"
+COUNT_GLOBAL_PLAYERS_ERROR: Final = "統計全局排行榜人數失敗。"
+FETCH_GLOBAL_RANKING_ERROR: Final = "讀取全局排行榜失敗。"
 
 
 async def count_group_players(guild_id: int) -> int:
@@ -15,24 +20,17 @@ async def count_group_players(guild_id: int) -> int:
     try:
         async with pool.acquire() as conn:
             value = await conn.fetchval(
-                "SELECT COUNT(*) FROM bread_players WHERE guild_id = $1",
-                guild_id,
+                "SELECT COUNT(*) FROM bread_players WHERE guild_id = $1", guild_id
             )
     except Exception as exc:
-        raise DatabaseOperationError(
-            "統計群排行榜人數失敗。",
-            original_exception=exc,
-        ) from exc
+        raise DatabaseOperationError(COUNT_GROUP_PLAYERS_ERROR, original_exception=exc) from exc
 
     return int(value or 0)
 
 
 async def fetch_group_ranking_page(
-    guild_id: int,
-    *,
-    limit: int,
-    offset: int,
-) -> list["asyncpg.Record"]:
+    guild_id: int, *, limit: int, offset: int
+) -> list[asyncpg.Record]:
     pool = get_pool()
 
     try:
@@ -55,10 +53,7 @@ async def fetch_group_ranking_page(
                 offset,
             )
     except Exception as exc:
-        raise DatabaseOperationError(
-            "讀取群排行榜失敗。",
-            original_exception=exc,
-        ) from exc
+        raise DatabaseOperationError(FETCH_GROUP_RANKING_ERROR, original_exception=exc) from exc
 
     return list(rows)
 
@@ -68,23 +63,14 @@ async def count_global_players() -> int:
 
     try:
         async with pool.acquire() as conn:
-            value = await conn.fetchval(
-                "SELECT COUNT(DISTINCT user_id) FROM bread_players",
-            )
+            value = await conn.fetchval("SELECT COUNT(DISTINCT user_id) FROM bread_players")
     except Exception as exc:
-        raise DatabaseOperationError(
-            "統計全局排行榜人數失敗。",
-            original_exception=exc,
-        ) from exc
+        raise DatabaseOperationError(COUNT_GLOBAL_PLAYERS_ERROR, original_exception=exc) from exc
 
     return int(value or 0)
 
 
-async def fetch_global_ranking_page(
-    *,
-    limit: int,
-    offset: int,
-) -> list["asyncpg.Record"]:
+async def fetch_global_ranking_page(*, limit: int, offset: int) -> list[asyncpg.Record]:
     pool = get_pool()
 
     try:
@@ -106,9 +92,6 @@ async def fetch_global_ranking_page(
                 offset,
             )
     except Exception as exc:
-        raise DatabaseOperationError(
-            "讀取全局排行榜失敗。",
-            original_exception=exc,
-        ) from exc
+        raise DatabaseOperationError(FETCH_GLOBAL_RANKING_ERROR, original_exception=exc) from exc
 
     return list(rows)

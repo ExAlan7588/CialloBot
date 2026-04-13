@@ -1,12 +1,15 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Final
 
 from database.postgresql.async_manager import get_pool
 from utils.exceptions import DatabaseOperationError
 
 if TYPE_CHECKING:
     import asyncpg
+
+COUNT_USER_RECORDS_ERROR: Final = "計算 Bread 行為紀錄數量失敗。"
+FETCH_USER_RECORDS_ERROR: Final = "讀取 Bread 行為紀錄失敗。"
 
 
 async def count_user_records(*, guild_id: int, user_id: int) -> int:
@@ -24,21 +27,14 @@ async def count_user_records(*, guild_id: int, user_id: int) -> int:
                 user_id,
             )
     except Exception as exc:
-        raise DatabaseOperationError(
-            "計算 Bread 行為紀錄數量失敗。",
-            original_exception=exc,
-        ) from exc
+        raise DatabaseOperationError(COUNT_USER_RECORDS_ERROR, original_exception=exc) from exc
 
     return int(total or 0)
 
 
 async def fetch_user_records_page(
-    *,
-    guild_id: int,
-    user_id: int,
-    limit: int,
-    offset: int,
-) -> list["asyncpg.Record"]:
+    *, guild_id: int, user_id: int, limit: int, offset: int
+) -> list[asyncpg.Record]:
     pool = get_pool()
 
     try:
@@ -62,9 +58,6 @@ async def fetch_user_records_page(
                 offset,
             )
     except Exception as exc:
-        raise DatabaseOperationError(
-            "讀取 Bread 行為紀錄失敗。",
-            original_exception=exc,
-        ) from exc
+        raise DatabaseOperationError(FETCH_USER_RECORDS_ERROR, original_exception=exc) from exc
 
     return list(rows)

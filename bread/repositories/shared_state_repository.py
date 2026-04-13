@@ -1,21 +1,24 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Final
 
 from utils.exceptions import DatabaseOperationError
 
 if TYPE_CHECKING:
     import asyncpg
 
+MISSING_GUILD_CONFIG_ERROR: Final = "找不到 Bread 群設定。"
+MISSING_PLAYER_ERROR: Final = "找不到 Bread 玩家資料。"
+
 
 async def upsert_and_get_guild_config(
-    conn: Any,
+    conn: asyncpg.Connection,
     *,
     guild_id: int,
     default_item_name: str,
     default_allow_random_rob: bool,
     default_allow_random_give: bool,
-) -> "asyncpg.Record":
+) -> asyncpg.Record:
     await conn.execute(
         """
         INSERT INTO bread_guild_configs (
@@ -42,17 +45,13 @@ async def upsert_and_get_guild_config(
         guild_id,
     )
     if config_row is None:
-        raise DatabaseOperationError("找不到 Bread 群設定。")
+        raise DatabaseOperationError(MISSING_GUILD_CONFIG_ERROR)
     return config_row
 
 
 async def upsert_and_get_player(
-    conn: Any,
-    *,
-    guild_id: int,
-    user_id: int,
-    nickname: str,
-) -> "asyncpg.Record":
+    conn: asyncpg.Connection, *, guild_id: int, user_id: int, nickname: str
+) -> asyncpg.Record:
     await conn.execute(
         """
         INSERT INTO bread_players (
@@ -91,16 +90,13 @@ async def upsert_and_get_player(
         user_id,
     )
     if player_row is None:
-        raise DatabaseOperationError("找不到 Bread 玩家資料。")
+        raise DatabaseOperationError(MISSING_PLAYER_ERROR)
     return player_row
 
 
 async def fetch_player(
-    conn: Any,
-    *,
-    guild_id: int,
-    user_id: int,
-) -> "asyncpg.Record | None":
+    conn: asyncpg.Connection, *, guild_id: int, user_id: int
+) -> asyncpg.Record | None:
     return await conn.fetchrow(
         """
         SELECT
@@ -125,11 +121,7 @@ async def fetch_player(
 
 
 async def count_candidate_players(
-    conn: Any,
-    *,
-    guild_id: int,
-    exclude_user_id: int,
-    min_item_count: int,
+    conn: asyncpg.Connection, *, guild_id: int, exclude_user_id: int, min_item_count: int
 ) -> int:
     total = await conn.fetchval(
         """
@@ -148,13 +140,13 @@ async def count_candidate_players(
 
 
 async def fetch_candidate_player_by_offset(
-    conn: Any,
+    conn: asyncpg.Connection,
     *,
     guild_id: int,
     exclude_user_id: int,
     min_item_count: int,
     offset: int,
-) -> "asyncpg.Record | None":
+) -> asyncpg.Record | None:
     return await conn.fetchrow(
         """
         SELECT

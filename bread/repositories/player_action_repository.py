@@ -1,12 +1,15 @@
 from __future__ import annotations
 
-from datetime import datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any, Final
 
+from bread.repositories.shared_state_repository import fetch_player
 from database.postgresql.async_manager import get_pool
 from utils.exceptions import DatabaseOperationError
 
-from bread.repositories.shared_state_repository import fetch_player
+if TYPE_CHECKING:
+    from datetime import datetime
+
+    import asyncpg
 
 
 class _StateChangedError(Exception):
@@ -24,6 +27,9 @@ PLAYER_STATE_COLUMNS = (
     "give_cooldown_until",
     "bet_cooldown_until",
 )
+
+MISSING_STATE_COLUMNS_ERROR: Final = "Bread 玩家狀態欄位缺失: {missing_text}"
+ACTION_FAILED_ERROR: Final = "執行 Bread {action_type} 操作失敗。"
 
 
 async def execute_single_player_action(
@@ -67,29 +73,15 @@ async def execute_single_player_action(
                         now=now,
                     )
             except _StateChangedError:
-                latest_row = await fetch_player(
-                    conn,
-                    guild_id=guild_id,
-                    user_id=user_id,
-                )
-                return {
-                    "updated_row": None,
-                    "latest_row": latest_row,
-                    "state_changed": True,
-                }
+                latest_row = await fetch_player(conn, guild_id=guild_id, user_id=user_id)
+                return {"updated_row": None, "latest_row": latest_row, "state_changed": True}
     except DatabaseOperationError:
         raise
     except Exception as exc:
-        raise DatabaseOperationError(
-            f"執行 Bread {action_type} 操作失敗。",
-            original_exception=exc,
-        ) from exc
+        error_message = ACTION_FAILED_ERROR.format(action_type=action_type)
+        raise DatabaseOperationError(error_message, original_exception=exc) from exc
 
-    return {
-        "updated_row": updated_row,
-        "latest_row": updated_row,
-        "state_changed": False,
-    }
+    return {"updated_row": updated_row, "latest_row": updated_row, "state_changed": False}
 
 
 async def execute_transfer_action(
@@ -148,14 +140,10 @@ async def execute_transfer_action(
                     )
             except _StateChangedError:
                 latest_actor_row = await fetch_player(
-                    conn,
-                    guild_id=guild_id,
-                    user_id=actor_user_id,
+                    conn, guild_id=guild_id, user_id=actor_user_id
                 )
                 latest_target_row = await fetch_player(
-                    conn,
-                    guild_id=guild_id,
-                    user_id=target_user_id,
+                    conn, guild_id=guild_id, user_id=target_user_id
                 )
                 return {
                     "actor_updated_row": None,
@@ -167,10 +155,8 @@ async def execute_transfer_action(
     except DatabaseOperationError:
         raise
     except Exception as exc:
-        raise DatabaseOperationError(
-            f"執行 Bread {action_type} 操作失敗。",
-            original_exception=exc,
-        ) from exc
+        error_message = ACTION_FAILED_ERROR.format(action_type=action_type)
+        raise DatabaseOperationError(error_message, original_exception=exc) from exc
 
     return {
         "actor_updated_row": actor_updated_row,
@@ -182,14 +168,14 @@ async def execute_transfer_action(
 
 
 async def _update_player_state(
-    conn,
+    conn: asyncpg.Connection,
     *,
     guild_id: int,
     user_id: int,
     expected_updated_at: datetime,
     new_state: dict[str, Any],
     now: datetime,
-):
+) -> asyncpg.Record | None:
     _validate_state(new_state)
 
     return await conn.fetchrow(
@@ -238,7 +224,7 @@ async def _update_player_state(
 
 
 async def _insert_action_log(
-    conn,
+    conn: asyncpg.Connection,
     *,
     guild_id: int,
     actor_user_id: int,
@@ -278,4 +264,5 @@ def _validate_state(new_state: dict[str, Any]) -> None:
     missing_columns = [column for column in PLAYER_STATE_COLUMNS if column not in new_state]
     if missing_columns:
         missing_text = ", ".join(missing_columns)
-        raise DatabaseOperationError(f"Bread 玩家狀態欄位缺失: {missing_text}")
+        error_message = MISSING_STATE_COLUMNS_ERROR.format(missing_text=missing_text)
+        raise DatabaseOperationError(error_message)

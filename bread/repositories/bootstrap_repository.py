@@ -1,8 +1,9 @@
 from __future__ import annotations
 
+from typing import Final
+
 from database.postgresql.async_manager import get_pool
 from utils.exceptions import DatabaseOperationError
-
 
 _SCHEMA_STATEMENTS = [
     """
@@ -60,17 +61,15 @@ _SCHEMA_STATEMENTS = [
     """,
 ]
 
+SCHEMA_INIT_ERROR: Final = "初始化 Bread 資料表失敗。"
+
 
 async def ensure_bread_schema() -> None:
     pool = get_pool()
 
     try:
-        async with pool.acquire() as conn:
-            async with conn.transaction():
-                for statement in _SCHEMA_STATEMENTS:
-                    await conn.execute(statement)
+        async with pool.acquire() as conn, conn.transaction():
+            for statement in _SCHEMA_STATEMENTS:
+                await conn.execute(statement)
     except Exception as exc:
-        raise DatabaseOperationError(
-            "初始化 Bread 資料表失敗。",
-            original_exception=exc,
-        ) from exc
+        raise DatabaseOperationError(SCHEMA_INIT_ERROR, original_exception=exc) from exc
