@@ -12,7 +12,7 @@ from bread.repositories.ranking_repository import (
     fetch_global_ranking_page,
     fetch_group_ranking_page,
 )
-from bread.services.gameplay_utils import build_feature_disabled_error, ensure_guild_supported
+from bread.services.gameplay_utils import build_feature_disabled_error
 from utils.exceptions import BusinessError
 
 RankingScope = Literal["group", "global"]
@@ -50,7 +50,7 @@ async def get_ranking_page(
             group_only_error = "群排行榜只能在伺服器內使用。"
             raise BusinessError(group_only_error, author_name="無法使用")
 
-        resolved_guild_id = ensure_guild_supported(guild_id)
+        resolved_guild_id = guild_id
 
         try:
             config_row = await get_or_create_guild_config(
