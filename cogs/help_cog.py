@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import builtins
 import contextlib
-from collections.abc import Iterator, Sequence
+from typing import TYPE_CHECKING
 
 import discord
 from discord import app_commands
@@ -11,6 +11,9 @@ from loguru import logger
 
 from utils.localization import get_localized_string as lstr
 from utils.localization import get_user_language
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator, Sequence
 
 # Define the desired order of commands
 DESIRED_COMMAND_ORDER = [
