@@ -107,10 +107,10 @@ async def set_guild_item_name(*, guild_id: int | None, item_name: str) -> ItemNa
         raise build_feature_disabled_error() from exc
 
     old_item_name = str(config_row["item_name"])
-    pool = get_pool()
     now = datetime.now(UTC)
 
     try:
+        pool = get_pool()
         async with pool.acquire() as conn:
             await conn.execute(
                 """
@@ -122,6 +122,8 @@ async def set_guild_item_name(*, guild_id: int | None, item_name: str) -> ItemNa
                 normalized_item_name,
                 now,
             )
+    except RuntimeError as exc:
+        raise build_feature_disabled_error() from exc
     except Exception as exc:
         raise DatabaseOperationError(ITEM_NAME_UPDATE_ERROR, original_exception=exc) from exc
 
