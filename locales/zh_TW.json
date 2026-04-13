@@ -133,6 +133,8 @@
   "cmd_desc_bread_record": "查看 Bread 行為紀錄。",
   "cmd_desc_bread_nickname": "設定 Bread 暱稱。",
   "cmd_desc_bread_itemname": "設定本群 Bread 物品名稱。",
+  "cmd_desc_keyword_add": "添加新的關鍵詞觸發（使用彈出式表單）。",
+  "cmd_desc_keyword_list": "列出所有關鍵詞。",
   "ping_response_gateway": "🏓 Discord gateway 延遲：**{gateway_ms} ms**",
 
   "beatmap_status_loved": "Loved",

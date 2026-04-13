@@ -35,6 +35,8 @@ DESIRED_COMMAND_ORDER = [
     "bread record",
     "bread nickname",
     "bread itemname",
+    "keyword add",
+    "keyword list",
 ]
 
 

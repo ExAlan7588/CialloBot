@@ -10,7 +10,7 @@ LOCALE_FILES = [
     ROOT / "locales" / "en.json",
     ROOT / "locales" / "zh_TW.json",
 ]
-REQUIRED_BREAD_KEYS = [
+REQUIRED_HELP_KEYS = [
     "cmd_desc_bread_profile",
     "cmd_desc_bread_buy",
     "cmd_desc_bread_eat",
@@ -21,15 +21,17 @@ REQUIRED_BREAD_KEYS = [
     "cmd_desc_bread_record",
     "cmd_desc_bread_nickname",
     "cmd_desc_bread_itemname",
+    "cmd_desc_keyword_add",
+    "cmd_desc_keyword_list",
 ]
 
 
 class HelpLocaleTests(unittest.TestCase):
-    def test_bread_help_descriptions_exist_in_supported_locales(self) -> None:
+    def test_group_help_descriptions_exist_in_supported_locales(self) -> None:
         for locale_file in LOCALE_FILES:
             with self.subTest(locale=locale_file.name):
                 translations = json.loads(locale_file.read_text(encoding="utf-8"))
-                for key in REQUIRED_BREAD_KEYS:
+                for key in REQUIRED_HELP_KEYS:
                     self.assertIn(key, translations)
                     self.assertTrue(translations[key].strip())
 

@@ -134,6 +134,8 @@
   "cmd_desc_bread_record": "Shows Bread action records.",
   "cmd_desc_bread_nickname": "Sets your Bread nickname.",
   "cmd_desc_bread_itemname": "Sets this guild's Bread item name.",
+  "cmd_desc_keyword_add": "Adds a new keyword trigger with a modal form.",
+  "cmd_desc_keyword_list": "Lists all configured keywords in this guild.",
   "ping_response_gateway": "🏓 Discord gateway latency: **{gateway_ms} ms**",
 
   "mapper_no_maps_found": "{0} has no public beatmaps.",
