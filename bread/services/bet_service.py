@@ -51,7 +51,7 @@ WINNING_GESTURES = {
 
 
 async def bet_items(
-    *, guild_id: int | None, user_id: int, nickname: str, gesture: str
+    *, guild_id: int | None, user_id: int, fallback_nickname: str, gesture: str
 ) -> BetResult:
     resolved_guild_id = ensure_guild_supported(guild_id)
     if gesture not in ALL_GESTURES:
@@ -63,7 +63,7 @@ async def bet_items(
         context = await get_or_create_player_context(
             guild_id=resolved_guild_id,
             user_id=user_id,
-            nickname=nickname,
+            fallback_nickname=fallback_nickname,
             default_item_name=DEFAULT_ITEM_NAME,
             default_allow_random_rob=DEFAULT_ALLOW_RANDOM_ROB,
             default_allow_random_give=DEFAULT_ALLOW_RANDOM_GIVE,

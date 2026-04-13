@@ -32,7 +32,7 @@ class BreadRecordView(BaseView):
         record_page = await get_record_page(
             guild_id=self.guild_id,
             user_id=self.target.id,
-            nickname=self.target.display_name,
+            fallback_nickname=self.target.display_name,
             page=self.current_page,
             page_size=self.page_size,
         )

@@ -41,7 +41,11 @@ class GiveResult:
 
 
 async def give_items(
-    *, guild_id: int | None, actor_user_id: int, actor_nickname: str, target_user_id: int | None
+    *,
+    guild_id: int | None,
+    actor_user_id: int,
+    actor_fallback_nickname: str,
+    target_user_id: int | None,
 ) -> GiveResult:
     resolved_guild_id = ensure_guild_supported(guild_id)
     now = datetime.now(UTC)
@@ -50,7 +54,7 @@ async def give_items(
         context = await get_transfer_context(
             guild_id=resolved_guild_id,
             actor_user_id=actor_user_id,
-            actor_nickname=actor_nickname,
+            actor_fallback_nickname=actor_fallback_nickname,
             target_user_id=target_user_id,
             default_item_name=DEFAULT_ITEM_NAME,
             default_allow_random_rob=DEFAULT_ALLOW_RANDOM_ROB,

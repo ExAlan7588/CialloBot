@@ -22,7 +22,7 @@ async def get_or_create_buy_context(
     *,
     guild_id: int,
     user_id: int,
-    nickname: str,
+    fallback_nickname: str,
     default_item_name: str,
     default_allow_random_rob: bool,
     default_allow_random_give: bool,
@@ -39,7 +39,7 @@ async def get_or_create_buy_context(
                 default_allow_random_give=default_allow_random_give,
             )
             player_row = await upsert_and_get_player(
-                conn, guild_id=guild_id, user_id=user_id, nickname=nickname
+                conn, guild_id=guild_id, user_id=user_id, nickname=fallback_nickname
             )
     except DatabaseOperationError:
         raise
@@ -53,7 +53,7 @@ async def execute_buy_transaction(
     *,
     guild_id: int,
     user_id: int,
-    nickname: str,
+    fallback_nickname: str,
     default_item_name: str,
     default_allow_random_rob: bool,
     default_allow_random_give: bool,
@@ -77,7 +77,7 @@ async def execute_buy_transaction(
                 default_allow_random_give=default_allow_random_give,
             )
             player_row = await upsert_and_get_player(
-                conn, guild_id=guild_id, user_id=user_id, nickname=nickname
+                conn, guild_id=guild_id, user_id=user_id, nickname=fallback_nickname
             )
 
             updated_item_count = int(player_row["item_count"]) + delta

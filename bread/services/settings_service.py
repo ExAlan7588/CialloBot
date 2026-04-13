@@ -51,7 +51,7 @@ async def set_bread_nickname(
         context = await get_or_create_player_context(
             guild_id=resolved_guild_id,
             user_id=user_id,
-            nickname=fallback_nickname,
+            fallback_nickname=fallback_nickname,
             default_item_name=DEFAULT_ITEM_NAME,
             default_allow_random_rob=DEFAULT_ALLOW_RANDOM_ROB,
             default_allow_random_give=DEFAULT_ALLOW_RANDOM_GIVE,

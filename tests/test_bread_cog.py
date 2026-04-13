@@ -31,6 +31,11 @@ class BreadCogActorNicknameTests(unittest.IsolatedAsyncioTestCase):
                 ),
                 "callback_args": (),
                 "expected_author": "BreadActor 的 可頌 採購結果",
+                "expected_call_kwargs": {
+                    "guild_id": 123,
+                    "user_id": 456,
+                    "fallback_nickname": "DiscordActor",
+                },
             },
             {
                 "command": BreadCog.bread_eat,
@@ -47,6 +52,11 @@ class BreadCogActorNicknameTests(unittest.IsolatedAsyncioTestCase):
                 ),
                 "callback_args": (),
                 "expected_author": "BreadActor 的 可頌 食用結果",
+                "expected_call_kwargs": {
+                    "guild_id": 123,
+                    "user_id": 456,
+                    "fallback_nickname": "DiscordActor",
+                },
             },
             {
                 "command": BreadCog.bread_give,
@@ -62,6 +72,12 @@ class BreadCogActorNicknameTests(unittest.IsolatedAsyncioTestCase):
                 ),
                 "callback_args": (None,),
                 "expected_author": "BreadActor 的 可頌 贈送結果",
+                "expected_call_kwargs": {
+                    "guild_id": 123,
+                    "actor_user_id": 456,
+                    "actor_fallback_nickname": "DiscordActor",
+                    "target_user_id": None,
+                },
             },
             {
                 "command": BreadCog.bread_rob,
@@ -78,6 +94,12 @@ class BreadCogActorNicknameTests(unittest.IsolatedAsyncioTestCase):
                 ),
                 "callback_args": (None,),
                 "expected_author": "BreadActor 的 可頌 搶奪結果",
+                "expected_call_kwargs": {
+                    "guild_id": 123,
+                    "actor_user_id": 456,
+                    "actor_fallback_nickname": "DiscordActor",
+                    "target_user_id": None,
+                },
             },
             {
                 "command": BreadCog.bread_bet,
@@ -95,19 +117,51 @@ class BreadCogActorNicknameTests(unittest.IsolatedAsyncioTestCase):
                 ),
                 "callback_args": (app_commands.Choice(name="剪刀", value="剪刀"),),
                 "expected_author": "BreadActor 的 可頌 賭局結果",
+                "expected_call_kwargs": {
+                    "guild_id": 123,
+                    "user_id": 456,
+                    "fallback_nickname": "DiscordActor",
+                    "gesture": "剪刀",
+                },
             },
         ]
 
         for case in test_cases:
             with self.subTest(command=case["expected_author"]):
                 interaction = self._build_interaction()
-                with patch(case["patch_target"], AsyncMock(return_value=case["result"])):
+                with patch(case["patch_target"], AsyncMock(return_value=case["result"])) as mocked_call:
                     await case["command"].callback(self.cog, interaction, *case["callback_args"])
 
+                mocked_call.assert_awaited_once_with(**case["expected_call_kwargs"])
                 send_message = interaction.response.send_message
                 send_message.assert_awaited_once()
                 embed = send_message.await_args.kwargs["embed"]
                 self.assertEqual(embed.author.name, case["expected_author"])
+
+    async def test_bread_profile_uses_fallback_nickname_argument(self) -> None:
+        interaction = self._build_interaction()
+        with patch(
+            "cogs.bread_cog.get_profile_data",
+            AsyncMock(
+                return_value={
+                    "item_name": "可頌",
+                    "nickname": "BreadActor",
+                    "item_count": 3,
+                    "level": 1,
+                    "xp": 2,
+                    "remaining_to_level": 8,
+                    "level_target": 10,
+                }
+            ),
+        ) as mocked_get_profile_data:
+            callback = cast(Any, BreadCog.bread_profile.callback)
+            await callback(self.cog, interaction, None)
+
+        mocked_get_profile_data.assert_awaited_once_with(
+            guild_id=123,
+            user_id=456,
+            fallback_nickname="DiscordActor",
+        )
 
     async def test_bread_nickname_uses_fallback_nickname_argument(self) -> None:
         interaction = self._build_interaction()

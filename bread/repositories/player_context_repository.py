@@ -21,7 +21,7 @@ async def get_or_create_player_context(
     *,
     guild_id: int,
     user_id: int,
-    nickname: str,
+    fallback_nickname: str,
     default_item_name: str,
     default_allow_random_rob: bool,
     default_allow_random_give: bool,
@@ -38,7 +38,7 @@ async def get_or_create_player_context(
                 default_allow_random_give=default_allow_random_give,
             )
             player_row = await upsert_and_get_player(
-                conn, guild_id=guild_id, user_id=user_id, nickname=nickname
+                conn, guild_id=guild_id, user_id=user_id, nickname=fallback_nickname
             )
     except DatabaseOperationError:
         raise
@@ -52,7 +52,7 @@ async def get_transfer_context(
     *,
     guild_id: int,
     actor_user_id: int,
-    actor_nickname: str,
+    actor_fallback_nickname: str,
     target_user_id: int | None,
     default_item_name: str,
     default_allow_random_rob: bool,
@@ -72,7 +72,10 @@ async def get_transfer_context(
                 default_allow_random_give=default_allow_random_give,
             )
             actor_row = await upsert_and_get_player(
-                conn, guild_id=guild_id, user_id=actor_user_id, nickname=actor_nickname
+                conn,
+                guild_id=guild_id,
+                user_id=actor_user_id,
+                nickname=actor_fallback_nickname,
             )
 
             target_row = None

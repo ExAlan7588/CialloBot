@@ -8,6 +8,7 @@ from bread.constants import DEFAULT_ALLOW_RANDOM_GIVE, DEFAULT_ALLOW_RANDOM_ROB,
 from bread.repositories.profile_repository import get_or_create_guild_config, get_or_create_player
 from bread.repositories.record_repository import count_user_records, fetch_user_records_page
 from bread.services.gameplay_utils import build_feature_disabled_error, ensure_guild_supported
+from utils.exceptions import BusinessError
 
 if TYPE_CHECKING:
     from datetime import datetime
@@ -33,11 +34,18 @@ class BreadRecordPage:
 
 
 async def get_record_page(
-    *, guild_id: int | None, user_id: int, nickname: str, page: int, page_size: int = 5
+    *,
+    guild_id: int | None,
+    user_id: int,
+    fallback_nickname: str,
+    page: int,
+    page_size: int = 5,
 ) -> BreadRecordPage:
-    resolved_guild_id = ensure_guild_supported(guild_id)
+    if page < 1:
+        page_error = "頁碼必須大於 0。"
+        raise BusinessError(page_error, author_name="頁碼錯誤")
 
-    normalized_page = max(page, 1)
+    resolved_guild_id = ensure_guild_supported(guild_id)
 
     try:
         # 先确保群配置和玩家档案存在，这样空记录页面也能正常展示物品名和昵称。
@@ -47,13 +55,15 @@ async def get_record_page(
             default_allow_random_rob=DEFAULT_ALLOW_RANDOM_ROB,
             default_allow_random_give=DEFAULT_ALLOW_RANDOM_GIVE,
         )
-        player_row = await get_or_create_player(resolved_guild_id, user_id, nickname=nickname)
+        player_row = await get_or_create_player(
+            resolved_guild_id, user_id, nickname=fallback_nickname
+        )
         total_entries = await count_user_records(guild_id=resolved_guild_id, user_id=user_id)
     except RuntimeError as exc:
         raise build_feature_disabled_error() from exc
 
     total_pages = max(ceil(total_entries / page_size), 1)
-    current_page = min(normalized_page, total_pages)
+    current_page = min(page, total_pages)
     offset = (current_page - 1) * page_size
 
     try:

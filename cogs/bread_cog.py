@@ -37,7 +37,7 @@ class BreadCog(commands.Cog):
         profile_data = await get_profile_data(
             guild_id=interaction.guild_id,
             user_id=target.id,
-            nickname=target.display_name,
+            fallback_nickname=target.display_name,
         )
 
         item_name = profile_data["item_name"]
@@ -59,7 +59,7 @@ class BreadCog(commands.Cog):
         result = await buy_items(
             guild_id=interaction.guild_id,
             user_id=interaction.user.id,
-            nickname=interaction.user.display_name,
+            fallback_nickname=interaction.user.display_name,
         )
 
         if result.delta > 0:
@@ -87,7 +87,7 @@ class BreadCog(commands.Cog):
         result = await eat_items(
             guild_id=interaction.guild_id,
             user_id=interaction.user.id,
-            nickname=interaction.user.display_name,
+            fallback_nickname=interaction.user.display_name,
         )
 
         embed = SuccessEmbed(
@@ -121,7 +121,7 @@ class BreadCog(commands.Cog):
         result = await give_items(
             guild_id=interaction.guild_id,
             actor_user_id=interaction.user.id,
-            actor_nickname=interaction.user.display_name,
+            actor_fallback_nickname=interaction.user.display_name,
             target_user_id=target_id,
         )
 
@@ -156,7 +156,7 @@ class BreadCog(commands.Cog):
         result = await rob_items(
             guild_id=interaction.guild_id,
             actor_user_id=interaction.user.id,
-            actor_nickname=interaction.user.display_name,
+            actor_fallback_nickname=interaction.user.display_name,
             target_user_id=target_id,
         )
 
@@ -191,7 +191,7 @@ class BreadCog(commands.Cog):
         result = await bet_items(
             guild_id=interaction.guild_id,
             user_id=interaction.user.id,
-            nickname=interaction.user.display_name,
+            fallback_nickname=interaction.user.display_name,
             gesture=gesture.value,
         )
 

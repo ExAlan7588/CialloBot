@@ -71,7 +71,7 @@ class BreadTargetNicknameTests(unittest.IsolatedAsyncioTestCase):
             result = await give_items(
                 guild_id=123,
                 actor_user_id=1,
-                actor_nickname="DiscordActor",
+                actor_fallback_nickname="DiscordActor",
                 target_user_id=99,
             )
 
@@ -141,7 +141,7 @@ class BreadTargetNicknameTests(unittest.IsolatedAsyncioTestCase):
             result = await rob_items(
                 guild_id=123,
                 actor_user_id=1,
-                actor_nickname="DiscordActor",
+                actor_fallback_nickname="DiscordActor",
                 target_user_id=77,
             )
 

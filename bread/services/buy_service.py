@@ -37,7 +37,7 @@ class BuyResult:
     cooldown_until: datetime
 
 
-async def buy_items(*, guild_id: int | None, user_id: int, nickname: str) -> BuyResult:
+async def buy_items(*, guild_id: int | None, user_id: int, fallback_nickname: str) -> BuyResult:
     resolved_guild_id = ensure_guild_supported(guild_id)
     now = datetime.now(UTC)
     base_amount = randint(DEFAULT_MIN_BUY_AMOUNT, DEFAULT_MAX_BUY_AMOUNT)
@@ -47,7 +47,7 @@ async def buy_items(*, guild_id: int | None, user_id: int, nickname: str) -> Buy
         context = await get_or_create_buy_context(
             guild_id=resolved_guild_id,
             user_id=user_id,
-            nickname=nickname,
+            fallback_nickname=fallback_nickname,
             default_item_name=DEFAULT_ITEM_NAME,
             default_allow_random_rob=DEFAULT_ALLOW_RANDOM_ROB,
             default_allow_random_give=DEFAULT_ALLOW_RANDOM_GIVE,
@@ -77,7 +77,7 @@ async def buy_items(*, guild_id: int | None, user_id: int, nickname: str) -> Buy
         tx_result = await execute_buy_transaction(
             guild_id=resolved_guild_id,
             user_id=user_id,
-            nickname=nickname,
+            fallback_nickname=fallback_nickname,
             default_item_name=DEFAULT_ITEM_NAME,
             default_allow_random_rob=DEFAULT_ALLOW_RANDOM_ROB,
             default_allow_random_give=DEFAULT_ALLOW_RANDOM_GIVE,
