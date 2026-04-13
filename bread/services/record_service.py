@@ -1,14 +1,16 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import datetime
 from math import ceil
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from bread.constants import DEFAULT_ALLOW_RANDOM_GIVE, DEFAULT_ALLOW_RANDOM_ROB, DEFAULT_ITEM_NAME
 from bread.repositories.profile_repository import get_or_create_guild_config, get_or_create_player
 from bread.repositories.record_repository import count_user_records, fetch_user_records_page
-from utils.exceptions import BusinessError
+from bread.services.gameplay_utils import build_feature_disabled_error, ensure_guild_supported
+
+if TYPE_CHECKING:
+    from datetime import datetime
 
 
 @dataclass(frozen=True, slots=True)
@@ -31,37 +33,24 @@ class BreadRecordPage:
 
 
 async def get_record_page(
-    *,
-    guild_id: int | None,
-    user_id: int,
-    nickname: str,
-    page: int,
-    page_size: int = 5,
+    *, guild_id: int | None, user_id: int, nickname: str, page: int, page_size: int = 5
 ) -> BreadRecordPage:
-    if guild_id is None:
-        raise BusinessError("Bread 功能目前只能在伺服器內使用。", author_name="無法使用")
+    resolved_guild_id = ensure_guild_supported(guild_id)
 
     normalized_page = max(page, 1)
 
     try:
         # 先确保群配置和玩家档案存在，这样空记录页面也能正常展示物品名和昵称。
         config_row = await get_or_create_guild_config(
-            guild_id,
+            resolved_guild_id,
             default_item_name=DEFAULT_ITEM_NAME,
             default_allow_random_rob=DEFAULT_ALLOW_RANDOM_ROB,
             default_allow_random_give=DEFAULT_ALLOW_RANDOM_GIVE,
         )
-        player_row = await get_or_create_player(
-            guild_id,
-            user_id,
-            nickname=nickname,
-        )
-        total_entries = await count_user_records(guild_id=guild_id, user_id=user_id)
+        player_row = await get_or_create_player(resolved_guild_id, user_id, nickname=nickname)
+        total_entries = await count_user_records(guild_id=resolved_guild_id, user_id=user_id)
     except RuntimeError as exc:
-        raise BusinessError(
-            "目前尚未配置 PostgreSQL，Bread 系統尚未啟用。",
-            author_name="功能未啟用",
-        ) from exc
+        raise build_feature_disabled_error() from exc
 
     total_pages = max(ceil(total_entries / page_size), 1)
     current_page = min(normalized_page, total_pages)
@@ -69,16 +58,10 @@ async def get_record_page(
 
     try:
         rows = await fetch_user_records_page(
-            guild_id=guild_id,
-            user_id=user_id,
-            limit=page_size,
-            offset=offset,
+            guild_id=resolved_guild_id, user_id=user_id, limit=page_size, offset=offset
         )
     except RuntimeError as exc:
-        raise BusinessError(
-            "目前尚未配置 PostgreSQL，Bread 系統尚未啟用。",
-            author_name="功能未啟用",
-        ) from exc
+        raise build_feature_disabled_error() from exc
 
     entries = [_build_record_entry(row) for row in rows]
     return BreadRecordPage(

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from random import choice, randint, random
 
 from bread.constants import (
@@ -23,7 +23,7 @@ from bread.services.gameplay_utils import (
     build_feature_disabled_error,
     build_player_state,
     ensure_guild_supported,
-    get_remaining_cooldown_text,
+    raise_cooldown_error,
     resolve_state_change_conflict,
 )
 from utils.exceptions import BusinessError
@@ -43,18 +43,22 @@ class BetResult:
     cooldown_until: datetime
 
 
+WINNING_GESTURES = {
+    GESTURE_SCISSORS: GESTURE_PAPER,
+    GESTURE_ROCK: GESTURE_SCISSORS,
+    GESTURE_PAPER: GESTURE_ROCK,
+}
+
+
 async def bet_items(
-    *,
-    guild_id: int | None,
-    user_id: int,
-    nickname: str,
-    gesture: str,
+    *, guild_id: int | None, user_id: int, nickname: str, gesture: str
 ) -> BetResult:
     resolved_guild_id = ensure_guild_supported(guild_id)
     if gesture not in ALL_GESTURES:
-        raise BusinessError("手勢必須是剪刀、石頭或布。", author_name="手勢無效")
+        error_message = "手勢必須是剪刀、石頭或布。"
+        raise BusinessError(error_message, author_name="手勢無效")
 
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     try:
         context = await get_or_create_player_context(
             guild_id=resolved_guild_id,
@@ -65,7 +69,7 @@ async def bet_items(
             default_allow_random_give=DEFAULT_ALLOW_RANDOM_GIVE,
         )
     except RuntimeError as exc:
-        raise build_feature_disabled_error(exc) from exc
+        raise build_feature_disabled_error() from exc
 
     config_row = context["config_row"]
     player_row = context["player_row"]
@@ -74,23 +78,18 @@ async def bet_items(
     cooldown_until = player_row["bet_cooldown_until"]
 
     if isinstance(cooldown_until, datetime) and cooldown_until > now:
-        raise BusinessError(
-            f"無法賭{item_name}，還有{get_remaining_cooldown_text(cooldown_until, now=now)}",
-            author_name="冷卻中",
+        raise_cooldown_error(
+            action_name="賭", item_name=item_name, cooldown_until=cooldown_until, now=now
         )
 
     bet_amount = randint(DEFAULT_MIN_BET_AMOUNT, DEFAULT_MAX_BET_AMOUNT)
     if previous_item_count < bet_amount:
-        raise BusinessError(
-            f"你的{item_name}還不夠賭，先去買一些吧。",
-            author_name="存貨不足",
-        )
+        error_message = f"你的{item_name}還不夠賭，先去買一些吧。"
+        raise BusinessError(error_message, author_name="存貨不足")
 
     system_gesture = choice(list(ALL_GESTURES))
     delta, base_event_name = _resolve_base_bet_outcome(
-        gesture=gesture,
-        system_gesture=system_gesture,
-        bet_amount=bet_amount,
+        gesture=gesture, system_gesture=system_gesture, bet_amount=bet_amount
     )
     cooldown_seconds = DEFAULT_BET_COOLDOWN_SECONDS if delta != 0 else 0
     event_name = base_event_name
@@ -147,7 +146,7 @@ async def bet_items(
             now=now,
         )
     except RuntimeError as exc:
-        raise build_feature_disabled_error(exc) from exc
+        raise build_feature_disabled_error() from exc
 
     if tx_result["state_changed"]:
         resolve_state_change_conflict(
@@ -174,22 +173,11 @@ async def bet_items(
 
 
 def _resolve_base_bet_outcome(
-    *,
-    gesture: str,
-    system_gesture: str,
-    bet_amount: int,
+    *, gesture: str, system_gesture: str, bet_amount: int
 ) -> tuple[int, str]:
-    if (
-        gesture == GESTURE_SCISSORS and system_gesture == GESTURE_PAPER
-        or gesture == GESTURE_ROCK and system_gesture == GESTURE_SCISSORS
-        or gesture == GESTURE_PAPER and system_gesture == GESTURE_ROCK
-    ):
+    if WINNING_GESTURES[gesture] == system_gesture:
         return bet_amount, "win"
-    if (
-        system_gesture == GESTURE_SCISSORS and gesture == GESTURE_PAPER
-        or system_gesture == GESTURE_ROCK and gesture == GESTURE_SCISSORS
-        or system_gesture == GESTURE_PAPER and gesture == GESTURE_ROCK
-    ):
+    if WINNING_GESTURES[system_gesture] == gesture:
         return -bet_amount, "lose"
     return 0, "draw"
 
@@ -222,7 +210,9 @@ def _build_bet_message(
             f"這把被警察盯上了，沒有結算輸贏，但下次賭要多等 40 分鐘。"
         )
     if event_name == "bet_again":
-        suffix = "平局，這次可以立刻再來一把。" if delta == 0 else "你有點上癮，這次可以立刻再來一把。"
+        suffix = (
+            "平局，這次可以立刻再來一把。" if delta == 0 else "你有點上癮，這次可以立刻再來一把。"
+        )
         return (
             f"你出 {player_gesture}，我出 {system_gesture}。\n"
             f"{_build_base_bet_outcome_text(item_name=item_name, delta=delta, current_item_count=current_item_count)}\n"
@@ -234,12 +224,7 @@ def _build_bet_message(
     )
 
 
-def _build_base_bet_outcome_text(
-    *,
-    item_name: str,
-    delta: int,
-    current_item_count: int,
-) -> str:
+def _build_base_bet_outcome_text(*, item_name: str, delta: int, current_item_count: int) -> str:
     if delta > 0:
         return f"你贏了，拿到 **{delta}** 個 {item_name}，現在共有 **{current_item_count}** 個。"
     if delta < 0:

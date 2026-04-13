@@ -8,35 +8,23 @@ from bread.constants import (
     DEFAULT_ITEM_NAME,
     DEFAULT_LEVEL_BREAD_NUM,
 )
-from bread.repositories.profile_repository import (
-    get_or_create_guild_config,
-    get_or_create_player,
-)
-from utils.exceptions import BusinessError
+from bread.repositories.profile_repository import get_or_create_guild_config, get_or_create_player
+from bread.services.gameplay_utils import build_feature_disabled_error, ensure_guild_supported
 
 
-async def get_profile_data(
-    *,
-    guild_id: int | None,
-    user_id: int,
-    nickname: str,
-) -> dict[str, Any]:
-    if guild_id is None:
-        raise BusinessError("Bread 功能目前只能在伺服器內使用。", author_name="無法使用")
+async def get_profile_data(*, guild_id: int | None, user_id: int, nickname: str) -> dict[str, Any]:
+    resolved_guild_id = ensure_guild_supported(guild_id)
 
     try:
         config_row = await get_or_create_guild_config(
-            guild_id,
+            resolved_guild_id,
             default_item_name=DEFAULT_ITEM_NAME,
             default_allow_random_rob=DEFAULT_ALLOW_RANDOM_ROB,
             default_allow_random_give=DEFAULT_ALLOW_RANDOM_GIVE,
         )
-        player_row = await get_or_create_player(guild_id, user_id, nickname=nickname)
+        player_row = await get_or_create_player(resolved_guild_id, user_id, nickname=nickname)
     except RuntimeError as exc:
-        raise BusinessError(
-            "目前尚未配置 PostgreSQL，Bread 系統尚未啟用。",
-            author_name="功能未啟用",
-        ) from exc
+        raise build_feature_disabled_error() from exc
 
     remaining_to_level = max(DEFAULT_LEVEL_BREAD_NUM - int(player_row["xp"]), 0)
 

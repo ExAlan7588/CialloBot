@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from random import randint, random
 
 from bread.constants import (
@@ -22,7 +22,7 @@ from bread.services.gameplay_utils import (
     build_feature_disabled_error,
     build_player_state,
     ensure_guild_supported,
-    get_remaining_cooldown_text,
+    raise_cooldown_error,
     resolve_state_change_conflict,
 )
 from utils.exceptions import BusinessError
@@ -44,14 +44,9 @@ class EatResult:
     cooldown_until: datetime
 
 
-async def eat_items(
-    *,
-    guild_id: int | None,
-    user_id: int,
-    nickname: str,
-) -> EatResult:
+async def eat_items(*, guild_id: int | None, user_id: int, nickname: str) -> EatResult:
     resolved_guild_id = ensure_guild_supported(guild_id)
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
 
     try:
         context = await get_or_create_player_context(
@@ -63,7 +58,7 @@ async def eat_items(
             default_allow_random_give=DEFAULT_ALLOW_RANDOM_GIVE,
         )
     except RuntimeError as exc:
-        raise build_feature_disabled_error(exc) from exc
+        raise build_feature_disabled_error() from exc
 
     config_row = context["config_row"]
     player_row = context["player_row"]
@@ -74,23 +69,17 @@ async def eat_items(
     cooldown_until = player_row["eat_cooldown_until"]
 
     if isinstance(cooldown_until, datetime) and cooldown_until > now:
-        raise BusinessError(
-            f"無法吃{item_name}，還有{get_remaining_cooldown_text(cooldown_until, now=now)}",
-            author_name="冷卻中",
+        raise_cooldown_error(
+            action_name="吃", item_name=item_name, cooldown_until=cooldown_until, now=now
         )
 
     eat_amount = randint(DEFAULT_MIN_EAT_AMOUNT, DEFAULT_MAX_EAT_AMOUNT)
     if previous_item_count < eat_amount:
-        raise BusinessError(
-            f"你的{item_name}還不夠吃，先去買一些吧。",
-            author_name="存貨不足",
-        )
+        error_message = f"你的{item_name}還不夠吃，先去買一些吧。"
+        raise BusinessError(error_message, author_name="存貨不足")
 
     player_state = build_player_state(player_row)
-    event = _resolve_eat_event(
-        previous_item_count=previous_item_count,
-        eat_amount=eat_amount,
-    )
+    event = _resolve_eat_event(previous_item_count=previous_item_count, eat_amount=eat_amount)
 
     consumed_amount = int(event["consumed_amount"])
     player_state["item_count"] = previous_item_count - consumed_amount
@@ -150,7 +139,7 @@ async def eat_items(
             now=now,
         )
     except RuntimeError as exc:
-        raise build_feature_disabled_error(exc) from exc
+        raise build_feature_disabled_error() from exc
 
     if tx_result["state_changed"]:
         resolve_state_change_conflict(
@@ -178,11 +167,7 @@ async def eat_items(
     )
 
 
-def _resolve_eat_event(
-    *,
-    previous_item_count: int,
-    eat_amount: int,
-) -> dict[str, int | bool | str]:
+def _resolve_eat_event(*, previous_item_count: int, eat_amount: int) -> dict[str, int | bool | str]:
     roll = random()
 
     if roll < 0.01:

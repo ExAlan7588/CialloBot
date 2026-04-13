@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+from typing import Final
 
 from bread.constants import DEFAULT_ALLOW_RANDOM_GIVE, DEFAULT_ALLOW_RANDOM_ROB, DEFAULT_ITEM_NAME
 from bread.repositories.player_action_repository import execute_single_player_action
@@ -11,6 +12,7 @@ from bread.services.gameplay_utils import (
     build_feature_disabled_error,
     build_player_state,
     ensure_guild_supported,
+    raise_state_changed_error,
 )
 from database.postgresql.async_manager import get_pool
 from utils.exceptions import BusinessError, DatabaseOperationError
@@ -28,21 +30,23 @@ class ItemNameUpdateResult:
     new_item_name: str
 
 
+EMPTY_NICKNAME_ERROR: Final = "暱稱不能是空的。"
+LONG_NICKNAME_ERROR: Final = "Bread 暱稱不可大於 7 個字。"
+ITEM_NAME_LENGTH_ERROR: Final = "自訂物品名稱長度必須介於 2 到 5 個字。"
+ITEM_NAME_UPDATE_ERROR: Final = "更新 Bread 群物品名稱失敗。"
+
+
 async def set_bread_nickname(
-    *,
-    guild_id: int | None,
-    user_id: int,
-    display_name: str,
-    new_nickname: str,
+    *, guild_id: int | None, user_id: int, display_name: str, new_nickname: str
 ) -> NicknameUpdateResult:
     resolved_guild_id = ensure_guild_supported(guild_id)
     normalized_nickname = new_nickname.strip()
     if not normalized_nickname:
-        raise BusinessError("暱稱不能是空的。", author_name="暱稱無效")
+        raise BusinessError(EMPTY_NICKNAME_ERROR, author_name="暱稱無效")
     if len(normalized_nickname) > 7:
-        raise BusinessError("Bread 暱稱不可大於 7 個字。", author_name="暱稱無效")
+        raise BusinessError(LONG_NICKNAME_ERROR, author_name="暱稱無效")
 
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     try:
         context = await get_or_create_player_context(
             guild_id=resolved_guild_id,
@@ -53,12 +57,13 @@ async def set_bread_nickname(
             default_allow_random_give=DEFAULT_ALLOW_RANDOM_GIVE,
         )
     except RuntimeError as exc:
-        raise build_feature_disabled_error(exc) from exc
+        raise build_feature_disabled_error() from exc
 
     player_row = context["player_row"]
     old_nickname = str(player_row["nickname"])
     player_state = build_player_state(player_row)
     player_state["nickname"] = normalized_nickname
+    result_text = f"將 Bread 暱稱從 {old_nickname} 改成 {normalized_nickname}"
 
     try:
         tx_result = await execute_single_player_action(
@@ -68,7 +73,7 @@ async def set_bread_nickname(
             new_state=player_state,
             action_type="rename",
             delta=0,
-            result_text=f"將 Bread 暱稱從 {old_nickname} 改成 {normalized_nickname}",
+            result_text=result_text,
             extra_data={
                 "event_name": "rename_nickname",
                 "old_nickname": old_nickname,
@@ -77,26 +82,19 @@ async def set_bread_nickname(
             now=now,
         )
     except RuntimeError as exc:
-        raise build_feature_disabled_error(exc) from exc
+        raise build_feature_disabled_error() from exc
 
     if tx_result["state_changed"]:
-        raise BusinessError("Bread 狀態剛剛被更新，請再試一次。", author_name="請重試")
+        raise_state_changed_error()
 
-    return NicknameUpdateResult(
-        old_nickname=old_nickname,
-        new_nickname=normalized_nickname,
-    )
+    return NicknameUpdateResult(old_nickname=old_nickname, new_nickname=normalized_nickname)
 
 
-async def set_guild_item_name(
-    *,
-    guild_id: int | None,
-    item_name: str,
-) -> ItemNameUpdateResult:
+async def set_guild_item_name(*, guild_id: int | None, item_name: str) -> ItemNameUpdateResult:
     resolved_guild_id = ensure_guild_supported(guild_id)
     normalized_item_name = item_name.strip()
     if len(normalized_item_name) < 2 or len(normalized_item_name) > 5:
-        raise BusinessError("自訂物品名稱長度必須介於 2 到 5 個字。", author_name="名稱無效")
+        raise BusinessError(ITEM_NAME_LENGTH_ERROR, author_name="名稱無效")
 
     try:
         config_row = await get_or_create_guild_config(
@@ -106,11 +104,11 @@ async def set_guild_item_name(
             default_allow_random_give=DEFAULT_ALLOW_RANDOM_GIVE,
         )
     except RuntimeError as exc:
-        raise build_feature_disabled_error(exc) from exc
+        raise build_feature_disabled_error() from exc
 
     old_item_name = str(config_row["item_name"])
     pool = get_pool()
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
 
     try:
         async with pool.acquire() as conn:
@@ -125,12 +123,6 @@ async def set_guild_item_name(
                 now,
             )
     except Exception as exc:
-        raise DatabaseOperationError(
-            "更新 Bread 群物品名稱失敗。",
-            original_exception=exc,
-        ) from exc
+        raise DatabaseOperationError(ITEM_NAME_UPDATE_ERROR, original_exception=exc) from exc
 
-    return ItemNameUpdateResult(
-        old_item_name=old_item_name,
-        new_item_name=normalized_item_name,
-    )
+    return ItemNameUpdateResult(old_item_name=old_item_name, new_item_name=normalized_item_name)

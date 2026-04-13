@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from random import randint, random
 
 from bread.constants import (
@@ -20,7 +20,7 @@ from bread.services.gameplay_utils import (
     build_feature_disabled_error,
     build_player_state,
     ensure_guild_supported,
-    get_remaining_cooldown_text,
+    raise_cooldown_error,
     resolve_state_change_conflict,
 )
 from utils.exceptions import BusinessError
@@ -43,14 +43,10 @@ class RobResult:
 
 
 async def rob_items(
-    *,
-    guild_id: int | None,
-    actor_user_id: int,
-    actor_nickname: str,
-    target_user_id: int | None,
+    *, guild_id: int | None, actor_user_id: int, actor_nickname: str, target_user_id: int | None
 ) -> RobResult:
     resolved_guild_id = ensure_guild_supported(guild_id)
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     rob_amount = randint(DEFAULT_MIN_ROB_AMOUNT, DEFAULT_MAX_ROB_AMOUNT)
 
     try:
@@ -66,7 +62,7 @@ async def rob_items(
             allow_random=target_user_id is None,
         )
     except RuntimeError as exc:
-        raise build_feature_disabled_error(exc) from exc
+        raise build_feature_disabled_error() from exc
 
     config_row = context["config_row"]
     actor_row = context["actor_row"]
@@ -78,26 +74,26 @@ async def rob_items(
     cooldown_until = actor_row["rob_cooldown_until"]
 
     if isinstance(cooldown_until, datetime) and cooldown_until > now:
-        raise BusinessError(
-            f"無法搶{item_name}，還有{get_remaining_cooldown_text(cooldown_until, now=now)}",
-            author_name="冷卻中",
+        raise_cooldown_error(
+            action_name="搶", item_name=item_name, cooldown_until=cooldown_until, now=now
         )
 
     if target_user_id is None and not allow_random_rob:
-        raise BusinessError("你還沒有指定要搶的玩家。", author_name="缺少對象")
+        error_message = "你還沒有指定要搶的玩家。"
+        raise BusinessError(error_message, author_name="缺少對象")
     if target_row is None and target_user_id is not None:
-        raise BusinessError(f"該玩家沒有足夠的 {item_name} 可以搶。", author_name="找不到目標")
+        error_message = f"該玩家沒有足夠的 {item_name} 可以搶。"
+        raise BusinessError(error_message, author_name="找不到目標")
     if target_row is None:
-        raise BusinessError(
-            f"這個群目前沒有可搶的玩家，大家的 {item_name} 都太少了。",
-            author_name="找不到目標",
-        )
+        error_message = f"這個群目前沒有可搶的玩家，大家的 {item_name} 都太少了。"
+        raise BusinessError(error_message, author_name="找不到目標")
 
     target_id = int(target_row["user_id"])
     target_name = str(target_row["nickname"])
     target_previous_item_count = int(target_row["item_count"])
     if target_previous_item_count < rob_amount:
-        raise BusinessError(f"該玩家沒有那麼多 {item_name} 可以搶。", author_name="存貨不足")
+        error_message = f"該玩家沒有那麼多 {item_name} 可以搶。"
+        raise BusinessError(error_message, author_name="存貨不足")
 
     actor_delta = rob_amount
     target_delta = -rob_amount
@@ -181,7 +177,7 @@ async def rob_items(
             now=now,
         )
     except RuntimeError as exc:
-        raise build_feature_disabled_error(exc) from exc
+        raise build_feature_disabled_error() from exc
 
     if tx_result["state_changed"]:
         resolve_state_change_conflict(

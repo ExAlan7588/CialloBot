@@ -12,8 +12,8 @@ from bread.repositories.ranking_repository import (
     fetch_global_ranking_page,
     fetch_group_ranking_page,
 )
+from bread.services.gameplay_utils import build_feature_disabled_error, ensure_guild_supported
 from utils.exceptions import BusinessError
-
 
 RankingScope = Literal["group", "global"]
 
@@ -39,44 +39,34 @@ class RankingPage:
 
 
 async def get_ranking_page(
-    *,
-    scope: RankingScope,
-    guild_id: int | None,
-    page: int,
-    page_size: int = 10,
+    *, scope: RankingScope, guild_id: int | None, page: int, page_size: int = 10
 ) -> RankingPage:
     if page < 1:
-        raise BusinessError("頁碼必須大於 0。", author_name="頁碼錯誤")
+        page_error = "頁碼必須大於 0。"
+        raise BusinessError(page_error, author_name="頁碼錯誤")
 
     if scope == "group":
         if guild_id is None:
-            raise BusinessError(
-                "群排行榜只能在伺服器內使用。",
-                author_name="無法使用",
-            )
+            group_only_error = "群排行榜只能在伺服器內使用。"
+            raise BusinessError(group_only_error, author_name="無法使用")
+
+        resolved_guild_id = ensure_guild_supported(guild_id)
 
         try:
             config_row = await get_or_create_guild_config(
-                guild_id,
+                resolved_guild_id,
                 default_item_name=DEFAULT_ITEM_NAME,
                 default_allow_random_rob=True,
                 default_allow_random_give=True,
             )
-            total_entries = await count_group_players(guild_id)
+            total_entries = await count_group_players(resolved_guild_id)
             total_pages = max(1, ceil(total_entries / page_size)) if total_entries else 1
             current_page = min(page, total_pages)
             offset = (current_page - 1) * page_size
-            rows = await fetch_group_ranking_page(
-                guild_id,
-                limit=page_size,
-                offset=offset,
-            )
+            rows = await fetch_group_ranking_page(resolved_guild_id, limit=page_size, offset=offset)
             item_name = str(config_row["item_name"])
         except RuntimeError as exc:
-            raise BusinessError(
-                "目前尚未配置 PostgreSQL，Bread 系統尚未啟用。",
-                author_name="功能未啟用",
-            ) from exc
+            raise build_feature_disabled_error() from exc
 
         entries = [
             RankingEntry(
@@ -104,10 +94,7 @@ async def get_ranking_page(
         offset = (current_page - 1) * page_size
         rows = await fetch_global_ranking_page(limit=page_size, offset=offset)
     except RuntimeError as exc:
-        raise BusinessError(
-            "目前尚未配置 PostgreSQL，Bread 系統尚未啟用。",
-            author_name="功能未啟用",
-        ) from exc
+        raise build_feature_disabled_error() from exc
 
     entries = [
         RankingEntry(

@@ -1,9 +1,8 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from random import randint, random
-from typing import Any
 
 from bread.constants import (
     DEFAULT_ALLOW_RANDOM_GIVE,
@@ -18,7 +17,12 @@ from bread.constants import (
     DEFAULT_MIN_BUY_AMOUNT,
 )
 from bread.repositories.buy_repository import execute_buy_transaction, get_or_create_buy_context
-from utils.exceptions import BusinessError
+from bread.services.gameplay_utils import (
+    build_feature_disabled_error,
+    ensure_guild_supported,
+    raise_cooldown_error,
+    resolve_state_change_conflict,
+)
 
 
 @dataclass(frozen=True, slots=True)
@@ -33,22 +37,15 @@ class BuyResult:
     cooldown_until: datetime
 
 
-async def buy_items(
-    *,
-    guild_id: int | None,
-    user_id: int,
-    nickname: str,
-) -> BuyResult:
-    if guild_id is None:
-        raise BusinessError("Bread 功能目前只能在伺服器內使用。", author_name="無法使用")
-
-    now = datetime.now(timezone.utc)
+async def buy_items(*, guild_id: int | None, user_id: int, nickname: str) -> BuyResult:
+    resolved_guild_id = ensure_guild_supported(guild_id)
+    now = datetime.now(UTC)
     base_amount = randint(DEFAULT_MIN_BUY_AMOUNT, DEFAULT_MAX_BUY_AMOUNT)
 
     try:
         # 先读取并补齐玩家/群配置，但这里不写入购买结果，也不记录日志。
         context = await get_or_create_buy_context(
-            guild_id=guild_id,
+            guild_id=resolved_guild_id,
             user_id=user_id,
             nickname=nickname,
             default_item_name=DEFAULT_ITEM_NAME,
@@ -56,10 +53,7 @@ async def buy_items(
             default_allow_random_give=DEFAULT_ALLOW_RANDOM_GIVE,
         )
     except RuntimeError as exc:
-        raise BusinessError(
-            "目前尚未配置 PostgreSQL，Bread 系統尚未啟用。",
-            author_name="功能未啟用",
-        ) from exc
+        raise build_feature_disabled_error() from exc
 
     config_row = context["config_row"]
     player_row = context["player_row"]
@@ -68,15 +62,12 @@ async def buy_items(
     cooldown_until = player_row["buy_cooldown_until"]
 
     if isinstance(cooldown_until, datetime) and cooldown_until > now:
-        raise BusinessError(
-            f"無法買{item_name}，還有{_format_remaining_time(cooldown_until - now)}",
-            author_name="冷卻中",
+        raise_cooldown_error(
+            action_name="買", item_name=item_name, cooldown_until=cooldown_until, now=now
         )
 
     delta, event_name, message = _resolve_buy_outcome(
-        item_name=item_name,
-        previous_item_count=previous_item_count,
-        base_amount=base_amount,
+        item_name=item_name, previous_item_count=previous_item_count, base_amount=base_amount
     )
     updated_cooldown_until = now + timedelta(seconds=DEFAULT_BUY_COOLDOWN_SECONDS)
     current_item_count = previous_item_count + delta
@@ -84,7 +75,7 @@ async def buy_items(
     try:
         # 真正的库存变化和日志写入只发生在这一段。
         tx_result = await execute_buy_transaction(
-            guild_id=guild_id,
+            guild_id=resolved_guild_id,
             user_id=user_id,
             nickname=nickname,
             default_item_name=DEFAULT_ITEM_NAME,
@@ -105,22 +96,15 @@ async def buy_items(
             },
         )
     except RuntimeError as exc:
-        raise BusinessError(
-            "目前尚未配置 PostgreSQL，Bread 系統尚未啟用。",
-            author_name="功能未啟用",
-        ) from exc
+        raise build_feature_disabled_error() from exc
 
     if tx_result["state_changed"]:
-        latest_player_row = tx_result["player_row"]
-        latest_cooldown_until = latest_player_row["buy_cooldown_until"]
-        if isinstance(latest_cooldown_until, datetime) and latest_cooldown_until > now:
-            raise BusinessError(
-                f"無法買{item_name}，還有{_format_remaining_time(latest_cooldown_until - now)}",
-                author_name="冷卻中",
-            )
-        raise BusinessError(
-            "Bread 狀態剛剛被其他操作更新，請再試一次。",
-            author_name="請重試",
+        resolve_state_change_conflict(
+            item_name=item_name,
+            action_name="買",
+            latest_row=tx_result["player_row"],
+            cooldown_key="buy_cooldown_until",
+            now=now,
         )
 
     updated_row = tx_result["updated_row"]
@@ -140,10 +124,7 @@ async def buy_items(
 
 
 def _resolve_buy_outcome(
-    *,
-    item_name: str,
-    previous_item_count: int,
-    base_amount: int,
+    *, item_name: str, previous_item_count: int, base_amount: int
 ) -> tuple[int, str, str]:
     roll = random()
 
@@ -198,11 +179,3 @@ def _resolve_buy_outcome(
             f"現在一共擁有 **{previous_item_count + base_amount}** 個 {item_name}。"
         ),
     )
-
-
-def _format_remaining_time(delta: timedelta) -> str:
-    total_seconds = max(int(delta.total_seconds()), 0)
-    minutes, seconds = divmod(total_seconds, 60)
-    if minutes > 0:
-        return f"{minutes}分{seconds}秒"
-    return f"{seconds}秒"
