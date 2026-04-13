@@ -1,10 +1,14 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 import discord
-from discord.ext import commands
 
 from bread.services.ranking_service import RankingPage, RankingScope, get_ranking_page
 from utils.base_view import BaseView
+
+if TYPE_CHECKING:
+    from discord.ext import commands
 
 
 class BreadRankingView(BaseView):
