@@ -38,10 +38,11 @@ class BreadRankingView(BaseView):
 
     def _build_embed_from_page(self, ranking_page: RankingPage) -> discord.Embed:
         scope_name = "群排行榜" if ranking_page.scope == "group" else "全局排行榜"
-        title = f"{ranking_page.item_name} {scope_name}"
         if ranking_page.scope == "global":
+            title = f"Bread {scope_name}"
             description = "全局榜按同一位玩家跨群匯總。"
         else:
+            title = f"{ranking_page.item_name} {scope_name}"
             description = "排序規則：先等級，再物品數量。"
 
         embed = discord.Embed(
