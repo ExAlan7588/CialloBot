@@ -233,7 +233,7 @@ def _build_rob_message(
             f"吃 {item_name} 的冷卻已刷新，目前仍持有 **{current_item_count}** 個 {item_name}。"
         )
     if event_name == "rob_police":
-        return "你搶面包被警察盯上了，這次沒有損益，但下次搶要多等 40 分鐘。"
+        return f"你搶 {item_name} 被警察盯上了，這次沒有損益，但下次搶要多等 40 分鐘。"
     if event_name == "counterattack":
         return (
             f"搶奪失敗，{target_prefix} [{target_nickname}] 反擊成功。\n"

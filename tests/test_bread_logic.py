@@ -5,6 +5,7 @@ from unittest.mock import patch
 
 from bread.services.bet_service import _resolve_base_bet_outcome
 from bread.services.eat_service import _resolve_eat_event
+from bread.services.rob_service import _build_rob_message
 from bread.services.record_service import _build_preview_text, _map_action_label
 
 
@@ -54,6 +55,18 @@ class BreadLogicTests(unittest.TestCase):
     def test_record_preview_only_keeps_first_line(self) -> None:
         preview = _build_preview_text("第一行摘要\n第二行不應該出現")
         self.assertEqual(preview, "第一行摘要")
+
+    def test_rob_police_message_uses_custom_item_name(self) -> None:
+        message = _build_rob_message(
+            item_name="可頌",
+            target_nickname="TargetBread",
+            actor_delta=0,
+            current_item_count=12,
+            was_random_target=False,
+            event_name="rob_police",
+        )
+        self.assertIn("可頌", message)
+        self.assertNotIn("面包", message)
 
 
 if __name__ == "__main__":
