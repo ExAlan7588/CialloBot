@@ -179,12 +179,61 @@ class BreadCogActorNicknameTests(unittest.IsolatedAsyncioTestCase):
             new_nickname="New",
         )
 
+    async def test_bread_rank_defaults_to_group_scope(self) -> None:
+        interaction = self._build_interaction()
+        response_message = SimpleNamespace()
+        interaction.original_response = AsyncMock(return_value=response_message)
+        ranking_view = SimpleNamespace(message=None)
+        with patch(
+            "cogs.bread_cog.create_ranking_response",
+            AsyncMock(return_value=("embed", ranking_view)),
+        ) as mocked_create_ranking_response:
+            callback = cast(Any, BreadCog.bread_rank.callback)
+            await callback(self.cog, interaction, None)
+
+        mocked_create_ranking_response.assert_awaited_once_with(
+            bot=self.cog.bot,
+            author=interaction.user,
+            scope="group",
+            guild_id=123,
+        )
+        interaction.response.send_message.assert_awaited_once_with(embed="embed", view=ranking_view)
+        interaction.original_response.assert_awaited_once_with()
+        self.assertIs(ranking_view.message, response_message)
+
+    async def test_bread_rank_maps_non_group_choice_to_global_scope(self) -> None:
+        interaction = self._build_interaction()
+        response_message = SimpleNamespace()
+        interaction.original_response = AsyncMock(return_value=response_message)
+        ranking_view = SimpleNamespace(message=None)
+        with patch(
+            "cogs.bread_cog.create_ranking_response",
+            AsyncMock(return_value=("embed", ranking_view)),
+        ) as mocked_create_ranking_response:
+            callback = cast(Any, BreadCog.bread_rank.callback)
+            await callback(
+                self.cog,
+                interaction,
+                app_commands.Choice(name="全局排行榜", value="global"),
+            )
+
+        mocked_create_ranking_response.assert_awaited_once_with(
+            bot=self.cog.bot,
+            author=interaction.user,
+            scope="global",
+            guild_id=123,
+        )
+        interaction.response.send_message.assert_awaited_once_with(embed="embed", view=ranking_view)
+        interaction.original_response.assert_awaited_once_with()
+        self.assertIs(ranking_view.message, response_message)
+
     @staticmethod
     def _build_interaction() -> SimpleNamespace:
         return SimpleNamespace(
             guild_id=123,
             user=SimpleNamespace(id=456, display_name="DiscordActor", bot=False),
             response=SimpleNamespace(send_message=AsyncMock()),
+            original_response=AsyncMock(),
         )
 
 
