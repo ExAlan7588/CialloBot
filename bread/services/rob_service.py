@@ -28,6 +28,7 @@ from utils.exceptions import BusinessError
 
 @dataclass(frozen=True, slots=True)
 class RobResult:
+    actor_nickname: str
     item_name: str
     actor_delta: int
     target_delta: int
@@ -193,6 +194,7 @@ async def rob_items(
 
     actor_updated_row = tx_result["actor_updated_row"]
     return RobResult(
+        actor_nickname=str(actor_updated_row["nickname"]),
         item_name=item_name,
         actor_delta=actor_delta,
         target_delta=target_delta,

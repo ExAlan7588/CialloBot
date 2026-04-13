@@ -64,12 +64,12 @@ class BreadCog(commands.Cog):
 
         if result.delta > 0:
             embed = SuccessEmbed(
-                author_name=f"{interaction.user.display_name} 的 {result.item_name} 採購結果",
+                author_name=f"{result.actor_nickname} 的 {result.item_name} 採購結果",
                 description=result.message,
             )
         else:
             embed = WarningEmbed(
-                author_name=f"{interaction.user.display_name} 的 {result.item_name} 採購結果",
+                author_name=f"{result.actor_nickname} 的 {result.item_name} 採購結果",
                 description=result.message,
             )
 
@@ -91,7 +91,7 @@ class BreadCog(commands.Cog):
         )
 
         embed = SuccessEmbed(
-            author_name=f"{interaction.user.display_name} 的 {result.item_name} 食用結果",
+            author_name=f"{result.actor_nickname} 的 {result.item_name} 食用結果",
             description=result.message,
         )
         embed.set_footer(
@@ -124,7 +124,7 @@ class BreadCog(commands.Cog):
         )
 
         embed = SuccessEmbed(
-            author_name=f"{interaction.user.display_name} 的 {result.item_name} 贈送結果",
+            author_name=f"{result.actor_nickname} 的 {result.item_name} 贈送結果",
             description=result.message,
         )
         embed.set_footer(
@@ -158,7 +158,7 @@ class BreadCog(commands.Cog):
 
         embed_cls = SuccessEmbed if result.actor_delta > 0 else WarningEmbed
         embed = embed_cls(
-            author_name=f"{interaction.user.display_name} 的 {result.item_name} 搶奪結果",
+            author_name=f"{result.actor_nickname} 的 {result.item_name} 搶奪結果",
             description=result.message,
         )
         embed.set_footer(
@@ -193,7 +193,7 @@ class BreadCog(commands.Cog):
 
         embed_cls = SuccessEmbed if result.delta > 0 else WarningEmbed
         embed = embed_cls(
-            author_name=f"{interaction.user.display_name} 的 {result.item_name} 賭局結果",
+            author_name=f"{result.actor_nickname} 的 {result.item_name} 賭局結果",
             description=result.message,
         )
         embed.set_footer(

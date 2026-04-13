@@ -23,6 +23,7 @@ from utils.exceptions import BusinessError
 
 @dataclass(frozen=True, slots=True)
 class BuyResult:
+    actor_nickname: str
     item_name: str
     delta: int
     previous_item_count: int
@@ -127,6 +128,7 @@ async def buy_items(
         current_item_count = int(updated_row["item_count"])
 
     return BuyResult(
+        actor_nickname=str(updated_row["nickname"]),
         item_name=item_name,
         delta=delta,
         previous_item_count=previous_item_count,

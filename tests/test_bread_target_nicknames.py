@@ -59,6 +59,7 @@ class BreadTargetNicknameTests(unittest.IsolatedAsyncioTestCase):
                 AsyncMock(
                     return_value={
                         "actor_updated_row": {
+                            "nickname": "ActorBread",
                             "item_count": 17,
                             "give_cooldown_until": now,
                         },
@@ -74,6 +75,7 @@ class BreadTargetNicknameTests(unittest.IsolatedAsyncioTestCase):
                 target_user_id=99,
             )
 
+        self.assertEqual(result.actor_nickname, "ActorBread")
         self.assertEqual(result.target_nickname, "TargetBread")
         self.assertIn("[TargetBread]", result.message)
 
@@ -127,6 +129,7 @@ class BreadTargetNicknameTests(unittest.IsolatedAsyncioTestCase):
                 AsyncMock(
                     return_value={
                         "actor_updated_row": {
+                            "nickname": "ActorBread",
                             "item_count": 24,
                             "rob_cooldown_until": now,
                         },
@@ -142,6 +145,7 @@ class BreadTargetNicknameTests(unittest.IsolatedAsyncioTestCase):
                 target_user_id=77,
             )
 
+        self.assertEqual(result.actor_nickname, "ActorBread")
         self.assertEqual(result.target_nickname, "TargetBread")
         self.assertIn("[TargetBread]", result.message)
 

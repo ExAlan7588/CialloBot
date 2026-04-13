@@ -31,6 +31,7 @@ from utils.exceptions import BusinessError
 
 @dataclass(frozen=True, slots=True)
 class BetResult:
+    actor_nickname: str
     item_name: str
     delta: int
     previous_item_count: int
@@ -159,6 +160,7 @@ async def bet_items(
 
     updated_row = tx_result["updated_row"]
     return BetResult(
+        actor_nickname=str(updated_row["nickname"]),
         item_name=item_name,
         delta=delta,
         previous_item_count=previous_item_count,

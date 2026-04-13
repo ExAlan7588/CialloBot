@@ -30,6 +30,7 @@ from utils.exceptions import BusinessError
 
 @dataclass(frozen=True, slots=True)
 class EatResult:
+    actor_nickname: str
     item_name: str
     consumed_amount: int
     previous_item_count: int
@@ -162,6 +163,7 @@ async def eat_items(
 
     updated_row = tx_result["updated_row"]
     return EatResult(
+        actor_nickname=str(updated_row["nickname"]),
         item_name=item_name,
         consumed_amount=consumed_amount,
         previous_item_count=previous_item_count,
