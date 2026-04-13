@@ -1,1 +1,1 @@
-uv run bot.py
+uv run --python 3.13 bot.py

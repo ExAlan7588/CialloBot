@@ -14,7 +14,9 @@ import discord
 from discord.ext import commands
 from loguru import logger
 
+from database.postgresql.async_manager import close_connections, setup_connections
 from private import config
+from utils.command_tree import CustomCommandTree
 from utils.osu_api import OsuAPI
 from utils.startup import setup_logging, wrap_task_factory
 
@@ -33,6 +35,7 @@ class OsuBot(commands.Bot):
         """
         super().__init__(**options)
         self.osu_api_client: OsuAPI | None = None
+        self.database_ready = False
 
     async def setup_hook(self) -> None:
         """Bot 的異步設置鉤子。
@@ -52,6 +55,18 @@ class OsuBot(commands.Bot):
             logger.info("✅ OsuAPI 客戶端已初始化")
         except Exception as e:
             logger.error(f"❌ OsuAPI 客戶端初始化失敗: {e}", exc_info=True)
+            raise
+
+        # 初始化 PostgreSQL 連線池。
+        # 迁移期允许未配置时跳过，避免当前 osu 功能被强制卡死。
+        try:
+            self.database_ready = await setup_connections()
+            if self.database_ready:
+                logger.info("✅ PostgreSQL 連接池已初始化")
+            else:
+                logger.warning("⚠️ 未配置 PostgreSQL，已跳過資料庫初始化")
+        except Exception as e:
+            logger.error(f"❌ PostgreSQL 初始化失敗: {e}", exc_info=True)
             raise
 
         # 載入所有 Cogs
@@ -130,6 +145,14 @@ class OsuBot(commands.Bot):
             except Exception as e:
                 logger.error(f"❌ 關閉 OsuAPI 客戶端時發生錯誤: {e}", exc_info=True)
 
+        # 统一关闭数据库资源，避免连接池残留。
+        try:
+            await close_connections()
+            if self.database_ready:
+                logger.info("✅ PostgreSQL 連接池已關閉")
+        except Exception as e:
+            logger.error(f"❌ 關閉 PostgreSQL 連接池時發生錯誤: {e}", exc_info=True)
+
         await super().close()
         logger.info("機器人關閉完成")
 
@@ -155,6 +178,7 @@ async def main() -> None:
         command_prefix="!",
         intents=intents,
         log_handler=None,  # 禁用 discord.py 的預設日誌處理器
+        tree_cls=CustomCommandTree,
     )
 
     try:

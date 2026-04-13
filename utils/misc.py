@@ -26,7 +26,12 @@ def should_ignore_error(error: Exception) -> bool:
     return bool(isinstance(error, asyncio.CancelledError))
 
 
-def capture_exception(exception: Exception) -> None:
+def capture_exception(
+    exception: Exception,
+    *,
+    context: str | None = None,
+    level: str = "error",
+) -> None:
     """捕獲並記錄異常。
 
     這個函數可以用於集中處理異常，未來可以擴展為
@@ -35,5 +40,14 @@ def capture_exception(exception: Exception) -> None:
     Args:
         exception: 要捕獲的異常
     """
-    if not should_ignore_error(exception):
-        logger.exception(f"捕獲到未處理的異常: {exception}")
+    if should_ignore_error(exception):
+        return
+
+    normalized_level = level.upper()
+    message_prefix = f"{context}: " if context else ""
+    message = f"{message_prefix}{type(exception).__name__}: {exception}"
+
+    try:
+        logger.opt(exception=exception).log(normalized_level, message)
+    except ValueError:
+        logger.opt(exception=exception).error(message)

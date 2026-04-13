@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import builtins
 import contextlib
+from collections.abc import Iterator, Sequence
 
 import discord
 from discord import app_commands
@@ -24,6 +25,16 @@ DESIRED_COMMAND_ORDER = [
     "pp",
     "copypasta",
     "mapper",
+    "bread profile",
+    "bread buy",
+    "bread eat",
+    "bread give",
+    "bread rob",
+    "bread bet",
+    "bread rank",
+    "bread record",
+    "bread nickname",
+    "bread itemname",
 ]
 
 
@@ -72,51 +83,48 @@ class HelpCog(commands.Cog):
         logger.debug(f"[HelpCog] Fetched {len(all_app_commands)} app commands.")
 
         # Sort commands according to DESIRED_COMMAND_ORDER
-        def sort_key(cmd):
+        def sort_key(cmd_path: str) -> int:
             try:
-                return DESIRED_COMMAND_ORDER.index(cmd.name)
+                return DESIRED_COMMAND_ORDER.index(cmd_path)
             except ValueError:
-                return len(
-                    DESIRED_COMMAND_ORDER
-                )  # Put commands not in the list at the end
+                return len(DESIRED_COMMAND_ORDER)  # Put commands not in the list at the end
 
-        sorted_commands = sorted(all_app_commands, key=sort_key)
+        flattened_commands = list(_flatten_app_commands(all_app_commands))
+        sorted_commands = sorted(flattened_commands, key=lambda item: sort_key(item[0]))
         logger.debug(
-            f"[HelpCog] Sorted commands: {[cmd.name for cmd in sorted_commands]}"
+            f"[HelpCog] Sorted commands: {[cmd_path for cmd_path, _, _ in sorted_commands]}"
         )
 
         commands_to_display = []
-        for i, cmd in enumerate(sorted_commands):
+        for i, (cmd_path, cmd_name, cmd_description) in enumerate(sorted_commands):
             logger.debug(
-                f"[HelpCog] Processing command {i + 1}/{len(sorted_commands)}: {cmd.name}"
+                f"[HelpCog] Processing command {i + 1}/{len(sorted_commands)}: {cmd_path}"
             )
-            if isinstance(cmd, app_commands.Command):
-                cmd_name = cmd.name
-                cmd_description = cmd.description
-                if not cmd_description or cmd_description == "...":
-                    cmd_description = lstr(
-                        user_id_for_l10n,
-                        "help_no_description",
-                        "No description available.",
-                    )
+            description_text = cmd_description
+            if not description_text or description_text == "...":
+                description_text = lstr(
+                    user_id_for_l10n,
+                    "help_no_description",
+                    "No description available.",
+                )
 
-                localized_desc_key = f"cmd_desc_{cmd_name.lower()}"
-                original_cmd_description = cmd.description or lstr(
-                    user_id_for_l10n, "help_no_description", "No description available."
-                )
-                localized_description = lstr(
-                    user_id_for_l10n, localized_desc_key, original_cmd_description
-                )
-                if (
-                    "<translation_missing" in localized_description
-                    or localized_description == localized_desc_key
-                ):
-                    localized_description = original_cmd_description
+            localized_desc_key = f"cmd_desc_{cmd_name.lower().replace(' ', '_')}"
+            original_cmd_description = description_text or lstr(
+                user_id_for_l10n, "help_no_description", "No description available."
+            )
+            localized_description = lstr(
+                user_id_for_l10n, localized_desc_key, original_cmd_description
+            )
+            if (
+                "<translation_missing" in localized_description
+                or localized_description == localized_desc_key
+            ):
+                localized_description = original_cmd_description
 
-                commands_to_display.append(f"`/{cmd_name}`: {localized_description}")
-                logger.debug(
-                    f"[HelpCog] - Appended full format for {cmd_name}. Current count: {len(commands_to_display)}"
-                )
+            commands_to_display.append(f"`/{cmd_path}`: {localized_description}")
+            logger.debug(
+                f"[HelpCog] - Appended full format for {cmd_path}. Current count: {len(commands_to_display)}"
+            )
 
         if commands_to_display:
             embed.description = "\n".join(commands_to_display)
@@ -137,10 +145,26 @@ class HelpCog(commands.Cog):
                 if commands_to_display:
                     fallback_text = "\n".join(commands_to_display)
                 await interaction.followup.send(fallback_text, ephemeral=True)
-            except:
-                pass
+            except Exception:
+                logger.exception("[HelpCog] Failed to send plain-text help fallback")
 
 
 async def setup(bot: commands.Bot) -> None:
     await bot.add_cog(HelpCog(bot))
     logger.info("HelpCog loaded.")
+
+
+def _flatten_app_commands(
+    commands_list: Sequence[
+        app_commands.Command | app_commands.Group | app_commands.ContextMenu
+    ],
+    *,
+    prefix: str = "",
+) -> Iterator[tuple[str, str, str]]:
+    for cmd in commands_list:
+        if isinstance(cmd, app_commands.Group):
+            group_prefix = f"{prefix}{cmd.name}".strip()
+            yield from _flatten_app_commands(list(cmd.commands), prefix=f"{group_prefix} ")
+        elif isinstance(cmd, app_commands.Command):
+            full_path = f"{prefix}{cmd.name}".strip()
+            yield full_path, full_path, cmd.description
