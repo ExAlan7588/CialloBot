@@ -14,9 +14,7 @@ import discord
 from discord.ext import commands
 from loguru import logger
 
-from database.postgresql.async_manager import close_connections, setup_connections
 from private import config
-from utils.command_tree import CustomCommandTree
 from utils.osu_api import OsuAPI
 from utils.startup import setup_logging, wrap_task_factory
 
@@ -35,7 +33,6 @@ class OsuBot(commands.Bot):
         """
         super().__init__(**options)
         self.osu_api_client: OsuAPI | None = None
-        self.database_ready = False
 
     async def setup_hook(self) -> None:
         """Bot 的異步設置鉤子。
@@ -55,18 +52,6 @@ class OsuBot(commands.Bot):
             logger.info("✅ OsuAPI 客戶端已初始化")
         except Exception as e:
             logger.error(f"❌ OsuAPI 客戶端初始化失敗: {e}", exc_info=True)
-            raise
-
-        # 初始化 PostgreSQL 連線池。
-        # 迁移期允许未配置时跳过，避免当前 osu 功能被强制卡死。
-        try:
-            self.database_ready = await setup_connections()
-            if self.database_ready:
-                logger.info("✅ PostgreSQL 連接池已初始化")
-            else:
-                logger.warning("⚠️ 未配置 PostgreSQL，已跳過資料庫初始化")
-        except Exception as e:
-            logger.error(f"❌ PostgreSQL 初始化失敗: {e}", exc_info=True)
             raise
 
         # 載入所有 Cogs
@@ -93,25 +78,34 @@ class OsuBot(commands.Bot):
 
     async def _load_all_cogs(self) -> None:
         """載入所有 Cog 模組。"""
-        import os
-
         logger.info("== 開始載入所有 Cog 模組 ==")
 
-        if not pathlib.Path("./cogs").exists():
-            pathlib.Path("./cogs").mkdir(parents=True)
-            logger.warning("⚠️ cogs 資料夾不存在，已自動創建。")
+        cog_names = self._discover_cog_names()
+        if not cog_names:
+            logger.info("沒有可載入的 Cog。")
             return
 
-        for filename in os.listdir("./cogs"):
-            if filename.endswith(".py") and not filename.startswith("_"):
-                cog_name = filename[:-3]
-                try:
-                    await self.load_extension(f"cogs.{cog_name}")
-                    logger.info("✅ 已成功載入 Cog: {cog_name}", cog_name=cog_name)
-                except commands.ExtensionAlreadyLoaded:
-                    logger.warning("⚠️ Cog {cog_name} 已經載入", cog_name=cog_name)
-                except Exception as e:
-                    logger.error(f"❌ 載入 Cog {cog_name} 失敗: {e}", exc_info=True)
+        for cog_name in cog_names:
+            try:
+                await self.load_extension(f"cogs.{cog_name}")
+                logger.info("✅ 已成功載入 Cog: {cog_name}", cog_name=cog_name)
+            except commands.ExtensionAlreadyLoaded:
+                logger.warning("⚠️ Cog {cog_name} 已經載入", cog_name=cog_name)
+            except Exception as e:
+                logger.error(f"❌ 載入 Cog {cog_name} 失敗: {e}", exc_info=True)
+
+    def _discover_cog_names(self) -> list[str]:
+        cogs_dir = pathlib.Path("cogs")
+        if not cogs_dir.exists():
+            cogs_dir.mkdir(parents=True)
+            logger.warning("⚠️ cogs 資料夾不存在，已自動創建。")
+            return []
+
+        return sorted(
+            entry.stem
+            for entry in cogs_dir.iterdir()
+            if entry.is_file() and entry.suffix == ".py" and not entry.name.startswith("_")
+        )
 
     async def on_ready(self) -> None:
         """當 Bot 準備就緒時觸發。"""
@@ -123,7 +117,7 @@ class OsuBot(commands.Bot):
         )
         logger.info("Discord.py Version: {version}", version=discord.__version__)
 
-    async def on_error(self, event_method: str, *args: Any, **kwargs: Any) -> None:
+    async def on_error(self, event_method: str, *_args: Any, **_kwargs: Any) -> None:
         """處理事件中的未捕獲錯誤。
 
         Args:
@@ -144,14 +138,6 @@ class OsuBot(commands.Bot):
                 logger.info("✅ OsuAPI 客戶端已關閉")
             except Exception as e:
                 logger.error(f"❌ 關閉 OsuAPI 客戶端時發生錯誤: {e}", exc_info=True)
-
-        # 统一关闭数据库资源，避免连接池残留。
-        try:
-            await close_connections()
-            if self.database_ready:
-                logger.info("✅ PostgreSQL 連接池已關閉")
-        except Exception as e:
-            logger.error(f"❌ 關閉 PostgreSQL 連接池時發生錯誤: {e}", exc_info=True)
 
         await super().close()
         logger.info("機器人關閉完成")
@@ -178,7 +164,6 @@ async def main() -> None:
         command_prefix="!",
         intents=intents,
         log_handler=None,  # 禁用 discord.py 的預設日誌處理器
-        tree_cls=CustomCommandTree,
     )
 
     try:

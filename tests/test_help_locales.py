@@ -11,16 +11,6 @@ LOCALE_FILES = [
     ROOT / "locales" / "zh_TW.json",
 ]
 REQUIRED_HELP_KEYS = [
-    "cmd_desc_bread_profile",
-    "cmd_desc_bread_buy",
-    "cmd_desc_bread_eat",
-    "cmd_desc_bread_give",
-    "cmd_desc_bread_rob",
-    "cmd_desc_bread_bet",
-    "cmd_desc_bread_rank",
-    "cmd_desc_bread_record",
-    "cmd_desc_bread_nickname",
-    "cmd_desc_bread_itemname",
     "cmd_desc_keyword_add",
     "cmd_desc_keyword_list",
 ]

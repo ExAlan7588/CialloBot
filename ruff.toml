@@ -86,6 +86,7 @@ ignore = [
 "test.py" = ["ALL"]
 "vulture_whitelist.py" = ["ALL"]
 "restart.py" = ["T201", "S602", "S404", "S603"]
+"private/config.sample.py" = ["N999"]
 
 [lint.flake8-type-checking]
 quote-annotations = true

@@ -13,7 +13,6 @@ dependencies = [
     "rosu-pp-py>=1.0",
     "matplotlib>=3.0",
     "loguru>=0.7",
-    "asyncpg>=0.30",
 ]
 
 [dependency-groups]
