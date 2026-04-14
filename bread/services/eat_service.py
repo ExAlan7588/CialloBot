@@ -44,7 +44,9 @@ class EatResult:
     cooldown_until: datetime
 
 
-async def eat_items(*, guild_id: int | None, user_id: int, fallback_nickname: str) -> EatResult:
+async def eat_items(
+    *, guild_id: int | None, user_id: int, fallback_nickname: str
+) -> EatResult:
     resolved_guild_id = ensure_guild_supported(guild_id)
     now = datetime.now(UTC)
 
@@ -70,16 +72,21 @@ async def eat_items(*, guild_id: int | None, user_id: int, fallback_nickname: st
 
     if isinstance(cooldown_until, datetime) and cooldown_until > now:
         raise_cooldown_error(
-            action_name="吃", item_name=item_name, cooldown_until=cooldown_until, now=now
+            action_name="吃",
+            item_name=item_name,
+            cooldown_until=cooldown_until,
+            now=now,
         )
 
     eat_amount = randint(DEFAULT_MIN_EAT_AMOUNT, DEFAULT_MAX_EAT_AMOUNT)
     if previous_item_count < eat_amount:
-        error_message = f"你的{item_name}還不夠吃，先去買一些吧。"
+        error_message = f"你的 {item_name} 還不夠吃，先去買一些吧。"
         raise BusinessError(error_message, author_name="存貨不足")
 
     player_state = build_player_state(player_row)
-    event = _resolve_eat_event(previous_item_count=previous_item_count, eat_amount=eat_amount)
+    event = _resolve_eat_event(
+        previous_item_count=previous_item_count, eat_amount=eat_amount
+    )
 
     consumed_amount = int(event["consumed_amount"])
     player_state["item_count"] = previous_item_count - consumed_amount
@@ -167,7 +174,9 @@ async def eat_items(*, guild_id: int | None, user_id: int, fallback_nickname: st
     )
 
 
-def _resolve_eat_event(*, previous_item_count: int, eat_amount: int) -> dict[str, int | bool | str]:
+def _resolve_eat_event(
+    *, previous_item_count: int, eat_amount: int
+) -> dict[str, int | bool | str]:
     roll = random()
 
     if roll < 0.01:
@@ -229,7 +238,8 @@ def _resolve_eat_event(*, previous_item_count: int, eat_amount: int) -> dict[str
             "event_name": "too_full",
             "consumed_amount": eat_amount,
             "level_delta": 0,
-            "cooldown_seconds": DEFAULT_EAT_COOLDOWN_SECONDS + DEFAULT_EAT_EXTRA_COOLDOWN_SECONDS,
+            "cooldown_seconds": DEFAULT_EAT_COOLDOWN_SECONDS
+            + DEFAULT_EAT_EXTRA_COOLDOWN_SECONDS,
             "reset_all_cooldowns": False,
             "refresh_rob_cooldown": False,
         }

@@ -16,7 +16,10 @@ from bread.constants import (
     DEFAULT_MAX_BUY_AMOUNT,
     DEFAULT_MIN_BUY_AMOUNT,
 )
-from bread.repositories.buy_repository import execute_buy_transaction, get_or_create_buy_context
+from bread.repositories.buy_repository import (
+    execute_buy_transaction,
+    get_or_create_buy_context,
+)
 from bread.services.gameplay_utils import (
     build_feature_disabled_error,
     ensure_guild_supported,
@@ -37,7 +40,9 @@ class BuyResult:
     cooldown_until: datetime
 
 
-async def buy_items(*, guild_id: int | None, user_id: int, fallback_nickname: str) -> BuyResult:
+async def buy_items(
+    *, guild_id: int | None, user_id: int, fallback_nickname: str
+) -> BuyResult:
     resolved_guild_id = ensure_guild_supported(guild_id)
     now = datetime.now(UTC)
     base_amount = randint(DEFAULT_MIN_BUY_AMOUNT, DEFAULT_MAX_BUY_AMOUNT)
@@ -63,11 +68,16 @@ async def buy_items(*, guild_id: int | None, user_id: int, fallback_nickname: st
 
     if isinstance(cooldown_until, datetime) and cooldown_until > now:
         raise_cooldown_error(
-            action_name="買", item_name=item_name, cooldown_until=cooldown_until, now=now
+            action_name="買",
+            item_name=item_name,
+            cooldown_until=cooldown_until,
+            now=now,
         )
 
     delta, event_name, message = _resolve_buy_outcome(
-        item_name=item_name, previous_item_count=previous_item_count, base_amount=base_amount
+        item_name=item_name,
+        previous_item_count=previous_item_count,
+        base_amount=base_amount,
     )
     updated_cooldown_until = now + timedelta(seconds=DEFAULT_BUY_COOLDOWN_SECONDS)
     current_item_count = previous_item_count + delta
@@ -134,7 +144,7 @@ def _resolve_buy_outcome(
             delta,
             "golden_buy",
             (
-                f"出現了黃金{item_name}。本次直接算 **{delta}** 個，"
+                f"出現了黃金 {item_name}！本次直接算 **{delta}** 個，"
                 f"現在一共擁有 **{previous_item_count + delta}** 個 {item_name}。"
             ),
         )
@@ -145,7 +155,7 @@ def _resolve_buy_outcome(
             delta,
             "spoiled_stock",
             (
-                f"你正想去買{item_name}，結果發現有 **{base_amount}** 個 {item_name} 壞掉了。\n"
+                f"你正想去買 {item_name}，結果發現有 **{base_amount}** 個 {item_name} 壞掉了。\n"
                 f"現在剩下 **{previous_item_count + delta}** 個 {item_name}。"
             ),
         )

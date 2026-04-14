@@ -76,7 +76,10 @@ async def give_items(
 
     if isinstance(cooldown_until, datetime) and cooldown_until > now:
         raise_cooldown_error(
-            action_name="送", item_name=item_name, cooldown_until=cooldown_until, now=now
+            action_name="送",
+            item_name=item_name,
+            cooldown_until=cooldown_until,
+            now=now,
         )
 
     if target_user_id is None and not allow_random_give:
@@ -91,7 +94,7 @@ async def give_items(
 
     give_amount = randint(DEFAULT_MIN_GIVE_AMOUNT, DEFAULT_MAX_GIVE_AMOUNT)
     if previous_item_count < give_amount:
-        error_message = f"你的{item_name}還不夠送，先去買一些吧。"
+        error_message = f"你的 {item_name} 還不夠送，先去買一些吧。"
         raise BusinessError(error_message, author_name="存貨不足")
 
     target_id = int(target_row["user_id"])
@@ -120,7 +123,9 @@ async def give_items(
 
     actor_state = build_player_state(actor_row)
     actor_state["item_count"] = previous_item_count - actor_cost
-    actor_state["give_cooldown_until"] = now + timedelta(seconds=DEFAULT_GIVE_COOLDOWN_SECONDS)
+    actor_state["give_cooldown_until"] = now + timedelta(
+        seconds=DEFAULT_GIVE_COOLDOWN_SECONDS
+    )
 
     target_state = build_player_state(target_row)
     target_state["item_count"] = target_previous_item_count + target_gain

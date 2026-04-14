@@ -79,7 +79,10 @@ async def rob_items(
 
     if isinstance(cooldown_until, datetime) and cooldown_until > now:
         raise_cooldown_error(
-            action_name="搶", item_name=item_name, cooldown_until=cooldown_until, now=now
+            action_name="搶",
+            item_name=item_name,
+            cooldown_until=cooldown_until,
+            now=now,
         )
 
     if target_user_id is None and not allow_random_rob:
@@ -126,7 +129,9 @@ async def rob_items(
     elif roll < 0.07:
         actor_delta = 0
         target_delta = 0
-        cooldown_seconds = DEFAULT_ROB_COOLDOWN_SECONDS + DEFAULT_ROB_POLICE_EXTRA_COOLDOWN_SECONDS
+        cooldown_seconds = (
+            DEFAULT_ROB_COOLDOWN_SECONDS + DEFAULT_ROB_POLICE_EXTRA_COOLDOWN_SECONDS
+        )
         event_name = "rob_police"
     elif roll < 0.09:
         loss_amount = min(rob_amount, previous_item_count)

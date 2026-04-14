@@ -69,7 +69,9 @@ class BreadRankingView(BaseView):
             lines: list[str] = []
             for entry in ranking_page.entries:
                 if ranking_page.scope == "global":
-                    extra = f" | 跨 {entry.guild_count} 個群" if entry.guild_count else ""
+                    extra = (
+                        f" | 跨 {entry.guild_count} 個群" if entry.guild_count else ""
+                    )
                     lines.append(
                         f"`#{entry.rank:>2}` <@{entry.user_id}> | Lv.{entry.level} | "
                         f"{entry.item_count} 個{extra}"

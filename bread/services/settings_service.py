@@ -4,7 +4,11 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 from typing import Final
 
-from bread.constants import DEFAULT_ALLOW_RANDOM_GIVE, DEFAULT_ALLOW_RANDOM_ROB, DEFAULT_ITEM_NAME
+from bread.constants import (
+    DEFAULT_ALLOW_RANDOM_GIVE,
+    DEFAULT_ALLOW_RANDOM_ROB,
+    DEFAULT_ITEM_NAME,
+)
 from bread.repositories.player_action_repository import execute_single_player_action
 from bread.repositories.player_context_repository import get_or_create_player_context
 from bread.repositories.profile_repository import get_or_create_guild_config
@@ -87,10 +91,14 @@ async def set_bread_nickname(
     if tx_result["state_changed"]:
         raise_state_changed_error()
 
-    return NicknameUpdateResult(old_nickname=old_nickname, new_nickname=normalized_nickname)
+    return NicknameUpdateResult(
+        old_nickname=old_nickname, new_nickname=normalized_nickname
+    )
 
 
-async def set_guild_item_name(*, guild_id: int | None, item_name: str) -> ItemNameUpdateResult:
+async def set_guild_item_name(
+    *, guild_id: int | None, item_name: str
+) -> ItemNameUpdateResult:
     resolved_guild_id = ensure_guild_supported(guild_id)
     normalized_item_name = item_name.strip()
     if len(normalized_item_name) < 2 or len(normalized_item_name) > 5:
@@ -125,6 +133,10 @@ async def set_guild_item_name(*, guild_id: int | None, item_name: str) -> ItemNa
     except RuntimeError as exc:
         raise build_feature_disabled_error() from exc
     except Exception as exc:
-        raise DatabaseOperationError(ITEM_NAME_UPDATE_ERROR, original_exception=exc) from exc
+        raise DatabaseOperationError(
+            ITEM_NAME_UPDATE_ERROR, original_exception=exc
+        ) from exc
 
-    return ItemNameUpdateResult(old_item_name=old_item_name, new_item_name=normalized_item_name)
+    return ItemNameUpdateResult(
+        old_item_name=old_item_name, new_item_name=normalized_item_name
+    )

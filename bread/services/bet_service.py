@@ -79,12 +79,15 @@ async def bet_items(
 
     if isinstance(cooldown_until, datetime) and cooldown_until > now:
         raise_cooldown_error(
-            action_name="賭", item_name=item_name, cooldown_until=cooldown_until, now=now
+            action_name="賭",
+            item_name=item_name,
+            cooldown_until=cooldown_until,
+            now=now,
         )
 
     bet_amount = randint(DEFAULT_MIN_BET_AMOUNT, DEFAULT_MAX_BET_AMOUNT)
     if previous_item_count < bet_amount:
-        error_message = f"你的{item_name}還不夠賭，先去買一些吧。"
+        error_message = f"你的 {item_name} 不夠賭，先去買一些吧。"
         raise BusinessError(error_message, author_name="存貨不足")
 
     system_gesture = choice(list(ALL_GESTURES))
@@ -105,7 +108,9 @@ async def bet_items(
             event_name = "triple_hands_loss"
     elif roll < 0.07:
         delta = 0
-        cooldown_seconds = DEFAULT_BET_COOLDOWN_SECONDS + DEFAULT_BET_POLICE_EXTRA_COOLDOWN_SECONDS
+        cooldown_seconds = (
+            DEFAULT_BET_COOLDOWN_SECONDS + DEFAULT_BET_POLICE_EXTRA_COOLDOWN_SECONDS
+        )
         event_name = "bet_police"
     elif roll < 0.1:
         cooldown_seconds = 0
@@ -196,7 +201,7 @@ def _build_bet_message(
     if event_name == "double_win":
         return (
             f"你出 {player_gesture}，我出 {system_gesture}。\n"
-            f"你本來就贏了，還觸發加碼，這次直接拿到 **{delta}** 個 {item_name}！\n"
+            f"你贏了，還觸發加碼！直接拿到 **{delta}** 個 {item_name}。\n"
             f"持有量：**{previous_item_count} -> {current_item_count}**"
         )
     if event_name == "triple_hands_loss":
@@ -207,11 +212,13 @@ def _build_bet_message(
     if event_name == "bet_police":
         return (
             f"你出 {player_gesture}，我出 {system_gesture}。\n"
-            f"這把被警察盯上了，沒有結算輸贏，但下次賭要多等 40 分鐘。"
+            f"被警察盯上了，這把不算輸贏，但下次賭要多等 40 分鐘。"
         )
     if event_name == "bet_again":
         suffix = (
-            "平局，這次可以立刻再來一把。" if delta == 0 else "你有點上癮，這次可以立刻再來一把。"
+            "平局，這次可以立刻再來一把。"
+            if delta == 0
+            else "你有點上癮，這次可以立刻再來一把。"
         )
         return (
             f"你出 {player_gesture}，我出 {system_gesture}。\n"
@@ -224,9 +231,12 @@ def _build_bet_message(
     )
 
 
-def _build_base_bet_outcome_text(*, item_name: str, delta: int, current_item_count: int) -> str:
+def _build_base_bet_outcome_text(
+    *, item_name: str, delta: int, current_item_count: int
+) -> str:
     if delta > 0:
         return f"你贏了，拿到 **{delta}** 個 {item_name}，現在共有 **{current_item_count}** 個。"
     if delta < 0:
         return f"你輸了，失去 **{abs(delta)}** 個 {item_name}，現在剩 **{current_item_count}** 個。"
     return f"平局，{item_name} 全數退回，你現在仍有 **{current_item_count}** 個。"
+    return f"平手，{item_name} 原數退回，你手上還是 **{current_item_count}** 個。"

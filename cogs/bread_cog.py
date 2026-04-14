@@ -262,7 +262,9 @@ class BreadCog(commands.Cog):
         interaction: discord.Interaction,
         scope: app_commands.Choice[str] | None = None,
     ) -> None:
-        selected_scope = "group" if scope is None or scope.value == "group" else "global"
+        selected_scope = (
+            "group" if scope is None or scope.value == "group" else "global"
+        )
         embed, view = await create_ranking_response(
             bot=self.bot,
             author=interaction.user,
