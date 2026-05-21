@@ -1,21 +1,40 @@
 from __future__ import annotations
 
-import os
-import pathlib
+import asyncio
+import math
 import time
+from collections.abc import Callable
+from pathlib import Path
+from typing import TypeAlias, TypedDict
 
 import aiofiles
+import aiofiles.os
 import aiohttp
 from loguru import logger
-
-# Placeholder for rosu_pp, assuming it's installed
-# import rosu_pp_py as rosu_pp # Or the correct import name
+from rosu_pp_py import Beatmap, Difficulty, DifficultyAttributes, Performance, PerformanceAttributes
 
 OSU_BEATMAP_DOWNLOAD_URL = "https://osu.ppy.sh/osu/{beatmap_id}"
-TEMP_OSU_DIR = "./temp"
+TEMP_OSU_DIR = Path("temp")
+DEFAULT_CLOCK_RATE = 1.0
+CLOCK_RATE_TOLERANCE = 1e-9
+ERROR_DETAIL_LIMIT = 200
+
+BeatmapStatusInput: TypeAlias = int | str | None
+LocalizedStringGetter: TypeAlias = Callable[[int, str, str], str]
 
 
-# --- Custom Exceptions ---
+class BeatmapMetadata(TypedDict):
+    title: str
+    artist: str
+    version: str
+
+
+class RosuPpResult(TypedDict):
+    pp: float
+    stars: float
+    max_combo: int
+
+
 class BeatmapProcessingError(Exception):
     """Base class for errors during beatmap processing."""
 
@@ -28,8 +47,6 @@ class RosuPpCalculationError(BeatmapProcessingError):
     """Raised when rosu-pp calculation fails."""
 
 
-# Mod bitmasks - Reference: https://github.com/ppy/osu-api/wiki/Display-Mods
-# And common interpretations for PP calculators.
 MOD_ACRONYMS_TO_BITMASK = {
     "NF": 1,
     "EZ": 2,
@@ -45,9 +62,6 @@ MOD_ACRONYMS_TO_BITMASK = {
     "PF": 16384,
 }
 
-# Ensure temp directory exists (though ideally bot doesn't create dirs on the fly)
-# os.makedirs(TEMP_OSU_DIR, exist_ok=True) # User should create this
-
 BEATMAP_STATUS_EMOJIS = {
     "ranked": "<:ranked:1378350261323694221>",
     "qualified": "<:AorQ:1378350246647566346>",
@@ -56,38 +70,27 @@ BEATMAP_STATUS_EMOJIS = {
     "pending": "<:WorP:1378351617253838938>",
     "wip": "<:WorP:1378351617253838938>",
     "graveyard": "<:WorP:1378351617253838938>",
-    "unknown": "<:WorP:1378351617253838938>",  # Default emoji for unknown
+    "unknown": "<:WorP:1378351617253838938>",
 }
 
 BEATMAP_STATUS_API_MAP = {
-    # API v2 `status` (string) and `ranked` (integer)
-    # BeatmapCompact https://osu.ppy.sh/docs/index.html#beatmapcompact
-    # BeatmapsetCompact https://osu.ppy.sh/docs/index.html#beatmapsetcompact
-    "graveyard": "graveyard",  # -2
-    "wip": "wip",  # -1 (Work in Progress)
-    "pending": "pending",  # 0
-    "ranked": "ranked",  # 1
-    "approved": "approved",  # 2 (Note: osu! API v2 docs say "qualified" is 2, "approved" is 3. Check specific API responses)
-    # However, common usage elsewhere seems to map `approved` string directly.
-    # Let's assume string values from API are primary.
-    "qualified": "qualified",  # 3 (API v2: status: "qualified", ranked: 3) -> This seems more consistent now.
-    "loved": "loved",  # 4
-    # Integer mapping (from `beatmap.status` or `beatmapset.status` if integer)
-    # These integers align with `Beatmapset->status` or `Beatmap->status` when they are integers.
-    # Often, the API might return `status` as a string like "ranked", "loved", etc.
-    # And `ranked` as an integer (1 for ranked, 4 for loved, etc.)
+    "graveyard": "graveyard",
+    "wip": "wip",
+    "pending": "pending",
+    "ranked": "ranked",
+    "approved": "approved",
+    "qualified": "qualified",
+    "loved": "loved",
     -2: "graveyard",
     -1: "wip",
     0: "pending",
     1: "ranked",
-    2: "qualified",  # Mapping API int 2 to qualified
-    3: "approved",  # Mapping API int 3 to approved
+    2: "qualified",
+    3: "approved",
     4: "loved",
-    # Fallback for older API versions or different fields if necessary
-    "work-in-progress": "wip",  # from osu!direct or older API calls
+    "work-in-progress": "wip",
 }
 
-# Mapping our internal status keys to the l10n keys for translations
 BEATMAP_STATUS_L10N_KEYS = {
     "ranked": "beatmap_status_ranked_emoji",
     "qualified": "beatmap_status_qualified_emoji",
@@ -100,169 +103,137 @@ BEATMAP_STATUS_L10N_KEYS = {
 }
 
 
-def get_beatmap_status_display(status_input, user_id_for_l10n: int, lstr_func) -> str:
-    """
-    Returns the emoji and localized status string for a given beatmap status.
-    status_input can be an integer (from API status field, e.g., beatmapset.ranked or beatmap.status (if int))
-                 or a string (from API status field, e.g., beatmap.status or beatmapset.status (if str)).
-    lstr_func is the localization function (e.g., from a cog: self.bot.l10n.get_lstr_value).
-    """
-    status_key = "unknown"  # Default
-
-    if isinstance(status_input, str):
-        normalized_status_str = status_input.lower().replace("_", "-").replace(" ", "-")
-        if (
-            normalized_status_str in BEATMAP_STATUS_API_MAP
-        ):  # Direct match for string keys like "ranked"
-            status_key = normalized_status_str
-        elif normalized_status_str == "approved":  # API v2 uses "approved" string, map it.
-            status_key = "approved"  # Ensure approved has its own key if distinct from qualified
-        elif normalized_status_str == "qualified":
-            status_key = "qualified"
-        # Add more explicit string mappings if needed
-    elif isinstance(status_input, int):
-        status_key = BEATMAP_STATUS_API_MAP.get(status_input, "unknown")
-
-    # If status_key is still "unknown" but was a string, try to map it if it's a known status string key
-    if (
-        status_key == "unknown"
-        and isinstance(status_input, str)
-        and status_input.lower() in BEATMAP_STATUS_EMOJIS
-    ):
-        status_key = status_input.lower()
-
+def get_beatmap_status_display(
+    status_input: BeatmapStatusInput, user_id_for_l10n: int, lstr_func: LocalizedStringGetter
+) -> str:
+    """Return the emoji and localized label for a beatmap status."""
+    status_key = _normalize_status_key(status_input)
     emoji = BEATMAP_STATUS_EMOJIS.get(status_key, BEATMAP_STATUS_EMOJIS["unknown"])
-    l10n_key_for_text = BEATMAP_STATUS_L10N_KEYS.get(
-        status_key, BEATMAP_STATUS_L10N_KEYS["unknown"]
-    )
-
-    # The third argument to lstr_func is a fallback if the key is not found.
-    # For "unknown", we might want a generic "Unknown Status" or just the status_key.
-    status_text_localized = lstr_func(
-        user_id_for_l10n, l10n_key_for_text, status_key.replace("-", " ").capitalize()
-    )
-
-    return f"{emoji} {status_text_localized}"
+    l10n_key = BEATMAP_STATUS_L10N_KEYS.get(status_key, BEATMAP_STATUS_L10N_KEYS["unknown"])
+    fallback = status_key.replace("-", " ").capitalize()
+    status_text = lstr_func(user_id_for_l10n, l10n_key, fallback)
+    return f"{emoji} {status_text}"
 
 
-async def download_osu_file(beatmap_id: int, session: aiohttp.ClientSession) -> str | None:
-    """Downloads an .osu file for a given beatmap_id.
-    Returns the path to the downloaded file.
-    Raises BeatmapDownloadError if the download failed or temp directory doesn't exist.
-    The file is saved in the TEMP_OSU_DIR.
-    """
-    if not pathlib.Path(TEMP_OSU_DIR).exists():
-        err_msg = f"Temporary directory {TEMP_OSU_DIR} does not exist. Please create it."
-        logger.error(f"[BeatmapUtils] Error: {err_msg}")
-        raise BeatmapDownloadError(err_msg)
+def _normalize_status_key(status_input: BeatmapStatusInput) -> str:
+    if isinstance(status_input, int):
+        return BEATMAP_STATUS_API_MAP.get(status_input, "unknown")
+    if not isinstance(status_input, str):
+        return "unknown"
 
-    file_name = f"{beatmap_id}_{int(time.time())}.osu"
-    file_path = os.path.join(TEMP_OSU_DIR, file_name)
+    normalized = status_input.lower().replace("_", "-").replace(" ", "-")
+    mapped_status = BEATMAP_STATUS_API_MAP.get(normalized)
+    if isinstance(mapped_status, str):
+        return mapped_status
+    if normalized in BEATMAP_STATUS_EMOJIS:
+        return normalized
+    return "unknown"
+
+
+async def download_osu_file(beatmap_id: int, session: aiohttp.ClientSession) -> str:
+    """Download an .osu file and return the local file path."""
+    if not await aiofiles.os.path.exists(TEMP_OSU_DIR):
+        msg = f"Temporary directory {TEMP_OSU_DIR} does not exist"
+        raise BeatmapDownloadError(msg)
+
     url = OSU_BEATMAP_DOWNLOAD_URL.format(beatmap_id=beatmap_id)
+    file_path = TEMP_OSU_DIR / f"{beatmap_id}_{int(time.time())}.osu"
 
     try:
-        logger.debug(f"[BeatmapUtils] Downloading .osu file from: {url}")
         async with session.get(url) as response:
-            if response.status == 200:
-                async with aiofiles.open(file_path, "wb") as f:
-                    await f.write(await response.read())
-                logger.debug(f"[BeatmapUtils] Successfully downloaded {file_path}")
-                return file_path
-            error_detail = f"HTTP {response.status}"
-            try:  # Try to get more error details from response
-                text_response = await response.text()
-                error_detail += f": {text_response[:200]}"  # Limit length of error message
-            except Exception:
-                pass  # Ignore if cannot get text
-            err_msg = f"Error downloading .osu file: {error_detail} for URL {url}"
-            logger.error(f"[BeatmapUtils] {err_msg}")
-            raise BeatmapDownloadError(err_msg)
-    except aiohttp.ClientError as e:
-        err_msg = f"ClientError during .osu download for {url}: {e}"
-        logger.error(f"[BeatmapUtils] {err_msg}")
-        raise BeatmapDownloadError(err_msg) from e
-    except Exception as e:  # Catch any other unexpected errors
-        err_msg = f"Unexpected error during .osu download for {url}: {type(e).__name__} - {e}"
-        logger.error(f"[BeatmapUtils] {err_msg}")
-        raise BeatmapDownloadError(err_msg) from e
+            if response.status != 200:
+                await _raise_download_error(response, url)
+            await _write_response_body(file_path, response)
+    except aiohttp.ClientError as exc:
+        msg = f"Client error during .osu download for {url}: {exc}"
+        raise BeatmapDownloadError(msg) from exc
+
+    logger.debug(f"[BeatmapUtils] Successfully downloaded {file_path}")
+    return str(file_path)
 
 
-def parse_osu_file_metadata(osu_file_path: str) -> dict:
-    """Parses an .osu file to extract Title, Artist, and Version from the [Metadata] section."""
-    metadata = {"title": None, "artist": None, "version": None}
+async def _raise_download_error(response: aiohttp.ClientResponse, url: str) -> None:
+    error_detail = f"HTTP {response.status}"
     try:
-        with pathlib.Path(osu_file_path).open("r", encoding="utf-8") as f:
-            in_metadata_section = False
-            for line in f:
-                line = line.strip()
-                if line == "[Metadata]":
-                    in_metadata_section = True
-                    continue
-                if in_metadata_section:
-                    if (
-                        line.startswith("Title:") and metadata["title"] is None
-                    ):  # Prefer first Title found
-                        metadata["title"] = line[len("Title:") :].strip()
-                    elif (
-                        line.startswith("TitleUnicode:") and metadata["title"] is None
-                    ):  # Fallback to TitleUnicode
-                        metadata["title"] = line[len("TitleUnicode:") :].strip()
-                    elif line.startswith("Artist:") and metadata["artist"] is None:
-                        metadata["artist"] = line[len("Artist:") :].strip()
-                    elif line.startswith("ArtistUnicode:") and metadata["artist"] is None:
-                        metadata["artist"] = line[len("ArtistUnicode:") :].strip()
-                    elif line.startswith("Version:") and metadata["version"] is None:
-                        metadata["version"] = line[len("Version:") :].strip()
-                    elif line.startswith("[") and line.endswith("]"):  # Reached another section
-                        break
-            # If any metadata is still None, default them to avoid issues, or they can be handled upstream
-            if metadata["title"] is None:
-                metadata["title"] = "Unknown Title"
-            if metadata["artist"] is None:
-                metadata["artist"] = "Unknown Artist"
-            if metadata["version"] is None:
-                metadata["version"] = "Unknown Version"
-        logger.debug(f"[BeatmapUtils] Parsed metadata: {metadata} from {osu_file_path}")
-    except Exception as e:
-        logger.error(f"[BeatmapUtils] Error parsing .osu file metadata for {osu_file_path}: {e}")
-        if metadata["title"] is None:
-            metadata["title"] = "Error Parsing Title"
-        if metadata["artist"] is None:
-            metadata["artist"] = "Error Parsing Artist"
-        if metadata["version"] is None:
-            metadata["version"] = "Error Parsing Version"
-    return metadata
+        text_response = await response.text()
+    except aiohttp.ClientError as exc:
+        logger.warning(f"[BeatmapUtils] Failed to read download error body: {exc}")
+    else:
+        error_detail = f"{error_detail}: {text_response[:ERROR_DETAIL_LIMIT]}"
+
+    msg = f"Error downloading .osu file: {error_detail} for URL {url}"
+    raise BeatmapDownloadError(msg)
 
 
-def get_mods_bitmask_and_clock_rate(selected_mods: list[str]) -> tuple[int, float | None]:
-    """Converts a list of mod acronyms to a bitmask and determines clock rate."""
+async def _write_response_body(file_path: Path, response: aiohttp.ClientResponse) -> None:
+    async with aiofiles.open(file_path, "wb") as osu_file:
+        await osu_file.write(await response.read())
+
+
+def parse_osu_file_metadata(osu_file_path: str) -> BeatmapMetadata:
+    """Parse title, artist, and version from an .osu file metadata section."""
+    metadata: dict[str, str | None] = {"title": None, "artist": None, "version": None}
+    in_metadata_section = False
+
+    with Path(osu_file_path).open("r", encoding="utf-8") as osu_file:
+        for raw_line in osu_file:
+            stripped_line = raw_line.strip()
+            if stripped_line == "[Metadata]":
+                in_metadata_section = True
+                continue
+            if in_metadata_section and _metadata_section_finished(stripped_line):
+                break
+            if in_metadata_section:
+                _apply_metadata_line(metadata, stripped_line)
+
+    parsed_metadata = _metadata_with_defaults(metadata)
+    logger.debug(f"[BeatmapUtils] Parsed metadata: {parsed_metadata} from {osu_file_path}")
+    return parsed_metadata
+
+
+def _metadata_section_finished(line: str) -> bool:
+    return line.startswith("[") and line.endswith("]")
+
+
+def _apply_metadata_line(metadata: dict[str, str | None], line: str) -> None:
+    metadata_fields = {
+        "title": ("Title:", "TitleUnicode:"),
+        "artist": ("Artist:", "ArtistUnicode:"),
+        "version": ("Version:",),
+    }
+    for field, prefixes in metadata_fields.items():
+        if metadata[field] is not None:
+            continue
+        for prefix in prefixes:
+            if line.startswith(prefix):
+                metadata[field] = line[len(prefix) :].strip()
+                return
+
+
+def _metadata_with_defaults(metadata: dict[str, str | None]) -> BeatmapMetadata:
+    return {
+        "title": metadata["title"] or "Unknown Title",
+        "artist": metadata["artist"] or "Unknown Artist",
+        "version": metadata["version"] or "Unknown Version",
+    }
+
+
+def get_mods_bitmask_and_clock_rate(selected_mods: list[str]) -> tuple[int, float]:
+    """Convert mod acronyms to a bitmask and clock rate."""
     bitmask = 0
-    clock_rate = 1.0  # Default clock rate
-
-    if not selected_mods:
-        return 0, clock_rate
-
-    # Make a copy to avoid modifying the original list if 'NC' needs 'DT'
+    clock_rate = DEFAULT_CLOCK_RATE
     mods_for_processing = list(selected_mods)
 
     if "NC" in mods_for_processing and "DT" not in mods_for_processing:
-        mods_for_processing.append("DT")  # Nightcore implies Double Time
+        mods_for_processing.append("DT")
 
     for mod in mods_for_processing:
         mod_upper = mod.upper()
-        if mod_upper in MOD_ACRONYMS_TO_BITMASK:
-            bitmask |= MOD_ACRONYMS_TO_BITMASK[mod_upper]
-
+        bitmask |= MOD_ACRONYMS_TO_BITMASK.get(mod_upper, 0)
         if mod_upper in {"DT", "NC"}:
             clock_rate = 1.5
         elif mod_upper == "HT":
             clock_rate = 0.75
-
-    # If both DT/NC and HT are somehow selected, which is unusual,
-    # the last one processed in typical list order might take precedence for clock_rate.
-    # Or, one might want to define specific behavior (e.g., error or default).
-    # For simplicity, this implementation lets the last one set it.
-    # A more robust way would be to disallow conflicting mods earlier or have rosu-pp handle it.
 
     return bitmask, clock_rate
 
@@ -271,127 +242,100 @@ async def calculate_pp_with_rosu(
     osu_file_path: str,
     selected_mods: list[str],
     accuracy: float = 100.0,
-    combo: int | None = None,  # Max combo if None
+    combo: int | None = None,
     misses: int = 0,
-) -> dict | None:
-    """Calculates PP using rosu-pp-py.
-    Returns a dict with 'pp', 'stars', and 'max_combo'.
-    Raises RosuPpCalculationError if calculation failed or rosu-pp-py is not found.
-    """
+) -> RosuPpResult:
+    """Calculate PP using rosu-pp-py without blocking the event loop."""
+    return await asyncio.to_thread(
+        _calculate_pp_with_rosu_sync, osu_file_path, selected_mods, accuracy, combo, misses
+    )
+
+
+def _calculate_pp_with_rosu_sync(
+    osu_file_path: str, selected_mods: list[str], accuracy: float, combo: int | None, misses: int
+) -> RosuPpResult:
     try:
-        try:
-            from rosu_pp_py import Beatmap, Difficulty, Performance  # Adjust import if needed
-        except ImportError as e:
-            err_msg = "rosu-pp-py library not found. Please install it."
-            logger.error(f"[BeatmapUtils] Error: {err_msg}")
-            raise RosuPpCalculationError(err_msg) from e
+        return _run_rosu_pp_calculation(osu_file_path, selected_mods, accuracy, combo, misses)
+    except TypeError as exc:
+        msg = f"rosu-pp API compatibility error for {osu_file_path}: {exc}"
+        raise RosuPpCalculationError(msg) from exc
+    except Exception as exc:
+        msg = f"rosu-pp calculation failed for {osu_file_path}: {type(exc).__name__} - {exc}"
+        raise RosuPpCalculationError(msg) from exc
 
-        logger.debug(
-            f"[BeatmapUtils] Calculating PP for: {osu_file_path} with mods {selected_mods}, acc {accuracy}%"
-        )
 
-        beatmap_obj = Beatmap(path=osu_file_path)  # Load the beatmap
+def _run_rosu_pp_calculation(
+    osu_file_path: str, selected_mods: list[str], accuracy: float, combo: int | None, misses: int
+) -> RosuPpResult:
+    beatmap = Beatmap(path=osu_file_path)
+    mod_bitmask, clock_rate = get_mods_bitmask_and_clock_rate(selected_mods)
+    difficulty_attrs = _calculate_difficulty(beatmap, mod_bitmask, clock_rate)
+    actual_combo = combo if combo is not None else difficulty_attrs.max_combo
+    performance_attrs = _calculate_performance(
+        beatmap, mod_bitmask, clock_rate, accuracy, actual_combo, misses
+    )
+    return _build_rosu_result(
+        performance_attrs.pp, difficulty_attrs.stars, difficulty_attrs.max_combo
+    )
 
-        mod_bitmask, clock_rate = get_mods_bitmask_and_clock_rate(selected_mods)
 
-        # Calculate difficulty attributes first, as these are often useful and sometimes needed by Performance
-        difficulty_calculator = Difficulty(mods=mod_bitmask)
-        if (
-            clock_rate != 1.0
-        ):  # rosu-pp typically handles None clock_rate as 1.0, but explicit is fine
-            difficulty_calculator.set_clock_rate(clock_rate)
+def _calculate_difficulty(
+    beatmap: Beatmap, mod_bitmask: int, clock_rate: float
+) -> DifficultyAttributes:
+    difficulty = Difficulty(mods=mod_bitmask)
+    if not _is_default_clock_rate(clock_rate):
+        difficulty.set_clock_rate(clock_rate)
+    return difficulty.calculate(beatmap)
 
-        difficulty_attrs = difficulty_calculator.calculate(beatmap_obj)
 
-        stars = difficulty_attrs.stars
-        max_combo_from_calc = difficulty_attrs.max_combo
+def _calculate_performance(
+    beatmap: Beatmap,
+    mod_bitmask: int,
+    clock_rate: float,
+    accuracy: float,
+    combo: int | None,
+    misses: int,
+) -> PerformanceAttributes:
+    performance = Performance()
+    if mod_bitmask:
+        performance.set_mods(mod_bitmask)
+    if not _is_default_clock_rate(clock_rate):
+        performance.set_clock_rate(clock_rate)
+    performance.set_accuracy(accuracy)
+    performance.set_misses(misses)
+    if combo is not None:
+        performance.set_combo(combo)
+    return performance.calculate(beatmap)
 
-        # Determine the combo to use for PP calculation
-        actual_combo = combo if combo is not None else max_combo_from_calc
 
-        # Calculate performance attributes using the direct calculation method
-        # This often involves creating a Performance object and then calling calculate on it
-        # with the beatmap and score state.
+def _build_rosu_result(pp: float | None, stars: float | None, max_combo: int) -> RosuPpResult:
+    if pp is None or stars is None:
+        msg = "rosu-pp returned None for PP or stars"
+        raise RosuPpCalculationError(msg)
 
-        # Instantiate Performance. The TypeError suggested it takes no args, or specific named args.
-        perf_calc = Performance()
+    logger.debug(f"[BeatmapUtils] Calculated PP: {pp:.2f}, Stars: {stars:.2f}")
+    return {"pp": pp, "stars": stars, "max_combo": max_combo}
 
-        # Set attributes for performance calculation via methods if available,
-        # or pass them to calculate() if that's the API.
-        # Common pattern for rosu-pp-py is to chain or pass to calculate.
 
-        # For many rosu-pp-py versions, you pass parameters to the calculate method of Performance.
-        # The calculate method itself might need the beatmap object or its pre-calculated attributes.
-
-        # Option 1: Pass everything to calculate (if Performance() is just a holder)
-        # This is a common pattern if Performance() itself does not store state from constructor.
-        # perf_attrs = perf_calc.calculate(
-        #     beatmap_obj, # Pass the Beatmap object
-        #     mods=mod_bitmask, # Redundant if difficulty_attrs is used and mods are baked in, but some APIs want it
-        #     acc=accuracy,
-        #     combo=actual_combo,
-        #     misses=misses,
-        #     # clock_rate might be passed here too if not handled by Difficulty effectively for Performance
-        # )
-
-        # Option 2: Chain methods (more typical for recent rosu-pp-py versions)
-        # This relies on Performance() returning self to allow chaining.
-        # We'll try chaining approach first as it's common.
-
-        perf_setup = perf_calc  # Start with the base Performance object
-
-        if mod_bitmask:  # Some versions of rosu-pp-py want mods on Performance too
-            perf_setup.set_mods(mod_bitmask)
-        if clock_rate and clock_rate != 1.0:
-            perf_setup.set_clock_rate(clock_rate)  # If set_clock_rate exists
-
-        perf_setup.set_accuracy(accuracy)
-        perf_setup.set_misses(misses)  # Changed from set_n_misses
-        if actual_combo is not None:
-            perf_setup.set_combo(actual_combo)
-
-        # And then calculate, passing the beatmap object.
-        # Some versions might want `difficulty_attrs` passed here instead of re-calculating internally or needing beatmap_obj
-        perf_attrs = perf_setup.calculate(
-            beatmap_obj
-        )  # or calculate(difficulty_attrs) if API expects that
-
-        pp = perf_attrs.pp
-
-        if pp is None or stars is None:
-            err_msg = "rosu-pp calculation returned None for PP or Stars. Mode might not be fully supported for PP."
-            logger.error(f"[BeatmapUtils] {err_msg} Path: {osu_file_path}")
-            raise RosuPpCalculationError(err_msg)
-
-        logger.debug(
-            f"[BeatmapUtils] Calculated PP: {pp:.2f}, Stars: {stars:.2f}, Max Combo: {max_combo_from_calc}"
-        )
-        return {"pp": pp, "stars": stars, "max_combo": max_combo_from_calc}
-
-    except TypeError as te:  # Catch the specific TypeError we saw
-        err_msg = f"TypeError during rosu-pp setup/calculation (check API compatibility for Performance class): {te} for {osu_file_path}"
-        logger.exception(f"[BeatmapUtils] {err_msg}")
-        raise RosuPpCalculationError(err_msg) from te
-    except Exception as e:
-        err_msg = f"Error during rosu-pp calculation for {osu_file_path}: {type(e).__name__} - {e}"
-        logger.exception(f"[BeatmapUtils] {err_msg}")
-        raise RosuPpCalculationError(err_msg) from e
+def _is_default_clock_rate(clock_rate: float) -> bool:
+    return math.isclose(clock_rate, DEFAULT_CLOCK_RATE, rel_tol=0.0, abs_tol=CLOCK_RATE_TOLERANCE)
 
 
 def delete_osu_file(osu_file_path: str) -> None:
-    """Deletes the specified .osu file from the temp directory."""
-    try:
-        if (
-            osu_file_path and pathlib.Path(osu_file_path).exists() and TEMP_OSU_DIR in osu_file_path
-        ):  # Safety check
-            pathlib.Path(osu_file_path).unlink()
-            logger.debug(f"[BeatmapUtils] Deleted temporary file: {osu_file_path}")
-        else:
-            logger.debug(
-                f"[BeatmapUtils] File not deleted (not found or invalid path): {osu_file_path}"
-            )
-    except Exception as e:
-        logger.error(f"[BeatmapUtils] Error deleting temporary file {osu_file_path}: {e}")
+    """Delete a temporary .osu file if it lives in the configured temp directory."""
+    file_path = Path(osu_file_path)
+    if not _is_temp_osu_file(file_path):
+        logger.debug(f"[BeatmapUtils] File not deleted, invalid temp path: {osu_file_path}")
+        return
+    if not file_path.exists():
+        logger.debug(f"[BeatmapUtils] File not deleted, missing path: {osu_file_path}")
+        return
+
+    file_path.unlink()
+    logger.debug(f"[BeatmapUtils] Deleted temporary file: {osu_file_path}")
 
 
-# Example usage and if __name__ == "__main__" block will be removed.
+def _is_temp_osu_file(file_path: Path) -> bool:
+    temp_dir = TEMP_OSU_DIR.resolve()
+    resolved_file = file_path.resolve()
+    return resolved_file.suffix == ".osu" and temp_dir in resolved_file.parents

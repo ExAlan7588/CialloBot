@@ -95,8 +95,7 @@ class MessageTracker:
         logger.info(f"🧹 清空了所有訊息追蹤記錄 (共 {count} 條)")
 
 
-# 全局訊息追蹤器實例
-_global_tracker: MessageTracker | None = None
+_MESSAGE_TRACKER = MessageTracker()
 
 
 def get_message_tracker() -> MessageTracker:
@@ -105,8 +104,4 @@ def get_message_tracker() -> MessageTracker:
     Returns:
         全局訊息追蹤器
     """
-    global _global_tracker
-    if _global_tracker is None:
-        _global_tracker = MessageTracker()
-        logger.info("✅ 初始化全局訊息追蹤器")
-    return _global_tracker
+    return _MESSAGE_TRACKER

@@ -64,7 +64,7 @@ class DeleteMessageView(discord.ui.View):
         return bool(member.guild_permissions.administrator)
 
     @discord.ui.button(label="刪除", style=discord.ButtonStyle.danger, emoji="🗑️")
-    async def delete_button(self, interaction: Interaction, button: discord.ui.Button) -> None:
+    async def delete_button(self, interaction: Interaction, _button: discord.ui.Button) -> None:
         """刪除按鈕回調
 
         Args:

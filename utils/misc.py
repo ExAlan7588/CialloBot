@@ -5,6 +5,8 @@
 
 from __future__ import annotations
 
+import asyncio
+
 from loguru import logger
 
 
@@ -19,10 +21,6 @@ def should_ignore_error(error: Exception) -> bool:
     Returns:
         如果應該忽略該錯誤則返回 True
     """
-    # 可以在這裡添加需要忽略的錯誤類型
-    # 例如：取消的任務、連接超時等
-    import asyncio
-
     return bool(isinstance(error, asyncio.CancelledError))
 
 

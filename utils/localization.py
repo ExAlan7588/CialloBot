@@ -1,218 +1,161 @@
 from __future__ import annotations
 
 import json
-import os
-import pathlib
-import threading  # For thread-safe file writing
+import threading
+from pathlib import Path
+from typing import Any
 
 from loguru import logger
 
 from private import config
 
-# 語言文件緩存
+LOCALES_DIR = Path("locales")
+USER_PREFS_FILE = Path("private/user_lang_prefs.json")
+TRANSLATION_MISSING_TEMPLATE = "<translation_missing: {key}>"
+FORMAT_ERROR_TEMPLATE = "<formatting_error: {key} ({error_type})>"
+
 _translations: dict[str, dict[str, str]] = {}
-_user_lang_preferences: dict[str, str] = {}  # user_id (str): lang_code
-USER_PREFS_FILE = "private/user_lang_prefs.json"
-_prefs_lock = threading.Lock()  # Lock for writing to the preferences file
+_user_lang_preferences: dict[str, str] = {}
+_prefs_lock = threading.Lock()
 
 
 def _load_user_preferences() -> None:
-    """從 JSON 文件加載用戶語言偏好到內存"""
-    global _user_lang_preferences
-    if not pathlib.Path(USER_PREFS_FILE).exists():
+    """Load user language preferences into memory."""
+    if not USER_PREFS_FILE.exists():
         logger.info(f"'{USER_PREFS_FILE}' not found. Starting with empty user preferences.")
-        _user_lang_preferences = {}
+        _replace_user_preferences({})
         return
-    try:
-        with _prefs_lock:  # Ensure thread-safe reading, though less critical than writing
-            with pathlib.Path(USER_PREFS_FILE).open(encoding="utf-8") as f:
-                content = f.read()
-                if not content:  # File is empty
-                    _user_lang_preferences = {}
-                    logger.info(
-                        f"'{USER_PREFS_FILE}' is empty. Starting with empty user preferences."
-                    )
-                else:
-                    _user_lang_preferences = json.loads(content)
-                    # Ensure keys are strings if they were stored as ints from interaction.user.id
-                    _user_lang_preferences = {str(k): v for k, v in _user_lang_preferences.items()}
-                    logger.info(f"已成功從 '{USER_PREFS_FILE}' 加載用戶語言偏好。")
-    except json.JSONDecodeError:
-        logger.error(f"錯誤：解析 '{USER_PREFS_FILE}' 失敗。將使用空的用戶偏好。")
-        _user_lang_preferences = {}
-    except Exception as e:
-        logger.error(f"加載用戶偏好時發生未知錯誤: {e}")
-        _user_lang_preferences = {}
+
+    content = USER_PREFS_FILE.read_text(encoding="utf-8")
+    if not content:
+        logger.info(f"'{USER_PREFS_FILE}' is empty. Starting with empty user preferences.")
+        _replace_user_preferences({})
+        return
+
+    data = json.loads(content)
+    if not isinstance(data, dict):
+        msg = f"{USER_PREFS_FILE} must contain a JSON object"
+        raise TypeError(msg)
+
+    _replace_user_preferences({str(user_id): str(lang_code) for user_id, lang_code in data.items()})
+    logger.info(f"已成功從 '{USER_PREFS_FILE}' 加載用戶語言偏好。")
+
+
+def _replace_user_preferences(preferences: dict[str, str]) -> None:
+    with _prefs_lock:
+        _user_lang_preferences.clear()
+        _user_lang_preferences.update(preferences)
 
 
 def _save_user_preferences() -> None:
-    """將內存中的用戶語言偏好保存到 JSON 文件"""
-    try:
-        with _prefs_lock:  # Thread-safe writing
-            # 創建一個要保存的字典副本，確保所有鍵都是字符串
-            # 這一步主要是為了調試和確保一致性
-            preferences_to_save = {str(k): v for k, v in _user_lang_preferences.items()}
+    """Persist user language preferences to JSON."""
+    with _prefs_lock:
+        preferences_to_save = dict(_user_lang_preferences)
+        USER_PREFS_FILE.write_text(
+            json.dumps(preferences_to_save, ensure_ascii=False, indent=4), encoding="utf-8"
+        )
 
-            logger.debug(f"[L10N] Attempting to save: {preferences_to_save}")
-
-            with pathlib.Path(USER_PREFS_FILE).open("w", encoding="utf-8") as f:
-                json.dump(preferences_to_save, f, ensure_ascii=False, indent=4)
-
-            logger.debug(
-                f"[L10N] Successfully saved to '{USER_PREFS_FILE}'. Content: {preferences_to_save}"
-            )
-    except Exception as e:
-        logger.error(f"[L10N] Failed to save to '{USER_PREFS_FILE}': {e}")
+    logger.debug(f"[L10N] Successfully saved to '{USER_PREFS_FILE}'.")
 
 
 def load_language(lang_code: str) -> None:
-    """加載指定語言的翻譯文件到緩存"""
-    if lang_code not in _translations:
-        try:
-            file_path = os.path.join("locales", f"{lang_code}.json")
-            with pathlib.Path(file_path).open(encoding="utf-8") as f:
-                _translations[lang_code] = json.load(f)
-                logger.debug(
-                    f"[L10N] Successfully loaded language file: {lang_code}.json into _translations['{lang_code}']"
-                )
-        except FileNotFoundError:
-            logger.error(f"[L10N] Language file {lang_code}.json not found.")
-            _translations[lang_code] = {}
-        except json.JSONDecodeError:
-            logger.error(f"[L10N] Failed to parse language file {lang_code}.json.")
-            _translations[lang_code] = {}
-    else:
-        logger.debug(f"[L10N] Language {lang_code} already in _translations. Skipping load.")
+    """Load a language file into the translation cache."""
+    if lang_code in _translations:
+        logger.debug(f"[L10N] Language {lang_code} already loaded. Skipping.")
+        return
 
-    # DEBUG: Print current state of _translations cache after any load attempt or skip
-    logger.debug(f"[L10N] Current _translations keys: {list(_translations.keys())}")
-    for lc, trans_dict in _translations.items():
-        test_key_val = trans_dict.get("user_profile_game_mode", "<TEST_KEY_MISSING>")
-        logger.debug(f"[L10N]   _translations['{lc}']['user_profile_game_mode']: '{test_key_val}'")
+    file_path = LOCALES_DIR / f"{lang_code}.json"
+    translations = json.loads(file_path.read_text(encoding="utf-8"))
+    if not isinstance(translations, dict):
+        msg = f"{file_path} must contain a JSON object"
+        raise TypeError(msg)
+
+    _translations[lang_code] = {str(key): str(value) for key, value in translations.items()}
+    logger.debug(f"[L10N] Successfully loaded language file: {file_path.name}")
 
 
 def get_user_language(user_id: int | str) -> str:
-    """獲取用戶的語言偏好，如果未設置則返回預設語言"""
-    # Ensure all keys in the global preferences are strings before attempting to get.
-    # This is a safeguard against potential pollution from other parts of the code.
-    global _user_lang_preferences  # Explicitly state we are working with the global
-    current_prefs_copy = dict(_user_lang_preferences)  # Work on a copy to iterate and modify safely
-    cleaned_prefs = {str(k): v for k, v in current_prefs_copy.items()}
-    if len(cleaned_prefs) != len(current_prefs_copy):
-        logger.warning(
-            f"[L10N] Cleaned _user_lang_preferences due to mixed key types. Original count: {len(current_prefs_copy)}, Cleaned count: {len(cleaned_prefs)}"
-        )
-        _user_lang_preferences = cleaned_prefs  # Update the global with the cleaned version
-
-    logger.debug(f"[L10N] Called for user_id: '{user_id}'")
-    # Now _user_lang_preferences should only have string keys.
-    logger.debug(
-        f"[L10N] Current (potentially cleaned) _user_lang_preferences: {_user_lang_preferences}"
-    )
-
-    lang_to_return = _user_lang_preferences.get(
-        str(user_id), config.DEFAULT_LANGUAGE
-    )  # Ensure lookup key is also string
+    """Return a user's language preference, or the configured default language."""
+    lang_to_return = _user_lang_preferences.get(str(user_id), config.DEFAULT_LANGUAGE)
     logger.debug(f"[L10N] Returning lang: '{lang_to_return}' for user_id: '{user_id}'")
     return lang_to_return
 
 
 def set_user_language(user_id: int | str, lang_code: str) -> bool:
-    """設置用戶的語言偏好"""
+    """Set a user's language preference."""
     if lang_code not in config.SUPPORTED_LANGUAGES:
-        # 也可以在這裡嘗試加載 lang_code，如果 locales 裡有對應文件但未在 SUPPORTED_LANGUAGES 中聲明
-        # 但目前嚴格按照 SUPPORTED_LANGUAGES 列表來
         logger.warning(f"嘗試設置不支持的語言 '{lang_code}' 給用戶 {user_id}")
         return False
 
     _user_lang_preferences[str(user_id)] = lang_code
     if lang_code not in _translations:
-        load_language(lang_code)  # 如果該語言尚未加載，則加載它
+        load_language(lang_code)
+
+    _save_user_preferences()
     logger.info(f"用戶 {user_id} 的語言已設置為: {lang_code}")
-    _save_user_preferences()  # Save after setting
     return True
 
 
 def get_localized_string(
-    user_id_or_lang_code: int | str | None, key: str, default_fallback: str = "", *args, **kwargs
+    user_id_or_lang_code: int | str | None,
+    key: str,
+    default_fallback: str = "",
+    *args: Any,
+    **kwargs: Any,
 ) -> str:
-    """根據用戶的語言偏好或預設語言獲取翻譯後的文本。
+    """Return a localized string using a user id, language code, or default language."""
+    lang_code = _resolve_language_code(user_id_or_lang_code)
+    localized_string = _lookup_translation(lang_code, key, default_fallback)
+    return _format_translation(localized_string, key, *args, **kwargs)
 
-    如果 user_id 為 None，則直接使用預設語言。
-    """
-    lang_code = config.DEFAULT_LANGUAGE
-    if isinstance(user_id_or_lang_code, (int, str)):
-        # Try to treat as user_id first
-        potential_lang = get_user_language(user_id_or_lang_code)
-        if potential_lang in _translations:  # If it's a valid lang from user prefs
-            lang_code = potential_lang
-        elif (
-            str(user_id_or_lang_code) in _translations
-        ):  # Else, if it was a direct lang_code string
-            lang_code = str(user_id_or_lang_code)
-        # If neither, lang_code remains DEFAULT_LANGUAGE
-    elif user_id_or_lang_code is None:
-        # lang_code remains DEFAULT_LANGUAGE as initialized
-        pass
 
-    # Ensure _translations is populated
-    if not _translations:
-        logger.critical("[L10N] _translations is empty. Attempting to reload.")
-        load_language(
-            lang_code
-        )  # Attempt to reload if empty, might happen on first call if init order is tricky
-        if not _translations:
-            logger.critical(
-                "[L10N] Reload failed, _translations still empty. Returning raw key or fallback."
-            )
-            # Cannot format if translations are missing. Return unformatted key or fallback.
-            return default_fallback or f"<missing_translations_for_key: {key}>"
+def _resolve_language_code(user_id_or_lang_code: int | str | None) -> str:
+    if user_id_or_lang_code is None:
+        return config.DEFAULT_LANGUAGE
 
+    direct_lang_code = str(user_id_or_lang_code)
+    potential_lang = get_user_language(user_id_or_lang_code)
+    if potential_lang in _translations:
+        return potential_lang
+    if direct_lang_code in _translations:
+        return direct_lang_code
+    return config.DEFAULT_LANGUAGE
+
+
+def _lookup_translation(lang_code: str, key: str, default_fallback: str) -> str:
     localized_string = _translations.get(lang_code, {}).get(key)
-
-    if localized_string is None:
-        # Try fallback to default language (e.g., English) if not already using it
-        if lang_code != config.DEFAULT_LANGUAGE and config.DEFAULT_LANGUAGE in _translations:
-            localized_string = _translations[config.DEFAULT_LANGUAGE].get(key)
-
-        # If still not found, use the provided default_fallback
-        if localized_string is None:
-            localized_string = default_fallback
-            # If default_fallback was also empty, it means the key is truly missing.
-            if not localized_string:  # Checks if default_fallback was also empty or None
-                logger.warning(
-                    f"[L10N] Key '{key}' not found in lang '{lang_code}' or default '{config.DEFAULT_LANGUAGE}', and no fallback string provided. Returning placeholder."
-                )
-                return f"<translation_missing: {key}>"
-
-    try:
-        # DEBUGGING LOG STATEMENT
-        logger.debug(f"[L10N PRE-FORMAT] Key: '{key}', Lang: '{lang_code}'")
-        logger.debug(f"[L10N PRE-FORMAT] Raw String: '{localized_string}'")
-        logger.debug(f"[L10N PRE-FORMAT] Args: {args} (Type: {type(args)})")
-        logger.debug(f"[L10N PRE-FORMAT] Kwargs: {kwargs} (Type: {type(kwargs)})")
-
-        if args or kwargs:  # Only call format if there are args or kwargs
-            return localized_string.format(*args, **kwargs)
+    if localized_string is not None:
         return localized_string
-    except (IndexError, KeyError, TypeError) as e:  # Added TypeError for bad keyword args
-        # logger.error(f"[L10N] Formatting key='{key}', raw_string='{localized_string}', args={args}, kwargs={kwargs} FAILED: {e}")
-        return f"<formatting_error: {key} ({e.__class__.__name__})>"  # Include error type
+
+    default_string = _translations.get(config.DEFAULT_LANGUAGE, {}).get(key)
+    if default_string is not None:
+        return default_string
+
+    if default_fallback:
+        return default_fallback
+
+    logger.warning(
+        f"[L10N] Key '{key}' not found in lang '{lang_code}' "
+        f"or default '{config.DEFAULT_LANGUAGE}'."
+    )
+    return TRANSLATION_MISSING_TEMPLATE.format(key=key)
 
 
-# 初始加載預設語言 和用戶偏好
-_load_user_preferences()  # Load user preferences first
+def _format_translation(localized_string: str, key: str, *args: Any, **kwargs: Any) -> str:
+    try:
+        if args or kwargs:
+            return localized_string.format(*args, **kwargs)
+    except (IndexError, KeyError, TypeError) as exc:
+        return FORMAT_ERROR_TEMPLATE.format(key=key, error_type=exc.__class__.__name__)
+    else:
+        return localized_string
 
+
+_load_user_preferences()
 load_language(config.DEFAULT_LANGUAGE)
-# 你也可以在這裡加載所有 SUPPORTED_LANGUAGES
+
 for lang in config.SUPPORTED_LANGUAGES:
     if lang not in _translations:
         load_language(lang)
 
-# Alias for convenience
 lstr = get_localized_string
-
-# 方便 cogs 或 bot 直接使用的函數 (如果不想處理 user_id)
-# 但通常建議在 cog 命令中傳遞 ctx.author.id
-# def get_lstr(ctx, key, *args):
-#     return get_localized_string(ctx.author.id, key, *args)
