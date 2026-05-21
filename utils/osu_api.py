@@ -2,67 +2,30 @@ from __future__ import annotations
 
 import time
 from dataclasses import dataclass
-from typing import Any, TypeAlias
+from typing import Any
 
 import aiohttp
 from loguru import logger
 
-OSU_API_V2_BASE_URL = "https://osu.ppy.sh/api/v2"
-OSU_OAUTH_TOKEN_URL = "https://osu.ppy.sh/oauth/token"
-OSU_API_V1_BASE_URL = "https://osu.ppy.sh/api"
+from utils import osu_http
+from utils.osu_domain import RULESET_IDS, calculate_accuracy, decode_mods
+from utils.osu_http import (
+    OSU_API_V1_BASE_URL,
+    OSU_OAUTH_TOKEN_URL,
+    ApiResponse,
+    OsuAPITokenError,
+    RequestParams,
+    api_v2_url,
+    expect_dict,
+    expect_list,
+    parse_response,
+)
 
-HTTP_NO_CONTENT = 204
-HTTP_ERROR_MIN = 400
 TOKEN_EXPIRY_SKEW_SECONDS = 60
 API_V2_PAGE_LIMIT = 100
-RESPONSE_PREVIEW_LENGTH = 500
-MANIA_MAX_HIT_VALUE = 320
-OSU_MAX_HIT_VALUE = 300
-OSU_GOOD_HIT_VALUE = 100
-OSU_MEH_HIT_VALUE = 50
-MANIA_KATU_HIT_VALUE = 200
-TAIKO_GOOD_WEIGHT = 0.5
-
-ApiResponse: TypeAlias = dict[str, Any] | list[Any]
-RequestParams: TypeAlias = dict[str, Any]
-
-RULESET_IDS = {"osu": 0, "taiko": 1, "fruits": 2, "mania": 3}
-
-MODS_ENUM = {
-    1: "NF",
-    2: "EZ",
-    4: "TD",
-    8: "HD",
-    16: "HR",
-    32: "SD",
-    64: "DT",
-    128: "RX",
-    256: "HT",
-    512: "NC",
-    1024: "FL",
-    2048: "AU",
-    4096: "SO",
-    8192: "AP",
-    16384: "PF",
-}
-
-SPEED_MODS = {"NC", "DT", "HT"}
-
-
-class OsuAPIError(Exception):
-    """Base exception for osu! API failures."""
-
-
-class OsuAPITokenError(OsuAPIError):
-    """Raised when OAuth token acquisition fails."""
-
-
-class OsuAPIResponseError(OsuAPIError):
-    """Raised when osu! API returns an HTTP error response."""
-
-
-class OsuAPIDataError(OsuAPIError):
-    """Raised when osu! API returns data in an unexpected shape."""
+OsuAPIError = osu_http.OsuAPIError
+OsuAPIResponseError = osu_http.OsuAPIResponseError
+OsuAPIDataError = osu_http.OsuAPIDataError
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -151,7 +114,7 @@ class OsuAPI:
         """Send a request to osu! API v2 and return parsed JSON data."""
         await self._ensure_token()
         session = await self._get_session()
-        url = _api_v2_url(endpoint)
+        url = api_v2_url(endpoint)
         headers = self._authorization_headers()
 
         async with session.request(
@@ -169,25 +132,7 @@ class OsuAPI:
     async def _parse_response(
         self, response: aiohttp.ClientResponse, url: str, *, params: RequestParams | None = None
     ) -> ApiResponse:
-        if response.status == HTTP_NO_CONTENT:
-            return {}
-
-        response_text = await response.text()
-        logger.debug(
-            f"[OSU_API] {response.status} {url}: {response_text[:RESPONSE_PREVIEW_LENGTH]}"
-        )
-        if response.status >= HTTP_ERROR_MIN:
-            msg = f"osu! API request failed ({response.status}) for {url} params={params}: {response_text}"
-            raise OsuAPIResponseError(msg)
-        if not response_text:
-            return {}
-
-        data = await response.json()
-        if isinstance(data, (dict, list)):
-            return data
-
-        msg = f"osu! API returned unsupported JSON payload: {type(data).__name__}"
-        raise OsuAPIDataError(msg)
+        return await parse_response(response, url, params=params)
 
     async def get_user(
         self, user_identifier: str, *, mode: str | None = None, identifier_type: str | None = None
@@ -198,7 +143,7 @@ class OsuAPI:
             endpoint += f"/{mode}"
 
         params = {"key": "username"} if identifier_type == "username" else {}
-        return _expect_dict(await self._request("GET", endpoint, params=params), endpoint)
+        return expect_dict(await self._request("GET", endpoint, params=params), endpoint)
 
     async def get_user_recent(
         self,
@@ -217,7 +162,7 @@ class OsuAPI:
         if offset is not None:
             params["offset"] = offset
 
-        return _expect_list(await self._request("GET", endpoint, params=params), endpoint)
+        return expect_list(await self._request("GET", endpoint, params=params), endpoint)
 
     async def get_user_best(
         self,
@@ -254,7 +199,7 @@ class OsuAPI:
         params: RequestParams = {"limit": limit, "offset": offset}
         if mode:
             params["mode"] = mode
-        return _expect_list(await self._request("GET", endpoint, params=params), endpoint)
+        return expect_list(await self._request("GET", endpoint, params=params), endpoint)
 
     async def get_user_beatmapsets(
         self, user_id: int | str, beatmap_type: str, *, limit: int = 50, offset: int = 0
@@ -273,12 +218,12 @@ class OsuAPI:
     async def get_beatmapset(self, beatmapset_id: int) -> dict[str, Any]:
         """Retrieve details for a beatmapset."""
         endpoint = f"/beatmapsets/{beatmapset_id}"
-        return _expect_dict(await self._request("GET", endpoint), endpoint)
+        return expect_dict(await self._request("GET", endpoint), endpoint)
 
     async def get_beatmap_details(self, beatmap_id: int) -> dict[str, Any]:
         """Retrieve details for a beatmap difficulty."""
         endpoint = f"/beatmaps/{beatmap_id}"
-        return _expect_dict(await self._request("GET", endpoint), endpoint)
+        return expect_dict(await self._request("GET", endpoint), endpoint)
 
     async def get_beatmap_attributes(
         self,
@@ -295,35 +240,15 @@ class OsuAPI:
                 mods=mods, ruleset_id=ruleset_id, ruleset_short_name=ruleset_short_name
             )
         )
-        return _expect_dict(await self._request("POST", endpoint, json_payload=payload), endpoint)
+        return expect_dict(await self._request("POST", endpoint, json_payload=payload), endpoint)
 
     def decode_mods(self, mods_int: int | list[str]) -> str:
         """Convert mod bitmask or API v2 mod list to a compact mod string."""
-        if isinstance(mods_int, list):
-            return "".join(mods_int) if mods_int else "None"
-        if not isinstance(mods_int, int):
-            return "Invalid"
-        if mods_int == 0:
-            return "None"
-
-        mods = _decode_speed_mods(mods_int)
-        mods.extend(
-            mod for value, mod in MODS_ENUM.items() if mod not in SPEED_MODS and mods_int & value
-        )
-        return "".join(mods) if mods else "None"
+        return decode_mods(mods_int)
 
     def calculate_accuracy(self, statistics: dict[str, Any], mode: str = "osu") -> float:
         """Calculate accuracy from osu! API score statistics."""
-        counts = _score_counts(statistics)
-        if mode == "osu":
-            return _calculate_osu_accuracy(counts)
-        if mode == "taiko":
-            return _calculate_taiko_accuracy(counts)
-        if mode == "fruits":
-            return _direct_accuracy(statistics)
-        if mode == "mania":
-            return _calculate_mania_accuracy(counts)
-        return _direct_accuracy(statistics)
+        return calculate_accuracy(statistics, mode)
 
     async def get_score_v1(
         self, beatmap_id: int, user_id: int | str, *, mode: int = 0
@@ -338,30 +263,8 @@ class OsuAPI:
         async with session.get(f"{OSU_API_V1_BASE_URL}/get_scores", params=params) as response:
             data = await self._parse_response(response, str(response.url))
 
-        scores = _expect_list(data, "get_score_v1")
+        scores = expect_list(data, "get_score_v1")
         return scores[0] if scores and isinstance(scores[0], dict) else None
-
-
-def _api_v2_url(endpoint: str) -> str:
-    return (
-        f"{OSU_API_V2_BASE_URL}/{endpoint}"
-        if not endpoint.startswith("/")
-        else f"{OSU_API_V2_BASE_URL}{endpoint}"
-    )
-
-
-def _expect_dict(data: ApiResponse, context: str) -> dict[str, Any]:
-    if isinstance(data, dict):
-        return data
-    msg = f"Expected object response for {context}, got {type(data).__name__}"
-    raise OsuAPIDataError(msg)
-
-
-def _expect_list(data: ApiResponse, context: str) -> list[Any]:
-    if isinstance(data, list):
-        return data
-    msg = f"Expected list response for {context}, got {type(data).__name__}"
-    raise OsuAPIDataError(msg)
 
 
 def _beatmap_attributes_payload(request: BeatmapAttributesRequest) -> RequestParams:
@@ -382,62 +285,3 @@ def _normalize_mods_payload(mods: int | list[str] | str) -> int | list[str] | st
 
 def _ruleset_id_from_name(ruleset_short_name: str | None) -> int | None:
     return RULESET_IDS.get(ruleset_short_name.lower()) if ruleset_short_name else None
-
-
-def _decode_speed_mods(mods_int: int) -> list[str]:
-    if mods_int & 512:
-        return ["NC"]
-    if mods_int & 64:
-        return ["DT"]
-    if mods_int & 256:
-        return ["HT"]
-    return []
-
-
-def _score_counts(statistics: dict[str, Any]) -> dict[str, int]:
-    return {
-        "c300": int(statistics.get("count_300", 0)),
-        "c100": int(statistics.get("count_100", 0)),
-        "c50": int(statistics.get("count_50", 0)),
-        "miss": int(statistics.get("count_miss", 0)),
-        "geki": int(statistics.get("count_geki", 0)),
-        "katu": int(statistics.get("count_katu", 0)),
-    }
-
-
-def _calculate_osu_accuracy(counts: dict[str, int]) -> float:
-    total_hits = counts["c300"] + counts["c100"] + counts["c50"] + counts["miss"]
-    if total_hits == 0:
-        return 0.0
-    score = (
-        counts["c300"] * OSU_MAX_HIT_VALUE
-        + counts["c100"] * OSU_GOOD_HIT_VALUE
-        + counts["c50"] * OSU_MEH_HIT_VALUE
-    )
-    return round(score / (total_hits * OSU_MAX_HIT_VALUE) * 100, 2)
-
-
-def _calculate_taiko_accuracy(counts: dict[str, int]) -> float:
-    total_hits = counts["c300"] + counts["c100"] + counts["miss"]
-    if total_hits == 0:
-        return 0.0
-    return round((counts["c300"] + counts["c100"] * TAIKO_GOOD_WEIGHT) / total_hits * 100, 2)
-
-
-def _calculate_mania_accuracy(counts: dict[str, int]) -> float:
-    total_notes = sum(counts.values())
-    if total_notes == 0:
-        return 0.0
-    score = (
-        counts["geki"] * MANIA_MAX_HIT_VALUE
-        + counts["c300"] * OSU_MAX_HIT_VALUE
-        + counts["katu"] * MANIA_KATU_HIT_VALUE
-        + counts["c100"] * OSU_GOOD_HIT_VALUE
-        + counts["c50"] * OSU_MEH_HIT_VALUE
-    )
-    return round(score / (total_notes * MANIA_MAX_HIT_VALUE) * 100, 2)
-
-
-def _direct_accuracy(statistics: dict[str, Any]) -> float:
-    accuracy = statistics.get("accuracy")
-    return float(accuracy) * 100 if accuracy is not None else 0.0

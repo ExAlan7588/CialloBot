@@ -29,6 +29,7 @@ DESIRED_COMMAND_ORDER = [
     "keyword add",
     "keyword list",
 ]
+COMMAND_ORDER_INDEX = {command_name: index for index, command_name in enumerate(DESIRED_COMMAND_ORDER)}
 
 
 class HelpCog(commands.Cog):
@@ -101,10 +102,7 @@ def _help_title(user_id_for_l10n: str) -> str:
 
 
 def _command_order(cmd_path: str) -> int:
-    try:
-        return DESIRED_COMMAND_ORDER.index(cmd_path)
-    except ValueError:
-        return len(DESIRED_COMMAND_ORDER)
+    return COMMAND_ORDER_INDEX.get(cmd_path, len(COMMAND_ORDER_INDEX))
 
 
 def _command_help_line(

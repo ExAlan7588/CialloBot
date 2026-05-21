@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, Any, Protocol
 import discord
 
 from utils.localization import get_localized_string as lstr
-from utils.osu_api import RULESET_IDS
+from utils.osu_domain import RULESET_IDS
 
 from .pp_embed_builder import PpEmbedBuilder, PpEmbedRequest, PpEmbedResult
 

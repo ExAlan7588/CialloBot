@@ -1,16 +1,28 @@
 from __future__ import annotations
 
-DISCORD_BOT_TOKEN = "YOUR_DISCORD_BOT_TOKEN_HERE"
+import os
 
-DEFAULT_LANGUAGE = "en"
-DEFAULT_OSU_MODE = 0  # 0 for osu!standard, 1 for Taiko, 2 for CatchTheBeat, 3 for osu!mania
+
+def _env(name: str, default: str = "") -> str:
+    return os.environ.get(name, default).strip()
+
+
+def _env_int(name: str, default: int) -> int:
+    raw_value = _env(name)
+    return int(raw_value) if raw_value else default
+
+
+DISCORD_BOT_TOKEN = _env("DISCORD_BOT_TOKEN")
+
+DEFAULT_LANGUAGE = _env("DEFAULT_LANGUAGE", "en")
+DEFAULT_OSU_MODE = _env_int("DEFAULT_OSU_MODE", 0)
 
 # 支援的語言列表，對應 locales 文件夾中的文件名 (不含 .json)
 SUPPORTED_LANGUAGES = {"en": "English", "zh_TW": "繁體中文"}
 
 # osu! API v2 OAuth Credentials
-OSU_API_V2_CLIENT_ID = "YOUR_CLIENT_ID_HERE"  # <--- 請填入您的 Client ID
-OSU_API_V2_CLIENT_SECRET = "YOUR_CLIENT_SECRET_HERE"  # <--- 請填入您的 Client Secret
+OSU_API_V2_CLIENT_ID = _env("OSU_API_V2_CLIENT_ID")
+OSU_API_V2_CLIENT_SECRET = _env("OSU_API_V2_CLIENT_SECRET")
 
 # osu! API v1 Key (for fallback)
-OSU_API_V1_KEY = "YOUR_API_V1_KEY_HERE"  # <--- 請將此處替換為您真實的 API v1 Key
+OSU_API_V1_KEY = _env("OSU_API_V1_KEY")

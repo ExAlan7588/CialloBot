@@ -7,11 +7,11 @@ import discord
 from loguru import logger
 
 from private import config
-from utils import user_data_manager
+from services.user_bindings import get_bound_user
 from utils.localization import get_localized_string as lstr
 
+from .command_errors import UserCommandError
 from .osu_constants import MODE_EMOJI_STRINGS, OSU_MODES_INT_TO_STRING, OSU_MODES_STRING_TO_INT
-from .user_errors import UserCommandError
 from .user_profile_fields import (
     achievement_text,
     add_standard_profile_fields,
@@ -236,7 +236,7 @@ async def _resolve_profile_identifier(
     if command_input.osu_user:
         return command_input.osu_user.strip(), "username"
 
-    bound_osu_id = await user_data_manager.get_user_binding(user_id_for_l10n)
+    bound_osu_id = await get_bound_user(user_id_for_l10n)
     if bound_osu_id:
         return str(bound_osu_id), "id"
     raise UserCommandError(lstr(user_id_for_l10n, "error_osu_user_not_provided_or_bound"))

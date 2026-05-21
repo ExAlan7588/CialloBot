@@ -9,8 +9,8 @@ from loguru import logger
 
 from utils.localization import get_localized_string as lstr
 
+from .command_errors import UserCommandError, send_command_error
 from .user_bindings import SetUserCommandInput, UserBindingService
-from .user_errors import UserCommandError
 from .user_formatting import UserFormatter
 from .user_mapper import MapperCommandInput, UserMapperService
 from .user_profile import ProfileCommandInput, UserProfileService
@@ -122,7 +122,7 @@ class UserCog(commands.Cog):
         try:
             await command_task
         except UserCommandError as exc:
-            await interaction.followup.send(exc.message, ephemeral=exc.ephemeral)
+            await send_command_error(interaction, exc)
         except Exception as exc:
             await self._send_unexpected_error(interaction, command_name=command_name, exc=exc)
 

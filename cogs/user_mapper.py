@@ -7,10 +7,10 @@ from typing import TYPE_CHECKING, Any
 import discord
 from loguru import logger
 
-from utils import user_data_manager
+from services.user_bindings import get_bound_user
 from utils.localization import get_localized_string as lstr
 
-from .user_errors import UserCommandError
+from .command_errors import UserCommandError
 
 if TYPE_CHECKING:
     from utils.osu_api import OsuAPI
@@ -145,7 +145,7 @@ async def _resolve_mapper_lookup(
         identifier_type = "username" if user_identifier.isdigit() else None
         return MapperLookup(user_identifier=user_identifier, identifier_type=identifier_type)
 
-    bound_user = await user_data_manager.get_user_binding(user_id_for_l10n)
+    bound_user = await get_bound_user(user_id_for_l10n)
     if bound_user:
         return MapperLookup(user_identifier=str(bound_user), identifier_type=None)
     raise UserCommandError(lstr(user_id_for_l10n, "error_osu_user_not_provided_or_bound"))

@@ -10,8 +10,9 @@ from discord.ext import commands
 from loguru import logger
 
 from utils.localization import get_localized_string as lstr
-from utils.osu_api import RULESET_IDS
+from utils.osu_domain import RULESET_IDS
 
+from .command_errors import PpCommandError, send_command_error
 from .pp_embed_builder import PpEmbedBuilder, PpEmbedRequest
 from .pp_views import ModSelectView, PpViewConfig
 
@@ -24,13 +25,6 @@ BEATMAP_SHORT_URL_RE = re.compile(r"osu.ppy.sh/b/(\d+)")
 BEATMAPSET_SHORT_URL_RE = re.compile(r"osu.ppy.sh/s/(\d+)")
 BEATMAP_MODE_PRIORITY = {"osu": 0, "taiko": 1, "fruits": 2, "mania": 3}
 ERROR_DETAIL_LIMIT = 100
-
-
-class PpCommandError(Exception):
-    def __init__(self, message: str, *, ephemeral: bool = False) -> None:
-        super().__init__(message)
-        self.message = message
-        self.ephemeral = ephemeral
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -65,7 +59,7 @@ class PpCog(commands.Cog):
         try:
             await self._send_pp(interaction, url, user_id_for_l10n=user_id_for_l10n)
         except PpCommandError as exc:
-            await interaction.followup.send(exc.message, ephemeral=exc.ephemeral)
+            await send_command_error(interaction, exc)
         except Exception as exc:
             await self._send_unexpected_error(interaction, user_id_for_l10n, exc=exc)
 

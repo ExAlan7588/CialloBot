@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Any, Protocol
 import discord
 from loguru import logger
 
-from utils.beatmap_utils import get_beatmap_status_display
+from utils.beatmap_utils import get_beatmap_status_display, resolve_beatmap_status_input
 from utils.localization import get_localized_string as lstr
 from utils.localization import get_user_language
 
@@ -19,7 +19,7 @@ from .osu_constants import (
     RANK_SH_EMOJI,
     RANK_XH_EMOJI,
 )
-from .osu_formatting import format_mods_for_display
+from .osu_formatting import format_mods_for_display, format_score_mods
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -239,8 +239,7 @@ def _log_missing_v1_score(context: V1ScoreContext) -> None:
 
 
 def _format_mods(score_data: dict[str, Any], user_id_for_l10n: int) -> str:
-    mods = score_data.get("mods", [])
-    return "".join(mods) if mods else lstr(user_id_for_l10n, "mods_nomod", "No Mod")
+    return format_score_mods(score_data.get("mods", []), user_id_for_l10n)
 
 
 def _resolve_rank_emoji(score_data: dict[str, Any], mods: str) -> str:
@@ -290,8 +289,7 @@ def _add_status_and_mode_fields(
 
 
 def _resolve_raw_status(beatmapset_data: dict[str, Any]) -> str | int | None:
-    raw_status = beatmapset_data.get("status")
-    return raw_status if isinstance(raw_status, str) else beatmapset_data.get("ranked")
+    return resolve_beatmap_status_input(beatmapset_data)
 
 
 def _add_hits_field(embed: discord.Embed, request: ScoreEmbedRequest) -> None:

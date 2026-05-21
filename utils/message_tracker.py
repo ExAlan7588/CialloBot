@@ -68,11 +68,8 @@ class MessageTracker:
         """清理最舊的 10% 記錄"""
         cleanup_count = max(1, self.max_size // 10)
 
-        # 獲取最舊的記錄（字典保持插入順序）
-        old_messages = list(self._messages.keys())[:cleanup_count]
-
-        for message_id in old_messages:
-            del self._messages[message_id]
+        for _ in range(cleanup_count):
+            self._messages.pop(next(iter(self._messages)))
 
         logger.info(f"🧹 清理了 {cleanup_count} 條舊訊息記錄 (剩餘: {len(self._messages)})")
 

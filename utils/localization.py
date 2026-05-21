@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 import threading
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
@@ -8,14 +7,19 @@ from typing import TYPE_CHECKING, Any
 from loguru import logger
 
 from private import config
+from utils.localization_store import (
+    load_json_object,
+    serialize_preferences,
+    validate_language_preferences,
+    validate_translations,
+)
+from utils.localization_text import format_translation, lookup_translation
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
 
 LOCALES_DIR = Path("locales")
 USER_PREFS_FILE = Path("private/user_lang_prefs.json")
-TRANSLATION_MISSING_TEMPLATE = "<translation_missing: {key}>"
-FORMAT_ERROR_TEMPLATE = "<formatting_error: {key} ({error_type})>"
 
 _translations: dict[str, dict[str, str]] = {}
 _user_lang_preferences: dict[str, str] = {}
@@ -45,36 +49,18 @@ def _replace_user_preferences(preferences: Mapping[str, str]) -> None:
 
 
 def _load_preferences_from_json(content: str, path: Path) -> dict[str, str]:
-    data = json.loads(content)
-    if not isinstance(data, dict):
-        msg = f"{path} must contain a JSON object"
-        raise TypeError(msg)
-    return _validate_language_preferences(path, data)
+    return _validate_language_preferences(path, load_json_object(content, path))
 
 
 def _validate_language_preferences(path: Path, data: dict[Any, Any]) -> dict[str, str]:
-    preferences: dict[str, str] = {}
-    for user_id, lang_code in data.items():
-        if not isinstance(user_id, str) or not user_id:
-            msg = f"{path} contains an invalid user id key: {user_id!r}"
-            raise TypeError(msg)
-        if not isinstance(lang_code, str):
-            msg = f"{path} contains a non-string language code for user {user_id!r}"
-            raise TypeError(msg)
-        if lang_code not in _supported_language_codes():
-            msg = f"{path} contains unsupported language code {lang_code!r} for user {user_id!r}"
-            raise ValueError(msg)
-        preferences[user_id] = lang_code
-    return preferences
+    return validate_language_preferences(path, data, _supported_language_codes())
 
 
 def _save_user_preferences() -> None:
     """Persist user language preferences to JSON."""
     with _prefs_lock:
         preferences_to_save = dict(_user_lang_preferences)
-        USER_PREFS_FILE.write_text(
-            json.dumps(preferences_to_save, ensure_ascii=False, indent=4), encoding="utf-8"
-        )
+        USER_PREFS_FILE.write_text(serialize_preferences(preferences_to_save), encoding="utf-8")
 
     logger.debug(f"[L10N] Successfully saved to '{USER_PREFS_FILE}'.")
 
@@ -89,11 +75,7 @@ def load_language(lang_code: str) -> None:
         return
 
     file_path = LOCALES_DIR / f"{lang_code}.json"
-    translations = json.loads(file_path.read_text(encoding="utf-8"))
-    if not isinstance(translations, dict):
-        msg = f"{file_path} must contain a JSON object"
-        raise TypeError(msg)
-
+    translations = load_json_object(file_path.read_text(encoding="utf-8"), file_path)
     _translations[lang_code] = _validate_translations(file_path, translations)
     logger.debug(f"[L10N] Successfully loaded language file: {file_path.name}")
 
@@ -108,16 +90,7 @@ def initialize_localization() -> None:
 
 
 def _validate_translations(path: Path, translations: dict[Any, Any]) -> dict[str, str]:
-    validated: dict[str, str] = {}
-    for key, value in translations.items():
-        if not isinstance(key, str) or not key:
-            msg = f"{path} contains an invalid translation key: {key!r}"
-            raise TypeError(msg)
-        if not isinstance(value, str):
-            msg = f"{path} contains a non-string translation for key {key!r}"
-            raise TypeError(msg)
-        validated[key] = value
-    return validated
+    return validate_translations(path, translations)
 
 
 def get_user_language(user_id: int | str) -> str:
@@ -181,32 +154,23 @@ def _supported_language_codes() -> set[str]:
 
 
 def _lookup_translation(lang_code: str, key: str, default_fallback: str) -> str:
-    localized_string = _translations.get(lang_code, {}).get(key)
-    if localized_string is not None:
-        return localized_string
-
-    default_string = _translations.get(config.DEFAULT_LANGUAGE, {}).get(key)
-    if default_string is not None:
-        return default_string
-
-    if default_fallback:
-        return default_fallback
-
-    logger.warning(
-        f"[L10N] Key '{key}' not found in lang '{lang_code}' "
-        f"or default '{config.DEFAULT_LANGUAGE}'."
+    localized_string = lookup_translation(
+        _translations,
+        lang_code=lang_code,
+        default_language=config.DEFAULT_LANGUAGE,
+        key=key,
+        default_fallback=default_fallback,
     )
-    return TRANSLATION_MISSING_TEMPLATE.format(key=key)
+    if localized_string.startswith("<translation_missing:"):
+        logger.warning(
+            f"[L10N] Key '{key}' not found in lang '{lang_code}' "
+            f"or default '{config.DEFAULT_LANGUAGE}'."
+        )
+    return localized_string
 
 
 def _format_translation(localized_string: str, key: str, *args: Any, **kwargs: Any) -> str:
-    try:
-        if args or kwargs:
-            return localized_string.format(*args, **kwargs)
-    except (IndexError, KeyError, TypeError) as exc:
-        return FORMAT_ERROR_TEMPLATE.format(key=key, error_type=exc.__class__.__name__)
-    else:
-        return localized_string
+    return format_translation(localized_string, key, *args, **kwargs)
 
 
 lstr = get_localized_string

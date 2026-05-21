@@ -7,7 +7,7 @@ import discord
 from loguru import logger
 
 from utils import beatmap_utils
-from utils.beatmap_utils import get_beatmap_status_display
+from utils.beatmap_utils import get_beatmap_status_display, resolve_beatmap_status_input
 from utils.localization import get_localized_string as lstr
 
 from .osu_formatting import format_mods_for_display
@@ -215,8 +215,7 @@ def _add_status_field(embed: discord.Embed, request: PpEmbedRequest) -> None:
 
 
 def _raw_beatmap_status(beatmapset_data: dict[str, Any]) -> str | int | None:
-    raw_status = beatmapset_data.get("status")
-    return raw_status if isinstance(raw_status, str) else beatmapset_data.get("ranked")
+    return resolve_beatmap_status_input(beatmapset_data)
 
 
 def _add_attributes_field(

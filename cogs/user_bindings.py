@@ -3,10 +3,10 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any
 
-from utils import user_data_manager
+from services.user_bindings import bind_user, get_bound_user, unbind_user
 from utils.localization import get_localized_string as lstr
 
-from .user_errors import UserCommandError
+from .command_errors import UserCommandError
 
 if TYPE_CHECKING:
     import discord
@@ -44,7 +44,7 @@ class UserBindingService:
         )
         player_id = _player_id_or_not_found(player_data, target, user_id_for_l10n)
         official_username = _require_username(player_data)
-        await user_data_manager.set_user_binding(interaction.user.id, str(player_id))
+        await bind_user(interaction.user.id, str(player_id))
         await interaction.followup.send(
             lstr(
                 user_id_for_l10n,
@@ -56,7 +56,7 @@ class UserBindingService:
 
     async def send_unsetuser(self, interaction: discord.Interaction) -> None:
         user_id_for_l10n = interaction.user.id
-        removed = await user_data_manager.remove_user_binding(interaction.user.id)
+        removed = await unbind_user(interaction.user.id)
         if removed:
             await interaction.followup.send(
                 lstr(
@@ -77,7 +77,7 @@ class UserBindingService:
 
     async def _send_current_binding(self, interaction: discord.Interaction) -> None:
         user_id_for_l10n = interaction.user.id
-        existing_binding = await user_data_manager.get_user_binding(interaction.user.id)
+        existing_binding = await get_bound_user(interaction.user.id)
         if not existing_binding:
             await interaction.followup.send(
                 lstr(

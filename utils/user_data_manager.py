@@ -1,16 +1,20 @@
 from __future__ import annotations
 
 import asyncio
-import json
 from pathlib import Path
-from typing import TypeAlias
 
 import aiofiles
 import aiofiles.os
 
+from utils.user_binding_store import (
+    UserBindings,
+    load_bindings_from_json,
+    serialize_user_bindings,
+    validate_user_bindings,
+)
+
 DATA_FILE = Path("private/user_bindings.json")
 DATA_LOCK = asyncio.Lock()
-UserBindings: TypeAlias = dict[str, str]
 
 
 async def load_user_bindings() -> UserBindings:
@@ -29,31 +33,18 @@ async def load_user_bindings() -> UserBindings:
 
 
 def _load_bindings_from_json(content: str, path: Path) -> UserBindings:
-    data = json.loads(content)
-    if not isinstance(data, dict):
-        msg = f"{path} must contain a JSON object"
-        raise TypeError(msg)
-    return _validate_user_bindings(path, data)
+    return load_bindings_from_json(content, path)
 
 
 def _validate_user_bindings(path: Path, data: dict[object, object]) -> UserBindings:
-    bindings: UserBindings = {}
-    for discord_id, osu_user in data.items():
-        if not isinstance(discord_id, str) or not discord_id:
-            msg = f"{path} contains an invalid Discord user id key: {discord_id!r}"
-            raise TypeError(msg)
-        if not isinstance(osu_user, str) or not osu_user:
-            msg = f"{path} contains an invalid osu! binding for Discord user {discord_id!r}"
-            raise TypeError(msg)
-        bindings[discord_id] = osu_user
-    return bindings
+    return validate_user_bindings(path, data)
 
 
 async def save_user_bindings(data: UserBindings) -> None:
     """異步保存使用者綁定數據。"""
     _validate_user_bindings(DATA_FILE, data)
     async with DATA_LOCK, aiofiles.open(DATA_FILE, mode="w", encoding="utf-8") as file:
-        await file.write(json.dumps(data, indent=4, ensure_ascii=False))
+        await file.write(serialize_user_bindings(data))
 
 
 async def set_user_binding(discord_user_id: int, osu_username_or_id: str) -> bool:

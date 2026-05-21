@@ -8,7 +8,7 @@ from loguru import logger
 
 from utils.localization import get_localized_string as lstr
 
-from .osu_constants import MODE_FALLBACK_TEXT, OSU_MODES_L10N_KEYS
+from .osu_formatting import get_osu_mode_name
 
 DEFAULT_DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 GLOBE_EMOJI = "🌍"
@@ -50,20 +50,12 @@ class UserFormatter:
         return raw_translation
 
     def mode_name(self, mode_int: int, user_id_for_l10n: int | str) -> str:
-        logger.debug(
-            f"[USER_COG get_mode_name] Called with mode_int: {mode_int}, "
-            f"user_id: {user_id_for_l10n}"
+        return get_osu_mode_name(
+            mode_int,
+            user_id_for_l10n,
+            fallback_getter=lstr,
+            log_prefix="USER_COG",
         )
-        l10n_key = OSU_MODES_L10N_KEYS.get(mode_int, "mode_unknown")
-        localized_name = self.lstr_or_na(user_id_for_l10n, l10n_key)
-        if localized_name == self.na(user_id_for_l10n) or l10n_key == "mode_unknown":
-            final_name = MODE_FALLBACK_TEXT.get(
-                mode_int, self.lstr_or_na(user_id_for_l10n, "mode_unknown")
-            )
-        else:
-            final_name = localized_name
-        logger.debug(f"[USER_COG get_mode_name] Result: {final_name}")
-        return final_name
 
     def datetime_text(
         self,

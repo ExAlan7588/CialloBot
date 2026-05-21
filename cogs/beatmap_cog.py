@@ -9,13 +9,14 @@ import discord
 from discord.ext import commands
 from loguru import logger
 
-from utils.beatmap_utils import get_beatmap_status_display
+from utils.beatmap_utils import get_beatmap_status_display, resolve_beatmap_status_input
 from utils.localization import get_localized_string as lstr
+
+from .osu_formatting import get_osu_mode_name
 
 if TYPE_CHECKING:
     from utils.osu_api import OsuAPI
 
-OSU_MODES_DISPLAY = {0: "mode_std", 1: "mode_taiko", 2: "mode_ctb", 3: "mode_mania"}
 OSU_STANDARD_RULESET_ID = 0
 BEATMAP_EMBED_COLOR = 0xFF69B4
 
@@ -55,8 +56,7 @@ class BeatmapCog(commands.Cog):
         )
 
     def get_mode_name(self, mode_int: int, user_id: int) -> str:
-        key = OSU_MODES_DISPLAY.get(mode_int, "mode_unknown")
-        return lstr(user_id, key)
+        return get_osu_mode_name(mode_int, user_id, fallback_getter=lstr, log_prefix="BeatmapCog")
 
     def format_length(self, total_seconds: int) -> str:
         """將秒數格式化為 mm:ss"""
@@ -196,13 +196,7 @@ class BeatmapCog(commands.Cog):
         return covers.get("card", discord.Embed.Empty)
 
     def _status_display(self, context: BeatmapEmbedContext) -> str:
-        raw_status = context.beatmapset.get("status")
-        if not isinstance(raw_status, str):
-            raw_status = context.beatmapset.get("ranked", context.beatmapset.get("approved"))
-        if raw_status is None:
-            raw_status = context.target.get("status")
-        if raw_status is not None and not isinstance(raw_status, str):
-            raw_status = context.target.get("ranked", context.target.get("approved"))
+        raw_status = resolve_beatmap_status_input(context.beatmapset, context.target)
         return get_beatmap_status_display(raw_status, context.user_id, lstr)
 
     def _add_identity_fields(self, embed: discord.Embed, context: BeatmapEmbedContext) -> None:

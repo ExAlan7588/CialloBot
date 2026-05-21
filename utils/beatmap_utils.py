@@ -115,6 +115,23 @@ def get_beatmap_status_display(
     return f"{emoji} {status_text}"
 
 
+def resolve_beatmap_status_input(
+    primary_payload: dict[str, object], fallback_payload: dict[str, object] | None = None
+) -> BeatmapStatusInput:
+    raw_status = primary_payload.get("status")
+    if isinstance(raw_status, str):
+        return raw_status
+
+    ranked_status = primary_payload.get("ranked", primary_payload.get("approved"))
+    if isinstance(ranked_status, (int, str)):
+        return ranked_status
+
+    if fallback_payload is None:
+        return None
+
+    return resolve_beatmap_status_input(fallback_payload)
+
+
 def _normalize_status_key(status_input: BeatmapStatusInput) -> str:
     if isinstance(status_input, int):
         return BEATMAP_STATUS_API_MAP.get(status_input, "unknown")

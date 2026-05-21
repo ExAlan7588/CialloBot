@@ -9,20 +9,19 @@ from discord.ext import commands
 from loguru import logger
 
 from private import config
-from utils import user_data_manager
+from services.user_bindings import get_bound_user
 from utils.localization import get_language_string, get_user_language
 from utils.localization import get_localized_string as lstr
 
+from .command_errors import OsuCommandError, send_command_error
 from .osu_constants import (
     BEST_SCORE_LIMIT,
     ERROR_DETAIL_LIMIT,
-    MODE_FALLBACK_TEXT,
     OSU_MODES_INT_TO_STRING,
-    OSU_MODES_L10N_KEYS,
-    OSU_MODES_NAME_ONLY_L10N_KEYS,
     OSU_MODES_STRING_TO_INT,
     RECENT_SCORE_LIMIT,
 )
+from .osu_formatting import get_osu_mode_name
 from .osu_score_embeds import ScoreEmbedBuilder, ScoreEmbedRequest
 from .osu_score_views import BestScoreView, RecentScoreView, ScoreViewConfig
 
@@ -36,13 +35,6 @@ MODE_CHOICES = [
     app_commands.Choice(name="CTB", value=2),
     app_commands.Choice(name="Mania", value=3),
 ]
-
-
-class OsuCommandError(Exception):
-    def __init__(self, message: str, *, ephemeral: bool = True) -> None:
-        super().__init__(message)
-        self.message = message
-        self.ephemeral = ephemeral
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -97,18 +89,9 @@ class OsuCog(commands.Cog):
     def get_mode_name(
         self, mode_int: int, user_id_for_l10n: int, *, name_only: bool = False
     ) -> str:
-        current_lang = get_user_language(str(user_id_for_l10n))
-        logger.debug(
-            f"[OSU_COG get_mode_name] Called with mode_int: {mode_int}, "
-            f"user_id: {user_id_for_l10n}, determined_lang: {current_lang}, name_only: {name_only}"
+        return get_osu_mode_name(
+            mode_int, user_id_for_l10n, name_only=name_only, log_prefix="OSU_COG"
         )
-        key_map = OSU_MODES_NAME_ONLY_L10N_KEYS if name_only else OSU_MODES_L10N_KEYS
-        l10n_key = key_map.get(mode_int, "mode_name_only_unknown" if name_only else "mode_unknown")
-        localized_name = get_language_string(
-            current_lang, l10n_key, MODE_FALLBACK_TEXT.get(mode_int, "Unknown Mode")
-        )
-        logger.debug(f"[OSU_COG get_mode_name] Result: {localized_name}")
-        return localized_name
 
     @app_commands.command(name="recent", description="Shows the most recent osu! score for a user.")
     @app_commands.describe(
@@ -131,7 +114,7 @@ class OsuCog(commands.Cog):
         try:
             await self._send_recent_score(interaction, command_input)
         except OsuCommandError as exc:
-            await interaction.followup.send(exc.message, ephemeral=exc.ephemeral)
+            await send_command_error(interaction, exc)
         except Exception as exc:
             await self._send_unexpected_error(
                 interaction, user_id_for_l10n, command_name="/recent", exc=exc
@@ -158,7 +141,7 @@ class OsuCog(commands.Cog):
         try:
             await self._send_best_score(interaction, command_input)
         except OsuCommandError as exc:
-            await interaction.followup.send(exc.message, ephemeral=exc.ephemeral)
+            await send_command_error(interaction, exc)
         except Exception as exc:
             await self._send_unexpected_error(
                 interaction, user_id_for_l10n, command_name="/best", exc=exc
@@ -377,7 +360,7 @@ class OsuCog(commands.Cog):
 
 
 async def _bound_user_or_error(user_id_for_l10n: int) -> str:
-    bound_osu_user = await user_data_manager.get_user_binding(user_id_for_l10n)
+    bound_osu_user = await get_bound_user(user_id_for_l10n)
     if bound_osu_user:
         return str(bound_osu_user)
 
