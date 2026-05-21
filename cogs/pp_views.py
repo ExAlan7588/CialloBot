@@ -21,7 +21,7 @@ PP_VIEW_TIMEOUT_SECONDS = 300
 
 class RosuErrorNotifier(Protocol):
     async def __call__(
-        self, interaction: discord.Interaction, user_id_for_l10n: int, error_key: str
+        self, interaction: discord.Interaction, user_id_for_l10n: int, *, error_key: str
     ) -> None:
         """Send a user-facing rosu-pp error notification."""
         ...
@@ -186,7 +186,9 @@ class ModSelectView(discord.ui.View):
         self, interaction: discord.Interaction, error_key: str | None
     ) -> None:
         if error_key is not None:
-            await self.config.rosu_error_notifier(interaction, self.user_id_for_l10n, error_key)
+            await self.config.rosu_error_notifier(
+                interaction, self.user_id_for_l10n, error_key=error_key
+            )
 
 
 def _require_beatmap_id(beatmap: dict[str, Any]) -> int:

@@ -76,7 +76,9 @@ class PpEmbedBuilder:
         logger.debug(
             f"[PpCog] API did not return PP. Attempting rosu-pp for beatmap ID: {beatmap_id}"
         )
-        return await _calculate_rosu_display_data(request, display_data, session, beatmap_id)
+        return await _calculate_rosu_display_data(
+            request, display_data, session=session, beatmap_id=beatmap_id
+        )
 
     def _session_for_download(self) -> ClientSession | None:
         session = getattr(self.osu_api, "session", None)
@@ -93,10 +95,10 @@ def _initial_display_data(request: PpEmbedRequest) -> BeatmapDisplayData:
         title=request.beatmapset_data.get("title", "Unknown Title"),
         version=target.get("version", "Unknown Difficulty"),
         mode=target.get("mode", "osu"),
-        cs=_attribute_or_beatmap_value(attrs, target, "circle_size", "cs"),
-        ar=_attribute_or_beatmap_value(attrs, target, "approach_rate", "ar"),
-        hp=_attribute_or_beatmap_value(attrs, target, "hp_drain", "drain"),
-        od=_attribute_or_beatmap_value(attrs, target, "accuracy", "accuracy"),
+        cs=_attribute_or_beatmap_value(attrs, target, attr_key="circle_size", beatmap_key="cs"),
+        ar=_attribute_or_beatmap_value(attrs, target, attr_key="approach_rate", beatmap_key="ar"),
+        hp=_attribute_or_beatmap_value(attrs, target, attr_key="hp_drain", beatmap_key="drain"),
+        od=_attribute_or_beatmap_value(attrs, target, attr_key="accuracy", beatmap_key="accuracy"),
         stars=attrs.get("star_rating", "N/A"),
         pp_100=attrs.get("pp"),
         max_combo=attrs.get("max_combo", target.get("max_combo")),
@@ -104,7 +106,7 @@ def _initial_display_data(request: PpEmbedRequest) -> BeatmapDisplayData:
 
 
 def _attribute_or_beatmap_value(
-    attrs: dict[str, Any], target_beatmap: dict[str, Any], attr_key: str, beatmap_key: str
+    attrs: dict[str, Any], target_beatmap: dict[str, Any], *, attr_key: str, beatmap_key: str
 ) -> Any:
     value = attrs.get(attr_key)
     return target_beatmap.get(beatmap_key, "N/A") if value is None else value
@@ -113,6 +115,7 @@ def _attribute_or_beatmap_value(
 async def _calculate_rosu_display_data(
     request: PpEmbedRequest,
     display_data: BeatmapDisplayData,
+    *,
     session: ClientSession,
     beatmap_id: int,
 ) -> BeatmapDisplayData:

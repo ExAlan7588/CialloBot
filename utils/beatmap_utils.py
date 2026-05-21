@@ -241,21 +241,29 @@ def get_mods_bitmask_and_clock_rate(selected_mods: list[str]) -> tuple[int, floa
 async def calculate_pp_with_rosu(
     osu_file_path: str,
     selected_mods: list[str],
+    *,
     accuracy: float = 100.0,
     combo: int | None = None,
     misses: int = 0,
 ) -> RosuPpResult:
     """Calculate PP using rosu-pp-py without blocking the event loop."""
     return await asyncio.to_thread(
-        _calculate_pp_with_rosu_sync, osu_file_path, selected_mods, accuracy, combo, misses
+        _calculate_pp_with_rosu_sync,
+        osu_file_path,
+        selected_mods,
+        accuracy=accuracy,
+        combo=combo,
+        misses=misses,
     )
 
 
 def _calculate_pp_with_rosu_sync(
-    osu_file_path: str, selected_mods: list[str], accuracy: float, combo: int | None, misses: int
+    osu_file_path: str, selected_mods: list[str], *, accuracy: float, combo: int | None, misses: int
 ) -> RosuPpResult:
     try:
-        return _run_rosu_pp_calculation(osu_file_path, selected_mods, accuracy, combo, misses)
+        return _run_rosu_pp_calculation(
+            osu_file_path, selected_mods, accuracy=accuracy, combo=combo, misses=misses
+        )
     except TypeError as exc:
         msg = f"rosu-pp API compatibility error for {osu_file_path}: {exc}"
         raise RosuPpCalculationError(msg) from exc
@@ -265,14 +273,14 @@ def _calculate_pp_with_rosu_sync(
 
 
 def _run_rosu_pp_calculation(
-    osu_file_path: str, selected_mods: list[str], accuracy: float, combo: int | None, misses: int
+    osu_file_path: str, selected_mods: list[str], *, accuracy: float, combo: int | None, misses: int
 ) -> RosuPpResult:
     beatmap = Beatmap(path=osu_file_path)
     mod_bitmask, clock_rate = get_mods_bitmask_and_clock_rate(selected_mods)
     difficulty_attrs = _calculate_difficulty(beatmap, mod_bitmask, clock_rate)
     actual_combo = combo if combo is not None else difficulty_attrs.max_combo
     performance_attrs = _calculate_performance(
-        beatmap, mod_bitmask, clock_rate, accuracy, actual_combo, misses
+        beatmap, mod_bitmask, clock_rate, accuracy=accuracy, combo=actual_combo, misses=misses
     )
     return _build_rosu_result(
         performance_attrs.pp, difficulty_attrs.stars, difficulty_attrs.max_combo
@@ -292,6 +300,7 @@ def _calculate_performance(
     beatmap: Beatmap,
     mod_bitmask: int,
     clock_rate: float,
+    *,
     accuracy: float,
     combo: int | None,
     misses: int,

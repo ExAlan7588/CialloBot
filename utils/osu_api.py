@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import time
+from dataclasses import dataclass
 from typing import Any, TypeAlias
 
 import aiohttp
@@ -64,8 +65,15 @@ class OsuAPIDataError(OsuAPIError):
     """Raised when osu! API returns data in an unexpected shape."""
 
 
+@dataclass(frozen=True, kw_only=True)
+class BeatmapAttributesRequest:
+    mods: int | list[str] | str | None
+    ruleset_id: int | None
+    ruleset_short_name: str | None
+
+
 class OsuAPI:
-    def __init__(self, client_id: str, client_secret: str, api_v1_key: str) -> None:
+    def __init__(self, *, client_id: str, client_secret: str, api_v1_key: str) -> None:
         self.client_id = client_id
         self.client_secret = client_secret
         self.api_v1_key = api_v1_key
@@ -136,6 +144,7 @@ class OsuAPI:
         self,
         method: str,
         endpoint: str,
+        *,
         params: RequestParams | None = None,
         json_payload: RequestParams | None = None,
     ) -> ApiResponse:
@@ -158,7 +167,7 @@ class OsuAPI:
         }
 
     async def _parse_response(
-        self, response: aiohttp.ClientResponse, url: str, params: RequestParams | None = None
+        self, response: aiohttp.ClientResponse, url: str, *, params: RequestParams | None = None
     ) -> ApiResponse:
         if response.status == HTTP_NO_CONTENT:
             return {}
@@ -181,7 +190,7 @@ class OsuAPI:
         raise OsuAPIDataError(msg)
 
     async def get_user(
-        self, user_identifier: str, mode: str | None = None, identifier_type: str | None = None
+        self, user_identifier: str, *, mode: str | None = None, identifier_type: str | None = None
     ) -> dict[str, Any]:
         """Retrieve details for a user."""
         endpoint = f"/users/{user_identifier}"
@@ -194,6 +203,7 @@ class OsuAPI:
     async def get_user_recent(
         self,
         user_id: int | str,
+        *,
         mode: str | None = None,
         limit: int = 5,
         offset: int | None = None,
@@ -212,6 +222,7 @@ class OsuAPI:
     async def get_user_best(
         self,
         user_id: int | str,
+        *,
         mode: str | None = None,
         limit: int = API_V2_PAGE_LIMIT,
         offset: int | None = None,
@@ -222,7 +233,9 @@ class OsuAPI:
 
         while len(scores) < limit:
             request_limit = min(API_V2_PAGE_LIMIT, limit - len(scores))
-            page = await self._get_user_best_page(user_id, mode, request_limit, current_offset)
+            page = await self._get_user_best_page(
+                user_id, mode=mode, limit=request_limit, offset=current_offset
+            )
             if not page:
                 break
 
@@ -235,7 +248,7 @@ class OsuAPI:
         return scores
 
     async def _get_user_best_page(
-        self, user_id: int | str, mode: str | None, limit: int, offset: int
+        self, user_id: int | str, *, mode: str | None, limit: int, offset: int
     ) -> list[Any]:
         endpoint = f"/users/{user_id}/scores/best"
         params: RequestParams = {"limit": limit, "offset": offset}
@@ -244,7 +257,7 @@ class OsuAPI:
         return _expect_list(await self._request("GET", endpoint, params=params), endpoint)
 
     async def get_user_beatmapsets(
-        self, user_id: int | str, beatmap_type: str, limit: int = 50, offset: int = 0
+        self, user_id: int | str, beatmap_type: str, *, limit: int = 50, offset: int = 0
     ) -> list[Any]:
         """Retrieve beatmapsets for a user and beatmapset type."""
         endpoint = f"/users/{user_id}/beatmapsets/{beatmap_type}"
@@ -270,13 +283,18 @@ class OsuAPI:
     async def get_beatmap_attributes(
         self,
         beatmap_id: int,
+        *,
         mods: int | list[str] | str | None = None,
         ruleset_id: int | None = None,
         ruleset_short_name: str | None = None,
     ) -> dict[str, Any]:
         """Retrieve difficulty attributes for a beatmap."""
         endpoint = f"/beatmaps/{beatmap_id}/attributes"
-        payload = _beatmap_attributes_payload(mods, ruleset_id, ruleset_short_name)
+        payload = _beatmap_attributes_payload(
+            BeatmapAttributesRequest(
+                mods=mods, ruleset_id=ruleset_id, ruleset_short_name=ruleset_short_name
+            )
+        )
         return _expect_dict(await self._request("POST", endpoint, json_payload=payload), endpoint)
 
     def decode_mods(self, mods_int: int | list[str]) -> str:
@@ -308,7 +326,7 @@ class OsuAPI:
         return _direct_accuracy(statistics)
 
     async def get_score_v1(
-        self, beatmap_id: int, user_id: int | str, mode: int = 0
+        self, beatmap_id: int, user_id: int | str, *, mode: int = 0
     ) -> dict[str, Any] | None:
         """Retrieve a user's best score on a beatmap from osu! API v1."""
         if not self.api_v1_key:
@@ -346,13 +364,11 @@ def _expect_list(data: ApiResponse, context: str) -> list[Any]:
     raise OsuAPIDataError(msg)
 
 
-def _beatmap_attributes_payload(
-    mods: int | list[str] | str | None, ruleset_id: int | None, ruleset_short_name: str | None
-) -> RequestParams:
+def _beatmap_attributes_payload(request: BeatmapAttributesRequest) -> RequestParams:
     payload: RequestParams = {}
-    if mods is not None:
-        payload["mods"] = _normalize_mods_payload(mods)
-    final_ruleset_id = ruleset_id or _ruleset_id_from_name(ruleset_short_name)
+    if request.mods is not None:
+        payload["mods"] = _normalize_mods_payload(request.mods)
+    final_ruleset_id = request.ruleset_id or _ruleset_id_from_name(request.ruleset_short_name)
     if final_ruleset_id is not None:
         payload["ruleset_id"] = final_ruleset_id
     return payload

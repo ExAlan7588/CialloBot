@@ -50,6 +50,7 @@ class UserCog(commands.Cog):
     async def profile(
         self,
         interaction: discord.Interaction,
+        *,
         osu_user: str | None = None,
         osu_id: int | None = None,
         mode: app_commands.Choice[int] | None = None,
@@ -63,7 +64,9 @@ class UserCog(commands.Cog):
             detail=detail,
         )
         await self._run_user_command(
-            interaction, self.profile_service.send_profile(interaction, command_input), "/profile"
+            interaction,
+            self.profile_service.send_profile(interaction, command_input),
+            command_name="/profile",
         )
 
     @app_commands.command(name="mapper", description="Shows osu! mapping statistics for a user.")
@@ -71,13 +74,16 @@ class UserCog(commands.Cog):
     async def mapper(
         self,
         interaction: discord.Interaction,
+        *,
         osu_user: str | None = None,
         osu_id: int | None = None,
     ) -> None:
         await interaction.response.defer()
         command_input = MapperCommandInput(osu_user=osu_user, osu_id=osu_id)
         await self._run_user_command(
-            interaction, self.mapper_service.send_mapper(interaction, command_input), "/mapper"
+            interaction,
+            self.mapper_service.send_mapper(interaction, command_input),
+            command_name="/mapper",
         )
 
     @app_commands.command(
@@ -89,13 +95,16 @@ class UserCog(commands.Cog):
     async def setuser(
         self,
         interaction: discord.Interaction,
+        *,
         osu_user: str | None = None,
         osu_id: int | None = None,
     ) -> None:
         await interaction.response.defer(ephemeral=True)
         command_input = SetUserCommandInput(osu_user=osu_user, osu_id=osu_id)
         await self._run_user_command(
-            interaction, self.binding_service.send_setuser(interaction, command_input), "/setuser"
+            interaction,
+            self.binding_service.send_setuser(interaction, command_input),
+            command_name="/setuser",
         )
 
     @app_commands.command(
@@ -104,21 +113,21 @@ class UserCog(commands.Cog):
     async def unsetuser(self, interaction: discord.Interaction) -> None:
         await interaction.response.defer(ephemeral=True)
         await self._run_user_command(
-            interaction, self.binding_service.send_unsetuser(interaction), "/unsetuser"
+            interaction, self.binding_service.send_unsetuser(interaction), command_name="/unsetuser"
         )
 
     async def _run_user_command(
-        self, interaction: discord.Interaction, command_task: Awaitable[None], command_name: str
+        self, interaction: discord.Interaction, command_task: Awaitable[None], *, command_name: str
     ) -> None:
         try:
             await command_task
         except UserCommandError as exc:
             await interaction.followup.send(exc.message, ephemeral=exc.ephemeral)
         except Exception as exc:
-            await self._send_unexpected_error(interaction, command_name, exc)
+            await self._send_unexpected_error(interaction, command_name=command_name, exc=exc)
 
     async def _send_unexpected_error(
-        self, interaction: discord.Interaction, command_name: str, exc: Exception
+        self, interaction: discord.Interaction, *, command_name: str, exc: Exception
     ) -> None:
         logger.opt(exception=exc).error(f"[UserCog] Error in {command_name} command")
         await interaction.followup.send(

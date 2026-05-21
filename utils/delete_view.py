@@ -27,7 +27,7 @@ class DeleteMessageView(discord.ui.View):
     """
 
     def __init__(
-        self, trigger_user_id: int, guild: discord.Guild | None, timeout: float = 300.0
+        self, trigger_user_id: int, guild: discord.Guild | None, *, timeout: float = 300.0
     ) -> None:
         """初始化刪除視圖
 

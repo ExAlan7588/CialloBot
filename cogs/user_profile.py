@@ -91,7 +91,7 @@ class UserProfileService:
         )
         embed = _create_profile_embed(context)
         if command_input.detail:
-            await self._send_detail_profile(interaction, context, embed)
+            await self._send_detail_profile(interaction, context, embed=embed)
             return
         add_standard_profile_fields(embed, context)
         await interaction.followup.send(embed=embed)
@@ -133,7 +133,11 @@ class UserProfileService:
         )
 
     async def _send_detail_profile(
-        self, interaction: discord.Interaction, context: ProfileRenderContext, embed: discord.Embed
+        self,
+        interaction: discord.Interaction,
+        context: ProfileRenderContext,
+        *,
+        embed: discord.Embed,
     ) -> None:
         graph_buffer, has_rank_graph = generate_profile_rank_graph(
             context.player_data.get("rank_history"), context.user_id_for_l10n

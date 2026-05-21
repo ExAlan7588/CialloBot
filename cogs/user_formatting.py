@@ -69,6 +69,7 @@ class UserFormatter:
         self,
         dt_obj: datetime.datetime | None,
         user_id_for_l10n: int | str,
+        *,
         format_key: str = "date_format",
     ) -> str:
         if dt_obj is None:

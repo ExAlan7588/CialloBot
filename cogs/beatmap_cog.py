@@ -100,7 +100,7 @@ class BeatmapCog(commands.Cog):
         if not beatmaps:
             return None
 
-        target = self._select_target_beatmap(query, beatmaps, direct_beatmap)
+        target = self._select_target_beatmap(query, beatmaps, direct_beatmap=direct_beatmap)
         if target is None:
             return None
         return BeatmapSelection(target, beatmaps)
@@ -128,7 +128,11 @@ class BeatmapCog(commands.Cog):
         return beatmaps
 
     def _select_target_beatmap(
-        self, query: BeatmapQuery, beatmaps: list[BeatmapData], direct_beatmap: BeatmapData | None
+        self,
+        query: BeatmapQuery,
+        beatmaps: list[BeatmapData],
+        *,
+        direct_beatmap: BeatmapData | None,
     ) -> BeatmapData | None:
         if query.beatmap_id:
             if direct_beatmap and str(direct_beatmap.get("id")) == query.beatmap_id:

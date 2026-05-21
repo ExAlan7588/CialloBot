@@ -50,6 +50,14 @@ class MappingStats:
     latest_beatmapset: dict[str, Any] | None
 
 
+@dataclass(frozen=True, kw_only=True)
+class MapperRenderContext:
+    player_data: dict[str, Any]
+    stats: MappingStats
+    user_id_for_l10n: int
+    formatter: UserFormatter
+
+
 class UserMapperService:
     def __init__(self, osu_api: OsuAPI, formatter: UserFormatter) -> None:
         self.osu_api = osu_api
@@ -75,10 +83,12 @@ class UserMapperService:
         beatmapsets = await self._fetch_all_beatmapsets(actual_user_id)
         stats = _mapping_stats(player_data, beatmapsets)
         embed = _build_mapper_embed(
-            player_data=player_data,
-            stats=stats,
-            user_id_for_l10n=user_id_for_l10n,
-            formatter=self.formatter,
+            MapperRenderContext(
+                player_data=player_data,
+                stats=stats,
+                user_id_for_l10n=user_id_for_l10n,
+                formatter=self.formatter,
+            )
         )
         logger.debug(f"[USER_COG /mapper] Sending embed for {username}")
         await interaction.followup.send(embed=embed)
@@ -93,13 +103,15 @@ class UserMapperService:
     async def _fetch_all_beatmapsets(self, user_id: int | str) -> list[dict[str, Any]]:
         all_beatmapsets: dict[Any, dict[str, Any]] = {}
         for beatmap_type in MAPPER_BEATMAP_TYPES:
-            await self._fetch_beatmapsets_by_type(user_id, beatmap_type, all_beatmapsets)
+            await self._fetch_beatmapsets_by_type(
+                user_id, beatmap_type, all_beatmapsets=all_beatmapsets
+            )
 
         logger.debug(f"[USER_COG /mapper] Total unique beatmapsets fetched: {len(all_beatmapsets)}")
         return list(all_beatmapsets.values())
 
     async def _fetch_beatmapsets_by_type(
-        self, user_id: int | str, beatmap_type: str, all_beatmapsets: dict[Any, dict[str, Any]]
+        self, user_id: int | str, beatmap_type: str, *, all_beatmapsets: dict[Any, dict[str, Any]]
     ) -> None:
         offset = 0
         fetched_count = 0
@@ -203,17 +215,12 @@ def _parse_submission_date(beatmapset: dict[str, Any]) -> datetime.datetime | No
         return None
 
 
-def _build_mapper_embed(
-    player_data: dict[str, Any],
-    stats: MappingStats,
-    user_id_for_l10n: int,
-    formatter: UserFormatter,
-) -> discord.Embed:
+def _build_mapper_embed(context: MapperRenderContext) -> discord.Embed:
     embed = discord.Embed(color=discord.Color.purple())
-    _set_mapper_author(embed, player_data, user_id_for_l10n)
-    _add_mapper_stats_fields(embed, stats, user_id_for_l10n, formatter)
-    _add_latest_submission_field(embed, stats, user_id_for_l10n, formatter)
-    embed.set_footer(text=f"ID: {player_data.get('id')}")
+    _set_mapper_author(embed, context.player_data, context.user_id_for_l10n)
+    _add_mapper_stats_fields(embed, context)
+    _add_latest_submission_field(embed, context)
+    embed.set_footer(text=f"ID: {context.player_data.get('id')}")
     return embed
 
 
@@ -243,9 +250,10 @@ def _mapper_title(username: str, user_id_for_l10n: int) -> str:
         return fallback
 
 
-def _add_mapper_stats_fields(
-    embed: discord.Embed, stats: MappingStats, user_id_for_l10n: int, formatter: UserFormatter
-) -> None:
+def _add_mapper_stats_fields(embed: discord.Embed, context: MapperRenderContext) -> None:
+    stats = context.stats
+    formatter = context.formatter
+    user_id_for_l10n = context.user_id_for_l10n
     field_specs = (
         ("mapper_total_sets", str(stats.total_mapsets), True),
         ("mapper_ranked_loved", str(stats.ranked_loved_sets), True),
@@ -300,9 +308,10 @@ def _mapping_duration_text(
     return formatter.time_since(stats.earliest_submission_date, user_id_for_l10n, short=False)
 
 
-def _add_latest_submission_field(
-    embed: discord.Embed, stats: MappingStats, user_id_for_l10n: int, formatter: UserFormatter
-) -> None:
+def _add_latest_submission_field(embed: discord.Embed, context: MapperRenderContext) -> None:
+    stats = context.stats
+    formatter = context.formatter
+    user_id_for_l10n = context.user_id_for_l10n
     field_name = formatter.lstr_or_na(user_id_for_l10n, "mapper_latest_submission")
     if stats.latest_beatmapset is None:
         embed.add_field(

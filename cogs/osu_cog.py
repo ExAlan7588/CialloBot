@@ -120,6 +120,7 @@ class OsuCog(commands.Cog):
     async def recent(
         self,
         interaction: discord.Interaction,
+        *,
         osu_user: str | None = None,
         osu_id: int | None = None,
         mode: int | None = None,
@@ -132,7 +133,9 @@ class OsuCog(commands.Cog):
         except OsuCommandError as exc:
             await interaction.followup.send(exc.message, ephemeral=exc.ephemeral)
         except Exception as exc:
-            await self._send_unexpected_error(interaction, user_id_for_l10n, "/recent", exc)
+            await self._send_unexpected_error(
+                interaction, user_id_for_l10n, command_name="/recent", exc=exc
+            )
 
     @app_commands.command(name="best", description="Shows a user's top osu! score.")
     @app_commands.describe(
@@ -144,6 +147,7 @@ class OsuCog(commands.Cog):
     async def best(
         self,
         interaction: discord.Interaction,
+        *,
         osu_user: str | None = None,
         mode: int | None = None,
         bp_rank: int | None = None,
@@ -156,7 +160,9 @@ class OsuCog(commands.Cog):
         except OsuCommandError as exc:
             await interaction.followup.send(exc.message, ephemeral=exc.ephemeral)
         except Exception as exc:
-            await self._send_unexpected_error(interaction, user_id_for_l10n, "/best", exc)
+            await self._send_unexpected_error(
+                interaction, user_id_for_l10n, command_name="/best", exc=exc
+            )
 
     async def _send_recent_score(
         self, interaction: discord.Interaction, command_input: RecentCommandInput
@@ -182,7 +188,7 @@ class OsuCog(commands.Cog):
         embed = await self._create_score_embed(
             _score_embed_request(context, best_scores[initial_index], initial_index + 1)
         )
-        view = self._best_view(context, best_scores, initial_index)
+        view = self._best_view(context, best_scores, initial_index=initial_index)
         view.message = await interaction.followup.send(embed=embed, view=view)
 
     async def _resolve_recent_context(
@@ -343,7 +349,7 @@ class OsuCog(commands.Cog):
         return RecentScoreView(_score_view_config(self.score_embed_builder, context, scores))
 
     def _best_view(
-        self, context: PlayerCommandContext, scores: list[dict[str, Any]], initial_index: int
+        self, context: PlayerCommandContext, scores: list[dict[str, Any]], *, initial_index: int
     ) -> BestScoreView:
         view = BestScoreView(_score_view_config(self.score_embed_builder, context, scores))
         view.current_index = initial_index
@@ -354,6 +360,7 @@ class OsuCog(commands.Cog):
         self,
         interaction: discord.Interaction,
         user_id_for_l10n: int,
+        *,
         command_name: str,
         exc: Exception,
     ) -> None:

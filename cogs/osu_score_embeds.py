@@ -50,6 +50,13 @@ class ScoreValue:
 
 
 @dataclass(frozen=True, kw_only=True)
+class V1ScoreContext:
+    beatmap_id: int
+    user_id: int | str
+    mode_int: int
+
+
+@dataclass(frozen=True, kw_only=True)
 class ScoreEmbedBuilder:
     osu_api: OsuAPI
     mode_name_resolver: ModeNameResolver
@@ -133,7 +140,9 @@ class ScoreEmbedBuilder:
             return ScoreValue(value=current_score, v1_fallback_failed=True)
 
         return _resolve_v1_score_value(
-            v1_score_data, current_score, beatmap_id, user_id, request.mode_int
+            v1_score_data,
+            current_score,
+            V1ScoreContext(beatmap_id=beatmap_id, user_id=user_id, mode_int=request.mode_int),
         )
 
 
@@ -190,26 +199,22 @@ def _set_author(embed: discord.Embed, request: ScoreEmbedRequest) -> None:
 
 
 def _resolve_v1_score_value(
-    v1_score_data: dict[str, Any] | None,
-    current_score: int,
-    beatmap_id: int,
-    user_id: int | str,
-    mode_int: int,
+    v1_score_data: dict[str, Any] | None, current_score: int, context: V1ScoreContext
 ) -> ScoreValue:
     if not v1_score_data:
-        _log_missing_v1_score(beatmap_id, user_id, mode_int)
+        _log_missing_v1_score(context)
         return ScoreValue(value=current_score, v1_fallback_failed=True)
 
     raw_score = v1_score_data.get("score")
     if raw_score is None:
-        _log_missing_v1_score(beatmap_id, user_id, mode_int)
+        _log_missing_v1_score(context)
         return ScoreValue(value=current_score, v1_fallback_failed=True)
 
-    return _parse_v1_score_value(raw_score, current_score, beatmap_id, user_id, mode_int)
+    return _parse_v1_score_value(raw_score, current_score, context)
 
 
 def _parse_v1_score_value(
-    raw_score: Any, current_score: int, beatmap_id: int, user_id: int | str, mode_int: int
+    raw_score: Any, current_score: int, context: V1ScoreContext
 ) -> ScoreValue:
     try:
         score_value = int(raw_score)
@@ -221,15 +226,15 @@ def _parse_v1_score_value(
 
     logger.info(
         f"[_create_score_embed] Successfully updated score to {score_value} using API v1 fallback "
-        f"for beatmap {beatmap_id}, user {user_id}, mode {mode_int}."
+        f"for beatmap {context.beatmap_id}, user {context.user_id}, mode {context.mode_int}."
     )
     return ScoreValue(value=score_value, v1_fallback_failed=False)
 
 
-def _log_missing_v1_score(beatmap_id: int, user_id: int | str, mode_int: int) -> None:
+def _log_missing_v1_score(context: V1ScoreContext) -> None:
     logger.info(
         f"[_create_score_embed] API v1 fallback did not return valid score data for "
-        f"beatmap {beatmap_id}, user {user_id}, mode {mode_int}."
+        f"beatmap {context.beatmap_id}, user {context.user_id}, mode {context.mode_int}."
     )
 
 

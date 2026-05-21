@@ -63,23 +63,23 @@ class PpCog(commands.Cog):
         await interaction.response.defer()
         user_id_for_l10n = interaction.user.id
         try:
-            await self._send_pp(interaction, url, user_id_for_l10n)
+            await self._send_pp(interaction, url, user_id_for_l10n=user_id_for_l10n)
         except PpCommandError as exc:
             await interaction.followup.send(exc.message, ephemeral=exc.ephemeral)
         except Exception as exc:
-            await self._send_unexpected_error(interaction, user_id_for_l10n, exc)
+            await self._send_unexpected_error(interaction, user_id_for_l10n, exc=exc)
 
     async def _send_pp(
-        self, interaction: discord.Interaction, url: str, user_id_for_l10n: int
+        self, interaction: discord.Interaction, url: str, *, user_id_for_l10n: int
     ) -> None:
         selection = await self._resolve_selection(_parse_beatmap_url(url), user_id_for_l10n)
         attributes = await self._get_initial_attributes(selection, user_id_for_l10n)
         result = await self.embed_builder.create(
-            _embed_request(selection, attributes, user_id_for_l10n)
+            _embed_request(selection, attributes, user_id_for_l10n=user_id_for_l10n)
         )
         view = self._view(selection, user_id_for_l10n)
         await interaction.followup.send(embed=result.embed, view=view)
-        await self._send_rosu_error(interaction, user_id_for_l10n, result.rosu_error_key)
+        await self._send_rosu_error(interaction, user_id_for_l10n, error_key=result.rosu_error_key)
 
     async def _resolve_selection(
         self, url_parts: BeatmapUrlParts, user_id_for_l10n: int
@@ -165,7 +165,7 @@ class PpCog(commands.Cog):
         )
 
     async def _send_rosu_error(
-        self, interaction: discord.Interaction, user_id_for_l10n: int, error_key: str | None
+        self, interaction: discord.Interaction, user_id_for_l10n: int, *, error_key: str | None
     ) -> None:
         if error_key is None:
             return
@@ -179,7 +179,7 @@ class PpCog(commands.Cog):
         )
 
     async def _send_unexpected_error(
-        self, interaction: discord.Interaction, user_id_for_l10n: int, exc: Exception
+        self, interaction: discord.Interaction, user_id_for_l10n: int, *, exc: Exception
     ) -> None:
         logger.opt(exception=exc).error("[PpCog] Error in /pp command")
         await interaction.followup.send(
@@ -260,7 +260,7 @@ def _require_beatmap_id(beatmap: dict[str, Any], user_id_for_l10n: int) -> int:
 
 
 def _embed_request(
-    selection: BeatmapSelection, attributes: dict[str, Any], user_id_for_l10n: int
+    selection: BeatmapSelection, attributes: dict[str, Any], *, user_id_for_l10n: int
 ) -> PpEmbedRequest:
     return PpEmbedRequest(
         target_beatmap=selection.target_beatmap,

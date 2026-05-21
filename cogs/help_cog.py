@@ -84,7 +84,9 @@ def _build_help_embed(
     sorted_commands = sorted(flattened_commands, key=lambda item: _command_order(item[0]))
     logger.debug(f"[HelpCog] Sorted commands: {[cmd_path for cmd_path, _, _ in sorted_commands]}")
     command_lines = [
-        _command_help_line(index, command, len(sorted_commands), user_id_for_l10n)
+        _command_help_line(
+            index, command, total=len(sorted_commands), user_id_for_l10n=user_id_for_l10n
+        )
         for index, command in enumerate(sorted_commands, start=1)
     ]
     embed = discord.Embed(title=_help_title(user_id_for_l10n), color=discord.Color.blue())
@@ -106,7 +108,7 @@ def _command_order(cmd_path: str) -> int:
 
 
 def _command_help_line(
-    index: int, command: tuple[str, str, str], total: int, user_id_for_l10n: str
+    index: int, command: tuple[str, str, str], *, total: int, user_id_for_l10n: str
 ) -> str:
     cmd_path, cmd_name, cmd_description = command
     logger.debug(f"[HelpCog] Processing command {index}/{total}: {cmd_path}")
