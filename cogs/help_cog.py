@@ -38,8 +38,7 @@ class HelpCog(commands.Cog):
         self.bot = bot
 
     @app_commands.command(
-        name="help",
-        description="Displays all available slash commands and their descriptions.",
+        name="help", description="Displays all available slash commands and their descriptions."
     )
     async def slash_help(self, interaction: discord.Interaction) -> None:
         logger.debug(
@@ -53,12 +52,8 @@ class HelpCog(commands.Cog):
 
         test_title_key = "help_embed_title"
         english_fallback_title = "Available Slash Commands (Fallback)"
-        localized_title_test = lstr(
-            user_id_for_l10n, test_title_key, english_fallback_title
-        )
-        logger.debug(
-            f"[HelpCog] Attempted lstr for '{test_title_key}': '{localized_title_test}'"
-        )
+        localized_title_test = lstr(user_id_for_l10n, test_title_key, english_fallback_title)
+        logger.debug(f"[HelpCog] Attempted lstr for '{test_title_key}': '{localized_title_test}'")
 
         try:
             await interaction.response.defer(ephemeral=True)
@@ -92,15 +87,11 @@ class HelpCog(commands.Cog):
 
         commands_to_display = []
         for i, (cmd_path, cmd_name, cmd_description) in enumerate(sorted_commands):
-            logger.debug(
-                f"[HelpCog] Processing command {i + 1}/{len(sorted_commands)}: {cmd_path}"
-            )
+            logger.debug(f"[HelpCog] Processing command {i + 1}/{len(sorted_commands)}: {cmd_path}")
             description_text = cmd_description
             if not description_text or description_text == "...":
                 description_text = lstr(
-                    user_id_for_l10n,
-                    "help_no_description",
-                    "No description available.",
+                    user_id_for_l10n, "help_no_description", "No description available."
                 )
 
             localized_desc_key = f"cmd_desc_{cmd_name.lower().replace(' ', '_')}"
@@ -134,9 +125,7 @@ class HelpCog(commands.Cog):
             logger.error(f"[HelpCog] Failed to send help embed: {e_send}")
             # Try to send a simple text message if embed fails
             try:
-                fallback_text = (
-                    "Could not display help commands as an embed. Please check logs."
-                )
+                fallback_text = "Could not display help commands as an embed. Please check logs."
                 if commands_to_display:
                     fallback_text = "\n".join(commands_to_display)
                 await interaction.followup.send(fallback_text, ephemeral=True)
@@ -150,9 +139,7 @@ async def setup(bot: commands.Bot) -> None:
 
 
 def _flatten_app_commands(
-    commands_list: Sequence[
-        app_commands.Command | app_commands.Group | app_commands.ContextMenu
-    ],
+    commands_list: Sequence[app_commands.Command | app_commands.Group | app_commands.ContextMenu],
     *,
     prefix: str = "",
 ) -> Iterator[tuple[str, str, str]]:

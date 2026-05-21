@@ -115,12 +115,8 @@ def get_beatmap_status_display(status_input, user_id_for_l10n: int, lstr_func) -
             normalized_status_str in BEATMAP_STATUS_API_MAP
         ):  # Direct match for string keys like "ranked"
             status_key = normalized_status_str
-        elif (
-            normalized_status_str == "approved"
-        ):  # API v2 uses "approved" string, map it.
-            status_key = (
-                "approved"  # Ensure approved has its own key if distinct from qualified
-            )
+        elif normalized_status_str == "approved":  # API v2 uses "approved" string, map it.
+            status_key = "approved"  # Ensure approved has its own key if distinct from qualified
         elif normalized_status_str == "qualified":
             status_key = "qualified"
         # Add more explicit string mappings if needed
@@ -149,18 +145,14 @@ def get_beatmap_status_display(status_input, user_id_for_l10n: int, lstr_func) -
     return f"{emoji} {status_text_localized}"
 
 
-async def download_osu_file(
-    beatmap_id: int, session: aiohttp.ClientSession
-) -> str | None:
+async def download_osu_file(beatmap_id: int, session: aiohttp.ClientSession) -> str | None:
     """Downloads an .osu file for a given beatmap_id.
     Returns the path to the downloaded file.
     Raises BeatmapDownloadError if the download failed or temp directory doesn't exist.
     The file is saved in the TEMP_OSU_DIR.
     """
     if not pathlib.Path(TEMP_OSU_DIR).exists():
-        err_msg = (
-            f"Temporary directory {TEMP_OSU_DIR} does not exist. Please create it."
-        )
+        err_msg = f"Temporary directory {TEMP_OSU_DIR} does not exist. Please create it."
         logger.error(f"[BeatmapUtils] Error: {err_msg}")
         raise BeatmapDownloadError(err_msg)
 
@@ -179,9 +171,7 @@ async def download_osu_file(
             error_detail = f"HTTP {response.status}"
             try:  # Try to get more error details from response
                 text_response = await response.text()
-                error_detail += (
-                    f": {text_response[:200]}"  # Limit length of error message
-                )
+                error_detail += f": {text_response[:200]}"  # Limit length of error message
             except Exception:
                 pass  # Ignore if cannot get text
             err_msg = f"Error downloading .osu file: {error_detail} for URL {url}"
@@ -192,9 +182,7 @@ async def download_osu_file(
         logger.error(f"[BeatmapUtils] {err_msg}")
         raise BeatmapDownloadError(err_msg) from e
     except Exception as e:  # Catch any other unexpected errors
-        err_msg = (
-            f"Unexpected error during .osu download for {url}: {type(e).__name__} - {e}"
-        )
+        err_msg = f"Unexpected error during .osu download for {url}: {type(e).__name__} - {e}"
         logger.error(f"[BeatmapUtils] {err_msg}")
         raise BeatmapDownloadError(err_msg) from e
 
@@ -221,15 +209,11 @@ def parse_osu_file_metadata(osu_file_path: str) -> dict:
                         metadata["title"] = line[len("TitleUnicode:") :].strip()
                     elif line.startswith("Artist:") and metadata["artist"] is None:
                         metadata["artist"] = line[len("Artist:") :].strip()
-                    elif (
-                        line.startswith("ArtistUnicode:") and metadata["artist"] is None
-                    ):
+                    elif line.startswith("ArtistUnicode:") and metadata["artist"] is None:
                         metadata["artist"] = line[len("ArtistUnicode:") :].strip()
                     elif line.startswith("Version:") and metadata["version"] is None:
                         metadata["version"] = line[len("Version:") :].strip()
-                    elif line.startswith("[") and line.endswith(
-                        "]"
-                    ):  # Reached another section
+                    elif line.startswith("[") and line.endswith("]"):  # Reached another section
                         break
             # If any metadata is still None, default them to avoid issues, or they can be handled upstream
             if metadata["title"] is None:
@@ -240,9 +224,7 @@ def parse_osu_file_metadata(osu_file_path: str) -> dict:
                 metadata["version"] = "Unknown Version"
         logger.debug(f"[BeatmapUtils] Parsed metadata: {metadata} from {osu_file_path}")
     except Exception as e:
-        logger.error(
-            f"[BeatmapUtils] Error parsing .osu file metadata for {osu_file_path}: {e}"
-        )
+        logger.error(f"[BeatmapUtils] Error parsing .osu file metadata for {osu_file_path}: {e}")
         if metadata["title"] is None:
             metadata["title"] = "Error Parsing Title"
         if metadata["artist"] is None:
@@ -252,9 +234,7 @@ def parse_osu_file_metadata(osu_file_path: str) -> dict:
     return metadata
 
 
-def get_mods_bitmask_and_clock_rate(
-    selected_mods: list[str],
-) -> tuple[int, float | None]:
+def get_mods_bitmask_and_clock_rate(selected_mods: list[str]) -> tuple[int, float | None]:
     """Converts a list of mod acronyms to a bitmask and determines clock rate."""
     bitmask = 0
     clock_rate = 1.0  # Default clock rate
@@ -402,9 +382,7 @@ def delete_osu_file(osu_file_path: str) -> None:
     """Deletes the specified .osu file from the temp directory."""
     try:
         if (
-            osu_file_path
-            and pathlib.Path(osu_file_path).exists()
-            and TEMP_OSU_DIR in osu_file_path
+            osu_file_path and pathlib.Path(osu_file_path).exists() and TEMP_OSU_DIR in osu_file_path
         ):  # Safety check
             pathlib.Path(osu_file_path).unlink()
             logger.debug(f"[BeatmapUtils] Deleted temporary file: {osu_file_path}")
@@ -413,9 +391,7 @@ def delete_osu_file(osu_file_path: str) -> None:
                 f"[BeatmapUtils] File not deleted (not found or invalid path): {osu_file_path}"
             )
     except Exception as e:
-        logger.error(
-            f"[BeatmapUtils] Error deleting temporary file {osu_file_path}: {e}"
-        )
+        logger.error(f"[BeatmapUtils] Error deleting temporary file {osu_file_path}: {e}")
 
 
 # Example usage and if __name__ == "__main__" block will be removed.

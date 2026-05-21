@@ -32,9 +32,7 @@ def wrap_task_factory() -> None:
     loop = asyncio.get_running_loop()
     original_factory = loop.get_task_factory()
 
-    async def coro_wrapper(
-        coro: Coroutine[Any, Any, Any], name: str | None = None
-    ) -> Any:
+    async def coro_wrapper(coro: Coroutine[Any, Any, Any], name: str | None = None) -> Any:
         """包裝協程，添加異常處理。"""
         try:
             return await coro
@@ -45,9 +43,7 @@ def wrap_task_factory() -> None:
             raise
 
     def new_factory(
-        loop: asyncio.AbstractEventLoop,
-        coro: Coroutine[Any, Any, Any],
-        **kwargs: Any,
+        loop: asyncio.AbstractEventLoop, coro: Coroutine[Any, Any, Any], **kwargs: Any
     ) -> asyncio.Task[Any]:
         """新的任務工廠函數。"""
         task_name = kwargs.get("name")

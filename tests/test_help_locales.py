@@ -6,14 +6,8 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parent.parent
-LOCALE_FILES = [
-    ROOT / "locales" / "en.json",
-    ROOT / "locales" / "zh_TW.json",
-]
-REQUIRED_HELP_KEYS = [
-    "cmd_desc_keyword_add",
-    "cmd_desc_keyword_list",
-]
+LOCALE_FILES = [ROOT / "locales" / "en.json", ROOT / "locales" / "zh_TW.json"]
+REQUIRED_HELP_KEYS = ["cmd_desc_keyword_add", "cmd_desc_keyword_list"]
 
 
 class HelpLocaleTests(unittest.TestCase):

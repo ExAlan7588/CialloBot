@@ -40,9 +40,7 @@ class BeatmapCog(commands.Cog):
         if not total_seconds:
             return "0:00"
         try:
-            return str(datetime.timedelta(seconds=int(total_seconds)))[
-                2:
-            ]  # 去掉小時部分 0:
+            return str(datetime.timedelta(seconds=int(total_seconds)))[2:]  # 去掉小時部分 0:
         except:
             return "N/A"
 
@@ -79,9 +77,7 @@ class BeatmapCog(commands.Cog):
         if beatmap_id_str:
             try:
                 beatmap_id = int(beatmap_id_str)
-                beatmap_detail = await self.osu_api.get_beatmap_details(
-                    beatmap_id=beatmap_id
-                )
+                beatmap_detail = await self.osu_api.get_beatmap_details(beatmap_id=beatmap_id)
                 if beatmap_detail:
                     target_beatmap_from_direct_id = beatmap_detail
                     beatmap_data_list = [
@@ -94,9 +90,7 @@ class BeatmapCog(commands.Cog):
         elif beatmapset_id_str:
             try:
                 beatmapset_id = int(beatmapset_id_str)
-                beatmapset_data = await self.osu_api.get_beatmapset(
-                    beatmapset_id=beatmapset_id
-                )
+                beatmapset_data = await self.osu_api.get_beatmapset(beatmapset_id=beatmapset_id)
                 # beatmapset_data for API v2 contains a 'beatmaps' key with list of difficulties
                 if (
                     beatmapset_data
@@ -132,9 +126,7 @@ class BeatmapCog(commands.Cog):
             # Fallback: if somehow target_beatmap_from_direct_id wasn't set or ID mismatched
             # This part of the logic might be redundant if target_beatmap_from_direct_id is reliable
             elif beatmap_data_list:
-                for bm in (
-                    beatmap_data_list
-                ):  # Should be a list of one if direct fetch worked
+                for bm in beatmap_data_list:  # Should be a list of one if direct fetch worked
                     if str(bm.get("id")) == beatmap_id_str:  # API v2 beatmap id is 'id'
                         target_beatmap = bm
                         break
@@ -147,14 +139,10 @@ class BeatmapCog(commands.Cog):
         elif beatmap_data_list:  # Ensure list is not empty
             # Try to find osu!standard (ruleset_id 0)
             for bm in beatmap_data_list:
-                if (
-                    bm.get("ruleset_id") == 0
-                ):  # API v2 uses 'ruleset_id' for mode integer
+                if bm.get("ruleset_id") == 0:  # API v2 uses 'ruleset_id' for mode integer
                     target_beatmap = bm
                     break
-            if (
-                not target_beatmap
-            ):  # If no osu!standard, take the first one in the list
+            if not target_beatmap:  # If no osu!standard, take the first one in the list
                 target_beatmap = beatmap_data_list[0]
             # If beatmap_data_list was empty, target_beatmap remains None
 
@@ -173,9 +161,7 @@ class BeatmapCog(commands.Cog):
         # bpm, total_length, hit_length, max_combo, status (string), url, ruleset_id.
         # It also contains a nested 'beatmapset' object.
 
-        current_beatmapset_data = target_beatmap.get(
-            "beatmapset"
-        )  # This should be a nested object
+        current_beatmapset_data = target_beatmap.get("beatmapset")  # This should be a nested object
         if not current_beatmapset_data:
             current_beatmapset_data = {}  # Fallback to avoid errors, though this indicates an issue
             logger.warning(
@@ -207,9 +193,7 @@ class BeatmapCog(commands.Cog):
                     )
 
         status_display_string_on_message = get_beatmap_status_display(
-            raw_status_on_message,
-            user_id_for_l10n,
-            lstr,
+            raw_status_on_message, user_id_for_l10n, lstr
         )
 
         stars = float(target_beatmap.get("difficulty_rating", 0.0))
@@ -229,22 +213,16 @@ class BeatmapCog(commands.Cog):
         b_id = target_beatmap.get("id")
         # bs_id can be from target_beatmap.beatmapset_id or from current_beatmapset_data.id
         bs_id = target_beatmap.get("beatmapset_id")
-        if (
-            not bs_id and current_beatmapset_data
-        ):  # Fallback if not directly on beatmap object
+        if not bs_id and current_beatmapset_data:  # Fallback if not directly on beatmap object
             bs_id = current_beatmapset_data.get("id")
 
         beatmap_url = target_beatmap.get("url", f"https://osu.ppy.sh/b/{b_id}")
 
         beatmap_cover_url = discord.Embed.Empty
         if current_beatmapset_data and "covers" in current_beatmapset_data:
-            beatmap_cover_url = current_beatmapset_data["covers"].get(
-                "card", discord.Embed.Empty
-            )
+            beatmap_cover_url = current_beatmapset_data["covers"].get("card", discord.Embed.Empty)
 
-        mode_int = int(
-            target_beatmap.get("ruleset_id", 0)
-        )  # ruleset_id is the integer mode
+        mode_int = int(target_beatmap.get("ruleset_id", 0))  # ruleset_id is the integer mode
         mode_name = self.get_mode_name(mode_int, user_id_for_l10n)
 
         # For footer: num_diffs_in_set
@@ -254,16 +232,12 @@ class BeatmapCog(commands.Cog):
         # Or, if we fetched the full set, len(beatmap_data_list) when beatmapset_id_str was used.
 
         num_diffs_to_report_in_footer = 0
-        if (
-            not beatmap_id_str and beatmapset_id_str
-        ):  # It was a query for a full beatmapset
+        if not beatmap_id_str and beatmapset_id_str:  # It was a query for a full beatmapset
             if (
                 current_beatmapset_data and "total" in current_beatmapset_data
             ):  # API v2 Beatmapset has 'total' beatmaps
                 num_diffs_to_report_in_footer = current_beatmapset_data["total"]
-            elif (
-                beatmap_data_list
-            ):  # Fallback using the length of the fetched list of diffs
+            elif beatmap_data_list:  # Fallback using the length of the fetched list of diffs
                 num_diffs_to_report_in_footer = len(beatmap_data_list)
         # If beatmap_id_str was present, we don't show "multiple difficulties" footer usually.
 
@@ -278,9 +252,7 @@ class BeatmapCog(commands.Cog):
 
         embed.add_field(
             name=lstr(user_id_for_l10n, "beatmap_creator_label"),
-            value=f"[{creator}](https://osu.ppy.sh/u/{creator_id})"
-            if creator_id
-            else creator,
+            value=f"[{creator}](https://osu.ppy.sh/u/{creator_id})" if creator_id else creator,
             inline=True,
         )
         embed.add_field(
@@ -297,21 +269,15 @@ class BeatmapCog(commands.Cog):
 
         stats_text = f"CS: `{cs}` AR: `{ar}` OD: `{od}` HP: `{hp}`"
         embed.add_field(
-            name=lstr(user_id_for_l10n, "beatmap_stats_label"),
-            value=stats_text,
-            inline=False,
+            name=lstr(user_id_for_l10n, "beatmap_stats_label"), value=stats_text, inline=False
         )
 
         length_formatted = f"{self.format_length(total_length, user_id_for_l10n)} ({self.format_length(hit_length, user_id_for_l10n)} {lstr(user_id_for_l10n, 'short_playable_time_indicator', default_fallback='play')})"
         embed.add_field(
-            name=lstr(user_id_for_l10n, "beatmap_length_label"),
-            value=length_formatted,
-            inline=True,
+            name=lstr(user_id_for_l10n, "beatmap_length_label"), value=length_formatted, inline=True
         )
         embed.add_field(
-            name=lstr(user_id_for_l10n, "beatmap_bpm_label"),
-            value=f"{bpm:.0f}",
-            inline=True,
+            name=lstr(user_id_for_l10n, "beatmap_bpm_label"), value=f"{bpm:.0f}", inline=True
         )
         if max_combo:
             embed.add_field(
@@ -321,9 +287,7 @@ class BeatmapCog(commands.Cog):
             )
         else:  # Create a placeholder field if max_combo is None or 0
             embed.add_field(
-                name=lstr(user_id_for_l10n, "beatmap_max_combo_label"),
-                value="N/A",
-                inline=True,
+                name=lstr(user_id_for_l10n, "beatmap_max_combo_label"), value="N/A", inline=True
             )
 
         # 頁腳

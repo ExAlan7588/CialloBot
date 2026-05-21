@@ -27,10 +27,7 @@ def should_ignore_error(error: Exception) -> bool:
 
 
 def capture_exception(
-    exception: Exception,
-    *,
-    context: str | None = None,
-    level: str = "error",
+    exception: Exception, *, context: str | None = None, level: str = "error"
 ) -> None:
     """捕獲並記錄異常。
 
