@@ -38,3 +38,6 @@ Thumbs.db
 # Temporary files
 temp/
 *.tmp
+
+# Codex task state
+.codex-tasks/
