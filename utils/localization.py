@@ -109,6 +109,14 @@ def get_localized_string(
     return _format_translation(localized_string, key, *args, **kwargs)
 
 
+def get_language_string(
+    lang_code: str, key: str, default_fallback: str = "", *args: Any, **kwargs: Any
+) -> str:
+    """Return a localized string for an explicit language code."""
+    localized_string = _lookup_translation(lang_code, key, default_fallback)
+    return _format_translation(localized_string, key, *args, **kwargs)
+
+
 def _resolve_language_code(user_id_or_lang_code: int | str | None) -> str:
     if user_id_or_lang_code is None:
         return config.DEFAULT_LANGUAGE

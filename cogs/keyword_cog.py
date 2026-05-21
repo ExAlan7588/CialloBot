@@ -9,7 +9,8 @@
 from __future__ import annotations
 
 import json
-import pathlib
+from dataclasses import dataclass
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 import discord
@@ -18,8 +19,24 @@ from discord.ext import commands
 from discord.ui import Modal, TextInput
 from loguru import logger
 
+from utils.message_tracker import get_message_tracker
+
 if TYPE_CHECKING:
     from discord import Interaction
+
+KEYWORDS_FILE = Path("private/server_keywords.json")
+KEYWORDS_COMMENT = "伺服器關鍵詞配置文件"
+KEYWORDS_FORMAT = {"guild_id": {"keyword": "response"}}
+MAX_KEYWORD_FIELDS = 25
+KEYWORD_PREVIEW_LENGTH = 50
+COMMAND_PREVIEW_LENGTH = 100
+
+
+@dataclass(frozen=True)
+class DeleteContext:
+    trigger_user_id: int
+    message_type: str
+    original_content: str
 
 
 class DeleteConfirmView(discord.ui.View):
@@ -40,16 +57,13 @@ class DeleteConfirmView(discord.ui.View):
         self.value: bool | None = None
 
     @discord.ui.button(label="確認刪除", style=discord.ButtonStyle.danger, emoji="🗑️")
-    async def confirm(self, interaction: Interaction, button: discord.ui.Button) -> None:
+    async def confirm(self, interaction: Interaction, _button: discord.ui.Button) -> None:
         """確認刪除按鈕
 
         Args:
             interaction: Discord 互動對象
             button: 按鈕對象
         """
-        from utils.message_tracker import get_message_tracker
-
-        # 驗證是否為請求者
         if interaction.user.id != self.requester.id:
             await interaction.response.send_message(
                 "❌ 只有發起刪除請求的用戶才能確認！", ephemeral=True
@@ -57,15 +71,7 @@ class DeleteConfirmView(discord.ui.View):
             return
 
         try:
-            message_id = self.message_to_delete.id
-            await self.message_to_delete.delete()
-
-            # 從追蹤器中移除記錄
-            tracker = get_message_tracker()
-            tracker.remove_message(message_id)
-
-            await interaction.response.send_message("✅ 已成功刪除訊息！", ephemeral=True)
-            logger.info(f"🗑️ 用戶 {self.requester} 刪除了機器人訊息 (ID: {message_id})")
+            message_id = await self._delete_message()
         except discord.NotFound:
             await interaction.response.send_message("❌ 訊息已被刪除或不存在。", ephemeral=True)
         except discord.Forbidden:
@@ -75,12 +81,15 @@ class DeleteConfirmView(discord.ui.View):
             await interaction.response.send_message(
                 "❌ 刪除訊息時發生錯誤，請稍後再試。", ephemeral=True
             )
+        else:
+            await interaction.response.send_message("✅ 已成功刪除訊息！", ephemeral=True)
+            logger.info(f"🗑️ 用戶 {self.requester} 刪除了機器人訊息 (ID: {message_id})")
         finally:
             self.value = True
             self.stop()
 
     @discord.ui.button(label="取消", style=discord.ButtonStyle.secondary, emoji="❌")
-    async def cancel(self, interaction: Interaction, button: discord.ui.Button) -> None:
+    async def cancel(self, interaction: Interaction, _button: discord.ui.Button) -> None:
         """取消按鈕
 
         Args:
@@ -97,6 +106,12 @@ class DeleteConfirmView(discord.ui.View):
         await interaction.response.send_message("✅ 已取消刪除操作。", ephemeral=True)
         self.value = False
         self.stop()
+
+    async def _delete_message(self) -> int:
+        message_id = self.message_to_delete.id
+        await self.message_to_delete.delete()
+        get_message_tracker().remove_message(message_id)
+        return message_id
 
     async def on_timeout(self) -> None:
         """超時處理"""
@@ -200,7 +215,6 @@ class KeywordCog(commands.Cog):
             bot: Discord Bot 實例
         """
         self.bot = bot
-        self.keywords_file = "private/server_keywords.json"
         self.keywords: dict[str, dict[str, str]] = {}
         self.load_keywords()
 
@@ -212,36 +226,20 @@ class KeywordCog(commands.Cog):
 
     def load_keywords(self) -> None:
         """從 JSON 文件載入關鍵詞配置"""
-        try:
-            if pathlib.Path(self.keywords_file).exists():
-                with pathlib.Path(self.keywords_file).open("r", encoding="utf-8") as f:
-                    data = json.load(f)
-                    # 過濾掉註釋和格式說明
-                    self.keywords = {k: v for k, v in data.items() if not k.startswith("_")}
-                logger.info(f"✅ 已載入 {len(self.keywords)} 個伺服器的關鍵詞配置")
-            else:
-                self.keywords = {}
-                self.save_keywords()
-                logger.info("✅ 創建新的關鍵詞配置文件")
-        except Exception as e:
-            logger.error(f"❌ 載入關鍵詞配置失敗: {e}", exc_info=True)
+        if not KEYWORDS_FILE.exists():
             self.keywords = {}
+            self.save_keywords()
+            logger.info("✅ 創建新的關鍵詞配置文件")
+            return
+
+        self.keywords = _load_keywords(KEYWORDS_FILE)
+        logger.info(f"✅ 已載入 {len(self.keywords)} 個伺服器的關鍵詞配置")
 
     def save_keywords(self) -> None:
         """保存關鍵詞配置到 JSON 文件"""
-        try:
-            # 添加註釋和格式說明
-            data = {
-                "_comment": "伺服器關鍵詞配置文件",
-                "_format": {"guild_id": {"keyword": "response"}},
-                **self.keywords,
-            }
-
-            with pathlib.Path(self.keywords_file).open("w", encoding="utf-8") as f:
-                json.dump(data, f, ensure_ascii=False, indent=2)
-            logger.debug("💾 已保存關鍵詞配置")
-        except Exception as e:
-            logger.error(f"❌ 保存關鍵詞配置失敗: {e}", exc_info=True)
+        data = {"_comment": KEYWORDS_COMMENT, "_format": KEYWORDS_FORMAT, **self.keywords}
+        KEYWORDS_FILE.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+        logger.debug("💾 已保存關鍵詞配置")
 
     def is_admin(self, interaction: Interaction) -> bool:
         """檢查用戶是否為管理員
@@ -295,48 +293,21 @@ class KeywordCog(commands.Cog):
             interaction: Discord 互動對象
             message: 被右鍵點擊的訊息
         """
-        from utils.message_tracker import get_message_tracker
-
-        # 檢查是否為機器人的訊息
         if message.author.id != self.bot.user.id:
             await interaction.response.send_message(
                 "❌ 此功能只能用於刪除機器人的訊息！", ephemeral=True
             )
             return
 
-        trigger_user_id: int | None = None
-        message_type = "unknown"
-        original_content = ""
-
-        # 方式 1：檢查是否為回覆（reply）- 用於關鍵詞
-        if message.reference and message.reference.message_id:
-            try:
-                original_message = await message.channel.fetch_message(message.reference.message_id)
-                trigger_user_id = original_message.author.id
-                message_type = "keyword"
-                original_content = original_message.content
-            except discord.NotFound:
-                pass  # 原始訊息不存在，嘗試其他方式
-            except Exception as e:
-                logger.error(f"❌ 獲取原始訊息時發生錯誤: {e}", exc_info=True)
-
-        # 方式 2：檢查訊息追蹤器 - 用於指令（如 copypasta）
-        if trigger_user_id is None:
-            tracker = get_message_tracker()
-            trigger_user_id = tracker.get_trigger_user(message.id)
-            if trigger_user_id is not None:
-                message_type = "command"
-
-        # 如果無法確定觸發者
-        if trigger_user_id is None:
+        delete_context = await self._delete_context(message)
+        if delete_context is None:
             await interaction.response.send_message(
                 "❌ 無法確定此訊息的觸發者。\n此功能僅支援關鍵詞回覆和指令觸發的訊息。",
                 ephemeral=True,
             )
             return
 
-        # 檢查權限：觸發者或管理員
-        is_trigger_user = interaction.user.id == trigger_user_id
+        is_trigger_user = interaction.user.id == delete_context.trigger_user_id
         is_admin = self.is_admin(interaction)
 
         if not is_trigger_user and not is_admin:
@@ -345,24 +316,44 @@ class KeywordCog(commands.Cog):
             )
             return
 
-        # 創建確認視圖
         view = DeleteConfirmView(message, interaction.user)
-
-        # 根據訊息類型顯示不同的確認訊息
-        if message_type == "keyword":
-            confirm_text = (
-                f"⚠️ 確定要刪除這條訊息嗎？\n\n"
-                f"**原始訊息：** {original_content[:50]}{'...' if len(original_content) > 50 else ''}\n"
-                f"**回覆內容：** {message.content[:50]}{'...' if len(message.content) > 50 else ''}"
-            )
-        else:  # command
-            confirm_text = (
-                f"⚠️ 確定要刪除這條訊息嗎？\n\n"
-                f"**訊息內容：** {message.content[:100]}{'...' if len(message.content) > 100 else ''}"
-            )
-
-        # 發送確認訊息
+        confirm_text = self._delete_confirm_text(delete_context, message.content)
         await interaction.response.send_message(confirm_text, view=view, ephemeral=True)
+
+    async def _delete_context(self, message: discord.Message) -> DeleteContext | None:
+        reply_context = await self._reply_delete_context(message)
+        if reply_context is not None:
+            return reply_context
+
+        trigger_user_id = get_message_tracker().get_trigger_user(message.id)
+        if trigger_user_id is None:
+            return None
+        return DeleteContext(trigger_user_id, "command", "")
+
+    async def _reply_delete_context(self, message: discord.Message) -> DeleteContext | None:
+        if not message.reference or not message.reference.message_id:
+            return None
+        try:
+            original_message = await message.channel.fetch_message(message.reference.message_id)
+        except discord.NotFound:
+            return None
+        except discord.HTTPException as exc:
+            logger.error(f"❌ 獲取原始訊息時發生錯誤: {exc}", exc_info=True)
+            raise
+
+        return DeleteContext(original_message.author.id, "keyword", original_message.content)
+
+    def _delete_confirm_text(self, delete_context: DeleteContext, message_content: str) -> str:
+        if delete_context.message_type != "keyword":
+            return f"⚠️ 確定要刪除這條訊息嗎？\n\n**訊息內容：** {_preview(message_content, COMMAND_PREVIEW_LENGTH)}"
+
+        original_preview = _preview(delete_context.original_content, KEYWORD_PREVIEW_LENGTH)
+        response_preview = _preview(message_content, KEYWORD_PREVIEW_LENGTH)
+        return (
+            f"⚠️ 確定要刪除這條訊息嗎？\n\n"
+            f"**原始訊息：** {original_preview}\n"
+            f"**回覆內容：** {response_preview}"
+        )
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message) -> None:
@@ -448,14 +439,16 @@ class KeywordCog(commands.Cog):
             color=discord.Color.blue(),
         )
 
-        # 添加關鍵詞字段（最多顯示 25 個）
-        for _i, (keyword, response) in enumerate(list(guild_keywords.items())[:25]):
-            # 截斷過長的回覆
+        for _keyword_index, (keyword, response) in enumerate(
+            list(guild_keywords.items())[:MAX_KEYWORD_FIELDS]
+        ):
             display_response = response if len(response) <= 100 else response[:97] + "..."
             embed.add_field(name=f"🔑 {keyword}", value=display_response, inline=False)
 
-        if len(guild_keywords) > 25:
-            embed.set_footer(text=f"僅顯示前 25 個關鍵詞，共有 {len(guild_keywords)} 個")
+        if len(guild_keywords) > MAX_KEYWORD_FIELDS:
+            embed.set_footer(
+                text=f"僅顯示前 {MAX_KEYWORD_FIELDS} 個關鍵詞，共有 {len(guild_keywords)} 個"
+            )
 
         await interaction.response.send_message(embed=embed, ephemeral=True)
 
@@ -474,3 +467,34 @@ async def setup(bot: commands.Bot) -> None:
     """
     await bot.add_cog(KeywordCog(bot))
     logger.info("✅ KeywordCog 已載入")
+
+
+def _load_keywords(path: Path) -> dict[str, dict[str, str]]:
+    data = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(data, dict):
+        msg = f"{path} must contain a JSON object"
+        raise TypeError(msg)
+
+    return {
+        str(guild_id): _validate_keyword_entries(path, str(guild_id), keywords)
+        for guild_id, keywords in data.items()
+        if not str(guild_id).startswith("_")
+    }
+
+
+def _validate_keyword_entries(path: Path, guild_id: str, keywords: object) -> dict[str, str]:
+    if not isinstance(keywords, dict):
+        msg = f"{path} guild {guild_id} must contain a keyword object"
+        raise TypeError(msg)
+
+    validated: dict[str, str] = {}
+    for keyword, response in keywords.items():
+        if not isinstance(keyword, str) or not isinstance(response, str):
+            msg = f"{path} guild {guild_id} must contain string keywords and responses"
+            raise TypeError(msg)
+        validated[keyword] = response
+    return validated
+
+
+def _preview(value: str, max_length: int) -> str:
+    return value if len(value) <= max_length else value[: max_length - 3] + "..."

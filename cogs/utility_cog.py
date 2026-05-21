@@ -1,17 +1,26 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
+
 import discord
 from discord import app_commands
 from discord.ext import commands
 from loguru import logger
 
-from private import config  # For SUPPORTED_LANGUAGES and DEFAULT_LANGUAGE
-from utils.localization import (
-    _translations,
-    get_user_language,
-    set_user_language,
-)  # For direct access to translations for language names
+from private import config
+from utils.localization import get_language_string, get_user_language, set_user_language
 from utils.localization import get_localized_string as lstr
+
+LANGUAGE_CODE_ALIASES = {"en": "en", "zh-tw": "zh_TW", "zh_tw": "zh_TW", "zhtw": "zh_TW"}
+
+
+@dataclass(frozen=True)
+class LanguageCommandContext:
+    user_id: int
+    current_language: str
+    available_languages: str
+    requested_code: str | None
+    normalized_code: str | None
 
 
 def get_language_display_name(lang_code: str, target_lang_code: str) -> str:
@@ -64,114 +73,79 @@ class UtilityCog(commands.Cog):
     async def lang(
         self, interaction: discord.Interaction, language_code: str | None = None
     ) -> None:
-        user_id = interaction.user.id
-        current_user_lang = get_user_language(user_id)
-
-        available_langs_display = []
-        for lc in config.SUPPORTED_LANGUAGES:
-            display_name = get_language_display_name(lc, current_user_lang)
-            available_langs_display.append(f"{display_name} (`{lc}`)")
-        available_langs_str = ", ".join(available_langs_display)
-
-        if language_code is None:
-            # Display current language and available languages
-            current_lang_display = get_language_display_name(current_user_lang, current_user_lang)
-
-            # Directly use the translations for the current user's language for this response.
-            response_message = "Failed to construct current language message."
-            try:
-                translations_for_current_lang = _translations.get(current_user_lang, {})
-                message_template = translations_for_current_lang.get("lang_no_code_provided")
-
-                if message_template:
-                    response_message = message_template.format(
-                        current_lang_display, available_langs_str
-                    )
-                else:  # Fallback if the template itself is missing
-                    default_lang_translations = _translations.get(config.DEFAULT_LANGUAGE, {})
-                    fallback_template = default_lang_translations.get("lang_no_code_provided")
-                    if fallback_template:
-                        response_message = fallback_template.format(
-                            current_lang_display, available_langs_str
-                        )
-                    else:  # Ultimate fallback
-                        response_message = f"No language code provided. Current: {current_lang_display}. Available: {available_langs_str}"
-            except Exception as e:
-                logger.error(f"[UtilityCog] Error formatting lang_no_code_provided: {e}")
-                response_message = f"No language code provided. Your current language is **{current_lang_display}**. Available languages: {available_langs_str}"  # Fallback to English structure
-
-            await interaction.response.send_message(response_message, ephemeral=True)
+        context = self._language_context(interaction.user.id, language_code)
+        if context.requested_code is None:
+            await self._send_current_language(interaction, context)
             return
 
-        raw_normalized_code = (
-            language_code.strip().lower()
-        )  # e.g., "zh_TW" -> "zh_tw", "ZH-TW" -> "zh-tw", "en" -> "en"
+        if context.normalized_code not in config.SUPPORTED_LANGUAGES:
+            await self._send_language_error(interaction, context)
+            return
 
-        # Standardize to the representation used in SUPPORTED_LANGUAGES
-        # config.SUPPORTED_LANGUAGES = ["en", "zh_TW"]
-        final_code_to_check = ""
-        if raw_normalized_code == "en":
-            final_code_to_check = "en"
-        elif raw_normalized_code in {
-            "zh-tw",
-            "zh_tw",
-            "zhtw",
-        }:  # handles variations like "zh-tw", "zh_tw", "zhtw"
-            final_code_to_check = "zh_TW"
-        else:
-            # For any other code, use it as is for checking against SUPPORTED_LANGUAGES
-            final_code_to_check = raw_normalized_code
+        if not set_user_language(context.user_id, context.normalized_code):
+            await self._send_language_error(interaction, context)
+            return
 
-        # Check if the language code is valid and supported
-        if final_code_to_check in config.SUPPORTED_LANGUAGES:
-            success = set_user_language(user_id, final_code_to_check)
-            if success:
-                # Get the display name of the new language IN the new language
-                new_lang_display = get_language_display_name(
-                    final_code_to_check, final_code_to_check
-                )
+        await self._send_language_success(interaction, context)
 
-                # Directly use the translations for the newly set language for this specific response.
-                # This ensures the confirmation message itself is in the new language.
-                response_message = "Language setting failed to construct message."
-                try:
-                    translations_for_new_lang = _translations.get(final_code_to_check, {})
-                    message_template = translations_for_new_lang.get("lang_set_success")
+    def _language_context(self, user_id: int, requested_code: str | None) -> LanguageCommandContext:
+        current_language = get_user_language(user_id)
+        return LanguageCommandContext(
+            user_id=user_id,
+            current_language=current_language,
+            available_languages=self._available_languages(current_language),
+            requested_code=requested_code,
+            normalized_code=_normalize_language_code(requested_code),
+        )
 
-                    if message_template:
-                        response_message = message_template.format(new_lang_display)
-                    else:  # Fallback if the template itself is missing in the new language
-                        # Try default language as a secondary fallback for the template
-                        default_lang_translations = _translations.get(config.DEFAULT_LANGUAGE, {})
-                        fallback_template = default_lang_translations.get("lang_set_success")
-                        if fallback_template:
-                            response_message = fallback_template.format(new_lang_display)
-                        else:  # Ultimate fallback if no template is found anywhere
-                            response_message = (
-                                f"Language set to: {new_lang_display}"  # Non-localized
-                            )
-                except Exception as e:
-                    logger.error(f"[UtilityCog] Error formatting lang_set_success: {e}")
-                    # Fallback to a simple English message if formatting fails
-                    response_message = f"Your language has been set to: **{new_lang_display}**."
+    def _available_languages(self, target_lang_code: str) -> str:
+        return ", ".join(
+            f"{get_language_display_name(lang_code, target_lang_code)} (`{lang_code}`)"
+            for lang_code in config.SUPPORTED_LANGUAGES
+        )
 
-                await interaction.response.send_message(response_message, ephemeral=True)
-            else:
-                # This case should ideally not be reached if final_code_to_check in SUPPORTED_LANGUAGES
-                # but set_user_language might have other internal checks in the future.
-                await interaction.response.send_message(
-                    lstr(user_id, "lang_set_fail", language_code)
-                    + "\n"
-                    + lstr(user_id, "lang_available_languages", available_langs_str),
-                    ephemeral=True,
-                )
-        else:
-            await interaction.response.send_message(
-                lstr(user_id, "lang_set_fail", language_code)
-                + "\n"
-                + lstr(user_id, "lang_available_languages", available_langs_str),
-                ephemeral=True,
-            )
+    async def _send_current_language(
+        self, interaction: discord.Interaction, context: LanguageCommandContext
+    ) -> None:
+        current_lang_display = get_language_display_name(
+            context.current_language, context.current_language
+        )
+        response_message = get_language_string(
+            context.current_language,
+            "lang_no_code_provided",
+            "No language code provided. Your current language is **{}**. Available languages: {}",
+            current_lang_display,
+            context.available_languages,
+        )
+        await interaction.response.send_message(response_message, ephemeral=True)
+
+    async def _send_language_success(
+        self, interaction: discord.Interaction, context: LanguageCommandContext
+    ) -> None:
+        if context.normalized_code is None:
+            msg = "normalized language code is required for success response"
+            raise ValueError(msg)
+
+        new_lang_display = get_language_display_name(
+            context.normalized_code, context.normalized_code
+        )
+        response_message = get_language_string(
+            context.normalized_code,
+            "lang_set_success",
+            "Your language has been set to: **{}**.",
+            new_lang_display,
+        )
+        await interaction.response.send_message(response_message, ephemeral=True)
+
+    async def _send_language_error(
+        self, interaction: discord.Interaction, context: LanguageCommandContext
+    ) -> None:
+        response_message = (
+            lstr(context.user_id, "lang_set_fail", context.requested_code)
+            + "\n"
+            + lstr(context.user_id, "lang_available_languages", context.available_languages)
+        )
+        await interaction.response.send_message(response_message, ephemeral=True)
 
     # Dynamically generate choices for the language_code parameter
     @lang.autocomplete("language_code")
@@ -226,3 +200,10 @@ class UtilityCog(commands.Cog):
 async def setup(bot: commands.Bot) -> None:
     await bot.add_cog(UtilityCog(bot))
     logger.info("UtilityCog loaded.")
+
+
+def _normalize_language_code(language_code: str | None) -> str | None:
+    if language_code is None:
+        return None
+    normalized_code = language_code.strip().lower()
+    return LANGUAGE_CODE_ALIASES.get(normalized_code, normalized_code)

@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import builtins
-import contextlib
 from typing import TYPE_CHECKING
 
 import discord
@@ -45,92 +43,10 @@ class HelpCog(commands.Cog):
             f"[HelpCog] /help command invoked by {interaction.user.name} (ID: {interaction.user.id})"
         )
         user_id_for_l10n = str(interaction.user.id)
-        current_lang_code = get_user_language(user_id_for_l10n)
-        logger.debug(
-            f"[HelpCog] user_id_for_l10n: {user_id_for_l10n}, Detected lang_code for l10n: {current_lang_code}"
-        )
-
-        test_title_key = "help_embed_title"
-        english_fallback_title = "Available Slash Commands (Fallback)"
-        localized_title_test = lstr(user_id_for_l10n, test_title_key, english_fallback_title)
-        logger.debug(f"[HelpCog] Attempted lstr for '{test_title_key}': '{localized_title_test}'")
-
-        try:
-            await interaction.response.defer(ephemeral=True)
-        except Exception as e_defer:
-            logger.error(f"[HelpCog] Failed to defer interaction for /help: {e_defer}")
-            with contextlib.suppress(builtins.BaseException):
-                await interaction.followup.send(
-                    "Error processing help command (defer failed). Please try again.",
-                    ephemeral=True,
-                )
-            return
-
-        embed_title = localized_title_test
-        embed = discord.Embed(title=embed_title, color=discord.Color.blue())
-
-        all_app_commands = self.bot.tree.get_commands()
-        logger.debug(f"[HelpCog] Fetched {len(all_app_commands)} app commands.")
-
-        # Sort commands according to DESIRED_COMMAND_ORDER
-        def sort_key(cmd_path: str) -> int:
-            try:
-                return DESIRED_COMMAND_ORDER.index(cmd_path)
-            except ValueError:
-                return len(DESIRED_COMMAND_ORDER)  # Put commands not in the list at the end
-
-        flattened_commands = list(_flatten_app_commands(all_app_commands))
-        sorted_commands = sorted(flattened_commands, key=lambda item: sort_key(item[0]))
-        logger.debug(
-            f"[HelpCog] Sorted commands: {[cmd_path for cmd_path, _, _ in sorted_commands]}"
-        )
-
-        commands_to_display = []
-        for i, (cmd_path, cmd_name, cmd_description) in enumerate(sorted_commands):
-            logger.debug(f"[HelpCog] Processing command {i + 1}/{len(sorted_commands)}: {cmd_path}")
-            description_text = cmd_description
-            if not description_text or description_text == "...":
-                description_text = lstr(
-                    user_id_for_l10n, "help_no_description", "No description available."
-                )
-
-            localized_desc_key = f"cmd_desc_{cmd_name.lower().replace(' ', '_')}"
-            original_cmd_description = description_text or lstr(
-                user_id_for_l10n, "help_no_description", "No description available."
-            )
-            localized_description = lstr(
-                user_id_for_l10n, localized_desc_key, original_cmd_description
-            )
-            if (
-                "<translation_missing" in localized_description
-                or localized_description == localized_desc_key
-            ):
-                localized_description = original_cmd_description
-
-            commands_to_display.append(f"`/{cmd_path}`: {localized_description}")
-            logger.debug(
-                f"[HelpCog] - Appended full format for {cmd_path}. Current count: {len(commands_to_display)}"
-            )
-
-        if commands_to_display:
-            embed.description = "\n".join(commands_to_display)
-        else:
-            embed.description = lstr(
-                user_id_for_l10n, "help_no_commands_found", "No slash commands found."
-            )
-
-        try:
-            await interaction.followup.send(embed=embed)
-        except Exception as e_send:
-            logger.error(f"[HelpCog] Failed to send help embed: {e_send}")
-            # Try to send a simple text message if embed fails
-            try:
-                fallback_text = "Could not display help commands as an embed. Please check logs."
-                if commands_to_display:
-                    fallback_text = "\n".join(commands_to_display)
-                await interaction.followup.send(fallback_text, ephemeral=True)
-            except Exception:
-                logger.exception("[HelpCog] Failed to send plain-text help fallback")
+        _log_help_language(user_id_for_l10n)
+        await interaction.response.defer(ephemeral=True)
+        embed = _build_help_embed(self.bot.tree.get_commands(), user_id_for_l10n)
+        await interaction.followup.send(embed=embed)
 
 
 async def setup(bot: commands.Bot) -> None:
@@ -150,3 +66,72 @@ def _flatten_app_commands(
         elif isinstance(cmd, app_commands.Command):
             full_path = f"{prefix}{cmd.name}".strip()
             yield full_path, full_path, cmd.description
+
+
+def _log_help_language(user_id_for_l10n: str) -> None:
+    current_lang_code = get_user_language(user_id_for_l10n)
+    logger.debug(
+        f"[HelpCog] user_id_for_l10n: {user_id_for_l10n}, "
+        f"Detected lang_code for l10n: {current_lang_code}"
+    )
+
+
+def _build_help_embed(
+    commands_list: Sequence[app_commands.Command | app_commands.Group | app_commands.ContextMenu],
+    user_id_for_l10n: str,
+) -> discord.Embed:
+    flattened_commands = list(_flatten_app_commands(commands_list))
+    sorted_commands = sorted(flattened_commands, key=lambda item: _command_order(item[0]))
+    logger.debug(f"[HelpCog] Sorted commands: {[cmd_path for cmd_path, _, _ in sorted_commands]}")
+    command_lines = [
+        _command_help_line(index, command, len(sorted_commands), user_id_for_l10n)
+        for index, command in enumerate(sorted_commands, start=1)
+    ]
+    embed = discord.Embed(title=_help_title(user_id_for_l10n), color=discord.Color.blue())
+    embed.description = _help_description(command_lines, user_id_for_l10n)
+    return embed
+
+
+def _help_title(user_id_for_l10n: str) -> str:
+    title = lstr(user_id_for_l10n, "help_embed_title", "Available Slash Commands")
+    logger.debug(f"[HelpCog] Localized help title: '{title}'")
+    return title
+
+
+def _command_order(cmd_path: str) -> int:
+    try:
+        return DESIRED_COMMAND_ORDER.index(cmd_path)
+    except ValueError:
+        return len(DESIRED_COMMAND_ORDER)
+
+
+def _command_help_line(
+    index: int, command: tuple[str, str, str], total: int, user_id_for_l10n: str
+) -> str:
+    cmd_path, cmd_name, cmd_description = command
+    logger.debug(f"[HelpCog] Processing command {index}/{total}: {cmd_path}")
+    description = _localized_command_description(cmd_name, cmd_description, user_id_for_l10n)
+    return f"`/{cmd_path}`: {description}"
+
+
+def _localized_command_description(
+    cmd_name: str, cmd_description: str, user_id_for_l10n: str
+) -> str:
+    fallback_description = _command_description_fallback(cmd_description, user_id_for_l10n)
+    localized_key = f"cmd_desc_{cmd_name.lower().replace(' ', '_')}"
+    localized_description = lstr(user_id_for_l10n, localized_key, fallback_description)
+    if "<translation_missing" in localized_description or localized_description == localized_key:
+        return fallback_description
+    return localized_description
+
+
+def _command_description_fallback(cmd_description: str, user_id_for_l10n: str) -> str:
+    if cmd_description and cmd_description != "...":
+        return cmd_description
+    return lstr(user_id_for_l10n, "help_no_description", "No description available.")
+
+
+def _help_description(command_lines: list[str], user_id_for_l10n: str) -> str:
+    if command_lines:
+        return "\n".join(command_lines)
+    return lstr(user_id_for_l10n, "help_no_commands_found", "No slash commands found.")
