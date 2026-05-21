@@ -29,7 +29,9 @@ DESIRED_COMMAND_ORDER = [
     "keyword add",
     "keyword list",
 ]
-COMMAND_ORDER_INDEX = {command_name: index for index, command_name in enumerate(DESIRED_COMMAND_ORDER)}
+COMMAND_ORDER_INDEX = {
+    command_name: index for index, command_name in enumerate(DESIRED_COMMAND_ORDER)
+}
 
 
 class HelpCog(commands.Cog):

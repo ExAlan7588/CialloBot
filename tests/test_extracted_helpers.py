@@ -39,11 +39,7 @@ def test_localization_text_lookup_and_format_helpers() -> None:
     translations = {"en": {"hello": "Hello {name}"}, "zh_TW": {}}
     assert (
         lookup_translation(
-            translations,
-            lang_code="zh_TW",
-            default_language="en",
-            key="hello",
-            default_fallback="",
+            translations, lang_code="zh_TW", default_language="en", key="hello", default_fallback=""
         )
         == "Hello {name}"
     )

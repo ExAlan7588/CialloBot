@@ -51,10 +51,7 @@ class UserFormatter:
 
     def mode_name(self, mode_int: int, user_id_for_l10n: int | str) -> str:
         return get_osu_mode_name(
-            mode_int,
-            user_id_for_l10n,
-            fallback_getter=lstr,
-            log_prefix="USER_COG",
+            mode_int, user_id_for_l10n, fallback_getter=lstr, log_prefix="USER_COG"
         )
 
     def datetime_text(

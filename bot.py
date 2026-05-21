@@ -5,6 +5,7 @@
 
 from __future__ import annotations
 
+import ast
 import asyncio
 from pathlib import Path
 from typing import Any, Protocol
@@ -20,6 +21,8 @@ from utils.startup import setup_logging, wrap_task_factory
 
 COGS_DIR = Path(__file__).resolve().parent / "cogs"
 COGS_PACKAGE = "cogs"
+COG_MODULE_SUFFIX = ".py"
+EXTENSION_SETUP_FUNCTION = "setup"
 COMMAND_PREFIX = "!"
 LOG_FILE = "logs/bot.log"
 LOG_LEVEL = "INFO"
@@ -112,7 +115,7 @@ class OsuBot(commands.Bot):
         return sorted(
             entry.stem
             for entry in self._cogs_dir.iterdir()
-            if entry.is_file() and entry.suffix == ".py" and not entry.name.startswith("_")
+            if _is_public_python_module(entry) and _defines_extension_setup(entry)
         )
 
     async def on_ready(self) -> None:
@@ -169,6 +172,22 @@ def create_intents() -> discord.Intents:
     intents.message_content = True
     intents.members = True
     return intents
+
+
+def _is_public_python_module(entry: Path) -> bool:
+    return entry.is_file() and entry.suffix == COG_MODULE_SUFFIX and not entry.name.startswith("_")
+
+
+def _defines_extension_setup(module_path: Path) -> bool:
+    module = ast.parse(module_path.read_text(encoding="utf-8"), filename=str(module_path))
+    return any(_is_extension_setup_definition(node) for node in module.body)
+
+
+def _is_extension_setup_definition(node: ast.stmt) -> bool:
+    return (
+        isinstance(node, ast.AsyncFunctionDef | ast.FunctionDef)
+        and node.name == EXTENSION_SETUP_FUNCTION
+    )
 
 
 def create_bot() -> OsuBot:

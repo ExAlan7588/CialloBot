@@ -41,7 +41,9 @@ def decode_mods(mods_int: int | list[str]) -> str:
         return "None"
 
     mods = _decode_speed_mods(mods_int)
-    mods.extend(mod for value, mod in MODS_ENUM.items() if mod not in SPEED_MODS and mods_int & value)
+    mods.extend(
+        mod for value, mod in MODS_ENUM.items() if mod not in SPEED_MODS and mods_int & value
+    )
     return "".join(mods) if mods else "None"
 
 

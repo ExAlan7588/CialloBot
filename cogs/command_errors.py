@@ -28,7 +28,5 @@ class UserCommandError(CommandDisplayError):
         super().__init__(message, ephemeral=ephemeral)
 
 
-async def send_command_error(
-    interaction: discord.Interaction, error: CommandDisplayError
-) -> None:
+async def send_command_error(interaction: discord.Interaction, error: CommandDisplayError) -> None:
     await interaction.followup.send(error.message, ephemeral=error.ephemeral)
