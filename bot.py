@@ -6,9 +6,8 @@
 from __future__ import annotations
 
 import asyncio
-import pathlib
-import sys
-from typing import Any
+from pathlib import Path
+from typing import Any, Protocol
 
 import discord
 from discord.ext import commands
@@ -18,6 +17,36 @@ from private import config
 from utils.osu_api import OsuAPI
 from utils.startup import setup_logging, wrap_task_factory
 
+COGS_DIR = Path(__file__).resolve().parent / "cogs"
+COGS_PACKAGE = "cogs"
+COMMAND_PREFIX = "!"
+LOG_FILE = "logs/bot.log"
+LOG_LEVEL = "INFO"
+MISSING_DISCORD_TOKEN_MESSAGE = "DISCORD_BOT_TOKEN is required"
+
+
+class OsuApiClient(Protocol):
+    """Minimal osu! API client contract needed by the bot lifecycle."""
+
+    async def setup(self) -> None: ...
+
+    async def close(self) -> None: ...
+
+
+class OsuApiFactory(Protocol):
+    """Factory contract for constructing osu! API clients."""
+
+    def __call__(self) -> OsuApiClient: ...
+
+
+def create_osu_api_client() -> OsuAPI:
+    """Create the production osu! API client from configured credentials."""
+    return OsuAPI(
+        client_id=config.OSU_API_V2_CLIENT_ID,
+        client_secret=config.OSU_API_V2_CLIENT_SECRET,
+        api_v1_key=config.OSU_API_V1_KEY,
+    )
+
 
 class OsuBot(commands.Bot):
     """自定義的 Discord Bot 類別。
@@ -25,14 +54,24 @@ class OsuBot(commands.Bot):
     擴展了 discord.py 的 Bot 類別，添加了自定義的初始化和錯誤處理。
     """
 
-    def __init__(self, **options: Any) -> None:
+    def __init__(
+        self,
+        *,
+        osu_api_factory: OsuApiFactory = create_osu_api_client,
+        cogs_dir: Path = COGS_DIR,
+        **options: Any,
+    ) -> None:
         """初始化 Bot。
 
         Args:
+            osu_api_factory: osu! API 客戶端工廠。
+            cogs_dir: Cog 模組所在目錄。
             **options: 傳遞給 discord.py Bot 的選項
         """
         super().__init__(**options)
-        self.osu_api_client: OsuAPI | None = None
+        self._osu_api_factory = osu_api_factory
+        self._cogs_dir = cogs_dir
+        self.osu_api_client: OsuApiClient | None = None
 
     async def setup_hook(self) -> None:
         """Bot 的異步設置鉤子。
@@ -41,38 +80,14 @@ class OsuBot(commands.Bot):
         """
         logger.info("== 開始異步設置 ==")
 
-        # 初始化 OsuAPI 客戶端
-        try:
-            self.osu_api_client = OsuAPI(
-                client_id=config.OSU_API_V2_CLIENT_ID,
-                client_secret=config.OSU_API_V2_CLIENT_SECRET,
-                api_v1_key=config.OSU_API_V1_KEY,
-            )
-            await self.osu_api_client.setup()
-            logger.info("✅ OsuAPI 客戶端已初始化")
-        except Exception as e:
-            logger.error(f"❌ OsuAPI 客戶端初始化失敗: {e}", exc_info=True)
-            raise
+        self.osu_api_client = self._osu_api_factory()
+        await self.osu_api_client.setup()
+        logger.info("✅ OsuAPI 客戶端已初始化")
 
-        # 載入所有 Cogs
         await self._load_all_cogs()
 
-        # 同步應用程式命令（Slash Commands）
-        try:
-            # 全域同步（所有伺服器）
-            synced = await self.tree.sync()
-            logger.info("✅ 已全域同步 {count} 個應用程式命令", count=len(synced))
-
-            # 可選：為特定測試伺服器立即同步（開發用）
-            # 取消下面的註釋並填入你的測試伺服器 ID
-            # TEST_GUILD_ID = 123456789012345678  # 替換為你的伺服器 ID
-            # guild = discord.Object(id=TEST_GUILD_ID)
-            # self.tree.copy_global_to(guild=guild)
-            # synced_guild = await self.tree.sync(guild=guild)
-            # logger.info(f"✅ 已為測試伺服器同步 {len(synced_guild)} 個命令（立即生效）")
-
-        except Exception as e:
-            logger.error(f"❌ 同步應用程式命令失敗: {e}", exc_info=True)
+        synced = await self.tree.sync()
+        logger.info("✅ 已全域同步 {count} 個應用程式命令", count=len(synced))
 
         logger.info("✅ 異步設置完成")
 
@@ -86,24 +101,16 @@ class OsuBot(commands.Bot):
             return
 
         for cog_name in cog_names:
-            try:
-                await self.load_extension(f"cogs.{cog_name}")
-                logger.info("✅ 已成功載入 Cog: {cog_name}", cog_name=cog_name)
-            except commands.ExtensionAlreadyLoaded:
-                logger.warning("⚠️ Cog {cog_name} 已經載入", cog_name=cog_name)
-            except Exception as e:
-                logger.error(f"❌ 載入 Cog {cog_name} 失敗: {e}", exc_info=True)
+            await self.load_extension(f"{COGS_PACKAGE}.{cog_name}")
+            logger.info("✅ 已成功載入 Cog: {cog_name}", cog_name=cog_name)
 
     def _discover_cog_names(self) -> list[str]:
-        cogs_dir = pathlib.Path("cogs")
-        if not cogs_dir.exists():
-            cogs_dir.mkdir(parents=True)
-            logger.warning("⚠️ cogs 資料夾不存在，已自動創建。")
-            return []
+        if not self._cogs_dir.is_dir():
+            raise FileNotFoundError(self._cogs_dir)
 
         return sorted(
             entry.stem
-            for entry in cogs_dir.iterdir()
+            for entry in self._cogs_dir.iterdir()
             if entry.is_file() and entry.suffix == ".py" and not entry.name.startswith("_")
         )
 
@@ -127,57 +134,66 @@ class OsuBot(commands.Bot):
         """
         logger.exception(f"在事件 '{event_method}' 中發生未捕獲的異常")
 
+    async def on_command_error(
+        self, context: commands.Context[Any], exception: commands.CommandError
+    ) -> None:
+        """處理文字命令錯誤。
+
+        Bot 主要使用 slash commands；使用者偶爾輸入未知的 ! 指令時，
+        discord.py 預設處理器會將 CommandNotFound 記成 ERROR，導致 PM2
+        error log 被正常的使用者輸入洗版。未知文字指令直接忽略，其他命令錯誤
+        仍交回 discord.py 預設處理器。
+        """
+        if isinstance(exception, commands.CommandNotFound):
+            return
+
+        await super().on_command_error(context, exception)
+
     async def close(self) -> None:
         """關閉 Bot 並清理資源。"""
         logger.info("機器人正在關閉...")
 
-        # 關閉 OsuAPI 客戶端
-        if self.osu_api_client:
-            try:
+        try:
+            if self.osu_api_client is not None:
                 await self.osu_api_client.close()
                 logger.info("✅ OsuAPI 客戶端已關閉")
-            except Exception as e:
-                logger.error(f"❌ 關閉 OsuAPI 客戶端時發生錯誤: {e}", exc_info=True)
+        finally:
+            await super().close()
+            logger.info("機器人關閉完成")
 
-        await super().close()
-        logger.info("機器人關閉完成")
+
+def create_intents() -> discord.Intents:
+    """Create the Discord intents used by the bot."""
+    intents = discord.Intents.default()
+    intents.message_content = True
+    intents.members = True
+    return intents
+
+
+def create_bot() -> OsuBot:
+    """Create the production bot instance."""
+    return OsuBot(command_prefix=COMMAND_PREFIX, intents=create_intents(), log_handler=None)
+
+
+def get_discord_token() -> str:
+    """Return the configured Discord bot token or fail explicitly."""
+    token = config.DISCORD_BOT_TOKEN
+    if not token:
+        raise RuntimeError(MISSING_DISCORD_TOKEN_MESSAGE)
+
+    return token
 
 
 async def main() -> None:
     """主啟動函數。"""
-    # 設定日誌系統
-    setup_logging(log_file="logs/bot.log", log_level="INFO")
-
-    # 檢查 Discord Token
-    token = config.DISCORD_BOT_TOKEN
-    if not token:
-        logger.critical("❌ 錯誤：找不到 DISCORD_BOT_TOKEN。機器人無法啟動。")
-        sys.exit(1)
-
-    # 設定 Intents
-    intents = discord.Intents.default()
-    intents.message_content = True
-    intents.members = True
-
-    # 創建 Bot 實例
-    bot = OsuBot(
-        command_prefix="!",
-        intents=intents,
-        log_handler=None,  # 禁用 discord.py 的預設日誌處理器
-    )
+    setup_logging(log_file=LOG_FILE, log_level=LOG_LEVEL)
+    token = get_discord_token()
+    bot = create_bot()
 
     try:
         logger.info("正在啟動機器人...")
-
-        # 包裝任務工廠以捕獲背景任務的異常
         wrap_task_factory()
-
-        # 啟動 Bot
         await bot.start(token)
-    except KeyboardInterrupt:
-        logger.info("收到鍵盤中斷信號，正在優雅地關閉機器人...")
-    except Exception:
-        logger.exception("啟動機器人時發生未預期的錯誤")
     finally:
         if not bot.is_closed():
             await bot.close()
