@@ -3,7 +3,6 @@ from __future__ import annotations
 import datetime
 from dataclasses import dataclass
 
-import pycountry
 from dateutil.relativedelta import relativedelta
 from loguru import logger
 
@@ -24,15 +23,6 @@ def get_country_flag_emoji(country_code: str | None) -> str:
     return chr(REGIONAL_INDICATOR_OFFSET + ord(normalized_code[0])) + chr(
         REGIONAL_INDICATOR_OFFSET + ord(normalized_code[1])
     )
-
-
-def get_country_name(country_code: str, lang: str = "en") -> str:
-    country = pycountry.countries.get(alpha_2=country_code.upper())
-    if country is None:
-        return country_code
-    if lang.startswith("zh") and hasattr(country, "common_name"):
-        return country.name
-    return country.name
 
 
 @dataclass(frozen=True)

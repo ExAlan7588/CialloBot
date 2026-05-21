@@ -9,7 +9,6 @@ import discord
 from discord.ext import commands
 from loguru import logger
 
-# from utils.osu_api_utils import get_ruleset_id_from_string, RateLimiter, get_user_id_for_l10n_from_message # REMOVED
 from utils.beatmap_utils import get_beatmap_status_display
 from utils.localization import get_localized_string as lstr
 
