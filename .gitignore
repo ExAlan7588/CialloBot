@@ -19,7 +19,11 @@ logs/
 venv/
 .venv/
 env/
-.env/
+
+# Local environment files (contains secrets)
+.env
+.env.*
+!.env.example
 
 # IDE
 .vscode/
