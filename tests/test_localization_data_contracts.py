@@ -2,16 +2,9 @@ from __future__ import annotations
 
 import asyncio
 import json
-import sys
-import types
 from pathlib import Path
 
 import pytest
-
-stub_config = types.ModuleType("private.config")
-setattr(stub_config, "DEFAULT_LANGUAGE", "en")
-setattr(stub_config, "SUPPORTED_LANGUAGES", {"en": "English", "zh_TW": "繁體中文"})
-sys.modules["private.config"] = stub_config
 
 from utils import localization
 from utils import user_data_manager
@@ -20,7 +13,11 @@ from utils import user_data_manager
 @pytest.fixture(autouse=True)
 def reset_localization_state() -> None:
     setattr(localization.config, "DEFAULT_LANGUAGE", "en")
-    setattr(localization.config, "SUPPORTED_LANGUAGES", {"en": "English", "zh_TW": "繁體中文"})
+    setattr(
+        localization.config,
+        "SUPPORTED_LANGUAGES",
+        {"en": "English", "zh_TW": "Traditional Chinese"},
+    )
     localization._replace_user_preferences({})
     localization._translations.clear()
 

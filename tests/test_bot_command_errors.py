@@ -1,23 +1,13 @@
 from __future__ import annotations
 
-import sys
-import types
-import unittest
+import asyncio
 from pathlib import Path
-from tempfile import TemporaryDirectory
 from unittest.mock import AsyncMock, Mock, patch
 
+import pytest
 from discord.ext import commands
 
-stub_config = types.ModuleType("private.config")
-setattr(stub_config, "DISCORD_BOT_TOKEN", "dummy-token")
-setattr(stub_config, "OSU_API_V2_CLIENT_ID", "dummy-client-id")
-setattr(stub_config, "OSU_API_V2_CLIENT_SECRET", "dummy-client-secret")
-setattr(stub_config, "OSU_API_V1_KEY", "dummy-api-v1-key")
-setattr(stub_config, "DEFAULT_LANGUAGE", "en")
-setattr(stub_config, "SUPPORTED_LANGUAGES", {"en": "English", "zh_TW": "繁體中文"})
-sys.modules["private.config"] = stub_config
-
+from private import config
 from bot import MISSING_DISCORD_TOKEN_MESSAGE, OsuBot, get_discord_token
 
 
@@ -41,120 +31,132 @@ class StubOsuApi:
             raise self._close_error
 
 
-class BotCommandErrorTests(unittest.IsolatedAsyncioTestCase):
-    async def asyncSetUp(self) -> None:
-        self.bot = OsuBot(command_prefix="!", intents=None)
+def test_command_not_found_is_ignored_without_default_error_logging() -> None:
+    asyncio.run(_assert_command_not_found_is_ignored())
 
-    async def asyncTearDown(self) -> None:
-        await self.bot.close()
 
-    async def test_command_not_found_is_ignored_without_default_error_logging(self) -> None:
-        ctx = Mock()
-        error = commands.CommandNotFound('Command "!token" is not found')
+async def _assert_command_not_found_is_ignored() -> None:
+    bot = OsuBot(command_prefix="!", intents=None)
+    ctx = Mock()
+    error = commands.CommandNotFound('Command "!token" is not found')
 
+    try:
         with patch.object(
             commands.Bot,
             "on_command_error",
             new=AsyncMock(side_effect=AssertionError("default handler should not run")),
         ):
-            await self.bot.on_command_error(ctx, error)
+            await bot.on_command_error(ctx, error)
+    finally:
+        await bot.close()
 
-    async def test_other_command_errors_use_default_error_logging(self) -> None:
-        ctx = Mock()
-        error = commands.CommandInvokeError(RuntimeError("boom"))
 
+def test_other_command_errors_use_default_error_logging() -> None:
+    asyncio.run(_assert_other_command_errors_use_default_handler())
+
+
+async def _assert_other_command_errors_use_default_handler() -> None:
+    bot = OsuBot(command_prefix="!", intents=None)
+    ctx = Mock()
+    error = commands.CommandInvokeError(RuntimeError("boom"))
+
+    try:
         with patch.object(commands.Bot, "on_command_error", new=AsyncMock()) as handler:
-            await self.bot.on_command_error(ctx, error)
+            await bot.on_command_error(ctx, error)
+    finally:
+        await bot.close()
 
-        handler.assert_awaited_once_with(ctx, error)
+    handler.assert_awaited_once_with(ctx, error)
 
 
-class BotLifecycleTests(unittest.IsolatedAsyncioTestCase):
-    async def test_missing_token_raises_explicit_error(self) -> None:
-        original_token = stub_config.DISCORD_BOT_TOKEN
-        setattr(stub_config, "DISCORD_BOT_TOKEN", "")
+def test_missing_token_raises_explicit_error(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(config, "DISCORD_BOT_TOKEN", "")
 
-        try:
-            with self.assertRaisesRegex(RuntimeError, MISSING_DISCORD_TOKEN_MESSAGE):
-                get_discord_token()
-        finally:
-            setattr(stub_config, "DISCORD_BOT_TOKEN", original_token)
+    with pytest.raises(RuntimeError, match=MISSING_DISCORD_TOKEN_MESSAGE):
+        get_discord_token()
 
-    async def test_missing_cogs_directory_raises_file_not_found(self) -> None:
-        bot = OsuBot(command_prefix="!", intents=None, cogs_dir=Path("missing-cogs"))
 
-        try:
-            with self.assertRaises(FileNotFoundError):
-                bot._discover_cog_names()
-        finally:
-            await bot.close()
+def test_missing_cogs_directory_raises_file_not_found() -> None:
+    asyncio.run(_assert_missing_cogs_directory_raises())
 
-    async def test_setup_hook_propagates_api_setup_failure(self) -> None:
-        api = StubOsuApi(setup_error=RuntimeError("setup failed"))
-        bot = OsuBot(command_prefix="!", intents=None, osu_api_factory=lambda: api)
 
-        try:
-            with self.assertRaisesRegex(RuntimeError, "setup failed"):
+async def _assert_missing_cogs_directory_raises() -> None:
+    bot = OsuBot(command_prefix="!", intents=None, cogs_dir=Path("missing-cogs"))
+
+    try:
+        with pytest.raises(FileNotFoundError):
+            bot._discover_cog_names()
+    finally:
+        await bot.close()
+
+
+def test_setup_hook_propagates_api_setup_failure() -> None:
+    asyncio.run(_assert_setup_hook_propagates_api_setup_failure())
+
+
+async def _assert_setup_hook_propagates_api_setup_failure() -> None:
+    api = StubOsuApi(setup_error=RuntimeError("setup failed"))
+    bot = OsuBot(command_prefix="!", intents=None, osu_api_factory=lambda: api)
+
+    try:
+        with pytest.raises(RuntimeError, match="setup failed"):
+            await bot.setup_hook()
+    finally:
+        await bot.close()
+
+    assert api.setup_called
+
+
+def test_setup_hook_propagates_cog_load_failure(tmp_path: Path) -> None:
+    asyncio.run(_assert_setup_hook_propagates_cog_load_failure(tmp_path))
+
+
+async def _assert_setup_hook_propagates_cog_load_failure(cogs_dir: Path) -> None:
+    api = StubOsuApi()
+    (cogs_dir / "broken_cog.py").touch()
+    bot = OsuBot(command_prefix="!", intents=None, osu_api_factory=lambda: api, cogs_dir=cogs_dir)
+
+    try:
+        with patch.object(
+            bot, "load_extension", new=AsyncMock(side_effect=RuntimeError("load failed"))
+        ):
+            with pytest.raises(RuntimeError, match="load failed"):
                 await bot.setup_hook()
-        finally:
-            await bot.close()
+    finally:
+        await bot.close()
 
-        self.assertTrue(api.setup_called)
-
-    async def test_setup_hook_propagates_cog_load_failure(self) -> None:
-        api = StubOsuApi()
-
-        with TemporaryDirectory() as temp_dir:
-            cogs_dir = Path(temp_dir)
-            (cogs_dir / "broken_cog.py").touch()
-            bot = OsuBot(
-                command_prefix="!", intents=None, osu_api_factory=lambda: api, cogs_dir=cogs_dir
-            )
-
-            try:
-                with patch.object(
-                    bot, "load_extension", new=AsyncMock(side_effect=RuntimeError("load failed"))
-                ):
-                    with self.assertRaisesRegex(RuntimeError, "load failed"):
-                        await bot.setup_hook()
-            finally:
-                await bot.close()
-
-        self.assertTrue(api.setup_called)
-
-    async def test_setup_hook_propagates_command_sync_failure(self) -> None:
-        api = StubOsuApi()
-
-        with TemporaryDirectory() as temp_dir:
-            bot = OsuBot(
-                command_prefix="!",
-                intents=None,
-                osu_api_factory=lambda: api,
-                cogs_dir=Path(temp_dir),
-            )
-
-            try:
-                with patch.object(
-                    bot.tree, "sync", new=AsyncMock(side_effect=RuntimeError("sync failed"))
-                ):
-                    with self.assertRaisesRegex(RuntimeError, "sync failed"):
-                        await bot.setup_hook()
-            finally:
-                await bot.close()
-
-        self.assertTrue(api.setup_called)
-
-    async def test_close_propagates_api_close_failure_after_bot_close(self) -> None:
-        api = StubOsuApi(close_error=RuntimeError("close failed"))
-        bot = OsuBot(command_prefix="!", intents=None, osu_api_factory=lambda: api)
-        bot.osu_api_client = api
-
-        with self.assertRaisesRegex(RuntimeError, "close failed"):
-            await bot.close()
-
-        self.assertTrue(api.close_called)
-        self.assertTrue(bot.is_closed())
+    assert api.setup_called
 
 
-if __name__ == "__main__":
-    unittest.main()
+def test_setup_hook_propagates_command_sync_failure(tmp_path: Path) -> None:
+    asyncio.run(_assert_setup_hook_propagates_command_sync_failure(tmp_path))
+
+
+async def _assert_setup_hook_propagates_command_sync_failure(cogs_dir: Path) -> None:
+    api = StubOsuApi()
+    bot = OsuBot(command_prefix="!", intents=None, osu_api_factory=lambda: api, cogs_dir=cogs_dir)
+
+    try:
+        with patch.object(bot.tree, "sync", new=AsyncMock(side_effect=RuntimeError("sync failed"))):
+            with pytest.raises(RuntimeError, match="sync failed"):
+                await bot.setup_hook()
+    finally:
+        await bot.close()
+
+    assert api.setup_called
+
+
+def test_close_propagates_api_close_failure_after_bot_close() -> None:
+    asyncio.run(_assert_close_propagates_api_close_failure_after_bot_close())
+
+
+async def _assert_close_propagates_api_close_failure_after_bot_close() -> None:
+    api = StubOsuApi(close_error=RuntimeError("close failed"))
+    bot = OsuBot(command_prefix="!", intents=None, osu_api_factory=lambda: api)
+    bot.osu_api_client = api
+
+    with pytest.raises(RuntimeError, match="close failed"):
+        await bot.close()
+
+    assert api.close_called
+    assert bot.is_closed()
