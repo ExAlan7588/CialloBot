@@ -3,11 +3,14 @@ from __future__ import annotations
 import json
 import threading
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from loguru import logger
 
 from private import config
+
+if TYPE_CHECKING:
+    from collections.abc import Mapping
 
 LOCALES_DIR = Path("locales")
 USER_PREFS_FILE = Path("private/user_lang_prefs.json")
@@ -28,23 +31,41 @@ def _load_user_preferences() -> None:
 
     content = USER_PREFS_FILE.read_text(encoding="utf-8")
     if not content:
-        logger.info(f"'{USER_PREFS_FILE}' is empty. Starting with empty user preferences.")
-        _replace_user_preferences({})
-        return
+        msg = f"{USER_PREFS_FILE} is empty; expected a JSON object"
+        raise ValueError(msg)
 
-    data = json.loads(content)
-    if not isinstance(data, dict):
-        msg = f"{USER_PREFS_FILE} must contain a JSON object"
-        raise TypeError(msg)
-
-    _replace_user_preferences({str(user_id): str(lang_code) for user_id, lang_code in data.items()})
+    _replace_user_preferences(_load_preferences_from_json(content, USER_PREFS_FILE))
     logger.info(f"已成功從 '{USER_PREFS_FILE}' 加載用戶語言偏好。")
 
 
-def _replace_user_preferences(preferences: dict[str, str]) -> None:
+def _replace_user_preferences(preferences: Mapping[str, str]) -> None:
     with _prefs_lock:
         _user_lang_preferences.clear()
-        _user_lang_preferences.update(preferences)
+        _user_lang_preferences.update(dict(preferences))
+
+
+def _load_preferences_from_json(content: str, path: Path) -> dict[str, str]:
+    data = json.loads(content)
+    if not isinstance(data, dict):
+        msg = f"{path} must contain a JSON object"
+        raise TypeError(msg)
+    return _validate_language_preferences(path, data)
+
+
+def _validate_language_preferences(path: Path, data: dict[Any, Any]) -> dict[str, str]:
+    preferences: dict[str, str] = {}
+    for user_id, lang_code in data.items():
+        if not isinstance(user_id, str) or not user_id:
+            msg = f"{path} contains an invalid user id key: {user_id!r}"
+            raise TypeError(msg)
+        if not isinstance(lang_code, str):
+            msg = f"{path} contains a non-string language code for user {user_id!r}"
+            raise TypeError(msg)
+        if lang_code not in _supported_language_codes():
+            msg = f"{path} contains unsupported language code {lang_code!r} for user {user_id!r}"
+            raise ValueError(msg)
+        preferences[user_id] = lang_code
+    return preferences
 
 
 def _save_user_preferences() -> None:
@@ -60,6 +81,9 @@ def _save_user_preferences() -> None:
 
 def load_language(lang_code: str) -> None:
     """Load a language file into the translation cache."""
+    if lang_code not in _supported_language_codes():
+        msg = f"Unsupported language code: {lang_code}"
+        raise ValueError(msg)
     if lang_code in _translations:
         logger.debug(f"[L10N] Language {lang_code} already loaded. Skipping.")
         return
@@ -70,8 +94,30 @@ def load_language(lang_code: str) -> None:
         msg = f"{file_path} must contain a JSON object"
         raise TypeError(msg)
 
-    _translations[lang_code] = {str(key): str(value) for key, value in translations.items()}
+    _translations[lang_code] = _validate_translations(file_path, translations)
     logger.debug(f"[L10N] Successfully loaded language file: {file_path.name}")
+
+
+def initialize_localization() -> None:
+    """Load persisted language preferences and all configured locale files."""
+    _load_user_preferences()
+    load_language(config.DEFAULT_LANGUAGE)
+    for lang_code in config.SUPPORTED_LANGUAGES:
+        if lang_code not in _translations:
+            load_language(str(lang_code))
+
+
+def _validate_translations(path: Path, translations: dict[Any, Any]) -> dict[str, str]:
+    validated: dict[str, str] = {}
+    for key, value in translations.items():
+        if not isinstance(key, str) or not key:
+            msg = f"{path} contains an invalid translation key: {key!r}"
+            raise TypeError(msg)
+        if not isinstance(value, str):
+            msg = f"{path} contains a non-string translation for key {key!r}"
+            raise TypeError(msg)
+        validated[key] = value
+    return validated
 
 
 def get_user_language(user_id: int | str) -> str:
@@ -83,7 +129,7 @@ def get_user_language(user_id: int | str) -> str:
 
 def set_user_language(user_id: int | str, lang_code: str) -> bool:
     """Set a user's language preference."""
-    if lang_code not in config.SUPPORTED_LANGUAGES:
+    if lang_code not in _supported_language_codes():
         logger.warning(f"嘗試設置不支持的語言 '{lang_code}' 給用戶 {user_id}")
         return False
 
@@ -130,6 +176,10 @@ def _resolve_language_code(user_id_or_lang_code: int | str | None) -> str:
     return config.DEFAULT_LANGUAGE
 
 
+def _supported_language_codes() -> set[str]:
+    return {str(lang_code) for lang_code in config.SUPPORTED_LANGUAGES}
+
+
 def _lookup_translation(lang_code: str, key: str, default_fallback: str) -> str:
     localized_string = _translations.get(lang_code, {}).get(key)
     if localized_string is not None:
@@ -158,12 +208,5 @@ def _format_translation(localized_string: str, key: str, *args: Any, **kwargs: A
     else:
         return localized_string
 
-
-_load_user_preferences()
-load_language(config.DEFAULT_LANGUAGE)
-
-for lang in config.SUPPORTED_LANGUAGES:
-    if lang not in _translations:
-        load_language(lang)
 
 lstr = get_localized_string

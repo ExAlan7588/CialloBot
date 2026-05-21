@@ -14,6 +14,7 @@ from discord.ext import commands
 from loguru import logger
 
 from private import config
+from utils.localization import initialize_localization
 from utils.osu_api import OsuAPI
 from utils.startup import setup_logging, wrap_task_factory
 
@@ -187,6 +188,7 @@ def get_discord_token() -> str:
 async def main() -> None:
     """主啟動函數。"""
     setup_logging(log_file=LOG_FILE, log_level=LOG_LEVEL)
+    initialize_localization()
     token = get_discord_token()
     bot = create_bot()
 

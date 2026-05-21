@@ -14,6 +14,8 @@ setattr(stub_config, "DISCORD_BOT_TOKEN", "dummy-token")
 setattr(stub_config, "OSU_API_V2_CLIENT_ID", "dummy-client-id")
 setattr(stub_config, "OSU_API_V2_CLIENT_SECRET", "dummy-client-secret")
 setattr(stub_config, "OSU_API_V1_KEY", "dummy-api-v1-key")
+setattr(stub_config, "DEFAULT_LANGUAGE", "en")
+setattr(stub_config, "SUPPORTED_LANGUAGES", {"en": "English", "zh_TW": "繁體中文"})
 sys.modules["private.config"] = stub_config
 
 from bot import MISSING_DISCORD_TOKEN_MESSAGE, OsuBot, get_discord_token
